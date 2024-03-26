@@ -36,7 +36,7 @@ HRESULT CMotherMouth::Initialize(void* pArg)
 	//	m_pActor->Set_State(new CVampireCommander_Spawn1);
 	//}
 	//HP
-
+	this->Set_Enable(false);
 	return S_OK;
 }
 

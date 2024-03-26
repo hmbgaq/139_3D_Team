@@ -12,6 +12,7 @@ class CEffect_Void abstract : public CAlphaObject
 public:
 	enum TYPE_EFFECT { PARTICLE, RECT, MESH, TRAIL, TYPE_EFFECT_END };
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_NORAML, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
+	enum TYPE_SCROLL { SCROLL_ROW, SCROLL_COL, SCROLL_BOTH, SCROLL_ROTAT, TYPE_SCROLL_END };
 
 
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
@@ -20,15 +21,16 @@ public:
 		TYPE_EFFECT	eType_Effect = { TYPE_EFFECT_END };
 		EASING_TYPE eType_Easing = { EASING_TYPE::LINEAR };
 
+
 		wstring		strProtoTag = { TEXT("") };
 		wstring		strPartTag = { TEXT("") };
 
 		// Texture
 		wstring		strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_END] = { TEXT(""), TEXT("") };
 		wstring		strTextureTag[TEXTURE_END];
-		_int		iTextureIndex[TEXTURE_END] = { 0 };
+		_int		iTextureIndex[TEXTURE_END]	= { 0 };
 
-		_uint		iCurNumInstance = { 500 };
+		_uint		iCurNumInstance				= { 1000 };
 
 		// Render Group
 		_int		iRenderGroup = { 6 };	//! 밖에서 렌더러의 렌더그룹을 인트로 형변환해서 던져주자 이펙트는 6번
@@ -49,6 +51,7 @@ public:
 		_float4		vColor_Offset	= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Mul		= { 1.f, 1.f, 1.f, 1.f };
+		MODE_COLOR	eMode_Color		= { MODE_COLOR::MUL };
 
 		// Rim & Bloom
 		_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 블룸 파워(rgb 색상값)
@@ -142,7 +145,9 @@ public:
 
 	typedef struct tagDistortionDesc
 	{
-		_float	fSequenceTerm	= { 0.05f };
+		//_float	fSequenceTerm	= { 0.05f };
+
+		TYPE_SCROLL	eType_Scroll = { TYPE_SCROLL_END };
 
 		_float3 vScrollSpeeds	= { 0.f, 0.f, 0.f };
 		_float3 vScales			= { 0.f, 0.f, 0.f };
@@ -177,6 +182,7 @@ public:
 
 public:
 	virtual void	ReSet_Effect();
+	virtual void	Init_ReSet_Effect();
 	virtual void	End_Effect();
 
 

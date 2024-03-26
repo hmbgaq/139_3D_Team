@@ -19,7 +19,6 @@ public:
 	{
 		_bool		bUseCustomTex	 = { TRUE };
 
-
 		//_float4		vRimColor = { 1.f, 1.f, 1.f, 1.f };		// 사용
 		//_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 사용
 
@@ -50,6 +49,7 @@ public:
 
 public:
 	virtual void	ReSet_Effect()	override;
+	virtual void	Init_ReSet_Effect() override;
 	virtual void	End_Effect()	override;
 
 

@@ -37,6 +37,7 @@ public:
 
 public:
 	virtual void	ReSet_Effect()	override;
+	virtual void	Init_ReSet_Effect() override;
 	virtual void	End_Effect()	override;
 
 public:
@@ -50,9 +51,13 @@ public:
 public:
 	//PARTICLE_DESC* Get_Desc() { return &m_tParticleDesc; }
 	UVSPRITE_DESC* Get_Sprite_Desc() { return &m_tSpriteDesc; }
+	DISTORTION_DESC* Get_Distortion_Desc() { return &m_tDistortionDesc; }
 
+
+// 툴 용
 public:
-	HRESULT			Change_TextureCom(wstring strProtoTextureTag);	// 툴 용
+	HRESULT			Change_TextureCom(wstring strProtoTextureTag);
+	HRESULT			Remove_TextureCom(TEXTURE eTexture);
 
 
 public:
@@ -65,13 +70,14 @@ private:
 
 private:
 	//PARTICLE_DESC				m_tParticleDesc = {};
-	UVSPRITE_DESC				m_tSpriteDesc = {};
+	UVSPRITE_DESC				m_tSpriteDesc		= {};
+	DISTORTION_DESC				m_tDistortionDesc	= {};
 
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
-	CVIBuffer_Particle* m_pVIBufferCom = { nullptr };
+	CShader*					m_pShaderCom = { nullptr };
+	CTexture*					m_pTextureCom[TEXTURE_END] = { nullptr };
+	CVIBuffer_Particle*			m_pVIBufferCom = { nullptr };
 
 	_bool						m_bSortZ = { FALSE };
 

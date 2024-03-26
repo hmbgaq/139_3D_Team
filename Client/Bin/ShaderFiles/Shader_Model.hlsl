@@ -27,6 +27,8 @@ float3 g_vBloomPower = { 0.f, 0.f, 0.f };       /* Bloom */
 float4 g_vRimColor = { 0.f, 0.f, 0.f, 0.f };    /* RimLight */
 float g_fRimPower = 5.f;                        /* RimLight */
 
+float g_fReflectionScale = 0.05f;                 /* Icicle */ 
+
 /* ------------------- function ------------------- */ 
 float2 RotateTexture(float2 texCoord, float angle)
 {
@@ -67,25 +69,49 @@ struct VS_OUT
 	float4		vBinormal       : BINORMAL;
 };
 
+struct VS_OUT_ICICLE
+{
+    float4      vPosition       : SV_POSITION;
+    float4      vNormal         : NORMAL;
+    float2      vTexcoord       : TEXCOORD0;
+    float4      vWorldPos       : TEXCOORD1;
+    float4      vProjPos        : TEXCOORD2;
+    float4      vTangent        : TANGENT;
+    float4      vBinormal       : BINORMAL;
+    float4      vRefractionPos  : TEXCOORD3;
+};
+
 struct PS_IN
 {
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float4 vWorldPos : TEXCOORD1;
-    float4 vProjPos : TEXCOORD2;
-    float4 vTangent : TANGENT;
-    float4 vBinormal : BINORMAL;
+    float4      vPosition       : SV_POSITION;
+    float4      vNormal         : NORMAL;
+    float2      vTexcoord       : TEXCOORD0;
+    float4      vWorldPos       : TEXCOORD1;
+    float4      vProjPos        : TEXCOORD2;
+    float4      vTangent        : TANGENT;
+    float4      vBinormal       : BINORMAL;
+};
+
+struct PS_IN_ICICLE
+{
+    float4      vPosition       : SV_POSITION;
+    float4      vNormal         : NORMAL;
+    float2      vTexcoord       : TEXCOORD0;
+    float4      vWorldPos       : TEXCOORD1;
+    float4      vProjPos        : TEXCOORD2;
+    float4      vTangent        : TANGENT;
+    float4      vBinormal       : BINORMAL;
+    float4      vRefractionPos  : TEXCOORD3;
 };
 
 struct PS_OUT
 {
-    float4 vDiffuse     : SV_TARGET0;
-    float4 vNormal      : SV_TARGET1;
-    float4 vDepth       : SV_TARGET2;
-    float4 vORM         : SV_TARGET3;
-    float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
-    float4 vEmissive    : SV_Target5;
+    float4      vDiffuse        : SV_TARGET0;
+    float4      vNormal         : SV_TARGET1;
+    float4      vDepth          : SV_TARGET2;
+    float4      vORM            : SV_TARGET3;
+    float4      vRimBloom       : SV_TARGET4; /* Rim + Bloom */
+    float4      vEmissive       : SV_Target5;
 };
 /* ------------------- Base Vertex Shader -------------------*/
 
@@ -106,10 +132,50 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
 
+    
 	return Out;
 }
 
+VS_OUT VS_MAIN_OUTLINE(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
 
+    float4 OutPos = vector(In.vPosition.xyz + In.vNormal.xyz * g_LineThick, 1);
+    Out.vPosition = mul(OutPos, matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+
+VS_OUT_ICICLE VS_MAIN_ICICLE(VS_IN In)
+{
+    VS_OUT_ICICLE Out = (VS_OUT_ICICLE) 0;
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
+    Out.vTexcoord = In.vTexcoord;
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vProjPos = Out.vPosition;
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
+    Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
+
+    matrix ViewProjectWorld;
+    ViewProjectWorld = mul(g_ViewMatrix, g_ProjMatrix);
+    ViewProjectWorld = mul(g_WorldMatrix, ViewProjectWorld);
+    Out.vRefractionPos = mul(float4(In.vPosition, 1.f), ViewProjectWorld);
+    
+    return Out;
+}
 /* ------------------- Base Pixel Shader (0) -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -209,22 +275,6 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
 
 /* ------------------- OutLine Pixel Shader(4) -------------------*/
 
-VS_OUT VS_MAIN_OUTLINE(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
-
-    matrix matWV, matWVP;
-
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-
-    float4 OutPos = vector(In.vPosition.xyz + In.vNormal.xyz * g_LineThick, 1);
-    Out.vPosition = mul(OutPos, matWVP);
-    Out.vTexcoord = In.vTexcoord;
-    
-    return Out;
-}
-
 PS_OUT PS_MAIN_OUTLINE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -281,20 +331,45 @@ PS_OUT PS_BloodPool(PS_IN In)
 }
 
 /* ------------------- (8) Icicle -------------------*/
-PS_OUT PS_MAIN_ICICLE(PS_IN In)
+PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
 {
     PS_OUT Out = (PS_OUT) 0;
 	
-    //Out.vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    Out.vDiffuse = float4(1.f, 0.f, 0.f, 1.f);
-	
-    clip(Out.vDiffuse.a - 0.1f);
-	
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 1.f);
+    /* 좌표를 (-1, 1) -> (0, 1) 로 변환 */ 
+    float2 RefractTexCoord;
+    RefractTexCoord.x = In.vRefractionPos.x / In.vRefractionPos.w / 2.0f + 0.5f;
+    RefractTexCoord.y = -In.vRefractionPos.y / In.vRefractionPos.w / 2.0f + 0.5f;
+    
+    /* 노말맵은 (0, 1) 의 좌표를 (-1, 1)로 변환 */
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = (vNormalDesc.xyz * 2.f) -1.f;
+    
+    /* 굴절크기변수를 노말값에 곱하기 + 흩뜨려놓기 */ 
+    RefractTexCoord = RefractTexCoord + (vNormal.xy * g_fReflectionScale);
+    
+    float4 RefractionColor = g_NoiseTexture.Sample(LinearSampler, RefractTexCoord);    
+    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vDiffuse = lerp(RefractionColor, vMtrlDiffuse, 0.5f);
+    
+    /* 현재 픽셀까지의 거리를 계산 */
+    float distanceToCamera = distance(In.vRefractionPos, g_vCamPosition);
+    
+    /* 거리에 따라 투명도를 조절 (예시로 설정한 값) */
+    float maxDistance = 30.0f; // 최대 거리
+    float minTransparency = 0.2f; // 최소 투명도
+    float maxTransparency = 1.0f; // 최대 투명도
+    float transparency = lerp(maxTransparency, minTransparency, saturate(distanceToCamera / maxDistance));
+    
+    /* 최종 색상을 계산할 때 알파 값을 조절 */
+    Out.vDiffuse = lerp(RefractionColor, vMtrlDiffuse, 0.5f);
+    Out.vDiffuse.a *= transparency;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+    Out.vNormal = (vector(vNormal * 0.5f + 0.5f, 0.f)) * 0.2;
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
-	
+    
     return Out;
 }
 
@@ -407,7 +482,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_MAIN_ICICLE();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;

@@ -80,11 +80,8 @@ void CBody::Late_Tick(_float fTimeDelta)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
 
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-			return;
-
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
-			return;
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 	}
 
 #ifdef _DEBUG
@@ -131,11 +128,7 @@ HRESULT CBody::Render_Shadow()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-
 		m_pShaderCom->Begin(2);
-
 		m_pModelCom->Render((_uint)i);
 	}
 

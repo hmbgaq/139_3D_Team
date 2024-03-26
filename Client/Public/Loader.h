@@ -44,6 +44,7 @@ public:
 	HRESULT	Loading_For_Tool_Level();
 
 	HRESULT	Loading_Player(LEVEL eLEVEL);
+	HRESULT Loading_For_Shader(LEVEL eLevel);
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };

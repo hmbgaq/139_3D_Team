@@ -223,7 +223,6 @@ void CEffect::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-
 	m_tEffectDesc.eType_Dead = In_Json["Effect"]["eType_Dead"];
 
 	m_tEffectDesc.bPlay			= In_Json["Effect"]["bPlay"];
@@ -287,7 +286,9 @@ void CEffect::Load_FromJson(const json& In_Json)
 		}
 	}
 
-	ReSet_Effect();
+
+	Init_ReSet_Effect();
+
 }
 
 void CEffect::Update_PivotMat()
@@ -328,16 +329,20 @@ void CEffect::ReSet_Effect()
 	m_tEffectDesc.fRemainAcc	 = 0.f;
 	m_tEffectDesc.fLifeTimeRatio = 0.f;
 
+
+}
+
+void CEffect::Init_ReSet_Effect()
+{
+	ReSet_Effect();
 	for (auto& Pair : m_PartObjects)
 	{
 		if (nullptr != Pair.second)
-		{
-			dynamic_cast<CEffect_Void*>(Pair.second)->ReSet_Effect();
-		}
-		
-		dynamic_cast<CEffect_Void*>(Pair.second)->Get_Desc()->bRender = { TRUE };
+			dynamic_cast<CEffect_Void*>(Pair.second)->Init_ReSet_Effect();
 	}
 }
+
+
 
 void CEffect::End_Effect()
 {

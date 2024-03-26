@@ -49,6 +49,11 @@ private:
 	HRESULT			Ready_Components(void* pArg);
 	HRESULT			Bind_ShaderResources();
 
+public:
+	/* Tool 에서 조정할 값들 */
+
+
+
 private:
 	_int			m_iRenderPass = {};
 

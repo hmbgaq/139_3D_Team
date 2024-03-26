@@ -1,5 +1,6 @@
 #include "MotherMouth_State.h"
 #include "GameInstance.h"
+#include "MotherMouth_SpittingMineStart.h"
 
 void CMotherMouth_State::Initialize(CMotherMouth* pActor)
 {
@@ -34,5 +35,10 @@ CState<CMotherMouth>* CMotherMouth_State::Attack_State(CMotherMouth* pActor, _fl
 
 CState<CMotherMouth>* CMotherMouth_State::Normal(CMotherMouth* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (pActor->Get_Enable() == true)
+	{
+		return new CMotherMouth_SpittingMineStart;
+	}
+
 	return nullptr;
 }

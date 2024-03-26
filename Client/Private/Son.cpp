@@ -4,8 +4,8 @@
 #include "Body_Son.h"
 
 // #include "Son_Idle.h"
-// #include "Son_Spawn1.h"
-// #include "Son_HitCenter.h"
+#include "Son_Spawn.h"
+#include "Son_Hit.h"
 // #include "Son_HitLeft.h"
 // #include "Son_HitRight.h"
 // #include "Son_CutScene.h"
@@ -57,7 +57,7 @@ HRESULT CSon::Initialize(void* pArg)
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CSon>(this);
-		//m_pActor->Set_State(new CSon_Spawn1);
+		m_pActor->Set_State(new CSon_Spawn);
 	}
 	//HP
 	m_iMaxHp = 150;
@@ -68,6 +68,7 @@ HRESULT CSon::Initialize(void* pArg)
 
 	// Ready BossHUDBar
 	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	Search_Target(200.f);
 
 	return S_OK;
 }
@@ -82,26 +83,25 @@ void CSon::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-	Search_Target(200.f);
 
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
 	//cout << "introBossHP:" << m_iHp << endl;
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
+	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 
-	cout << "Son : " << fAngle << endl;
+	//cout << "Son : " << fAngle << endl;
 	if (m_bLookAt == true)
 	{
-
-		if (0 <= fAngle && fAngle <= 45)
+	
+		if (0 <= fAngle && fAngle <= 90)
 			Look_At_Target_Lerp(fTimeDelta);
-		else if (-45 <= fAngle && fAngle < 0)
+		else if (-90 <= fAngle && fAngle < 0)
 			Look_At_Target_Lerp(fTimeDelta);
-
+	
 		/*m_bLookAt = false;*/
-
+	
 	}
 
 }
@@ -130,39 +130,16 @@ HRESULT CSon::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Son"), BodyDesc)))
 		return E_FAIL;
 
-	CWeapon::WEAPON_DESC		WeaponDesc = {};
-	//FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
-
-	
-
-	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
-	m_pWeapon_Punch_R->Set_Enable(false);
+	//CWeapon::WEAPON_DESC		WeaponDesc = {};
+	////FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
+	//
+	//
+	//
+	//CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
+	//m_pWeapon_Punch_R->Set_Enable(false);
 
 
 	return S_OK;
-}
-
-void CSon::Hitted_Left(Power ePower)
-{
-	switch (ePower)
-	{
-	case Engine::Heavy:
-	case Engine::Absolute:
-		//m_pActor->Set_State(new CSon_HitRight);
-		break;
-	}
-
-}
-
-void CSon::Hitted_Right(Power ePower)
-{
-	switch (ePower)
-	{
-	case Engine::Heavy:
-	case Engine::Absolute:
-		//m_pActor->Set_State(new CSon_HitLeft);
-		break;
-	}
 }
 
 
@@ -172,16 +149,13 @@ void CSon::Hitted_Front(Power ePower)
 	{
 	case Engine::Heavy:
 	case Engine::Absolute:
-		//m_pActor->Set_State(new CSon_HitCenter);
+		m_pActor->Set_State(new CSon_Hit);
 		break;
 	}
 }
 
 void CSon::Hitted_Dead(Power ePower)
 {
-	//stun이 걸리고 그다음에 처형이 있기 때문에 그냥 때려서는 죽일수 없다.
-	//m_pActor->Set_State(new CSon_Stun_Start);
-	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 }
 
