@@ -38,12 +38,17 @@ CState<CTank>* CTank_State::Attack_State(CTank* pActor, _float fTimeDelta, _uint
 	return nullptr;
 }
 
-CState<CTank>* CTank_State::Hit_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
+CState<CTank>* CTank_State::Shield_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }
 
-CState<CTank>* CTank_State::Knock_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
+CState<CTank>* CTank_State::NoShield_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CTank>* CTank_State::Hit_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }
@@ -53,8 +58,12 @@ CState<CTank>* CTank_State::Death_State(CTank* pActor, _float fTimeDelta, _uint 
 	return nullptr;
 }
 
-
 CState<CTank>* CTank_State::Spawn_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CTank>* CTank_State::Stun_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }
@@ -77,8 +86,6 @@ CState<CTank>* CTank_State::Normal(CTank* pActor, _float fTimeDelta, _uint _iAni
 CState<CTank>* CTank_State::Idle(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	CState<CTank>* pState = { nullptr };
-
-
 
 	return pState;
 }

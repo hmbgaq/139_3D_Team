@@ -25,14 +25,12 @@ public:		//상태 그룹 별 업데이트
 	CState<CTank>* Walk_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CTank>* Run_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CTank>* Attack_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CTank>* Shield_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CTank>* NoShield_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CTank>* Hit_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
-	CState<CTank>* Knock_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CTank>* Death_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
-
-	CState<CTank>* Dodge_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CTank>* Spawn_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
+	CState<CTank>* Stun_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
 public:		//개별 동작 상태 집합
