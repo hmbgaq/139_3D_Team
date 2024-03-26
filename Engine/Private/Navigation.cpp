@@ -544,7 +544,7 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 
 	if (pGround != nullptr)
 	{
-		*pGround = vPosition.y < fResult;
+		*pGround = vPosition.y <= fResult;
 	}
 
 

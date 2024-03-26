@@ -127,6 +127,7 @@
 #include "Player_OpenStateCombo_8hit.h"
 #include "Player_SlamTwoHand_TEMP.h"
 #include "Player_MeleeKick.h"
+#include "Player_CartRide_Loop.h"
 
 #pragma endregion
 
@@ -397,6 +398,12 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
 	{
+		if (m_pGameInstance->Key_Pressing(DIK_C))
+		{
+			return new CPlayer_CartRide_Loop();
+		}
+
+
 		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 

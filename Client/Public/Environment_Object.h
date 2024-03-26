@@ -82,13 +82,19 @@ private:
 	_bool						m_bPlay = false;
 	_bool						m_bColliderRender = false;
 
-
 	_uint						m_iCurrentLevel = LEVEL_TOOL;
 
 private:
 	HRESULT				Ready_Components();
 	HRESULT				Bind_ShaderResources();
 
+	/* 고드름용 - 소영 작업중 */
+	_int		iCheckMeshNum = 0;
+	_int		m_iIceMeshNumber = 0;
+	_bool		bRenderIce = { false };
+	_float4		m_vCamPosition = {};
+	CTexture*	m_pIceNoise = { nullptr };
+	CTexture*	m_pIceDiffuse = { nullptr };
 
 public:
 	/* 원형객체를 생성한다. */

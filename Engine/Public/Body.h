@@ -112,7 +112,6 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
-	//CTexture* m_pDissolveTexture = { nullptr };
 
 protected:
 	class CTransform* m_pParentTransform = { nullptr };
@@ -126,9 +125,6 @@ protected:
 	_float		m_fShootingReaction = { 0.f };
 	_float		m_fShootingReactionTarget = { 0.f };
 
-
-	//_bool		m_bDissolve = { false };
-	//_float		m_fDissolveWeight = { 0.f };
 	_uint		m_iShaderPass = 0;
 
 protected:

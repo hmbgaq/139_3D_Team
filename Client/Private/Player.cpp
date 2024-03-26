@@ -27,6 +27,8 @@
 #include "Player_InteractionVault100.h"
 #include "Player_InteractionVault200.h"
 
+#include "Player_CartRide_Loop.h"
+
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -67,6 +69,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	{
 		m_pActor = new CActor<CPlayer>(this);
 		m_pActor->Set_State(new CPlayer_IdleLoop());
+		//m_pActor->Set_State(new CPlayer_CartRide_Loop());
+
 // 	}
 
 
@@ -122,6 +126,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
+
+
 
 	//_float3 vPos = Get_Position();
 
@@ -371,7 +377,6 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 		{
 			Move_In_Proportion_To_Enemy(fTimeDelta);
 		}
-		
 	}
 }
 
@@ -400,6 +405,7 @@ HRESULT CPlayer::Ready_PartObjects()
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Zapper"), "LeftHandIK", WeaponDesc,		PLAYER_WEAPON_ZAPPER));
 
 	
+	Set_Weapons_Enable_False();
 
 	//CWeapon* m_pWeapon_Punch_L = Get_Weapon(PLAYER_WEAPON_PUNCH_L);
 	//m_pWeapon_Punch_L->Set_Enable(false);

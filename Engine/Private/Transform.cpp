@@ -62,30 +62,35 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 {
 	_vector	vPosition = Get_State(STATE_POSITION);
 
-	
-
 	vPosition += vMove;
 
 	if (nullptr != pNavigation)
 	{
 		if (false == pNavigation->isMove(vPosition))
 			return; /* 슬라이딩들어갈자리 */
-			
-		_bool bIsGround = false;
-		_float fHeight = {};
 
-		fHeight = pNavigation->Compute_Height(vPosition, &bIsGround);
+		_float4 vResult;
+		_float3 vResult_Float3;
 
+		XMStoreFloat4(&vResult, vPosition);
+		//vResult.y -= 9.81f * m_pGameInstance->Get_TimeDelta();
 
-		if (bIsGround == true)
+		vResult_Float3 = { vResult.x, vResult.y, vResult.z };
+
+		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &m_bIsGround);
+
+		if (true == m_bIsGround)
 		{
-			vPosition.m128_f32[1] = fHeight;
+			vResult.y = fHeight;
 		}
 
-
+		Set_State(STATE_POSITION, XMLoadFloat4(&vResult));
 	}
-	Set_State(STATE_POSITION, vPosition);
-	
+	else 
+	{
+		Set_State(STATE_POSITION, vPosition);
+	}
+
 }
 
 void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTimeDelta, CNavigation* pNavigation)
@@ -131,16 +136,16 @@ void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTime
 	if (true == bIsMove_ForSliding || true == bIsMove_ForSliding_NewPosition)
 	{
 		XMStoreFloat4(&vResult, vTargetPos);
+		//vResult.y -= 9.81f * fTimeDelta;
 
-		_bool bIsGround = false;
 		_float3 vResult_Float3 = { vResult.x, vResult.y, vResult.z };
-		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &bIsGround);
+		
+		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &m_bIsGround);
 
-		if (true == bIsGround) 
+		if (true == m_bIsGround)
 		{
 			vResult.y = fHeight;
 		}
-			
 
 		Set_State(STATE_POSITION, XMLoadFloat4(&vResult));
 	}

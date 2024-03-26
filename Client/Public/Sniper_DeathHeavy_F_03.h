@@ -4,7 +4,7 @@
 
 BEGIN(Client)
 
-class CSniper_DeathLight_B_01 : public CBandit_Sniper_State_Hit
+class CSniper_DeathHeavy_F_03 : public CBandit_Sniper_State_Hit
 {
 public:
 	virtual void Initialize(CBandit_Sniper* pActor) override;
@@ -12,7 +12,7 @@ public:
 	virtual void Release(CBandit_Sniper* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CBandit_Sniper::Bandit_Sniper_State::Sniper_DeathLight_B_01;
+	static const _uint g_iAnimIndex = CBandit_Sniper::Bandit_Sniper_State::Bandit_DeathHeavy_F_03_NEW;
 
 };
 

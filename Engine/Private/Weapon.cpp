@@ -216,6 +216,13 @@ CWeapon* CWeapon::Set_Dir(_float3 _vDir)
 	return this;
 }
 
+CWeapon* CWeapon::Set_KnockUp(_bool _bKnockUp)
+{
+	m_bKnockUp = _bKnockUp;
+
+	return this;
+}
+
 void CWeapon::Set_Enable_Collisions(_bool bEnable)
 {
 	for (CCollider* pCollider : m_pColliders)

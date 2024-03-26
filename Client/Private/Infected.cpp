@@ -43,6 +43,7 @@
 #include "Infected_HitLightOpened_R_01.h"
 #include "Infected_OpenStatePull_F_01.h"
 #include "Infected_OpenStateTimeout.h"
+#include "Infected_KnockUp_Low_Fixed.h"
 
 
 CInfected::CInfected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -236,6 +237,11 @@ void CInfected::Hitted_Opened(Direction eDirection)
 		m_pActor->Set_State(new CInfected_HitLightOpened_F_01_NEW());
 		break;
 	}
+}
+
+void CInfected::Hitted_KnockUp()
+{
+	m_pActor->Set_State(new CInfected_KnockUp_Low_Fixed());
 }
 
 void CInfected::Free()
