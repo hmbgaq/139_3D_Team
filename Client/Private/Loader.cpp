@@ -96,6 +96,13 @@
 #include "Bullet_Bandit_Sniper.h"
 #pragma endregion
 
+#pragma region TANK
+#include "Tank.h"
+#include "Body_Tank.h"
+#include "Weapon_Tank.h"
+
+#pragma endregion
+
 
 #pragma region UI
 /* Anything */
@@ -386,6 +393,9 @@ HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Heavy_Vampiric_Zombie", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Tank"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Tank/Tank", PivotMatrix)));
+	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Weapon/Axe", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Tank_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Tank/Shield/Shield", PivotMatrix)));
 
 
 	/* ------------------ Boss ------------------ */
@@ -1144,6 +1154,9 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Bandit_Sniper"), CWeapon_Bandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Bandit_Sniper"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Bandit_Sniper"), CBullet_Bandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Bandit_Sniper"))));
 
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Tank"), CBody_Tank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Tank"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Tank"), CWeapon_Tank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Tank"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Tank"), CTank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Tank"))));
 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Terrain"), CTerrain::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Winchester"))));

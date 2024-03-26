@@ -2011,15 +2011,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child">
       <UniqueIdentifier>{d6fe46e2-99b9-4f39-b476-25050368dcb3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Vampiric">
-      <UniqueIdentifier>{46453a21-20a0-4038-8f82-834f72bb7c96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Vampiric\Body">
-      <UniqueIdentifier>{3dec87dd-b724-48d3-9f18-2fc527d7a2df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Vampiric\Weapon">
-      <UniqueIdentifier>{859ae25c-6b5b-41a4-9047-3a15c15891dd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State">
       <UniqueIdentifier>{b2831741-11aa-4ab4-9c5b-6889d4ceafcc}</UniqueIdentifier>
     </Filter>
@@ -3202,12 +3193,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\6. Death\2. Normal">
       <UniqueIdentifier>{005eb8ab-e87a-424c-b97b-0dde8013da0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal">
-      <UniqueIdentifier>{37c6c4fe-5fce-4960-8385-983618f2e65b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal\1. HitHeavy">
-      <UniqueIdentifier>{86f994b5-8493-4f5d-8963-22ee3fbba5f9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield">
       <UniqueIdentifier>{8d314dbf-b001-435a-be90-56f416ef109b}</UniqueIdentifier>
     </Filter>
@@ -3429,6 +3414,84 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\1. Knock\Cannonball\2">
       <UniqueIdentifier>{28769abc-6c7d-4e78-9c5d-4a4b0d0b9ce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield">
+      <UniqueIdentifier>{37c6c4fe-5fce-4960-8385-983618f2e65b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\1. Heavy">
+      <UniqueIdentifier>{86f994b5-8493-4f5d-8963-22ee3fbba5f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\2. Normal">
+      <UniqueIdentifier>{54e544b2-fcd4-44a3-ace8-cb901e4bf703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\2. Normal\BR">
+      <UniqueIdentifier>{354008c5-9455-403a-a9d5-a8557d4f607e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\1. Left">
+      <UniqueIdentifier>{cddf4309-be7f-4956-b882-10f640f464fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\2. Right">
+      <UniqueIdentifier>{149c22e2-b967-461d-9aba-4824fe5371cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\1. Left\90">
+      <UniqueIdentifier>{8eb90328-07b8-4bca-be26-58bbc2dea6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\2. Right\90">
+      <UniqueIdentifier>{b9ecb03a-aad1-4518-8db8-0d68cd374405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\1. Front">
+      <UniqueIdentifier>{f3f0edb5-a813-4387-966b-212ba5aab889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\1. Front\1">
+      <UniqueIdentifier>{efe0313b-1e18-4faf-b9b2-193f12ff0c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\1. Front\2">
+      <UniqueIdentifier>{323105c5-1f0b-4c36-aed6-591ca3b8c36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\2. Left">
+      <UniqueIdentifier>{ebeaab34-72ea-4575-81df-4a3ae3774753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\3. Right">
+      <UniqueIdentifier>{012a7bc2-d32c-4788-a84f-cc297a62bc9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\1. Left">
+      <UniqueIdentifier>{f3f9fbf6-4f86-4495-894b-1e14ceb381e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\2. Right">
+      <UniqueIdentifier>{4c709354-b64c-4151-92cb-7a9820b98388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\1. Left\90">
+      <UniqueIdentifier>{13fc63b1-b5dc-4d9e-a2f3-68f39c777036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\2. Right\90">
+      <UniqueIdentifier>{0f5ea1c5-460c-46b8-a9b9-bf16d69d00c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\01">
+      <UniqueIdentifier>{55494a7a-08c9-41a4-97dd-94d9be315d52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\03">
+      <UniqueIdentifier>{8bdf51c6-eb6d-472a-b046-786b8e03ac1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\04">
+      <UniqueIdentifier>{11507856-71c0-455a-9086-d9c2c01949e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie">
+      <UniqueIdentifier>{ea0a605f-0fe0-44f1-9ead-3a99011461aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Bandit_Heavy_Vampiric">
+      <UniqueIdentifier>{46453a21-20a0-4038-8f82-834f72bb7c96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Bandit_Heavy_Vampiric\Body">
+      <UniqueIdentifier>{3dec87dd-b724-48d3-9f18-2fc527d7a2df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Bandit_Heavy_Vampiric\Weapon">
+      <UniqueIdentifier>{859ae25c-6b5b-41a4-9047-3a15c15891dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Body">
+      <UniqueIdentifier>{ee3c5f6f-fba7-442a-a2d4-3ef72f1571fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Weapon">
+      <UniqueIdentifier>{bc058210-167f-4bb8-bd12-86f5899bae02}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -6579,15 +6642,6 @@
     <ClInclude Include="..\Public\Tank_WhipHold.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Tank_Spawn_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_Spawn_03.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_Spawn_04_Charge.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Tank_Walk_B.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\2. Walk\1. Back</Filter>
     </ClInclude>
@@ -6598,28 +6652,10 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\3. Run\1. Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_HitHeavy_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal\1. HitHeavy</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\1. Heavy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_HitHeavyShield_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitHeavyShield_FL_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitHeavyShield_FL90_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitHeavyShield_FR_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitHeavyShield_FR90_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitNormal_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitNormal_BR_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_Burn_Loop.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\4. ETC</Filter>
@@ -6630,31 +6666,7 @@
     <ClInclude Include="..\Public\Tank_VortexGrenade_Stop.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\4. ETC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitLightShield_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitLightShield_F_02.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitLightShield_FL_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitLightShield_FR_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Tank_HitNormalShield_F_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitNormalShield_FL_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitNormalShield_FL90_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitNormalShield_FR_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Tank_HitNormalShield_FR90_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_OpenState_HitLight_F_01.h">
@@ -6884,6 +6896,57 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_KnockFrontHeavy_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\1. Knock\Front\Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitNormal_BR_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\2. Normal\BR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitNormal_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\2. Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitHeavyShield_FL_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\1. Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitHeavyShield_FR_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\2. Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitHeavyShield_FL90_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\1. Left\90</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitHeavyShield_FR90_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\2. Right\90</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitLightShield_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\1. Front\1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitLightShield_F_02.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\1. Front\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitLightShield_FL_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\2. Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitLightShield_FR_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\3. Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitNormalShield_FL_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\1. Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitNormalShield_FR_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\2. Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitNormalShield_FL90_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\1. Left\90</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_HitNormalShield_FR90_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\2. Right\90</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_Spawn_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\01</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_Spawn_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\03</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tank_Spawn_04_Charge.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\04</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -9626,54 +9689,12 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\3. ShieldRegain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_HitHeavy_B_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal\1. HitHeavy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitNormal_B_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitNormal_BR_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. Normal</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\1. Heavy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_HitHeavyShield_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitHeavyShield_FL_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitHeavyShield_FL90_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitHeavyShield_FR_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitHeavyShield_FR90_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitLightShield_F_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitLightShield_F_02.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitLightShield_FL_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitLightShield_FR_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Tank_HitNormalShield_F_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitNormalShield_FL_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitNormalShield_FL90_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitNormalShield_FR_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_HitNormalShield_FR90_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_OpenState_Start.cpp">
@@ -9708,15 +9729,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Finisher_Tank.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\6. Death\3. Finisher</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_Spawn_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_Spawn_03.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Tank_Spawn_04_Charge.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_Stun_Start.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\8. Stun\1. Start</Filter>
@@ -9777,6 +9789,57 @@
     </ClCompile>
     <ClCompile Include="..\Private\Sniper_KnockFrontHeavy_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\1. Knock\Front\Heavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitNormal_BR_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\2. Normal\BR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitNormal_B_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\2. Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitHeavyShield_FL_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\1. Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitHeavyShield_FR_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\2. Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitHeavyShield_FL90_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\1. Left\90</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitHeavyShield_FR90_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\1. Heavy\2. Right\90</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitLightShield_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\1. Front\1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitLightShield_F_02.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\1. Front\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitLightShield_FL_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\2. Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitLightShield_FR_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\2. Light\3. Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitNormalShield_FL_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\1. Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitNormalShield_FR_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\2. Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitNormalShield_FL90_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\1. Left\90</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_HitNormalShield_FR90_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\2. Shield\3. Normal\2. Right\90</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_Spawn_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\01</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_Spawn_03.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\03</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_Spawn_04_Charge.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\7. Spawn\04</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

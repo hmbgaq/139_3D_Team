@@ -46,10 +46,10 @@ HRESULT CWeapon_Tank::Ready_Components()
 
 HRESULT CWeapon_Tank::Load_Json()
 {
-	string path = "../Bin/DataFiles/Data_Monster/Tank/Weapon.json";
-	json In_Json;
-	CJson_Utility::Load_Json(path.c_str(), In_Json);
-	m_pTransformCom->Load_FromJson(In_Json);
+	//string path = "../Bin/DataFiles/Data_Monster/Tank/Weapon.json";
+	//json In_Json;
+	//CJson_Utility::Load_Json(path.c_str(), In_Json);
+	//m_pTransformCom->Load_FromJson(In_Json);
 
 	return S_OK;
 }
@@ -74,29 +74,17 @@ void CWeapon_Tank::Tick(_float fTimeDelta)
 void CWeapon_Tank::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+	{
+		m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
+	}
+
 }
 
 HRESULT CWeapon_Tank::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
-
-	//if (m_iRenderPass == ECast(MONSTER_SHADER::SNIPER_WEAPON))
-	//{
-	//	/* Camera */
-	//	m_fCamFar = m_pGameInstance->Get_CamFar();
-	//	m_vCamPos = m_pGameInstance->Get_CamPosition();
-	//	m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float));
-	//	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
-
-	//	/* RimLight */
-	//	m_vRimColor = { 0.0f, 0.0f, 0.f, 1.f };
-	//	m_vBloomPower = _float3(0.7f, 0.7f, 0.7f);
-	//	m_fRimPower = 5.f;
-
-	//	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
-	//	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
-	//	m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
-	//}
 
 	return S_OK;
 }
@@ -123,14 +111,6 @@ HRESULT CWeapon_Tank::Render()
 	}
 
 	return S_OK;
-}
-
-void CWeapon_Tank::Sniping(_float4 vTargetPos, _float3 StartfPos)
-{
-	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_MONSTER_BULLET, L"Prototype_GameObject_Bullet_Tank");
-
-	pBullet->Set_Position(StartfPos);
-	pBullet->Get_Transform()->Look_At(vTargetPos);
 }
 
 #pragma region Create, Clone, Pool, Free

@@ -2,6 +2,7 @@
 #include "Tank.h"
 #include "GameInstance.h"
 #include "Body_Tank.h"
+#include "Weapon_Tank.h"
 #include "Tank_Idle.h"
 
 CTank::CTank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -74,8 +75,23 @@ HRESULT CTank::Ready_Components()
 
 HRESULT CTank::Ready_PartObjects()
 {
-	CBody::BODY_DESC		BodyDesc = {};
-	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Tank"), BodyDesc));
+	/* For. Body */
+	{
+		CBody::BODY_DESC		BodyDesc = {};
+		FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Tank"), BodyDesc));
+	}
+
+	/* For. Weapon */
+	{
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("RightHandIK");
+		WeaponDesc.m_pParentTransform = m_pTransformCom;
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Tank"), "RightHandIK", WeaponDesc, TEXT("Weapon_Shield")));
+
+		//CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Punch"));
+		//m_pWeapon->Set_Enable(false);
+	}
+
 
 	return S_OK;
 }

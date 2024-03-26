@@ -59,8 +59,7 @@ HRESULT CLevel_GamePlay::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	FAILED_CHECK(Ready_Shader());
-
+	//FAILED_CHECK(Ready_Shader());
 
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
@@ -297,6 +296,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
+	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Tank"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	_float3 vPos = CData_Manager::GetInstance()->Get_Player()->Get_Position();
+	pMonster->Set_Position(vPos);
+
 	//TODO 트리거에서 불러올거임 이제
 // 	json Stage1MonsterJson = {};
 // 
