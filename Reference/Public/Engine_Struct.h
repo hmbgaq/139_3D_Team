@@ -381,8 +381,8 @@ namespace Engine
 	typedef struct ENGINE_DLL tagSSR_Desc
 	{
 		_bool	bSSR_Active = { false };
-		_float fRayHitThreshold = 1.f;
-		_float fRayStep = 1.f;
+		_float fRayHitThreshold = 2.f;
+		_float fRayStep = 1.6f;
 	}SSR_DESC;
 
 	typedef struct ENGINE_DLL tagBloomRim_Desc

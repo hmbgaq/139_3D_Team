@@ -48,7 +48,7 @@ HRESULT CRenderer::Initialize()
 	m_tDOF_Option.bDOF_Active = false;
 	m_tHSV_Option.bScreen_Active = false;
 	m_tAnti_Option.bFXAA_Active = false;
-	m_tSSR_Option.bSSR_Active = true;
+	m_tSSR_Option.bSSR_Active = false;
 	return S_OK;
 }
 
@@ -91,7 +91,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Deferred_Effect()); 
 
 	/* --- Post Processing --- */
-	if(true == m_tSSR_Option.bSSR_Active)
+	//if(true == m_tSSR_Option.bSSR_Active)
 		FAILED_CHECK(Render_SSR());
 
 	if (true == m_tRadial_Option.bRadial_Active) /* 이미지 블러효과를 추가하는것 */
@@ -519,6 +519,11 @@ HRESULT CRenderer::Render_SSR()
 	
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Chroma()
+{
 	return S_OK;
 }
 
@@ -1297,6 +1302,10 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSR"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_SSR"), TEXT("Target_SSR")));
 
+	/* MRT_Chroma */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Chroma"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Chroma"), TEXT("Target_Chroma")));
+
 	/* MRT_Final */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Final"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Final"), TEXT("Target_Final")));
@@ -1413,6 +1422,7 @@ HRESULT CRenderer::Ready_DebugRender()
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_SSR"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
 
 	{	
 		/* !유정 : Effect관련 RenderTarget */
@@ -1472,6 +1482,7 @@ HRESULT CRenderer::Render_DebugTarget()
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow"),		m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Deferred"),	m_pShader_Deferred, m_pVIBuffer);
 
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_SSR"),			m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_HDR"),			m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_RaidalBlur"),	m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_DOFBlur"),		m_pShader_Deferred, m_pVIBuffer);

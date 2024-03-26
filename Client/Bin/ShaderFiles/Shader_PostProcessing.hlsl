@@ -32,6 +32,13 @@ struct SSR_DESC
     float fRayHitThreshold;
     float fRayStep;
 };
+
+struct CHROMA_DESC
+{
+    bool bChroma_Active;
+    float fChromaticIntensity;
+    float3 vChromaticPosition;
+};
 /* =================== Variable =================== */
 // Origin
 float4x4    g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -235,6 +242,7 @@ float4 SSRBinarySearch(float3 dir, inout float3 hitCoord)
 float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
 {
    float depth;
+    
     for (int i = 0; i < SSR_MAX_STEPS; i++)
     {
         hitCoord += dir;
@@ -242,7 +250,8 @@ float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
 
-        depth = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+        float4 DepthTexture = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+        float depth = DepthTexture.r;
         float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
         float depthDifference = hitCoord.z - viewSpacePosition.z;
 
@@ -478,11 +487,13 @@ PS_OUT PS_MAIN_SSR(PS_IN In)
         Out.vColor = sceneColor;
         return Out;
     }
+    
     float3 normal = normalMetallic.rgb;
     normal = 2 * normal - 1.0;
     normal = normalize(normal);
 
-    float depth = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
+    float4 DepthColor = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
+    float depth = DepthColor.r;
     float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
     float3 reflectDirection = normalize(reflect(viewSpacePosition, normal));
 

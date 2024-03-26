@@ -49,6 +49,7 @@ private:
 	HRESULT Render_PBR();
 	HRESULT Render_MyPBR();
 	HRESULT Render_SSR();
+	HRESULT Render_Chroma();
 
 	HRESULT Deferred_Effect();
 	HRESULT Render_Effect_BloomBlur();
