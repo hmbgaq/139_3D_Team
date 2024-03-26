@@ -64,8 +64,8 @@ void CVampireCommander_Weapon_Hand::Late_Tick(_float fTimeDelta)
 	if (nullptr != m_pTrail)
 	{
 		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
-		cout << "VampireCommander_Hand_PositionX:" << m_WorldMatrix._41 << "VampireCommander_Hand_PositionY:" << m_WorldMatrix._42 << "VampireCommander_Hand_PositionZ:" << m_WorldMatrix._43 << endl;
-		cout << "TrailX:" << m_pTrail->Get_Position().x << "TrailY:" << m_pTrail->Get_Position().y << "TrailZ:" << m_pTrail->Get_Position().z << endl;
+		//cout << "VampireCommander_Hand_PositionX:" << m_WorldMatrix._41 << "VampireCommander_Hand_PositionY:" << m_WorldMatrix._42 << "VampireCommander_Hand_PositionZ:" << m_WorldMatrix._43 << endl;
+		//cout << "TrailX:" << m_pTrail->Get_Position().x << "TrailY:" << m_pTrail->Get_Position().y << "TrailZ:" << m_pTrail->Get_Position().z << endl;
 	}
 	
 	// m_pTrail->Set_Play(TRUE /*FALSE*/); //! 유정: 트레일 온오프
@@ -115,7 +115,7 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
 	if (nullptr != pTarget_Character && m_bSynced == false)// 일반 타격 
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
  		string Test = "Data_Animation/";
 		parent->Set_EventNotify(Test, "Test2_AnimationData.json");

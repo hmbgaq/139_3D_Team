@@ -42,13 +42,16 @@ public:
 
 public:
 	virtual void	ReSet_Effect()	override;
+	virtual void	Init_ReSet_Effect() override;
 	virtual void	End_Effect()	override;
 
 public:
 	CTexture*				Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
 
+// 툴 용
 public:
-	HRESULT					Change_TextureCom(wstring strProtoTextureTag);	// 툴 용
+	HRESULT			Change_TextureCom(wstring strProtoTextureTag);
+	HRESULT			Remove_TextureCom(TEXTURE eTexture);
 
 public:
 	EFFECT_RECT_DESC*		Get_Desc() { return &m_tRectDesc; }

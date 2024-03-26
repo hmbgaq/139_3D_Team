@@ -45,9 +45,6 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 			return E_FAIL;
 	}
 
-	
-
-
 	return S_OK;
 }
 
@@ -57,6 +54,16 @@ void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Tick(_float fTimeDelta)
 {
+	//if (m_pGameInstance->Key_Down(DIK_8))
+	//{
+	//	iCheckMeshNum += 1;
+	//
+	//	if (iCheckMeshNum >= m_pModelCom->Get_NumMeshes())
+	//		iCheckMeshNum = 0;
+	//
+	//	cout << iCheckMeshNum << endl;
+	//}
+
 	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	//
 	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
@@ -86,30 +93,45 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 
 HRESULT CEnvironment_Object::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
-	
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	
-	for (size_t i = 0; i < iNumMeshes; i++)
+	FAILED_CHECK(Bind_ShaderResources());
+
+	wstring strTemp = Get_ModelTag();
+
+	if (bRenderIce)
 	{
-		if(m_tEnvironmentDesc.bAnimModel == true)
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (size_t i = 0; i < iNumMeshes; i++)
 		{
-			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pIceNoise->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture");
+			m_pIceDiffuse->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse");
+			m_vCamPosition = m_pGameInstance->Get_CamPosition();
+			m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPosition, sizeof(_float4));
+
+			if (i == m_iIceMeshNumber)
+				m_pShaderCom->Begin(10);
+			else
+				m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+
+			m_pModelCom->Render((_uint)i);
 		}
-
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
-		
-		
-		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
-
-		m_pModelCom->Render((_uint)i);
 	}
+	else
+	{
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (m_tEnvironmentDesc.bAnimModel == true)
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			}
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+			m_pModelCom->Render((_uint)i);
+		}
+	}
 	return S_OK;
 }
 
@@ -250,23 +272,51 @@ HRESULT CEnvironment_Object::Ready_Components()
 	//!	return E_FAIL;
 	//!}
 
-//	m_pPickingCollider
+	//	m_pPickingCollider
+
+	/* 소영 얼음중 */		
+	
+	wstring strTemp = Get_ModelTag();
+
+	if (TEXT("Prototype_Component_Model_TeslaIcicle1") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle3") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle4") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle5") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle6") == strTemp)
+	{
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceNoise"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pIceNoise)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), TEXT("Com_Texture2"), reinterpret_cast<CComponent**>(&m_pIceDiffuse)));
+		bRenderIce = true;
+		m_iIceMeshNumber = 1;
+	}
+	else if (TEXT("Prototype_Component_Model_TeslaIcicle2") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicle3") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong1") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong2") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong3") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong4") == strTemp)
+	{
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceNoise"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pIceNoise)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), TEXT("Com_Texture2"), reinterpret_cast<CComponent**>(&m_pIceDiffuse)));
+		bRenderIce = true;
+		m_iIceMeshNumber = 0;
+	}
+	else
+	{
+		bRenderIce = false;
+	}
 
 	return S_OK;
 }
 
 HRESULT CEnvironment_Object::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
-		_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-		return E_FAIL;
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 	
 	return S_OK;
 }
@@ -308,7 +358,11 @@ void CEnvironment_Object::Free()
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
-
+	
+	if(nullptr != m_pIceNoise)
+		Safe_Release(m_pIceNoise);
+	if(nullptr != m_pIceDiffuse)
+		Safe_Release(m_pIceDiffuse);
 
 	//m_pGameInstance->Add_Light()
 

@@ -26,6 +26,11 @@ HRESULT CPlayer_Weapon_Revolver::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	string path = "../Bin/DataFiles/Data_Weapon/Player/Revolver/Revolver.json";
+	json In_Json;
+	CJson_Utility::Load_Json(path.c_str(), In_Json);
+	m_pTransformCom->Load_FromJson(In_Json);
+
 	return S_OK;
 }
 

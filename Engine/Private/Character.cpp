@@ -57,6 +57,9 @@ HRESULT CCharacter::Initialize(void* pArg)
 	m_pRigidBody->Set_Owner(this);
 	m_pRigidBody->Set_Transform(m_pTransformCom);
 
+
+	m_pRigidBody->Set_UseGravity(true);
+
 	return S_OK;
 }
 
@@ -114,19 +117,19 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			vResult.y *= m_vRootMoveRate.y;
 			vResult.z *= m_vRootMoveRate.z;
 
-			m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-			//m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+			//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+			m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
 		}
 		
 	}
 
-		m_pRigidBody->Late_Tick(fTimeDelta);
+	m_pRigidBody->Late_Tick(fTimeDelta);
 
 #ifdef _DEBUG
 		//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
 #endif	
 
-		Set_WeaknessPos();
+	Set_WeaknessPos();
 	
 }
 
@@ -289,6 +292,11 @@ void CCharacter::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimS
 	m_pBody->Set_Animation(_iNextAnimation, _eAnimState, _bIsTransition, _bUseAnimationPos, iTargetKeyFrameIndex);
 }
 
+void CCharacter::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_pBody->Set_AnimState(_eAnimState);
+}
+
 _bool CCharacter::Is_Animation_End()
 {
 	return m_pBody->Is_Animation_End();
@@ -402,22 +410,18 @@ void CCharacter::Look_At_And_Knockback(_float3 vTargetPos, _float fForce)
 
 }
 
-Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
+Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee, _bool bKnockUp)
 {
 	Hit_Type eHitType = Hit_Type::None;
-
 
 	//if (true == m_bIsRevealedWeakness && false == bIsMelee)
 	//{
 	//	Get_Damaged(iDamage);
 	//	m_pTransformCom->Look_At_Direction(vDir * -1);
-
 	//	if (0 >= --m_iWeaknessCount) 
 	//	{
 	//		m_bIsRevealedWeakness = false;
 	//		m_bIsInvincible = false;
-
-
 	//		if (m_iHp <= 0)
 	//		{
 	//			Set_Stun(true);
@@ -427,11 +431,8 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	//		{
 	//			Hitted_Weakness();
 	//		}
-
 	//		return Hit_Type::Hit_Break;
-
 	//	}
-
 	//}
 
 	if (true == m_bIsInvincible && false == m_bIsStun)
@@ -442,6 +443,11 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 
 	Get_Damaged(iDamage);	
 	Add_Force(vDir, fForce);
+
+	//_float3 vUp = { 0.f, 1.f, 0.f };
+	//Add_Force(XMLoadFloat3(&vUp), 1.0f);
+
+
 	m_pTransformCom->Look_At_Direction(vDir * -1);
 
 	if (m_iHp <= 0)
@@ -471,19 +477,32 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	{
 		eHitType = Hit_Type::Hit;
 
-		switch (eHitDirection)
+		if (true == bKnockUp)
 		{
-		case Engine::Left:
-			Hitted_Left(eHitPower);
-			break;
-		case Engine::Right:
-			Hitted_Right(eHitPower);
-			break;
-		default:
-			Hitted_Front(eHitPower);
-			break;
+			Set_KnockUp(true);
 		}
-		//Set_StiffnessRate(fStiffnessRate);
+
+
+		if (true == m_bIsKnockUp)
+		{
+			Hitted_KnockUp();
+		}
+		else 
+		{
+			switch (eHitDirection)
+			{
+			case Engine::Left:
+				Hitted_Left(eHitPower);
+				break;
+			case Engine::Right:
+				Hitted_Right(eHitPower);
+				break;
+			default:
+				Hitted_Front(eHitPower);
+				break;
+			}
+		}
+
 	}
 
 	return eHitType;
@@ -753,6 +772,11 @@ void CCharacter::Set_WeaknessPos()
 _uint CCharacter::Get_CurrentKeyFrames(_uint iIndex)
 {
 	return m_pBody->Get_CurrentKeyFrames(iIndex);
+}
+
+void CCharacter::Set_UseMouseMove(_bool _bIsUseMouseMove)
+{
+	m_pBody->Set_UseMouseMove(_bIsUseMouseMove);
 }
 
 

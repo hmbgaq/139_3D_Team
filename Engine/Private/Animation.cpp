@@ -191,7 +191,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 			}
 			break;
 		case Engine::CModel::ANIM_STATE_STOP:
-			m_isFinished = true;
+			m_isFinished = false;
 			break;
 		default:
 			break;
@@ -219,6 +219,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Upper(CModel::ANIM_STATE _eAni
 				{
 				case Engine::CModel::ANIM_STATE_NORMAL:
 				case Engine::CModel::ANIM_STATE_LOOP:
+				case Engine::CModel::ANIM_STATE_STOP:
 					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
 					break;
 				case Engine::CModel::ANIM_STATE_REVERSE:
@@ -325,31 +326,30 @@ _bool CAnimation::Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _
 		CChannel* pNowChannel = m_Channels[i];
 		_int iChannelIndex = m_Channels[i]->Get_BoneIndex();
 
-		if (Is_UpperBody(iChannelIndex))
+	
+		if (m_bIsTransition)
 		{
-			if (m_bIsTransition)
-			{
-				KEYFRAME	_StartFrame = m_StartTransitionKeyFrame[i];
-				KEYFRAME	_EndFrame = m_EndTransitionKeyFrame[i];
+			KEYFRAME	_StartFrame = m_StartTransitionKeyFrame[i];
+			KEYFRAME	_EndFrame = m_EndTransitionKeyFrame[i];
 
-				m_Channels[i]->Invalidate_TransformationMatrix_Transition(_StartFrame, _EndFrame, m_fTrackPosition, Bones);
-			}
-			else
+			m_Channels[i]->Invalidate_TransformationMatrix_Transition(_StartFrame, _EndFrame, m_fTrackPosition, Bones);
+		}
+		else
+		{
+			switch (_eAnimState)
 			{
-				switch (_eAnimState)
-				{
-				case Engine::CModel::ANIM_STATE_NORMAL:
-				case Engine::CModel::ANIM_STATE_LOOP:
-					m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
-					break;
-				case Engine::CModel::ANIM_STATE_REVERSE:
-					m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
-					break;
-				default:
-					break;
-				}
+			case Engine::CModel::ANIM_STATE_NORMAL:
+			case Engine::CModel::ANIM_STATE_LOOP:
+				m_Channels[i]->Invalidate_TransformationMatrix(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+				break;
+			case Engine::CModel::ANIM_STATE_REVERSE:
+				m_Channels[i]->Invalidate_TransformationMatrix_Reverse(m_fTrackPosition, Bones, &m_CurrentKeyFrames[i]);
+				break;
+			default:
+				break;
 			}
 		}
+		
 
 		//HERE
 		if (m_Channels[i]->Get_BoneIndex() == 17)
@@ -365,12 +365,18 @@ _bool CAnimation::Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _
 
 			// 몬스터 목뼈 변환 행렬 가져오기
 			_matrix boneTransform = XMLoadFloat4x4(&Transform);
+			
+			////
+			//_vector forward = XMVector3Normalize(XMVectorSet(boneTransform.m[0][0], boneTransform.m[0][1], boneTransform.m[0][2], 0.f));
 
 			// 플레이어 위치를 로컬 공간으로 변환
-			_vector localPosition = XMVector3TransformCoord(XMLoadFloat3(&playerPosition), boneTransform);
+			//_float3 localPosition = XMVector3TransformCoord(XMLoadFloat3(&playerPosition), Transform);
 
+			//목뼈 방향 벡터
+			_float3 BonePosition = _float3(Transform.m[0][0], Transform.m[0][1], Transform.m[0][2]);
+		
 			// 로컬 회전 행렬 계산
-			_matrix localRotation = XMMatrixLookAtLH(localPosition, XMVectorSet(0.0f, 0.0f, 0.0f,0.f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.f));
+			_matrix localRotation = XMMatrixLookAtLH(BonePosition, playerPosition, XMVectorSet(0.0f, 1.0f, 0.0f, 0.f));
 
 			// 월드 공간 변환 행렬에 곱하기
 			boneTransform = XMMatrixMultiply(boneTransform, localRotation);
@@ -378,7 +384,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _
 
 			//_float4x4 ResultMatrix = XMMatrixMultiply(Transform, playerToParasiterMatrix);
 
-			pBone->Set_TransformationMatrix(boneTransform);
+			pBone->Set_TransformationMatrix(localRotation);
 		}
 	}
 

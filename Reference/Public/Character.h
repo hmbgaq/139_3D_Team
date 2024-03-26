@@ -91,6 +91,8 @@ public:
 		, _bool _bUseAnimationPos = true
 		, _uint iTargetKeyFrameIndex = 0);
 
+	void	Set_AnimState(CModel::ANIM_STATE _eAnimState);
+
 	_bool	Is_Animation_End();
 	_bool	Is_UpperAnimation_End();
 
@@ -123,7 +125,7 @@ public:
 
 
 public:
-	virtual Hit_Type Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false);
+	virtual Hit_Type Set_Hitted(_float iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee = false, _bool bKnockUp = false);
 
 	virtual void Hitted_Left(Power ePower) {};
 	virtual void Hitted_Right(Power ePower) {};
@@ -142,6 +144,9 @@ public:
 	virtual void Hitted_Electrocute() {};
 	virtual void Hitted_OpenState_Pull() {};
 	virtual void Hitted_Opened(Direction eDirection) {};
+	virtual void Hitted_KnockUp() {
+		Hitted_Front(Power::Heavy);
+	};
 
 	
 public:
@@ -210,6 +215,9 @@ public:
 public:
 	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
 
+public:
+	void Set_UseMouseMove(_bool _bIsUseMouseMove);
+
 
 public:
 #pragma region ===========> HP <=========== 
@@ -249,6 +257,10 @@ public:
 	void Reset_RootMoveRate() { m_vRootMoveRate = _float3(1.f, 1.f, 1.f); };
 	void Set_MonsterAttackState(_bool bState) { m_bMonsterAttackState = bState; };
 
+public:
+	_bool Is_KnockUp() { return m_bIsKnockUp; };
+	void Set_KnockUp(_bool _bIsKnockUp) { m_bIsKnockUp = _bIsKnockUp; };
+
 protected:
 	CHARCTER_DESC CharAnimDesc = {};
 
@@ -265,6 +277,8 @@ protected:
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
 	_float m_fElectrocuteTime = { 0.f };
+
+
 
 protected:
 	//Power m_eStrength = { Power::Light };
@@ -287,7 +301,8 @@ protected:
 	_bool		m_bIsRevealedWeakness = { false };
 	_int		m_iWeaknessCount = { 3 };
 
-
+protected:
+	_bool		m_bIsKnockUp = { false };
 
 protected:
 	_float3		m_vRootMoveRate = { 1.f, 1.f, 1.f };

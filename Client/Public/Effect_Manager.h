@@ -35,8 +35,13 @@ public:
 	//! 명빈 : 편하게 쓰려고 기존 함수를 활용해 간소화 시킴
 	CEffect* Create_Effect(string strFileName, CGameObject* pOwner = nullptr);
 
-	// 고정 위치에 이펙트를 생성하고 싶은 경우 호출(vPos에 생성시킬 위치)
+	// 더 깊은 경로에 있는 이펙트 데이터 파일 사용하고싶을 때 호출 : strAddPath는 "/" 제외 (Data_Effect/Zapper_Dash/Zapper_Dash_10.json)
+	CEffect* Create_Effect(string strAddPath, string strFileName, CGameObject* pOwner = nullptr);
+
+
+	// 특정 위치에 이펙트를 생성하고 싶은 경우 호출(vPos에 생성시킬 위치)
 	CEffect* Create_Effect_Pos(string strFileName, _float3 vPos, CGameObject* pOwner = nullptr);
+	CEffect* Create_Effect_Pos(string strAddPath, string strFileName, _float3 vPos, CGameObject* pOwner = nullptr);
 
 	// 트레일이 달린 이펙트를 생성할 때 사용(이펙트jsno파일, 트레일json파일, 이펙트가 따라움직여야할 객체가 있는 경우 오너 넣기)
 	CEffect* Create_Effect_With_Trail(string strEffectFileName, string strTrailFileName, CGameObject* pOwner = nullptr);

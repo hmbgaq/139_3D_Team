@@ -269,8 +269,6 @@ void CNavigation::SaveData(wstring strSavePath)
 		vPoints[2] = *m_Cells[i]->Get_Point(CCell::POINT_C);
 
 		WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-
 	}
 
 	WriteFile(hFile, &m_iCurrentIndex, sizeof(_int), &dwByte, nullptr);
@@ -289,7 +287,6 @@ void CNavigation::LoadData(wstring strLoadPath)
 			break;
 
 		Safe_Release(m_Cells[i]);
-
 	}
 
 	m_Cells.clear();
@@ -337,8 +334,6 @@ void CNavigation::LoadData(wstring strLoadPath)
 
 void CNavigation::SpawnCell_Setting(_float3 vPos)
 {
-	cout << "셀찾기 시작 "<< endl;
-
 	for (auto& Cell : m_Cells)
 	{
 		_vector points[3] = {};
@@ -365,10 +360,8 @@ void CNavigation::SpawnCell_Setting(_float3 vPos)
 		// 점 vPos를 평면 방정식에 대입하여 부호를 확인합니다.
 		_float Result = XMVectorGetX(XMVector3Dot(vPos, normal)) + D;
 
-		cout << Result << endl;
 		if (Result < 0)
 		{
-			cout << "★☆★☆★☆★☆★☆★☆★☆★☆★☆찾음★☆★☆★☆★☆★☆★☆★☆" << endl;
 			Set_CurrentIndex(Cell->Get_CurrentIndex());
 			return;
 		}
@@ -551,7 +544,7 @@ _float CNavigation::Compute_Height(_float3 vPosition, _bool* pGround)
 
 	if (pGround != nullptr)
 	{
-		*pGround = vPosition.y < fResult;
+		*pGround = vPosition.y <= fResult;
 	}
 
 

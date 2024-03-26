@@ -21,4 +21,5 @@ CState<CMotherMouth>* CMotherMouth_SpittingMineEnd::Update(CMotherMouth* pActor,
 void CMotherMouth_SpittingMineEnd::Release(CMotherMouth* pActor)
 {
 	__super::Release(pActor);
+	pActor->Set_Enable(false);
 }

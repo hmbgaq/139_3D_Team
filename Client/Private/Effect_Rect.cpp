@@ -71,6 +71,7 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 
 			// 라이프타임 누적 시작
 			m_tVoidDesc.fTimeAcc += fTimeDelta;
+			m_tVoidDesc.fSpriteTimeAcc += fTimeDelta;
 			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
@@ -195,7 +196,7 @@ _bool CEffect_Rect::Write_Json(json& Out_Json)
 
 
 	/* Distortion */
-	Out_Json["fSequenceTerm"] = m_tDistortionDesc.fSequenceTerm;
+	Out_Json["eType_Scroll"] = m_tDistortionDesc.eType_Scroll;
 
 	CJson_Utility::Write_Float3(Out_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
 	CJson_Utility::Write_Float3(Out_Json["vScales"], m_tDistortionDesc.vScales);
@@ -226,7 +227,7 @@ void CEffect_Rect::Load_FromJson(const json& In_Json)
 
 
 	/* Distortion */
-	m_tDistortionDesc.fSequenceTerm = In_Json["fSequenceTerm"];
+	m_tDistortionDesc.eType_Scroll = In_Json["eType_Scroll"];
 
 	CJson_Utility::Load_Float3(In_Json["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
 	CJson_Utility::Load_Float3(In_Json["vScales"], m_tDistortionDesc.vScales);
@@ -241,7 +242,6 @@ void CEffect_Rect::Load_FromJson(const json& In_Json)
 
 void CEffect_Rect::ReSet_Effect()
 {
-
 	__super::ReSet_Effect();
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
@@ -256,6 +256,23 @@ void CEffect_Rect::ReSet_Effect()
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
+}
+
+void CEffect_Rect::Init_ReSet_Effect()
+{
+	__super::ReSet_Effect();
+
+	m_tVoidDesc.fDissolveAmount = 0.f;
+	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bRender = FALSE;
+
+
+	if (m_tVoidDesc.bUseSpriteAnim)
+	{
+		m_tSpriteDesc.bSpriteFinish = FALSE;
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
+	}
 }
 
 void CEffect_Rect::End_Effect()
@@ -278,24 +295,28 @@ HRESULT CEffect_Rect::Change_TextureCom(wstring strProtoTextureTag)
 	wstring strNoise = TEXT("Noise");
 	wstring strSprite = TEXT("Sprite");
 
+	CEffect_Void::TEXTURE eTexture = TEXTURE_END;
 
 	if (strProtoTextureTag.find(strDiffuse) != string::npos)	// 문자열 찾음
 	{
 		// 디퓨즈 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 디퓨즈폴더 -> 피 디퓨즈폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])
 		{
-			Remove_Component(TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+			Remove_TextureCom(TEXTURE_DIFFUSE);
 		}
+
+		eTexture = TEXTURE_DIFFUSE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 	}
 	else if (strProtoTextureTag.find(strNormal) != string::npos)
 	{
 		// 노말 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 노말폴더 -> 피 노말폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_NORAML])
 		{
-			Remove_Component(TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+			Remove_TextureCom(TEXTURE_NORAML);
 		}
+		eTexture = TEXTURE_NORAML;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 	}
 	else if (strProtoTextureTag.find(strMask) != string::npos)
 	{
@@ -320,11 +341,38 @@ HRESULT CEffect_Rect::Change_TextureCom(wstring strProtoTextureTag)
 		// 스프라이트 텍스처 컴포넌트 해제 후 새로운 텍스처로 다시 생성 (예시 : 일반 스프라이트폴더 -> 연기 스프라이트폴더로 변경하고싶을 떄)
 		if (nullptr != m_pTextureCom[TEXTURE_SPRITE])
 		{
-			Remove_Component(TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE]));
-			FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+			Remove_TextureCom(TEXTURE_SPRITE);
 		}
+		eTexture = TEXTURE_SPRITE;
+		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
+	m_tVoidDesc.strTextureTag[eTexture] = strProtoTextureTag;
+	m_tVoidDesc.iTextureIndex[eTexture] = 0;
+
+	return S_OK;
+}
+
+HRESULT CEffect_Rect::Remove_TextureCom(TEXTURE eTexture)
+{
+	wstring strTexureComTag = TEXT("");
+
+	if (TEXTURE_DIFFUSE == eTexture)
+		strTexureComTag = TEXT("Com_Diffuse");
+	else if (TEXTURE_NORAML == eTexture)
+		strTexureComTag = TEXT("Com_Normal");
+	else if (TEXTURE_MASK == eTexture)
+		strTexureComTag = TEXT("Com_Mask");
+	else if (TEXTURE_NOISE == eTexture)
+		strTexureComTag = TEXT("Com_Noise");
+	else if (TEXTURE_SPRITE == eTexture)
+		strTexureComTag = TEXT("Com_Sprite");
+
+
+	m_tVoidDesc.strTextureTag[eTexture] = TEXT("");
+	m_tVoidDesc.iTextureIndex[eTexture] = 0;
+
+	Remove_Component(strTexureComTag, reinterpret_cast<CComponent**>(&m_pTextureCom[eTexture]));
 
 	return S_OK;
 }
@@ -443,14 +491,15 @@ HRESULT CEffect_Rect::Bind_ShaderResources()
 								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
 	}
 
-
 	/* UV ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
+
 	/* Distortion */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iScrollType", &m_tDistortionDesc.eType_Scroll, sizeof(_int)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2)));

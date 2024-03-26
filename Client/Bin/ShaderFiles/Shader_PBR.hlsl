@@ -13,8 +13,8 @@
 /* ----------------- Variable ----------------- */
 TextureCube g_IrradianceTexture;
 TextureCube g_PreFilteredTexture;
-Texture2D g_BRDFTexture;
-float4 g_LightDiffuse = { 1.f, 1.f, 1.f, 1.f };
+Texture2D   g_BRDFTexture;
+float4      g_LightDiffuse = { 1.f, 1.f, 1.f, 1.f };
 /* -------------------------------------------- */
 
 // Burley B. "Physically Based Shading at Disney"
@@ -74,11 +74,11 @@ float D_GGX(in float roughness2, in float NdotH)
     float alpha = roughness2 * roughness2;
     const float NdotH2 = NdotH * NdotH; // NdotH2 = NdotH^2
    
-   // alpha = pow(alpha, 2.f); // 언리얼은 4제곱
+    //alpha = pow(alpha, 2.f); // 언리얼은 4제곱
 
-    //const float lower = (NdotH2 * (alpha - 1.0f)) + 1.0f;
-    const float lower = NdotH2 * alpha + (1.0f - NdotH2);
-    return alpha / (PI * lower * lower);
+    const float lower = (NdotH2 * (alpha - 1.0f)) + 1.0f;
+    //const float lower = NdotH2 * alpha + (1.0f - NdotH2);
+    return alpha / (PI * lower * lower);   
 }
 
 // Shlick's approximation of Fresnel By Unity Engine
@@ -134,7 +134,14 @@ float G_SmithShlick(in float roughness2, in float NdotV, in float NdotL)
 // -> 매우 복잡한 방정식을 가지고 있으나 슐릭(Schlick)의 근사식으로 간단하게 구할 수 있다.
 float3 fresnelSchlick(float cosTheta, float3 F0)
 {
+    // 가까운물은 바닥까지 잘 보이고 먼 물은 거울처럼 반사되어 보이는것
+    // 빛은 다른 매질과 충돌할 떄 일정 비율은 굴절되고 일정 비율은 반사가 되는데 
+    // 입사각에 따라 반사, 굴절의 정도가 달라지는 현상을 표현한것이 프레넬 방정식이다. 
+    // 직접 계산하기에는 매우 복잡해서 PBR에서는 근사화한 버전을 사용한다 = 슐릭의 근사식
+   
+    // costheta는 (half way 벡터 * view벡터)로 쓰이는값이다. 
     return F0 + (1.0f - F0) * pow(1.0 - cosTheta, 5.0f);
+    
 }
 
 float3 FresnelSchlickRoughness(float cosTheta, float3 F0, float roughness)
@@ -161,6 +168,8 @@ float DistributionGGX(float3 N, float3 H, float roughness)
 // k는 direct lighting이냐 IBL Lighting이냐에 따라서 달라질 수 있다. 
 float GeometrySchlickGGX(float NdotV, float roughness) // k is a remapping of roughness based on direct lighting or IBL lighting
 {
+    // k : roughness값의 remapping (direct light, IBL 등 경우에 따라 다름)
+    // 그리고 아웃풋은 얼마나 미세면그림자가 져있는지가 나온다. 
     float r = (roughness + 1.0);
     float k = (r * r) / 8.0; // direct
     
@@ -196,6 +205,7 @@ float GeometrySmith(float NdotV, float NdotL, float roughness)
 // 1에 가까우면 더 많이 halfway vector와 일치하겠지만 자긍ㄴ 한 반경에 집중되지않아서 어느 특정부부남ㄴ 엄청 밝은색을 띄는게 아니라 전체적으로 회색 색상을 띄게된다. 
 float NormalDistributionGGXTR(float NdotH, float roughness)
 {
+    // roughness값이 클수록 highlight되는 영역이 넓어지면서 희미해진다. 
     float roughness2 = roughness * roughness;
     float NdotH2 = NdotH * NdotH;
 
@@ -280,8 +290,12 @@ float3 BRDF(in float roughness2, in float fMetallic, in float3 vDiffuseColor, in
     
     // Diffuse & Specular factors
     float denom = max(4.0f * NdotV * NdotL, 0.001f); // 0.001f just in case product is 0
-    float3 specular_factor = saturate((D * F * G) / denom);
-    float3 diffuse_factor = kD * vDiffuseColor / PI;
+    float3 specular_factor = saturate((D * F * G) / denom); // Cook-Torrance Specula
+    float3 diffuse_factor = kD * vDiffuseColor / PI; // Lambertian diffuse - diffuse모델의 경우 거의 모든 BRDF 공식에서 별 차이가 없다 
+    // -> EPIC GAMES에서 발표한 결과에 따르면 Lambertian diffuse가 대부분의 리얼타임 렌더링에서 충분하다고 함.
+    // -> Diffuse BRDF가 에너지 보존법칙을 고려하게되면 위의 공식에 의해 Diffuse맵을 Albedo(RBG 채널당 표면 반사율)의 개념으로 사용하게된다. 
+    // 이경우 알베도는 절대값인 색상값이 아니라 비율이기때문에 "데이터"의 의미로 들어가기떄문에 다른 파라미터를 통해서 밝기를 조절해야된다. 
+    // 조절을 안할경우 /PI 이기때문에 Diffuse가 1/3정도 줄어들게된다. 
     
     return (diffuse_factor + specular_factor) * NdotL;
     
@@ -322,24 +336,18 @@ float3 BRDF(in float roughness2, in float fMetallic, in float3 vDiffuseColor, in
 
 float3 New_BRDF(in float fRoughness, in float fMetallic, in float3 vDiffuseColor, in float3 F0, in float3 N, in float3 V, in float3 L, in float3 H, in float fAO)
 {
-    const float NdotL = max(dot(N, L), EPSILON);
-    const float NdotV = max(dot(N, V), EPSILON);
-    const float NdotH = max(dot(N, H), EPSILON);
-    const float HdotV = max(dot(H, V), EPSILON);
-    
-    // Distribution & Geometry & Fresnel
-    //float NDF = DistributionGGX(N, H, fRoughness);
-    //float G = GeometrySmith(N, V, L, fRoughness);
-    //float3 F = fresnelSchlick(HdotV, vSpecularColor);
-    //float D = D_GGX(fRoughness, NdotH);
-    //float G = G_GGX(fRoughness, NdotV, NdotL);
-    //float3 F = F_Shlick(vSpecularColor, HdotV);
+    const float NdotL = max(dot(N, L), EPSILON); // Normal vector [dot] Light vector  -> 결과는 costheta이다. N과 L은 정규화된 벡터이므로 그 길이가 1이기 때문임. 
+    const float NdotV = max(dot(N, V), EPSILON); // 
+    const float NdotH = max(dot(N, H), EPSILON); // Normal vector [dot] halfway vector  
+    const float HdotV = max(dot(H, V), EPSILON); // halfway vector [dot] view vector
     
     float3 R = reflect(-V, N);
     
-    float D = NormalDistributionGGXTR(NdotH, fRoughness);
-    float G = GeometrySmith(NdotV, NdotL, fRoughness);
-    float3 F = fresnelSchlick(HdotV, F0);
+    // EpicGame's Unreal Engine4 가 채용중인 PBR : Trowbridge-Reitz GGX(D), Fresnel-Schlick(F), 그리고 Smith's Schlick-GGX(G)
+    // pbr에서 사용되는 D, F, G 는 여러가지 버전이 있을 수 있다. 계산속도를 중시한다던가 물리적으로 사실적인가 등을 고려하기 떄문이다. 
+    float D = NormalDistributionGGXTR(NdotH, fRoughness); // roughness값에 의한 반사분포
+    float3 F = fresnelSchlick(HdotV, F0); // 다른 각도로 봤을 떄 달라지는 반사정도 - 금석성과 관련이 크다. 
+    float G = GeometrySmith(NdotV, NdotL, fRoughness); // 미세면 그림자
     
     float3 kS = F;
     float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
@@ -372,6 +380,24 @@ float3 New_BRDF(in float fRoughness, in float fMetallic, in float3 vDiffuseColor
     float3 vAmbient = (kD * vDiffuse + specular) * fAO;
     
     float3 vColor = vAmbient + Lo;
+    
+    return vColor;
+}
+
+float3 MY_BRDF(in float fRoughness, in float fMetallic, in float3 vDiffuseColor, in float3 F0, in float3 N, in float3 V, in float3 L, in float3 H, in float fAO)
+{
+    const float NdotL = saturate(dot(N, L));
+    const float NdotV = saturate(dot(N, V));
+    const float NdotH = saturate(dot(N, H));
+    const float HdotV = saturate(dot(H, V));
+    
+    // EpicGame's Unreal Engine4 가 채용중인 PBR : Trowbridge-Reitz GGX(D), Fresnel-Schlick(F), 그리고 Smith's Schlick-GGX(G)
+    // pbr에서 사용되는 D, F, G 는 여러가지 버전이 있을 수 있다. 계산속도를 중시한다던가 물리적으로 사실적인가 등을 고려하기 떄문이다. 
+    float D = NormalDistributionGGXTR(NdotH, fRoughness); // roughness값에 의한 반사분포
+    float G = GeometrySmith(NdotV, NdotL, fRoughness); // 미세면 그림자
+    float3 F = fresnelSchlick(HdotV, F0); // 다른 각도로 봤을 떄 달라지는 반사정도 - 금석성과 관련이 크다. 
+    
+    float3 vColor = F;
     
     return vColor;
 }

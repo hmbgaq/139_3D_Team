@@ -53,6 +53,7 @@ private:
 	class ShaderParsed_Object* pObject = nullptr;
 
 	/* Level Shader Struct */
+	SSR_DESC			m_eSSR_Desc				= {};
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};
 	DEFERRED_DESC		m_eDeferred_Desc		= {};
@@ -61,8 +62,10 @@ private:
 	HDR_DESC			m_eHDR_Desc				= {};
 	ANTI_DESC			m_eAnti_Desc			= {};
 	HSV_DESC			m_eHSV_Desc				= {};
-	LEVEL_SHADER_DESC	m_eTotalShader_Desc		= {};
-	
+	VIGNETTE_DESC		m_eVignette_Desc		= {};
+	SCREENEFFECT_DESC	m_eScreenDEffect_Desc	= {};
+	CHROMA_DESC			m_eChroma_Desc			= {};
+
 	/* Shader Save / Load */
 	_bool m_bShaderSave = {false} ;
 	_bool m_bShaderLoad = {false} ;
@@ -74,11 +77,9 @@ private:
 	_bool			m_bSave = false;
 	_bool			m_bLoad = false;
 
-
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
 	virtual _bool		Write_Json(json& Out_Json);
-	string				capitalizeString(string strWord);
 
 private:
 	/* 최상위 셋팅 */
@@ -110,8 +111,11 @@ private:
 	void Compress_HDR_Setting();
 	void Compress_FXAA_Setting();
 	void Compress_HSV_Setting();
+	void Compress_Vignette_Setting();
+	void Compress_ScreenEffect_Setting();
+	void Compress_SSR_Setting();
+	void Compress_Chroma_Setting();
 	void Save_Shader();
-	void Load_Shader();
 	
 	/* Level Light Control */
 	void Save_Load_Light(); // 레벨을 잡고 해당 레벨에 대한 빛정보를 가져오기 

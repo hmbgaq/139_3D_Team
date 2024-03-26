@@ -149,30 +149,30 @@ private:
 private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
-	_int m_iMaxShaderPassIndex_Particle						= { 3 };
+	_int m_iMaxShaderPassIndex_Particle						= { 4 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 44, 24, 20 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 12, 0, 44, 24, 20 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 9 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 44, 24, 20 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 12, 0, 44, 24, 20 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 12, 0, 164, 243, 24 };
 
 
 private:
@@ -198,22 +198,29 @@ private:
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.f };
 
 
-#pragma region Particle 옵션 시작
+	_int	m_iLoop_Part = { 0 };
+
+#pragma region Particle 옵션 시작 =====================================================
 private:
 	_int	m_iNumInstance_Particle		= { 200 };
-	_int	m_iMaxNumInstance_Particle	= { 500 };
+	_int	m_iMaxNumInstance_Particle	= { 1000 };
 
 	_int	m_iBillBoard				= { 0 };
 
 	/* 파티클만의 속성 */
-	_int	m_iRecycle_Particle = { 0 };
-	_int	m_iReverse_Particle = { 0 };
-	_int	m_iType_Emit_Particle = { 0 };
-	_int	m_iType_Action_Particle = { 0 };
-	_int	m_iType_Fade_Particle = { 0 };
+	_int	m_iRecycle_Particle			= { 0 };
+	_int	m_iReverse_Particle			= { 0 };
+	_int	m_iType_Emit_Particle		= { 0 };
+	_int	m_iType_Action_Particle		= { 0 };
+	_int	m_iType_Fade_Particle		= { 0 };
 
 
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
+
+	/* Emitter */
+	_float	m_fEmissionTime_Particle = { 0.f };	// 방출 시간 텀
+	_int	m_iAddEmitCount_Particle = { 0 };			// 한번 방출 할 때 몇개씩 추가로 방출할건지
+
 
 	/* RigidBody ============================================== */
 	_int	m_iUseRigidBody_Particle	= { 0 };
@@ -221,31 +228,50 @@ private:
 	_int	m_iUseGravity_Particle		= { 0 };
 
 	_float	m_fGravity_Particle = { -9.8f };		// 중력 가속도
-	_float	m_fFriction_Particle = { 0.1f };		// 마찰 계수
+	
+	//_float m_fFriction_Particle = { 0.1f };		// 마찰 계수
+	_float	m_vFrictionLerp_Pos_Particle[2] = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
+	_float	m_vStartEnd_Friction_Particle[2] = { 0.1f, 0.1f };
+
+
 	_float	m_fSleepThreshold_Particle = { 0.05f };	// 슬립 한계점(1이하로)
 
 	_float	m_vMinMaxPower_Particle[2]	= { 0.1f, 250.f };
 	_float	m_vMinMaxMass_Particle[2]	= { 10.f, 10.f };
-	_float	m_vMinMaxSpeed_Particle[2] = { 1.f, 1.f };
+
 	/* RigidBody ============================================== */
+
+	_float	m_vMinMaxSpeed_Particle[2] = { 1.f, 1.f };
+	_float	m_vMinMaxTornadoSpeed_Particle[2] = { 1.f, 1.f };
 
 
 	/* For.Position */
 	_float	m_vMinCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMaxCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
+
 	_float	m_vMinMaxRange_Particle[2] = { 0.f, 0.f };
+	_float	m_fMinMaxAddRange_Particle[2] = { 0.f, 0.f };
+
+	_float	m_vMinMaxPosY_Particle[2] = { 0.1f, 3.f };		// 파티클이 올라갈 최고 높이
+	_float	m_vMinMaxTheta_Particle[2] = { 0.f, 6.28f };	// 3.14f * 2.f
+
 
 	/* For.Rotation */
+	_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vRotationOffsetX_Particle[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Particle[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Particle[2] = { 0.f, 0.f };
 
 
 	/* For.Scale */
-	_float		m_vLerpScale_Pos_Particle[2] = { 0.f, 1.f };
-	_float		m_vMinMaxWidth_Particle[2] = { 0.f, 1.f };
-	_float		m_vMinMaxHeight_Particle[2] = { 0.f, 1.f };
-	_float		m_vScaleSpeed_Particle[2] = { 0.005f, 0.05f };
+	//_float	m_vLerpScale_Pos_Particle[2]	= { 0.f, 1.f };
+
+	_int	m_iUseScaleLerp					= { 0 };
+	_float	m_vScaleLerp_Up_Pos[2]			= { 0.f, 0.3f };
+	_float	m_vScaleLerp_Down_Pos[2]		= { 1.f, 1.f };
+	_float	m_vMinMaxWidth_Particle[2]		= { 0.f, 1.f };
+	_float	m_vMinMaxHeight_Particle[2]		= { 0.f, 1.f };
+	//_float m_vScaleSpeed_Particle[2]		= { 0.005f, 0.05f };
 
 	/* For.Color */
 	_int	m_iDynamic_Color_Particle = { 0 };
@@ -253,10 +279,14 @@ private:
 	_float	m_fColor_Max_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fColor_Cur_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
+	_int	m_iColor_Mode_Particle = { 0 };
 	_float	m_fColor_Mul_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
-	_float	m_fUV_RotDegree				= { 0.f };	// UV회전
+	/* UV Option_Particle */
+	_float  m_vUV_Offset_Particle[2]	= { 0.f, 0.f };
+	_float  m_vUV_Scale_Particle[2]		= { 1.f, 1.f };
+	_float	m_fUV_RotDegree_Particle	= { 0.f };			// UV회전
 
 	_float	m_fAddScale					= { 0.f };
 	_float	m_vAddScale[2]				= { 0.f, 0.f };
@@ -271,16 +301,34 @@ private:
 	_float	m_fSequenceTerm_Particle		= { 0.05f };
 	/* For.Sprite ======================================== */
 
+
+
+	/* Distortion ============================================== */
+	_float m_fSequenceTerm_Distortion_Particle = { 1.f };
+	_int	m_iType_Scroll_Particle = { 0 };
+
+	_float	m_vScrollSpeeds_Particle[3] = { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion_Particle[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1_Particle[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2_Particle[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3_Particle[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale_Particle = { 1.f };
+	_float	m_fDistortionBias_Particle = { 1.f };
+	/* Distortion ============================================== */
+
+
+
 	/* 파티클 Rim & Bloom */
 	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
 
-#pragma endregion Particle 옵션 끝
+#pragma endregion Particle 옵션 끝 =====================================================
 
 
 
 #pragma region Rect 옵션 시작
-
 	/* For.Sprite ======================================== */
 	_int	m_iSprite_Rect = { 0 };					// 1이 True
 	_int	m_iSpriteLoop_Rect = { 0 };
@@ -296,7 +344,7 @@ private:
 
 
 	/* Distortion */
-	_float m_fSequenceTerm_Distortion = { 1.f };
+	_int	m_iType_Scroll_Rect = { 0 };
 
 	_float	m_vScrollSpeeds[3]			= { 1.f, 1.f, 0.f };
 	_float	m_vScales_Distortion[3]		= { 1.f, 1.f, 1.f };
@@ -318,19 +366,22 @@ private:
 	/* 렉트 Rim & Bloom */
 	_float	m_fRimColor_Rect[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Rect[3] = { 1.f, 1.f, 1.f };
-
 #pragma endregion Rect 옵션 끝
 
 
 
 #pragma region Instance(Mesh) 옵션 시작
 private:
-	_int m_iNumInstance_Mesh	= { 20 };
-	_int m_iMaxNumInstance_Mesh = { 20 };
+	_int	m_iNumInstance_Mesh		= { 50 };
+	_int	m_iMaxNumInstance_Mesh	= { 1000 };
 
+
+	_int	m_iType_Mode_Mesh = { 1 }; // MODE_STATIC, MODE_PARTICLE, MODE_END
+	_int	m_iType_Action_Mesh = { 0 };
 	_int	m_iRecycle_Mesh = { 0 };
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
+	_float	m_vMinMaxSpeed_Mesh[2] = { 1.f, 1.f };
 
 	/* Morph */
 	_float m_fMorphTimeTerm = { 0.05f };
@@ -350,15 +401,27 @@ private:
 
 
 	/* Color */
+	_int	m_iColor_Mode_Mesh = { 0 };
 	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
+
+
+	/* For.Scale_Mesh */
+	_int	m_iUseScaleLerp_Mesh			= { 0 };
+	_float	m_vScaleLerp_Up_Pos_Mesh[2]		= { 0.f, 0.3f };
+	_float	m_vScaleLerp_Down_Pos_Mesh[2]	= { 1.f, 1.f };
+	_int	m_iScaleRatio_Mesh				= { 0 }; // 크기 정비율?
+	_float	m_vStartScale_Mesh[3]			= { 1.f, 1.f, 1.f };
+	_float	m_vEndScale_Mesh[3]				= { 1.f, 1.f, 1.f };
 
 
 	/* Position_Mesh Particle */
 	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMaxCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
-
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
 
+
+	/* Rotation_Mesh */
+	_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };
@@ -383,6 +446,7 @@ private:
 
 	/* Distortion ============================================== */
 	_float m_fSequenceTerm_Distortion_Mesh = { 1.f };
+	_int	m_iType_Scroll_Mesh = { 0 };
 
 	_float	m_vScrollSpeeds_Mesh[3] = { 1.f, 1.f, 0.f };
 	_float	m_vScales_Distortion_Mesh[3] = { 1.f, 1.f, 1.f };
@@ -437,6 +501,11 @@ private:
 	_float	m_fColor_Grid[4] = { 0.3f, 0.3f, 0.3f, 1.f };	// 그리드(와이어프레임) 컬러
 	_int	m_iShaderPass_Grid = { 2 };
 
+
+	/* Test Floor */
+	CModel_Preview* m_pFloor_Preview = { nullptr };				// 땅바닥
+	_float			m_vWorldPosition_Floor[3] = { 0.f, 0.f, 0.f };	// 바닥 모델 월드 이동
+	_float			m_vScale_Floor[3] = { 0.f, 0.f, 0.f };			// 바닥 모델 크기
 
 	/* Model_Preview */
 	CModel_Preview*	m_pModel_Preview = { nullptr };				// 크기 비교용 보기 모델

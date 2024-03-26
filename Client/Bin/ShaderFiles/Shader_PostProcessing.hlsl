@@ -15,13 +15,36 @@ struct DOF
     float   fFocusRange;
 };
 
+struct VIGNETTE_DESC
+{
+    bool    bVignette_Active;
+    float   fVignetteRatio; //[0.15 to 6.00]  Sets a width to height ratio. 1.00 (1/1) is perfectly round, while 1.60 (16/10) is 60 % wider than it's high.
+    float   fVignetteRadius; //[-1.00 to 3.00] lower values = stronger radial effect from center
+    float   fVignetteAmount; //[-2.00 to 1.00] Strength of black. -2.00 = Max Black, 1.00 = Max White.
+    float   fVignetteSlope; //[2 to 16] How far away from the center the change should start to really grow strong (odd numbers cause a larger fps drop than even numbers)
+    float  fVignetteCenter_X;
+    float  fVignetteCenter_Y;
+};
+
+struct SSR_DESC
+{
+    bool bSSR_Active;
+    float fRayHitThreshold;
+    float fRayStep;
+};
+
+struct CHROMA_DESC
+{
+    bool bChroma_Active;
+    float fcaAmount;
+};
 /* =================== Variable =================== */
 // Origin
-matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-matrix g_ViewMatrixInv, g_ProjMatrixInv;
-float4 g_vCamPosition;
-float  g_fCamFar;
-Texture2D g_ProcessingTarget;
+float4x4    g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+float4x4    g_ViewMatrixInv, g_ProjMatrixInv;
+float4      g_vCamPosition;
+float       g_fCamFar;
+Texture2D   g_ProcessingTarget;
 
 // HDR 
 bool g_bHDR_Active;
@@ -46,6 +69,18 @@ Texture2D g_Distortion_Target;
 // EffectDistortion
 Texture2D g_Deferred_Target;
 Texture2D g_Effect_DistortionTarget;
+
+// Vignette
+VIGNETTE_DESC g_Vignette_desc;
+
+// SSR 
+static const int SSR_MAX_STEPS = 16;
+static const int SSR_BINARY_SEARCH_STEPS = 16;
+Texture2D g_NormalTarget;
+SSR_DESC g_SSR_Desc;
+
+// Chroma
+CHROMA_DESC g_Chroma_Desc;
 /* =================== Function =================== */
 
 float3 reinhard_extended(float3 v, float max_white)
@@ -134,6 +169,109 @@ float3 aces_fitted(float3 Color)
     return mul(aces_output_matrix, Color);
 }
 
+float4 vignette(float4 OriginColor, float2 texUV)
+{
+    // =================== Type 1 ===================
+
+	// Set the center
+    float2 distance_xy = texUV - float2(g_Vignette_desc.fVignetteCenter_X, g_Vignette_desc.fVignetteCenter_Y);
+    
+    float2 PixelSize = float2(1.0f / 1280.0f, 1.0f / 720.0f);
+
+	// Adjust the ratio
+    distance_xy *= float2((PixelSize.y / PixelSize.x), g_Vignette_desc.fVignetteRatio);
+
+	// Calculate the distance
+    distance_xy /= g_Vignette_desc.fVignetteRadius;
+    
+    float distance = dot(distance_xy, distance_xy);
+
+	// Apply the vignette
+    OriginColor.rgb *= (1.0 + pow(distance, g_Vignette_desc.fVignetteSlope * 0.5) * g_Vignette_desc.fVignetteAmount); //pow - multiply
+
+    return OriginColor;
+}
+
+static float3 GetViewSpacePosition(float2 texcoord, float depth)
+{
+    float4 clipSpaceLocation;
+    clipSpaceLocation.xy = texcoord * 2.0f - 1.0f;
+    clipSpaceLocation.y *= -1;
+    clipSpaceLocation.z = depth;
+    clipSpaceLocation.w = 1.0f;
+    float4 homogenousLocation = mul(clipSpaceLocation, g_ProjMatrixInv);
+    return homogenousLocation.xyz / homogenousLocation.w;
+}
+
+float4 SSRBinarySearch(float3 dir, inout float3 hitCoord)
+{
+    float depth;
+    for (int i = 0; i < SSR_BINARY_SEARCH_STEPS; i++)
+    {
+        float4 projectedCoord = mul(float4(hitCoord, 1.0f), g_ProjMatrix);
+        projectedCoord.xy /= projectedCoord.w;
+        projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+
+        depth = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+        float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
+        float depthDifference = hitCoord.z - viewSpacePosition.z;
+
+        if (depthDifference <= 0.0f)
+            hitCoord += dir;
+
+        dir *= 0.5f;
+        hitCoord -= dir;
+   }
+
+    float4 projectedCoord = mul(float4(hitCoord, 1.0f), g_ProjMatrix);
+    projectedCoord.xy /= projectedCoord.w;
+    projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+    
+    depth = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+    float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
+    float depthDifference = hitCoord.z - viewSpacePosition.z;
+
+    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fRayHitThreshold ? 1.0f : 0.0f);
+}
+
+float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
+{
+   float depth;
+    
+    for (int i = 0; i < SSR_MAX_STEPS; i++)
+    {
+        hitCoord += dir;
+        float4 projectedCoord = mul(float4(hitCoord, 1.0f), g_ProjMatrix);
+        projectedCoord.xy /= projectedCoord.w;
+        projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+
+        float4 DepthTexture = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+        float depth = DepthTexture.r;
+        float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
+        float depthDifference = hitCoord.z - viewSpacePosition.z;
+
+		[branch]
+        if (depthDifference > 0.0f)
+        {
+            return SSRBinarySearch(dir, hitCoord);
+        }
+
+        dir *= g_SSR_Desc.fRayStep;
+    }
+   return float4(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+//Logical XOR - not used right now but it might be useful at a later time
+float XOR(float xor_A, float xor_B)
+{
+    return saturate(dot(float4(-xor_A, -xor_A, xor_A, xor_B), float4(xor_B, xor_B, 1.0, 1.0))); // -2 * A * B + A + B
+}
+
+
+bool IsInsideScreen(float2 vCoord)
+{
+    return !(vCoord.x < 0 || vCoord.x > 1 || vCoord.y < 0 || vCoord.y > 1);
+}
 /* =================== VS / PS =================== */
 
 struct VS_IN
@@ -163,11 +301,13 @@ struct PS_OUT
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
-	
-    matrix matWV, matWVP;
+    
+    float4x4 matWV;
+    float4x4 matWVP;
 
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
+
 
     Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
@@ -278,8 +418,7 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
-    
-    Out.vColor = Effect_Solid ;
+    Out.vColor = Effect_Solid;
 
     if (Out.vColor.a == 0) 
         Out.vColor += Effect_Distortion;
@@ -301,30 +440,124 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
 PS_OUT PS_MAIN_EFFECT_DISTORTION(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    
-    //vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
-    
+       
+    // 전처리에서 찍어준 디스토션 렌더타겟을 샘플링해서 얻어온다.
     vector Distortion = g_Effect_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
     Out.vColor = Distortion;
      
     
-    float2 vNoiseCoords;
-    // 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
-    vNoiseCoords.xy = Distortion.xy + In.vTexcoord.xy;
-    vector Deferred = g_Deferred_Target.Sample(LinearSampler, vNoiseCoords);
+    // 왜곡된 텍스쿠드 좌표를 만든다.
+    float2 vDistortedCoord = Distortion.xy + In.vTexcoord.xy;
+     
+    // 디퍼드 렌더타겟을 왜곡된 텍스쿠드 좌표로 샘플링한다.
+    vector Deferred = g_Deferred_Target.Sample(LinearSampler, vDistortedCoord);
     
     
     if (Out.vColor.a == 0)
         discard;
     
-    /* Distortion이 적용된 부분만 Deferred와 연산한다. -> Distrotion이 적용된부분이 Deferred가 비치게되는 느낌? */
-   Out.vColor = Deferred; 
+    Out.vColor = Deferred;
     
+    return Out;
+}
+/* ------------------- 6 - Vignette -------------------*/
+PS_OUT PS_MAIN_VIGNETTE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector color = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    Out.vColor = vignette(color, In.vTexcoord);
+    
+    return Out;
+}
+/* ------------------- 7 - SSR -------------------*/
+PS_OUT PS_MAIN_SSR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    // 반사되는 반직선을 계산하기위해 Depth 와 Normal의 방향을 사용한다. -> 반직선이 Geometry와 충돌할때까지 추적 
+    float4 normalMetallic = g_NormalTarget.Sample(LinearBorderSampler, In.vTexcoord);
+    float4 sceneColor = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0);
+
+    float metallic = normalMetallic.a;
+    if (metallic < 0.01f)
+    {
+        Out.vColor = sceneColor;
+        return Out;
+    }
+    
+    float3 normal = normalMetallic.rgb;
+    normal = 2 * normal - 1.0;
+    normal = normalize(normal);
+
+    float4 DepthColor = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
+    float depth = DepthColor.r;
+    float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
+    float3 reflectDirection = normalize(reflect(viewSpacePosition, normal));
+
+    float3 hitPosition = viewSpacePosition;
+    float4 coords = SSRRayMarch(reflectDirection, hitPosition);
+
+    float2 coordsEdgeFactor = float2(1, 1) - pow(saturate(abs(coords.xy - float2(0.5f, 0.5f)) * 2), 8);
+    float screenEdgeFactor = saturate(min(coordsEdgeFactor.x, coordsEdgeFactor.y));
+    float reflectionIntensity = saturate(screenEdgeFactor * saturate(reflectDirection.z) * (coords.w));
+
+    float3 reflectionColor = reflectionIntensity * g_ProcessingTarget.SampleLevel(ClampSampler, coords.xy, 0).rgb;
+    Out.vColor =  sceneColor + metallic * max(0, float4(reflectionColor, 1.0f));
+   
+    return Out;
+}
+/* ------------------- 8 - Chroma -------------------*/
+PS_OUT PS_MAIN_CHROMA(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float  screenWidth, screenHeight;
+    screenWidth = 1280.f;
+    screenHeight = 720.f;
+    //colorTex.GetDimensions(screenWidth, screenHeight);
+    const float2 texelSize = 1.0.xx / float2(screenWidth, screenHeight);
+    
+    float2 center_offset = In.vTexcoord - float2(0.5, 0.5);
+
+    float ca_amount = 0.018 * g_Chroma_Desc.fcaAmount;
+	// ca_amount = 0.0;
+
+	// Reduce the amount of CA in the center of the screen to preserve image sharpness.
+    ca_amount *= saturate(length(center_offset) * 2);
+
+    int num_colors = 7;
+	//int num_colors = max(3, int(max(screenWidth, screenHeight) * 0.075 * sqrt(ca_amount)));
+    float softness = 0.3;
+
+    float3 color_sum = float3(0, 0, 0);
+    float3 res_sum = float3(0, 0, 0);
+
+    for (int i = 0; i < num_colors; ++i)
+    {
+        float t = float(i) / (num_colors - 1);
+
+        const float thresh = softness * 2.0 / 3 + 1.0 / 3;
+        float3 color =
+			lerp(float3(0, 0, 1), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 0.5 / 3)))
+		+ lerp(float3(0, 1, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 1.5 / 3)))
+		+ lerp(float3(1, 0, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 2.5 / 3)));
+
+        color_sum += color;
+
+        float offset = float(i - num_colors * 0.5) * ca_amount / num_colors;
+
+        float2 sampleUv = float2(0.5, 0.5) + center_offset * (1 + offset);
+        float3 Screen = g_ProcessingTarget.SampleLevel(LinearSampler, sampleUv, 0);
+        res_sum += color * Screen;
+    }
+
+    float3 res = res_sum / color_sum;
+    Out.vColor= float4(res, 1.0);
     
     return Out;
 }
 /* ------------------- Technique  -------------------*/
-
 technique11 DefaultTechnique
 {
     pass Origin // 0
@@ -401,5 +634,41 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_EFFECT_DISTORTION();
+    }
+
+    pass VIGNETTE // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_VIGNETTE();
+    }
+
+    pass SSR // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SSR();
+    }
+
+    pass Chroma
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_CHROMA();
     }
 }

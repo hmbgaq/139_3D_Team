@@ -337,6 +337,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 
 	ImGui::SeparatorText("Post");
 
+	if (ImGui::TreeNode("SSR Setting"))
+	{
+		Compress_SSR_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Radial Blur Setting"))
 	{
 		Compress_Radial_Setting();
@@ -364,7 +369,21 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_HSV_Setting();
 		ImGui::TreePop();
 	}
-
+	if (ImGui::TreeNode("Vignette Setting"))
+	{
+		Compress_Vignette_Setting();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Chroma Setting"))
+	{
+		Compress_Chroma_Setting();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Screen Effect"))
+	{
+		Compress_ScreenEffect_Setting();
+		ImGui::TreePop();
+	}
 	ImGui::PushID(3);
 	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
@@ -516,12 +535,61 @@ void CWindow_ShaderTool::Compress_HSV_Setting()
 
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(m_eHSV_Desc);
 }
+
+void CWindow_ShaderTool::Compress_Vignette_Setting()
+{
+	ImGui::Checkbox("Vignette Active", &m_eVignette_Desc.bVignette_Active);
+
+	ImGui::SliderFloat("fVignetteRatio", &m_eVignette_Desc.fVignetteRatio, 0.0f, 6.0f, "Ratio = %.3f");
+
+	ImGui::SliderFloat("fVignetteRadius", &m_eVignette_Desc.fVignetteRadius, -1.0f, 3.0f, "Radius = %.3f");
+
+	ImGui::SliderFloat("fVignetteAmount", &m_eVignette_Desc.fVignetteAmount, -2.0f, 1.0f, "Amount = %.3f");
+	
+	ImGui::SliderFloat("fVignetteSlope", &m_eVignette_Desc.fVignetteSlope, 0.0f, 16.0f, "Slope = %.3f");
+
+	ImGui::SliderFloat("fVignetteCenter_X", &m_eVignette_Desc.fVignetteCenter_X, 0.0f, 1.0f, "Center_X = %.3f");
+
+	ImGui::SliderFloat("fVignetteCenter_Y", &m_eVignette_Desc.fVignetteCenter_Y, 0.0f, 1.0f, "Center_Y = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Vignette_Option(m_eVignette_Desc);
+}
+
+void CWindow_ShaderTool::Compress_ScreenEffect_Setting()
+{
+	ImGui::Checkbox("Gray Active", &m_eScreenDEffect_Desc.bGrayScale_Active);
+	ImGui::Checkbox("Sephia Active", &m_eScreenDEffect_Desc.bSephia_Active);
+
+	ImGui::SliderFloat("Grey Power", &m_eScreenDEffect_Desc.GreyPower, 0.0f, 1.0f, "GreyPower = %.3f");
+	ImGui::SliderFloat("Sephia Power", &m_eScreenDEffect_Desc.SepiaPower, 0.0f, 1.0f, "SepiaPower = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(m_eScreenDEffect_Desc);
+	
+}
+
+void CWindow_ShaderTool::Compress_SSR_Setting()
+{
+	ImGui::Checkbox("SSR Active", &m_eSSR_Desc.bSSR_Active);
+
+	ImGui::SliderFloat("RayHitThreshold", &m_eSSR_Desc.fRayHitThreshold, 0.0f, 5.0f, "RayHitThreshold = %.3f");
+	ImGui::SliderFloat("RayStep", &m_eSSR_Desc.fRayStep, 0.0f, 3.0f, "RayStep = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_SSR_Option(m_eSSR_Desc);
+}
+
+void CWindow_ShaderTool::Compress_Chroma_Setting()
+{
+	ImGui::Checkbox("Chroma Active", &m_eChroma_Desc.bChroma_Active);
+	ImGui::SliderFloat("Intensity", &m_eChroma_Desc.fChromaticIntensity, 0.0f, 50.0f, "Intensity = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Chroma_Option(m_eChroma_Desc);
+}
+
 void CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
 
 	string LevelString = SMath::capitalizeString(m_eCurrLevel_String);
-	path += LevelString;
 	path += "_Shader.json";
 
 	json Out_Json;
@@ -616,10 +684,12 @@ void CWindow_ShaderTool::Select_Level()
 					m_eCurrLevel_String = "LEVEL_INTRO_BOSS";
 					break;
 				case 4:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainNormalMapping_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
 					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;
 				case 5:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_LAVA;
 					m_eCurrLevel_String = "LEVEL_LAVA";
 					break;
@@ -706,7 +776,6 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
-
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();

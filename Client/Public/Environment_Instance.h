@@ -67,7 +67,6 @@ private:
 	_uint									m_iCurrentLevel = (_uint)LEVEL_TOOL;
 	
 
-
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

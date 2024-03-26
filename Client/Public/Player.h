@@ -57,7 +57,7 @@ public:
 
 public:
 	void Aim_Walk(_float fTimeDelta);
-	void Activate_ShootingReaction();
+	void Activate_ShootingReaction(_float fHeight = 20.f);
 
 public://!For. Interact
 	void SetState_InteractJumpDown100(); 

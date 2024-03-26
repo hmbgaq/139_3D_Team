@@ -26,8 +26,6 @@ private:
 	HRESULT Ready_PartObjects();
 
 protected:
-	virtual void Hitted_Left(Power ePower)	override;
-	virtual void Hitted_Right(Power ePower) override;
 	virtual void Hitted_Front(Power ePower) override;
 	virtual void Hitted_Dead(Power ePower)	override;
 	virtual void Hitted_Stun(Power ePower) override;
@@ -55,17 +53,17 @@ public:
 
 	virtual void Free() override;
 
-	enum Son_State
+	enum Son_State //스턴은 L버전은 위치값이 바뀌기 때문에 R로 사용 하면 될 거 같음 
 	{ 
 		Parasiter_Tentacle_Death                          ,
 		Parasiter_Worm_Attack_01						  ,
-		Parasiter_Worm_Attack_Hit_L						  ,
+		Parasiter_Worm_Attack_Hit_L						  ,//고장
 		Parasiter_Worm_Attack_Rest_01					  ,
-		Parasiter_Worm_Attack_Hit_R						  ,
+		Parasiter_Worm_Attack_Hit_R						  ,//고장
 		Parasiter_Worm_Attack_Stop_01					  ,
 		Parasiter_Worm_BiteAttack_Common_Stop_2000		  ,
 		Parasiter_Worm_BiteAttack_Common_Stop_400		  ,
-		Parasiter_Worm_burn								  ,
+		Parasiter_Worm_burn								  ,//고장
 		Parasiter_Worm_Idle								  ,
 		Parasiter_Worm_Hide								  ,
 		Parasiter_Worm_Hide_2							  ,
