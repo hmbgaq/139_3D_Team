@@ -151,28 +151,28 @@ private:
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 4 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 164, 243, 20 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 20 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 20 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 12, 0, 164, 243, 20 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 12, 0, 164, 243, 24 };
 
 
 private:
@@ -197,6 +197,8 @@ private:
 
 	_float m_vColor_Clip_Part[4] = { 0.f, 0.f, 0.f, 0.f };
 
+
+	_int	m_iLoop_Part = { 0 };
 
 #pragma region Particle 옵션 시작 =====================================================
 private:

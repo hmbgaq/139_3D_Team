@@ -363,6 +363,16 @@ void CWindow_EffectTool::Update_ParticleTab()
 		{
 			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
 
+			/* 파트 루프 키고 끄기 */
+			ImGui::SeparatorText("Loop_Part");
+			ImGui::RadioButton("Loop_Part", &m_iLoop_Part, 0);
+			ImGui::RadioButton("None Loop_Part", &m_iLoop_Part, 1);
+			if (0 == m_iLoop_Part)
+				m_pCurVoidDesc->bLoop = TRUE;
+			else if (1 == m_iLoop_Part)
+				m_pCurVoidDesc->bLoop = FALSE;
+
+
 			if (CEffect_Void::PARTICLE == eType_Effect)
 			{
 #pragma region Desc 얻어오기 업데이트_파티클
@@ -390,7 +400,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Sprite_Base"))	// 베이스 스프라이트로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 21;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 24;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 						}
 						ImGui::SameLine();
@@ -404,7 +414,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::InputInt("Sprite_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
 						{
 							if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
-								m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
+								m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] - 1;
 
 							if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
 								m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
@@ -422,9 +432,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 11;
-							m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = 0;	// 텍스처 인덱스 초기화
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 
@@ -507,7 +515,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 #pragma region 스프라이트 설정_파티클
 				/* 스프라이트 키고 끄기 */
-				ImGui::SeparatorText("Sprite");
+				ImGui::SeparatorText("Sprite_Particle");
 				ImGui::RadioButton("Off Sprite_Particle", &m_iSprite_Particle, 0);
 				ImGui::RadioButton("Sprite_Particle", &m_iSprite_Particle, 1);
 				if (0 == m_iSprite_Particle)
@@ -518,13 +526,20 @@ void CWindow_EffectTool::Update_ParticleTab()
 				{
 					// 1이 킨거.
 					m_pCurVoidDesc->bUseSpriteAnim = TRUE;
+				}
+					
+
+				if (m_pCurVoidDesc->bUseSpriteAnim)
+				{
+					ImGui::SeparatorText(" Sprite Setting_Particle ");
 
 					// 스프라이트의 루프를 키고 끄기_파티클
+					ImGui::SeparatorText("Loop Sprite_Particle");
 					ImGui::RadioButton("Loop Sprite_Particle", &m_iSpriteLoop, 0);
 					ImGui::RadioButton("None Loop Sprite_Particle", &m_iSpriteLoop, 1);
 					if (0 == m_iSpriteLoop)
 					{
-						m_pSpriteDesc_Particle->bLoop = TRUE; 
+						m_pSpriteDesc_Particle->bLoop = TRUE;
 						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 					else if (1 == m_iSpriteLoop)
@@ -533,12 +548,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 
-				}
-					
 
-				ImGui::SeparatorText(" Sprite Setting_Particle ");
-				if (m_pCurVoidDesc->bUseSpriteAnim)
-				{
 					m_pSpriteDesc_Particle = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
 
 					/* 스프라이트 재생 속도_파티클 */
@@ -1372,9 +1382,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (ImGui::Button("Sprite_Base_Rect"))	// 베이스 스프라이트로 변경
 					{
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite"));
-						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 21;
-						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 24;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 					ImGui::SameLine();
@@ -3019,10 +3027,17 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		m_vRotate_Part[2] = vRotated.z;
 
 
+		if (m_pCurVoidDesc->bLoop)
+			m_iLoop_Part = 0;
+		else
+			m_iLoop_Part = 1;
+
+
 		if (CEffect_Void::PARTICLE == eType_Effect)
 		{
 #pragma region 파티클(+버퍼) 디스크립션 얻어오기 시작
 			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();	// 이펙트_보이드 Desc
+			m_pSpriteDesc_Particle = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();		// 파티클 스프라이트 구조체
 			CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Distortion_Desc(); // 파티클 디스토션 구조체
 			CVIBuffer_Particle* pVIBuffer = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_VIBufferCom();	// 파티클 버퍼 얻어오기
 			m_pParticleBufferDesc = pVIBuffer->Get_Desc(); // 버퍼의 Desc 얻어오기
@@ -3071,15 +3086,17 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			else
 				m_iSprite_Particle = 0;
 
-			if (0 == m_iSprite_Particle)	// 스프라이트 애니메이션 사용이면
-			{
-				m_pSpriteDesc_Particle = dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_Sprite_Desc();
+			if (m_pSpriteDesc_Particle->bLoop)
+				m_iSpriteLoop = 0;
+			else
+				m_iSpriteLoop = 1;
+	
 
-				m_vUV_MaxTileCount_Particle[0] = (_int)m_pSpriteDesc_Particle->vUV_MaxTileCount.x;
-				m_vUV_MaxTileCount_Particle[1] = (_int)m_pSpriteDesc_Particle->vUV_MaxTileCount.y;
+			m_vUV_MaxTileCount_Particle[0] = (_int)m_pSpriteDesc_Particle->vUV_MaxTileCount.x;
+			m_vUV_MaxTileCount_Particle[1] = (_int)m_pSpriteDesc_Particle->vUV_MaxTileCount.y;
 
-				m_fSequenceTerm_Particle = m_pSpriteDesc_Particle->fSequenceTerm;
-			}
+			m_fSequenceTerm_Particle = m_pSpriteDesc_Particle->fSequenceTerm;
+			
 
 
 			/* 컬러 블렌딩 모드 업데이트 */
@@ -3402,7 +3419,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			else
 				m_iSprite_Rect = 0;
 
-			if (0 == m_iSprite_Rect)	// 스프라이트 애니메이션 사용이면(렉트)
+			if (1 == m_iSprite_Rect)	// 스프라이트 애니메이션 사용이면(렉트)
 			{
 				m_vUV_MaxTileCount_Particle[0] = (_int)pSpriteDesc->vUV_MaxTileCount.x;
 				m_vUV_MaxTileCount_Particle[1] = (_int)pSpriteDesc->vUV_MaxTileCount.y;

@@ -141,7 +141,6 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 				if (m_tVoidDesc.bRender)
 				{
-
 					m_pVIBufferCom->Update(fTimeDelta);
 				}
 			}
