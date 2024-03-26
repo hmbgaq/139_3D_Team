@@ -83,8 +83,8 @@ HRESULT CBody_Mother::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-// 		if (i == 0)
-// 			continue;
+		// 		if (i == 0)
+		// 			continue;
 
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 

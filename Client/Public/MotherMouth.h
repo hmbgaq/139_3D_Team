@@ -31,7 +31,8 @@ public:
 	void Set_Actor(CActor<CMotherMouth>* _pActor) { m_pActor = _pActor; }
 private:
 	CActor<CMotherMouth>* m_pActor = { nullptr };
-
+public:
+	_bool	m_bLoopFinished = false;
 public:
 	/* 원형객체를 생성한다. */
 	static CMotherMouth* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -20,4 +20,5 @@ CState<CMother>* CMother_VomitStart::Update(CMother* pActor, _float fTimeDelta)
 
 void CMother_VomitStart::Release(CMother* pActor)
 {
+	__super::Release(pActor);
 }

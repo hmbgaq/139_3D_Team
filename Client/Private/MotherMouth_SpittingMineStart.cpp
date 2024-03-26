@@ -6,6 +6,7 @@ void CMotherMouth_SpittingMineStart::Initialize(CMotherMouth* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->m_bLoopFinished = false;
 }
 
 CState<CMotherMouth>* CMotherMouth_SpittingMineStart::Update(CMotherMouth* pActor, _float fTimeDelta)

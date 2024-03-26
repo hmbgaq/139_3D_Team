@@ -369,7 +369,7 @@ _bool CAnimation::Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _
 			//_vector forward = XMVector3Normalize(XMVectorSet(boneTransform.m[0][0], boneTransform.m[0][1], boneTransform.m[0][2], 0.f));
 
 			// 플레이어 위치를 로컬 공간으로 변환
-			_float3 localPosition = XMVector3TransformCoord(XMLoadFloat3(&playerPosition), boneTransform);
+			//_float3 localPosition = XMVector3TransformCoord(XMLoadFloat3(&playerPosition), Transform);
 
 			//목뼈 방향 벡터
 			_float3 BonePosition = _float3(Transform.m[0][0], Transform.m[0][1], Transform.m[0][2]);
@@ -378,12 +378,12 @@ _bool CAnimation::Invalidate_TransformationMatrix_Parasiter(CModel::ANIM_STATE _
 			_matrix localRotation = XMMatrixLookAtLH(BonePosition, playerPosition, XMVectorSet(0.0f, 1.0f, 0.0f, 0.f));
 
 			// 월드 공간 변환 행렬에 곱하기
-			//boneTransform = XMMatrixMultiply(boneTransform, localRotation);
+			boneTransform = XMMatrixMultiply(boneTransform, localRotation);
 
 
 			//_float4x4 ResultMatrix = XMMatrixMultiply(Transform, playerToParasiterMatrix);
 
-			pBone->Set_TransformationMatrix(localRotation);
+			pBone->Set_TransformationMatrix(boneTransform);
 		}
 	}
 

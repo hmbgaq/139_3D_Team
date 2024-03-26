@@ -1,5 +1,5 @@
 #include "Mother_StunEnd.h"
-#include "Mother_Idle.h"
+#include "Mother_VomitStart.h"
 
 void CMother_StunEnd::Initialize(CMother* pActor)
 {
@@ -12,7 +12,7 @@ CState<CMother>* CMother_StunEnd::Update(CMother* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
 	{
-		return new CMother_StunEnd;
+		return new CMother_VomitStart;
 	}
 
 	return nullptr;
@@ -21,4 +21,5 @@ CState<CMother>* CMother_StunEnd::Update(CMother* pActor, _float fTimeDelta)
 void CMother_StunEnd::Release(CMother* pActor)
 {
 	__super::Release(pActor);
+	pActor->m_bPhase = false;
 }

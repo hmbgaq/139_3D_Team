@@ -45,9 +45,15 @@ private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
 
 public:
+	class CMotherMouth* m_pMonster = { nullptr };
+
+public:
 	//vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
+	_bool m_bPhase = true;
 
+	_uint m_iSonDead = 0;
+	_float m_fTimeDelta = 0.f;
 public:
 	/* 원형객체를 생성한다. */
 	static CMother* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
