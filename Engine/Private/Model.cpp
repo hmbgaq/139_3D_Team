@@ -452,8 +452,6 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 			break;
 
 		}
-
-		//material.pMtrlTextures[6].
 	}
 
 	return S_OK;

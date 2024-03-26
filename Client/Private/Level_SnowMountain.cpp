@@ -22,7 +22,6 @@
 #include "Monster_Character.h"
 #pragma endregion
 
-
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
@@ -35,8 +34,6 @@
 #include "MasterCamera.h"
 #include "SpringCamera.h"
 #include "Light.h"
-
-
 
 CLevel_SnowMountain::CLevel_SnowMountain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -578,6 +575,20 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
 	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+
+
+	//pPlayer->Set_Position
+	LIGHT_DESC desc = {};
+	desc.bEnable = true;
+	desc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+	desc.vPosition = _float4(60.5f, 0.f, 26.f, 0.f);
+	desc.fRange = 10.f;
+	desc.fCutOff = 0.5f;
+	desc.fOuterCutOff = 0.7f;
+	desc.vDiffuse = { 1.f, 1.f, 1.f, 1.f };
+	desc.vAmbient = { 1.f, 1.f, 1.f, 1.f };
+	desc.vSpecular = { 1.f, 1.f, 1.f, 1.f };
+	desc.fVolumetricStrength = 10.f;
 
 	return S_OK;
 }

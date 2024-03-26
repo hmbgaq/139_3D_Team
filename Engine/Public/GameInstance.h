@@ -139,6 +139,8 @@ public: /* For.Light_Manager */
 	class CLight*	Find_Light(const _int iIndex);
 	void			Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
 	class CLight*	Get_DirectionLight();
+	class CLight_Manager* Get_LightManager();
+	void			Get_AllLight(list<class CLight*>* pTemp);
 
 
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);

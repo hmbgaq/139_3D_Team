@@ -789,6 +789,20 @@ CLight* CGameInstance::Get_DirectionLight()
 	return m_pLight_Manager->Get_DirectionLight();
 }
 
+CLight_Manager* CGameInstance::Get_LightManager()
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, nullptr);
+
+	return m_pLight_Manager;
+}
+
+void CGameInstance::Get_AllLight(list<class CLight*>* pTemp)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, );
+
+	return m_pLight_Manager->Get_AllLight(pTemp);
+}
+
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
 	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);

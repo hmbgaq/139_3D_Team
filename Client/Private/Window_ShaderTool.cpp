@@ -1,13 +1,14 @@
-#include "stdafx.h"
-#include "Window_ShaderTool.h"
-#include "GameInstance.h"
-#include "Environment_Object.h"
-#include "Environment_Instance.h"
-#include "Data_Manager.h"
 #include "Light.h"
-#include "ShaderParsed_Object.h"
-#include "Monster_Character.h"
 #include "SMath.h"
+#include "stdafx.h"
+#include "Data_Manager.h"
+#include "GameInstance.h"
+#include "Light_Manager.h"
+#include "Monster_Character.h"
+#include "Window_ShaderTool.h"
+#include "Environment_Object.h"
+#include "ShaderParsed_Object.h"
+#include "Environment_Instance.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -112,8 +113,6 @@ void CWindow_ShaderTool::Create_Object()
 
 	ImGui::SeparatorText(" Modify Object ");
 
-
-
 	ImGui::End();
 }
 
@@ -181,6 +180,11 @@ void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
 
 void CWindow_ShaderTool::Layer_Light_Control()
 {
+	/* 모든 빛 다 가져오기 */
+	m_pGameInstance->Get_AllLight(&m_listLight);
+
+	Show_N_Controll_Light();
+
 	if (ImGui::TreeNode(" Save / Losad "))
 	{
 		Save_Load_Light();
@@ -196,6 +200,8 @@ void CWindow_ShaderTool::Layer_Light_Control()
 	}
 	if (ImGui::TreeNode("Spot Light"))
 	{
+		Compress_SpotLight();
+
 		ImGui::TreePop();
 	}
 }
@@ -253,6 +259,42 @@ void CWindow_ShaderTool::Save_Load_Light()
 		Load_Function(strPath, strFileName);
 }
 
+void CWindow_ShaderTool::Show_N_Controll_Light()
+{
+	const char* items[128];
+
+	for (auto& Lights : m_listLight)
+	{
+		_int iIndex = Lights->Get_LightIndex();
+		switch (Lights->Get_LightDesc().eType)
+		{
+		case LIGHT_DESC::TYPE::TYPE_DIRECTIONAL:
+			break;
+		case LIGHT_DESC::TYPE::TYPE_POINT:
+			break;
+		case LIGHT_DESC::TYPE::TYPE_SPOTLIGHT:
+			break;
+		}
+	}
+
+	//const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
+	static int item_current_idx = 0; // Here we store our selection data as an index.
+	if (ImGui::BeginListBox("listbox 1"))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+		{
+			const bool is_selected = (item_current_idx == n);
+			if (ImGui::Selectable(items[n], is_selected))
+				item_current_idx = n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+}
+
 void CWindow_ShaderTool::Compress_Directional_Light()
 {
 	/* 현재 레벨의 전역빛 가져오기 */
@@ -306,6 +348,32 @@ void CWindow_ShaderTool::Compress_Directional_Light()
 		m_pGameInstance->Remove_Light(0);
 		m_pGameInstance->Add_Light(NewDesc, TempIndex);
 	}
+}
+
+void CWindow_ShaderTool::Compress_SpotLight()
+{
+	if (ImGui::Button(u8"예시 만들기"))
+	{
+		_uint Temp = {};
+
+		LIGHT_DESC LightDesc = {};
+		LightDesc.bEnable = true;
+		LightDesc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+		LightDesc.vPosition = _float4(60.5f, 0.f, 26.f, 0.f);
+		LightDesc.fRange = 10.f;
+		LightDesc.fCutOff = 0.5f;
+		LightDesc.fOuterCutOff = 0.7f;
+		LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.fVolumetricStrength = 10.f;
+
+		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, Temp);
+	}
+}
+
+void CWindow_ShaderTool::Compress_PointLight()
+{
 }
 
 

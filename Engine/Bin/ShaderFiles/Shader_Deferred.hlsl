@@ -245,7 +245,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
 
     Out.vShade = g_vLightDiffuse * min((max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f);
-
+    
     float fViewZ = vDepthDesc.y * g_CamFar;
 
     vector vWorldPos;
@@ -330,62 +330,90 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 1;
 
-    //float depth = max(In.vPosition.z, g_DepthTarget.SampleLevel(ClampSampler,  In.vTexcoord, 2));
-    //float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
-    //float3 V = float3(0.0f, 0.0f, 0.0f) - viewSpacePosition;
-    //float cameraDistance = length(V);
-    //V /= cameraDistance;
-    //
-    //const uint SAMPLE_COUNT = 16;
-    //float3 rayEnd = float3(0.0f, 0.0f, 0.0f);
-    //float stepSize = length(viewSpacePosition - rayEnd) / SAMPLE_COUNT;
-    //viewSpacePosition = viewSpacePosition + V * stepSize * BayerDither(In.vPosition.xy);
-    //
-    //float marchedDistance = 0;
-    //float accumulation = 0;
-    //
-	//[loop(SAMPLE_COUNT)]
-    //for (uint i = 0; i < SAMPLE_COUNT; ++i)
-    //{
-    //    float3 L = g_vLightPos.xyz - viewSpacePosition;
-    //    float distSquared = dot(L, L);
-    //    float dist = sqrt(distSquared);
-    //    L /= dist;
-    //
-    //    float spotFactor = dot(L, normalize(-g_vLightDir.xyz));
-    //    float spotCutOff = g_fOuterCutOff;
-    //
-	//	[branch]
-    //    if (spotFactor > spotCutOff)
-    //    {
-    //        float attenuation = DoAttenuation(dist, g_fRange);
-    //        float conAtt = saturate((spotFactor - g_fOuterCutOff) / (g_fCutOff - g_fOuterCutOff));
-    //        conAtt *= conAtt;
-    //        attenuation *= conAtt;
-    //        
-	//		//[branch]
-    //        //if (lightData.castsShadows)
-    //        //{
-    //        //    float4 shadowMapCoords = mul(float4(viewSpacePosition, 1.0), shadowData.shadowMatrices[0]);
-    //        //    float3 UVD = shadowMapCoords.xyz / shadowMapCoords.w;
-    //        //
-    //        //    UVD.xy = 0.5 * UVD.xy + 0.5;
-    //        //    UVD.y = 1.0 - UVD.y;
-    //        //    [branch]
-    //        //    if (IsSaturated(UVD.xy))
-    //        //    {
-    //        //        float shadowFactor = CalcShadowFactor_PCF3x3(ShadowSampler, ShadowMap, UVD, shadowData.shadowMapSize, shadowData.softness);
-    //        //        attenuation *= shadowFactor;
-    //        //    }
-    //        //}
-    //        accumulation += attenuation;
-    //    }
-    //    marchedDistance += stepSize;
-    //    viewSpacePosition = viewSpacePosition + V * stepSize;
-    //}
-    //
-    //accumulation /= SAMPLE_COUNT;
-    //Out.vSpecular = max(0, float4(accumulation * g_vLightDiffuse.rgb * g_fVolumetricStrength, 1));
+    float depth = max(In.vPosition.z, g_DepthTarget.SampleLevel(ClampSampler,  In.vTexcoord, 2));
+    float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
+    float3 V = float3(0.0f, 0.0f, 0.0f) - viewSpacePosition;
+    float cameraDistance = length(V);
+    V /= cameraDistance;
+    
+    const uint SAMPLE_COUNT = 16;
+    float3 rayEnd = float3(0.0f, 0.0f, 0.0f);
+    float stepSize = length(viewSpacePosition - rayEnd) / SAMPLE_COUNT;
+    viewSpacePosition = viewSpacePosition + V * stepSize * BayerDither(In.vPosition.xy);
+    
+    float marchedDistance = 0;
+    float accumulation = 0;
+    
+	[loop(SAMPLE_COUNT)]
+    for (uint i = 0; i < SAMPLE_COUNT; ++i)
+    {
+        float3 L = g_vLightPos.xyz - viewSpacePosition;
+        float distSquared = dot(L, L);
+        float dist = sqrt(distSquared);
+        L /= dist;
+    
+        float spotFactor = dot(L, normalize(-g_vLightDir.xyz));
+        float spotCutOff = g_fOuterCutOff;
+    
+		[branch]
+        if (spotFactor > spotCutOff)
+        {
+            float attenuation = DoAttenuation(dist, g_fRange);
+            float conAtt = saturate((spotFactor - g_fOuterCutOff) / (g_fCutOff - g_fOuterCutOff));
+            conAtt *= conAtt;
+            attenuation *= conAtt;
+            
+			//[branch]
+            //if (lightData.castsShadows)
+            //{
+            //    float4 shadowMapCoords = mul(float4(viewSpacePosition, 1.0), shadowData.shadowMatrices[0]);
+            //    float3 UVD = shadowMapCoords.xyz / shadowMapCoords.w;
+            //
+            //    UVD.xy = 0.5 * UVD.xy + 0.5;
+            //    UVD.y = 1.0 - UVD.y;
+            //    [branch]
+            //    if (IsSaturated(UVD.xy))
+            //    {
+            //        float shadowFactor = CalcShadowFactor_PCF3x3(ShadowSampler, ShadowMap, UVD, shadowData.shadowMapSize, shadowData.softness);
+            //        attenuation *= shadowFactor;
+            //    }
+            //}
+            accumulation += attenuation;
+        }
+        marchedDistance += stepSize;
+        viewSpacePosition = viewSpacePosition + V * stepSize;
+    }
+    
+    accumulation /= SAMPLE_COUNT;
+    Out.vSpecular = max(0, float4(accumulation * g_vLightDiffuse.rgb * g_fVolumetricStrength, 1));
+    
+    vector  vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
+    vector  vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
+    float4  vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+    float   fViewZ = vDepthDesc.y * g_CamFar;
+    vector  vWorldPos;
+
+	/* 투영스페이스 상의 위치. */
+	/* 로컬위치 * 월드행렬 * 뷰행렬* 투영행렬 / View.z */
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepthDesc.x;
+    vWorldPos.w = 1.f;
+
+	/* 뷰스페이스 상의 위치를 구하자. */
+	/* 로컬위치 * 월드행렬 * 뷰행렬 */
+    vWorldPos = vWorldPos * fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+
+	/* 월드 상의 위치를 구하자. */
+	/* 로컬위치 * 월드행렬 */
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+    float4 vLightDir = vWorldPos - g_vLightPos;
+    float fDistance = length(vLightDir);
+    float fAtt = max((g_fLightRange - fDistance) / g_fLightRange, 0.f);
+
+    Out.vShade = g_vLightDiffuse * min((max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f) * fAtt;
+
     return Out;
 }
 
