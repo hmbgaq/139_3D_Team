@@ -51,7 +51,6 @@ public:
 	_int iMeshNumber = 0;
 	MONSTER_DESC* Get_MonsterDesc() { return &m_tMonsterDesc; }
 
-
 protected:
 	MONSTER_DESC			m_tMonsterDesc = {};
 

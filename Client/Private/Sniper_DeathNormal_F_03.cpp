@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "Sniper_DeathNormal_F_01.h"
+#include "Sniper_DeathNormal_F_03.h"
 
-void CSniper_DeathNormal_F_01::Initialize(CBandit_Sniper* pActor)
+void CSniper_DeathNormal_F_03::Initialize(CBandit_Sniper* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 }
 
-CState<CBandit_Sniper>* CSniper_DeathNormal_F_01::Update(CBandit_Sniper* pActor, _float fTimeDelta)
+CState<CBandit_Sniper>* CSniper_DeathNormal_F_03::Update(CBandit_Sniper* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
 	{
@@ -17,7 +17,7 @@ CState<CBandit_Sniper>* CSniper_DeathNormal_F_01::Update(CBandit_Sniper* pActor,
 	return nullptr;
 }
 
-void CSniper_DeathNormal_F_01::Release(CBandit_Sniper* pActor)
+void CSniper_DeathNormal_F_03::Release(CBandit_Sniper* pActor)
 {
 	__super::Release(pActor);
 }
