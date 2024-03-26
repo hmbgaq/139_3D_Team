@@ -183,6 +183,8 @@ void CWindow_ShaderTool::Layer_Light_Control()
 	/* 모든 빛 다 가져오기 */
 	m_pGameInstance->Get_AllLight(&m_listLight);
 
+	Show_N_Controll_Light();
+
 	if (ImGui::TreeNode(" Save / Losad "))
 	{
 		Save_Load_Light();
@@ -255,6 +257,42 @@ void CWindow_ShaderTool::Save_Load_Light()
 
 	if(m_bLoad)
 		Load_Function(strPath, strFileName);
+}
+
+void CWindow_ShaderTool::Show_N_Controll_Light()
+{
+	const char* items[128];
+
+	for (auto& Lights : m_listLight)
+	{
+		_int iIndex = Lights->Get_LightIndex();
+		switch (Lights->Get_LightDesc().eType)
+		{
+		case LIGHT_DESC::TYPE::TYPE_DIRECTIONAL:
+			break;
+		case LIGHT_DESC::TYPE::TYPE_POINT:
+			break;
+		case LIGHT_DESC::TYPE::TYPE_SPOTLIGHT:
+			break;
+		}
+	}
+
+	//const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
+	static int item_current_idx = 0; // Here we store our selection data as an index.
+	if (ImGui::BeginListBox("listbox 1"))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+		{
+			const bool is_selected = (item_current_idx == n);
+			if (ImGui::Selectable(items[n], is_selected))
+				item_current_idx = n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
 }
 
 void CWindow_ShaderTool::Compress_Directional_Light()
