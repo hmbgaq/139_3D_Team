@@ -858,40 +858,40 @@ void CUI::Load_FromJson(const json& In_Json)
 			m_tUIInfo.tKeyframe.bNoiseChange = In_Json["Keyframe"][i]["NoiseChange"];
 
 		if (In_Json["Keyframe"][i].contains("TimeAcc")) // 키가 있으면
-			m_tUIInfo.tKeyframe.fTimeAcc = In_Json["Distortion"]["TimeAcc"];
+			m_tUIInfo.tKeyframe.fTimeAcc = In_Json["Keyframe"][i]["TimeAcc"];
 		if (In_Json["Keyframe"][i].contains("ScrollSpeedsX")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vScrollSpeeds.x = In_Json["Distortion"]["ScrollSpeedsX"];
+			m_tUIInfo.tKeyframe.vScrollSpeeds.x = In_Json["Keyframe"][i]["ScrollSpeedsX"];
 		if (In_Json["Keyframe"][i].contains("ScrollSpeedsY")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vScrollSpeeds.y = In_Json["Distortion"]["ScrollSpeedsY"];
+			m_tUIInfo.tKeyframe.vScrollSpeeds.y = In_Json["Keyframe"][i]["ScrollSpeedsY"];
 		if (In_Json["Keyframe"][i].contains("ScrollSpeedsZ")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vScrollSpeeds.z = In_Json["Distortion"]["ScrollSpeedsZ"];
+			m_tUIInfo.tKeyframe.vScrollSpeeds.z = In_Json["Keyframe"][i]["ScrollSpeedsZ"];
 		if (In_Json["Keyframe"][i].contains("ScalesX")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vScales.x = In_Json["Distortion"]["ScalesX"];
+			m_tUIInfo.tKeyframe.vScales.x = In_Json["Keyframe"][i]["ScalesX"];
 		if (In_Json["Keyframe"][i].contains("ScalesY")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vScales.y = In_Json["Distortion"]["ScalesY"];
+			m_tUIInfo.tKeyframe.vScales.y = In_Json["Keyframe"][i]["ScalesY"];
 		if (In_Json["Keyframe"][i].contains("ScalesZ")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vScales.z = In_Json["Distortion"]["ScalesZ"];
+			m_tUIInfo.tKeyframe.vScales.z = In_Json["Keyframe"][i]["ScalesZ"];
 		if (In_Json["Keyframe"][i].contains("Distortion1X")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vDistortion1.x = In_Json["Distortion"]["Distortion1X"];
+			m_tUIInfo.tKeyframe.vDistortion1.x = In_Json["Keyframe"][i]["Distortion1X"];
 		if (In_Json["Keyframe"][i].contains("Distortion1Y")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vDistortion1.y = In_Json["Distortion"]["Distortion1Y"];
+			m_tUIInfo.tKeyframe.vDistortion1.y = In_Json["Keyframe"][i]["Distortion1Y"];
 		if (In_Json["Keyframe"][i].contains("Distortion2X")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vDistortion2.x = In_Json["Distortion"]["Distortion2X"];
+			m_tUIInfo.tKeyframe.vDistortion2.x = In_Json["Keyframe"][i]["Distortion2X"];
 		if (In_Json["Keyframe"][i].contains("Distortion2Y")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vDistortion2.y = In_Json["Distortion"]["Distortion2Y"];
+			m_tUIInfo.tKeyframe.vDistortion2.y = In_Json["Keyframe"][i]["Distortion2Y"];
 		if (In_Json["Keyframe"][i].contains("Distortion3X")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vDistortion3.y = In_Json["Distortion"]["Distortion3X"];
+			m_tUIInfo.tKeyframe.vDistortion3.y = In_Json["Keyframe"][i]["Distortion3X"];
 		if (In_Json["Keyframe"][i].contains("Distortion3Y")) // 키가 있으면
-			m_tUIInfo.tKeyframe.vDistortion3.y = In_Json["Distortion"]["Distortion3Y"];
+			m_tUIInfo.tKeyframe.vDistortion3.y = In_Json["Keyframe"][i]["Distortion3Y"];
 		if (In_Json["Keyframe"][i].contains("DistortionScale")) // 키가 있으면
-			m_tUIInfo.tKeyframe.fDistortionScale = In_Json["Distortion"]["DistortionScale"];
+			m_tUIInfo.tKeyframe.fDistortionScale = In_Json["Keyframe"][i]["DistortionScale"];
 
 		if (In_Json["Keyframe"].contains("DistortionUI")) // 키가 있으면
-			m_tUIInfo.tKeyframe.bDistortionUI = In_Json["Distortion"]["DistortionUI"];
+			m_tUIInfo.tKeyframe.bDistortionUI = In_Json["Distortion"][i]["DistortionUI"];
 		if (In_Json["Keyframe"].contains("MaskNum")) // 키가 있으면
-			m_tUIInfo.tKeyframe.iMaskNum = In_Json["Distortion"]["MaskNum"];
+			m_tUIInfo.tKeyframe.iMaskNum = In_Json["Distortion"][i]["MaskNum"];
 		if (In_Json["Keyframe"].contains("NoiseNum")) // 키가 있으면
-			m_tUIInfo.tKeyframe.iNoiseNum = In_Json["Distortion"]["NoiseNum"];
+			m_tUIInfo.tKeyframe.iNoiseNum = In_Json["Distortion"][i]["NoiseNum"];
 
 		m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 	}
@@ -1490,6 +1490,9 @@ void CUI::Play_Animation(_float fTimeDelta)
 				{
 					m_bDisappear = true;
 				}
+				/* m_bRenderOut */
+				m_bRenderOut = m_vecAnimation[iFrameIndex].bDisappear;
+
 				/* LoopSection */
 				if (m_vecAnimation[iFrameIndex].bLoopSection == true)
 				{

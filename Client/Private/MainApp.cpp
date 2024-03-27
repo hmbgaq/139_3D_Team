@@ -177,13 +177,37 @@ HRESULT CMainApp::Ready_UITexture()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_E"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/DeathScreen/ui_element_list_tab_E.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_Last_D"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/DeathScreen/ui_element_list_tab_Last_D.dds"))));
 	
+	/* Option */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("headder_active_option"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/headder_active_option.dds"))));
+	/* NonActive Option */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HDR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_HDR.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_DOF"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_DOF.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_FOG"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_FOG.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_FXAA"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_FXAA.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HBAO"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_HBAO.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HSV"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_HSV.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_PBR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_PBR.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_RADIAL"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_RADIAL.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_SSR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_SSR.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_SHADOW"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_SHADOW.dds"))));
+	
+	/* Active Option */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_DOF"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_DOF.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_FOG"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_FOG.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_HDR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_HDR.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_HBAO"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_HBAO.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_HSV"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_HSV.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_SHADOW"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_SHADOW.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_RADIAL"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_RADIAL.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_SSR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_SSR.dds"))));
+
 	return S_OK;
 }
 
 // Effect & UI 공통 텍스처
 HRESULT CMainApp::Ready_Mask_Noise()
 {
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask (%d).dds"), 157)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask (%d).dds"), 158)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask_Waves"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Waves/Mask_Wave_%d.dds"), 6)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Noise"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/03_Noise/Noise (%d).dds"), 240)));
 

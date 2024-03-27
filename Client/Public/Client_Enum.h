@@ -76,16 +76,16 @@ namespace Client
 		// GAME_OPTION
 			/* SHADER */
 			HBAO_PLUS,	 // 세기 조절 할수도
-			FOG,
-			RADIAL_BLUR,
-			DOF,
+			FOG,		
+			RADIAL_BLUR, 
+			DOF,		
 			HDR,
 			FXAA,
 			HSV,		 // 세기 조절 할수도
 			SHADOW,
-			LIGHT_SHAFT, // 예정
-			PBR,		 // 예정
-			SSR,		 // 예정
+			LIGHT_SHAFT, // 예정 - 빼야함
+			PBR,		 // 예정 - 없는채로 만들기 
+			SSR,		 // 예정 - 없는채로 만들기 
 			/* SHADER_END */
 			/* SOUND */
 			MASTER_SOUND,

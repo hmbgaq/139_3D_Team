@@ -89,7 +89,7 @@ public:
 	/* 렌더옵션 초기화 */
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
 
-	//void Set_PBR_Active(_bool bPBR) { return m_tPBR; }
+	//void Set_PBR_Active(_bool bPBR) { return m_bPBPBR; }
 	/* 활성화 */
 	void Set_BloomBlur_Active(_bool _bloom_active) { m_tDeferred_Option.bRimBloom_Blur_Active = _bloom_active; }
 	_bool Get_BloomBlur_Active() { return m_tDeferred_Option.bRimBloom_Blur_Active; }

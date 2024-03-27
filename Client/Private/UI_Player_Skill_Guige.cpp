@@ -43,11 +43,12 @@ HRESULT CUI_Player_Skill_Guige::Initialize(void* pArg)
 	m_vCenter.x = 0.5;
 	m_vCenter.y = 0.5;
 
-	m_fMaxCoolTime = 10.f;
+	//m_fMaxCoolTime = m_fMaxCoolTime;
 
 	m_bActive = true;
 
 	m_iMaskNum = 42;
+	m_fCoolTime = m_fMaxCoolTime;
 
 	return S_OK;
 }
@@ -66,12 +67,12 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 	//else
 	//	m_fCoolTime = m_fMaxCoolTime;
 
-	if (m_pGameInstance->Key_Pressing(DIK_I))
-		m_fRadius += 0.1f;
+	//if (m_pGameInstance->Key_Pressing(DIK_I))
+	//	m_fRadius += 0.1f;
 
 	if (m_pGameInstance->Key_Down(DIK_K))
 	{
-		m_fCoolTime -= 1.f;
+		m_fCoolTime += 1.f;
 		//m_vCenter.x += 0.1f;
 		//m_vCenter.y += 0.1f;
 	}

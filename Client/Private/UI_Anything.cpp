@@ -45,6 +45,9 @@ void CUI_Anything::Priority_Tick(_float fTimeDelta)
 
 void CUI_Anything::Tick(_float fTimeDelta)
 {
+	//if(!m_vecAnimation.empty())
+	//	m_bActive = m_vecAnimation[iFrameIndex].bDisappear;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_bActive == true)
@@ -76,8 +79,11 @@ void CUI_Anything::Late_Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-			return;
+		if (m_bRenderOut == false) // 안보이게 하는거 꺼져있을 경우 랜더
+		{
+			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+				return;
+		}
 	}
 }
 
@@ -88,45 +94,23 @@ HRESULT CUI_Anything::Render()
 	//! Apply 호출 후X 행렬을 던져줘도 에러는 나지 않지만, 안정성이 떨어진다.
 	//! Apply 호출 후에 행렬을 던져주면, 어떤 때에는 정상적으로 수행되고, 어떤 때에는 값이 제대로 안 넘어가는 경우가 있다.
 
-	//switch (m_tUIInfo.eUIType)
-	//{
-	//case CUI_Anything::SMALL:
-	//case CUI_Anything::MID:
-	//case CUI_Anything::LARGE:
-	//case CUI_Anything::SIDE:
-	//{
-	//	///* 월드상의 몬스터 위치로 계산된 UI를 카메라 절두체 안에 들어왔을 경우에만 표시하기 위함 */
-	//	//if (m_fOwnerCamDistance > 40.f || false == In_Frustum())
-	//	//{
-	//	//	// m_pGameInstance->Get_CamDir();
-	//	//	return E_FAIL;
-	//	//}
-	//	//__super::SetUp_WorldToScreen(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION));
-
-	//	//__super::SetUp_Transform(m_fWorldToScreenX, m_fWorldToScreenY, m_fDefaultScale * m_fScaleOffsetX, m_fDefaultScale * m_fScaleOffsetY);
-
-
-	//	//__super::SetUp_BillBoarding();
-	//	break;
-	//}
-	//	break;
-	//default:
-	//	break;
-	//}
 
 	if (m_bActive == true)
 	{
-		if (FAILED(Bind_ShaderResources()))
-			return E_FAIL;
+		if (m_bRenderOut == false) // 안보이게 하는거 꺼져있을 경우 랜더
+		{
+			if (FAILED(Bind_ShaderResources()))
+				return E_FAIL;
 
-		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+			//! 이 셰이더에 0번째 패스로 그릴거야.
+			m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-		m_pVIBufferCom->Bind_VIBuffers();
+			//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+			m_pVIBufferCom->Bind_VIBuffers();
 
-		//! 바인딩된 정점, 인덱스를 그려
-		m_pVIBufferCom->Render();
+			//! 바인딩된 정점, 인덱스를 그려
+			m_pVIBufferCom->Render();
+		}
 	}
 
 	return S_OK;

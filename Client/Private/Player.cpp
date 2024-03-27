@@ -4,6 +4,8 @@
 #include "Weapon_Player.h"
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
+// Add_UIManager
+#include "UI_Manager.h"
 
 #include "Player_HitNormal_B.h"
 #include "Player_HitNormal_F.h"
@@ -94,6 +96,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	/* Temp - 맵에 맞게 위치 조정한값*/
 	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
 
+	//! Add_UIManager
+	m_pUIManager = CUI_Manager::GetInstance();
+	//! Add_DeidScreen
+	m_pUIManager->Ready_DiedScreen(LEVEL_STATIC); // 생성
+	m_pUIManager->NonActive_DiedScreen(); // 끄기
+
 	return S_OK;
 }
 
@@ -115,7 +123,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	Update_ChargingTime(fTimeDelta);
 
-
+	KeyInput(fTimeDelta);
 
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
 
@@ -374,6 +382,24 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 			Move_In_Proportion_To_Enemy(fTimeDelta);
 		}
 		
+	}
+}
+
+void CPlayer::KeyInput(_float fTimeDelta)
+{
+	if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+	{
+		m_pUIManager->NonActive_DiedScreen(); // 끄기
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_I))
+	{
+		m_pUIManager->Active_DiedScreen();	// 켜기
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+
 	}
 }
 

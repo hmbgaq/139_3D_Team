@@ -33,6 +33,10 @@ float g_MaxHP;
 float g_CurrentHP;
 float g_LerpHP;
 
+// 시작점과 끝점의 UV 좌표 설정
+float2 g_StartPoint; // 시작점 (좌상단)
+float2 g_EndPoint; // 끝점 (우하단)
+
 /* Aim */
 float2 g_Recoil;
 float2 g_Offset;
@@ -489,6 +493,81 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In) // 6
     return Out;
 }
 
+PS_OUT PS_MAIN_SHARD_HP(PS_IN In) // 7
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float2 uvDiff = g_EndPoint - g_StartPoint;
+    float2 uvNormalized = In.vTexcoord - g_StartPoint;
+
+    // 시작점과 끝점 사이의 거리 계산
+    float distance = dot(uvNormalized, normalize(uvDiff));
+    
+    // 체력이 감소할 때의 UV 좌표 범위 계산
+    float healthRatio = saturate(g_CurrentHP / g_MaxHP); // 예시로 체력이 40일 때를 가정
+    float2 uvRange = lerp(uvDiff, float2(0.0f, 0.0f), g_LerpHP); // 체력이 낮아질수록 UV 좌표 범위를 줄임
+
+    //// 현재 체력에 따른 투명도 계산
+    //float healthRatio = saturate(g_CurrentHP / g_MaxHP); // 예시로 체력이 40일 때를 가정
+    //float alpha = lerp(1.0f, 0.0f, healthRatio); // 체력이 낮아질수록 투명도가 증가하도록 보간
+    //
+    //// 투명한 픽셀에는 흰색을 그리고 그 외에는 배경색을 그립니다.
+    //float4 vColor = lerp(vDiffuseColor, float4(1.0f, 1.0f, 1.0f, 1.0f), alpha);
+    
+    
+    // 현재 픽셀이 UV 좌표 범위 내에 있는지 확인하여 흰색으로 깎임
+    float2 uvDifference = In.vTexcoord - g_StartPoint;
+    float inRange = dot(uvDifference, normalize(uvRange - g_StartPoint)); // 현재 픽셀이 UV 좌표 범위 내에 있는지 확인
+    // 흰색으로 깎인 부분만을 나타냄
+    float4 vColor = vDiffuseColor;
+    if (inRange > 0.0f)
+    {
+        vColor = float4(1.0f, 1.0f, 1.0f, 1.0f); // 흰색으로 설정
+    }
+    
+    // 대각선 방향으로 체력바가 서서히 줄어드는 효과 생성
+    //float4 vResult = vColor * (1.0f - saturate(distance));
+    float4 vResult = vColor;
+    
+    Out.vColor = vResult;
+    
+    return Out;
+    
+    //float DecreaseAmount = 0.0f; // 흰색 표시 효과
+    //
+    //// 시작점과 끝점의 각 좌표의 차이 계산
+    //float2 DeltaUV = g_EndPoint - g_StartPoint;
+    //
+    //// 현재 체력에 따른 UV 좌표 계산
+    //float2 CurrentUV = g_StartPoint + DeltaUV * (g_CurrentHP / g_MaxHP);
+    //
+    //// 체력이 감소할 때마다 흰색으로 표시하도록 반복
+    //while (g_CurrentHP > 0.0f)
+    //{
+    //// 흰색 표시 효과 갱신
+    //    g_LerpHP += DecreaseRate;
+    //
+    //// 흰색 표시 효과가 1.0을 초과하지 않도록 설정
+    //    if (DecreaseAmount > 1.0f)
+    //        DecreaseAmount = 1.0f;
+    //
+    //// 현재 체력 감소
+    //    g_CurrentHP -= 1.0f;
+    //
+    //// 현재 체력에 따른 UV 좌표 재계산
+    //    CurrentUV = g_StartPoint + DeltaUV * (g_CurrentHP / maxHealth);
+    //
+    //// 흰색으로 표시되는 부분 계산
+    //    float2 WhiteUV = g_StartPoint + DeltaUV * ((g_CurrentHP + g_LerpHP) / maxHealth);
+    //
+    //// 여기서 currentUV부터 whiteUV까지를 흰색으로 표시하여 체력바가 서서히 줄어드는 효과를 구현할 수 있습니다.
+    //}
+    
+    //return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
@@ -583,5 +662,18 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
+    }
+
+    pass Shard_Hp // 7
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SHARD_HP();
     }
 }

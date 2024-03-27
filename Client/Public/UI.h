@@ -466,6 +466,7 @@ protected: /* ============================= UI =============================== *
 	_bool				m_bActive = false;
 	_bool				m_bReset = false;
 	_bool				m_bRestore = false;
+	_bool				m_bRenderOut = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;

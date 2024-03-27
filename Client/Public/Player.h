@@ -7,7 +7,9 @@ BEGIN(Engine)
 class CPhysXCollider;
 END
 
+
 BEGIN(Client)
+class CUI_Manager;
 
 class CPlayer final : public CCharacter_Client
 {
@@ -67,6 +69,10 @@ public:
 	void Search_Target(_float fMaxDistance = 10.f);
 
 	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
+
+private:
+	void	KeyInput(_float fTimeDelta);
+	CUI_Manager* m_pUIManager = nullptr;
 
 private:
 	HRESULT Ready_Components();

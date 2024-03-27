@@ -4,6 +4,7 @@
 #include "Base.h"
 #include "GameInstance.h"
 #include "Client_Defines.h"
+#include "UI.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -52,6 +53,8 @@ public: /* Ready_Preset */
 	HRESULT Ready_Loading_IntroBoss(_uint iLevelIndex);
 	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 	HRESULT Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
+	HRESULT Ready_DiedScreen(_uint iLevelIndex);
+	HRESULT Ready_Option(_uint iLevelIndex);
 
 public:
 	/* LeftHUD */
@@ -117,10 +120,21 @@ public:
 	void			Active_EnemyHUD_Shard(_bool bActive);
 	void			Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	void			Set_Offset(_float fOffsetX, _float fOffsetY);
-
 	vector<CUI*>	m_vecEnemyHUD_Shard;
 
+	/* DiedScreen */
+	HRESULT			Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_DiedScreen();
+	void			NonActive_DiedScreen();
+	vector<CUI*>	m_vecDiedScreen;
 
+	/* Option */
+	HRESULT			Add_Option(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_Option();
+	void			NonActive_Option();
+	vector<CUI*>	m_vecOption;
+
+	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
 
 
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);

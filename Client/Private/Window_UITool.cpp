@@ -35,11 +35,11 @@ HRESULT CWindow_UITool::Initialize()
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));	// Option
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/DeathScreen"))));	// DeathScreen
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/DeathScreen"))));	// DeathScreen
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));	// PlayerHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));	// WorldMap
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Crosshairs"))));// Crosshairs
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/EnemyHUD"))));	// EnemyHUD
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/EnemyHUD"))));	// EnemyHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// Image
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image"))));			// All
 	
@@ -4063,6 +4063,33 @@ void CWindow_UITool::UI_Preset()
 	if (ImGui::Button("EnemyHUD_Shard"))
 	{
 		m_pUI_Manager->Ready_EnemyHUD_Shard(LEVEL_STATIC);
+	}
+	if (ImGui::Button("DiedScreen"))
+	{
+		m_pUI_Manager->Ready_DiedScreen(LEVEL_STATIC);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("TestPlayDied"))
+	{
+		m_pUI_Manager->Active_DiedScreen();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("TestNotPlayDied"))
+	{
+		m_pUI_Manager->NonActive_DiedScreen();
+	}
+	if (ImGui::Button("Option"))
+	{
+		m_pUI_Manager->Ready_Option(LEVEL_STATIC);
+	}
+	if (ImGui::Button("TestPlayOption"))
+	{
+		m_pUI_Manager->Active_Option();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("TestNotPlayOption"))
+	{
+		m_pUI_Manager->NonActive_Option();
 	}
 }
 

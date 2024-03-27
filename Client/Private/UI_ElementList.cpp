@@ -136,11 +136,11 @@ void CUI_ElementList::Check_Picking(_float fTimeDelta)
 				m_bShadow_Active = !m_bShadow_Active;
 				m_pGameInstance->Get_Renderer()->Set_Shadow_Active(m_bShadow_Active);
 			}
-			//else if (m_tUIInfo.strUIName == "PBR")
-			//{
-			//	m_bPBR_Active = !m_bPBR_Active;
-			//	m_pGameInstance->Get_Renderer()->Set_PBR_Active(m_bPBR_Active);
-			//}
+			else if (m_tUIInfo.strUIName == "HSV")
+			{
+				m_bHSV_Active = !m_bHSV_Active;
+				m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bHSV_Active);
+			}
 		}
 	}
 }
@@ -157,18 +157,113 @@ HRESULT CUI_ElementList::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-#pragma region 아이콘은 텍스처를 골라서 넣을 수 있게 해줘야한다.
+#pragma region 
 	//! For.Com_Texture2 // NonActive
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab"),
-		TEXT("Com_Texture_Element_List_NonActive"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_DOF"),
+		TEXT("Com_Texture_Element_List_NonActive_DOF"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_DOF]))))
 		return E_FAIL;
 
 	//! For.Com_Texture2 // Active
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation"),
-		TEXT("Com_Texture_Element_List_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_DOF"),
+		TEXT("Com_Texture_Element_List_Active_DOF"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_DOF]))))
 		return E_FAIL;
 #pragma endregion
 
+#pragma region 
+	//! For.Com_Texture2 // NonActive
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_FOG"),
+		TEXT("Com_Texture_Element_List_NonActive_FOG"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_FOG]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // Active
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_FOG"),
+		TEXT("Com_Texture_Element_List_Active_FOG"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_FOG]))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region 
+	//! For.Com_Texture2 // NonActive
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_HDR"),
+		TEXT("Com_Texture_Element_List_NonActive_HDR"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_HDR]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // Active
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_HDR"),
+		TEXT("Com_Texture_Element_List_Active_HDR"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_HDR]))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region 
+	//! For.Com_Texture2 // NonActive
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_HBAO"),
+		TEXT("Com_Texture_Element_List_NonActive_HABO"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_HABO]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // Active
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_HBAO"),
+		TEXT("Com_Texture_Element_List_Active_HABO"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_HABO]))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region HSV
+	//! For.Com_Texture2 // NonActive
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_HSV"),
+		TEXT("Com_Texture_Element_List_NonActive_HSV"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_HSV]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // Active
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_HSV"),
+		TEXT("Com_Texture_Element_List_Active_HSV"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_HSV]))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region PBR
+	////! For.Com_Texture2 // NonActive
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_PBR"),
+	//	TEXT("Com_Texture_Element_List_NonActive"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
+	//	return E_FAIL;
+
+	////! For.Com_Texture2 // Active
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_PBR"),
+	//	TEXT("Com_Texture_Element_List_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
+	//	return E_FAIL;
+#pragma endregion
+
+#pragma region RADIAL_BLUR
+	//! For.Com_Texture2 // NonActive
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_RADIAL"),
+		TEXT("Com_Texture_Element_List_NonActive_BLUR"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_RADIAL_BLUR]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // Active
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_RADIAL"),
+		TEXT("Com_Texture_Element_List_Active_BLUR"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_RADIAL_BLUR]))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region SSR
+	//! For.Com_Texture2 // NonActive
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_SSR"),
+		TEXT("Com_Texture_Element_List_NonActive_SSR"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_SSR]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // Active
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_SSR"),
+		TEXT("Com_Texture_Element_List_Active_SSR"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_SSR]))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region SHADOW
+	//! For.Com_Texture2 // NonActive
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_SHADOW"),
+		TEXT("Com_Texture_Element_List_NonActive_SHADOW"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_SHADOW]))))
+		return E_FAIL;
+
+	//! For.Com_Texture2 // Active
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_SHADOW"),
+		TEXT("Com_Texture_Element_List_Active_SHADOW"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_SHADOW]))))
+		return E_FAIL;
+#pragma endregion
 	return S_OK;
 }
 
@@ -184,15 +279,93 @@ HRESULT CUI_ElementList::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
+
+
 	if (m_bPick == true)
 	{
-		if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+		if (m_tUIInfo.strUIName == "HABO")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_HABO]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "FOG")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_FOG]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_RADIAL_BLUR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "DOF")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_DOF]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "HDR")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_HDR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "SHADOW")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_SHADOW]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "PBR")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_PBR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "HSV")
+		{
+			if (FAILED(m_pTextureCom[ACTIVE_HSV]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
 	}
 	else
 	{
-		if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+		if (m_tUIInfo.strUIName == "HABO")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_HABO]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "FOG")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_FOG]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_RADIAL_BLUR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "DOF")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_DOF]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "HDR")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_HDR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "SHADOW")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_SHADOW]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "PBR")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_PBR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_tUIInfo.strUIName == "HSV")
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE_HSV]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
 	}
 	return S_OK;
 }
