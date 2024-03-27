@@ -221,11 +221,6 @@ void CModel::Calculate_ModelSize(_float* fOutWidth, _float* fOutHeight)
 	*fOutHeight = vMax.y - vMin.y;
 }
 
-
-
-
-
-
 void CModel::Set_MouseMove(_float2 vMouseMove)
 {
 	m_vMouseMove = vMouseMove;
@@ -451,6 +446,7 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 			Bind_ShaderResource(pShader, "g_OpacityTexture", iMeshIndex, aiTextureType_OPACITY);
 			break;
 
+		/* AO 컬러는 모델의 디테일과 형태를 강조하는데 사용 - EX. SNOW맵 표지판. PBR에서 쓰는 O는 Opacity를 말한것임. */
 		}
 	}
 
@@ -687,9 +683,6 @@ vector<CBone*>* CModel::Get_Bones()
 
 _uint CModel::Get_BoneNum(const _char* _szName)
 {
-	
-
-
 	return _uint();
 }
 
@@ -735,15 +728,6 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			//if (j == (size_t)aiTextureType_SPECULAR)/* ORM텍스쳐 있는데 ASSIMP 에 SPECULAR로 안잡히는 모델이 많아서 강제로 넣어주는중 */
-			//{
-			//	string strPath = pAIMaterial.Get_Textures((_uint)j);
-			//	if (strPath == "")
-			//	{
-			//		m_bSpecularMissed = true;
-			//	}
-			//}
-			
 			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
@@ -754,12 +738,14 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			//_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
 			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
 
+			if (szFileName == "ICarusGround2")
+				_int iCheck = 0;
+
 			_char		szTmp[MAX_PATH] = "";
 			strcpy_s(szTmp, szDrive);
 			strcat_s(szTmp, szDirectory);
 			strcat_s(szTmp, szFileName);
 			strcat_s(szTmp, szEXT);
-
 
 			//_char szTest[MAX_PATH] = ".dds";
 			//strcat_s(szTmp, szTest);
@@ -776,28 +762,46 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	
 				return E_FAIL;
 
-
-			if (j == (size_t)aiTextureType_NORMALS)// && m_bSpecularMissed)
+			// Diffuse 일때 한번 검사 + Normal일때 Diffuse에서 못만들었다면 추가 검사 
+			if ((j == (size_t)aiTextureType_DIFFUSE) || (j == (size_t)aiTextureType_NORMALS && false == m_bSpecularExist)) // Diffuse 있을때 ORM넣기 
 			{
-				// 플레이어 ORM이 안들어가는이유 : SPECULAR TEXTURE가 있음@ 그래서 안들어감 ! 
-				string ORMfileName(szFileName);
-				ORMfileName.pop_back();
-				ORMfileName += "ORM";
+				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT);
 
-				_char		szORMTmp[MAX_PATH] = "";
-				strcpy_s(szORMTmp, szDrive);
-				strcat_s(szORMTmp, szDirectory);
-				strcat_s(szORMTmp, ORMfileName.c_str());
-				strcat_s(szORMTmp, szEXT);
+				if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR]) /* 1글자 뺴서 하는 ORM 실패 */
+				{
+					m_bSpecularExist = false;
+					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT, 2);
 
-				_tchar		szORMFullPath[MAX_PATH] = TEXT("");
+					if (nullptr != MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])/* 2글자 뺴서 하는 ORM 성공  */
+						m_bSpecularExist = true;
+					else
+					{
+						/* 뭘해도 Specular가 없다 : 다른텍스쳐로 대체 */
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
+						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS])
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
 
-				MultiByteToWideChar((_uint)CP_ACP, 0, szORMTmp, (_int)strlen(szORMTmp), szORMFullPath, (_int)MAX_PATH);
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
+						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY])
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
 
-				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = CTexture::Create(m_pDevice, m_pContext, szORMFullPath, 1, true);
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
+						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS])
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
 
-				//if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])
-				//	cout << " Create ORM Texture Failure" << endl;
+
+						//cout << "Model : " << strModelFilePath << endl;
+						//cout << "Texture : " << szFileName << endl;
+						//cout << endl;
+					}
+				}
+				else
+					m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */
+			}
+
+			if (j == (size_t)aiTextureType_DIFFUSE)
+			{
+				
 			}
 		}
 
@@ -880,6 +884,71 @@ HRESULT CModel::Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& 
 	FAILED_CHECK(m_Meshes[iMeshIndex]->Render());
 
 	return S_OK;
+}
+
+CTexture* CModel::Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* strOriginFileName, const char* strOriginDrive, const char* strOriginDirectory, const char* strOriginExt, _int iCnt)
+{
+	/* Diffuse 기준, ORM텍스쳐는 아니지만 Roughness, Opacity, Metalic 으로도 읽지않아서 만들어줘야하는 텍스쳐 */
+	string PBRfileName(strOriginFileName);
+
+	for (_int i = 0; i < iCnt; ++i)
+	{
+		PBRfileName.pop_back();
+	}
+
+	switch (eType)
+	{
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_METALIC:
+		PBRfileName += "Metalic";
+		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_ROUGHNESS:
+		PBRfileName += "Roughness";
+		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_OPACITY:
+		PBRfileName += "Opacity";
+		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_ORM:
+		PBRfileName += "ORM";
+		break;
+	}
+
+	_char		szPBRTmp[MAX_PATH] = "";
+	strcpy_s(szPBRTmp, strOriginDrive);
+	strcat_s(szPBRTmp, strOriginDirectory);
+	strcat_s(szPBRTmp, PBRfileName.c_str());
+	strcat_s(szPBRTmp, strOriginExt);
+
+	_tchar		szPBRFullPath[MAX_PATH] = TEXT("");
+	MultiByteToWideChar((_uint)CP_ACP, 0, szPBRTmp, (_int)strlen(szPBRTmp), szPBRFullPath, (_int)MAX_PATH);
+	CTexture* pTexture = CTexture::Create(m_pDevice, m_pContext, szPBRFullPath, 1, true);
+
+	if (eType == CModel::ADD_TEXTURE_TYPE::TYPE_ORM && nullptr == pTexture)
+	{
+		string ORMfileName_2(strOriginFileName);
+
+		for (_int i = 0; i < iCnt; ++i)
+		{
+			ORMfileName_2.pop_back();
+		}
+
+		ORMfileName_2 += "M";
+
+		_char		szORMTmp[MAX_PATH] = "";
+		strcpy_s(szORMTmp, strOriginDrive);
+		strcat_s(szORMTmp, strOriginDirectory);
+		strcat_s(szORMTmp, ORMfileName_2.c_str());
+		strcat_s(szORMTmp, strOriginExt);
+
+		_tchar		szORMFullPath[MAX_PATH] = TEXT("");
+
+		MultiByteToWideChar((_uint)CP_ACP, 0, szORMTmp, (_int)strlen(szORMTmp), szORMFullPath, (_int)MAX_PATH);
+
+		CTexture* pTexture_New = CTexture::Create(m_pDevice, m_pContext, szORMFullPath, 1, true);
+
+		return pTexture_New;
+	}
+
+	return pTexture;
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)

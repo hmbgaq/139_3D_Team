@@ -31,6 +31,7 @@ public:
 	HRESULT	Create_Shader();
 	HRESULT Create_RenderTarget();
 	HRESULT Create_DepthStencil();
+	HRESULT GraphicDebug_Shader();
 
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
@@ -125,6 +126,9 @@ public:
 	void Set_Vignette_Option(VIGNETTE_DESC desc) { m_tVignette_Option = desc; }
 	void Set_ScreenEffect_Option(SCREENEFFECT_DESC desc) { m_eScreenDEffect_Desc = desc; }
 
+private: // Debug
+	ID3DBlob* CompileShader(const std::wstring& filename, const string& entrypoint, const string& target);
+
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
 	_bool						bTest = { true };
@@ -150,11 +154,11 @@ private:
 	wstring						strCurrentTarget			= TEXT("Target_Effect_Final");
 
 private:
+	ID3DBlob*					m_psByteCode				= { nullptr };
 	ID3D11Device*				m_pDevice					= { nullptr };
 	ID3D11DeviceContext*		m_pContext					= { nullptr };
 	class CGameInstance*		m_pGameInstance				= { nullptr };
 	list<class CGameObject*>	m_RenderObjects[RENDER_END];
-
 private:
 	class CShader*				m_pShader_Deferred			= { nullptr };
 	class CShader*				m_pShader_PostProcess		= { nullptr };
@@ -187,7 +191,7 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { false };
+	_bool			m_bDebugRenderTarget	= { true };
 	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

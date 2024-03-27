@@ -641,8 +641,8 @@ void CWindow_ShaderTool::Compress_SSR_Setting()
 {
 	ImGui::Checkbox("SSR Active", &m_eSSR_Desc.bSSR_Active);
 
-	ImGui::SliderFloat("RayHitThreshold", &m_eSSR_Desc.fRayHitThreshold, 0.0f, 5.0f, "RayHitThreshold = %.3f");
 	ImGui::SliderFloat("RayStep", &m_eSSR_Desc.fRayStep, 0.0f, 3.0f, "RayStep = %.3f");
+	ImGui::SliderFloat("RayHitThreshold", &m_eSSR_Desc.fStepCnt	, 0.0f, 150.f, "RayHitThreshold = %.3f");
 
 	m_pGameInstance->Get_Renderer()->Set_SSR_Option(m_eSSR_Desc);
 }

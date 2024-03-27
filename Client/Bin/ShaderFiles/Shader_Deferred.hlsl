@@ -5,7 +5,35 @@
 //#include "HeightFogUsage.hlsl"
 //#pragma multi_compile _ HF_FOG_ENABLED HF_LIGHT_ATTEN
 
-/* ========== Light ==========*/
+/*=============================================================
+ 
+                             Struct 
+                                
+==============================================================*/
+struct FOG_DESC
+{
+    bool bFog_Active;
+    float fFogStartDepth;
+    float fFogStartDistance;
+    float fFogDistanceValue;
+    float fFogHeightValue;
+    float fFogDistanceDensity;
+    float fFogHeightDensity;
+    float padding; // 4 
+    float4 vFogColor;
+};
+
+struct BLOOMRIM_DESC
+{
+    // 패딩을 추가하지않아도 메모리가 정렬됨 
+    bool bBloomBlur_Active;
+    bool bRimBlur_Active;
+};
+/*=============================================================
+ 
+                             Variable 
+                                
+==============================================================*/
 // Directional
 vector g_vLightDir;
 
@@ -55,8 +83,12 @@ Texture2D g_Effect_DiffuseTarget;   /* Effect - Diffuse */
 Texture2D g_OutlineTarget;          /* RenderGroup - Outline */
 Texture2D g_VoxelReadTexture;
 
+/* ========== GameObject ==========*/
+BLOOMRIM_DESC g_Bloom_Rim_Desc;
+
 /* ========== Fog ==========*/
 float2 g_vFogUVAcc = { 0.f, 0.f };
+FOG_DESC g_Fogdesc;
 
 /* ========== Deferred Active ==========*/
 bool g_bSSAO_Active;
@@ -67,30 +99,11 @@ bool g_bShadow_Active;
 float g_fBias;
 float3 g_vLightColor;
 
-struct FOG_DESC 
-{
-    bool  bFog_Active;          
-    float fFogStartDepth;       
-    float fFogStartDistance;    
-    float fFogDistanceValue;    
-    float fFogHeightValue;      
-    float fFogDistanceDensity;  
-    float fFogHeightDensity;    
-    float padding;              // 4 
-    float4 vFogColor;           
-};
-
-struct BLOOMRIM_DESC
-{
-    // 패딩을 추가하지않아도 메모리가 정렬됨 
-    bool bBloomBlur_Active; 
-    bool bRimBlur_Active; 
-};
-
-FOG_DESC g_Fogdesc;
-BLOOMRIM_DESC g_Bloom_Rim_Desc;
-
-/* ------------------ ------------------ */ 
+/*=============================================================
+ 
+                             IN/OUT  
+                                
+==============================================================*/
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -121,7 +134,11 @@ struct PS_OUT_LIGHT
     float4 vSpecular : SV_TARGET1;
 };
 
-/* ------------------ Function ------------------ */ 
+/*=============================================================
+ 
+                             Function 
+                                
+==============================================================*/
 
 float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
 {
@@ -204,6 +221,11 @@ float4 DoSpecular(float4 lightColor, float shininess, float3 L, float3 N, float3
     return lightColor * pow(RdotV, shininess);
 }
 
+/*=============================================================
+ 
+                         Vertex Shader 
+                                
+==============================================================*/
 /* ----------------------------------------------- */ 
 VS_OUT VS_MAIN(VS_IN In)
 {
@@ -220,6 +242,12 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 
 }
+
+/*=============================================================
+ 
+                          Pixel Shader  
+                                
+==============================================================*/
 /* ------------------ 0 - DEBUG ------------------ */
 
 PS_OUT PS_MAIN_DEBUG(PS_IN In)
@@ -524,11 +552,12 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     vAlbedo = pow(vAlbedo, 2.2f);
     vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     float3 N = vNormal.xyz * 2.f - 1.f;
-    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord); /* (R)Roughness ,(G)Metallic , (B)Ambient Occlusion */
+    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
+    /* (R)Occlusion ,(G)Roughness , (B)Metalic */
     
-    float fRoughness = vORMDesc.r;
-    float fMetallic = vORMDesc.g;
-    float fAmbient_Occlusion = vORMDesc.b;
+    float fRoughness = vORMDesc.g;
+    float fMetallic = vORMDesc.b;
+    float fAmbient_Occlusion = vORMDesc.r;
     
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     
@@ -619,11 +648,11 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     vAlbedo = pow(vAlbedo, gamma);
     
-    // ORM : (R)Roughness ,(G)Metallic , (B)Ambient Occlusion 에 저장 
+    // ORM : (R)Occlusion ,(G)Roughness , (B)Metalic */ 에 저장 
     vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord); 
-    float fRoughness = vORMDesc.r;
-    float fMetallic = vORMDesc.g;
-    float fAmbient_Occlusion = vORMDesc.b;
+    float fAmbient_Occlusion = vORMDesc.r;
+    float fRoughness = vORMDesc.g;
+    float fMetallic = vORMDesc.b;
     float fAO;
     fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
     

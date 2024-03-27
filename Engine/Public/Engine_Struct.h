@@ -382,8 +382,8 @@ namespace Engine
 	typedef struct ENGINE_DLL tagSSR_Desc
 	{
 		_bool	bSSR_Active = { false };
-		_float fRayHitThreshold = 2.f;
-		_float fRayStep = 1.6f;
+		_float  fRayStep = 0.005f;
+		_float  fStepCnt = 75.f;
 	}SSR_DESC;
 
 	typedef struct ENGINE_DLL tagChroma_Desc
@@ -468,8 +468,7 @@ namespace Engine
 		_float foffset_bias		= 1.f;		//[0.0 to 6.0] Offset bias adjusts the radius of the sampling pattern.
 											//I designed the pattern for offset_bias 1.0, but feel free to experiment.
 		_float fshow_sharpen	= 0.f;		//[0 or 1] Visualize the strength of the sharpen (multiplied by 4 to see it better)
-
-	};
+	}LUMASHARPEN_DESC;
 
 	typedef struct ENGINE_DLL tagScreenTone
 	{

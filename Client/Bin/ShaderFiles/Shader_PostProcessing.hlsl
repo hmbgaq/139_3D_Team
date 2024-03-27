@@ -1,6 +1,18 @@
 #include "Shader_Defines.hlsli"
 
-/* =================== Struct =================== */
+/*=============================================================
+ 
+                             Global  
+                                
+==============================================================*/
+static const float PI = 3.14159265359f;
+static const float EPSILON = 0.000001f;
+
+/*=============================================================
+ 
+                             Struct 
+                                
+==============================================================*/
 struct radial
 {
     bool    bRadial_Active;
@@ -10,8 +22,8 @@ struct radial
 
 struct DOF
 {
-    bool bDOF_Active;
-    float4 DOFParams;
+    bool    bDOF_Active;
+    float4  DOFParams;
     //float   fFocusDistance;
     //float   fFocusRange;
 };
@@ -23,15 +35,15 @@ struct VIGNETTE_DESC
     float   fVignetteRadius; //[-1.00 to 3.00] lower values = stronger radial effect from center
     float   fVignetteAmount; //[-2.00 to 1.00] Strength of black. -2.00 = Max Black, 1.00 = Max White.
     float   fVignetteSlope; //[2 to 16] How far away from the center the change should start to really grow strong (odd numbers cause a larger fps drop than even numbers)
-    float  fVignetteCenter_X;
-    float  fVignetteCenter_Y;
+    float   fVignetteCenter_X;
+    float   fVignetteCenter_Y;
 };
 
 struct SSR_DESC
 {
     bool bSSR_Active;
-    float fRayHitThreshold;
-    float fRayStep;
+    float fRayStep; // 0.005
+    float fStepCnt; // 75
 };
 
 struct CHROMA_DESC
@@ -39,10 +51,17 @@ struct CHROMA_DESC
     bool bChroma_Active;
     float fcaAmount;
 };
-/* =================== Variable =================== */
+/*=============================================================
+ 
+                             Variable 
+                                
+==============================================================*/
 // Origin
-float4x4    g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-float4x4    g_ViewMatrixInv, g_ProjMatrixInv;
+float4x4    g_WorldMatrix;
+float4x4    g_ViewMatrix;
+float4x4    g_ProjMatrix;
+float4x4    g_ViewMatrixInv;
+float4x4    g_ProjMatrixInv;
 float4      g_vCamPosition;
 float       g_fCamFar;
 float       g_fCamNear;
@@ -79,11 +98,17 @@ VIGNETTE_DESC g_Vignette_desc;
 static const int SSR_MAX_STEPS = 16;
 static const int SSR_BINARY_SEARCH_STEPS = 16;
 Texture2D g_NormalTarget;
+Texture2D g_ORMTarget;
 SSR_DESC g_SSR_Desc;
 
 // Chroma
 CHROMA_DESC g_Chroma_Desc;
-/* =================== Function =================== */
+
+/*=============================================================
+ 
+                             Function 
+                                
+==============================================================*/
 
 float3 reinhard_extended(float3 v, float max_white)
 {
@@ -233,7 +258,8 @@ float4 SSRBinarySearch(float3 dir, inout float3 hitCoord)
     float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
     float depthDifference = hitCoord.z - viewSpacePosition.z;
 
-    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fRayHitThreshold ? 1.0f : 0.0f);
+    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fStepCnt ? 1.0f : 0.0f);
+//    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fRayHitThreshold ? 1.0f : 0.0f);
 }
 
 float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
@@ -300,7 +326,11 @@ float3 DistanceDOF(float3 colorFocus, float3 colorBlurred, float depth)
     return lerp(colorFocus, colorBlurred, blurFactor);
 }
 
-/* =================== VS / PS =================== */
+/*=============================================================
+ 
+                             IN/OUT  
+                                
+==============================================================*/
 
 struct VS_IN
 {
@@ -316,7 +346,7 @@ struct VS_OUT
 
 struct VS_OUT_SSR
 {
-    float4 VpOSITION : SV_Position;
+    float4 vPosition : SV_Position;
     float2 vTexcoord : TEXCOORD0;
     float4 vPositionClip : TEXCOORD1;
 };
@@ -332,7 +362,11 @@ struct PS_OUT
     float4 vColor : SV_TARGET0;
 };
 
-/* =================== Base Vertex Shader =================== */
+/*=============================================================
+ 
+                         Vertex Shader 
+                                
+==============================================================*/
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
@@ -350,12 +384,11 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
-VS_OUT_SSR VS_MAIN_SSR(VS_IN In)
-{
-    VS_OUT_SSR Out = (VS_OUT_SSR) 0;
-    
-    return Out;
-}
+/*=============================================================
+ 
+                          Pixel Shader  
+                                
+==============================================================*/
 /* ------------------- 0 - Origin Pixel Shader -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -472,8 +505,8 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
         Out.vColor += Effect_Distortion;
     
     if (Out.vColor.a == 0) 
-       // Out.vColor += Deferred + Effect + Effect_Blur;
         Out.vColor += Deferred + Effect + Object_Blur + Effect_Blur;
+       // Out.vColor += Deferred + Effect + Effect_Blur;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
@@ -493,13 +526,11 @@ PS_OUT PS_MAIN_EFFECT_DISTORTION(PS_IN In)
     vector Distortion = g_Effect_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
     Out.vColor = Distortion;
      
-    
     // 왜곡된 텍스쿠드 좌표를 만든다.
     float2 vDistortedCoord = Distortion.xy + In.vTexcoord.xy;
      
     // 디퍼드 렌더타겟을 왜곡된 텍스쿠드 좌표로 샘플링한다.
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, vDistortedCoord);
-    
     
     if (Out.vColor.a == 0)
         discard;
@@ -523,39 +554,119 @@ PS_OUT PS_MAIN_SSR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    // 반사되는 반직선을 계산하기위해 Depth 와 Normal의 방향을 사용한다. -> 반직선이 Geometry와 충돌할때까지 추적 
-    float4 normalMetallic = g_NormalTarget.Sample(LinearBorderSampler, In.vTexcoord);
-    float4 sceneColor = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0);
-
-    float metallic = normalMetallic.a;
-    if (metallic < 0.01f)
+    if (0 == g_SSR_Desc.fStepCnt || EPSILON > g_SSR_Desc.fRayStep)
     {
-        Out.vColor = sceneColor;
+        Out.vColor = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
         return Out;
     }
+    float4 vColor = float4(0.f, 0.f, 0.f, 0.f);
     
-    float3 normal = normalMetallic.rgb;
-    normal = 2 * normal - 1.0;
-    normal = normalize(normal);
+    float4 vNormal = g_NormalTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vProperties = g_ORMTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    float fViewZ = vDepth.w * 1200.f;
+    
+    float4 vWorldPos;
 
-    float4 DepthColor = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
-    float depth = DepthColor.r;
-    float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
-    float3 reflectDirection = normalize(reflect(viewSpacePosition, normal));
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vNormal.w;
+    vWorldPos.w = 1.0f;
+    
+    vWorldPos *= fViewZ;
+    //vWorldPos = mul(vWorldPos, g_ProjViewMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+    
+    float4 vViewDir = normalize(vWorldPos - g_vCamPosition);
+    vViewDir.w = 0.f;
+    
+    float4 vRayOrigin = vWorldPos;
+    
+    vNormal = float4(vNormal.xyz * 2.f - 1.f, 0.f);
+    float4 vRayDir = normalize(reflect(vViewDir, vNormal));
+    vRayDir.w = 0.f;
+    
+    float fStep = g_SSR_Desc.fRayStep;
+    float4x4 matVP = mul(g_ViewMatrix, g_ProjMatrix);
+    
+    float fPixelDepth = 0.f;
+    int iStepDistance = 0;
+    float2 vRayPixelPos = (float2) 0;
+  
+    [loop]
+    for (iStepDistance = 1; iStepDistance < g_SSR_Desc.fStepCnt; ++iStepDistance)
+    {
+        float4 vDirStep = vRayDir * fStep * iStepDistance;
+        vDirStep.w = 0.f;
+        float4 vRayWorldPos = vRayOrigin + vDirStep;
 
-    float3 hitPosition = viewSpacePosition;
-    float4 coords = SSRRayMarch(reflectDirection, hitPosition);
-
-    float2 coordsEdgeFactor = float2(1, 1) - pow(saturate(abs(coords.xy - float2(0.5f, 0.5f)) * 2), 8);
-    float screenEdgeFactor = saturate(min(coordsEdgeFactor.x, coordsEdgeFactor.y));
-    float reflectionIntensity = saturate(screenEdgeFactor * saturate(reflectDirection.z) * (coords.w));
-
-    float3 reflectionColor = reflectionIntensity * g_ProcessingTarget.SampleLevel(ClampSampler, coords.xy, 0).rgb;
-    Out.vColor =  sceneColor + metallic * max(0, float4(reflectionColor, 1.0f));
-   
+        float4 vRayProjPos = mul(vRayWorldPos, matVP);
+        vRayProjPos.x = vRayProjPos.x / vRayProjPos.w;
+        vRayProjPos.y = vRayProjPos.y / vRayProjPos.w;
+      
+        vRayPixelPos = float2(vRayProjPos.x * 0.5f + 0.5f, vRayProjPos.y * -0.5f + 0.5f);
+        
+        clip(vRayPixelPos);
+        clip(1.f - vRayPixelPos);
+        
+        float2 vPixelCoord = float2(0.f, 0.f);
+        //vPixelCoord.x = g_NormalTarget.Sample(LinearSampler, vRayPixelPos).w;
+        //vPixelCoord.y = g_NormalDepthTarget.Sample(LinearSampler, vRayPixelPos).w;
+        
+        fPixelDepth = g_NormalTarget.Sample(LinearSampler, vRayPixelPos).w;
+        fPixelDepth *= g_DepthTarget.Sample(LinearSampler, vRayPixelPos).w * 1200.f;
+        
+        float fDiff = vRayProjPos.z - fPixelDepth;
+        
+        if (fDiff > 0.0f && fDiff < g_SSR_Desc.fRayStep)
+            break;
+    }
+ 
+    clip(g_SSR_Desc.fStepCnt - 0.5f - iStepDistance);
+    
+    Out.vColor = g_ProcessingTarget.Sample(LinearSampler, vRayPixelPos) * (1.f - iStepDistance / g_SSR_Desc.fStepCnt) * (clamp(pow(vProperties.x, 2.2f) / (vProperties.y + EPSILON), 0.01f, 1.f));
+    
     return Out;
 }
-/* ------------------- 8 - Chroma -------------------*/
+// SSR
+//    PS_OUT Out = (PS_OUT) 0;
+    
+//    // 반사되는 반직선을 계산하기위해 Depth 와 Normal의 방향을 사용한다. -> 반직선이 Geometry와 충돌할때까지 추적 
+//    float4 normalMetallic = g_NormalTarget.Sample(LinearBorderSampler, In.vTexcoord);
+//    float4 sceneColor = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0);
+
+//    float metallic = normalMetallic.a;
+//    if (metallic < 0.01f)
+//    {
+//        Out.vColor = sceneColor;
+//        return Out;
+//    }
+    
+//    float3 normal = normalMetallic.rgb;
+//    normal = 2 * normal - 1.0;
+//    normal = normalize(normal);
+
+//    float4 DepthColor = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
+//    float depth = DepthColor.r;
+//    float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
+//    float3 reflectDirection = normalize(reflect(viewSpacePosition, normal));
+
+//    float3 hitPosition = viewSpacePosition;
+//    float4 coords = SSRRayMarch(reflectDirection, hitPosition);
+
+//    float2 coordsEdgeFactor = float2(1, 1) - pow(saturate(abs(coords.xy - float2(0.5f, 0.5f)) * 2), 8);
+//    float screenEdgeFactor = saturate(min(coordsEdgeFactor.x, coordsEdgeFactor.y));
+//    float reflectionIntensity = saturate(screenEdgeFactor * saturate(reflectDirection.z) * (coords.w));
+
+//    float3 reflectionColor = reflectionIntensity * g_ProcessingTarget.SampleLevel(ClampSampler, coords.xy, 0).rgb;
+//    Out.vColor =  sceneColor + metallic * max(0, float4(reflectionColor, 1.0f));
+   
+//    return Out;
+//} 
+
+/* ------------------- 8 - Chroma-------------------*/
 PS_OUT PS_MAIN_CHROMA(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -565,7 +676,7 @@ PS_OUT PS_MAIN_CHROMA(PS_IN In)
     screenHeight = 720.f;
     //colorTex.GetDimensions(screenWidth, screenHeight);
     const float2 texelSize = 1.0.xx / float2(screenWidth, screenHeight);
-    
+  
     float2 center_offset = In.vTexcoord - float2(0.5, 0.5);
 
     float ca_amount = 0.018 * g_Chroma_Desc.fcaAmount;
@@ -602,7 +713,7 @@ PS_OUT PS_MAIN_CHROMA(PS_IN In)
 
     float3 res = res_sum / color_sum;
     Out.vColor= float4(res, 1.0);
-    
+  
     return Out;
 }
 /* ------------------- Technique  -------------------*/
@@ -701,7 +812,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN_SSR();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;

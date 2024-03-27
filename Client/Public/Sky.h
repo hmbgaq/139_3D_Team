@@ -14,7 +14,8 @@ BEGIN(Client)
 class CSky final : public CGameObject
 {
 public:
-	enum SKYTYPE { SKY_STAGE1, SKY_STAGE1BOSS, SKY_TEMP1, SKY_TEMP2 };
+	//enum SKYTYPE { SKY_STAGE1, SKY_STAGE1BOSS, SKY_TEMP1, SKY_TEMP2 };
+	enum SKYTYPE { SKY_STAGE1, SKY_STAGE1BOSS, SKY_STAGE2, SKY_STAGE2BOSS, SKY_END };
 
 private:
 	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

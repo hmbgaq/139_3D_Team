@@ -2843,7 +2843,7 @@ void CWindow_MapTool::Interact_SplineSave()
 	json SplineJson;
 
 
-	_int iSplinePointSize = m_mapSplinePoints.size();
+	_int iSplinePointSize = (_int)m_mapSplinePoints.size();
 	_int iJsonIndex = 0;
 
 	SplineJson[iJsonIndex].emplace("DivergingCount", m_iSplineDivergingCount);

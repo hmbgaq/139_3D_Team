@@ -114,9 +114,8 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 
 void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 {
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return ;
+	if (m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 5.f))
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
@@ -479,9 +478,8 @@ void CEnvironment_Interact::Start_Spline(vector<_float4>* SplinePoints)
 	m_InitMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
 	_vector vFirstPos, vSecondPos, vResultPos;
-	_int iPointSize = SplinePoints->size();
-	_int iRoopCount = SplinePoints->size() / 2;
-
+	_int iPointSize = _int(SplinePoints->size());
+	_int iRoopCount = _int(SplinePoints->size() / 2);
 
 	for (_int i = 0; i < iPointSize; ++i)
 	{
@@ -624,7 +622,7 @@ HRESULT CEnvironment_Interact::Load_SplineJson()
 		return E_FAIL;
 	}
 
-	_int iSplineJsonSize = SplineJson.size();
+	_int iSplineJsonSize = _int(SplineJson.size());
 
 	for (_int i = 0; i < iSplineJsonSize; ++i)
 	{
@@ -643,7 +641,7 @@ HRESULT CEnvironment_Interact::Load_SplineJson()
 		json   SplineVectorJson = SplineJson[i]["SplineVectorJson"];
 		_float fSplineSpeed = SplineJson[i]["SplineSpeed"]; //! 해당 구간 속도
 
-		_int iSplineVectorJsonSize = SplineVectorJson.size();
+		_int iSplineVectorJsonSize = _int(SplineVectorJson.size());
 
 		vector<_float4> vecSplinePoint;
 
@@ -761,7 +759,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 
 		auto& iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-		_int iNewSplineVectorSize = iter->second.size();
+		_int iNewSplineVectorSize = _int(iter->second.size());
 
 		for (_int i = 0; i < iNewSplineVectorSize; ++i)
 		{
@@ -791,7 +789,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 				
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-				_int iNewSplineVectorSize = iter->second.size();
+				_int iNewSplineVectorSize = _int(iter->second.size());
 
 				for (_int i = 0; i < iNewSplineVectorSize; ++i)
 				{
@@ -811,7 +809,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-				_int iNewSplineVectorSize = iter->second.size();
+				_int iNewSplineVectorSize = _int(iter->second.size());
 
 				for (_int i = 0; i < iNewSplineVectorSize; ++i)
 				{
@@ -834,7 +832,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-				_int iNewSplineVectorSize = iter->second.size();
+				_int iNewSplineVectorSize = _int(iter->second.size());
 
 				for (_int i = 0; i < iNewSplineVectorSize; ++i)
 				{
@@ -855,7 +853,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-				_int iNewSplineVectorSize = iter->second.size();
+				_int iNewSplineVectorSize = _int(iter->second.size());
 
 				for (_int i = 0; i < iNewSplineVectorSize; ++i)
 				{
@@ -879,7 +877,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-				_int iNewSplineVectorSize = iter->second.size();
+				_int iNewSplineVectorSize = _int(iter->second.size());
 
 				for (_int i = 0; i < iNewSplineVectorSize; ++i)
 				{
@@ -900,7 +898,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-				_int iNewSplineVectorSize = iter->second.size();
+				_int iNewSplineVectorSize = _int(iter->second.size());
 
 				for (_int i = 0; i < iNewSplineVectorSize; ++i)
 				{
