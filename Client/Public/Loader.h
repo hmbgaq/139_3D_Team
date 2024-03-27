@@ -68,6 +68,14 @@ private:
 	HRESULT Read_FBXModelPath_NoScale(const _tchar* StartDirectoryPath, LEVEL eLevel, _int iAnimType); //! 백배 스케일 안함
 
 
+/* For.Effect */
+private:
+	HRESULT Ready_Effect_Origin();
+	HRESULT Ready_Effect_All(LEVEL eLevel);
+	HRESULT Ready_Effect_Texture(LEVEL eLevel);
+	HRESULT Ready_Effect_Model(LEVEL eLevel);
+	HRESULT Ready_Effect_Buffer(LEVEL eLevel);
+
 
 public:
 	static CLoader * Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, LEVEL eNextLevelID);

@@ -45,9 +45,8 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
+
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
 		if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
@@ -134,7 +133,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 					if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
 					{
 						m_tVoidDesc.fDissolveAmount = 1.f;
-						m_tVoidDesc.bRender = TRUE;
+						//m_tVoidDesc.bRender = TRUE;
 						return;
 					}
 				}
@@ -144,8 +143,8 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 					m_pVIBufferCom->Update(fTimeDelta);
 				}
 			}
+
 #ifdef _DEBUG
-		}
 	}
 #endif // _DEBUG
 
@@ -153,52 +152,50 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
+
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tVoidDesc.bActive_Tool)
-		{
 #endif // _DEBUG
-			if (m_tVoidDesc.bRender)
+		if (m_tVoidDesc.bRender)
+		{
+			__super::Update_PivotMat();
+
+			if (m_bSortZ)
 			{
-				__super::Update_PivotMat();
-
-				if (m_bSortZ)
-				{
-					//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
-				}
-				Compute_CamDistance();
-
-				// CRenderer::RENDER_BLEND
-				FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
+				//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
 			}
-#ifdef _DEBUG
+			Compute_CamDistance();
+
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 		}
+#ifdef _DEBUG
 	}
 #endif // _DEBUG
+
 }
 
 HRESULT CEffect_Particle::Render()
 {
+
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tVoidDesc.bActive_Tool)
-		{
 #endif // _DEBUG
-			if (FAILED(Bind_ShaderResources()))
-				return E_FAIL;
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-			/* 이 쉐이더에 0번째 패스로 그릴거야. */
-			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+		/* 이 쉐이더에 0번째 패스로 그릴거야. */
+		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
 
-			/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
-			m_pVIBufferCom->Bind_VIBuffers();
+		/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
+		m_pVIBufferCom->Bind_VIBuffers();
 
-			/* 바인딩된 정점, 인덱스를 그려. */
-			m_pVIBufferCom->Render();
+		/* 바인딩된 정점, 인덱스를 그려. */
+		m_pVIBufferCom->Render();
+
+
 #ifdef _DEBUG
-		}
 	}
 #endif // _DEBUG
 

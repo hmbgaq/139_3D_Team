@@ -559,7 +559,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
 		VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
@@ -573,7 +573,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
         VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
@@ -588,7 +588,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
         VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();

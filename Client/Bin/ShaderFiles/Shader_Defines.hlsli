@@ -169,6 +169,20 @@ BlendState BS_AlphaBlend_Add
 	BlendOp = add;
 };
 
+BlendState BS_AlphaBlend_Effect
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+
+    SrcBlend = Src_Alpha;
+    DestBlend = Inv_Src_Alpha;
+    BlendOp = Add;
+
+    SrcBlendAlpha = Src_Alpha;
+    DestBlendAlpha = Dest_Alpha;
+    BlendOpAlpha = MAX;
+};
+
 BlendState BS_Blend_Add
 {
 	BlendEnable[0] = true;
@@ -179,6 +193,8 @@ BlendState BS_Blend_Add
 	BlendOp = add;
 	/* Src색상과 대상 색상을 더할 때 Add연산을 사용하도록 설정한다. */ 
 };
+
+
 
 BlendState BS_Blend_Max
 {

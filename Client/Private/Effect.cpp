@@ -145,7 +145,6 @@ void CEffect::Tick(_float fTimeDelta)
 void CEffect::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
