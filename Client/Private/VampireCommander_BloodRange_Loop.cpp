@@ -15,7 +15,7 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 	m_iLoopescape = 0;
 	m_fPreHP = pActor->Get_Hp();
 	
-	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, L"Layer_Effect", "blood Loop_16.json", pActor);
+	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, L"Layer_Effect", "blood Loop_22_Smoke.json", pActor);
 }
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
