@@ -2,6 +2,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "Renderer.h"
+#include "UI_Manager.h"
 
 BEGIN(Engine)
 class CCharacter;
@@ -110,7 +111,7 @@ public:
 		_float		fScaleY = 100.f;
 
 		/* 회전 */
-		_float		fRotationZ = 0.0f;
+		_float		fRotationZ = 0.5f;
 
 		/* 이동 */
 		_float		fPositionX = (_float)g_iWinSizeX / 2;
@@ -514,8 +515,16 @@ public:
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
+	_bool				m_bSelect = false;
+	_bool				m_bSelectPressing = false;
 	_uint				m_iButtonState = {};
 	_bool				m_bChange_Proj = false;
+
+public:
+	void				Set_Select(_bool bSelect) { m_bSelect = bSelect; }
+	_bool				Get_Select() { return m_bSelect; }
+	void				Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
+	_bool				Get_SelectPressing() { return m_bSelectPressing; };
 
 public:
 	void	ChangeProj() { m_bChange_Proj = true; }

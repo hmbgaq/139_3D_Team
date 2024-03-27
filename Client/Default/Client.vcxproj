@@ -1016,6 +1016,7 @@
     <ClInclude Include="..\Public\UI_Obtain_Button.h" />
     <ClInclude Include="..\Public\UI_Option_Button.h" />
     <ClInclude Include="..\Public\UI_Option_SubTitle_Button.h" />
+    <ClInclude Include="..\Public\UI_SelectList.h" />
     <ClInclude Include="..\Public\UI_Skill_Button.h" />
     <ClInclude Include="..\Public\UI_Option_Title_Button.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
@@ -1775,6 +1776,7 @@
     <ClCompile Include="..\Private\UI_Obtain_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_SubTitle_Button.cpp" />
+    <ClCompile Include="..\Private\UI_SelectList.cpp" />
     <ClCompile Include="..\Private\UI_Skill_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_Title_Button.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />

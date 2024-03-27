@@ -18,7 +18,7 @@
 #include "VampireCommander_BloodRange_Stun_Start.h"
 #include "Player_Finisher_VampireCommander_VS.h"
 
-#include "UI_Manager.h"
+//#include "UI_Manager.h"
 
 #include "Data_Manager.h"
 #include "Player.h"

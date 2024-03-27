@@ -51,6 +51,9 @@ HRESULT CUI::Initialize(void* pArg)
 #pragma region 2D
 	//if (m_tUIInfo.bWorld == false)
 	{
+		if (m_tUIInfo.fPositionZ == 0.f)
+			m_tUIInfo.fPositionZ = 0.1f;
+
 		m_pTransformCom->Set_Scaling(m_tUIInfo.fScaleX, m_tUIInfo.fScaleY, m_fScaleZ);
 
 		m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(m_tUIInfo.fPositionX - (_float)g_iWinSizeX * 0.5f, -m_tUIInfo.fPositionY + (_float)g_iWinSizeY * 0.5f, m_tUIInfo.fPositionZ, 1.f));
@@ -110,33 +113,33 @@ void CUI::Tick(_float fTimeDelta)
 	if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
 		m_bActive = m_bTool;
 	
-	if (m_bChange_Proj == true)
-	{
-		if (m_tUIInfo.bWorld == true)
-		{
-			// View 세팅 카메라에 대한 세팅이다 : 카메라가 위치할 곳, 카메라가 볼 곳, 카메라의 UP vector
-			XMMatrixLookAtLH({ 0.f, 0.f, -10.f, 0.f }, { 0.f, 0.f, 10.f, 0.f }, { 0.f, 1.f, 0.f, 0.f });
+	//if (m_bChange_Proj == true)
+	//{
+	//	if (m_tUIInfo.bWorld == true)
+	//	{
+	//		// View 세팅 카메라에 대한 세팅이다 : 카메라가 위치할 곳, 카메라가 볼 곳, 카메라의 UP vector
+	//		XMMatrixLookAtLH({ 0.f, 0.f, -10.f, 0.f }, { 0.f, 0.f, 10.f, 0.f }, { 0.f, 1.f, 0.f, 0.f });
 
-			// 기존 Proj를 내려준다.
-			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
+	//		// 기존 Proj를 내려준다.
+	//		XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
 
-			// 새 Proj로 올려준다.
-			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ));
-		}
-		else
-		{
-			// View 세팅
-			XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+	//		// 새 Proj로 올려준다.
+	//		XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ));
+	//	}
+	//	else
+	//	{
+	//		// View 세팅
+	//		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 
-			// 기존 Proj를 내려준다.
-			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
+	//		// 기존 Proj를 내려준다.
+	//		XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
 
-			// 새 Proj로 올려준다.
-			XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, 0.f, 1.f));
-		}
+	//		// 새 Proj로 올려준다.
+	//		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, m_tUIInfo.fPositionZ, 1.f));
+	//	}
 
-		m_bChange_Proj = false;
-	}
+	//	m_bChange_Proj = false;
+	//}
 
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 	{
@@ -231,9 +234,19 @@ void CUI::Picking_UI()
 	m_pContext->RSGetViewports(&ViewPortIndex, &ViewPort); // 뷰포트 가져오기 
 
 	if (PtInRect(&m_rcUI, pt))   //  PtInRect(렉트주소, 마우스 포인트)
+	{
 		m_bPick = true;
+		if (m_pGameInstance->Mouse_Down(DIM_LB)) // 다른곳에서 입력이 겹칠거같은데 공통으로 쓸 글로벌 변수로 마우스 클릭을 하나 두는게 좋을수도
+			m_bSelect = true;
+		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+			m_bSelectPressing = true;
+	}
 	else
+	{
 		m_bPick = false;
+		m_bSelect = false;
+		m_bSelectPressing = false;
+	}
 }
 
 void CUI::Check_RectPos()

@@ -35,6 +35,8 @@ HRESULT CUI_ElementList::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	m_bButtonUI = true;
+
 	return S_OK;
 }
 
@@ -102,45 +104,43 @@ void CUI_ElementList::UI_Exit(_float fTimeDelta)
 
 void CUI_ElementList::Check_Picking(_float fTimeDelta)
 {
-	if (m_bPick == true)
+
+	if (m_bSelect || m_bSelectPressing)
 	{
-		if (m_pGameInstance->Mouse_Down(DIM_LB))
+		if (m_tUIInfo.strUIName == "HBAO")
 		{
-			if (m_tUIInfo.strUIName == "HABO")
-			{
-				m_bHABO_Active = !m_bHABO_Active;
-				m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_bHABO_Active);
-			}
-			else if (m_tUIInfo.strUIName == "FOG")
-			{
-				m_bFOG_Active = !m_bFOG_Active;
-				m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_bFOG_Active);
-			}
-			else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
-			{
-				m_bRadial_Blur_Active = !m_bRadial_Blur_Active;
-				m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_bRadial_Blur_Active);
-			}
-			else if (m_tUIInfo.strUIName == "DOF")
-			{
-				m_bDof_Active = !m_bDof_Active;
-				m_pGameInstance->Get_Renderer()->Set_DOF_Active(m_bDof_Active);
-			}
-			else if (m_tUIInfo.strUIName == "HDR")
-			{
-				m_bHDR_Active = !m_bHDR_Active;
-				m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bHDR_Active);
-			}
-			else if (m_tUIInfo.strUIName == "SHADOW")
-			{
-				m_bShadow_Active = !m_bShadow_Active;
-				m_pGameInstance->Get_Renderer()->Set_Shadow_Active(m_bShadow_Active);
-			}
-			else if (m_tUIInfo.strUIName == "HSV")
-			{
-				m_bHSV_Active = !m_bHSV_Active;
-				m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bHSV_Active);
-			}
+			m_bHABO_Active = !m_bHABO_Active;
+			m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_bHABO_Active);
+		}
+		else if (m_tUIInfo.strUIName == "FOG")
+		{
+			m_bFOG_Active = !m_bFOG_Active;
+			m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_bFOG_Active);
+		}
+		else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
+		{
+			m_bRadial_Blur_Active = !m_bRadial_Blur_Active;
+			m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_bRadial_Blur_Active);
+		}
+		else if (m_tUIInfo.strUIName == "DOF")
+		{
+			m_bDof_Active = !m_bDof_Active;
+			m_pGameInstance->Get_Renderer()->Set_DOF_Active(m_bDof_Active);
+		}
+		else if (m_tUIInfo.strUIName == "HDR")
+		{
+			m_bHDR_Active = !m_bHDR_Active;
+			m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bHDR_Active);
+		}
+		else if (m_tUIInfo.strUIName == "SHADOW")
+		{
+			m_bShadow_Active = !m_bShadow_Active;
+			m_pGameInstance->Get_Renderer()->Set_Shadow_Active(m_bShadow_Active);
+		}
+		else if (m_tUIInfo.strUIName == "PBR")
+		{
+			m_bHSV_Active = !m_bHSV_Active;
+			m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bHSV_Active);
 		}
 	}
 }
@@ -241,15 +241,15 @@ HRESULT CUI_ElementList::Ready_Components()
 		return E_FAIL;
 #pragma endregion
 
-#pragma region SSR
+#pragma region PBR
 	//! For.Com_Texture2 // NonActive
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_SSR"),
-		TEXT("Com_Texture_Element_List_NonActive_SSR"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_SSR]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_tab_PBR"),
+		TEXT("Com_Texture_Element_List_NonActive_PBR"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE_PBR]))))
 		return E_FAIL;
 
 	//! For.Com_Texture2 // Active
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_SSR"),
-		TEXT("Com_Texture_Element_List_Active_SSR"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_SSR]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_list_navigation_PBR"),
+		TEXT("Com_Texture_Element_List_Active_PBR"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_PBR]))))
 		return E_FAIL;
 #pragma endregion
 
@@ -264,6 +264,7 @@ HRESULT CUI_ElementList::Ready_Components()
 		TEXT("Com_Texture_Element_List_Active_SHADOW"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE_SHADOW]))))
 		return E_FAIL;
 #pragma endregion
+
 	return S_OK;
 }
 
@@ -280,10 +281,10 @@ HRESULT CUI_ElementList::Bind_ShaderResources()
 		return E_FAIL;
 
 
-
 	if (m_bPick == true)
 	{
-		if (m_tUIInfo.strUIName == "HABO")
+		/* 이 객체가 주가되는 녀석이니, 본인이 가진 변수들로 픽킹을 구분하고, 이 객체가 픽킹됐는지 알아야하는 객체는 매니저를 통해 알게하자. */
+		if (m_tUIInfo.strUIName == "HBAO") // 선택된 녀석과 본인이 가진 이름을 비교해서 띄워야한다.
 		{
 			if (FAILED(m_pTextureCom[ACTIVE_HABO]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
@@ -326,7 +327,7 @@ HRESULT CUI_ElementList::Bind_ShaderResources()
 	}
 	else
 	{
-		if (m_tUIInfo.strUIName == "HABO")
+		if (m_tUIInfo.strUIName == "HBAO")
 		{
 			if (FAILED(m_pTextureCom[NONACTIVE_HABO]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;

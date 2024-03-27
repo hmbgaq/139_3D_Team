@@ -2953,6 +2953,9 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList">
       <UniqueIdentifier>{adb0cc32-0a85-4a50-b6cf-4c821167dfe3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList\Select">
+      <UniqueIdentifier>{8e0ffcba-6dc3-4707-bf47-a12695be8aa6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5978,6 +5981,9 @@
     <ClInclude Include="..\Public\Infected_HitHeavyToStun_01_NEW.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\9. Stun\2. HitHeavy_To_Stun</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_SelectList.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList\Select</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8453,6 +8459,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_ElementList.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SelectList.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList\Select</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

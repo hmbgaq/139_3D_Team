@@ -494,6 +494,7 @@ private:
 		"Option_Window",
 		"Option_Title_Button",
 		"ElementList",
+		"SelectList",
 		"AimCrosshair",
 		"Weakness",
 		"Distortion",

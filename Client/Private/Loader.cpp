@@ -123,6 +123,7 @@
 #include "UI_Option_Title_Button.h"
 #include "UI_Obtain_Button.h"
 #include "UI_ElementList.h"
+#include "UI_SelectList.h"
 /* LevelUp */
 #include "UI_LevelUp_MagicFrame.h"
 #include "UI_LevelUp_MagicTrack.h"
@@ -1008,6 +1009,7 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Option_Window"), CUI_Option_Window::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Option_Window"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Option_Title_Button"), CUI_Option_Title_Button::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Option_Title_Button"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ElementList"), CUI_ElementList::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ElementList"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SelectList"), CUI_SelectList::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SelectList"))));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Obtain_Button"), CUI_Obtain_Button::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Obtain_Button"))));
 #pragma endregion End
 

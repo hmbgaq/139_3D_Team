@@ -14,6 +14,7 @@ Texture2D g_DiffuseTexture;
 Texture2D g_DiffuseTexture_Second;
 Texture2D g_DiffuseTexture_Third;
 Texture2D g_DiffuseTexture_Fourth;
+Texture2D g_SelectTexture;
 
 Texture2D g_MaskTexture;
 Texture2D g_NoiseTexture;

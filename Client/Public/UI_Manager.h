@@ -136,6 +136,41 @@ public:
 
 	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
 
+public:
+	void			Check_UIPicking(_float fTimeDelta);
+
+private:
+	_bool			m_bMouseOver = false;
+	_bool			m_bSelect = false;
+	_bool			m_bSelectPressing = false;
+	string			m_strSelectUI = "";
+	string			m_strMouseOverUI = "";
+	CUI*			m_pUI = nullptr;
+
+public:
+	void			Set_MouseOver(_bool bMouseOver) { m_bMouseOver = bMouseOver; }
+	// UI 마우스 오버중
+	_bool			Get_MouseOver() { return m_bMouseOver; }
+
+	void			Set_Select(_bool bSelect) { m_bSelect = bSelect; }
+	// UI 선택
+	_bool			Get_Select() { return m_bSelect; }
+
+	void			Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
+	// UI 선택(Pressing)중
+	_bool			Get_SelectPressing() { return m_bSelectPressing; };
+
+	// 선택한 UI 이름 반환
+	string			Get_strSelectUI() { return m_strSelectUI; };
+	// 마우스 오버중인 UI 이름 반환
+	string			Get_strMouseOverUI() { return m_strMouseOverUI; };
+
+	// 선택된 UI본인을 반환
+	CUI* Get_CurrentUI() 
+	{ 
+		if (m_pUI != nullptr)
+			return m_pUI;
+	}
 
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 

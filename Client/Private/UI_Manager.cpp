@@ -38,6 +38,7 @@ HRESULT CUI_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 void CUI_Manager::Tick(_float fTimeDelta)
 { 
 	Check_Active(fTimeDelta);
+	Check_UIPicking(fTimeDelta);
 }
 
 // 플레이 화면의 모든 UI생성
@@ -1622,6 +1623,44 @@ void CUI_Manager::Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_In
 		tUI_Info->eColorMode = Out_Json["ColorMode"];				// 16. Mode
 	if (Out_Json.contains("RenderGroup"))
 		tUI_Info->iRenderGroup = Out_Json["RenderGroup"];			// 16. RenderGroup
+}
+
+void CUI_Manager::Check_UIPicking(_float fTimeDelta)
+{
+	/* Option */ // 전체 다 꺼져있다가 마우스 클릭시 전부 같은녀석으로 켜짐 (확인 필요)
+	if (!m_vecOption.empty())
+	{
+		if (m_vecOption.front()->Get_Active() == true)
+		{
+			for (auto& Option : m_vecOption)
+			{
+				m_bMouseOver = Option->Get_Pick();
+
+				if (m_bMouseOver == true)
+				{// 마우스 오버시에 모든 정보를 넘겨주고 리턴시켜야함 -> 계속 순회하며 값을 바꾸니까 오버한게 덮혀서 안나온것. (오버한 녀석이 있다면, 그 순간 선택했는지 안했는지 정보까지 주면된다.)
+					m_strMouseOverUI = Option->Get_UIDesc().strUIName;
+					m_strSelectUI = Option->Get_UIDesc().strUIName;
+					m_bSelect = Option->Get_Select();
+					m_bSelectPressing = Option->Get_SelectPressing();
+					if (m_bSelect == true || m_bSelectPressing == true)
+						m_pUI = Option; // 이때 선택했을 경우만 UI를 넘겨주면됨 (필요하다면 오버했을 때도 넘겨주는식으로 바꿔써도 된다.)
+					else
+					{
+						m_pUI = nullptr;
+						m_strSelectUI = "";
+					}
+					return;
+				}
+				else
+				{
+					m_strMouseOverUI = "";
+				}
+			}
+		}
+	}
+
+	/*  */
+
 }
 
 //// Add_CloneUI == Add_CloneObject_And_Get
