@@ -268,16 +268,20 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
 }
 
-_bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta)
+_bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian)
 {
 	_fvector vAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 	m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
 
+	_float vLocalPos;
+
+	
+
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 
-	if (0.5f > abs(fTargetAngle - fAngle))
+	if (fMinRadian > abs(fTargetAngle - fAngle))
 	{
 		Rotation(vAxis, fRadian);
 		return true;
@@ -314,6 +318,28 @@ void CTransform::Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare
 		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * fTimeDelta;
 
 	Set_State(STATE_POSITION, vPosition);
+}
+
+_bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta, _float fSpare)
+{
+	_vector		vPosition = Get_State(STATE_POSITION);
+	_vector		vDir = vTargetPos - vPosition;
+
+	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
+	//Look_At(vTargetPos);
+	Look_At_Lerp(vTargetPos, fTimeDelta, 0.2f);
+
+	if (fDistance >= fSpare)
+	{
+		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * fTimeDelta;
+
+		Set_State(STATE_POSITION, vPosition);
+		
+		return true;
+	}
+	else
+		return false;
+	
 }
 
 void CTransform::Look_At(_fvector vTargetPos)
@@ -367,7 +393,7 @@ void CTransform::Look_At_Direction(_fvector _vLook)
 	Set_State(STATE_LOOK, vLook);
 }
 
-void CTransform::Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta)
+void CTransform::Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta, _float fMinRadian)
 {
 	_float3		vScale = Get_Scaled();
 
@@ -378,7 +404,7 @@ void CTransform::Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta)
 
 	_float fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(matrixLook).y;
 
-	Rotation_Lerp(fRadian, fTimeDelta);
+	Rotation_Lerp(fRadian, fTimeDelta, fMinRadian);
 }
 
 

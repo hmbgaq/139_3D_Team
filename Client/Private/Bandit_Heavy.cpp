@@ -80,17 +80,17 @@ HRESULT CBandit_Heavy::Ready_PartObjects()
 	return S_OK;
 }
 
-CBandit_Heavy* CBandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-{
-	CBandit_Heavy* pInstance = new CBandit_Heavy(pDevice, pContext, strPrototypeTag);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CBandit_Heavy");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
+//CBandit_Heavy* CBandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+//{
+//	CBandit_Heavy* pInstance = new CBandit_Heavy(pDevice, pContext, strPrototypeTag);
+//
+//	if (FAILED(pInstance->Initialize_Prototype()))
+//	{
+//		MSG_BOX("Failed to Created : CBandit_Heavy");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
 
 CGameObject* CBandit_Heavy::Clone(void* pArg)
 {

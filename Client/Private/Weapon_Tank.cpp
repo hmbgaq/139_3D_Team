@@ -185,6 +185,7 @@ void CWeapon_Tank::OnCollisionEnter(CCollider* other)
 		}
 
 		Get_Damaged(fDamage);
+		CData_Manager::GetInstance()->Apply_Shake_And_Blur(Power::Heavy);
 
 		if (0 >= m_fHp) 
 		{
@@ -194,7 +195,6 @@ void CWeapon_Tank::OnCollisionEnter(CCollider* other)
 			{
 				pTank->Set_ShieldBroken();
 				pTank->Hitted_Front(Power::Heavy);
-				CData_Manager::GetInstance()->Apply_Shake_And_Blur(Power::Heavy);
 			}
 			
 			Set_Enable(false);

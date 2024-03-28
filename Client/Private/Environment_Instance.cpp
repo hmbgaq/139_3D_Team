@@ -98,15 +98,29 @@ HRESULT CEnvironment_Instance::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	wstring strTemp = Get_ModelTag();
+
+	if (strTemp == TEXT("Prototype_Component_Model_OakTreeDry1") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry2") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry3") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry4") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry5") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry6"))
+			int a = 0;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
-
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
-
 		m_pInstanceModelCom->Render((_uint)i);
 	}
 
+
+	return S_OK;
+}
+
+HRESULT CEnvironment_Instance::Render_Shadow()
+{
 	return S_OK;
 }
 
@@ -198,7 +212,6 @@ HRESULT CEnvironment_Instance::Remove_Instance(_uint iIndex)
 
 HRESULT CEnvironment_Instance::Ready_Components()
 {
-
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))

@@ -14,7 +14,7 @@ BEGIN(Client)
 class CEnvironment_Interact final : public CGameObject
 {
 public:
-	enum INTERACT_TYPE { INTERACT_JUMP100, INTERACT_JUMP200, INTERACT_JUMP300, INTERACT_VAULT100, INTERACT_VAULT200, INTERACT_END };
+	enum INTERACT_TYPE { INTERACT_JUMP100, INTERACT_JUMP200, INTERACT_JUMP300, INTERACT_VAULT100, INTERACT_VAULT200, INTERACT_WAGONJUMP, INTERACT_WAGONEVENT, INTERACT_END };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
 
 public:
@@ -38,6 +38,7 @@ public:
 
 		_bool			bLevelChange = false;
 		LEVEL			eChangeLevel = LEVEL_INTRO_BOSS;
+		string			strSplineJsonPath = "";
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
 private:
@@ -58,7 +59,10 @@ public:
 	virtual _bool		Write_Json(json& Out_Json) override;
 	virtual void		Load_FromJson(const json& In_Json) override;
 
+
+
 public:
+	
 	ENVIRONMENT_INTERACTOBJECT_DESC*	Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
@@ -72,21 +76,49 @@ public:
 	void								Set_UseGravity(_bool bUseGravity) { m_tEnvironmentDesc.bUseGravity = bUseGravity; }
 	
 	void								Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel);
+	
 #endif // _DEBUG
+	_int								Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
+	void								Set_AnimationIndex(_uint iAnimIndex);
 	void								Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex; }
+	void								Set_SplineJsonPath(string strJsonPath) { m_tEnvironmentDesc.strSplineJsonPath = strJsonPath;}
+	void								Set_SplineDivergingCount(_int iDivergingCount) { m_iDivergingCount = iDivergingCount;} 
 
 #ifdef _DEBUG
 public: //! For.Tool
-	virtual _bool				Picking(_Out_ _float3* vPickedPos) override;
+	virtual _bool						Picking(_Out_ _float3* vPickedPos) override;
 
 #endif 
 
 public:
-	void						Start_Environment_Animation() { m_bPlay = true; }
+	void								Start_Environment_Animation() { m_bPlay = true; }
 
 public:
 	void								Interact();
 
+public:
+	void								Start_SplineEvent();
+	void								Reset_TestEvent();
+
+	void								Start_Spline(vector<_float4>* SplinePoints);
+	void								Start_SplineDouble(vector<_float4>* SplinePoints);
+	void								Reset_StartMatrix();
+	void								Spline_Loop(const _float fTimeDelta);
+	void								Spline_LoopDoublePoint(const _float fTimeDelta);
+	void								Spline_Clear();
+	
+	void								Set_SplineSpeed(_float fSpeed) { m_fSplineSpeed = /*15.f;*/fSpeed; m_pTransformCom->Set_Speed(/*15.f*/fSpeed); }
+	void								Set_ArrivalTime(_float fArriavalTime) { m_fArrivalTime = fArriavalTime;}
+
+	void								Set_SplineCheck(_int iIndex, _bool bCheck) { m_vecPointChecks[iIndex] = bCheck; }
+
+private:
+	HRESULT								Load_SplineJson();
+	HRESULT								Init_WagonEvent();
+	void								Change_WagonTrack(const _float fTimeDelta);
+	_vector								CatmullRomInterpolation(_fvector p0, _fvector p1, _fvector p2, _fvector p3, _float t);
+	vector<_float4>						CreateSmoothSpline(vector<_float4>& points, _int segments);
+	
 
 private:
 	CShader*							m_pShaderCom = { nullptr };	
@@ -98,9 +130,36 @@ private:
 private:
 	ENVIRONMENT_INTERACTOBJECT_DESC		m_tEnvironmentDesc = {};
 	_bool								m_bPlay = false;
+	
 	_bool								m_bInteract = false;
 	
 	_bool								m_bFindPlayer = false;
+
+	_bool								m_bSpline = false;
+	_float4x4							m_InitMatrix;
+
+	
+	vector<_float4>						m_vecSplinePoints;
+	map<wstring, vector<_float4>>		m_mapSplineVectors;
+	
+	map<wstring, _float>					m_mapSplineSpeeds;
+
+	wstring								m_strCurrentSplineTrack = L"";
+	_int								m_iCurrentTrackIndex = 0;
+
+
+	vector<_bool>						m_vecPointChecks;
+	_float								m_fSplineTimeAcc = 0.f;
+	_float								m_fSplineEndRaidus = 1.f;
+	_int								m_iCurrentSplineIndex = 0;
+	_int								m_iDivergingCount = 0;
+	_bool								m_bPlaySpline = false;
+	_float								m_fSplineSpeed = 1.f;
+	_float								m_fArrivalTime = 3.f; // ! 스플라인에 마지막 점까지 도착하는데 걸리는 시간.
+	_float4								m_vArrivalPosition = { 99999.f, 99999.f, 99999.f, 1.f };
+
+	_int								m_iCalcCount = 0;
+	_bool								m_bArrival = false;
 
 private:
 	CPlayer*						    m_pPlayer = { nullptr };

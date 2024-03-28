@@ -6,7 +6,7 @@
 
 BEGIN(Client)
 
-class CBandit_Heavy  : public CMonster_Character
+class CBandit_Heavy abstract : public CMonster_Character
 {
 private:
 	CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -30,7 +30,7 @@ private:
 	CActor<CBandit_Heavy>* m_pActor = { nullptr };
 
 public:
-	static CBandit_Heavy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	//static CBandit_Heavy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;
 

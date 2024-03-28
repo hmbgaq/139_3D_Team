@@ -94,8 +94,8 @@ void CUI::Priority_Tick(_float fTimeDelta)
 
 void CUI::Tick(_float fTimeDelta)
 {
-	if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
-		m_bActive = m_bTool;
+	//todoif (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
+	//todo	m_bActive = m_bTool;
 
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 	{

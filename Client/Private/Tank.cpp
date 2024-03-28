@@ -181,7 +181,7 @@ void CTank::Hitted_Finish()
 	Look_At_OnLand(CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector());
 		
 	CPlayer* pPlayer = Set_Player_Finisher_Pos(_float3(0.f, 0.f, 2.5f));
-	_vector vFront = XMLoadFloat3(&Calc_Front_Pos(_float3(-1.0f, 0.f, 0.5f)));
+	_vector vFront = XMLoadFloat3(&Calc_Front_Pos(_float3(-1.2f, 0.f, 0.5f)));
 	pPlayer->Look_At_OnLand(vFront);
 	pPlayer->Get_Actor()->Set_State(new CPlayer_Finisher_Tank());
 }
