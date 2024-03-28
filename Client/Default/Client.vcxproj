@@ -1040,6 +1040,7 @@
     <ClInclude Include="..\Public\Sniper_Taunt_03.h" />
     <ClInclude Include="..\Public\Sniper_Weakspot_Death_01.h" />
     <ClInclude Include="..\Public\Son.h" />
+    <ClInclude Include="..\Public\Son_ColliderBody.h" />
     <ClInclude Include="..\Public\Son_CrossAttack.h" />
     <ClInclude Include="..\Public\Son_CrossAttackEnd.h" />
     <ClInclude Include="..\Public\Son_CrossAttackLoop.h" />
@@ -1049,6 +1050,7 @@
     <ClInclude Include="..\Public\Son_Hit.h" />
     <ClInclude Include="..\Public\Son_Idle.h" />
     <ClInclude Include="..\Public\Son_LongAttack.h" />
+    <ClInclude Include="..\Public\Son_Projectile.h" />
     <ClInclude Include="..\Public\Son_RangeAttackFar.h" />
     <ClInclude Include="..\Public\Son_RangeAttackNear.h" />
     <ClInclude Include="..\Public\Son_ShortAttack.h" />
@@ -1960,6 +1962,7 @@
     <ClCompile Include="..\Private\Sniper_Taunt_03.cpp" />
     <ClCompile Include="..\Private\Sniper_Weakspot_Death_01.cpp" />
     <ClCompile Include="..\Private\Son.cpp" />
+    <ClCompile Include="..\Private\Son_ColliderBody.cpp" />
     <ClCompile Include="..\Private\Son_CrossAttack.cpp" />
     <ClCompile Include="..\Private\Son_CrossAttackEnd.cpp" />
     <ClCompile Include="..\Private\Son_CrossAttackLoop.cpp" />
@@ -1969,6 +1972,7 @@
     <ClCompile Include="..\Private\Son_Hit.cpp" />
     <ClCompile Include="..\Private\Son_Idle.cpp" />
     <ClCompile Include="..\Private\Son_LongAttack.cpp" />
+    <ClCompile Include="..\Private\Son_Projectile.cpp" />
     <ClCompile Include="..\Private\Son_RangeAttackFar.cpp" />
     <ClCompile Include="..\Private\Son_RangeAttackNear.cpp" />
     <ClCompile Include="..\Private\Son_ShortAttack.cpp" />

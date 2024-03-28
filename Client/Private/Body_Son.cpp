@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Body_Son.h"
 #include "GameInstance.h"
+#include "Bone.h"
 
 CBody_Son::CBody_Son(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody(pDevice, pContext, strPrototypeTag)
@@ -38,6 +39,8 @@ void CBody_Son::Priority_Tick(_float fTimeDelta)
 void CBody_Son::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	
 	//if (m_pGameInstance->Key_Down(DIK_K))
 	//{
 	//	iDiscardMeshNumber += 1;
@@ -140,11 +143,14 @@ HRESULT CBody_Son::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	_float4x4 Temp = this->Get_BonePtr("Bone020")->Get_CombinedTransformationMatrix();
+	_float3 Test = _float3(Temp._41,Temp._42,Temp._43);
+	//Test = Test* m_pTransformCom->Get_Position();
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
 	BoundingDesc.fRadius = 1.0f;
-	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	BoundingDesc.vCenter = Test;
 
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),

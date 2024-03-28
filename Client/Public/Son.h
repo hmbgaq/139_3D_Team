@@ -41,7 +41,7 @@ private:
 	CActor<CSon>* m_pActor = { nullptr };
 
 public:
-	vector<class CUI_Weakness*> m_pWeakneesUIs;
+	//vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
 	CMother* m_pMother = { nullptr };
 public:

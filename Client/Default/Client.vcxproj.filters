@@ -3469,6 +3469,12 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Egg">
       <UniqueIdentifier>{fb43b313-ab37-4920-a05e-04289c65fa5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile">
+      <UniqueIdentifier>{4cf2a6d5-8845-4ab9-82f8-0ac296cd921e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody">
+      <UniqueIdentifier>{4c03b81c-d85e-4d2a-9a83-5854ee665961}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6960,6 +6966,12 @@
     <ClInclude Include="..\Public\Mother_Egg.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Egg</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Son_Projectile.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_ColliderBody.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -9888,6 +9900,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mother_Egg.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Egg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Projectile.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_ColliderBody.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

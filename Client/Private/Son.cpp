@@ -26,6 +26,8 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 
+#include "Mother.h"
+
 CSon::CSon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
@@ -70,6 +72,7 @@ HRESULT CSon::Initialize(void* pArg)
 	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 	
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	CData_Manager::GetInstance()->Set_Son(this);
 	return S_OK;
 }
 
@@ -88,7 +91,7 @@ void CSon::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-	//cout << "introBossHP:" << m_iHp << endl;
+	cout << "SonHP:" << m_iHp << endl;
 	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 
 	//cout << "Son : " << fAngle << endl;
@@ -102,6 +105,13 @@ void CSon::Tick(_float fTimeDelta)
 	
 		/*m_bLookAt = false;*/
 	
+	}
+	if (m_iHp <= 0.f)
+	{
+		m_iHp = m_iMaxHp;
+		++m_pMother->m_iSonDead;
+		//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
+		this->Set_Enable(false);
 	}
 
 }
@@ -133,10 +143,14 @@ HRESULT CSon::Ready_PartObjects()
 	CWeapon::WEAPON_DESC		WeaponDesc = {};
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Head"), "Bone020", WeaponDesc, TEXT("Weapon_head")));
 	
+	//! 가라 몸전용 콜라이더 
+	CWeapon::WEAPON_DESC		ColliderBodyDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_ColliderBody"), "Bone020", ColliderBodyDesc, TEXT("Body")));
+
 	
 	
 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_head"));
-	m_pWeapon_Punch_R->Set_Enable(true);
+	m_pWeapon_Punch_R->Set_Enable(false);
 
 
 	return S_OK;
