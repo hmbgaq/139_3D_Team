@@ -24,6 +24,8 @@ public:
 protected:
 	virtual HRESULT Ready_Components();
 
+	void Attack(CCollider* other);
+
 
 public:
 	virtual void	OnCollisionEnter(CCollider* other)	override;
