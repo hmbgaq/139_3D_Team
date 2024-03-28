@@ -6,6 +6,8 @@ void CTank_Charge_Fail_L::Initialize(CTank* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
+
 }
 
 CState<CTank>* CTank_Charge_Fail_L::Update(CTank* pActor, _float fTimeDelta)
@@ -23,4 +25,5 @@ CState<CTank>* CTank_Charge_Fail_L::Update(CTank* pActor, _float fTimeDelta)
 void CTank_Charge_Fail_L::Release(CTank* pActor)
 {
 	__super::Release(pActor);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
 }

@@ -10,6 +10,12 @@ void CTank_Run_F::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_Run_F::Update(CTank* pActor, _float fTimeDelta)
 {
+	CCharacter* pTarget = pActor->Get_Target();
+	if (pTarget)
+	{
+		pActor->Look_At_Target();
+	}
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

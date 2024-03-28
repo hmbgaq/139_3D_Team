@@ -30,12 +30,16 @@ CTank::CTank(const CTank& rhs)
 
 void CTank::Set_ShieldBroken()
 {
+	Reset_AttackCount();
+
 	CWeapon_Tank* pWeapon_Tank = dynamic_cast<CWeapon_Tank*>(Get_Weapon(L"Weapon_Shield"));
 	if (pWeapon_Tank)
 	{
+		pWeapon_Tank->Set_Follow(false);
 		if (CModel::ANIM_STATE_NORMAL != pWeapon_Tank->Get_AnimState()) 
 		{
 			pWeapon_Tank->Set_Animation(0, CModel::ANIM_STATE_NORMAL, 0);
+
 		}
 		
 	}
@@ -176,9 +180,16 @@ HRESULT CTank::Ready_PartObjects()
 		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("LeftHandIK");
 		WeaponDesc.m_pParentTransform = m_pTransformCom;
 		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Tank"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Shield")));
+	}
 
-		//CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Punch"));
-		//m_pWeapon->Set_Enable(false);
+	{
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Punch_Tank"), "LeftHand", WeaponDesc, TANK_WEAPON_PUNCH_L));
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Punch_Tank"), "RightHand", WeaponDesc, TANK_WEAPON_PUNCH_R));
+
+		Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
+		Set_Weapon_Enable(TANK_WEAPON_PUNCH_R, false);
+
 	}
 
 

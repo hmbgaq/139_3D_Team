@@ -9,6 +9,16 @@ void CTank_Charge_Loop::Initialize(CTank* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 
+	//CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, true);
+	//pWeapon
+	//	->Set_Damage(10)
+	//	->Set_Direction(Direction::Front)
+	//	->Set_Power(Power::Medium)
+	//	->Set_Force(0.5f)
+	//	;
+
+	//pWeapon->Set_Enable_Collisions(true);
+
 }
 
 CState<CTank>* CTank_Charge_Loop::Update(CTank* pActor, _float fTimeDelta)
@@ -16,20 +26,18 @@ CState<CTank>* CTank_Charge_Loop::Update(CTank* pActor, _float fTimeDelta)
 	m_fTime += fTimeDelta;
 
 	pActor->Go_Straight(fTimeDelta);
+	pActor->Look_At_Target_Lerp(fTimeDelta * 0.25f);
 	
-	if (3.f <= m_fTime)
+	if (2.f <= m_fTime)
 	{
-		//_uint iRand = SMath::Random(0, 2);
 		return new CTank_Charge_Fail_L();
-
-		//return Idle(pActor, fTimeDelta, g_iAnimIndex);
 	}
 
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget)
 	{
 		_float fDistance = pActor->Calc_Distance();
-		if (1.f > fDistance && false == pTarget->Is_Invincible())
+		if (2.f > fDistance)
 		{
 			return new CTank_Charge_Hit_L();
 		}
@@ -44,4 +52,5 @@ CState<CTank>* CTank_Charge_Loop::Update(CTank* pActor, _float fTimeDelta)
 void CTank_Charge_Loop::Release(CTank* pActor)
 {
 	__super::Release(pActor);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
 }

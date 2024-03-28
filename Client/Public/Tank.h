@@ -22,6 +22,8 @@ public:
 		m_fShieldBrokenTime = fResult > 0.f ? fResult : 0.f;
 	}
 	_bool Get_Shield_Enable() { return Get_Weapon(L"Weapon_Shield")->Get_Enable(); }
+	_bool Get_Shield_Follow() { return Get_Weapon(L"Weapon_Shield")->Get_Follow(); }
+
 
 
 public:

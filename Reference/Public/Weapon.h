@@ -73,6 +73,10 @@ public:
 	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f));
 	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f)) {};
 
+public:
+	void Set_Follow(_bool _bIsFollow) { m_bIsFollow = _bIsFollow; };
+	_bool Get_Follow() { return m_bIsFollow; }
+
 
 protected:
 	virtual HRESULT Ready_Components() PURE;
@@ -105,13 +109,17 @@ protected:
 	Power		m_eHitPower = { Power::Light };
 	_float		m_fStiffnessRate = { 1.f };
 
-	_float		m_iDamage = { 0.f };
+	_float		m_fDamage = { 0.f };
 	_float		m_fForce = { 0.f };
 	_float3		m_vDir = { 0.f, 0.f, 0.f };
 	_bool		m_bKnockUp = { false };
 
 protected://몬스터가 Player 잡아서 던지는거 쓸때 쓰는거
 	_bool	m_bSynced = false;
+
+protected:
+	_bool m_bIsFollow = { true };
+
 
 
 public:

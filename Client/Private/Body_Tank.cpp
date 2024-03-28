@@ -101,7 +101,7 @@ HRESULT CBody_Tank::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
+	BoundingDesc.vExtents = _float3(0.8f, 0.8f, 0.8f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 

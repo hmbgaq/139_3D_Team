@@ -88,7 +88,7 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 		_vector vHitDir = Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1;
 
 
-		pTarget_Character->Set_Hitted(m_iDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, true, m_bKnockUp);
+		pTarget_Character->Set_Hitted(m_fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, true, m_bKnockUp);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
 		CCharacter_Client* pOwnerCharacter = dynamic_cast<CCharacter_Client*>(Get_Object_Owner());

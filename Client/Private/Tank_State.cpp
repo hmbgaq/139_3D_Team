@@ -99,6 +99,10 @@ CState<CTank>* CTank_State::Normal(CTank* pActor, _float fTimeDelta, _uint _iAni
 	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
+	//pState = Run(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
+
 	if (pActor->Is_Animation_End())
 	{
 		return Idle(pActor, fTimeDelta, _iAnimIndex);
@@ -116,16 +120,8 @@ CState<CTank>* CTank_State::Idle(CTank* pActor, _float fTimeDelta, _uint _iAnimI
 
 CState<CTank>* CTank_State::Run(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CCharacter* pTarget = pActor->Get_Target();
-	if (pTarget) 
-	{
-		pActor->Look_At_Target();
-		_float fDistance = pActor->Calc_Distance();
-		if (12.f > fDistance) 
-		{
-			return new CTank_Run_F();
-		}
-	}
+	if (CTank_Run_F::g_iAnimIndex != _iAnimIndex)
+		return new CTank_Run_F();
 
 	return nullptr;
 }
@@ -135,12 +131,11 @@ CState<CTank>* CTank_State::Attack(CTank* pActor, _float fTimeDelta, _uint _iAni
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget)
 	{
-		//pActor->Look_At_Target_Lerp(fTimeDelta);
 		pActor->Look_At_Target();
 		_float fDistance = pActor->Calc_Distance();
 		_bool Is_ShieldBroken = pActor->Is_ShieldBroken();
 
-		if (2.f > fDistance)
+		if (3.f > fDistance)
 		{
 			return MeleeDynamic(pActor, fTimeDelta, _iAnimIndex);
 		}
@@ -148,7 +143,24 @@ CState<CTank>* CTank_State::Attack(CTank* pActor, _float fTimeDelta, _uint _iAni
 		{
 			if (true == Is_ShieldBroken)
 			{
-				return GroundSlam(pActor, fTimeDelta, _iAnimIndex);
+				_uint iRand = SMath::Random(0, 2);
+				_uint iCount = pActor->Get_AttackCount();
+
+				switch (iRand)
+				{
+				case 0:
+					return GroundWave(pActor, fTimeDelta, _iAnimIndex);
+				case 1:
+					if (1 > iCount)
+					{
+						return GroundSlam(pActor, fTimeDelta, _iAnimIndex);
+					}
+					
+				default:
+					pActor->Reset_AttackCount();
+					return GroundWave(pActor, fTimeDelta, _iAnimIndex);
+				}
+				
 			}
 			else 
 			{
@@ -186,11 +198,6 @@ CState<CTank>* CTank_State::Attack(CTank* pActor, _float fTimeDelta, _uint _iAni
 				}
 			}
 		}
-
-		//else
-		//{
-		//	return Run(pActor, fTimeDelta, _iAnimIndex);
-		//}
 	}
 
 	return nullptr;
@@ -256,7 +263,7 @@ CState<CTank>* CTank_State::Charge(CTank* pActor, _float fTimeDelta, _uint _iAni
 
 CState<CTank>* CTank_State::ShieldRegain(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (false == pActor->Get_Shield_Enable() && false == pActor->Is_ShieldBroken())
+	if (false == pActor->Get_Shield_Follow() && false == pActor->Is_ShieldBroken())
 	{
 		return new CTank_ShieldRegain();
 	}

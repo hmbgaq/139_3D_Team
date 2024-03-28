@@ -10,6 +10,7 @@ void CTank_ShieldRegain::Initialize(CTank* pActor)
 	CWeapon_Tank* pWeapon_Tank = dynamic_cast<CWeapon_Tank*>(pWeapon);
 	if (pWeapon_Tank)
 	{
+		pWeapon_Tank->Set_Follow(true);
 		pWeapon_Tank->Set_Animation(0, CModel::ANIM_STATE_REVERSE, 28);
 	}
 }

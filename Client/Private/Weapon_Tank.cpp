@@ -60,6 +60,13 @@ CModel::ANIM_STATE CWeapon_Tank::Get_AnimState()
 	return m_pModelCom->Get_AnimState();
 }
 
+void CWeapon_Tank::Set_Enable(_bool _Enable)
+{
+	__super::Set_Enable(_Enable);
+	m_bIsFollow = _Enable;
+}
+
+
 HRESULT CWeapon_Tank::Load_Json()
 {
 	string path = "../Bin/DataFiles/Data_Weapon/Monster/Tank/Shield.json";
@@ -86,7 +93,10 @@ void CWeapon_Tank::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (CModel::ANIM_STATE::ANIM_STATE_NORMAL == Get_AnimState() && true == Is_Animation_End())
+	if (CModel::ANIM_STATE::ANIM_STATE_NORMAL == Get_AnimState() 
+		&& true == Is_Animation_End()
+		&& 0 != m_pModelCom->Get_CurrentKeyFrames()
+		)
 	{
 		Set_Enable(false);
 	}

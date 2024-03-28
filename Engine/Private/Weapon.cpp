@@ -64,14 +64,18 @@ void CWeapon::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	_matrix		SocketMatrix = m_pSocketBone->Get_CombinedTransformationMatrix();
-
-	for (size_t i = 0; i < 3; i++)
+	if (true == m_bIsFollow)
 	{
-		SocketMatrix.r[i] = XMVector3Normalize(SocketMatrix.r[i]);
+		_matrix		SocketMatrix = m_pSocketBone->Get_CombinedTransformationMatrix();
+
+		for (size_t i = 0; i < 3; i++)
+		{
+			SocketMatrix.r[i] = XMVector3Normalize(SocketMatrix.r[i]);
+		}
+
+		XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * m_pParentTransform->Get_WorldMatrix());
 	}
 
-	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * m_pParentTransform->Get_WorldMatrix());
 
 
 #ifdef _DEBUG
@@ -171,9 +175,9 @@ CCharacter* CWeapon::Get_PartOwner()
 	return dynamic_cast<CCharacter*>(m_pOwner);
 }
 
-CWeapon* CWeapon::Set_Damage(_float _iDamage)
+CWeapon* CWeapon::Set_Damage(_float _fDamage)
 {
-	m_iDamage = _iDamage;
+	m_fDamage = _fDamage;
 
 	return this;
 }

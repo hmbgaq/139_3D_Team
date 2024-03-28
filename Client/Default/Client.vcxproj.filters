@@ -3565,6 +3565,12 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\2. GroundWave">
       <UniqueIdentifier>{8f3ecdf3-868b-44c8-965b-bc24e9f902b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Shield">
+      <UniqueIdentifier>{5ae637cf-a068-4506-a799-3efb708dab22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Punch">
+      <UniqueIdentifier>{98fdfc50-7397-49d6-9ea9-d4c661df9ac8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -6693,9 +6699,6 @@
     <ClInclude Include="..\Public\Body_Tank.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Body</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Weapon_Tank.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Tank.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank</Filter>
     </ClInclude>
@@ -7076,6 +7079,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Mother_Spawn.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Tank.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Shield</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Punch_Tank.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Punch</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -9667,9 +9676,6 @@
     <ClCompile Include="..\Private\Body_Tank.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Body</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Weapon_Tank.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Tank.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank</Filter>
     </ClCompile>
@@ -10026,6 +10032,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mother_Spawn.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\8.Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Tank.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Shield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Punch_Tank.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Punch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -35,6 +35,9 @@ public:
 	_bool	Is_Animation_End();
 	CModel::ANIM_STATE Get_AnimState();
 
+public:
+	virtual void	Set_Enable(_bool _Enable) override;
+
 private:
 	HRESULT			Load_Json();
 	HRESULT			Option_Setting();
