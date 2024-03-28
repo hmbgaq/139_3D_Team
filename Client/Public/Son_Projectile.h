@@ -29,7 +29,7 @@ public:
 public:
 	_vector				m_vPlayerPos = {};
 	_vector				m_vMonsterPos = {};
-
+	_bool				m_bFirst = true;
 private:
 	CEffect* m_pEffect = { nullptr };
 	CSon* m_pSon = { nullptr };

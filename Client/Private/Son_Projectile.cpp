@@ -37,14 +37,14 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
 		return E_FAIL;
 
-	m_pSon = CData_Manager::GetInstance()->Get_Son();
+	//m_pSon = CData_Manager::GetInstance()->Get_Son();
 
 
-	_float4x4 BoneMatrix = m_pSon->Get_Body()->Get_BonePtr("Center")->Get_CombinedTransformationMatrix();
-	_float4x4 MotherMatrix = m_pSon->Get_Transform()->Get_WorldMatrix();
-	_float4x4 Temp = BoneMatrix * MotherMatrix;
-
-	m_pTransformCom->Set_WorldMatrix(Temp);
+	//_float4x4 BoneMatrix = m_pSon->Get_Body()->Get_BonePtr("Center")->Get_CombinedTransformationMatrix();
+	//_float4x4 MotherMatrix = m_pSon->Get_Transform()->Get_WorldMatrix();
+	//_float4x4 Temp = BoneMatrix * MotherMatrix;
+	//
+	//m_pTransformCom->Set_WorldMatrix(Temp);
 
 	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.5f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
 
@@ -62,6 +62,11 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+	if (m_bFirst == true)
+	{
+		m_pTransformCom->Look_At(m_vPlayerPos);
+		m_bFirst = false;
+	}
 }
 
 void CSon_Projectile::Tick(_float fTimeDelta)

@@ -179,6 +179,8 @@ public:
 		m_fGravityAcc = ((true == m_bIsGround) ? 0 : fAcc);
 	}
 	void Reset_GravityAcc() { m_fGravityAcc = 0.f; };
+public:
+	_float				m_fRadian = { 0.f };
 
 private:
 	_float				m_fSpeedPerSec = { 0.0f };
@@ -186,7 +188,6 @@ private:
 
 	_float4x4			m_WorldMatrix = {};
 
-	_float				m_fRadian = { 0.f };
 
 	_float4				m_fPosition = {};
 	_bool				m_bIsGround = { false };

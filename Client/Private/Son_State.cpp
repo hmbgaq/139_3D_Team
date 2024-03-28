@@ -6,6 +6,7 @@
 #include "Son_LongAttack.h"
 #include "Son_CrossAttack.h"
 #include "Son_RangeAttackFar.h"
+#include "Son_Idle.h"
 
 #include "SMath.h"
 
@@ -39,30 +40,35 @@ CState<CSon>* CSon_State::Attack_State(CSon* pActor, _float fTimeDelta, _uint _i
 {
 	if (pActor->m_pMother->m_bPhase == true)//TODO페이즈 1 공격 패턴 2개 원거리랑 주욱 늘어나서 공격 //원거리 공격중에서도 가까울때 멀때가 따로 있는데 두개다 랜덤으로 걸어서 한번 해봐야 할듯?
 	{
-		if (20.f > pActor->Calc_Distance() && 0.f < pActor->Calc_Distance())
+		if (5.f > pActor->Calc_Distance() && 0.f < pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_ShortAttack;
 		}
-		else if (50.f > pActor->Calc_Distance() && 20.f <= pActor->Calc_Distance())
+		else if (30.f > pActor->Calc_Distance() && 5.f <= pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_LongAttack;
 		}
-		else if (50.f <= pActor->Calc_Distance())
+		else if (100.f > pActor->Calc_Distance()&& 30.f<=pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_RangeAttackFar;
 		}
+		else
+		{
+			pActor->m_bLookAt = true;
+			return new CSon_Idle;
+		}
 	}
 	else if (pActor->m_pMother->m_bPhase == false)//TODO 페이즈 2,3 공격 패턴 3개 원거리 1개 직접 타격 2개 
 	{
-		if (20.f > pActor->Calc_Distance() && 0.f < pActor->Calc_Distance())
+		if (5.f > pActor->Calc_Distance() && 0.f < pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_ShortAttack;
 		}
-		else if (50.f > pActor->Calc_Distance() && 20.f <= pActor->Calc_Distance())
+		else if (30.f > pActor->Calc_Distance() && 5.f <= pActor->Calc_Distance())
 		{
 			_uint iRandom = SMath::Random(0, 2);
 
@@ -83,10 +89,15 @@ CState<CSon>* CSon_State::Attack_State(CSon* pActor, _float fTimeDelta, _uint _i
 			}
 		
 		}
-		else if (50.f <= pActor->Calc_Distance())
+		else if (100.f > pActor->Calc_Distance() && 30.f <= pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_RangeAttackFar;
+		}
+		else
+		{
+			pActor->m_bLookAt = true;
+			return new CSon_Idle;
 		}
 	}
 

@@ -398,10 +398,10 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
 	{
-		if (m_pGameInstance->Key_Pressing(DIK_C))
-		{
-			return new CPlayer_CartRide_Loop();
-		}
+		//if (m_pGameInstance->Key_Pressing(DIK_C))
+		//{
+		//	return new CPlayer_CartRide_Loop();
+		//}
 
 
 		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);

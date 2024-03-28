@@ -69,6 +69,7 @@ HRESULT CMother::Initialize(void* pArg)
 	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 
 	CData_Manager::GetInstance()->Set_Mother(this);
+	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
 	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
 	Search_Target(200.f);
@@ -85,6 +86,7 @@ void CMother::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	Search_Target(200.f);
 
 
 	if (m_pActor)
@@ -93,21 +95,33 @@ void CMother::Tick(_float fTimeDelta)
 	}
 	
 	//cout << "introBossHP:" << m_iHp << endl;
-	//_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
-	//
-	////cout << "Mother : " << fAngle << endl;
-	//if (m_bLookAt == true)
-	//{
-	//
-	//	if (0 <= fAngle && fAngle <= 45)
-	//		Look_At_Target_Lerp(fTimeDelta);
-	//	else if (-45 <= fAngle && fAngle < 0)
-	//		Look_At_Target_Lerp(fTimeDelta);
-	//
-	//	/*m_bLookAt = false;*/
-	//
-	//}
-
+	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
+	
+	//cout << "Mother : " << fAngle << endl;
+// 	if (m_bLookAt == true)
+// 	{
+// 	
+// 		if (0 <= fAngle && fAngle <= 180)
+// 			Look_At_Target_Lerp(fTimeDelta);
+// 		else if (-180 <= fAngle && fAngle < 0)
+// 			Look_At_Target_Lerp(fTimeDelta);
+// 	
+// 		/*m_bLookAt = false;*/
+// 	
+// 	}
+	/*if (m_bLookAt == true)*/
+// 	{
+// 
+// 		if (0 <= fAngle && fAngle <= 180)
+// 			Look_At_Target();
+// 		else if (-180 <= fAngle && fAngle < 0)
+// 			Look_At_Target();
+// 
+// 		/*m_bLookAt = false;*/
+// 
+// 	}
+	Look_At_Target();
+	//m_pTransformCom->m_fRadian += 90.f;
 }
 
 void CMother::Late_Tick(_float fTimeDelta)

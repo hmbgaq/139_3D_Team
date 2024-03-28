@@ -91,20 +91,37 @@ void CSon::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-	cout << "SonHP:" << m_iHp << endl;
+	m_fTimeDelta += fTimeDelta;
+
+	if (m_fTimeDelta >= 1.f)
+	{
+		cout << "SonHP:" << m_iHp << endl;
+		m_fTimeDelta = 0.f;
+	}
 	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 
 	//cout << "Son : " << fAngle << endl;
+// 	if (m_bLookAt == true)
+// 	{
+// 	
+// 		if (0 <= fAngle && fAngle <= 180)
+// 			Look_At_Target_Lerp(fTimeDelta);
+// 		else if (-180 <= fAngle && fAngle < 0)
+// 			Look_At_Target_Lerp(fTimeDelta);
+// 	
+// 		/*m_bLookAt = false;*/
+// 	
+// 	}
 	if (m_bLookAt == true)
 	{
-	
+
 		if (0 <= fAngle && fAngle <= 180)
-			Look_At_Target_Lerp(fTimeDelta);
+			Look_At_Target();
 		else if (-180 <= fAngle && fAngle < 0)
-			Look_At_Target_Lerp(fTimeDelta);
-	
+			Look_At_Target();
+
 		/*m_bLookAt = false;*/
-	
+
 	}
 	if (m_iHp <= 0.f)
 	{
