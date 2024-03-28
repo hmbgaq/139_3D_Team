@@ -483,8 +483,8 @@ HRESULT CEffect_Particle::Ready_Components()
 			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
 		// Sprite
-		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		//if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
+		//	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 
@@ -510,13 +510,13 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 	/* Texture ============================================================================================ */
-	if (m_tVoidDesc.bUseSpriteAnim)
-	{
-		// 스프라이트 사용이고, 
-		if(nullptr != m_pTextureCom[TEXTURE_SPRITE])	// 스프라이트 텍스처 있으면 바인드
-			FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
-	}
-	else
+	//if (m_tVoidDesc.bUseSpriteAnim)
+	//{
+	//	// 스프라이트 사용이고, 
+	//	if(nullptr != m_pTextureCom[TEXTURE_SPRITE])	// 스프라이트 텍스처 있으면 바인드
+	//		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
+	//}
+	//else
 	{
 		// 기본은 디퓨즈만 바인드
 		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])

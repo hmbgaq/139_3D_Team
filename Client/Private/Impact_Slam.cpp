@@ -40,8 +40,7 @@ HRESULT CImpact_Slam::Initialize(void* pArg)
 
 	m_fLifeTime = 1.f;
 
-	// ÀÌÆåÆ® »ý¼º
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
+
 
 	return S_OK;
 }
@@ -85,10 +84,9 @@ void CImpact_Slam::OnCollisionEnter(CCollider* other)
 		_vector vDir = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Look();
 		pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
-		pEffect->Get_Transform()->Look_At(m_pGameInstance->Get_Player()->Get_Position());
+
+		// Å¸°Ý ÀÌÆåÆ®
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 	}
 
 }

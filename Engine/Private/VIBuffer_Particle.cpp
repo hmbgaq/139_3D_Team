@@ -660,58 +660,6 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 #pragma region 입자들 시간 끝
 
 
-
-#pragma region 크기 러프 시작
-			if (m_tBufferDesc.bUseScaleLerp) // 크기 변경 러프 사용이면
-			{
-				if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vScaleLerp_Up_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
-				{
-					if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vScaleLerp_Down_Pos.x) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
-					{
-						// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
-						_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vScaleLerp_Down_Pos.x);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
-						if (m_vecParticleInfoDesc[i].fDownScaleTimeAccs >= fTotalTime)
-						{
-							m_vecParticleInfoDesc[i].fDownScaleTimeAccs = fTotalTime;
-							m_vecParticleInfoDesc[i].vCurScales.x = 0.f;
-							m_vecParticleInfoDesc[i].vCurScales.y = 0.f;
-						}
-						else
-						{
-							m_vecParticleInfoDesc[i].fDownScaleTimeAccs += fTimeDelta;	// 시간 누적	
-							m_vecParticleInfoDesc[i].vCurScales.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_vecParticleInfoDesc[i].fDownScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-							m_vecParticleInfoDesc[i].vCurScales.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_vecParticleInfoDesc[i].fDownScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-						}
-					}
-					else
-					{
-						// Max크기가 목표
-						_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (m_tBufferDesc.vScaleLerp_Up_Pos.y - m_tBufferDesc.vScaleLerp_Up_Pos.x);	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
-						if (m_vecParticleInfoDesc[i].fUpScaleTimeAccs >= fTotalTime)
-						{
-							m_vecParticleInfoDesc[i].fUpScaleTimeAccs = fTotalTime;
-							m_vecParticleInfoDesc[i].vCurScales.x = m_vecParticleInfoDesc[i].vMaxScales.x;
-							m_vecParticleInfoDesc[i].vCurScales.y = m_vecParticleInfoDesc[i].vMaxScales.y;
-						}
-						else
-						{
-							m_vecParticleInfoDesc[i].fUpScaleTimeAccs += fTimeDelta;	// 시간 누적		
-							m_vecParticleInfoDesc[i].vCurScales.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_vecParticleInfoDesc[i].fUpScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-							m_vecParticleInfoDesc[i].vCurScales.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_vecParticleInfoDesc[i].fUpScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
-						}
-
-					}
-
-				}
-			}
-
-			// 크기변경 적용
-			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
-			pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
-
-#pragma region 크기 러프 끝
-
-
 #pragma region 회전 : 자체 회전 시작
 			Rotation_Instance(i);
 
@@ -784,11 +732,54 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							// SPARK일때만 방사형으로 알아서 회전시킴
 							Update_Spark_Rotation(i);
 						}
+
+						// 초기화 조건		
+						_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
+
+						_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
+						//_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - vZeroCenter));	// 센터에서 현재 위치까지의 거리
+
+						if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
+						{
+							if (m_tBufferDesc.bRecycle)	// 재사용이 true이면 초기화
+							{
+								// 랜덤 값 다시 뽑기
+								ReSet_Info(i);
+								m_vecParticleInfoDesc[i].bEmit = TRUE;
+
+
+								// 안보이게
+								m_vecParticleShaderInfoDesc[i].vRight = _float3{ 0.f, 0.f, 0.f };
+								m_vecParticleShaderInfoDesc[i].vUp = _float3{ 0.f, 0.f, 0.f };
+								m_vecParticleShaderInfoDesc[i].vLook = _float3{ 0.f, 0.f, 0.f };
+
+								pVertices[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+								pVertices[i].vUp = _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+								pVertices[i].vLook = _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
+								pVertices[i].vPosition = m_vecParticleInfoDesc[i].vCenterPositions;
+
+
+								m_vecParticleShaderInfoDesc[i].vCurrentColors.w = { 0.f };
+								pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
+
+
+								m_vecParticleInfoDesc[i].Reset_ParticleTimes();		// 시간 초기화
+								continue;
+							}
+							else
+							{
+								m_vecParticleInfoDesc[i].bDie = TRUE;
+							}
+						}
+
+
 					}
 
 				}
 
-				// 알파_리지드바디(라이프타임)
+				// 알파_리지드바디(거리)
+				_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
+				_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
 				_float		fAlpha;
 				if (FADE_NONE == m_tBufferDesc.eType_Fade)
 				{
@@ -796,12 +787,13 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				}
 				else if (FADE_OUT == m_tBufferDesc.eType_Fade)
 				{
-					fAlpha = max((m_vecParticleInfoDesc[i].fLifeTime) - m_tBufferDesc.fTimeAcc, 0.f);
+					fAlpha = max(m_vecParticleInfoDesc[i].fMaxRange - fLength, 0.f);
 				}
 				else if (FADE_IN == m_tBufferDesc.eType_Fade)
 				{
-					fAlpha = min((m_vecParticleInfoDesc[i].fLifeTime) + m_tBufferDesc.fTimeAcc, 1.f);
+					fAlpha = min(fLength, 1.f);
 				}
+				m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
 				pVertices[i].vColor.w = fAlpha;
 
 			}
@@ -836,6 +828,10 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							//_vector		vDir = Make_Dir(i);					// 방향 만들기
 							//m_vecParticleInfoDesc[i].vDir = vDir;			// 방향 저장
 
+							// 안보이게
+							pVertices[i].vRight = _float4{ 0.f, 0.f, 0.f, 0.f };
+							pVertices[i].vUp = _float4{ 0.f, 0.f, 0.f, 0.f };
+							pVertices[i].vLook = _float4{ 0.f, 0.f, 0.f, 0.f };
 							pVertices[i].vPosition = m_vecParticleInfoDesc[i].vCenterPositions;
 
 
@@ -870,6 +866,10 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							// 센터 + 방향 위치로 세팅
 							//XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + vDir);
 
+							// 안보이게
+							pVertices[i].vRight = _float4{ 0.f, 0.f, 0.f, 0.f };
+							pVertices[i].vUp = _float4{ 0.f, 0.f, 0.f, 0.f };
+							pVertices[i].vLook = _float4{ 0.f, 0.f, 0.f, 0.f };
 							pVertices[i].vPosition = m_vecParticleInfoDesc[i].vCenterPositions;
 
 							// 시간 초기화
@@ -981,6 +981,13 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							//	vDir = vDir * m_vecParticleInfoDesc[i].fMaxRange;
 							//}
 
+
+							// 안보이게
+							pVertices[i].vRight = _float4{ 0.f, 0.f, 0.f, 0.f };
+							pVertices[i].vUp = _float4{ 0.f, 0.f, 0.f, 0.f };
+							pVertices[i].vLook = _float4{ 0.f, 0.f, 0.f, 0.f };
+
+
 							// 초기위치로 세팅 : 센터 + 방향 위치로 세팅
 							m_vecParticleInfoDesc[i].vCenterPositions.y = m_tBufferDesc.vMinMaxPosY.x;
 							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
@@ -1002,6 +1009,59 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 			}
 #pragma endregion 이동 : 직접 이동 끝
+
+
+#pragma region 크기 러프 시작
+			if (m_tBufferDesc.bUseScaleLerp) // 크기 변경 러프 사용이면
+			{
+				if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vScaleLerp_Up_Pos.x)		// 0~1로 보간한 라이프타임이 크기 증가를 시작할 타임 포지션을 넘어가면
+				{
+					if (m_tBufferDesc.fLifeTimeRatio >= m_tBufferDesc.vScaleLerp_Down_Pos.x) // 0~1로 보간한 라이프타임이 크기 감소를 시작할 타임 포지션도 넘어가면 감소 시작
+					{
+						// 크기 감소를 시작할 타임 포지션 (크기 0이 목표)
+						_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (1.f - m_tBufferDesc.vScaleLerp_Down_Pos.x);	// 라이프 타임 중, 감소에만 필요한 토탈시간 계산
+						if (m_vecParticleInfoDesc[i].fDownScaleTimeAccs >= fTotalTime)
+						{
+							m_vecParticleInfoDesc[i].fDownScaleTimeAccs = fTotalTime;
+							m_vecParticleInfoDesc[i].vCurScales.x = 0.f;
+							m_vecParticleInfoDesc[i].vCurScales.y = 0.f;
+						}
+						else
+						{
+							m_vecParticleInfoDesc[i].fDownScaleTimeAccs += fTimeDelta;	// 시간 누적	
+							m_vecParticleInfoDesc[i].vCurScales.x = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.x, 0.f, m_vecParticleInfoDesc[i].fDownScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+							m_vecParticleInfoDesc[i].vCurScales.y = abs(Easing::LerpToType(m_vecParticleInfoDesc[i].vMaxScales.y, 0.f, m_vecParticleInfoDesc[i].fDownScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+						}
+					}
+					else
+					{
+						// Max크기가 목표
+						_float fTotalTime = m_tBufferDesc.vMinMaxLifeTime.y * (m_tBufferDesc.vScaleLerp_Up_Pos.y - m_tBufferDesc.vScaleLerp_Up_Pos.x);	// 라이프 타임 중, 증가에만 필요한 토탈시간 계산
+						if (m_vecParticleInfoDesc[i].fUpScaleTimeAccs >= fTotalTime)
+						{
+							m_vecParticleInfoDesc[i].fUpScaleTimeAccs = fTotalTime;
+							m_vecParticleInfoDesc[i].vCurScales.x = m_vecParticleInfoDesc[i].vMaxScales.x;
+							m_vecParticleInfoDesc[i].vCurScales.y = m_vecParticleInfoDesc[i].vMaxScales.y;
+						}
+						else
+						{
+							m_vecParticleInfoDesc[i].fUpScaleTimeAccs += fTimeDelta;	// 시간 누적		
+							m_vecParticleInfoDesc[i].vCurScales.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxWidth.x, m_vecParticleInfoDesc[i].vMaxScales.x, m_vecParticleInfoDesc[i].fUpScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+							m_vecParticleInfoDesc[i].vCurScales.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxHeight.x, m_vecParticleInfoDesc[i].vMaxScales.y, m_vecParticleInfoDesc[i].fUpScaleTimeAccs, fTotalTime, m_tBufferDesc.eType_ScaleLerp));
+						}
+
+					}
+
+				}
+			}
+
+			// 크기변경 적용
+			pVertices[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
+			pVertices[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
+
+#pragma region 크기 러프 끝
+
+
 
 
 

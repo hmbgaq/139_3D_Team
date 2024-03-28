@@ -45,6 +45,7 @@ public:
 
 public:
 	void	Set_AnimIndex(_uint iAnimIndex);
+	void	Move(_float fTimeDelta);
 
 /* For.PartObject */
 public:

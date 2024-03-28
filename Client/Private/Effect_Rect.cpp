@@ -412,8 +412,8 @@ HRESULT CEffect_Rect::Ready_Components()
 			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
 		// Sprite
-		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		//if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
+		//	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 

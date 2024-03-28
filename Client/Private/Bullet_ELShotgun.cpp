@@ -101,10 +101,8 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 		}
 
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
-		pEffect->Get_Transform()->Look_At(m_pGameInstance->Get_Player()->Get_Position());
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+
 	}
 
 	//Set_Dead(true);
