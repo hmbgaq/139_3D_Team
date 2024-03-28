@@ -306,6 +306,8 @@ public: /* ============================== SetUp ============================== *
 	void			SetUp_WorldToScreen(_matrix vWorldPos, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	HRESULT			SetUp_BillBoarding();
 	_matrix			matTargetWorld = XMMatrixIdentity();
+	_bool			Calculation_Direcion(_vector vTargetPos, _float4 vCurrentDir);
+	_float			Target_Contained_Angle(_vector vStandard, _float4 vTargetPos);
 
 	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
 	void			Tick_LevelUp(_float fTimeDelta);
@@ -429,6 +431,7 @@ protected:
 protected:
 	_bool				Alpha_Minus(_float fTimeDelta);
 	_bool				Alpha_Plus(_float fTimeDelta);
+	_bool				Alpha_Plus_Control(_float fTimeDelta, _float fAlpha);
 	_float				m_fAlphaSpeed = 1.f;
 
 protected:
@@ -456,6 +459,8 @@ protected: /* =========================== Space ============================ */
 protected: /* =========================== Screen ============================ */
 	_float				m_fWorldToScreenX = 0.f;
 	_float				m_fWorldToScreenY = 0.f;
+	_float				m_fScreenOffsetX = 300.f;
+	_float				m_fScreenOffsetY = 150.f;
 
 protected: /* ============================= UI =============================== */
 	vector<CUI*>		m_vecUIParts;

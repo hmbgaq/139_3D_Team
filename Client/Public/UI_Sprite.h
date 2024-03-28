@@ -3,15 +3,15 @@
 #include "UI.h"
 
 /* 체력 프레임 */
-class CUI_Blood final : public CUI
+class CUI_Sprite final : public CUI
 {
 public: /* 각 UI파츠마다 어떤걸 얼마나 가질지 설정해주자. */
-	enum TEXTUREKIND { DIFFUSE, TEXTURE_END };
+	enum TEXTUREKIND { MAINMENU_START, MAINMENU_LOOP, TEXTURE_END };
 
 private:
-	CUI_Blood(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI_Blood(const CUI_Blood& rhs);
-	virtual ~CUI_Blood() = default;
+	CUI_Sprite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CUI_Sprite(const CUI_Sprite& rhs);
+	virtual ~CUI_Sprite() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -27,43 +27,32 @@ public:
 	virtual void	UI_Loop(_float fTimeDelta);
 	virtual void	UI_Exit(_float fTimeDelta);
 
+public:
+	void			Start_Setting();
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
 
 private:
-	void					Compute_OwnerCamDistance();
-	_bool					In_Frustum();
+	CTexture*	m_pTextureCom[TEXTURE_END] = { nullptr };
 
-private:
-	void					Set_OwnerHp();
+private: // Frame
+	_int		m_iCurrentFrame = 0;
+	DWORD		m_Time = GetTickCount64();
+	_float		m_fFrameChangeTime = 0.f;
 
-private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
-	TEXTUREKIND				m_eTexture_Kind = TEXTURE_END;
-	_float					m_fPreHP = 0.f;
-	_float					m_fCurHP = 0.f;
-	_float					m_fMaxHP = 0.f;
-	_float					m_fTimeAcc = 0.f;
-	_float					m_fVariationSpeed = 2.0f;
-	_bool					m_bLoop = false;
-	_bool					m_bAppear = false;
-
-	/* Decal */
-	_bool					m_bChangeType = false;
-	_float2					m_vDecal_Scale = { 1.f, 1.f };
-	_float2					m_vDecal_Offset = { 0.f, 0.f };
-
-	_bool					m_bLerp = false;
-public:
-	void	Set_Restore(_bool bRestore) { m_bRestore = bRestore; }
+private: // Sprite Info
+	_int		m_iMainStart_MaxFrame = 0;
+	_bool		m_bMainStart_Finish = false;
+	_int		m_iMainLoop_MaxFrame = 0;
+	_bool		m_bMainLoop_Finish = false;
 
 public:
 	virtual json			Save_Desc(json& out_json);
 	void					Load_Desc();
 
 public:
-	static CUI_Blood* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
+	static CUI_Sprite* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
 	virtual CGameObject* Pool() override;
 	virtual void			Free() override;

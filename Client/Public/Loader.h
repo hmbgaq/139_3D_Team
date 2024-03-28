@@ -60,6 +60,7 @@ private:
 	HRESULT	Ready_Origin();
 	HRESULT	Ready_UI_Origin();
 	HRESULT Ready_Environment_Model(LEVEL eLevel); //TODO 승용
+	HRESULT Ready_UI_Tool_Texture(LEVEL eLevel); //TODO 성희
 	HRESULT Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLevel, _int iAnimType); //! 시작 디렉토리 부터 안에 있는 경로를 전부 탐색 , 승용
 
 

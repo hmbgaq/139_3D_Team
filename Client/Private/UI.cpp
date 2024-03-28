@@ -731,30 +731,63 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
 	_int iWinHalfX = (g_iWinSizeX >> 1);
 	_int iWinHalfY = (g_iWinSizeY >> 1);
 
-	if (m_fWorldToScreenX < -(_float)iWinHalfX)
-	{
-		m_fWorldToScreenX = -(_float)iWinHalfX;
-		//m_fWorldToScreenX = -300.f;
-		//m_fWorldToScreenY = -300.f;
-	}
-	if (m_fWorldToScreenX > (_float)iWinHalfX)
-	{
-		m_fWorldToScreenX = (_float)iWinHalfX;
-		//m_fWorldToScreenX = -300.f;
-		//m_fWorldToScreenY = -300.f;
-	}
-	if (m_fWorldToScreenY < -(_float)iWinHalfY)
-	{
-		m_fWorldToScreenY = -(_float)iWinHalfY;
-		//m_fWorldToScreenX = -300.f;
-		//m_fWorldToScreenY = -300.f;
-	}
-	if (m_fWorldToScreenY > (_float)iWinHalfY)
-	{
-		m_fWorldToScreenY = (_float)iWinHalfY;
-		//m_fWorldToScreenX = -300.f;
-		//m_fWorldToScreenY = -300.f;
-	}
+	m_bActive = m_pGameInstance->isIn_WorldPlanes(vTargetPos, 5.f);
+
+	//_vector vRight = XMVector3Cross(m_pGameInstance->Get_CamDirection(), XMVectorSet(0.f, 1.f, 0.f, 0.f));
+
+	//m_bActive = Calculation_Direcion(vTargetPos, m_pGameInstance->Get_CamDirection());
+
+	//if (m_fWorldToScreenX < (_float)iWinHalfX &&	// Right
+	//	m_fWorldToScreenX > -(_float)iWinHalfX &&	// Left
+	//	m_fWorldToScreenY < (_float)iWinHalfY &&	// Top
+	//	m_fWorldToScreenY > -(_float)iWinHalfY)	// Bottom
+	//{
+	//	m_bActive = true;
+	//}
+
+	//if (m_fWorldToScreenX < -(_float)iWinHalfX)
+	//{
+	//	if (m_fWorldToScreenX < -((_float)iWinHalfX + m_fScreenOffsetX))
+	//		m_bActive = false;
+	//	else
+	//		m_bActive = true;
+
+	//	m_fWorldToScreenX = -(_float)iWinHalfX;
+	//	//m_fWorldToScreenX = -300.f;
+	//	//m_fWorldToScreenY = -300.f;
+	//}
+	//if (m_fWorldToScreenX > (_float)iWinHalfX)
+	//{
+	//	if (m_fWorldToScreenX > ((_float)iWinHalfX + m_fScreenOffsetX))
+	//		m_bActive = false;
+	//	else
+	//		m_bActive = true;
+
+	//	m_fWorldToScreenX = (_float)iWinHalfX;
+	//	//m_fWorldToScreenX = -300.f;
+	//	//m_fWorldToScreenY = -300.f;
+	//}
+	//if (m_fWorldToScreenY < -(_float)iWinHalfY)
+	//{
+	//	if (m_fWorldToScreenY < -((_float)iWinHalfY + m_fScreenOffsetY))
+	//		m_bActive = false;
+	//	else
+	//		m_bActive = true;
+	//	m_fWorldToScreenY = -((_float)iWinHalfY);
+	//	//m_fWorldToScreenX = -300.f;
+	//	//m_fWorldToScreenY = -300.f;
+	//}
+	//if (m_fWorldToScreenY > (_float)iWinHalfY)
+	//{
+	//	if (m_fWorldToScreenY > ((_float)iWinHalfY + m_fScreenOffsetY))
+	//		m_bActive = false;
+	//	else
+	//		m_bActive = true;
+
+	//	m_fWorldToScreenY = (_float)iWinHalfY;
+	//	//m_fWorldToScreenX = -300.f;
+	//	//m_fWorldToScreenY = -300.f;
+	//}
 
 	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
 
@@ -778,6 +811,45 @@ HRESULT CUI::SetUp_BillBoarding()
 	return S_OK;
 }
 
+_bool CUI::Calculation_Direcion(_vector vTargetPos, _float4 vCurrentDir)
+{
+	_float fAngle = Target_Contained_Angle(vCurrentDir, vTargetPos);
+
+	cout << "Angle : " << fAngle << endl;
+
+	if (0 <= fAngle && fAngle <= 90)
+		return true;
+	else if (-90 <= fAngle && fAngle < 0)
+		return true;
+	else if (fAngle > 90)
+		return false;
+	else if (fAngle < -90)
+		return false;
+	else
+		return false;
+
+}
+	
+_float CUI::Target_Contained_Angle(_vector vStandard, _float4 vTargetPos)
+{
+	 /* ---------- 소영 추가 ---------- */
+	 // 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
+	 /* ------------------------------- */
+	_vector vLook = XMVector3Normalize(vTargetPos - m_pTransformCom->Get_Pos());
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
+
+	_float fAngle = acos(XMVectorGetX(XMVector3Dot(vStandard, vLook)));
+
+	fAngle = XMConvertToDegrees(fAngle);
+
+	_vector vJudge = XMVector3Cross(vStandard, vLook);
+
+	_float fRotationDirection = XMVectorGetY(vJudge) < 0 ? -1.0f : 1.0f;
+
+	return fAngle * fRotationDirection;
+}
+
 void CUI::Tick_LevelUp(_float fTimeDelta)
 {
 	LifeTime_LevelUp(fTimeDelta);
@@ -785,30 +857,30 @@ void CUI::Tick_LevelUp(_float fTimeDelta)
 
 void CUI::Player_HUD(_float fTimeDelta)
 {
-	/* 인터페이스를 킬만한 행동(또는 상황)을 했을 경우 */
-	if (m_pData_Manager->Get_ShowInterface()/*m_pData_Manager->Limit_EXP()*/)
-	{
-		m_pData_Manager->Set_ShowInterface(false);
-		m_bActive = true;
-		m_fAlpha = 0.f;
-	}
+	///* 인터페이스를 킬만한 행동(또는 상황)을 했을 경우 */
+	//if (m_pData_Manager->Get_ShowInterface()/*m_pData_Manager->Limit_EXP()*/)
+	//{
+	//	m_pData_Manager->Set_ShowInterface(false);
+	//	m_bActive = true;
+	//	m_fAlpha = 0.f;
+	//}
 
-	if (m_fTime + m_fLifeTime < GetTickCount64())
-	{
-		m_bEventOn = true;
-		m_fTime = (_float)GetTickCount64();
-	}
+	//if (m_fTime + m_fLifeTime < GetTickCount64())
+	//{
+	//	m_bEventOn = true;
+	//	m_fTime = (_float)GetTickCount64();
+	//}
 
-	if (m_bEventOn)
-	{
-		m_fAlpha += fTimeDelta;
-	}
+	//if (m_bEventOn)
+	//{
+	//	m_fAlpha += fTimeDelta;
+	//}
 
-	if (m_fAlpha >= 1.f)
-	{
-		m_bActive = false;
-		m_bEventOn = false;
-	}
+	//if (m_fAlpha >= 1.f)
+	//{
+	//	m_bActive = false;
+	//	m_bEventOn = false;
+	//}
 }
 
 void CUI::Check_Disappear(_float fTimeDelta)
@@ -1129,6 +1201,7 @@ json CUI::Save_Desc(json& out_json)
 			out_json["Distortion"]["Distortion3Y"] = m_tUIInfo.vDistortion3.y;
 		//if (out_json["Distortion"].contains("DistortionScale")) // 키가 있으면
 			out_json["Distortion"]["DistortionScale"] = m_tUIInfo.fDistortionScale;
+			out_json["Distortion"]["DistortionBias"] = m_tUIInfo.fDistortionBias;
 		//if (out_json["Distortion"].contains("DistortionUI")) // 키가 있으면
 			out_json["Distortion"]["DistortionUI"] = m_tUIInfo.bDistortionUI;
 		//if (out_json["Distortion"].contains("MaskNum")) // 키가 있으면
@@ -1665,8 +1738,23 @@ _bool CUI::Alpha_Plus(_float fTimeDelta)
 	}
 	else
 	{
-		m_fAlpha = 1.f;
-		return false;
+		m_fAlpha = 1.f; // 알파 초기화
+		return false;	// UI Off
+	}
+	return true;
+
+}
+
+_bool CUI::Alpha_Plus_Control(_float fTimeDelta, _float fAlpha)
+{
+	if (m_fAlpha < fAlpha)
+	{
+		m_fAlpha += m_fAlphaSpeed * fTimeDelta;
+	}
+	else
+	{
+		m_fAlpha = fAlpha; // 알파 초기화
+		return false;	// UI Off
 	}
 	return true;
 

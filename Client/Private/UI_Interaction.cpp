@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "UI_Weakness.h"
+#include "UI_Interaction.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
 
-CUI_Weakness::CUI_Weakness(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_Interaction::CUI_Interaction(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_Weakness::CUI_Weakness(const CUI_Weakness& rhs)
+CUI_Interaction::CUI_Interaction(const CUI_Interaction& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_Weakness::Initialize_Prototype()
+HRESULT CUI_Interaction::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -24,7 +24,7 @@ HRESULT CUI_Weakness::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_Weakness::Initialize(void* pArg)
+HRESULT CUI_Interaction::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -44,99 +44,91 @@ HRESULT CUI_Weakness::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_Weakness::Priority_Tick(_float fTimeDelta)
+void CUI_Interaction::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_Weakness::Tick(_float fTimeDelta)
+void CUI_Interaction::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_V))
-		m_fOffsetY -= 0.1f;
-	if (m_pGameInstance->Key_Down(DIK_B))
-		m_fOffsetY += 0.1f;
-
-
-	__super::Tick(fTimeDelta);
-
-	m_pColliderCom->Update(matTargetWorld);
-
+	if (m_bActive == true)
+	{
+		__super::Tick(fTimeDelta);
+	}
 }
 
-void CUI_Weakness::Late_Tick(_float fTimeDelta)
+void CUI_Interaction::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	m_pTransformCom->Turn(m_vAxis, -fTimeDelta * 1.5f);
+	if (m_pGameInstance->Key_Down(DIK_R))
+		m_bOnInteraction = true;
 
-	//if (m_fTime + m_fActiveTime < GetTickCount64())
+	if (m_bActive == true)
 	{
-		if (m_fScaleX > 40.f)
+		if (m_bOnInteraction == true)
 		{
-			Change_SizeX((-m_fChangeScale));
-		}
+			if (m_fScaleX < 200.f)
+				Change_SizeX((+m_fChangeScale * 1.5f));
 
-		if (m_fScaleY > 40.f)
-		{
-			Change_SizeY((-m_fChangeScale));
-		}
+			if (m_fScaleY < 200.f)
+				Change_SizeY((+m_fChangeScale * 1.5f));
 
-		if (m_fScaleX <= 40.f && m_fScaleY <= 40.f)
-		{
-			m_fScaleX = 40.f;
-			m_fScaleY = 40.f;
-			m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
-		}
-	}
+			if (m_fAlpha < 1.f)
+				m_fAlpha += fTimeDelta * 1.5f;
 
-#ifdef _DEBUG
-	m_pGameInstance->Add_DebugRender(m_pColliderCom);
-#endif	
+			if (m_fAlpha >= 1.f)
+				m_bActive = false;
+		}
 
 	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 		return;
+	}
 }
 
-HRESULT CUI_Weakness::Render()
+HRESULT CUI_Interaction::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }
 
-void CUI_Weakness::UI_Ready(_float fTimeDelta)
+void CUI_Interaction::UI_Ready(_float fTimeDelta)
 {
 }
 
-void CUI_Weakness::UI_Enter(_float fTimeDelta)
+void CUI_Interaction::UI_Enter(_float fTimeDelta)
 {
 }
 
-void CUI_Weakness::UI_Loop(_float fTimeDelta)
+void CUI_Interaction::UI_Loop(_float fTimeDelta)
 {
 }
 
-void CUI_Weakness::UI_Exit(_float fTimeDelta)
+void CUI_Interaction::UI_Exit(_float fTimeDelta)
 {
 }
 
-void CUI_Weakness::Set_TargetPosition(_vector vTargetPosition)
+void CUI_Interaction::Set_TargetPosition(_vector vTargetPosition)
 {
 	m_vTargetPosition = vTargetPosition;
 }
 
-void CUI_Weakness::Check_TargetWorld()
+void CUI_Interaction::Check_TargetWorld()
 {
 	if (m_tUIInfo.bWorld == true)
 	{
@@ -177,7 +169,7 @@ void CUI_Weakness::Check_TargetWorld()
 	}
 }
 
-HRESULT CUI_Weakness::Ready_Components()
+HRESULT CUI_Interaction::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -190,24 +182,14 @@ HRESULT CUI_Weakness::Ready_Components()
 		return E_FAIL;
 
 	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("sparks"),
-		TEXT("Com_Texture_Lock"), reinterpret_cast<CComponent**>(&m_pTextureCom[SPARKS]))))
-		return E_FAIL;
-
-	/* For.Com_Collider */
-	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::WEAKNESS);
-	BoundingDesc.fRadius = 30.f;
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
-
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_Icon_exclamation_mark"),
+		TEXT("Com_Texture_Interaction"), reinterpret_cast<CComponent**>(&m_pTextureCom[INTERACTION]))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CUI_Weakness::Bind_ShaderResources()
+HRESULT CUI_Interaction::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -223,7 +205,7 @@ HRESULT CUI_Weakness::Bind_ShaderResources()
 	{
 		switch (i)
 		{
-		case CUI_Weakness::SPARKS:
+		case CUI_Interaction::INTERACTION:
 		{
 			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
@@ -237,7 +219,7 @@ HRESULT CUI_Weakness::Bind_ShaderResources()
 	return S_OK;
 }
 
-json CUI_Weakness::Save_Desc(json& out_json)
+json CUI_Interaction::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
@@ -245,43 +227,43 @@ json CUI_Weakness::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_Weakness::Load_Desc()
+void CUI_Interaction::Load_Desc()
 {
 
 }
 
-CUI_Weakness* CUI_Weakness::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_Interaction* CUI_Interaction::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Weakness* pInstance = new CUI_Weakness(pDevice, pContext, strPrototypeTag);
+	CUI_Interaction* pInstance = new CUI_Interaction(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_Weakness");
+		MSG_BOX("Failed to Created : CUI_Interaction");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Weakness::Pool()
+CGameObject* CUI_Interaction::Pool()
 {
-	return new CUI_Weakness(*this);
+	return new CUI_Interaction(*this);
 }
 
-CGameObject* CUI_Weakness::Clone(void* pArg)
+CGameObject* CUI_Interaction::Clone(void* pArg)
 {
-	CUI_Weakness* pInstance = new CUI_Weakness(*this);
+	CUI_Interaction* pInstance = new CUI_Interaction(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_Weakness");
+		MSG_BOX("Failed to Cloned : CUI_Interaction");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CUI_Weakness::Free()
+void CUI_Interaction::Free()
 {
 	__super::Free();
 

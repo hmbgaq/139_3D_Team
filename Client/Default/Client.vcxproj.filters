@@ -2956,6 +2956,18 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList\Select">
       <UniqueIdentifier>{8e0ffcba-6dc3-4707-bf47-a12695be8aa6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\97. Video\Sprite">
+      <UniqueIdentifier>{9f99e6c2-f92c-40a9-820f-4dbce387bf4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\03. Object">
+      <UniqueIdentifier>{d29e390e-cc28-4bc1-a536-6870a93520c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\03. Object\0. Interaction">
+      <UniqueIdentifier>{b6cb4dcf-251d-43ae-938b-ea2a10dd897e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox">
+      <UniqueIdentifier>{6de15db7-490e-49fe-97dc-b4f2376897e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5984,6 +5996,15 @@
     <ClInclude Include="..\Public\UI_SelectList.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList\Select</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Sprite.h">
+      <Filter>02.GameObjects\UI\97. Video\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Interaction.h">
+      <Filter>02.GameObjects\UI\03. Object\0. Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MainMenuList.h">
+      <Filter>02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -8462,6 +8483,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SelectList.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList\Select</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Sprite.cpp">
+      <Filter>02.GameObjects\UI\97. Video\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Interaction.cpp">
+      <Filter>02.GameObjects\UI\03. Object\0. Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MainMenuList.cpp">
+      <Filter>02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

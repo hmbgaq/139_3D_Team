@@ -485,11 +485,16 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In) // 6
 	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
 	// wrap를 사용하는 스테이트 대신 clamp를 사용하는 스테이트를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
     vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
+    
     vFireColor.a = vAlphaColor;
 
        // 컬러 혼합
     Out.vColor = Calculation_ColorBlend(vFireColor, g_vColor_Mul, g_iColorMode);
+    
+    Out.vColor.a -= g_Alpha;
+    
+    //if (Out.vColor.a < 0.1f)
+    //    discard;
     
     return Out;
 }

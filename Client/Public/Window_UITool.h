@@ -476,6 +476,7 @@ private:
 		"Player_Skill_Guige",
 		"Player_Skill_Icon",
 		"Player_ExpBar",
+		"Blood",
 		"Blood_Lights",
 		"Blood_Veins",
 		"Blood_Vignette",
@@ -503,7 +504,10 @@ private:
 		"EnemyHP_Shard",
 		"EnemyState_Shard",
 		"EnemyFrame_Shard",
-		"Video"
+		"Video",
+		"Sprite",
+		"Interaction",
+		"MainMenuList"
 	};
 
 	// 클래스 목록을 저장하는 벡터
