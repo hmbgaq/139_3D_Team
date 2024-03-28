@@ -16,6 +16,10 @@
 
 #include "Tank_Stun_Start.h"
 #include "Tank_DeathNormal_F_01.h"
+#include "Finisher_Tank.h"
+
+#include "Player.h"
+#include "Player_Finisher_Tank.h"
 
 
 CTank::CTank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -44,7 +48,7 @@ void CTank::Set_ShieldBroken()
 		
 	}
 		
-	m_fShieldBrokenTime = 10.f;
+	m_fShieldBrokenTime = 20.f;
 }
 
 HRESULT CTank::Initialize_Prototype()
@@ -69,7 +73,11 @@ HRESULT CTank::Initialize(void* pArg)
 		m_pActor->Set_State(new CTank_Idle());
 	}
 
-	m_iHp = 100000;
+	//m_iHp = 150;
+	m_iHp = 1;
+
+
+	m_bIsFixed = true;
 
 	//m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	//m_pNavigationCom = nullptr;
@@ -120,40 +128,62 @@ HRESULT CTank::Render()
 
 void CTank::Hitted_Left(Power ePower)
 {
-	switch (ePower)
+	if (true == Is_ShieldBroken())
 	{
-	case Engine::Medium:
-		m_pActor->Set_State(new CTank_HitNormalShield_FL_01());
-	case Engine::Heavy:
-		m_pActor->Set_State(new CTank_HitHeavyShield_FL_01());
+		switch (ePower)
+		{
+		case Engine::Medium:
+			m_pActor->Set_State(new CTank_HitNormalShield_FL_01());
+		case Engine::Heavy:
+			m_pActor->Set_State(new CTank_HitHeavyShield_FL_01());
+		}
 	}
+
 }
 
 void CTank::Hitted_Right(Power ePower)
 {
-	switch (ePower)
+	if (true == Is_ShieldBroken())
 	{
-	case Engine::Medium:
-		m_pActor->Set_State(new CTank_HitNormalShield_FR_01());
-	case Engine::Heavy:
-		m_pActor->Set_State(new CTank_HitHeavyShield_FR_01());
+		switch (ePower)
+		{
+		case Engine::Medium:
+			m_pActor->Set_State(new CTank_HitNormalShield_FR_01());
+		case Engine::Heavy:
+			m_pActor->Set_State(new CTank_HitHeavyShield_FR_01());
+		}
 	}
+
 }
 
 void CTank::Hitted_Front(Power ePower)
 {
-	switch (ePower)
+	if (true == Is_ShieldBroken())
 	{
-	case Engine::Medium:
-		m_pActor->Set_State(new CTank_HitNormalShield_F_01());
-	case Engine::Heavy:
-		m_pActor->Set_State(new CTank_HitHeavyShield_F_01());
+		switch (ePower)
+		{
+		case Engine::Medium:
+			m_pActor->Set_State(new CTank_HitNormalShield_F_01());
+		case Engine::Heavy:
+			m_pActor->Set_State(new CTank_HitHeavyShield_F_01());
+		}
 	}
 }
 
 void CTank::Hitted_Stun(Power ePower)
 {
 	m_pActor->Set_State(new CTank_Stun_Start());
+}
+
+void CTank::Hitted_Finish()
+{
+	m_pActor->Set_State(new CFinisher_Tank());
+	Look_At_OnLand(CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector());
+		
+	CPlayer* pPlayer = Set_Player_Finisher_Pos(_float3(0.f, 0.f, 2.5f));
+	_vector vFront = XMLoadFloat3(&Calc_Front_Pos(_float3(-1.0f, 0.f, 0.5f)));
+	pPlayer->Look_At_OnLand(vFront);
+	pPlayer->Get_Actor()->Set_State(new CPlayer_Finisher_Tank());
 }
 
 void CTank::Hitted_Dead(Power ePower)
@@ -190,8 +220,9 @@ HRESULT CTank::Ready_PartObjects()
 		Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
 		Set_Weapon_Enable(TANK_WEAPON_PUNCH_R, false);
 
-	}
+		Set_Weapon_Collisions_Enable(TEXT("Weapon_Shield"), true);
 
+	}
 
 	return S_OK;
 }

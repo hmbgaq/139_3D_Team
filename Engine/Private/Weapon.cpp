@@ -2,14 +2,15 @@
 #include "GameInstance.h"
 #include "Character.h"
 #include "Bone.h"
+#include "AttackObject.h"
 
 CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CGameObject(pDevice, pContext, strPrototypeTag)
+	: CAttackObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CWeapon::CWeapon(const CWeapon& rhs)
-	: CGameObject(rhs)
+	: CAttackObject(rhs)
 	, m_pColliders(rhs.m_pColliders)
 	, m_iColliderSize(rhs.m_iColliderSize)
 {
@@ -155,46 +156,46 @@ HRESULT CWeapon::Render_Shadow()
 }
 
 
-CCharacter* CWeapon::Get_Target_Character(CCollider* other)
-{
-	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
-		return nullptr;
-
-	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
-	if (nullptr == pTarget_Character)
-		return nullptr;
-
-	return pTarget_Character;
-}
-
-CCharacter* CWeapon::Get_PartOwner()
-{
-	if (nullptr == m_pOwner || m_pOwner->Is_Dead() || false == m_pOwner->Get_Enable())
-		return nullptr;
-
-	return dynamic_cast<CCharacter*>(m_pOwner);
-}
-
-CWeapon* CWeapon::Set_Damage(_float _fDamage)
-{
-	m_fDamage = _fDamage;
-
-	return this;
-}
-
-CWeapon* CWeapon::Set_Direction(Direction _eHitDirection)
-{
-	m_eHitDirection = _eHitDirection;
-
-	return this;
-}
-
-CWeapon* CWeapon::Set_Power(Power _eHitPower)
-{
-	m_eHitPower = _eHitPower;
-
-	return this;
-}
+//CCharacter* CWeapon::Get_Target_Character(CCollider* other)
+//{
+//	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+//		return nullptr;
+//
+//	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
+//	if (nullptr == pTarget_Character)
+//		return nullptr;
+//
+//	return pTarget_Character;
+//}
+//
+//CCharacter* CWeapon::Get_PartOwner()
+//{
+//	if (nullptr == m_pOwner || m_pOwner->Is_Dead() || false == m_pOwner->Get_Enable())
+//		return nullptr;
+//
+//	return dynamic_cast<CCharacter*>(m_pOwner);
+//}
+//
+//CWeapon* CWeapon::Set_Damage(_float _fDamage)
+//{
+//	m_fDamage = _fDamage;
+//
+//	return this;
+//}
+//
+//CWeapon* CWeapon::Set_Direction(Direction _eHitDirection)
+//{
+//	m_eHitDirection = _eHitDirection;
+//
+//	return this;
+//}
+//
+//CWeapon* CWeapon::Set_Power(Power _eHitPower)
+//{
+//	m_eHitPower = _eHitPower;
+//
+//	return this;
+//}
 
 CWeapon* CWeapon::Activate_Collisions(_bool _bActivate)
 {
@@ -206,12 +207,12 @@ CWeapon* CWeapon::Activate_Collisions(_bool _bActivate)
 	return this;
 }
 
-CWeapon* CWeapon::Set_Force(_float _fForce)
-{
-	m_fForce = _fForce;
-
-	return this;
-}
+//CWeapon* CWeapon::Set_Force(_float _fForce)
+//{
+//	m_fForce = _fForce;
+//
+//	return this;
+//}
 
 CWeapon* CWeapon::Set_Dir(_float3 _vDir)
 {
@@ -220,12 +221,12 @@ CWeapon* CWeapon::Set_Dir(_float3 _vDir)
 	return this;
 }
 
-CWeapon* CWeapon::Set_KnockUp(_bool _bKnockUp)
-{
-	m_bKnockUp = _bKnockUp;
-
-	return this;
-}
+//CWeapon* CWeapon::Set_KnockUp(_bool _bKnockUp)
+//{
+//	m_bKnockUp = _bKnockUp;
+//
+//	return this;
+//}
 
 void CWeapon::Set_Enable_Collisions(_bool bEnable)
 {

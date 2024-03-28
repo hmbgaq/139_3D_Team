@@ -28,6 +28,11 @@ public:
 	virtual	HRESULT Render_Shadow() override { return S_OK; };
 
 public:
+	virtual void	OnCollisionEnter(CCollider* other)	override;
+	virtual void	OnCollisionStay(CCollider* other)	override;
+	virtual void	OnCollisionExit(CCollider* other)	override;
+
+public:
 	void	Set_Animation(
 		_uint _iNextAnimation
 		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL

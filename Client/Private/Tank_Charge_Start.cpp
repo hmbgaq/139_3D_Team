@@ -8,15 +8,15 @@ void CTank_Charge_Start::Initialize(CTank* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	pActor->Reset_AttackCount();
 
-	CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, true);
-	pWeapon
-		->Set_Damage(10)
-		->Set_Direction(Direction::Front)
-		->Set_Power(Power::Medium)
-		->Set_Force(0.5f)
-		;
+	//CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, true);
+	//pWeapon
+	//	->Set_Damage(10)
+	//	->Set_Direction(Direction::Front)
+	//	->Set_Power(Power::Medium)
+	//	->Set_Force(0.5f)
+	//	;
 
-	pWeapon->Set_Enable_Collisions(false);
+	//pWeapon->Set_Enable_Collisions(false);
 
 }
 
@@ -27,7 +27,7 @@ CState<CTank>* CTank_Charge_Start::Update(CTank* pActor, _float fTimeDelta)
 		m_bFlags[0] = pActor->Is_Inputable_Front(34);
 		if (true == m_bFlags[0])
 		{
-			pActor->Set_Weapon_Collisions_Enable(TANK_WEAPON_PUNCH_L, true);
+			//pActor->Set_Weapon_Collisions_Enable(TANK_WEAPON_PUNCH_L, true);
 		}
 	}
 
@@ -42,5 +42,5 @@ CState<CTank>* CTank_Charge_Start::Update(CTank* pActor, _float fTimeDelta)
 void CTank_Charge_Start::Release(CTank* pActor)
 {
 	__super::Release(pActor);
-	CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
+	//CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
 }

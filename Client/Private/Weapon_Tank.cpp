@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "Weapon_Tank.h"
 #include "Model.h"
+#include "AttackObject.h"
+#include "Tank.h"
+#include "Data_Manager.h"
 
 CWeapon_Tank::CWeapon_Tank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -29,6 +32,9 @@ HRESULT CWeapon_Tank::Initialize(void* pArg)
 
 	FAILED_CHECK(Option_Setting());
 
+	m_fMaxHp = 50.f;
+	m_fHp = m_fMaxHp;
+
 	return S_OK;
 }
 
@@ -41,6 +47,20 @@ HRESULT CWeapon_Tank::Ready_Components()
 
 	/* For. Com_Shader */
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+
+	///* For.Com_Collider */
+	m_iColliderSize = 1;
+	m_pColliders.resize(m_iColliderSize);
+	
+	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_SHIELD);
+	BoundingDesc.fRadius = { 1.6f };
+	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc)))
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -64,6 +84,10 @@ void CWeapon_Tank::Set_Enable(_bool _Enable)
 {
 	__super::Set_Enable(_Enable);
 	m_bIsFollow = _Enable;
+	if (true == _Enable) 
+	{
+		Refill_Hp();
+	}
 }
 
 
@@ -100,22 +124,6 @@ void CWeapon_Tank::Tick(_float fTimeDelta)
 	{
 		Set_Enable(false);
 	}
-
-
-	//if (m_pGameInstance->Key_Down(DIK_F))
-	//{
-	//	string path = "../Bin/DataFiles/Data_Weapon/Monster/Tank/Shield.json";
-	//	{
-	//		json Out_Json;
-	//		m_pTransformCom->Write_Json(Out_Json);
-	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
-	//	}
-	//	//{
-	//	//   json In_Json;
-	//	//   CJson_Utility::Load_Json(path.c_str(), In_Json);
-	//	//   m_pTransformCom->Load_FromJson(In_Json);
-	//	//}
-	//}
 }
 
 void CWeapon_Tank::Late_Tick(_float fTimeDelta)
@@ -162,6 +170,46 @@ HRESULT CWeapon_Tank::Render()
 	}
 
 	return S_OK;
+}
+
+void CWeapon_Tank::OnCollisionEnter(CCollider* other)
+{
+	CAttackObject* pTarget_AttackObject = Get_Target_AttackObject(other);
+
+	if (pTarget_AttackObject != nullptr)
+	{
+		_float fDamage = pTarget_AttackObject->Get_Damage();
+		if (true == pTarget_AttackObject->Is_Melee()) 
+		{
+			fDamage *= 2.0f;
+		}
+
+		Get_Damaged(fDamage);
+
+		if (0 >= m_fHp) 
+		{
+			CCharacter* pOwner = Get_PartOwner();
+			CTank* pTank = dynamic_cast<CTank*>(pOwner);
+			if (pTank)
+			{
+				pTank->Set_ShieldBroken();
+				pTank->Hitted_Front(Power::Heavy);
+				CData_Manager::GetInstance()->Apply_Shake_And_Blur(Power::Heavy);
+			}
+			
+			Set_Enable(false);
+		}
+		
+		other->Set_Enable(false);
+	}
+}
+
+void CWeapon_Tank::OnCollisionStay(CCollider* other)
+{
+}
+
+void CWeapon_Tank::OnCollisionExit(CCollider* other)
+{
 }
 
 #pragma region Create, Clone, Pool, Free

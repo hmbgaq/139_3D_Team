@@ -29,6 +29,8 @@ HRESULT CPlayer_Weapon_Punch::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+	
+	m_bIsMelee = true;
 
 	return S_OK;
 }
@@ -79,7 +81,7 @@ HRESULT CPlayer_Weapon_Punch::Ready_Components()
 	return S_OK;
 }
 
-void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
+void CPlayer_Weapon_Punch::Attack(CCollider* other)
 {
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
@@ -88,22 +90,26 @@ void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
 		_vector vHitDir = Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1;
 
 
-		pTarget_Character->Set_Hitted(m_fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, true, m_bKnockUp);
+		pTarget_Character->Set_Hitted(m_fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee, m_bKnockUp);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
 		CCharacter_Client* pOwnerCharacter = dynamic_cast<CCharacter_Client*>(Get_Object_Owner());
-		if (pOwnerCharacter) 
+		if (pOwnerCharacter)
 		{
 			pOwnerCharacter->Create_Hitting_Effect(Get_WorldPosition(), m_eHitPower);
 		}
-
+		Set_Enable_Collisions(false);
 	}
-	Set_Enable_Collisions(false);
+}
+
+void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)
+{
+	Attack(other);
 }
 
 void CPlayer_Weapon_Punch::OnCollisionStay(CCollider* other)
 {
-	_int a = 0;		
+	Attack(other);
 }
 
 void CPlayer_Weapon_Punch::OnCollisionExit(CCollider* other)
