@@ -250,7 +250,7 @@ HRESULT CWindow_EffectTool::Ready_Sky()
 	if (m_pSky == nullptr)
 		return E_FAIL;
 
-	m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_TEMP1);
+	m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1);
 
 	return S_OK;
 }
@@ -679,22 +679,20 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->fEmissionTime = m_fEmissionTime_Particle;
 				}
 
-				if (ImGui::DragInt("AddEmitCount_Particle", &m_iAddEmitCount_Particle, 1, 0.f, m_pParticleBufferDesc->iCurNumInstance))
+				if (ImGui::DragInt("AddEmitCount_Particle", &m_iAddEmitCount_Particle, 1, 0, m_pParticleBufferDesc->iCurNumInstance))
 				{
 					// 정지 및 리셋
 					m_pCurEffectDesc->bPlay = FALSE;
 					m_pCurEffect->Init_ReSet_Effect();
 
 					if (0 >= m_iAddEmitCount_Particle)	// 0보다 작아지면 0으로
-						m_iAddEmitCount_Particle = 0.f;
+						m_iAddEmitCount_Particle = 0;
 
 					if (m_pParticleBufferDesc->iCurNumInstance <= m_iAddEmitCount_Particle)	// 현재 인스턴스 개수와 같거나 커지면 현재 인스턴스 개수로
 						m_iAddEmitCount_Particle = m_pParticleBufferDesc->iCurNumInstance;
 
 					m_pParticleBufferDesc->iAddEmitCount = (_uint)m_iAddEmitCount_Particle;
 				}
-
-
 
 				/* 퍼지는 범위(분포 범위) */
 				ImGui::SeparatorText(" Range_Particle ");

@@ -69,34 +69,34 @@ struct VS_IN
 
 struct VS_OUT
 {
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float4 vWorldPos : TEXCOORD1;
-    float4 vProjPos : TEXCOORD2;
-    float4 vTangent : TANGENT;
-    float4 vBinormal : BINORMAL;
+    float4 vPosition        : SV_POSITION;
+    float4 vNormal          : NORMAL;
+    float2 vTexcoord        : TEXCOORD0;
+    float4 vWorldPos        : TEXCOORD1;
+    float4 vProjPos         : TEXCOORD2;
+    float4 vTangent         : TANGENT;
+    float4 vBinormal        : BINORMAL;
 };
 
 struct PS_IN
 {
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float4 vWorldPos : TEXCOORD1;
-    float4 vProjPos : TEXCOORD2;
-    float4 vTangent : TANGENT;
-    float4 vBinormal : BINORMAL;
+    float4 vPosition        : SV_POSITION;
+    float4 vNormal          : NORMAL;
+    float2 vTexcoord        : TEXCOORD0;
+    float4 vWorldPos        : TEXCOORD1;
+    float4 vProjPos         : TEXCOORD2;
+    float4 vTangent         : TANGENT;
+    float4 vBinormal        : BINORMAL;
 };
 
 struct PS_OUT
 {
-    float4 vDiffuse     : SV_TARGET0;
-    float4 vNormal      : SV_TARGET1;
-    float4 vDepth       : SV_TARGET2;
-    float4 vORM         : SV_TARGET3;
-    float4 vRimBloom    : SV_TARGET4; /* Rim + Bloom */
-    float4 vEmissive    : SV_Target5;
+    float4 vDiffuse         : SV_TARGET0;
+    float4 vNormal          : SV_TARGET1;
+    float4 vDepth           : SV_TARGET2;
+    float4 vORM             : SV_TARGET3;
+    float4 vRimBloom        : SV_TARGET4; /* Rim + Bloom */
+    float4 vEmissive        : SV_Target5;
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -119,13 +119,13 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
 
-    Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
-    Out.vTexcoord = In.vTexcoord;
-    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
-    Out.vProjPos = Out.vPosition;
-    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
-    Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
+    Out.vPosition   = mul(vPosition, matWVP);
+    Out.vNormal     = normalize(mul(vNormal, g_WorldMatrix));
+    Out.vTexcoord   = In.vTexcoord;
+    Out.vWorldPos   = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vProjPos    = Out.vPosition;
+    Out.vTangent    = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
+    Out.vBinormal   = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
 	
     return Out;
 }

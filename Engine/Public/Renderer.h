@@ -29,8 +29,10 @@ public:
 	HRESULT Initialize();
 	HRESULT Create_Buffer();
 	HRESULT	Create_Shader();
+	HRESULT	Create_Texture();
 	HRESULT Create_RenderTarget();
 	HRESULT Create_DepthStencil();
+	HRESULT GraphicDebug_Shader();
 
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
@@ -94,6 +96,7 @@ public:
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
 
 	/* 활성화 */
+	void Set_PBR_Active(_bool _Pbr_active) { m_tPBR_Option.bPBR_ACTIVE = _Pbr_active; }
 	void Set_BloomBlur_Active(_bool _bloom_active) { m_tDeferred_Option.bRimBloom_Blur_Active = _bloom_active; }
 	void Set_Shadow_Active(_bool _Shadow_Active) { m_tDeferred_Option.bShadow_Active = _Shadow_Active; }
 	void Set_HBAO_Active(_bool _HBAO) { m_tHBAO_Option.bHBAO_Active = _HBAO; }
@@ -111,6 +114,7 @@ public:
 	void Set_Sephia_Active(_bool _Sephia_active) { m_eScreenDEffect_Desc.bSephia_Active = _Sephia_active; }
 
 	/* 옵션조절 */
+	void Set_PBR_Option(PBR_DESC desc) { m_tPBR_Option = desc; }
 	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }
 	void Set_HBAO_Option(HBAO_PLUS_DESC desc) { m_tHBAO_Option = desc; }
 	void Set_Fog_Option(FOG_DESC desc) { m_tFog_Option = desc; }
@@ -125,10 +129,14 @@ public:
 	void Set_Vignette_Option(VIGNETTE_DESC desc) { m_tVignette_Option = desc; }
 	void Set_ScreenEffect_Option(SCREENEFFECT_DESC desc) { m_eScreenDEffect_Desc = desc; }
 
+private: // Debug
+	ID3DBlob* CompileShader(const std::wstring& filename, const string& entrypoint, const string& target);
+
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
 	_bool						bTest = { true };
 
+	PBR_DESC					m_tPBR_Option				= {};
 	DEFERRED_DESC				m_tDeferred_Option			= {};
 	SSR_DESC					m_tSSR_Option				= {};
 	CHROMA_DESC					m_tChroma_Option			= {};
@@ -150,11 +158,11 @@ private:
 	wstring						strCurrentTarget			= TEXT("Target_Effect_Final");
 
 private:
+	ID3DBlob*					m_psByteCode				= { nullptr };
 	ID3D11Device*				m_pDevice					= { nullptr };
 	ID3D11DeviceContext*		m_pContext					= { nullptr };
 	class CGameInstance*		m_pGameInstance				= { nullptr };
 	list<class CGameObject*>	m_RenderObjects[RENDER_END];
-
 private:
 	class CShader*				m_pShader_Deferred			= { nullptr };
 	class CShader*				m_pShader_PostProcess		= { nullptr };
@@ -166,17 +174,24 @@ private:
 	class CVIBuffer_Rect*		m_pVIBuffer					= { nullptr };
 
 	class CTexture*				m_pPerlinNoiseTextureCom	= { nullptr };
-	class CTexture*				m_pIrradianceTextureCom		= { nullptr };
-	class CTexture*				m_pPreFilteredTextureCom	= { nullptr };
+	class CTexture*				m_pIrradianceTextureCom[4]	= { nullptr };
+	class CTexture*				m_pPreFilteredTextureCom[4]	= { nullptr };
 	class CTexture*				m_pBRDFTextureCom			= { nullptr };
 	class CTexture*				m_pVolumetrix_Voxel			= { nullptr };
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();
 
+	/* For. Tool */
+	class CTexture* m_pTool_IrradianceTextureCom[10] = { nullptr };
+	class CTexture* m_pTool_PreFilteredTextureCom[10] = { nullptr };
+
 public:
 	_bool			m_bUI_MRT = false;
 	void			Render_UI_MRT(_bool bMRT) { m_bUI_MRT = bMRT;}
+	void			Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture) { m_iPBRTexture_InsteadLevel = iPBRTexture; }
+	_bool			m_bToolLevel = { false };
+	_int			m_iPBRTexture_InsteadLevel = { 0 };
 
 #ifdef _DEBUG
 public:
@@ -187,7 +202,7 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { false };
+	_bool			m_bDebugRenderTarget	= { true };
 	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

@@ -1393,14 +1393,14 @@ void CWindow_MapTool::EnvironmentMode_Function()
 
 	}ImGui::Separator(); ImGui::NewLine();
 
-	//if (ImGui::Button(u8"스테이지1 불러오기"))
-	//{
-	//	string strFilePath = "..\\Bin\\DataFiles\\Data_Map";
-	//	string strFileName = "Stage1Final_MonsterInclude_Decrease.json";
-	//	Load_Function(strFilePath, strFileName);
-	//	LoadNavi("..\\Bin\\DataFiles\\Navigation\\Stage1NavigationFinal.dat");
-	//}
-	//
+	if (ImGui::Button(u8"스테이지1 불러오기"))
+	{
+		string strFilePath = "..\\Bin\\DataFiles\\Data_Map";
+		string strFileName = "Stage1Final_MapData.json";
+		Load_Function(strFilePath, strFileName);
+		LoadNavi("..\\Bin\\DataFiles\\Navigation\\Stage1NavigationFinal.dat");
+	}
+	
 	//ImGui::SameLine();
 	//
 	//if (ImGui::Button(u8"인트로보스맵 불러오기"))
@@ -1416,10 +1416,12 @@ void CWindow_MapTool::EnvironmentMode_Function()
 	if (ImGui::Button(u8"설산맵 불러오기"))
 	{
 		string strFilePath = "..\\Bin\\DataFiles\\Data_Map";
-		string strFileName = "SnowMountainTrackSignal_MapData.json";
+		string strFileName = "SnowMountainRetrack_MapData_MapData.json";
 		Load_Function(strFilePath, strFileName);
 		LoadNavi("..\\Bin\\DataFiles\\Navigation\\Stage1NavigationFinal.dat");
 	}
+
+	
 
 	
 
@@ -3048,7 +3050,7 @@ void CWindow_MapTool::Interact_SplineSave()
 	json SplineJson;
 
 
-	_int iSplinePointSize = m_mapSplinePoints.size();
+	_int iSplinePointSize = (_int)m_mapSplinePoints.size();
 	_int iJsonIndex = 0;
 
 	SplineJson[iJsonIndex].emplace("DivergingCount", m_iSplineDivergingCount);
@@ -3061,7 +3063,7 @@ void CWindow_MapTool::Interact_SplineSave()
 		string strTest = iter.first.c_str();
 		SplineJson[iJsonIndex].emplace("SplineKey", strTest);
 
-		_int iSplineVectorSize = iter.second.size();
+		_int iSplineVectorSize = _int(iter.second.size());
 
 		for (_int i = 0; i < iSplineVectorSize; ++i)
 		{
@@ -3136,7 +3138,7 @@ void CWindow_MapTool::Interact_SplineLoad()
 		MSG_BOX("스플라인 데이터 불러오기 실패");
 	}
 
-	_int iSplineJsonSize = SplineJson.size();
+	_int iSplineJsonSize = (_int)SplineJson.size();
 
 	for (_int i = 0; i < iSplineJsonSize; ++i)
 	{
@@ -3145,7 +3147,7 @@ void CWindow_MapTool::Interact_SplineLoad()
 		json   SplineVectorJson = SplineJson[i]["SplineVectorJson"];
 		_float fSplineSpeed = SplineJson[i]["SplineSpeed"]; //! 해당 구간 속도
 
-		_int iSplineVectorJsonSize = SplineVectorJson.size();
+		_int iSplineVectorJsonSize = (_int)SplineVectorJson.size();
 
 		vector<_float4> vecSplinePoint;
 
@@ -7453,7 +7455,7 @@ void CWindow_MapTool::Interact_SelectTab()
 			{
 				vector<_float4> vecSplinePoint;
 				
-				_int iSaveSplinePointSize = m_vecSplinePoints.size();
+				_int iSaveSplinePointSize = (_int)m_vecSplinePoints.size();
 
 				for (_int i = 0; i < iSaveSplinePointSize; ++i)
 				{
