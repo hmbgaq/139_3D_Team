@@ -84,6 +84,7 @@ public: /* For.Renderer */
 	HRESULT		Add_DebugRender(class CComponent* pDebugCom);
 	CRenderer*	Get_Renderer(); /* Åø¿ë */
 	HRESULT		Off_Shader();
+	void			Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture);
 
 #ifdef _DEBUG
 	void		Set_RenderDebugCom(_bool _bRenderDebug);

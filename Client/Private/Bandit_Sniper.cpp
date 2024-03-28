@@ -90,7 +90,7 @@ void CBandit_Sniper::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
-	cout << "Bullet Cnt : " << m_iBulletCnt << endl;
+	//cout << "Bullet Cnt : " << m_iBulletCnt << endl;
 }
 
 void CBandit_Sniper::Late_Tick(_float fTimeDelta)

@@ -19,10 +19,13 @@ Texture2D       g_NormalTexture;
 Texture2D       g_SpecularTexture;
 Texture2D       g_EmissiveTexture;
 Texture2D       g_OpacityTexture;
+Texture2D       g_AmbientOcclusionTexture;
+Texture2D       g_RoughnessTexture;
+Texture2D       g_MetalicTexture;
 
-Texture2D       g_ColorDiffuse;
 Texture2D       g_MaskTexture;
 Texture2D       g_NoiseTexture;
+Texture2D       g_ColorDiffuse;
 
 Texture2D       g_RADTexture;
 
@@ -186,7 +189,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	Out.vProjPos = Out.vPosition;
 	Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
 	Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
-
     
 	return Out;
 }
@@ -257,6 +259,10 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    //vector vO = g_AmbientOcclusionTexture.Sample(LinearSampler, In.vTexcoord); //AO 는 HBAO+ 가 할거라 필요없음. 
+    //vector vR = g_RoughnessTexture.Sample(LinearSampler, In.vTexcoord);
+    //vector vM = g_MetalicTexture.Sample(LinearSampler, In.vTexcoord);
     
 	return Out;
 }
@@ -519,28 +525,6 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     vNormal = mul(vNormal, WorldMatrix);
     Out.vNormal = (vector(vNormal * 0.5f + 0.5f, 0.f)) * 0.2;
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    
-    return Out;
-}
-
-/* ------------------- (11) Intro Ground -------------------*/
-PS_OUT PS_MAIN_GROUND(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-	
-    float4 RAD = g_RADTexture.Sample(LinearSampler, In.vTexcoord);
- 
-    /* Diffuse, Normal 은 Albedo, Normal Texture 가 들어갔음 */ 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);   
-    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
-    vPixelNormal = vPixelNormal * 2.f - 1.f;
-    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    vPixelNormal = mul(vPixelNormal, WorldMatrix);
-    
-    Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM.g = RAD.r;
     Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
@@ -689,17 +673,4 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_ICICLE();
     }
 
-    pass IntroGround // 11
-    {
-        SetRasterizerState(RS_Cull_None);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        HullShader = NULL;
-        DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_GROUND();
-    }
-
-    
 }

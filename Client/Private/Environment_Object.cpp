@@ -126,7 +126,7 @@ HRESULT CEnvironment_Object::Render()
 		{
 			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 			m_pRADTexture->Bind_ShaderResource(m_pShaderCom, "g_RADTexture");
-			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_INTROGROUND));
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
 			m_pModelCom->Render((_uint)i);
 		}
 	}
@@ -152,6 +152,7 @@ HRESULT CEnvironment_Object::Render_Shadow()
 {
 	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
 	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
@@ -160,7 +161,7 @@ HRESULT CEnvironment_Object::Render_Shadow()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW)); //TODO 추후 ENUM 으로 변경
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
 

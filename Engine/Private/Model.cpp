@@ -445,9 +445,17 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 		case (_int)aiTextureType_OPACITY:
 			Bind_ShaderResource(pShader, "g_OpacityTexture", iMeshIndex, aiTextureType_OPACITY);
 			break;
-
-		/* AO 컬러는 모델의 디테일과 형태를 강조하는데 사용 - EX. SNOW맵 표지판. PBR에서 쓰는 O는 Opacity를 말한것임. */
+		case (_int)aiTextureType_METALNESS:
+			Bind_ShaderResource(pShader, "g_MetalicTexture", iMeshIndex, aiTextureType_METALNESS);
+			break;
+		case (_int)aiTextureType_DIFFUSE_ROUGHNESS:
+			Bind_ShaderResource(pShader, "g_RoughnessTexture", iMeshIndex, aiTextureType_DIFFUSE_ROUGHNESS);
+			break;
+		//case (_int)aiTextureType_AMBIENT_OCCLUSION:
+		//	Bind_ShaderResource(pShader, "g_AmbientOcclusionTexture", iMeshIndex, aiTextureType_AMBIENT_OCCLUSION);
+		//	break;
 		}
+		/* AO 컬러는 모델의 디테일과 형태를 강조하는데 사용 - EX. SNOW맵 표지판. PBR에서 쓰는 O는 Opacity를 말한것임. */
 	}
 
 	return S_OK;
@@ -761,6 +769,11 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	
 				return E_FAIL;
+			
+			string TestfileName(szFileName);
+
+			if (TestfileName == "T_GiantTreeBark_01_BC")
+				int a = 0;
 
 			// Diffuse 일때 한번 검사 + Normal일때 Diffuse에서 못만들었다면 추가 검사 
 			if ((j == (size_t)aiTextureType_DIFFUSE) || (j == (size_t)aiTextureType_NORMALS && false == m_bSpecularExist)) // Diffuse 있을때 ORM넣기 
@@ -780,20 +793,31 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
 						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS])
 							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
-
-						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
+						else
+							cout << "Metalic : " << szFileName << endl;
+						
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT);
 						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY])
-							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
-
-						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT, 2);
+						else
+							cout << "Opacity : " << szFileName << endl;
+						
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT);
 						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS])
-							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
-
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT, 2);
+						else
+							cout << " Roughness: " << szFileName << endl;
 
 						//cout << "Model : " << strModelFilePath << endl;
 						//cout << "Texture : " << szFileName << endl;
 						//cout << endl;
 					}
+
+					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT);
+					if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE])
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT, 2);
+					else
+						cout << " Emissive: " << szFileName << endl;
 				}
 				else
 					m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */
@@ -910,6 +934,10 @@ CTexture* CModel::Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* str
 	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_ORM:
 		PBRfileName += "ORM";
 		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_EMISSIVE:
+		PBRfileName += "Emissive";
+		break;
+
 	}
 
 	_char		szPBRTmp[MAX_PATH] = "";

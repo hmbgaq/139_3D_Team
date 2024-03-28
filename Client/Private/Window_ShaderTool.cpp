@@ -385,6 +385,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 {
 	ImGui::SeparatorText("Pre-Post");
 
+	if (ImGui::TreeNode("PBR"))
+	{
+		Compress_PBR_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Bloom / Rim Setting"))
 	{
 		Compress_BloomRim_Setting();
@@ -485,6 +490,22 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 	//{
 	//	Load_Shader();
 	//}
+}
+
+void CWindow_ShaderTool::Compress_PBR_Setting()
+{
+	ImGui::Checkbox("PBR Active", &m_ePBR_Desc.bPBR_ACTIVE);
+
+	ImGui::InputInt("PBR Texture", &m_iPBRTextureNumber);
+
+	if (m_iPBRTextureNumber < 0)
+		m_iPBRTextureNumber = 0;
+	if (m_iPBRTextureNumber >= 10)
+		m_iPBRTextureNumber = 10;
+
+	m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTextureNumber);
+	m_pGameInstance->Get_Renderer()->Set_PBR_Option(m_ePBR_Desc);
+
 }
 
 void CWindow_ShaderTool::Compress_HBAO_Plus_Setting()

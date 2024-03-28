@@ -53,6 +53,7 @@ private:
 	class ShaderParsed_Object* pObject = nullptr;
 
 	/* Level Shader Struct */
+	PBR_DESC			m_ePBR_Desc				= {};
 	SSR_DESC			m_eSSR_Desc				= {};
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};
@@ -66,9 +67,10 @@ private:
 	SCREENEFFECT_DESC	m_eScreenDEffect_Desc	= {};
 	CHROMA_DESC			m_eChroma_Desc			= {};
 
-	/* Shader Save / Load */
-	_bool m_bShaderSave = {false} ;
-	_bool m_bShaderLoad = {false} ;
+	/* Shader */
+	_bool m_bShaderSave = {false} ; // Save / Load
+	_bool m_bShaderLoad = {false} ; // Save / Load
+	_int  m_iPBRTextureNumber = { 0 };
 
 	/* Level LightControl */
 	LEVEL			m_eLoadLevel = {};
@@ -106,6 +108,7 @@ private:
 	void Layer_Object_Shader_Control();
 
 	/* Compress - Shader */
+	void Compress_PBR_Setting();
 	void Compress_HBAO_Plus_Setting();
 	void Compress_Fog_Setting();
 	void Compress_BloomRim_Setting();

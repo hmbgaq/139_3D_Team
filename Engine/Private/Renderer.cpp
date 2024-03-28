@@ -28,6 +28,8 @@ HRESULT CRenderer::Initialize()
 
 	FAILED_CHECK(Create_Shader());
 
+	FAILED_CHECK(Create_Texture());
+
 	/* 렌더타겟 생성 + MRT 그룹 지정 */
 	FAILED_CHECK(Create_RenderTarget());
 
@@ -50,6 +52,7 @@ HRESULT CRenderer::Initialize()
 	m_tDOF_Option.bDOF_Active = false;
 	m_tHSV_Option.bScreen_Active = false;
 	m_tAnti_Option.bFXAA_Active = false;
+	m_tPBR_Option.bPBR_ACTIVE = false;
 
 	/* 이거 픽스 */
 	m_tSSR_Option.bSSR_Active = false;
@@ -82,7 +85,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS()); /* Target_HBAO */
 
-	if ((false == bTest) && (true == m_tHBAO_Option.bHBAO_Active))
+	if ((true == m_tPBR_Option.bPBR_ACTIVE) && (true == m_tHBAO_Option.bHBAO_Active))
 	{
 		FAILED_CHECK(Render_PBR());
 		//FAILED_CHECK(Render_MyPBR());
@@ -429,8 +432,36 @@ HRESULT CRenderer::Render_PBR()
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightDiffuse", &LightDiffuse, sizeof(_float4)));
 
 	/* Texture */
-	FAILED_CHECK(m_pIrradianceTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-	FAILED_CHECK(m_pPreFilteredTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+	switch (m_pGameInstance->Get_NextLevel())
+	{
+	case 9: // LEVEL_GamePlay
+		FAILED_CHECK(m_pIrradianceTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
+		FAILED_CHECK(m_pPreFilteredTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+		break;
+	case 3: // LEVEL_INTRO_BOSS
+		FAILED_CHECK(m_pIrradianceTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
+		FAILED_CHECK(m_pPreFilteredTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+		break;
+	case 4: // LEVEL_SNOWMOUNTAIN
+		FAILED_CHECK(m_pIrradianceTextureCom[2]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
+		FAILED_CHECK(m_pPreFilteredTextureCom[2]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+		break;
+	case 5: // LEVEL_SNOWMOUNTAINBOSS
+		//FAILED_CHECK(m_pIrradianceTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
+		//FAILED_CHECK(m_pPreFilteredTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+		break;
+
+	case 7:
+		m_bToolLevel = true;
+		break;
+	}
+
+	if (m_bToolLevel)
+	{
+		FAILED_CHECK(m_pTool_IrradianceTextureCom[m_iPBRTexture_InsteadLevel]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
+		FAILED_CHECK(m_pTool_PreFilteredTextureCom[m_iPBRTexture_InsteadLevel]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+	}
+
 	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDFTexture"));
 
 	if (true == m_tFog_Option.bFog_Active)
@@ -489,9 +520,9 @@ HRESULT CRenderer::Render_MyPBR()
 	_float4 LightDiffuse = m_pGameInstance->Get_DirectionLight()->Get_LightDesc().vDiffuse;
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightDiffuse", &LightDiffuse, sizeof(_float4)));
 
-	/* Texture */
+	/* Texture *//*
 	FAILED_CHECK(m_pIrradianceTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-	FAILED_CHECK(m_pPreFilteredTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
+	FAILED_CHECK(m_pPreFilteredTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));*/
 	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDFTexture"));
 
 	if (true == m_tFog_Option.bFog_Active)
@@ -1217,24 +1248,6 @@ HRESULT CRenderer::Create_Buffer()
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	NULL_CHECK_RETURN(m_pVIBuffer, E_FAIL);
 
-	/* PBR */
-	//m_pIrradianceTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_2_Irradiance.dds"));
-	m_pIrradianceTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_4_Irradiance.dds"));
-	NULL_CHECK_RETURN(m_pIrradianceTextureCom, E_FAIL);
-	
-	m_pBRDFTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/BRDF/BRDFTexture.png"));
-	NULL_CHECK_RETURN(m_pBRDFTextureCom, E_FAIL);
-	
-	//m_pPreFilteredTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Sky_2_PreFilteredTexture.dds"));
-	m_pPreFilteredTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Sky_4_PreFilteredTexture.dds"));
-	NULL_CHECK_RETURN(m_pPreFilteredTextureCom, E_FAIL);
-
-	/* Fog */
-	m_pVolumetrix_Voxel = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/VolumetricFog/Voxel.png"));
-	NULL_CHECK_RETURN(m_pVolumetrix_Voxel, E_FAIL);
-	m_pPerlinNoiseTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/T_Perlin_Noise_M.dds"));
-	NULL_CHECK_RETURN(m_pPerlinNoiseTextureCom, E_FAIL);
-
 	return S_OK;
 }
 
@@ -1260,6 +1273,48 @@ HRESULT CRenderer::Create_Shader()
 
 	m_pShader_UI = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI_Engine.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	NULL_CHECK_RETURN(m_pShader_UI, E_FAIL);
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Create_Texture()
+{
+	/* PBR  0 :  GamePlay, 1 : IntroBoss, 2 : LEVEL_SNOWMOUNTAIN, 3 : LEVEL_SNOWMOUNTAINBOSS */ 
+	m_pIrradianceTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Intro_Irradiance.dds")); // Intro
+	m_pIrradianceTextureCom[1] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/IntroBoss_Irradiance.dds")); // IntroBoss
+	m_pIrradianceTextureCom[3] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/SnowMountain_Irradiance.dds")); // SnowMountain
+	//m_pIrradianceTextureCom[2] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/SnowMountainBoss_Irradiance.dds")); // SnowMountainBoss
+	NULL_CHECK_RETURN(m_pIrradianceTextureCom, E_FAIL);
+
+	m_pPreFilteredTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Intro_PreFilteredTexture.dds"));
+	m_pPreFilteredTextureCom[1] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/IntroBoss_Irradiance.dds"));
+	m_pPreFilteredTextureCom[3] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/SnowMountain_PreFilteredTexture.dds"));
+	//m_pPreFilteredTextureCom[2] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/SnowMountainBoss_PreFilteredTexture.dds"));
+	NULL_CHECK_RETURN(m_pPreFilteredTextureCom, E_FAIL);
+
+	m_pBRDFTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/BRDF/BRDFTexture.png"));
+	NULL_CHECK_RETURN(m_pBRDFTextureCom, E_FAIL);
+
+	/* Fog */
+	m_pVolumetrix_Voxel = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/VolumetricFog/Voxel.png"));
+	NULL_CHECK_RETURN(m_pVolumetrix_Voxel, E_FAIL);
+	m_pPerlinNoiseTextureCom = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/T_Perlin_Noise_M.dds"));
+	NULL_CHECK_RETURN(m_pPerlinNoiseTextureCom, E_FAIL);
+
+	/* Tool */
+	m_pTool_IrradianceTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Intro_Irradiance.dds")); // Intro
+	m_pTool_IrradianceTextureCom[1] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/IntroBoss_Irradiance.dds")); // IntroBoss
+	m_pTool_IrradianceTextureCom[3] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/SnowMountain_Irradiance.dds")); // SnowMountain
+	m_pTool_IrradianceTextureCom[4] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Test1_Irradiance.dds")); // SnowMountain
+	m_pTool_IrradianceTextureCom[5] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Test2_Irradiance.dds")); // SnowMountain
+
+	m_pTool_PreFilteredTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Intro_PreFilteredTexture.dds"));
+	m_pTool_PreFilteredTextureCom[1] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/IntroBoss_Irradiance.dds"));
+	m_pTool_PreFilteredTextureCom[3] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/SnowMountain_PreFilteredTexture.dds"));
+	m_pTool_PreFilteredTextureCom[4] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Test1_PreFilteredTexture.dds"));
+	m_pTool_PreFilteredTextureCom[5] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Test2_PreFilteredTexture.dds"));
+
+
 
 	return S_OK;
 }
@@ -1665,7 +1720,6 @@ CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 void CRenderer::Free()
 {
-
 	for (auto& ObjectList : m_RenderObjects)
 	{
 		for (auto& pGameObject : ObjectList)
@@ -1684,6 +1738,16 @@ void CRenderer::Free()
 	Safe_Release(m_pPerlinNoiseTextureCom);
 	Safe_Release(m_pLightDepthDSV);
 
+	Safe_Release(m_pBRDFTextureCom);
+	Safe_Release(m_pVolumetrix_Voxel);
+
+	for (auto& pPrefILTERED : m_pPreFilteredTextureCom)
+		Safe_Release(pPrefILTERED);
+
+	for (auto& pIrrad : m_pIrradianceTextureCom)
+		Safe_Release(pIrrad);
+
+	Safe_Release(m_psByteCode);
 	Safe_Release(m_pShader_Deferred);
 	Safe_Release(m_pShader_PostProcess);
 	Safe_Release(m_pShader_Blur);
@@ -1696,6 +1760,13 @@ void CRenderer::Free()
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+
+
+	class CTexture* m_pIrradianceTextureCom[4] = { nullptr };
+	class CTexture* m_pPreFilteredTextureCom[4] = { nullptr };
+	class CTexture* m_pBRDFTextureCom = { nullptr };
+	class CTexture* m_pVolumetrix_Voxel = { nullptr };
 }
 
 #pragma endregion

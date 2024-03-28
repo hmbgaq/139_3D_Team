@@ -369,6 +369,11 @@ namespace Engine
 #pragma region Shader Control Struct - Screen 
 	/* 각자 구분용 */
 
+	typedef struct ENGINE_DLL tagPBR_Desc
+	{
+		_bool bPBR_ACTIVE = { false };
+	}PBR_DESC;
+
 	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
 	{
 		_bool  bHBAO_Active = { false };

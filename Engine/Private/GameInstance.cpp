@@ -435,6 +435,13 @@ HRESULT CGameInstance::Off_Shader()
 	return m_pRenderer->Off_Shader();
 }
 
+void CGameInstance::Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture)
+{
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	return m_pRenderer->Set_ToolPBRTexture_InsteadLevel(iPBRTexture);
+}
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {
