@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CTank::Tank_State::Tank_Charge_Loop;
 
+private:
+	_float m_fTime = { 0.f };
+
 };
 
 END

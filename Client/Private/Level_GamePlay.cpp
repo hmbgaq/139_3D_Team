@@ -296,10 +296,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const wstring & strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 {
-	//CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Tank"));
-	//NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//_float3 vPos = CData_Manager::GetInstance()->Get_Player()->Get_Position();
-	//pMonster->Set_Position(vPos);
+	CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Tank"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	_float3 vPos = CData_Manager::GetInstance()->Get_Player()->Get_Position();
+	pMonster->Set_Position(vPos);
 
 
 

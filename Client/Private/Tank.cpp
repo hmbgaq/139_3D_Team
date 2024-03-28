@@ -4,6 +4,19 @@
 #include "Body_Tank.h"
 #include "Weapon_Tank.h"
 #include "Tank_Idle.h"
+#include "Data_Manager.h"
+#include "Player.h"
+
+#include "Tank_HitHeavyShield_FL_01.h"
+#include "Tank_HitHeavyShield_FR_01.h"
+#include "Tank_HitHeavyShield_F_01.h"
+#include "Tank_HitNormalShield_FL_01.h"
+#include "Tank_HitNormalShield_FR_01.h"
+#include "Tank_HitNormalShield_F_01.h"
+
+#include "Tank_Stun_Start.h"
+#include "Tank_DeathNormal_F_01.h"
+
 
 CTank::CTank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -13,6 +26,21 @@ CTank::CTank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring
 CTank::CTank(const CTank& rhs)
 	: CMonster_Character(rhs)
 {
+}
+
+void CTank::Set_ShieldBroken()
+{
+	CWeapon_Tank* pWeapon_Tank = dynamic_cast<CWeapon_Tank*>(Get_Weapon(L"Weapon_Shield"));
+	if (pWeapon_Tank)
+	{
+		if (CModel::ANIM_STATE_NORMAL != pWeapon_Tank->Get_AnimState()) 
+		{
+			pWeapon_Tank->Set_Animation(0, CModel::ANIM_STATE_NORMAL, 0);
+		}
+		
+	}
+		
+	m_fShieldBrokenTime = 10.f;
 }
 
 HRESULT CTank::Initialize_Prototype()
@@ -37,6 +65,11 @@ HRESULT CTank::Initialize(void* pArg)
 		m_pActor->Set_State(new CTank_Idle());
 	}
 
+	m_iHp = 100000;
+
+	//m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	//m_pNavigationCom = nullptr;
+
 	return S_OK;
 }
 
@@ -54,11 +87,24 @@ void CTank::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
+	if (Is_ShieldBroken())
+	{
+		Update_ShieldBrokenTime(fTimeDelta);
+	}
+
+	if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
+	{
+		m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	}
+
 }
 
 void CTank::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+
+
 }
 
 HRESULT CTank::Render()
@@ -66,6 +112,49 @@ HRESULT CTank::Render()
 	FAILED_CHECK(__super::Render());
 
 	return S_OK;
+}
+
+void CTank::Hitted_Left(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Medium:
+		m_pActor->Set_State(new CTank_HitNormalShield_FL_01());
+	case Engine::Heavy:
+		m_pActor->Set_State(new CTank_HitHeavyShield_FL_01());
+	}
+}
+
+void CTank::Hitted_Right(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Medium:
+		m_pActor->Set_State(new CTank_HitNormalShield_FR_01());
+	case Engine::Heavy:
+		m_pActor->Set_State(new CTank_HitHeavyShield_FR_01());
+	}
+}
+
+void CTank::Hitted_Front(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Medium:
+		m_pActor->Set_State(new CTank_HitNormalShield_F_01());
+	case Engine::Heavy:
+		m_pActor->Set_State(new CTank_HitHeavyShield_F_01());
+	}
+}
+
+void CTank::Hitted_Stun(Power ePower)
+{
+	m_pActor->Set_State(new CTank_Stun_Start());
+}
+
+void CTank::Hitted_Dead(Power ePower)
+{
+	m_pActor->Set_State(new CTank_DeathNormal_F_01());
 }
 
 HRESULT CTank::Ready_Components()
@@ -84,9 +173,9 @@ HRESULT CTank::Ready_PartObjects()
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("RightHandIK");
+		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("LeftHandIK");
 		WeaponDesc.m_pParentTransform = m_pTransformCom;
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Tank"), "RightHandIK", WeaponDesc, TEXT("Weapon_Shield")));
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Tank"), "LeftHandIK", WeaponDesc, TEXT("Weapon_Shield")));
 
 		//CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Punch"));
 		//m_pWeapon->Set_Enable(false);

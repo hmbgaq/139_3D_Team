@@ -424,7 +424,8 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDe
 
 	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
 
-	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	Move_On_Navigation(vResult, pNavigation);
+	//Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
 }
 
 

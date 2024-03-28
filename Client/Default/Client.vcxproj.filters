@@ -3349,12 +3349,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\1. Charge\5. Stop">
       <UniqueIdentifier>{24411544-f7e0-4428-85df-63d8904dd575}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\2. GroundSlam">
-      <UniqueIdentifier>{0882410a-90d1-4dab-a044-24fc6b543904}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\3. GroundWave">
-      <UniqueIdentifier>{8f3ecdf3-868b-44c8-965b-bc24e9f902b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\4. ImpaleAttack">
       <UniqueIdentifier>{5f6e18f6-5833-4ca4-8c26-dc811511c325}</UniqueIdentifier>
     </Filter>
@@ -3411,9 +3405,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\2. DynamicNoShield\02">
       <UniqueIdentifier>{1e0f4e9f-d081-4355-9988-1f43cdb1b088}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\3. ShieldRegain">
-      <UniqueIdentifier>{61eae090-a53d-454b-97fe-33e3a498cd90}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\1. Knock">
       <UniqueIdentifier>{19c3e105-d561-4aef-aa3d-496efeb23d37}</UniqueIdentifier>
@@ -3564,6 +3555,15 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Weapon">
       <UniqueIdentifier>{bc058210-167f-4bb8-bd12-86f5899bae02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\4. ShieldRegain">
+      <UniqueIdentifier>{61eae090-a53d-454b-97fe-33e3a498cd90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\3. GroundSlam">
+      <UniqueIdentifier>{0882410a-90d1-4dab-a044-24fc6b543904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\2. GroundWave">
+      <UniqueIdentifier>{8f3ecdf3-868b-44c8-965b-bc24e9f902b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -6859,10 +6859,10 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\1. Charge\2. Loop</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_GroundSlam_AoE_Stomp_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\2. GroundSlam</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\3. GroundSlam</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_GroundWave_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\3. GroundWave</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\2. GroundWave</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_ImpaleAttack.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\4. ImpaleAttack</Filter>
@@ -6916,7 +6916,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\2. DynamicNoShield\02</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tank_ShieldRegain.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\3. ShieldRegain</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\4. ShieldRegain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Sniper_KnockUp_Low_Fixed.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\State\3. Hit\1. Knock\Up</Filter>
@@ -9755,10 +9755,10 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\1. Charge\2. Loop</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_GroundSlam_AoE_Stomp_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\2. GroundSlam</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\3. GroundSlam</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_GroundWave_01.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\3. GroundWave</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\2. GroundWave</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_ImpaleAttack.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\1. Shield\4. ImpaleAttack</Filter>
@@ -9815,7 +9815,7 @@
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\2. DynamicNoShield\02</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_ShieldRegain.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\3. ShieldRegain</Filter>
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\4. Attack\2. No_Shield\4. ShieldRegain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tank_HitHeavy_B_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\5. Hit\1. NoShield\1. Heavy</Filter>

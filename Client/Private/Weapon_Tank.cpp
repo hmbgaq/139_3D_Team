@@ -2,6 +2,7 @@
 #include "Bone.h"
 #include "GameInstance.h"
 #include "Weapon_Tank.h"
+#include "Model.h"
 
 CWeapon_Tank::CWeapon_Tank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -39,17 +40,32 @@ HRESULT CWeapon_Tank::Ready_Components()
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Tank_Weapon"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For. Com_Shader */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	return S_OK;
 }
 
+void CWeapon_Tank::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
+{
+	m_pModelCom->Set_Animation(_iNextAnimation, _eAnimState, false, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
+}
+
+_bool CWeapon_Tank::Is_Animation_End()
+{
+	return m_pModelCom->Is_AnimEnd();
+}
+
+CModel::ANIM_STATE CWeapon_Tank::Get_AnimState()
+{
+	return m_pModelCom->Get_AnimState();
+}
+
 HRESULT CWeapon_Tank::Load_Json()
 {
-	//string path = "../Bin/DataFiles/Data_Monster/Tank/Weapon.json";
-	//json In_Json;
-	//CJson_Utility::Load_Json(path.c_str(), In_Json);
-	//m_pTransformCom->Load_FromJson(In_Json);
+	string path = "../Bin/DataFiles/Data_Weapon/Monster/Tank/Shield.json";
+	json In_Json;
+	CJson_Utility::Load_Json(path.c_str(), In_Json);
+	m_pTransformCom->Load_FromJson(In_Json);
 
 	return S_OK;
 }
@@ -69,6 +85,27 @@ void CWeapon_Tank::Priority_Tick(_float fTimeDelta)
 void CWeapon_Tank::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (CModel::ANIM_STATE::ANIM_STATE_NORMAL == Get_AnimState() && true == Is_Animation_End())
+	{
+		Set_Enable(false);
+	}
+
+
+	//if (m_pGameInstance->Key_Down(DIK_F))
+	//{
+	//	string path = "../Bin/DataFiles/Data_Weapon/Monster/Tank/Shield.json";
+	//	{
+	//		json Out_Json;
+	//		m_pTransformCom->Write_Json(Out_Json);
+	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
+	//	}
+	//	//{
+	//	//   json In_Json;
+	//	//   CJson_Utility::Load_Json(path.c_str(), In_Json);
+	//	//   m_pTransformCom->Load_FromJson(In_Json);
+	//	//}
+	//}
 }
 
 void CWeapon_Tank::Late_Tick(_float fTimeDelta)
@@ -85,6 +122,10 @@ void CWeapon_Tank::Late_Tick(_float fTimeDelta)
 HRESULT CWeapon_Tank::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
+
+	//_float fCamFar = m_pGameInstance->Get_CamFar();
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+
 
 	return S_OK;
 }

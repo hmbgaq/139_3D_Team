@@ -10,7 +10,14 @@ void CTank_Charge_Fail_L::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_Charge_Fail_L::Update(CTank* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return Idle(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
+
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CTank_Charge_Fail_L::Release(CTank* pActor)

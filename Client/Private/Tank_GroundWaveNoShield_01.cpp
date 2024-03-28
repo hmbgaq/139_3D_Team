@@ -10,7 +10,12 @@ void CTank_GroundWaveNoShield_01::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_GroundWaveNoShield_01::Update(CTank* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return Idle(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CTank_GroundWaveNoShield_01::Release(CTank* pActor)

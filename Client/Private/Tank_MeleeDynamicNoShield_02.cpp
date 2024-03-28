@@ -10,7 +10,14 @@ void CTank_MeleeDynamicNoShield_02::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_MeleeDynamicNoShield_02::Update(CTank* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return Idle(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
+
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CTank_MeleeDynamicNoShield_02::Release(CTank* pActor)

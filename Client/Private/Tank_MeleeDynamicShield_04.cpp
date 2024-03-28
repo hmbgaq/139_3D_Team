@@ -1,4 +1,5 @@
 #include "..\Public\Tank_MeleeDynamicShield_04.h"
+#include "Tank_MeleeDynamicShield_04_FollowUp_01.h"
 
 void CTank_MeleeDynamicShield_04::Initialize(CTank* pActor)
 {
@@ -10,7 +11,14 @@ void CTank_MeleeDynamicShield_04::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_MeleeDynamicShield_04::Update(CTank* pActor, _float fTimeDelta)
 {
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return new CTank_MeleeDynamicShield_04_FollowUp_01();
+	}
+
+	return nullptr;
+
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CTank_MeleeDynamicShield_04::Release(CTank* pActor)
