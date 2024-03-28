@@ -13,6 +13,7 @@ END
 BEGIN(Client)
 
 class CPlayer;
+class CMother;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
@@ -33,6 +34,9 @@ public:
 	void Set_Player(CPlayer* _pPlayer);
 	CPlayer* Get_Player();
 	void Reset_Player(LEVEL eLEVEL);
+
+	void Set_Mother(CMother* _pMother);
+	CMother* Get_Mother();
 
 public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
@@ -183,6 +187,7 @@ public: /* ========================== Player Info ========================== */
 private:
 	CMasterCamera* m_pMasterCamera = { nullptr };
 	CPlayer* m_pPlayer = { nullptr };
+	CMother* m_pMother = { nullptr };
 
 	CSky* m_pSky = { nullptr };
 	CNavigation* m_pNavigation = { nullptr };

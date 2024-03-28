@@ -5,6 +5,7 @@ void CSon_Idle::Initialize(CSon* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	pActor->m_bLookAt = true;
 }
 
 CState<CSon>* CSon_Idle::Update(CSon* pActor, _float fTimeDelta)

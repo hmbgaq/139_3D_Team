@@ -324,7 +324,6 @@
     <ClInclude Include="..\Public\Body_Infected_B.h" />
     <ClInclude Include="..\Public\Body_Infected_C.h" />
     <ClInclude Include="..\Public\Body_Mother.h" />
-    <ClInclude Include="..\Public\Body_MotherMouth.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Son.h" />
     <ClInclude Include="..\Public\Body_Tank.h" />
@@ -469,14 +468,8 @@
     <ClInclude Include="..\Public\Model_Preview.h" />
     <ClInclude Include="..\Public\Monster_Character.h" />
     <ClInclude Include="..\Public\Mother.h" />
-    <ClInclude Include="..\Public\MotherMouth.h" />
-    <ClInclude Include="..\Public\MotherMouth_Idle.h" />
-    <ClInclude Include="..\Public\MotherMouth_SpittingMineEnd.h" />
-    <ClInclude Include="..\Public\MotherMouth_SpittingMineLoop.h" />
-    <ClInclude Include="..\Public\MotherMouth_SpittingMineStart.h" />
-    <ClInclude Include="..\Public\MotherMouth_State.h" />
-    <ClInclude Include="..\Public\MotherMouth_State_Normal.h" />
     <ClInclude Include="..\Public\Mother_Dead.h" />
+    <ClInclude Include="..\Public\Mother_Egg.h" />
     <ClInclude Include="..\Public\Mother_Hit.h" />
     <ClInclude Include="..\Public\Mother_Idle.h" />
     <ClInclude Include="..\Public\Mother_ShakeTreeEnd.h" />
@@ -1420,7 +1413,6 @@
     <ClCompile Include="..\Private\Body_Infected_B.cpp" />
     <ClCompile Include="..\Private\Body_Infected_C.cpp" />
     <ClCompile Include="..\Private\Body_Mother.cpp" />
-    <ClCompile Include="..\Private\Body_MotherMouth.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Son.cpp" />
     <ClCompile Include="..\Private\Body_Tank.cpp" />
@@ -1562,14 +1554,8 @@
     <ClCompile Include="..\Private\Model_Preview.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />
     <ClCompile Include="..\Private\Mother.cpp" />
-    <ClCompile Include="..\Private\MotherMouth.cpp" />
-    <ClCompile Include="..\Private\MotherMouth_Idle.cpp" />
-    <ClCompile Include="..\Private\MotherMouth_SpittingMineEnd.cpp" />
-    <ClCompile Include="..\Private\MotherMouth_SpittingMineLoop.cpp" />
-    <ClCompile Include="..\Private\MotherMouth_SpittingMineStart.cpp" />
-    <ClCompile Include="..\Private\MotherMouth_State.cpp" />
-    <ClCompile Include="..\Private\MotherMouth_State_Normal.cpp" />
     <ClCompile Include="..\Private\Mother_Dead.cpp" />
+    <ClCompile Include="..\Private\Mother_Egg.cpp" />
     <ClCompile Include="..\Private\Mother_Hit.cpp" />
     <ClCompile Include="..\Private\Mother_Idle.cpp" />
     <ClCompile Include="..\Private\Mother_ShakeTreeEnd.cpp" />

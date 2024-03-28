@@ -6,6 +6,7 @@ void CSon_CrossAttack::Initialize(CSon* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->m_bLookAt = false;
 }
 
 CState<CSon>* CSon_CrossAttack::Update(CSon* pActor, _float fTimeDelta)

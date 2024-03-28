@@ -76,6 +76,16 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 
 }
 
+void CData_Manager::Set_Mother(CMother* _pMother)
+{
+	m_pMother = _pMother;
+}
+
+CMother* CData_Manager::Get_Mother()
+{
+	return m_pMother;
+}
+
 void CData_Manager::Apply_Shake_And_Blur(Power ePower)
 {
 	if (m_pPlayer)

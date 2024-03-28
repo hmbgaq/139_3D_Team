@@ -21,4 +21,5 @@ CState<CSon>* CSon_CrossAttackEnd::Update(CSon* pActor, _float fTimeDelta)
 void CSon_CrossAttackEnd::Release(CSon* pActor)
 {
 	__super::Release(pActor);
+	
 }

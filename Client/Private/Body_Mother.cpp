@@ -40,27 +40,21 @@ void CBody_Mother::Priority_Tick(_float fTimeDelta)
 void CBody_Mother::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	//if (m_pGameInstance->Key_Down(DIK_K))
-	//{
-	//	iDiscardMeshNumber += 1;
-	//	if (iDiscardMeshNumber > (_int)m_pModelCom->Get_NumMeshes())
-	//	{
-	//		iDiscardMeshNumber = 0;
-	//	}
-	//	cout << iDiscardMeshNumber << endl;
-	//}
+
 }
 
 void CBody_Mother::Late_Tick(_float fTimeDelta)
 {
 	//__super::Late_Tick(fTimeDelta);
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
-
-	m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos, CData_Manager::GetInstance()->Get_Player()->Get_Position());
-
+	
+	if (m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
+		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos, CData_Manager::GetInstance()->Get_Player()->Get_Position());
+	else if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
+		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
 		return;
-
+	
 	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
 		return;
 

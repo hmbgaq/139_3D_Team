@@ -16,7 +16,7 @@ CState<CSon>* CSon_CrossAttackLoop::Update(CSon* pActor, _float fTimeDelta)
 
 	return nullptr;
 }
-
+	
 void CSon_CrossAttackLoop::Release(CSon* pActor)
 {
 	__super::Release(pActor);

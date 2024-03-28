@@ -65,11 +65,11 @@ HRESULT CSon::Initialize(void* pArg)
 
 	//m_fMaxHP = 1000.f;
 	//m_fCurHP = m_fMaxHP;
-
+	m_pMother = CData_Manager::GetInstance()->Get_Mother();
 	// Ready BossHUDBar
 	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
-	Search_Target(200.f);
-
+	
+	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	return S_OK;
 }
 
@@ -82,7 +82,7 @@ void CSon::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-
+	Search_Target(200.f);
 
 	if (m_pActor)
 	{
@@ -95,9 +95,9 @@ void CSon::Tick(_float fTimeDelta)
 	if (m_bLookAt == true)
 	{
 	
-		if (0 <= fAngle && fAngle <= 90)
+		if (0 <= fAngle && fAngle <= 180)
 			Look_At_Target_Lerp(fTimeDelta);
-		else if (-90 <= fAngle && fAngle < 0)
+		else if (-180 <= fAngle && fAngle < 0)
 			Look_At_Target_Lerp(fTimeDelta);
 	
 		/*m_bLookAt = false;*/
@@ -130,13 +130,13 @@ HRESULT CSon::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Son"), BodyDesc)))
 		return E_FAIL;
 
-	//CWeapon::WEAPON_DESC		WeaponDesc = {};
-	////FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
-	//
-	//
-	//
-	//CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
-	//m_pWeapon_Punch_R->Set_Enable(false);
+	CWeapon::WEAPON_DESC		WeaponDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Head"), "Bone020", WeaponDesc, TEXT("Weapon_head")));
+	
+	
+	
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_head"));
+	m_pWeapon_Punch_R->Set_Enable(true);
 
 
 	return S_OK;

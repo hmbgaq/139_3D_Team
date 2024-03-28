@@ -10,6 +10,8 @@ void CSon_RangeAttackFar::Initialize(CSon* pActor)
 
 CState<CSon>* CSon_RangeAttackFar::Update(CSon* pActor, _float fTimeDelta)
 {
+
+	//뱉어내기 전에 pActor->m_bLookAt = false;
 	if (pActor->Is_Animation_End())
 	{
 		return new CSon_Idle;
