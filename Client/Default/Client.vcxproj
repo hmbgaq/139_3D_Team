@@ -319,6 +319,7 @@
     <ClInclude Include="..\Public\Body_Bandit.h" />
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
     <ClInclude Include="..\Public\Body_Infected.h" />
     <ClInclude Include="..\Public\Body_Infected_A.h" />
     <ClInclude Include="..\Public\Body_Infected_B.h" />
@@ -348,6 +349,7 @@
     <ClInclude Include="..\Public\Finisher_Tank.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
+    <ClInclude Include="..\Public\Heavy_Vampiric_Zombie.h" />
     <ClInclude Include="..\Public\Impact_Slam.h" />
     <ClInclude Include="..\Public\Infected.h" />
     <ClInclude Include="..\Public\Infected_A.h" />
@@ -1244,7 +1246,9 @@
     <ClInclude Include="..\Public\UI_Option_Window.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
     <ClInclude Include="..\Public\Weapon_Bandit.h" />
+    <ClInclude Include="..\Public\Weapon_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Weapon_Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\Weapon_Heavy_Vampiric_Zombie.h" />
     <ClInclude Include="..\Public\Weapon_Infected.h" />
     <ClInclude Include="..\Public\Weapon_Infected_A.h" />
     <ClInclude Include="..\Public\Weapon_Infected_B.h" />
@@ -1392,6 +1396,8 @@
     <ClCompile Include="..\Private\BanditHeavy_Run_F.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Run_FL.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Run_FR.cpp" />
+    <ClCompile Include="..\Private\BanditHeavy_StrongKick.cpp" />
+    <ClCompile Include="..\Private\BanditHeavy_StrongSlamDouble.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Walk_B.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Walk_BL.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Walk_BR.cpp" />
@@ -1417,6 +1423,7 @@
     <ClCompile Include="..\Private\Body_Bandit.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Body_Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
     <ClCompile Include="..\Private\Body_Infected_A.cpp" />
     <ClCompile Include="..\Private\Body_Infected_B.cpp" />
@@ -1443,6 +1450,7 @@
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
     <ClCompile Include="..\Private\Finisher_Tank.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
+    <ClCompile Include="..\Private\Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Impact_Slam.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />
@@ -2162,7 +2170,9 @@
     <ClCompile Include="..\Private\UI_Option_Window.cpp" />
     <ClCompile Include="..\Private\VampireTank_KnockFrontLight_F_01.cpp" />
     <ClCompile Include="..\Private\Weapon_Bandit.cpp" />
+    <ClCompile Include="..\Private\Weapon_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Weapon_Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Weapon_Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Weapon_Infected.cpp" />
     <ClCompile Include="..\Private\Weapon_Infected_A.cpp" />
     <ClCompile Include="..\Private\Weapon_Infected_B.cpp" />

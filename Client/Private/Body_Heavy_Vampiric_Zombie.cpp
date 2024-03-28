@@ -1,54 +1,54 @@
 #include "stdafx.h"
-#include "Body_Bandit_Heavy.h"
+#include "Body_Heavy_Vampiric_Zombie.h"
 #include "GameInstance.h"
 
-CBody_Bandit_Heavy::CBody_Bandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CBody(pDevice, pContext, strPrototypeTag)
+CBody_Heavy_Vampiric_Zombie::CBody_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+	: CBody_Bandit_Heavy(pDevice, pContext, strPrototypeTag)
 {
 }
 
-CBody_Bandit_Heavy::CBody_Bandit_Heavy(const CBody_Bandit_Heavy& rhs)
-	: CBody(rhs)
+CBody_Heavy_Vampiric_Zombie::CBody_Heavy_Vampiric_Zombie(const CBody_Heavy_Vampiric_Zombie& rhs)
+	: CBody_Bandit_Heavy(rhs)
 {
 }
 
-HRESULT CBody_Bandit_Heavy::Initialize_Prototype()
+HRESULT CBody_Heavy_Vampiric_Zombie::Initialize_Prototype()
 {
 	FAILED_CHECK(__super::Initialize_Prototype());
 
 	return S_OK;
 }
 
-HRESULT CBody_Bandit_Heavy::Initialize(void* pArg)
+HRESULT CBody_Heavy_Vampiric_Zombie::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
 	return S_OK;
 }
 
-void CBody_Bandit_Heavy::Priority_Tick(_float fTimeDelta)
+void CBody_Heavy_Vampiric_Zombie::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 }
 
-void CBody_Bandit_Heavy::Tick(_float fTimeDelta)
+void CBody_Heavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 }
 
-void CBody_Bandit_Heavy::Late_Tick(_float fTimeDelta)
+void CBody_Heavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 }
 
-HRESULT CBody_Bandit_Heavy::Render()
+HRESULT CBody_Heavy_Vampiric_Zombie::Render()
 {
 	FAILED_CHECK(__super::Render());
 
 	return S_OK;
 }
 
-HRESULT CBody_Bandit_Heavy::Render_Shadow()
+HRESULT CBody_Heavy_Vampiric_Zombie::Render_Shadow()
 {
 	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -72,19 +72,19 @@ HRESULT CBody_Bandit_Heavy::Render_Shadow()
 	return S_OK;
 }
 
-void CBody_Bandit_Heavy::OnCollisionEnter(CCollider* other)
+void CBody_Heavy_Vampiric_Zombie::OnCollisionEnter(CCollider* other)
 {
 }
 
-void CBody_Bandit_Heavy::OnCollisionStay(CCollider* other)
+void CBody_Heavy_Vampiric_Zombie::OnCollisionStay(CCollider* other)
 {
 }
 
-void CBody_Bandit_Heavy::OnCollisionExit(CCollider* other)
+void CBody_Heavy_Vampiric_Zombie::OnCollisionExit(CCollider* other)
 {
 }
 
-HRESULT CBody_Bandit_Heavy::Ready_Components()
+HRESULT CBody_Heavy_Vampiric_Zombie::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
@@ -92,7 +92,7 @@ HRESULT CBody_Bandit_Heavy::Ready_Components()
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Bandit_Heavy"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
@@ -106,7 +106,7 @@ HRESULT CBody_Bandit_Heavy::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CBody_Bandit_Heavy::Bind_ShaderResources()
+HRESULT CBody_Heavy_Vampiric_Zombie::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
@@ -115,38 +115,38 @@ HRESULT CBody_Bandit_Heavy::Bind_ShaderResources()
 	return S_OK;
 }
 
-//CBody_Bandit_Heavy* CBody_Bandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-//{
-//	CBody_Bandit_Heavy* pInstance = new CBody_Bandit_Heavy(pDevice, pContext, strPrototypeTag);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize_Prototype()))
-//	{
-//		MSG_BOX("Failed to Created : CBody_Bandit_Heavy");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
+CBody_Heavy_Vampiric_Zombie* CBody_Heavy_Vampiric_Zombie::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+{
+	CBody_Heavy_Vampiric_Zombie* pInstance = new CBody_Heavy_Vampiric_Zombie(pDevice, pContext, strPrototypeTag);
 
-//CGameObject* CBody_Bandit_Heavy::Clone(void* pArg)
-//{
-//	CBody_Bandit_Heavy* pInstance = new CBody_Bandit_Heavy(*this);
-//
-//	/* 원형객체를 초기화한다.  */
-//	if (FAILED(pInstance->Initialize(pArg)))
-//	{
-//		MSG_BOX("Failed to Cloned : CBody_Bandit_Heavy");
-//		Safe_Release(pInstance);
-//	}
-//	return pInstance;
-//}
-//
-//CGameObject* CBody_Bandit_Heavy::Pool()
-//{
-//	return new CBody_Bandit_Heavy(*this);
-//}
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CBody_Heavy_Vampiric_Zombie");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
 
-void CBody_Bandit_Heavy::Free()
+CGameObject* CBody_Heavy_Vampiric_Zombie::Clone(void* pArg)
+{
+	CBody_Heavy_Vampiric_Zombie* pInstance = new CBody_Heavy_Vampiric_Zombie(*this);
+
+	/* 원형객체를 초기화한다.  */
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CBody_Heavy_Vampiric_Zombie");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+CGameObject* CBody_Heavy_Vampiric_Zombie::Pool()
+{
+	return new CBody_Heavy_Vampiric_Zombie(*this);
+}
+
+void CBody_Heavy_Vampiric_Zombie::Free()
 {
 	__super::Free();
 }

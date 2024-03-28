@@ -92,22 +92,22 @@ HRESULT CBandit_Heavy::Ready_PartObjects()
 //	return pInstance;
 //}
 
-CGameObject* CBandit_Heavy::Clone(void* pArg)
-{
-	CBandit_Heavy* pInstance = new CBandit_Heavy(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Cloned : CBandit_Heavy");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CBandit_Heavy::Pool()
-{
-	return new CBandit_Heavy(*this);
-}
+//CGameObject* CBandit_Heavy::Clone(void* pArg)
+//{
+//	CBandit_Heavy* pInstance = new CBandit_Heavy(*this);
+//
+//	if (FAILED(pInstance->Initialize(pArg)))
+//	{
+//		MSG_BOX("Failed to Cloned : CBandit_Heavy");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
+//
+//CGameObject* CBandit_Heavy::Pool()
+//{
+//	return new CBandit_Heavy(*this);
+//}
 
 void CBandit_Heavy::Free()
 {

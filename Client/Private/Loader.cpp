@@ -89,6 +89,11 @@
 //#include "Body_Bandit_Heavy.h"
 #pragma endregion
 
+#pragma region Heavy_Vampiric_Zombie
+#include "Heavy_Vampiric_Zombie.h"
+#include "Body_Heavy_Vampiric_Zombie.h"
+#pragma endregion
+
 #pragma region BANDIT_SNIPER
 #include "Bandit_Sniper.h"
 #include "Body_Bandit_Sniper.h"
@@ -1163,6 +1168,15 @@ HRESULT CLoader::Ready_Origin()
 	//! Bandit_Heavy
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Heavy"), CBandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bandit_Heavy"))));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Bandit_Heavy"), CBody_Bandit_Heavy::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Bandit_Heavy"))));
+
+	//! Heavy_Vampiric_Zombie
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Heavy_Vampiric_Zombie"), CBody_Heavy_Vampiric_Zombie::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Heavy_Vampiric_Zombie"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Tank"), CWeapon_Tank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Tank"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Punch_Tank"), CWeapon_Punch_Tank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Punch_Tank"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"), CHeavy_Vampiric_Zombie::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Projectile_GroundWave"), CProjectile_GroundWave::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Projectile_GroundWave"))));
+
+
 
 	//! Bandit_Sniper
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Sniper"), CBandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bandit_Sniper"))));

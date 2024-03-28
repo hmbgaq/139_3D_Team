@@ -8,7 +8,7 @@ BEGIN(Client)
 
 class CBandit_Heavy abstract : public CMonster_Character
 {
-private:
+protected:
 	CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CBandit_Heavy(const CBandit_Heavy& rhs);
 	virtual ~CBandit_Heavy() = default;
@@ -22,17 +22,17 @@ public:
 	virtual HRESULT Render() override;
 
 
-private:
+protected:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 
-private:
+protected:
 	CActor<CBandit_Heavy>* m_pActor = { nullptr };
 
 public:
 	//static CBandit_Heavy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	virtual CGameObject* Clone(void* pArg) override;
-	virtual CGameObject* Pool() override;
+	//virtual CGameObject* Clone(void* pArg) override;
+	//virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
 

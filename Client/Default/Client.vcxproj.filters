@@ -7092,6 +7092,18 @@
     <ClInclude Include="..\Public\Projectile_GroundWave.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Projectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Bandit_Heavy.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\0. Parent\Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Heavy_Vampiric_Zombie.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Heavy_Vampiric_Zombie.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10047,6 +10059,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\Projectile_GroundWave.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Bandit_Heavy.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\0. Parent\Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Heavy_Vampiric_Zombie.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Heavy_Vampiric_Zombie.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_StrongKick.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_StrongSlamDouble.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\3. Strong</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Heavy_Vampiric_Zombie.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

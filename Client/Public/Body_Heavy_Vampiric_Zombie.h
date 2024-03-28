@@ -1,20 +1,20 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Body.h"
+#include "Body_Bandit_Heavy.h"
 
 BEGIN(Engine)
 END
 
 BEGIN(Client)
 
-class CBody_Bandit_Heavy abstract : public CBody
+class CBody_Heavy_Vampiric_Zombie final : public CBody_Bandit_Heavy
 {
 
 protected:
-	CBody_Bandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CBody_Bandit_Heavy(const CBody_Bandit_Heavy& rhs);
-	virtual ~CBody_Bandit_Heavy() = default;
+	CBody_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CBody_Heavy_Vampiric_Zombie(const CBody_Heavy_Vampiric_Zombie& rhs);
+	virtual ~CBody_Heavy_Vampiric_Zombie() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -30,22 +30,19 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
-
-
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 
 
-
 public:
 	/* 원형객체를 생성한다. */
-	//static CBody_Bandit_Heavy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CBody_Heavy_Vampiric_Zombie* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	/* 사본객체를 생성한다. */
-	//virtual CGameObject* Clone(void* pArg) override;
-	//virtual CGameObject* Pool() override;
+	virtual CGameObject* Clone(void* pArg) override;
+	virtual CGameObject* Pool() override;
 
 	virtual void Free() override;
 
