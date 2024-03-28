@@ -434,19 +434,23 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 11;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 24;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 
 						// 스프라이트 텍스처 시작
 						if (ImGui::Button("Sprite_Base"))	// 베이스 스프라이트로 변경
 						{
+							m_eType_Sprite_Particle = CEffect_Void::TEXTURE_DIFFUSE;
+
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 24;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 25;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 						if (ImGui::Button("Sprite_Blood"))	// 피 스프라이트로 변경
 						{
+							m_eType_Sprite_Particle = CEffect_Void::TEXTURE_DIFFUSE;
+
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite_Blood"));
 							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 29;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
@@ -454,6 +458,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::SameLine();
 						if (ImGui::Button("Sprite_Smokes"))	// 스모크 스프라이트로 변경
 						{
+							m_eType_Sprite_Particle = CEffect_Void::TEXTURE_DIFFUSE;
+
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite_Smokes"));
 							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 34;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
@@ -463,7 +469,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE], 1))
 						{
 							if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
-								m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
+								m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] - 1;
 
 							if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
 								m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
@@ -490,8 +496,10 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 					}
 
-					if (ImGui::Button("Mask_Sprites"))	// 웨이브 마스크로 변경
+					if (ImGui::Button("Mask_Sprites"))	// 스프라이트 마스크로 변경
 					{
+						m_eType_Sprite_Particle = CEffect_Void::TEXTURE_MASK;
+
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask_Sprite"));
 						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 28;
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
@@ -589,29 +597,38 @@ void CWindow_EffectTool::Update_ParticleTab()
 						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 
+	
 					/* 스프라이트 최대 가로 세로 지정_파티클 */
-					if (ImGui::InputInt2(" Max_TileCount ", m_vUV_MaxTileCount_Particle, 1))
+					if (CEffect_Void::TEXTURE_END != m_eType_Sprite_Particle)
 					{
-						_uint iX, iY;
-						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_TextureCom(CEffect_Void::TEXTURE_SPRITE)->Get_TextureSize(&iX, &iY, m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE]);
-						m_pSpriteDesc_Particle->vTextureSize.x = (_float)iX;
-						m_pSpriteDesc_Particle->vTextureSize.y = (_float)iY;
+						if (ImGui::InputInt2(" Max_TileCount ", m_vUV_MaxTileCount_Particle, 1))
+						{
+							_uint iX, iY;
+							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_TextureCom(m_eType_Sprite_Particle)->Get_TextureSize(&iX, &iY, m_iTexIndex_Particle[m_eType_Sprite_Particle]);
+							m_pSpriteDesc_Particle->vTextureSize.x = (_float)iX;
+							m_pSpriteDesc_Particle->vTextureSize.y = (_float)iY;
 
-						_float fTileX, fTileY;
-						fTileX = (_float)iX / m_vUV_MaxTileCount_Particle[0];
-						fTileY = (_float)iY / m_vUV_MaxTileCount_Particle[1];
+							_float fTileX, fTileY;
+							fTileX = (_float)iX / m_vUV_MaxTileCount_Particle[0];
+							fTileY = (_float)iY / m_vUV_MaxTileCount_Particle[1];
 
-						m_pSpriteDesc_Particle->vTileSize.x = fTileX;
-						m_pSpriteDesc_Particle->vTileSize.y = fTileY;
+							m_pSpriteDesc_Particle->vTileSize.x = fTileX;
+							m_pSpriteDesc_Particle->vTileSize.y = fTileY;
 
-						m_pSpriteDesc_Particle->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Particle[0];
-						m_pSpriteDesc_Particle->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Particle[1];
+							m_pSpriteDesc_Particle->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Particle[0];
+							m_pSpriteDesc_Particle->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Particle[1];
 
-						m_pSpriteDesc_Particle->Reset_Sprite();
-						m_pCurPartEffect->ReSet_Effect();
+							m_pSpriteDesc_Particle->Reset_Sprite();
+							m_pCurPartEffect->ReSet_Effect();
+						}
+
+						ImGui::Text("Current Index : %d, %d", m_pSpriteDesc_Particle->vUV_CurTileIndex.x, m_pSpriteDesc_Particle->vUV_CurTileIndex.y);
 					}
 
-					ImGui::Text("Current Index : %d, %d", m_pSpriteDesc_Particle->vUV_CurTileIndex.x, m_pSpriteDesc_Particle->vUV_CurTileIndex.y);
+				}
+				else
+				{
+					m_eType_Sprite_Particle = CEffect_Void::TEXTURE_END;
 				}
 #pragma endregion
 
@@ -1413,7 +1430,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (ImGui::Button("Sprite_Base_Rect"))	// 베이스 스프라이트로 변경
 					{
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite"));
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 24;
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 25;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 					ImGui::SameLine();
@@ -1445,7 +1462,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 					{
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 13;
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 24;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 					}
 
@@ -1968,7 +1985,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 					{
 						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 13;
+						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 24;
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						
 

@@ -632,7 +632,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			pVertices[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
 			pVertices[i].vUp	= _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
 			pVertices[i].vLook	= _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
-			pVertices[i].vColor.w = 0.f;
+			m_vecParticleShaderInfoDesc[i].vCurrentColors.w = { 0.f };
+			pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
 
 			m_vecParticleInfoDesc[i].fTimeAccs = m_vecParticleInfoDesc[i].fLifeTime;
 			m_vecParticleInfoDesc[i].fLifeTimeRatios = 1.f;
@@ -825,18 +826,21 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							ReSet_Info(i);
 							m_vecParticleInfoDesc[i].bEmit = TRUE;
 
-							//_vector		vDir = Make_Dir(i);					// 방향 만들기
-							//m_vecParticleInfoDesc[i].vDir = vDir;			// 방향 저장
 
 							// 안보이게
-							pVertices[i].vRight = _float4{ 0.f, 0.f, 0.f, 0.f };
-							pVertices[i].vUp = _float4{ 0.f, 0.f, 0.f, 0.f };
-							pVertices[i].vLook = _float4{ 0.f, 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vRight = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vUp = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vLook = _float3{ 0.f, 0.f, 0.f };
+
+							pVertices[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+							pVertices[i].vUp = _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+							pVertices[i].vLook = _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
 							pVertices[i].vPosition = m_vecParticleInfoDesc[i].vCenterPositions;
-
-
 							// 센터 + 방향 위치로 세팅
-							//XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + vDir);
+							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
+
+							m_vecParticleShaderInfoDesc[i].vCurrentColors.w = { 0.f };
+							pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
 
 
 							m_vecParticleInfoDesc[i].Reset_ParticleTimes();		// 시간 초기화
@@ -861,16 +865,22 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							ReSet_Info(i);
 							m_vecParticleInfoDesc[i].bEmit = TRUE;
 
-							//_vector		vDir = Make_Dir(i);					// 방향 만들기
-							//m_vecParticleInfoDesc[i].vDir = vDir;			// 방향 저장
-							// 센터 + 방향 위치로 세팅
-							//XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + vDir);
 
 							// 안보이게
-							pVertices[i].vRight = _float4{ 0.f, 0.f, 0.f, 0.f };
-							pVertices[i].vUp = _float4{ 0.f, 0.f, 0.f, 0.f };
-							pVertices[i].vLook = _float4{ 0.f, 0.f, 0.f, 0.f };
-							pVertices[i].vPosition = m_vecParticleInfoDesc[i].vCenterPositions;
+							m_vecParticleShaderInfoDesc[i].vRight = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vUp = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vLook = _float3{ 0.f, 0.f, 0.f };
+
+							pVertices[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+							pVertices[i].vUp = _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+							pVertices[i].vLook = _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
+							//pVertices[i].vPosition = m_vecParticleInfoDesc[i].vCenterPositions;
+							// 센터 + 방향 위치로 세팅
+							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
+
+							m_vecParticleShaderInfoDesc[i].vCurrentColors.w = { 0.f };
+							pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
+
 
 							// 시간 초기화
 							m_vecParticleInfoDesc[i].Reset_ParticleTimes();
@@ -902,18 +912,22 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							ReSet_Info(i);
 							m_vecParticleInfoDesc[i].bEmit = TRUE;
 
-							_vector		vDir = Make_Dir(i);						// 방향 만들기
-							m_vecParticleInfoDesc[i].vDir = vDir;			// 쉐이더에 전달할 방향 저장
 
-							if (m_tBufferDesc.bReverse)
-							{
-								// 리버스일 경우
-								vDir = vDir * m_vecParticleInfoDesc[i].fMaxRange;
-							}
+							// 안보이게
+							m_vecParticleShaderInfoDesc[i].vRight = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vUp = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vLook = _float3{ 0.f, 0.f, 0.f };
 
+							pVertices[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+							pVertices[i].vUp = _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+							pVertices[i].vLook = _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
 							// 초기위치로 세팅 : 센터 + 방향 위치로 세팅
 							m_vecParticleInfoDesc[i].vCenterPositions.y = m_tBufferDesc.vMinMaxPosY.x;
-							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + vDir);
+							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
+
+							m_vecParticleShaderInfoDesc[i].vCurrentColors.w = { 0.f };
+							pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
+
 
 
 							// 시간 초기화
@@ -972,25 +986,22 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							ReSet_Info(i);
 							m_vecParticleInfoDesc[i].bEmit = TRUE;
 
-							//_vector		vDir = Make_Dir(i);					// 방향 만들기
-							//m_vecParticleInfoDesc[i].vDir = vDir;			//  방향 저장
-
-							//if (m_tBufferDesc.bReverse)
-							//{
-							//	// 리버스일 경우
-							//	vDir = vDir * m_vecParticleInfoDesc[i].fMaxRange;
-							//}
-
 
 							// 안보이게
-							pVertices[i].vRight = _float4{ 0.f, 0.f, 0.f, 0.f };
-							pVertices[i].vUp = _float4{ 0.f, 0.f, 0.f, 0.f };
-							pVertices[i].vLook = _float4{ 0.f, 0.f, 0.f, 0.f };
+	
+							m_vecParticleShaderInfoDesc[i].vRight = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vUp = _float3{ 0.f, 0.f, 0.f };
+							m_vecParticleShaderInfoDesc[i].vLook = _float3{ 0.f, 0.f, 0.f };
 
-
+							pVertices[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+							pVertices[i].vUp = _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+							pVertices[i].vLook = _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
 							// 초기위치로 세팅 : 센터 + 방향 위치로 세팅
 							m_vecParticleInfoDesc[i].vCenterPositions.y = m_tBufferDesc.vMinMaxPosY.x;
 							XMStoreFloat4(&pVertices[i].vPosition, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
+
+							m_vecParticleShaderInfoDesc[i].vCurrentColors.w = { 0.f };
+							pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
 
 
 							// 시간 초기화
@@ -1066,6 +1077,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 
 #pragma region 색 변경 시작
+
 			if (m_tBufferDesc.bDynamic_Color)	// 입자마다 다른 주기로 색 변경
 			{
 				m_vecParticleShaderInfoDesc[i].vCurrentColors.x = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxRed.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
@@ -1086,7 +1098,6 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 				m_vecParticleShaderInfoDesc[i].vCurrentColors = m_tBufferDesc.vCurrentColor;
 				pVertices[i].vColor = m_tBufferDesc.vCurrentColor;
 			}
-
 
 
 #pragma region 색 변경 끝

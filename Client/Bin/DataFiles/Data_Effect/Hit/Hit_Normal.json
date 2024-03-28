@@ -37,7 +37,7 @@
           "eForce_Mode": 1,
           "eType_Action": 0,
           "eType_ColorLerp": 12,
-          "eType_Fade": 0,
+          "eType_Fade": 1,
           "eType_FrictionLerp": 0,
           "eType_ScaleLerp": 0,
           "fEmissionTime": 0.0,
