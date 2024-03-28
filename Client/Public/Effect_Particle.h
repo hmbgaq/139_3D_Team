@@ -44,6 +44,7 @@ public:
 	virtual _bool Write_Json(json& Out_Json)		 override;
 	virtual void  Load_FromJson(const json& In_Json) override;
 
+
 	void			Set_SortZ(_bool bSortz) { m_bSortZ = bSortz; }
 	_bool			Get_SortZ() { return m_bSortZ; }
 

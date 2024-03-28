@@ -29,6 +29,8 @@ HRESULT CEffect_Void::Initialize(void* pArg)
 	
 	m_tVoidDesc = *static_cast<EFFECTVOID_DESC*>(pArg);
 
+		
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	
@@ -247,6 +249,7 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	strTag = static_cast<string>(In_Json["strProtoTag"]);
 	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strProtoTag);
 
+
 	strTag = static_cast<string>(In_Json["strPartTag"]);
 	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strPartTag);
 
@@ -317,6 +320,37 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 	/* 주인 */
 	m_tVoidDesc.bParentPivot = (_bool)In_Json["bParentPivot"];
+
+}
+
+
+void CEffect_Void::ReNumber_PartTag()
+{
+	// 현재 파트 태그에서 번호를 가져온다
+	_int iNumLength = 3; // 파트 번호의 길이 (000, 001, 002)
+	wstring strNum = m_tVoidDesc.strPartTag.substr(m_tVoidDesc.strPartTag.size() - iNumLength);
+
+	// 현재 번호를 정수로 변환
+	_int iCurrentNum = stoi(strNum);
+
+	// 현재 번호가 0보다 큰지 확인하고, 0보다 크다면 하나 감소
+	if (iCurrentNum > 0)
+	{
+		// 번호를 하나 줄인다.
+		--iCurrentNum;
+
+		// 새로운 번호를 문자열로 변환
+		wstring strNewNum;
+		if (iCurrentNum < 10)
+			strNewNum = L"00" + std::to_wstring(iCurrentNum);
+		else if (iCurrentNum < 100)
+			strNewNum = L"0" + std::to_wstring(iCurrentNum);
+		else
+			strNewNum = std::to_wstring(iCurrentNum);
+
+		// 파트 태그에서 현재 번호 부분을 새 번호로 대체한다.
+		m_tVoidDesc.strPartTag.replace(m_tVoidDesc.strPartTag.size() - iNumLength, iNumLength, strNewNum);
+	}
 
 }
 

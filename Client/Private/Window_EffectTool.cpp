@@ -130,9 +130,11 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 이펙트 툴
-	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 700.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 700.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	
 	__super::Begin();
+
+	Update_SaveLoad_Part_Menu();		// 저장 불러오기 메뉴 업데이트
 
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
 	{
@@ -142,11 +144,11 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem(" Rect "))
-		{
-			Update_RectTab();		// 렉트 탭 업데이트
-			ImGui::EndTabItem();
-		}
+		//if (ImGui::BeginTabItem(" Rect "))
+		//{
+		//	Update_RectTab();		// 렉트 탭 업데이트
+		//	ImGui::EndTabItem();
+		//}
 
 		if (ImGui::BeginTabItem(" Mesh "))
 		{
@@ -384,8 +386,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				/* 이름_파티클 */
 				ImGui::SeparatorText("Name");
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
-
+				//ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				ImGui::Text(m_szPartNames[m_iCurPartIndex]);
+				ImGui::SeparatorText("");
 
 #pragma region 텍스처 설정_파티클
 				/* 텍스처 변경_파티클 */
@@ -1367,7 +1370,8 @@ void CWindow_EffectTool::Update_RectTab()
 				CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Distortion_Desc();
 
 				/* 이름 */
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				//ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				ImGui::Text(m_szPartNames[m_iCurPartIndex]);
 
 				/* 텍스처 변경 */
 
@@ -1908,8 +1912,8 @@ void CWindow_EffectTool::Update_MeshTab()
 
 				/* 이름 */
 				ImGui::SeparatorText(" NAME ");
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
-
+				//ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				ImGui::Text(m_szPartNames[m_iCurPartIndex]);
 
 				/* 인스턴스 개수 변경 */
 				ImGui::SeparatorText(" Instance Count ");
@@ -4501,9 +4505,12 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		if (ImGui::ListBox(" Part List ", &m_iCurPartIndex, m_szPartNames, (_int)m_CurPartObjects.size(), (_int)6))
 		{
 			wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
-			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.find(strCurName)->second);
 
-			Update_CurParameters_Parts();
+			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strCurName));
+
+			if(nullptr != m_pCurPartEffect)
+				Update_CurParameters_Parts();
+			
 		}
 
 		if (nullptr != m_pCurPartEffect)
@@ -5458,10 +5465,11 @@ void CWindow_EffectTool::Delete_CurEffectObject()
 
 void CWindow_EffectTool::Delete_CurPart()
 {
-	m_pCurEffect->Delete_PartObject(m_pCurPartEffect->Get_Desc()->strPartTag);	
-
-
 	wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
+	wstring strCurPartName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
+
+	m_pCurEffect->Delete_PartObject(strCurPartName);
+
 
 	/* 문자열 초기화 */
 	m_iCurPartIndex = (_int)m_CurPartObjects.size();
@@ -5482,6 +5490,7 @@ void CWindow_EffectTool::Delete_CurPart()
 	_int iCount = 0;
 	for (auto& Pair : m_CurPartObjects)
 	{
+		//const string utf8Str = m_pGameInstance->Wstring_To_UTF8(dynamic_cast<CEffect_Void*>(Pair.second)->Get_Desc()->strPartTag);
 		const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
 		m_szPartNames[iCount] = new char[utf8Str.length() + 1];
 		strcpy(m_szPartNames[iCount], utf8Str.c_str());
@@ -5494,6 +5503,8 @@ void CWindow_EffectTool::Delete_CurPart()
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.begin()->second);
 	else
 		m_pCurPartEffect = nullptr;
+
+
 
 }
 
@@ -5555,6 +5566,13 @@ void CWindow_EffectTool::Update_CurParameters()
 		m_vRotate_Effect[0] = vRotated.x;
 		m_vRotate_Effect[1] = vRotated.y;
 		m_vRotate_Effect[2] = vRotated.z;
+
+
+
+
+
+
+
 	}
 
 }
@@ -5653,7 +5671,77 @@ void CWindow_EffectTool::Update_SaveLoad_Menu()
 		}
 		ImGui::EndMenuBar();
 	}
+
 }
+
+
+void CWindow_EffectTool::Update_SaveLoad_Part_Menu()
+{
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하고
+			{
+				if (nullptr != m_pCurPartEffect)	// 현재 파트이펙트도 존재하면
+				{
+					CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
+
+					if (CEffect_Void::PARTICLE == eType_Effect) 
+					{
+						// 파티클 저장 로드
+						if (ImGui::MenuItem("Save_Particle"))
+						{
+							m_eFile = FILE_PART_PARTICLE;
+							m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Particle/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+
+						}
+						if (ImGui::MenuItem("Load_Particle"))
+						{
+							m_eFile = FILE_PART_PARTICLE;
+							m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Particle/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+
+						}
+					}
+					else if (CEffect_Void::MESH == eType_Effect)
+					{
+						// 메쉬 저장 로드
+						if (ImGui::MenuItem("Save_Mesh"))
+						{
+							m_eFile = FILE_PART_MESH;
+							m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Mesh/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+
+						}
+						if (ImGui::MenuItem("Load_Mesh"))
+						{
+							m_eFile = FILE_PART_MESH;
+							m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Mesh/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+						}
+					}
+
+				}
+
+			}
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+}
+
 
 HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 {
@@ -5667,6 +5755,13 @@ HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 			m_pCurEffect->Write_Json(Out_Json);
 		}
 	}
+
+
+	if (FILE_PART_PARTICLE == m_eFile || FILE_PART_MESH == m_eFile)
+	{
+		m_pCurPartEffect->Write_Json(Out_Json);
+	}
+
 
 	if (FILE_TRAIL == m_eFile)
 	{
@@ -5711,7 +5806,85 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Get_FirstPartObject());
 		Update_CurParameters_Parts();
+
+
+		/* 문자열 초기화 */
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
+		if (nullptr != m_szPartNames)
+		{
+			for (_int i = 0; i < m_iCurPartIndex; ++i)
+			{
+				m_szPartNames[i] = nullptr;
+			}
+			m_szPartNames = nullptr;
+		}
+
+		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
+		Update_CurMembers(strCurName);
+
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
+		m_szPartNames = new char* [m_iCurPartIndex];
+
+		_int iCount = 0;
+		for (auto& Pair : m_CurPartObjects)
+		{
+			const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+			m_szPartNames[iCount] = new char[utf8Str.length() + 1];
+			strcpy(m_szPartNames[iCount], utf8Str.c_str());
+
+			iCount++;
+		}
+
+		m_iCurPartIndex = 0;
+		if (!m_CurPartObjects.empty())
+		{
+			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.begin()->second);
+			Update_CurParameters_Parts();
+		}
+		else
+			m_pCurPartEffect = nullptr;
+
+
 	}
+
+
+	// 파트_파티클 로드
+	if (FILE_PART_PARTICLE == m_eFile)
+	{
+		//wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
+		wstring strCurName = m_pCurPartEffect->Get_Desc()->strPartTag;
+
+		m_pCurPartEffect->Load_FromJson(In_Json);
+		m_pCurPartEffect->Get_Desc()->strPartTag = strCurName;
+
+		_int iTextureIndex[CEffect_Void::TEXTURE_END];
+
+		for (_int i = 0; i < ECast(CEffect_Void::TEXTURE_END); ++i)
+		{
+			iTextureIndex[i] = m_pCurPartEffect->Get_Desc()->iTextureIndex[i];
+		}
+
+		// 텍스처 재설정
+		for (_int i = 0; i < ECast(CEffect_Void::TEXTURE_END); ++i)
+		{
+			dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(m_pCurPartEffect->Get_Desc()->strTextureTag[i]);
+			m_pCurPartEffect->Get_Desc()->iTextureIndex[i] = iTextureIndex[i];
+		}
+
+
+		Update_CurParameters_Parts();
+		return S_OK;
+	}
+
+
+	// 파트_메쉬 로드
+	if (FILE_PART_MESH == m_eFile)
+	{
+
+
+		return S_OK;
+	}
+
 
 
 	if (FILE_TRAIL == m_eFile)
@@ -5738,6 +5911,7 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 
 	return S_OK;
 }
+
 
 
 CWindow_EffectTool* CWindow_EffectTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

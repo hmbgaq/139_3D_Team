@@ -15,7 +15,7 @@ class CSky;
 class CWindow_EffectTool final : public CImgui_Window
 {
 public:
-	enum TYPE_FILE { FILE_EFFECT, FILE_TRAIL, TYPE_FILE_END };
+	enum TYPE_FILE { FILE_EFFECT, FILE_PART_PARTICLE, FILE_PART_MESH, FILE_TRAIL, TYPE_FILE_END };
 
 	struct Window_EffectTool_DESC : public ImGuiDESC
 	{
@@ -34,7 +34,8 @@ public:
 
 /* For.Save&Load */
 public:
-	void	Update_SaveLoad_Menu();	// 저장 불러오기 메뉴 업데이트
+	void	Update_SaveLoad_Menu();			// 저장 불러오기 메뉴 업데이트
+	void	Update_SaveLoad_Part_Menu();	// 저장 불러오기 메뉴(파트이펙트) 업데이트
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 

@@ -341,6 +341,9 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 HRESULT CEffect_Particle::Change_TextureCom(wstring strProtoTextureTag)	// Åø ¿ë
 {
+	if (TEXT("") == strProtoTextureTag)
+		return S_OK;
+
 	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
 
 	wstring strDiffuse	= TEXT("Diffuse");
