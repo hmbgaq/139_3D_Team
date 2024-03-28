@@ -133,7 +133,7 @@ public:
 	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
 
 	void	Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
-	_bool	Go_TargetArrivalCheck(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
+	_bool	Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta, _float fSpare = 0.1f);
 	void	Look_At(_fvector vTargetPos);
 	void	Look_At_OnLand(_fvector vTargetPos);
 	void	Look_At_Direction(_fvector _vLook);

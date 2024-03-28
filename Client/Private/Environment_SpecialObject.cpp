@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 #include "Environment_LightObject.h"
+#include "Environment_Interact.h"
+#include "Data_Manager.h"
 //#include "UI_Weakness.h"
 
 CEnvironment_SpecialObject::CEnvironment_SpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -58,6 +60,7 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 	}
 
 	
+	m_pSnowMountainWagon = CData_Manager::GetInstance()->Get_SnowMountainWagon();
 
 	return S_OK;
 }
@@ -195,6 +198,11 @@ _bool CEnvironment_SpecialObject::Write_Json(json& Out_Json)
 void CEnvironment_SpecialObject::Load_FromJson(const json& In_Json)
 {
 	return __super::Load_FromJson(In_Json);
+}
+
+void CEnvironment_SpecialObject::Set_AnimationIndex(_int iAnimIndex)
+{
+	m_pModelCom->Set_Animation(iAnimIndex);
 }
 
 #ifdef _DEBUG
@@ -383,6 +391,7 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 
 			
 			m_bLeverOn = true;
+			m_pSnowMountainWagon->Set_SplineCheck(m_tEnvironmentDesc.iSpecialGroupIndex, true);
 		}
 		else
 		{
@@ -391,6 +400,7 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 	}
 	
 }
+
 
 
 HRESULT CEnvironment_SpecialObject::Ready_Components()

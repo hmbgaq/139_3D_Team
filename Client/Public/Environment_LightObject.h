@@ -75,6 +75,8 @@ public:
 	CEffect*			Get_Effect() { return m_pEffect; }
 
 public:
+	_int				Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
+	void				Set_AnimationIndex(_int iAnimIndex);
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender;}
 
 public:
@@ -89,7 +91,7 @@ public:
 	void				Set_ShaderPassindex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
 	void				Set_LightPos(_float3 vLightPos);
 	void				Set_EffectPos(_float3 vEffectPos);
-	void				Set_Select(_bool bSelect);
+	
 		
 	_int				Get_SpecialGroupIndex() { return m_tEnvironmentDesc.iSpecialGroupIndex;}
 	void				Set_SpecialGroupIndex(_int iSpecialGroupIndex) { m_tEnvironmentDesc.iSpecialGroupIndex = iSpecialGroupIndex;}

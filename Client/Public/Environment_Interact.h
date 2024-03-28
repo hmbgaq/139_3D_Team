@@ -62,6 +62,7 @@ public:
 
 
 public:
+	
 	ENVIRONMENT_INTERACTOBJECT_DESC*	Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
@@ -75,7 +76,10 @@ public:
 	void								Set_UseGravity(_bool bUseGravity) { m_tEnvironmentDesc.bUseGravity = bUseGravity; }
 	
 	void								Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel);
+	
 #endif // _DEBUG
+	_int								Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
+	void								Set_AnimationIndex(_uint iAnimIndex);
 	void								Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex; }
 	void								Set_SplineJsonPath(string strJsonPath) { m_tEnvironmentDesc.strSplineJsonPath = strJsonPath;}
 	void								Set_SplineDivergingCount(_int iDivergingCount) { m_iDivergingCount = iDivergingCount;} 
@@ -97,11 +101,13 @@ public:
 	void								Reset_TestEvent();
 
 	void								Start_Spline(vector<_float4>* SplinePoints);
+	void								Start_SplineDouble(vector<_float4>* SplinePoints);
 	void								Reset_StartMatrix();
 	void								Spline_Loop(const _float fTimeDelta);
+	void								Spline_LoopDoublePoint(const _float fTimeDelta);
 	void								Spline_Clear();
 	
-	void								Set_SplineSpeed(_float fSpeed) { m_fSplineSpeed = fSpeed; m_pTransformCom->Set_Speed(m_fSplineSpeed);}
+	void								Set_SplineSpeed(_float fSpeed) { m_fSplineSpeed = /*15.f;*/fSpeed; m_pTransformCom->Set_Speed(/*15.f*/fSpeed); }
 	void								Set_ArrivalTime(_float fArriavalTime) { m_fArrivalTime = fArriavalTime;}
 
 	void								Set_SplineCheck(_int iIndex, _bool bCheck) { m_vecPointChecks[iIndex] = bCheck; }
@@ -110,6 +116,8 @@ private:
 	HRESULT								Load_SplineJson();
 	HRESULT								Init_WagonEvent();
 	void								Change_WagonTrack(const _float fTimeDelta);
+	_vector								CatmullRomInterpolation(_fvector p0, _fvector p1, _fvector p2, _fvector p3, _float t);
+	vector<_float4>						CreateSmoothSpline(vector<_float4>& points, _int segments);
 	
 
 private:
@@ -148,6 +156,10 @@ private:
 	_bool								m_bPlaySpline = false;
 	_float								m_fSplineSpeed = 1.f;
 	_float								m_fArrivalTime = 3.f; // ! 스플라인에 마지막 점까지 도착하는데 걸리는 시간.
+	_float4								m_vArrivalPosition = { 99999.f, 99999.f, 99999.f, 1.f };
+
+	_int								m_iCalcCount = 0;
+	_bool								m_bArrival = false;
 
 private:
 	CPlayer*						    m_pPlayer = { nullptr };

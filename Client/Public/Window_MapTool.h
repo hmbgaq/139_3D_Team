@@ -78,6 +78,10 @@ private:
 
 	//!For. Environment
 	void			GroundTab_Function();
+		void			Ground_CreateTab();
+		void			Ground_SelectTab();
+		void			Ground_DeleteTab();
+
 	void			LightTab_Function();
 		void			Light_CreateTab();
 		void			Light_SelectTab();
@@ -85,6 +89,7 @@ private:
 
 	void			InteractTab_Function();
 		void			Interact_CreateTab();
+		void			Interact_SelectTab();
 		void			Interact_DeleteTab();
 		void			Interact_SplineSave();
 		void			Interact_SplineLoad();
@@ -94,11 +99,22 @@ private:
 		void			Special_SelectTab();
 		void			Special_DeleteTab();
 	
-	void			EnvironmentTab_Function();
+	void			InstanceTab_Function();
+		void			Instance_CreateTab();
+		void			Instance_SelectTab();
+		void			Instance_DeleteTab();
 
 	//!For. Character
 	void			MonsterTab_Function();
+		void			Monster_CreateTab();
+		void			Monster_SelectTab();
+		void			Monster_DeleteTab();
+
 	void			NPC_Tab_Function();
+		void			NPC_CreateTab();
+		void			NPC_SelectTab();
+		void			NPC_DeleteTab();
+	
 
 	//!For. Navigation
 	void			Navigation_CreateTab();
@@ -127,21 +143,15 @@ void			MouseInfo_Window(_float fTimeDelta);
 	void			CameraWindow_Function();
 	void			IsCreatePlayer_ReadyCamara();
 	
-	//!For.Environment
-	void			Select_ModeType();
-	void			Select_PickingType();
-
 	//!For.Character
 	void			Select_CharacterModeType();
 	
 	//!For. Public
+	void			Select_ModeType();
+	void			Select_PickingType();
 	void			Create_Tab(TAP_TYPE eTabType);
 	void			Delete_Tab(TAP_TYPE eTabType);
-
 	
-private: //! For. Create_Function
-	void			Picking_Function();
-
 private: //! For. Preveiw_Function
 	void			Preview_Function();
 	void			Change_PreViewObject(TAP_TYPE eTabType);
@@ -156,16 +166,19 @@ private: //! For. Preveiw_Function
 	void			Preview_RayFollowForTabType(TAP_TYPE eTabType);
 
 
+private: //! ForCreateFunction 
+	void			Picking_Function();
 
 	//!For. Environment
 	void			Ground_CreateFunction();
-	
 	void			Light_CreateFunction();
 	void			Interact_CreateFunction();
 	void			Special_CreateFunction();
-	void			Preview_Environment_CreateFunction();
+	
 	void			Create_Instance();
+	void			Preview_Environment_CreateFunction();
 	void			Anim_Environment_CreateFunction();
+
 
 	//!For. Character
 	void			Character_CreateFunction();
@@ -176,22 +189,13 @@ private: //! For. Preveiw_Function
 public:
 	void			Add_Monster_ForTrigger(CMonster_Character* pMonster);
 
-private: //!For. Select_Function
-
-	//!For. Environment
-	void			Basic_SelectFunction();
-	void			Instance_SelectFunction();
-	void			Interact_SelectFunction();
+private: //!For Guizmo
+	
 	void			Guizmo_Tick(CGameObject* pPickingObject = nullptr);
-
 	void			Instance_GuizmoTick(_int iIndex, INSTANCE_INFO_DESC* pInstance = nullptr);
 	void			Trigger_GuizmoTick(class CEvent_Trigger* pEventTrigger = nullptr);
 
-	//!For. Character
-	void			Character_SelectFunction();
-		void			Monster_SelectFunction();
-		void			Boss_SelectFunction();
-		void			NPC_SelectFunction();
+
 
 private:
 	ImTextureID		m_pSelectedTexture = { nullptr };
@@ -203,21 +207,43 @@ private:
 	OBJECTMODE_TYPE  m_eObjectMode = OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT;
 	ANIM_TYPE		 m_eAnimType = ANIM_TYPE::TYPE_NONANIM;
 	LIGHT_CREATEMODE m_eLightCreateMode = LIGHT_CREATEMODE::LIGHT_MODE;
-
-
 	_bool			m_bChangeObjectMode = false;
-	
+
+
 
 	CPlayer*		m_pPlayer = nullptr;
-	
-	_float4x4		m_matInstanceMatrix = {};
-	_float3			m_vRotation = {};
-	_bool			m_bRotateMode = { false};
-	_bool			m_bColliderPickingMode = false;
+	CMasterCamera*	m_pToolCamera = { nullptr };
+	CSky*			m_pSkybox = { nullptr };
 	_float			m_fCamaraSpeed = { 60.f };
+	_bool			m_bCreateCamera = false;
+	_int			m_iSkyTextureIndex = { 0 };
 
+	
 
-	//!For Navigation
+	
+private: //!For. Environment
+	map<string, MAP_KEY_TYPE>	m_mapNonAnimModelTag;
+	map<string, MAP_KEY_TYPE>	m_mapAnimModelTag;
+
+	vector<string>				m_vecSingleModelTag;
+
+	vector<string>				m_vecEnviroModelTag;
+	vector<string>				m_vecAnimEnviroModelTag;
+
+	vector<string>				m_vecInteractModelTag;
+	vector<string>				m_vecAnimInteractModelTag;
+
+	_bool						m_bShowCreateField = false;
+
+private: //!For. Character
+	vector<string>				m_vecMonsterTag;
+	vector<string>				m_vecBossTag;
+	vector<string>				m_vecNpcTag;
+
+	_uint						m_iSelectCharacterTag = {};
+	CGameObject*				m_pPreviewCharacter = { nullptr };
+
+private:   //!For Navigation
 	_int						m_iNavigationTargetIndex = 0;
 	vector<_float3>				m_vecPickedPoints;
 	vector<string>				m_vecPickingListBox;
@@ -240,59 +266,51 @@ private:
 	_bool						m_bHaveNaviSave = false;
 	_uint						m_iSaveNaviIndex = 50;
 
-	//!For Trigger
+private:  //!For Trigger
 	_int						m_iMonsterSpawnGroupIndex = 0;
 	class CEvent_Trigger*		m_pPickingTrigger = {nullptr};
-	//string						m_strSelectTriggerNameTag = "";
 	_char						m_strSelectTriggerNameTag[32] = "";
 
-//!  맵찍기 저장용 변수
-	string			m_strLoadFilePath = {}; //! 만약 불러오기로 맵을 불러왔다면 불러온 맵의 저장경로를 저장한다. 이상태에서 Ctrl S를 누를시 해당 경로에 덮어쓰기하는 식으로 해줘야할거같다.
-
-private: //!For. Character
-	vector<string>			  m_vecMonsterTag;
-	vector<string>			  m_vecBossTag;
-	vector<string>			  m_vecNpcTag;
-	 
-	_uint					  m_iSelectCharacterTag = {};
-	CGameObject*			  m_pPreviewCharacter = { nullptr };
-
-private: //!For. Environment
-	map<string, MAP_KEY_TYPE> m_mapNonAnimModelTag;
-	map<string, MAP_KEY_TYPE> m_mapAnimModelTag;
-	
-	vector<string>  m_vecSingleModelTag;
-
-	vector<string>  m_vecEnviroModelTag;
-	vector<string>	m_vecAnimEnviroModelTag;
-
-	vector<string>  m_vecInteractModelTag;
-	vector<string>	m_vecAnimInteractModelTag;
-
-	_bool			m_bShowCreateField = false;
-	
+private:  //! For Public
+	_uint							m_iSelectModelTag = 0;
+	_bool							m_bAnimType = false;
+	_int							m_iShaderPassIndex = { 0 };
+	_int							m_iAnimIndex = 0;
 
 private:
-	_uint			m_iSelectModelTag = 0;
+		
+		CNavigation* m_pNavigation = { nullptr };
 
-	//! for.PriviewObject //미리보기용 오브젝트
+private:
+	PrimitiveBatch<DirectX::VertexPositionColor>* m_pBatch = { nullptr };
+	BasicEffect* m_pEffect = { nullptr };
+	ID3D11InputLayout* m_pInputLayOut = { nullptr };
+	CBounding_Sphere* m_pBoundingSphere = { nullptr };
+
+private: //! For.Picking
+	class	CField* m_pField = { nullptr };
+	_float			m_fFieldSizeX = { 20.f };
+	_float			m_fFieldSizeZ = { 20.f };
+
+	RAY				m_tWorldRay = {};
+	_float3			m_fRayPos = {};
+	_float3			m_fMeshPos = {};
+	_float3			m_fInstanceMeshPos = {};
+
+	_float			m_fRayUpdateTime = { 0.1f };
+	_float			m_fRayUpdateTimeAcc = { 0.f };
+	_uint			m_iSelectMeshObjectIndex = 0;
+	CGameObject*	m_pPickingObject = { nullptr };
+	INSTANCE_INFO_DESC* m_pPickingInstanceInfo = { nullptr };
+
+private: //! For PriviewObject //미리보기용 오브젝트
 	CEnvironment_Object*			m_pPreviewObject = {}; //! 미리보기를 위해 클론시킨 오브젝트.
 	CEnvironment_Interact*			m_pPreviewInteract = {}; //! 상호작용용 미리보기 오브젝트
 	CEnvironment_LightObject*		m_pPreviewLightObject = {};
 	CEnvironment_SpecialObject*		m_pPreviewSpecialObject = { nullptr };
-	
-	
-	
-	_uint							m_iOriginSelectModelTag = 0; 
-	_float							m_fDeadWaiting = 0.1f; //! 한틱 도는거 기다리기위함
-	_float							m_fDeadWaitingAcc = 0.f;
-	_bool							m_bDeadComplete = true;
 	_bool							m_bChange = false;
-	_bool							m_bAnimType = false;
-
-	_int							m_iShaderPassIndex = {0};
-
-	//!For.Interact //! 상호작용
+	
+private: //!For.Interact //! 상호작용
 	_int							m_eInteractState = 0; //! 전부 이넘 캐스팅해야함
 	_int							m_eInteractType = 0;  //! 전부 이넘 캐스팅해야함
 	_int							m_eInteractLevel = 0;
@@ -322,43 +340,25 @@ private:
 	_int							m_iSplineListIndex = 0;
 	_int							m_iSplineDivergingCount = 0;
 
-	//!For.Light//! 라이트
+private: //!For.Light//! 라이트
 	_int							m_eLightEffectType = 0; //! 전부 이넘 캐스팅
 	LIGHT_DESC::TYPE				m_eLightType = LIGHT_DESC::TYPE::TYPE_END;
 	_bool							m_bLightEffect = true;
 	_float3							m_vLightEffectPos = {};
 	
 	
-	//!For.Special
+private:  //!For.Special 스페셜오브젝트
 	_int							m_eSpecialType = 0; //! 이넘 캐스팅용;
 	_int							m_iSpecialGroupIndex = 0;
 	_int							m_iSpecialBloonMeshIndex = 0;
-	
 
-private: //! 필드
-	class CField*	m_pField = { nullptr };
-	_float			m_fFieldSizeX = { 20.f };
-	_float			m_fFieldSizeZ = { 20.f };
-
-private: //! 레이캐스트
-	RAY				m_tWorldRay = {};
-	_float3			m_fRayPos = {};
-	_float3			m_fMeshPos = {};
-	_float3			m_fInstanceMeshPos = {};
-	
-
-	_float			m_fRayUpdateTime = { 0.1f };
-	_float			m_fRayUpdateTimeAcc = { 0.f };
-	_uint			m_iSelectMeshObjectIndex = 0;
-
-
-private:
-	//!For. CreateObject
+private: //!For. CreateSpecialObject
 	vector<CEnvironment_SpecialObject*> m_vecCreateSpecialObject;
 	vector<string>						m_vecCreateSpecialObjectTag;
 	_int								m_iCreateSpecialObjectIndex = 0;
 	_int								m_iSelectSpecialObjectIndex = 0;
 	
+private: //!For. CreateLightObject
 	vector<CEnvironment_LightObject*>	m_vecCreateLightObject;
 	vector<string>						m_vecCreateLightObjectTag = {};
 	_int								m_iCreateLightObjectIndex = 0;
@@ -368,42 +368,19 @@ private:
 	vector<CLight*>						m_vecCreateLight;
 	vector<string>						m_vecCreateLightTag;
 	_int								m_iSelectLightIndex = 0;
-	
+
+private: //!For. CreateInteractObject
 	vector<CEnvironment_Interact*>		m_vecCreateInteractObject = {};
 	vector<string>						m_vecCreateInteractObjectTag = {};
 	_int								m_vecCreateInteractIndex = 0;
 
-
+private: //!For. CreateNormalObject
 	vector<CEnvironment_Object*>		m_vecCreateObject = {}; //! 생성한 오브젝트
 	vector<string>						m_vecCreateObjectTag = {};	
 	_int								m_vecCreateObjectIndex = 0;
 	_int								m_iCreateObjectIndex = 0;
 	_int								m_iSelectObjectIndex = 0;
 
-	CGameObject*						m_pPickingObject = { nullptr };
-	INSTANCE_INFO_DESC*					m_pPickingInstanceInfo = { nullptr };
-
-	//!For. CreateCharacter
-	
-	vector<CMonster_Character*>			m_vecCreateMonster;
-	vector<string>						m_vecCreateMonsterTag;
-	_int								m_iSelectMonsterGroupIndex = 0;
-	_int								m_iSelectMonsterNaviIndex = -1;
-
-	//TODO 추후 NPC추가되면 작성
-	//!vector<CNPC*>					m_vecCreateNPC;
-	//!vector<string>					m_vecCreateNPCTag ;
-	//!_int							m_iCreateNPCIndex = {};
-	
-	_int							m_iCreateMonsterIndex = {};
-	_int							m_iSelectCharacterIndex = {};
-
-	//!For.CreateTrigger
-	
-	vector<CEvent_MosnterSpawnTrigger*>	 m_vecCreateMonsterTrigger;
-	vector<string>						 m_vecCreateMonsterTriggerTag;
-	_int								 m_iSelectMonsterTriggerIndex = 0;
-	_int								 m_iSelectMonsterSpawnGroupIndex = 0;
 
 private: //! For. CreateInstance
 	_uint							m_iSelectInstanceIndex = 0;
@@ -414,33 +391,39 @@ private: //! For. CreateInstance
 	vector<CEnvironment_Instance*>	m_vecCreateInstance = {};
 	vector<CEnvironment_Object*>	m_vecPreViewInstance = {}; //! 인스턴싱 디스크립션 만들기 위해.
 	vector<string>					m_vecPreViewInstanceTag = {};
-	
+
 	map<string, vector<CEnvironment_Object*>> m_mapPreviewInstance; //! 선택한 모델태그마다 각기 다른 벡터에 저장해서 생성하게하자.
 
 
 	vector<string>					m_vecCreateInstanceTag = {};
 	_int							m_iCreateInstanceIndex = 0;
-	
+
 	vector<string>					m_vecInstanceInfoTag = {}; //! m_vecPreViewInstance를 픽킹해서 인스턴싱 디스크립션을 채워 준후 m_vecCreateInstance를 만들어주자
 	_int							m_iInstanceInfoTagIndex = 0;
 
 	INSTANCE_ALLMOVETYPE			m_eInstanceAllMoveMode = INSTANCE_ALLMOVETYPE::ALLMOVE_X;
+	_float4x4						m_matInstanceMatrix = {};
+
+private: //!For.CreateTrigger
+	vector<CEvent_MosnterSpawnTrigger*>	 m_vecCreateMonsterTrigger;
+	vector<string>						 m_vecCreateMonsterTriggerTag;
+	_int								 m_iSelectMonsterTriggerIndex = 0;
+	_int								 m_iSelectMonsterSpawnGroupIndex = 0;
+
+
+private:  //!For. CreateCharacter
 	
+	vector<CMonster_Character*>			m_vecCreateMonster;
+	vector<string>						m_vecCreateMonsterTag;
+	_int								m_iSelectMonsterGroupIndex = 0;
+	_int								m_iSelectMonsterNaviIndex = -1;
+	_int								m_iCreateMonsterIndex = {};
+	_int								m_iSelectCharacterIndex = {};
 
-private:
-	_bool							m_bCreateCamera = false;
-	CMasterCamera*					m_pToolCamera = { nullptr };
-	CSky*							m_pSkybox = { nullptr };
-	_int							m_iSkyTextureIndex = { 0 };
-	CNavigation*					m_pNavigation = { nullptr };
-
-private:
-	PrimitiveBatch<DirectX::VertexPositionColor>*	m_pBatch = { nullptr };
-	BasicEffect*									m_pEffect = { nullptr };
-	ID3D11InputLayout*								m_pInputLayOut = { nullptr };
-	CBounding_Sphere*								m_pBoundingSphere = { nullptr };
-
-	
+private:  /*!For.CreateNPC*/	/*TODO 추후 NPC추가되면 작성*/
+	//!vector<CNPC*>					m_vecCreateNPC;
+	//!vector<string>					m_vecCreateNPCTag ;
+	//!_int							m_iCreateNPCIndex = {};
 
 public:
 	static CWindow_MapTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

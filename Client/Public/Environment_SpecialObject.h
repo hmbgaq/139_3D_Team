@@ -12,6 +12,7 @@ END
 
 BEGIN(Client)
 class CEnvironment_LightObject;
+class CEnvironment_Interact;
 //class CUI_Weakness;
 
 class CEnvironment_SpecialObject final : public CGameObject
@@ -76,6 +77,9 @@ public:
 	CModel*							Get_ModelCom() { return m_pModelCom; }
 
 public:
+	_int				Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex;}
+	void				Set_AnimationIndex(_int iAnimIndex);
+
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender; }
 	void				Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
 
@@ -111,6 +115,8 @@ public:
 
 	
 
+	
+
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
@@ -141,6 +147,8 @@ private: //! For. TrackLever
 	CUI_Weakness*					m_pLeverWeaknessUI = { nullptr }; 
 	CEnvironment_LightObject*		m_pLightObject = { nullptr };
 	_bool							m_bLeverOn = false;
+
+	CEnvironment_Interact*			m_pSnowMountainWagon = { nullptr };
 	
 
 private:

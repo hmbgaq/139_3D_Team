@@ -59,6 +59,8 @@ public:
 	CModel*				Get_ModelCom() { return m_pModelCom; }
 	
 public:
+	_int				Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
+	void				Set_AnimationIndex(_uint iAnimIndex);
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender;}
 	void				Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
 

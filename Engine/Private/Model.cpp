@@ -477,7 +477,7 @@ HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
-	if (m_Animations.size() <= 0)
+	if (m_Animations.size() <= _iAnimationIndex)
 		return;
 
 	m_eAnimState = _eAnimState;

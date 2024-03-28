@@ -26,7 +26,8 @@
 #include "Player_InteractionJumpDown300.h"
 #include "Player_InteractionVault100.h"
 #include "Player_InteractionVault200.h"
-
+#include "Player_CartRide_Start.h"
+#include "Player_L06_Wagon_Jump.h"
 #include "Player_CartRide_Loop.h"
 
 #include "PhysXCharacterController.h"
@@ -350,7 +351,21 @@ void CPlayer::SetState_InteractVault100()
 void CPlayer::SetState_InteractVault200()
 {
 	m_pActor->Set_State(new CPlayer_InteractionVault200());
-	
+}
+
+void CPlayer::SetState_InteractCartRideStart()
+{
+	m_pActor->Set_State(new CPlayer_CartRide_Start());
+}
+
+void CPlayer::SetState_InteractCartRideLoop()
+{
+	m_pActor->Set_State(new CPlayer_CartRide_Loop());
+}
+
+void CPlayer::SetState_InteractCartRideWagonJump()
+{
+	m_pActor->Set_State(new CPlayer_L06_Wagon_Jump());
 }
 
 #pragma endregion 상호작용

@@ -320,6 +320,8 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 
+		
+
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
@@ -343,6 +345,10 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
 		//! L"Layer_Event"
+		if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+		{
+			CData_Manager::GetInstance()->Set_SnowMountainWagon(pObject);
+		}
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];

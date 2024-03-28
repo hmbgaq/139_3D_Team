@@ -37,17 +37,25 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-	
+
+
+	CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.LightDesc.iLightIndex);
+
+	if (pLight == nullptr)
+		return E_FAIL;
+
+	m_tEnvironmentDesc.iLightIndex = pLight->Get_LightIndex();
+
 	if (false == m_tEnvironmentDesc.bPreview)
 	{
 		m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 
-		CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.LightDesc.iLightIndex);
-
-		if (pLight == nullptr)
-			return E_FAIL;
-
-		m_tEnvironmentDesc.iLightIndex = pLight->Get_LightIndex();
+		//CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.LightDesc.iLightIndex);
+		//
+		//if (pLight == nullptr)
+		//	return E_FAIL;
+		//
+		//m_tEnvironmentDesc.iLightIndex = pLight->Get_LightIndex();
 	}
 
 
@@ -186,6 +194,11 @@ void CEnvironment_LightObject::Set_Diffuse(_float4 vDiffuse)
 	//pLight->Set_LightDesc()
 }
 
+void CEnvironment_LightObject::Set_AnimationIndex(_int iAnimIndex)
+{
+	m_pModelCom->Set_Animation(iAnimIndex);
+}
+
 void CEnvironment_LightObject::Set_Specular(_float4 vSpecular)
 {
 	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
@@ -271,15 +284,7 @@ void CEnvironment_LightObject::Change_LightType(LIGHT_DESC::TYPE eLightType)
 
 }
 
-void CEnvironment_LightObject::Set_Select(_bool bSelect)
-{
-	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
 
-	if (nullptr == pLight)
-		return;
-		
-	pLight->Set_Select(bSelect);
-}
 
 void CEnvironment_LightObject::Set_EffectPos(_float3 vEffectPos)
 {
@@ -484,13 +489,11 @@ void CEnvironment_LightObject::Free()
 	__super::Free();
 
 
-	//if (false == m_tEnvironmentDesc.bPreview)
-	//{
-	//	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
-	//
-	//	if (pLight != nullptr)
-	//		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
-	//}
+	
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+	
+	if (pLight != nullptr)
+		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
 	
 	if (m_pEffect != nullptr)
 		Safe_Release(m_pEffect);

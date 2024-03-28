@@ -66,8 +66,11 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 {
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
-		if(m_pGameInstance->Key_Down(DIK_F7))
+		if (m_pGameInstance->Key_Down(DIK_F7))
+		{
 			Start_SplineEvent();
+			m_pPlayer->SetState_InteractCartRideLoop();
+		}
 		if(m_pGameInstance->Key_Down(DIK_NUMPAD1))
 			m_vecPointChecks[0] = true;
 		if (m_pGameInstance->Key_Down(DIK_NUMPAD2))
@@ -96,7 +99,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	}
 
 
-	if (true == m_tEnvironmentDesc.bAnimModel && true == m_bPlay)
+	if (true == m_tEnvironmentDesc.bAnimModel)// && true == m_bPlay)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, true);
 	}
@@ -108,6 +111,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	if (m_bSpline == true)
 	{
 		Spline_Loop(fTimeDelta);
+		//Spline_LoopDoublePoint(fTimeDelta);
 	}
 
 }
@@ -133,6 +137,11 @@ HRESULT CEnvironment_Interact::Render()
 	
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		if (m_tEnvironmentDesc.bAnimModel == true)
+		{
+			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		}
+
 		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 
 		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
@@ -187,6 +196,11 @@ void CEnvironment_Interact::Load_FromJson(const json& In_Json)
 	return __super::Load_FromJson(In_Json);
 }
 
+void CEnvironment_Interact::Set_AnimationIndex(_uint iAnimIndex)
+{
+	m_pModelCom->Set_Animation(iAnimIndex);
+}
+
 #ifdef _DEBUG
 
 void CEnvironment_Interact::Set_ColliderSize(_float3 vColliderSize)
@@ -226,6 +240,8 @@ void CEnvironment_Interact::Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel
 	m_tEnvironmentDesc.bLevelChange = bLevelChange;
 	m_tEnvironmentDesc.eChangeLevel = eLevel;
 }
+
+
 
 _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 {
@@ -456,7 +472,7 @@ void CEnvironment_Interact::Reset_TestEvent()
 
 	m_iDivergingCount = 4;
 
-	Set_SplineSpeed(10.f);
+	Set_SplineSpeed(30.f);
 
 	for (_int i = 0; i < m_iDivergingCount; ++i)
 	{
@@ -535,6 +551,78 @@ void CEnvironment_Interact::Start_Spline(vector<_float4>* SplinePoints)
 	
 }
 
+void CEnvironment_Interact::Start_SplineDouble(vector<_float4>* SplinePoints)
+{
+	if (true == SplinePoints->empty() || m_bSpline == true)
+		return;
+
+	if (SplinePoints->size() % 4 != 0)
+	{
+		MSG_BOX("스플라인 보간은 4의배수여야됨~");
+		return;
+	}
+
+
+	m_InitMatrix = m_pTransformCom->Get_WorldFloat4x4();
+
+	_vector vFirstPos, vSecondPos, vResultPos;
+	_int iPointSize = SplinePoints->size();
+	_int iRoopCount = SplinePoints->size() / 4;
+
+
+	for (_int i = 0; i < iPointSize; ++i)
+	{
+
+
+		m_vecSplinePoints.push_back((*SplinePoints)[i]);
+	}
+
+	// 포인트가 6개면 루프카운트는 3
+
+
+	//for (_int i = 0; i < iRoopCount; i++) 
+	//{
+	//	//! 루프카운트는 3. i는 0 
+	//	
+	//	vFirstPos = XMLoadFloat4(&SplinePoints[i * 2]); //! 0 2 4
+	//	vSecondPos = XMLoadFloat4(&SplinePoints[i * 2 + 1]); //! 1 3 5
+	//	vResultPos = XMVectorCatmullRom(vFirstPos, vFirstPos, vSecondPos, vSecondPos, m_fSplineTimeAcc);
+	//	m_vecSplinePoints.push_back(vResultPos);
+	//}
+
+	m_bSpline = true;
+
+
+
+	//TODO XMVectorCatmullRom()
+	//!XMVECTOR Result;
+	//!
+	//!float t2 = t * t;
+	//!float t3 = t2 * t;
+	//!
+	//!float P0 = -t3 + 2.0f * t2 - t;
+	//!float P1 = 3.0f * t3 - 5.0f * t2 + 2.0f;
+	//!float P2 = -3.0f * t3 + 4.0f * t2 + t;
+	//!float P3 = t3 - t2;
+	//!
+	//!Result.x = (P0 * Position0.x + P1 * Position1.x + P2 * Position2.x + P3 * Position3.x) * 0.5f;
+	//!Result.y = (P0 * Position0.y + P1 * Position1.y + P2 * Position2.y + P3 * Position3.y) * 0.5f;
+	//!Result.z = (P0 * Position0.z + P1 * Position1.z + P2 * Position2.z + P3 * Position3.z) * 0.5f;
+	//!Result.w = (P0 * Position0.w + P1 * Position1.w + P2 * Position2.w + P3 * Position3.w) * 0.5f;
+	//!
+	//!return Result;
+	
+	
+
+	//TODO XMVectorCatmullRomV() 
+
+	//!이 함수는 T 에서 독립적인 가중치 인자가 제공될 수 있다는 점을 제외하면 XMVectorCatmullRom 과 동일합니다 . 
+	//!예를 들어, 한 2D 위치 세트에 대한 위치 벡터의 x 및 y 구성 요소와 다른 2D 위치 세트에 대한 위치 벡터의 z 및 w 구성 요소를 사용하여 두 세트의 Catmull-Rom 보간법을 계산할 수 있습니다. 
+	//!2D 위치. T 의 x 및 y 구성 요소는 첫 번째 Catmull-Rom 보간에 대한 보간 요소를 결정합니다. 
+	//!마찬가지로 T 의 z 및 w 구성 요소는 두 번째 Catmull-Rom 보간에 대한 보간 요소를 결정합니다.
+
+}
+
 void CEnvironment_Interact::Reset_StartMatrix()
 {
 	m_pTransformCom->Set_WorldMatrix(m_InitMatrix); 
@@ -547,11 +635,7 @@ void CEnvironment_Interact::Reset_StartMatrix()
 void CEnvironment_Interact::Spline_Loop(const _float fTimeDelta)
 {
 	
-	m_fSplineTimeAcc += fTimeDelta * m_fSplineSpeed; 
-
-	_float t = m_fSplineTimeAcc / m_fArrivalTime;
-
-	t = max(0.0f, min(1.0f, t));
+	
 
 
 	//m_fSplineTimeAcc += fTimeDelta * m_fSplineSpeed;//m_pTransformCom->Get_Speed();
@@ -570,7 +654,73 @@ void CEnvironment_Interact::Spline_Loop(const _float fTimeDelta)
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
+		_vector vCalcPosition = {};
+
+		m_fSplineTimeAcc += fTimeDelta * m_fSplineSpeed;
+
+		if (m_fSplineTimeAcc >= 1.f)
+		{
+			m_fSplineTimeAcc = 0.0;
+			++m_iCurrentSplineIndex;
+			
+		}
+
+		_float t = m_fSplineTimeAcc / m_fArrivalTime;
+
+		t = max(0.0f, min(1.0f, t));
+
 		if (m_vecSplinePoints.size() <= m_iCurrentSplineIndex + 1)
+		{
+			vCalcPosition = m_vecSplinePoints[m_iCurrentSplineIndex];
+			m_bSpline = false;
+		}
+		else
+		{
+			_vector vCurrentPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+
+
+			_vector vMovePoint1, vMovePoint2;
+			vMovePoint1 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex]);
+			vMovePoint2 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 1]);
+			//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, 0.f);
+
+			
+			//vCalcPosition = XMVectorCatmullRomV(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, XMVectorSet(0.1f, 0.1f, 0.1f, 1.f));
+			vCalcPosition = CatmullRomInterpolation(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
+			//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, t);
+
+			
+			
+		}
+
+		m_pTransformCom->Look_At_Lerp(vCalcPosition, fTimeDelta, 0.1f);
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCalcPosition);
+
+		//if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus))
+		//{
+		//	m_iCurrentSplineIndex++;
+		//	//m_fSplineTimeAcc = 0.f;
+		//}
+	}
+	else
+	{
+		Change_WagonTrack(fTimeDelta);
+	}
+
+}
+
+void CEnvironment_Interact::Spline_LoopDoublePoint(const _float fTimeDelta)
+{
+	
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
+	{
+		m_fSplineTimeAcc += fTimeDelta * m_fSplineSpeed;
+
+		_double t = m_fSplineTimeAcc / m_fArrivalTime;
+
+		t = max(0.0f, min(1.0f, t));
+
+		if (m_vecSplinePoints.size() <= m_iCurrentSplineIndex + 3)
 		{
 			m_bSpline = false;
 			return;
@@ -579,11 +729,16 @@ void CEnvironment_Interact::Spline_Loop(const _float fTimeDelta)
 		_vector vCurrentPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 
-		_vector vMovePoint1, vMovePoint2, vCalcPosition;
+		_vector vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, vCalcPosition;
 		vMovePoint1 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex]);
 		vMovePoint2 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 1]);
+		vMovePoint3 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 2]);
+		vMovePoint4 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 3]);
+
 		//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
-		vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, t);
+		vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, t);
+		
+
 
 		if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus))
 		{
@@ -596,9 +751,8 @@ void CEnvironment_Interact::Spline_Loop(const _float fTimeDelta)
 		Change_WagonTrack(fTimeDelta);
 
 
-		
-	}
 
+	}
 }
 
 void CEnvironment_Interact::Spline_Clear()
@@ -615,7 +769,7 @@ HRESULT CEnvironment_Interact::Load_SplineJson()
 
 	json SplineJson = {};
 //C:\Users\PC\Desktop\3D_TeamPortpolio\Client\Bin\DataFiles\Data_Map\Spline
-	string strHardPath = "../Bin/DataFiles/Data_Map/Spline/SplineData_202403252212.json";
+	string strHardPath = "../Bin/DataFiles/Data_Map/Spline/SplineData_202403280100.json";
 
 	
 	if (FAILED(CJson_Utility::Load_Json(strHardPath.c_str()/*m_tEnvironmentDesc.strSplineJsonPath.c_str()*/, SplineJson)))
@@ -727,6 +881,9 @@ HRESULT CEnvironment_Interact::Init_WagonEvent()
 	if (StartIter == m_mapSplineVectors.end())
 		return E_FAIL;
 
+
+
+
 	m_vecSplinePoints = StartIter->second;
 
 	m_iDivergingCount = 4;
@@ -743,11 +900,15 @@ HRESULT CEnvironment_Interact::Init_WagonEvent()
 
 void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 {
-	_float t = m_fSplineTimeAcc / m_fArrivalTime;
+
+	m_fSplineTimeAcc += m_fSplineSpeed * fTimeDelta;
 
 	
 
+	_double t = m_fSplineTimeAcc / m_fArrivalTime;
+	//!
 	t = max(0.0f, min(1.0f, t));
+
 
 	if (m_strCurrentSplineTrack == L"분기1지점오답" && m_vecPointChecks[0] == true)
 	{
@@ -769,25 +930,25 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 		}
 		
 		auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
-
+		
 		Set_SplineSpeed(Speediter->second);
 		
 		m_iCurrentSplineIndex = 0;
 		m_bSpline = true;
-		
-		
+		m_fSplineTimeAcc = 0.f;
 	}
 
 	
 
-	if (m_vecSplinePoints.size() <= m_iCurrentSplineIndex + 1)
+	if (m_vecSplinePoints.size() <= m_iCurrentSplineIndex + 3)
 	{
 		if (m_strCurrentSplineTrack == L"분기1지점정답")
 		{
 			if (m_vecPointChecks[1] == true)
-			{
+			{	
 				m_vecSplinePoints.clear();
-				m_strCurrentSplineTrack = L"분기2지점정답";
+				//m_strCurrentSplineTrack = L"분기2지점정답";
+				m_strCurrentSplineTrack = L"분기2지점정답스피드존";
 				
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
@@ -803,6 +964,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 				Set_SplineSpeed(Speediter->second);
 				m_iCurrentSplineIndex = 0;
 				m_bSpline = true;
+				m_fSplineTimeAcc = 0.f;
 			}
 			else
 			{
@@ -823,11 +985,36 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 				Set_SplineSpeed(Speediter->second);
 				m_iCurrentSplineIndex = 0;
 				m_bSpline = true;
+				m_fSplineTimeAcc = 0.f;
 			}
 		}
-		else if (m_strCurrentSplineTrack == L"분기2지점정답")
+		//else if (m_strCurrentSplineTrack == L"분기2지점정답")
+		else if (m_strCurrentSplineTrack == L"분기2지점정답스피드존")
 		{
-			if (m_vecPointChecks[2] == true)
+			
+				m_vecSplinePoints.clear();
+				m_strCurrentSplineTrack = L"분기2지점정답스피드2";
+
+				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
+
+				_int iNewSplineVectorSize = iter->second.size();
+
+				for (_int i = 0; i < iNewSplineVectorSize; ++i)
+				{
+					m_vecSplinePoints.push_back(iter->second[i]);
+				}
+
+				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
+
+				Set_SplineSpeed(Speediter->second);
+				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(130.f));
+				m_iCurrentSplineIndex = 0;
+				m_bSpline = true;
+				m_fSplineTimeAcc = 0.f;
+		}
+		else if (m_strCurrentSplineTrack == L"분기2지점정답스피드2")
+		{
+			if (m_vecPointChecks[3] == true)
 			{
 				m_vecSplinePoints.clear();
 				m_strCurrentSplineTrack = L"분기3지점정답";
@@ -847,6 +1034,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(130.f));
 				m_iCurrentSplineIndex = 0;
 				m_bSpline = true;
+				m_fSplineTimeAcc = 0.f;
 			}
 			else
 			{
@@ -863,11 +1051,12 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 				}
 
 				auto& Speediter = m_mapSplineSpeeds.find(m_strCurrentSplineTrack);
-				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(125.f));
 
 				Set_SplineSpeed(Speediter->second);
+				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(125.f));
 				m_iCurrentSplineIndex = 0;
 				m_bSpline = true;
+				m_fSplineTimeAcc = 0.f;
 			}
 		}
 		else if (m_strCurrentSplineTrack == L"분기3지점정답")
@@ -892,6 +1081,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(130.f));
 				m_iCurrentSplineIndex = 0;
 				m_bSpline = true;
+				m_fSplineTimeAcc = 0.f;
 			}
 			else
 			{
@@ -913,11 +1103,13 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 				m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(125.f));
 				m_iCurrentSplineIndex = 0;
 				m_bSpline = true;
+				m_fSplineTimeAcc = 0.f;
 			}
 		}
 		else if (m_strCurrentSplineTrack == L"분기1지점오답" || m_strCurrentSplineTrack == L"분기2지점오답" || m_strCurrentSplineTrack == L"분기3지점오답" || m_strCurrentSplineTrack == L"분기4지점오답" || m_strCurrentSplineTrack == L"분기4지점정답")
 		{
 			m_bSpline = false;
+			m_fSplineTimeAcc = 0.f;
 		}
 		return;
 	}
@@ -925,16 +1117,24 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 	_vector vCurrentPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 
-	_vector vMovePoint1, vMovePoint2, vCalcPosition;
+	_vector vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, vCalcPosition;
 	vMovePoint1 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex]);
 	vMovePoint2 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 1]);
-	//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
-	vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, t);
+	vMovePoint3 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 2]);
+	vMovePoint4 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 3]);
+	
+	vCalcPosition = CatmullRomInterpolation(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, t);
+	//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, t);
 
-	if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus))
+	if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus) )
 	{
-		m_iCurrentSplineIndex++;
-		//m_fSplineTimeAcc = 0.f;
+		
+		m_fSplineTimeAcc = 0.0f;
+		++m_iCurrentSplineIndex;
+	}
+	else if (m_fSplineTimeAcc >= 1.0f)
+	{
+		m_fSplineTimeAcc = 0.0f;
 	}
 
 	_float3 vOffsetPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
@@ -944,23 +1144,52 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 	m_pPlayer->Set_Position(vOffsetPosition);
 	
 
+}
 
-	//_vector vCurrentPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	//
-	//
-	//_vector vMovePoint1, vMovePoint2, vCalcPosition;
-	//vMovePoint1 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex]);
-	//vMovePoint2 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 1]);
-	////vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
-	//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, t);
+_vector CEnvironment_Interact::CatmullRomInterpolation(_fvector p0, _fvector p1, _fvector p2, _fvector p3, _float t)
+{
+	 float t2 = t * t;
+    float t3 = t * t * t;
+    XMFLOAT3 result;
 
-	//if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus))
-	//{
-	//	m_iCurrentSplineIndex++;
-	//	//m_fSplineTimeAcc = 0.f;
-	//}
+	_float3 ps0, ps1, ps2, ps3;
 
+	XMStoreFloat3(&ps0, p0);
+	XMStoreFloat3(&ps1, p1);
+	XMStoreFloat3(&ps2, p2);
+	XMStoreFloat3(&ps3, p3);
 
+    result.x = 0.5f * ((2.0f * ps1.x) +
+                        (-ps0.x + ps2.x) * t +
+                        (2.0f * ps0.x - 5.0f * ps1.x + 4.0f * ps2.x - ps3.x) * t2 +
+                        (-ps0.x + 3.0f * ps1.x - 3.0f * ps2.x + ps3.x) * t3);
+
+    result.y = 0.5f * ((2.0f * ps1.y) +
+                        (-ps0.y + ps2.y) * t +
+                        (2.0f * ps0.y - 5.0f * ps1.y + 4.0f * ps2.y - ps3.y) * t2 +
+                        (-ps0.y + 3.0f * ps1.y - 3.0f * ps2.y + ps3.y) * t3);
+
+    result.z = 0.5f * ((2.0f * ps1.z) +
+                        (-ps0.z + ps2.z) * t +
+                        (2.0f * ps0.z - 5.0f * ps1.z + 4.0f * ps2.z - ps3.z) * t2 +
+                        (-ps0.z + 3.0f * ps1.z - 3.0f * ps2.z + ps3.z) * t3);
+
+    return XMVectorSet(result.x, result.y, result.z, 1.f);
+}
+
+vector<_float4> CEnvironment_Interact::CreateSmoothSpline(vector<_float4>& points, _int segments)
+{
+	vector<_float4> splinePoints;
+
+	for (int i = 0; i < points.size() - 3; ++i) {
+		for (int j = 0; j <= segments; ++j) {
+			float t = static_cast<float>(j) / segments;
+			_float4 p = CatmullRomInterpolation(points[i], points[i + 1], points[i + 2], points[i + 3], t);
+			splinePoints.push_back(p);
+		}
+	}
+
+	return splinePoints;
 }
 
 

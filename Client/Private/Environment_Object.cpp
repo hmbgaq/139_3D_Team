@@ -179,7 +179,14 @@ void CEnvironment_Object::Load_FromJson(const json& In_Json)
 	return __super::Load_FromJson(In_Json);
 }
 
+void CEnvironment_Object::Set_AnimationIndex(_uint iAnimIndex)
+{
+	m_pModelCom->Set_Animation(iAnimIndex);
+}
+
+
 #ifdef _DEBUG
+
 
 _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 {
@@ -248,31 +255,6 @@ HRESULT CEnvironment_Object::Ready_Components()
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), m_tEnvironmentDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
-
-	//CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
-	//
-	//m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
-	//Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
-
-		//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-		//!
-		//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
-		//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
-		//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
-
-	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
-	//{
-	//	MSG_BOX("¤¸´ï");
-	//	return E_FAIL;
-	//}
-
-	//!if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
-	//!{
-	//!	MSG_BOX("¤¸´ï");
-	//!	return E_FAIL;
-	//!}
-
-	//	m_pPickingCollider
 
 	/* ¼Ò¿µ ¾óÀ½Áß */		
 	

@@ -320,17 +320,19 @@ void CTransform::Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare
 	Set_State(STATE_POSITION, vPosition);
 }
 
-_bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _float fTimeDelta, _float fSpare)
+_bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta, _float fSpare)
 {
 	_vector		vPosition = Get_State(STATE_POSITION);
 	_vector		vDir = vTargetPos - vPosition;
 
 	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
-	Look_At_Lerp(vTargetPos, fTimeDelta, 0.1f);
+	//Look_At(vTargetPos);
+	Look_At_Lerp(vTargetPos, fTimeDelta, 0.2f);
 
 	if (fDistance >= fSpare)
 	{
 		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * fTimeDelta;
+
 		Set_State(STATE_POSITION, vPosition);
 		
 		return true;
