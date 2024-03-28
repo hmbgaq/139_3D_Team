@@ -6,11 +6,19 @@ void CTank_GroundWave_01::Initialize(CTank* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	pActor->Add_AttackCount();
-
 }
 
 CState<CTank>* CTank_GroundWave_01::Update(CTank* pActor, _float fTimeDelta)
 {
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(70);
+		if (true == m_bFlags[0])
+		{
+			pActor->Create_GroundWave();
+		}
+	}
+
 	if (pActor->Is_Animation_End())
 	{
 		return Idle(pActor, fTimeDelta, g_iAnimIndex);

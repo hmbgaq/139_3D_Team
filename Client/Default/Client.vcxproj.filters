@@ -3571,6 +3571,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Punch">
       <UniqueIdentifier>{98fdfc50-7397-49d6-9ea9-d4c661df9ac8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Projectile">
+      <UniqueIdentifier>{ec5904a9-4447-4d3f-8d31-5017873d9013}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7086,6 +7089,9 @@
     <ClInclude Include="..\Public\Weapon_Punch_Tank.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Punch</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Projectile_GroundWave.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10038,6 +10044,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Weapon_Punch_Tank.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Punch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Projectile_GroundWave.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\1. Parts\Weapon\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

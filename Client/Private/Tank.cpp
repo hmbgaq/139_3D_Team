@@ -191,6 +191,15 @@ void CTank::Hitted_Dead(Power ePower)
 	m_pActor->Set_State(new CTank_DeathNormal_F_01());
 }
 
+void CTank::Create_GroundWave()
+{
+	CGameObject* pGroundWave = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_MONSTER_BULLET, L"Prototype_GameObject_Projectile_GroundWave");
+	pGroundWave->Set_Position(Get_Position());
+
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+	pGroundWave->Get_Transform()->Look_At(pPlayer->Get_Position_Vector());
+}
+
 HRESULT CTank::Ready_Components()
 {
 	return S_OK;

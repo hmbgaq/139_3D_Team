@@ -68,7 +68,7 @@ HRESULT CWeapon_Punch_Tank::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 1.6f };
+	BoundingDesc.fRadius = { 1.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -78,7 +78,7 @@ HRESULT CWeapon_Punch_Tank::Ready_Components()
 	return S_OK;
 }
 
-void CWeapon_Punch_Tank::OnCollisionEnter(CCollider* other)
+void CWeapon_Punch_Tank::Attack(CCollider* other)
 {
 	if (ECast(COLLISION_LAYER::PLAYER_PARRYING) == other->Get_Layer())
 	{
@@ -102,28 +102,14 @@ void CWeapon_Punch_Tank::OnCollisionEnter(CCollider* other)
 	}
 }
 
+void CWeapon_Punch_Tank::OnCollisionEnter(CCollider* other)
+{
+	Attack(other);
+}
+
 void CWeapon_Punch_Tank::OnCollisionStay(CCollider* other)
 {
-	if (ECast(COLLISION_LAYER::PLAYER_PARRYING) == other->Get_Layer())
-	{
-		return;
-	}
-
-	CCharacter* pTarget_Character = Get_Target_Character(other);
-
-	if (pTarget_Character != nullptr)
-	{
-		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Medium;
-		m_fForce = 0.5f;
-
-		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		_vector vHitDir = Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1;
-
-		pTarget_Character->Set_Hitted(m_fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
-
-		Activate_Collisions(false);
-	}
+	Attack(other);
 }
 
 void CWeapon_Punch_Tank::OnCollisionExit(CCollider* other)

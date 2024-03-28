@@ -45,6 +45,9 @@ public:
 	virtual void Hitted_Finish() override;
 	virtual void Hitted_Dead(Power ePower)	override;	
 
+public:
+	void Create_GroundWave();
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();

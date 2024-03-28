@@ -54,7 +54,7 @@ HRESULT CWeapon_Tank::Ready_Components()
 	
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_SHIELD);
-	BoundingDesc.fRadius = { 1.6f };
+	BoundingDesc.fRadius = { 1.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
