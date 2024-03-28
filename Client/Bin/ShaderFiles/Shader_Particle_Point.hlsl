@@ -348,7 +348,8 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
     float3 vLook;
     float3 vRight, vUp;
-	
+    float3x3 WorldMatrix = (float3x3) g_WorldMatrix;
+    
     if (g_bBillBoard)
     {
         vLook = g_vCamPosition - In[0].vPosition;
@@ -364,9 +365,14 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 		//vLook.rgb = normalize(cross(vRight, vUp)); vLook.a = 0.f;
 		
 		
-        vRight = normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
-        vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
-        vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
+        //vRight = normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
+        //vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
+        //vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
+        
+        
+        vRight = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb, WorldMatrix)) * In[0].vPSize.x * 0.5f;
+        vUp = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb, WorldMatrix)) * In[0].vPSize.y * 0.5f;
+        vLook = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vLook, WorldMatrix));
 		
     }
 
