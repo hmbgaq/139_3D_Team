@@ -1,10 +1,10 @@
 #pragma once
-#include "Bandit_Heavy_State_Walk.h"
+#include "Bandit_Heavy_State_Run.h"
 
 
 BEGIN(Client)
 
-class CBanditHeavy_Run_FL : public CBandit_Heavy_State_Walk
+class CBanditHeavy_Run_FL : public CBandit_Heavy_State_Run
 {
 public:
 	virtual void Initialize(CBandit_Heavy* pActor) override;

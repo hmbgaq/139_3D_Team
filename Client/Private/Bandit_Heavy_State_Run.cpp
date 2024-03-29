@@ -9,6 +9,9 @@ CState<CBandit_Heavy>* CBandit_Heavy_State_Run::Update(CBandit_Heavy* pActor, _f
 {
 	__super::Update(pActor, fTimeDelta);
 
+
+	pActor->Look_At_Target();
+
 	return nullptr;
 }
 

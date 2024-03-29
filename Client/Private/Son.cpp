@@ -62,8 +62,8 @@ HRESULT CSon::Initialize(void* pArg)
 		m_pActor->Set_State(new CSon_Spawn);
 	}
 	//HP
-	m_iMaxHp = 150;
-	m_iHp = m_iMaxHp;
+	m_fMaxHp = 150;
+	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;
 	//m_fCurHP = m_fMaxHP;
@@ -95,7 +95,7 @@ void CSon::Tick(_float fTimeDelta)
 
 	if (m_fTimeDelta >= 1.f)
 	{
-		cout << "SonHP:" << m_iHp << endl;
+		cout << "SonHP:" << m_fHp << endl;
 		m_fTimeDelta = 0.f;
 	}
 	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
@@ -123,9 +123,9 @@ void CSon::Tick(_float fTimeDelta)
 		/*m_bLookAt = false;*/
 
 	}
-	if (m_iHp <= 0.f)
+	if (m_fHp <= 0.f)
 	{
-		m_iHp = m_iMaxHp;
+		m_fHp = m_fMaxHp;
 		++m_pMother->m_iSonDead;
 		//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
 		this->Set_Enable(false);

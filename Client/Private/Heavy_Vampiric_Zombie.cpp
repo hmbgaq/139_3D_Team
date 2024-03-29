@@ -25,6 +25,8 @@ HRESULT CHeavy_Vampiric_Zombie::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+
+
 	return S_OK;
 }
 
@@ -37,7 +39,7 @@ void CHeavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-
+	m_fHp = 100;
 }
 
 void CHeavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
@@ -61,6 +63,14 @@ HRESULT CHeavy_Vampiric_Zombie::Ready_PartObjects()
 {
 	CBody::BODY_DESC		BodyDesc = {};
 	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Heavy_Vampiric_Zombie"), BodyDesc));
+
+
+	/* For. Weapon */
+	{
+		CWeapon::WEAPON_DESC		WeaponDesc = {};
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Heavy_Vampiric_Zombie"), "LeftInHandMiddle", WeaponDesc, TEXT("Weapon_Axe")));
+	}
+
 
 	return S_OK;
 }

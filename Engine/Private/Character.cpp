@@ -97,10 +97,10 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	for (auto& Pair : m_PartObjects)
 	{
 		if (nullptr != Pair.second)
-			Pair.second->Late_Tick(fTimeDelta);
+			Pair.second->Late_Tick(fTimeDelta);	
 	}
 
-	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+	Check_Frustum();
 
 	if (true == m_bIsInFrustum)
 	{		
@@ -453,7 +453,7 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	}
 	
 
-	if (m_iHp <= 0)
+	if (m_fHp <= 0)
 	{
 		if (bIsMelee)
 		{
@@ -789,6 +789,11 @@ _uint CCharacter::Get_CurrentKeyFrames(_uint iIndex)
 void CCharacter::Set_UseMouseMove(_bool _bIsUseMouseMove)
 {
 	m_pBody->Set_UseMouseMove(_bIsUseMouseMove);
+}
+
+void CCharacter::Check_Frustum()
+{
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
 

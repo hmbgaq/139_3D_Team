@@ -60,8 +60,8 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
 	//HP
-	m_iMaxHp = 1000;
-	m_iHp = m_iMaxHp;
+	m_fMaxHp = 1000;
+	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;
 	//m_fCurHP = m_fMaxHP;

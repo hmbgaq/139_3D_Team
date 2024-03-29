@@ -64,10 +64,10 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 
 HRESULT CWeapon_Heavy_Vampiric_Zombie::Load_Json()
 {
-	//string path = "../Bin/DataFiles/Data_Weapon/Monster/Tank/Shield.json";
-	//json In_Json;
-	//CJson_Utility::Load_Json(path.c_str(), In_Json);
-	//m_pTransformCom->Load_FromJson(In_Json);
+	string path = "../Bin/DataFiles/Data_Weapon/Monster/Bandit_Heavy/Axe.json";
+	json In_Json;
+	CJson_Utility::Load_Json(path.c_str(), In_Json);
+	m_pTransformCom->Load_FromJson(In_Json);
 
 	return S_OK;
 }

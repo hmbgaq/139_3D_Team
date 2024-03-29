@@ -66,7 +66,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
-	m_iHp = 100;
+	m_fHp = 100;
 
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 // 	{
@@ -123,10 +123,10 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	KeyInput(fTimeDelta);
 
-	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
+	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
 	if (m_pGameInstance->Key_Down(DIK_C))
-		m_iHp = 100;
+		m_fHp = 100;
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
@@ -485,6 +485,11 @@ HRESULT CPlayer::Ready_PartObjects()
 	
 	
 	return S_OK;
+}
+
+void CPlayer::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 void CPlayer::Update_ChargingTime(_float fTimeDelta)

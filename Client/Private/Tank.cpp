@@ -74,7 +74,7 @@ HRESULT CTank::Initialize(void* pArg)
 	}
 
 	//m_iHp = 150;
-	m_iHp = 1;
+	m_fHp = 1;
 
 
 	m_bIsFixed = true;
@@ -102,6 +102,11 @@ void CTank::Tick(_float fTimeDelta)
 	if (Is_ShieldBroken())
 	{
 		Update_ShieldBrokenTime(fTimeDelta);
+		m_bIsFixed = false;
+	}
+	else 
+	{
+		m_bIsFixed = true;
 	}
 
 	if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
