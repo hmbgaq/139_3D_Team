@@ -3580,6 +3580,9 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody">
       <UniqueIdentifier>{4c03b81c-d85e-4d2a-9a83-5854ee665961}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\1. Parts">
+      <UniqueIdentifier>{f7dc8737-b5b3-45ac-9bf1-1a3d9f086c52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5952,9 +5955,6 @@
     <ClInclude Include="..\Public\Effect_Manager.h">
       <Filter>96.Manager\Effect_Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Back</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\BanditHeavy_HitLight_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\1</Filter>
     </ClInclude>
@@ -6119,9 +6119,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Front</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Heavy\Back</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BanditHeavy_HitHeavy_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Front</Filter>
@@ -7106,6 +7103,13 @@
     </ClInclude>
     <ClInclude Include="..\Public\Son_ColliderBody.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h" />
+    <ClInclude Include="..\Public\Body_Monster.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\1. Parts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10077,6 +10081,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Son_ColliderBody.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Monster.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\1. Parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

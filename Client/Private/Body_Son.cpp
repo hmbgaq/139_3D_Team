@@ -38,6 +38,8 @@ void CBody_Son::Priority_Tick(_float fTimeDelta)
 
 void CBody_Son::Tick(_float fTimeDelta)
 {
+	auto start = chrono::high_resolution_clock::now();
+
 	__super::Tick(fTimeDelta);
 
 	
@@ -50,6 +52,9 @@ void CBody_Son::Tick(_float fTimeDelta)
 	//	}
 	//	cout << iDiscardMeshNumber << endl;
 	//}
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son Body Tick 실행시간 : " << duration0.count() << endl;
 }
 
 void CBody_Son::Late_Tick(_float fTimeDelta)
@@ -59,6 +64,7 @@ void CBody_Son::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Son::Render()
 {
+	auto start = chrono::high_resolution_clock::now();
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -81,12 +87,15 @@ HRESULT CBody_Son::Render()
 		m_pModelCom->Render((_uint)i);
 	}
 
-
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son Body Render 실행시간 : " << duration0.count() << endl;
 	return S_OK;
 }
 
 HRESULT CBody_Son::Render_Shadow()
 {
+	auto start = chrono::high_resolution_clock::now();
 	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -106,6 +115,9 @@ HRESULT CBody_Son::Render_Shadow()
 		m_pModelCom->Render((_uint)i);
 	}
 
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son Body Shadow 실행시간 : " << duration0.count() << endl;
 	return S_OK;
 }
 

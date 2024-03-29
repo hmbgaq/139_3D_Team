@@ -58,7 +58,14 @@ public:
 	_float	Get_TrackPosition();
 	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
 
-	_float3 Get_MovePos() { return m_vMovePos; }
+	_float3 Get_MovePos() {
+		if (true == m_bIsNotUseMovePos)
+		{
+			return _float3(0.f, 0.f, 0.f);
+		}
+
+		return m_vMovePos; 
+	}
 	void Set_TrackPosition(_int iNewTrackPosition);
 	void Set_StiffnessRate(_float fStiffnessRate) { m_pModelCom->Set_StiffnessRate(fStiffnessRate); }
 	_float Get_StiffnessRate() { return m_pModelCom->Get_StiffnessRate(); }
@@ -129,6 +136,9 @@ protected:
 
 protected:
 	_bool	m_bIsUseMouseMove = { false };
+
+protected:
+	_bool	m_bIsNotUseMovePos = { false };
 
 
 //protected:

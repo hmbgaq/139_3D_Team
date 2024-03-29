@@ -324,6 +324,7 @@
     <ClInclude Include="..\Public\Body_Infected_A.h" />
     <ClInclude Include="..\Public\Body_Infected_B.h" />
     <ClInclude Include="..\Public\Body_Infected_C.h" />
+    <ClInclude Include="..\Public\Body_Monster.h" />
     <ClInclude Include="..\Public\Body_Mother.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Son.h" />
@@ -1427,6 +1428,7 @@
     <ClCompile Include="..\Private\Body_Infected_A.cpp" />
     <ClCompile Include="..\Private\Body_Infected_B.cpp" />
     <ClCompile Include="..\Private\Body_Infected_C.cpp" />
+    <ClCompile Include="..\Private\Body_Monster.cpp" />
     <ClCompile Include="..\Private\Body_Mother.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Son.cpp" />

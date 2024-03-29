@@ -84,6 +84,7 @@ void CMother::Priority_Tick(_float fTimeDelta)
 
 void CMother::Tick(_float fTimeDelta)
 {
+	
 	__super::Tick(fTimeDelta);
 
 	Search_Target(200.f);
@@ -120,8 +121,15 @@ void CMother::Tick(_float fTimeDelta)
 // 		/*m_bLookAt = false;*/
 // 
 // 	}
-	Look_At_TargetBoss();
+	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTransformCom->m_fRadian + XMConvertToRadians(270)));
+	Look_At_Target();
 	//m_pTransformCom->m_fRadian += 90.f;
+
+	if (m_pGameInstance->Key_Down(DIK_1))
+	{
+		m_bPhase = !m_bPhase;
+	}
+
 }
 
 void CMother::Late_Tick(_float fTimeDelta)
