@@ -361,7 +361,6 @@ void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
 	vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
 
 
-	Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToDegrees(-90));
 
 
 	//vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
@@ -373,6 +372,9 @@ void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
 	Set_State(STATE_RIGHT, vRight);
 	Set_State(STATE_UP, vUp);
 	Set_State(STATE_LOOK, vLook);
+
+	Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToDegrees(m_fRadian-90));
+
 }
 
 void CTransform::Look_At_Direction(_fvector _vLook)
