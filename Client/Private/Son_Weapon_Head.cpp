@@ -38,7 +38,7 @@ HRESULT CSon_Weapon_Head::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_iDamage = 20.f;
+	m_fDamage = 20.f;
 	return S_OK;
 }
 
@@ -130,7 +130,7 @@ void CSon_Weapon_Head::OnCollisionEnter(CCollider* other)
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		pTarget_Character->Set_Hitted(m_fDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 		//string Test = "Data_Animation/";
 		//parent->Set_EventNotify(Test, "Test2_AnimationData.json");
