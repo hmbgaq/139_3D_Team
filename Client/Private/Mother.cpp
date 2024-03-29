@@ -24,7 +24,6 @@
 #include "Effect.h"
 
 #include "Bone.h"
-#include "MotherMouth.h"
 
 CMother::CMother(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -69,17 +68,8 @@ HRESULT CMother::Initialize(void* pArg)
 	// Ready BossHUDBar
 	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 
-	
-
-	m_pMonster = dynamic_cast<CMotherMouth*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_Boss", TEXT("Prototype_GameObject_MotherMouth")));
-	if (nullptr == m_pMonster)   return E_FAIL;
-	_float4x4 BonMatrix = this->Get_Body()->Get_BonePtr("Jaws_Center")->Get_TransformationMatrix();
-	_float4x4 temp = {};
-	XMStoreFloat4x4(&temp, BonMatrix * this->Get_Transform()->Get_WorldMatrix());
-	m_pMonster->Set_Position(_float3(temp._41, temp._42, temp._43));
-	//m_pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
-
-
+	CData_Manager::GetInstance()->Set_Mother(this);
+	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
 	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
 	Search_Target(200.f);
@@ -96,14 +86,7 @@ void CMother::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//Mouth position
-	{
-		_float4x4 BonMatrix = this->Get_Body()->Get_BonePtr("Jaws_Center")->Get_TransformationMatrix();
-		_float4x4 temp = {};
-		XMStoreFloat4x4(&temp, BonMatrix * this->Get_Transform()->Get_WorldMatrix());
-		m_pMonster->Set_Position(_float3(temp._41, temp._42, temp._43));
-	}
-
+	Search_Target(200.f);
 
 
 	if (m_pActor)
@@ -112,21 +95,33 @@ void CMother::Tick(_float fTimeDelta)
 	}
 	
 	//cout << "introBossHP:" << m_iHp << endl;
-	//_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
-	//
-	////cout << "Mother : " << fAngle << endl;
-	//if (m_bLookAt == true)
-	//{
-	//
-	//	if (0 <= fAngle && fAngle <= 45)
-	//		Look_At_Target_Lerp(fTimeDelta);
-	//	else if (-45 <= fAngle && fAngle < 0)
-	//		Look_At_Target_Lerp(fTimeDelta);
-	//
-	//	/*m_bLookAt = false;*/
-	//
-	//}
-
+	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
+	
+	//cout << "Mother : " << fAngle << endl;
+// 	if (m_bLookAt == true)
+// 	{
+// 	
+// 		if (0 <= fAngle && fAngle <= 180)
+// 			Look_At_Target_Lerp(fTimeDelta);
+// 		else if (-180 <= fAngle && fAngle < 0)
+// 			Look_At_Target_Lerp(fTimeDelta);
+// 	
+// 		/*m_bLookAt = false;*/
+// 	
+// 	}
+	/*if (m_bLookAt == true)*/
+// 	{
+// 
+// 		if (0 <= fAngle && fAngle <= 180)
+// 			Look_At_Target();
+// 		else if (-180 <= fAngle && fAngle < 0)
+// 			Look_At_Target();
+// 
+// 		/*m_bLookAt = false;*/
+// 
+// 	}
+	Look_At_TargetBoss();
+	//m_pTransformCom->m_fRadian += 90.f;
 }
 
 void CMother::Late_Tick(_float fTimeDelta)

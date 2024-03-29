@@ -148,7 +148,7 @@ private:						/* Member */
 
 	CUI::UI_DESC				m_tChild_Desc;
 	CUI*						m_pCurrChild = nullptr;
-
+	char m_cName[MAX_PATH] = "";
 	vector<CGameObject*>		m_vecChildObject;
 	//std::vector<PATHINFO*>		m_vecChildObjectName;	// 추가된 오브젝트들의 이름 (리스트 박스 출력용)
 #pragma endregion Child End
@@ -159,7 +159,8 @@ public:
 	void						UI_Info();
 	HRESULT						Menu_Info();
 	void						Curr_Info();
-	CUI* m_pCurrSelectUI = nullptr;
+	CUI*						m_pCurrSelectUI = nullptr;
+	CGameObject*				m_pCurrSelectGameObject = nullptr;
 #pragma endregion Info End
 
 #pragma region	Common
@@ -189,6 +190,7 @@ public:
 	_bool						m_bFreeMove = false;
 	_float						m_fPosX = 0.f;
 	_float						m_fPosY = 0.f;
+	_float						m_fPosZ = 0.5f;
 	_float						m_fScale = 5.f;
 	_float						m_fRotation = 0.f;
 	_float2						m_vOrigin = { 0.1f, 0.1f };
@@ -304,6 +306,8 @@ private:
 	ImVec2					timelineSize = { 800.f, 85.f }; // 애니메이션 타임 라인 크기
 
 	_int m_iOldIndex = -1;
+	_bool m_bProj_Change = false;
+	_int	m_iRenderGroup = 0;
 #pragma region											최소, 최대 값
 // 크기
 	_float	fMin_Scale = -5000.0001f;	// 최소
@@ -411,7 +415,7 @@ private: /* enum */
 private: /* Value */
 	_float						m_fChangeValue = 0.1f;
 	_int						m_iChangeType = (_int)CHANGETYPE::NONE;
-	_int						m_iRenderGroup = (_int)CRenderer::RENDER_UI;
+	//_int						m_iRenderGroup = (_int)CRenderer::RENDER_UI;
 
 private: /* bool */
 	_bool						m_bOpenTexture = true;
@@ -472,6 +476,7 @@ private:
 		"Player_Skill_Guige",
 		"Player_Skill_Icon",
 		"Player_ExpBar",
+		"Blood",
 		"Blood_Lights",
 		"Blood_Veins",
 		"Blood_Vignette",
@@ -490,6 +495,7 @@ private:
 		"Option_Window",
 		"Option_Title_Button",
 		"ElementList",
+		"SelectList",
 		"AimCrosshair",
 		"Weakness",
 		"Distortion",
@@ -498,7 +504,10 @@ private:
 		"EnemyHP_Shard",
 		"EnemyState_Shard",
 		"EnemyFrame_Shard",
-		"Video"
+		"Video",
+		"Sprite",
+		"Interaction",
+		"MainMenuList"
 	};
 
 	// 클래스 목록을 저장하는 벡터

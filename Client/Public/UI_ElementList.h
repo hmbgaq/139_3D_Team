@@ -5,7 +5,9 @@
 /* 체력 프레임 */
 class CUI_ElementList final : public CUI
 {
-	enum TEXTUREKIND { NONACTIVE, ACTIVE, TEXTURE_END };
+	enum TEXTUREKIND { NONACTIVE_HABO, NONACTIVE_FOG, NONACTIVE_RADIAL_BLUR, NONACTIVE_DOF, NONACTIVE_HDR, NONACTIVE_SHADOW, NONACTIVE_SSR, NONACTIVE_HSV, NONACTIVE_PBR,
+					   ACTIVE_HABO, ACTIVE_FOG, ACTIVE_RADIAL_BLUR, ACTIVE_DOF, ACTIVE_HDR, ACTIVE_SHADOW, ACTIVE_SSR, ACTIVE_HSV, ACTIVE_PBR,
+					   SELECT, TEXTURE_END };
 
 private:
 	CUI_ElementList(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -26,6 +28,9 @@ public:
 	virtual void	UI_Loop(_float fTimeDelta);
 	virtual void	UI_Exit(_float fTimeDelta);
 
+public:
+	void			Check_Picking(_float fTimeDelta);
+
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
@@ -36,6 +41,13 @@ public:
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	_bool		m_bHABO_Active = false;
+	_bool		m_bFOG_Active = false;
+	_bool		m_bRadial_Blur_Active = false;
+	_bool		m_bDof_Active = false;
+	_bool		m_bHDR_Active = false;
+	_bool		m_bShadow_Active = false;
+	_bool		m_bHSV_Active = false;
 
 public:
 	static CUI_ElementList* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

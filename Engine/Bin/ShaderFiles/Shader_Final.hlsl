@@ -224,7 +224,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
    
-    Out.vColor = vUI;
+    //Out.vColor = vUI;
     
     // RimBloom 넣는 ver
     //if (Out.vColor.a == 0)
@@ -236,10 +236,10 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     //    Out.vColor += vFinal + vDebug;
     
     // 안넣는 ver
-    if (Out.vColor.a == 0)
-    {
-        Out.vColor += vFinal + vDebug + vRimBloom;
-    }
+    //if (Out.vColor.a == 0)
+    //{
+        Out.vColor = vFinal + vDebug + vRimBloom + vUI;
+    //}
        
     if (Out.vColor.a == 0)
         discard;

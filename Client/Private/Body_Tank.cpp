@@ -99,9 +99,9 @@ HRESULT CBody_Tank::Ready_Components()
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Tank"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For.Com_Collider */
-	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+	CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
+	BoundingDesc.vExtents = _float3(0.6f, 0.6f, 0.6f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 

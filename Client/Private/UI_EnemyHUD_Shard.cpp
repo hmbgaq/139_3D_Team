@@ -64,6 +64,10 @@ void CUI_EnemyHUD_Shard::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	if (m_bActive == true)
+	{
+
+	}
 	//if (m_bActive == true)
 	//{
 	//	if (m_bAppear == false) // 안보이는 상태니까
@@ -84,7 +88,7 @@ void CUI_EnemyHUD_Shard::Late_Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
 	}
 }

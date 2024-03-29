@@ -37,10 +37,18 @@ HRESULT CUI_Player_Skill_Guige::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	m_vCenter.x = m_pTransformCom->Get_Position().x;
-	m_vCenter.y = m_pTransformCom->Get_Position().y;
+	//m_vCenter.x = m_pTransformCom->Get_Position().x;
+	//m_vCenter.y = m_pTransformCom->Get_Position().y;
+
+	m_vCenter.x = 0.5;
+	m_vCenter.y = 0.5;
+
+	//m_fMaxCoolTime = m_fMaxCoolTime;
 
 	m_bActive = true;
+
+	m_iMaskNum = 42;
+	m_fCoolTime = m_fMaxCoolTime;
 
 	return S_OK;
 }
@@ -54,6 +62,51 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	//if(m_fCoolTime < m_fMaxCoolTime)
+	//	m_fCoolTime += fTimeDelta;
+	//else
+	//	m_fCoolTime = m_fMaxCoolTime;
+
+	//if (m_pGameInstance->Key_Pressing(DIK_I))
+	//	m_fRadius += 0.1f;
+
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		m_fCoolTime += 1.f;
+		//m_vCenter.x += 0.1f;
+		//m_vCenter.y += 0.1f;
+	}
+	if (m_pGameInstance->Key_Down(DIK_Z))
+		m_iMaskNum -= 1;
+	if (m_pGameInstance->Key_Down(DIK_X))
+		m_iMaskNum += 1;
+
+	if (m_bActive)
+	{
+		/*if (GRANDPRIXSKILL_END == m_eType)
+			return;*/
+
+		/*if (nullptr != m_pFrame)
+			m_pFrame->Tick(fTimeDelta);*/
+
+		/* */
+		if (m_bPick == true) // true일때 쿨타임 증가 시작 (스킬 쿨타임 변수를 0값으로 시작하게 하고[게이지가 꽉찬상태]
+		{
+			m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
+			m_iShaderNum = 5; // 원형 게이지 pass
+
+			if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
+			{
+				//m_bClicked = false;
+
+				//m_iShaderNum = 0;
+				m_fCoolTime = m_fMaxCoolTime; // 초기화 (게이지 없애기) => 스킬 사용시 CoolTime에 MaxCoolTime을 줘서 스킬 쿨이 돌게하면 될듯하다.
+			}
+		}
+
+		__super::Tick(fTimeDelta);
+	}
+
 	if (m_bActive)
 	{
 
@@ -65,7 +118,7 @@ void CUI_Player_Skill_Guige::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
 	}
 }
@@ -78,7 +131,7 @@ HRESULT CUI_Player_Skill_Guige::Render()
 			return E_FAIL;
 
 		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		m_pShaderCom->Begin(5); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
 		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
 		m_pVIBufferCom->Bind_VIBuffers();
@@ -126,16 +179,12 @@ HRESULT CUI_Player_Skill_Guige::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_cooldown_active_big"),
 		TEXT("Com_Texture_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
 		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
-		return E_FAIL;
-	// error : 셰이더 파일에 있는거랑 타입 안맞았음.
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_Center", &m_vCenter, sizeof(_float2))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_Radius", &m_fRadius, sizeof(_float))))
-		return E_FAIL;
 	
+	//! For.Com_Distortion_Mask
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"),
+		TEXT("Com_Distortion_Mask"), reinterpret_cast<CComponent**>(&m_pDistortionCom[MASK]))))
+		return E_FAIL;
+
 	////! For.Com_Texture3
 	//if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 	//	TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
@@ -153,10 +202,32 @@ HRESULT CUI_Player_Skill_Guige::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+	// error : 셰이더 파일에 있는거랑 타입 안맞았음.
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_Center", &m_vCenter, sizeof(_float2))))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_Radius", &m_fRadius, sizeof(_float))))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_CoolTime", &m_fCoolTime, sizeof(_float))))
+	//	return E_FAIL;
+
+	// 현재 쿨타임을 계산해서 던져준다.
+	_float fRatio = (m_fMaxCoolTime - m_fCoolTime) / m_fMaxCoolTime;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Ratio", &fRatio, sizeof(_float))))
+		return E_FAIL;
+
 	//if (FAILED(m_pTextureCom[INACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 	//	return E_FAIL;
 	if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;
+
+	if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
+		return E_FAIL;
+
 	//if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_CoolDownTexture")))
 	//	return E_FAIL;
 

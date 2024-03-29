@@ -3,14 +3,15 @@
 #include "Transform.h"
 #include "Character.h"
 #include "GameInstance.h"
+#include "AttackObject.h"
 
 CProjectile::CProjectile(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CGameObject(pDevice, pContext, strPrototypeTag)
+	: CAttackObject(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CProjectile::CProjectile(const CProjectile& rhs)
-	: CGameObject(rhs)
+	: CAttackObject(rhs)
 {
 }
 
@@ -129,46 +130,46 @@ HRESULT CProjectile::Render_Shadow()
 	return S_OK;
 }
 
-CCharacter* CProjectile::Get_Target_Character(CCollider* other)
-{
-	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
-		return nullptr;
-
-	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
-	if (nullptr == pTarget_Character)
-		return nullptr;
-
-	return pTarget_Character;
-}
-
-CProjectile* CProjectile::Set_Damage(_float _fDamage)
-{
-	m_fDamage = _fDamage;
-
-	return this;
-}
-
-CProjectile* CProjectile::Set_Direction(Direction _eHitDirection)
-{
-	m_eHitDirection = _eHitDirection;
-
-	return this;
-}
-
-CProjectile* CProjectile::Set_Power(Power _eHitPower)
-{
-	m_eHitPower = _eHitPower;
-
-	return this;
-}
-
-
-CProjectile* CProjectile::Set_Force(_float _fForce)
-{
-	m_fForce = _fForce;
-
-	return this;
-}
+//CCharacter* CProjectile::Get_Target_Character(CCollider* other)
+//{
+//	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+//		return nullptr;
+//
+//	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
+//	if (nullptr == pTarget_Character)
+//		return nullptr;
+//
+//	return pTarget_Character;
+//}
+//
+//CProjectile* CProjectile::Set_Damage(_float _fDamage)
+//{
+//	m_fDamage = _fDamage;
+//
+//	return this;
+//}
+//
+//CProjectile* CProjectile::Set_Direction(Direction _eHitDirection)
+//{
+//	m_eHitDirection = _eHitDirection;
+//
+//	return this;
+//}
+//
+//CProjectile* CProjectile::Set_Power(Power _eHitPower)
+//{
+//	m_eHitPower = _eHitPower;
+//
+//	return this;
+//}
+//
+//
+//CProjectile* CProjectile::Set_Force(_float _fForce)
+//{
+//	m_fForce = _fForce;
+//
+//	return this;
+//}
 
 void CProjectile::Search_Target(const wstring& strLayerTag, const _float fSearchDistance)
 {

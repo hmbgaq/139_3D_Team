@@ -165,6 +165,7 @@ public:
 	void Look_At_OnLand(_fvector vTargetPos);
 
 	void Look_At_Target();
+	void Look_At_TargetBoss();
 	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag, const _float fSearchDistance = MAX_SEARCH);
 
@@ -256,6 +257,7 @@ public:
 	void Set_RootMoveRate(_float3 vRate) { m_vRootMoveRate = vRate; };
 	void Reset_RootMoveRate() { m_vRootMoveRate = _float3(1.f, 1.f, 1.f); };
 	void Set_MonsterAttackState(_bool bState) { m_bMonsterAttackState = bState; };
+	_bool Get_MonsterAttackState() { return m_bMonsterAttackState; };
 
 public:
 	_bool Is_KnockUp() { return m_bIsKnockUp; };
@@ -303,6 +305,9 @@ protected:
 
 protected:
 	_bool		m_bIsKnockUp = { false };
+
+protected:
+	_bool		m_bIsFixed = { false };
 
 protected:
 	_float3		m_vRootMoveRate = { 1.f, 1.f, 1.f };

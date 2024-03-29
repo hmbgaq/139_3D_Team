@@ -1,4 +1,6 @@
 #include "..\Public\Tank_State_Idle.h"
+#include "SMath.h"
+
 
 void CTank_State_Idle::Initialize(CTank* pActor)
 {

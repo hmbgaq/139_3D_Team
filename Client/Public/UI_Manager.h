@@ -4,6 +4,7 @@
 #include "Base.h"
 #include "GameInstance.h"
 #include "Client_Defines.h"
+#include "UI.h"
 
 BEGIN(Engine)
 class CGameObject;
@@ -11,7 +12,7 @@ END
 
 
 BEGIN(Client)
-class CUI;
+//class CUI;
 
 class CUI_Manager : public CBase
 {
@@ -52,6 +53,8 @@ public: /* Ready_Preset */
 	HRESULT Ready_Loading_IntroBoss(_uint iLevelIndex);
 	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 	HRESULT Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
+	HRESULT Ready_DiedScreen(_uint iLevelIndex);
+	HRESULT Ready_Option(_uint iLevelIndex);
 
 public:
 	/* LeftHUD */
@@ -115,13 +118,59 @@ public:
 	/* EnemyHUD(Shard) */
 	HRESULT			Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_EnemyHUD_Shard(_bool bActive);
-	void			Set_EnemyHUD_World(_matrix matWorld);
+	void			Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	void			Set_Offset(_float fOffsetX, _float fOffsetY);
-
 	vector<CUI*>	m_vecEnemyHUD_Shard;
 
+	/* DiedScreen */
+	HRESULT			Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_DiedScreen();
+	void			NonActive_DiedScreen();
+	vector<CUI*>	m_vecDiedScreen;
 
+	/* Option */
+	HRESULT			Add_Option(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_Option();
+	void			NonActive_Option();
+	vector<CUI*>	m_vecOption;
 
+	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
+
+public:
+	void			Check_UIPicking(_float fTimeDelta);
+
+private:
+	_bool			m_bMouseOver = false;
+	_bool			m_bSelect = false;
+	_bool			m_bSelectPressing = false;
+	string			m_strSelectUI = "";
+	string			m_strMouseOverUI = "";
+	CUI*			m_pUI = nullptr;
+
+public:
+	void			Set_MouseOver(_bool bMouseOver) { m_bMouseOver = bMouseOver; }
+	// UI 마우스 오버중
+	_bool			Get_MouseOver() { return m_bMouseOver; }
+
+	void			Set_Select(_bool bSelect) { m_bSelect = bSelect; }
+	// UI 선택
+	_bool			Get_Select() { return m_bSelect; }
+
+	void			Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
+	// UI 선택(Pressing)중
+	_bool			Get_SelectPressing() { return m_bSelectPressing; };
+
+	// 선택한 UI 이름 반환
+	string			Get_strSelectUI() { return m_strSelectUI; };
+	// 마우스 오버중인 UI 이름 반환
+	string			Get_strMouseOverUI() { return m_strMouseOverUI; };
+
+	// 선택된 UI본인을 반환
+	CUI* Get_CurrentUI() 
+	{ 
+		if (m_pUI != nullptr)
+			return m_pUI;
+	}
 
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 

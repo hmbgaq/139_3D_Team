@@ -1,9 +1,9 @@
 #pragma once
-#include "Tank_State.h"
+#include "Tank_State_Attack.h"
 
 BEGIN(Client)
 
-class CTank_State_Attack_NoShield : public CTank_State
+class CTank_State_Attack_NoShield : public CTank_State_Attack
 {
 public:
 	virtual void Initialize(CTank* pActor) override;
