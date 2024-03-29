@@ -490,7 +490,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 					{
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 164;
+						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 170;
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 					}ImGui::SameLine();
@@ -1489,7 +1489,7 @@ void CWindow_EffectTool::Update_RectTab()
 				if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 				{
 					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 44;
+					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 170;
 					m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 0;
 
 				}ImGui::SameLine();
@@ -1839,17 +1839,6 @@ void CWindow_EffectTool::Update_MeshTab()
 		}
 
 
-		// 메쉬 파티클용 이펙트 메쉬 생성
-		if (ImGui::CollapsingHeader(" Mesh_Particle "))
-		{
-			if (ImGui::Button("Particle_Test"))
-			{
-				Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
-			}
-
-			ImGui::SeparatorText("");
-		}
-
 
 		// 이펙트용 스태틱 메쉬 생성
 		if (ImGui::CollapsingHeader(" Mesh_Static "))
@@ -2178,7 +2167,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 					{
 						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 164;
+						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 170;
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
 					}ImGui::SameLine();
@@ -4653,11 +4642,11 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		{
 			Add_Part_Particle();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button(" Add Rect "))
-		{
-			Add_Part_Rect();
-		}
+		//ImGui::SameLine();
+		//if (ImGui::Button(" Add Rect "))
+		//{
+		//	Add_Part_Rect();
+		//}
 		//ImGui::SameLine();
 		//if (ImGui::Button(" Add Mesh "))
 		//{
