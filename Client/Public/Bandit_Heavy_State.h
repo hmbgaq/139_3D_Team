@@ -28,15 +28,13 @@ public:		//상태 그룹 별 업데이트
 	CState<CBandit_Heavy>* Hit_State(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Heavy>* Knock_State(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Heavy>* Death_State(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
-
-
-	CState<CBandit_Heavy>* Dodge_State(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Heavy>* Spawn_State(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
 public:		//개별 동작 상태 집합
 	CState<CBandit_Heavy>* Normal(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Heavy>* Idle(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CBandit_Heavy>* Attack(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
 

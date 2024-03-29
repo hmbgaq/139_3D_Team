@@ -37,6 +37,7 @@ void CHeavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+
 }
 
 void CHeavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)

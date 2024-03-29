@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Body_Bandit_Heavy.h"
 #include "BanditHeavy_Idle.h"
+#include "Data_Manager.h"
+#include "Player.h"
 
 CBandit_Heavy::CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -51,6 +53,11 @@ void CBandit_Heavy::Tick(_float fTimeDelta)
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
+	}
+
+	if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
+	{
+		m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	}
 
 }
