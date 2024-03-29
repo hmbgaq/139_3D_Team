@@ -16,6 +16,7 @@ class CPlayer;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
+class CEnvironment_Interact;
 
 class CData_Manager : public CBase
 {
@@ -53,6 +54,9 @@ public:
 	void	Set_SkyType(_uint iCastSkyType);
 
 	void    Set_SkyTextureIndex(_uint iSkyTextureIndex);
+
+	CEnvironment_Interact* Get_SnowMountainWagon() { return m_pSnowMountainWagon;}
+	void				   Set_SnowMountainWagon(CEnvironment_Interact* pSnowWagon) { m_pSnowMountainWagon = pSnowWagon;}
 
 public:
 	CNavigation* Get_Navigation() { return m_pNavigation; }
@@ -186,6 +190,8 @@ private:
 
 	CSky* m_pSky = { nullptr };
 	CNavigation* m_pNavigation = { nullptr };
+	CEnvironment_Interact* m_pSnowMountainWagon = { nullptr };
+
 
 private:
 	CCamera* m_pCamera = { nullptr };

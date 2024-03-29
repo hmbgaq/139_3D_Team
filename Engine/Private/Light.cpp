@@ -52,19 +52,15 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 		FAILED_CHECK(pShader->Bind_RawValue("g_fRange", &m_LightDesc.fRange, sizeof(_float)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fCutOff", &m_LightDesc.fCutOff, sizeof(_float)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fOuterCutOff", &m_LightDesc.fOuterCutOff, sizeof(_float)));
+		FAILED_CHECK(pShader->Bind_RawValue("g_fVolumetricStrength", &m_LightDesc.fVolumetricStrength, sizeof(_float)));
 
 		iPassIndex = ECast(DEFERRED_SHADER::SPOT_LIGHT);
 	}
 	else
 		return S_OK; /* 타입을 지정하지 않은 빛은 렌더하지않는다. */
 
-	if (m_bSelect == true)
-	{
-		FAILED_CHECK(pShader->Bind_RawValue("g_vLightDiffuse", &m_vSelectDiffuse, sizeof(_float4)));
-	}
-	else
-		FAILED_CHECK(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4)));
-
+	
+	FAILED_CHECK(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4)));
 	FAILED_CHECK(pShader->Bind_RawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4)));
 	FAILED_CHECK(pShader->Bind_RawValue("g_vLightSpecular", &m_LightDesc.vSpecular, sizeof(_float4)));
 

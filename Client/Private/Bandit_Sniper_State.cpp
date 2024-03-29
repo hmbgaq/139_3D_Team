@@ -137,19 +137,19 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Attack(CBandit_Sniper* pActor, _fl
 
 	if (true == pActor->Get_ProtectExist()) /* ½¯µå ÀÖÀ½ */
 	{
-		if (pActor->Get_BulletCnt() >= 5)
+		if (pActor->Get_BulletCnt() >= 2)
 		{
 			pActor->Set_BulletCnt(0);
 			return new CSniper_CoverLow_Reload();
 		}
 
-		pActor->Add_BulletCnt();
+		pActor->Add_BulletCnt(); /* ÃÑ¾Ë °¹¼ö Ãß°¡ */
 		return new CSniper_CoverLow_Over_Start(); // ¾É¾ÆÀÖ´Ù°¡ Á¤¸é °ø°Ý
 	}
 	else
 	{
 		/* ½¯µå ¾øÀ½ */
-		if (pActor->Get_BulletCnt() >= 5)
+		if (pActor->Get_BulletCnt() >= 2)
 		{
 			pActor->Set_BulletCnt(0); 
 			return new CSniper_CoverHigh_Reload();

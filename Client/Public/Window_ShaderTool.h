@@ -53,6 +53,7 @@ private:
 	class ShaderParsed_Object* pObject = nullptr;
 
 	/* Level Shader Struct */
+	PBR_DESC			m_ePBR_Desc				= {};
 	SSR_DESC			m_eSSR_Desc				= {};
 	HBAO_PLUS_DESC		m_eHBAO_Desc			= {};
 	FOG_DESC			m_eFog_Desc				= {};
@@ -66,9 +67,10 @@ private:
 	SCREENEFFECT_DESC	m_eScreenDEffect_Desc	= {};
 	CHROMA_DESC			m_eChroma_Desc			= {};
 
-	/* Shader Save / Load */
-	_bool m_bShaderSave = {false} ;
-	_bool m_bShaderLoad = {false} ;
+	/* Shader */
+	_bool m_bShaderSave = {false} ; // Save / Load
+	_bool m_bShaderLoad = {false} ; // Save / Load
+	_int  m_iPBRTextureNumber = { 0 };
 
 	/* Level LightControl */
 	LEVEL			m_eLoadLevel = {};
@@ -80,6 +82,9 @@ private:
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
 	virtual _bool		Write_Json(json& Out_Json);
+
+	/* Light */
+	list<class CLight*>	m_listLight = {};
 
 private:
 	/* 최상위 셋팅 */
@@ -103,6 +108,7 @@ private:
 	void Layer_Object_Shader_Control();
 
 	/* Compress - Shader */
+	void Compress_PBR_Setting();
 	void Compress_HBAO_Plus_Setting();
 	void Compress_Fog_Setting();
 	void Compress_BloomRim_Setting();
@@ -119,7 +125,10 @@ private:
 	
 	/* Level Light Control */
 	void Save_Load_Light(); // 레벨을 잡고 해당 레벨에 대한 빛정보를 가져오기 
+	void Show_N_Controll_Light();
 	void Compress_Directional_Light();
+	void Compress_SpotLight();
+	void Compress_PointLight();
 
 public:
 	static CWindow_ShaderTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

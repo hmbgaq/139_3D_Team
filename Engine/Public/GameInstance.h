@@ -84,6 +84,7 @@ public: /* For.Renderer */
 	HRESULT		Add_DebugRender(class CComponent* pDebugCom);
 	CRenderer*	Get_Renderer(); /* Åø¿ë */
 	HRESULT		Off_Shader();
+	void			Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture);
 
 #ifdef _DEBUG
 	void		Set_RenderDebugCom(_bool _bRenderDebug);
@@ -139,6 +140,8 @@ public: /* For.Light_Manager */
 	class CLight*	Find_Light(const _int iIndex);
 	void			Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
 	class CLight*	Get_DirectionLight();
+	class CLight_Manager* Get_LightManager();
+	void			Get_AllLight(list<class CLight*>* pTemp);
 
 
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);

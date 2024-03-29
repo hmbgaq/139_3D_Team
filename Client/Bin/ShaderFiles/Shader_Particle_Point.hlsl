@@ -512,11 +512,11 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     vDistortedCoord = (vDistortion.xy * fPerturb) + In.vTexcoord.xy;
 
 
-	// 디퓨즈 텍스처 (clamp 샘플러 사용)
-    vFinalDiffuse = g_DiffuseTexture.Sample(ClampSampler, vDistortedCoord.xy);
+	// 디퓨즈 텍스처 (clamp 샘플러 사용?)
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, vDistortedCoord.xy);
 
 
-	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
+	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용?)
     vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
     vFinalDiffuse.a *= vAlphaColor;
 

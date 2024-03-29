@@ -39,6 +39,7 @@ namespace Engine
 		/* Spot Light  */
 		_float fCutOff = 0.f;
 		_float fOuterCutOff = 0.f;
+		_float fVolumetricStrength = 0.f;
 
 		/* Common */
 		_float4 vDiffuse = { 0.f, 0.f, 0.f, 0.f }; /* 반사될때 출력되는 주된 색 */
@@ -368,6 +369,11 @@ namespace Engine
 #pragma region Shader Control Struct - Screen 
 	/* 각자 구분용 */
 
+	typedef struct ENGINE_DLL tagPBR_Desc
+	{
+		_bool bPBR_ACTIVE = { false };
+	}PBR_DESC;
+
 	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
 	{
 		_bool  bHBAO_Active = { false };
@@ -381,8 +387,8 @@ namespace Engine
 	typedef struct ENGINE_DLL tagSSR_Desc
 	{
 		_bool	bSSR_Active = { false };
-		_float fRayHitThreshold = 2.f;
-		_float fRayStep = 1.6f;
+		_float  fRayStep = 0.005f;
+		_float  fStepCnt = 75.f;
 	}SSR_DESC;
 
 	typedef struct ENGINE_DLL tagChroma_Desc
@@ -441,8 +447,9 @@ namespace Engine
 	typedef struct ENGINE_DLL tagDOF
 	{
 		_bool  bDOF_Active		= false;
-		float  fFocusDistance = 10.f;
-		float  fFocusRange = 3.f;
+		_float4  DOFParams = { 0.f, 0.f, 0.f, 0.f };
+		//float  fFocusDistance = 10.f;
+		//float  fFocusRange = 3.f;
 
 	}DOF_DESC;
 
@@ -466,8 +473,7 @@ namespace Engine
 		_float foffset_bias		= 1.f;		//[0.0 to 6.0] Offset bias adjusts the radius of the sampling pattern.
 											//I designed the pattern for offset_bias 1.0, but feel free to experiment.
 		_float fshow_sharpen	= 0.f;		//[0 or 1] Visualize the strength of the sharpen (multiplied by 4 to see it better)
-
-	};
+	}LUMASHARPEN_DESC;
 
 	typedef struct ENGINE_DLL tagScreenTone
 	{

@@ -65,6 +65,9 @@ public://!For. Interact
 	void SetState_InteractJumpDown300();
 	void SetState_InteractVault100();
 	void SetState_InteractVault200();
+	void SetState_InteractCartRideStart();
+	void SetState_InteractCartRideLoop();
+	void SetState_InteractCartRideWagonJump();
 	
 
 public:
