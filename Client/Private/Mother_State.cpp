@@ -43,13 +43,14 @@ CState<CMother>* CMother_State::Stun_State(CMother* pActor, _float fTimeDelta, _
 
 CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-
+	
 	//TODO 페이즈1 //////////////////////////////////////////
 	if (pActor->m_bPhase == true)
 	{
-		if (pActor->m_iSonDead == 1)
+		if (pActor->m_iSonDead == 1 && pActor->m_bfirstCheck)
 		{
 			return new CMother_VomitStart;
+			pActor->m_bfirstCheck = false;
 		}
 		else if (pActor->m_iSonDead >= 2)//Son이 두마리다 죽었을때
 		{
@@ -59,6 +60,9 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 	//TODO 페이즈2,3 //////////////////////////////////////////
 	else if(pActor->m_bPhase == false)
 	{
+		if (pActor->m_iSonDead == 0)
+			pActor->m_bfirstCheck = true;
+
 		pActor->m_fTimeDelta += fTimeDelta;
 
 		if (pActor->m_fTimeDelta >= 15)
@@ -67,9 +71,10 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 			pActor->m_fTimeDelta = 0.f;
 		}
 
-		if (pActor->m_iSonDead == 1)
+		if (pActor->m_iSonDead == 1 && pActor->m_bfirstCheck)
 		{
 			return new CMother_VomitStart;
+			pActor->m_bfirstCheck = false;
 		}
 		else if (pActor->m_iSonDead >= 2)//Son이 두마리다 죽었을때
 		{
