@@ -139,7 +139,6 @@ void CCamera::ExtractFrustumBoundSphere(_float fNear, _float fFar, _float3& vBou
 	//fBoundRadius = D3DXVec3Length(&vBoundSpan);
 }
 
-
 void CCamera::Free()
 {
 	__super::Free();

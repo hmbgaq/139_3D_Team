@@ -34,8 +34,6 @@ void CBody_Infected::Priority_Tick(_float fTimeDelta)
 void CBody_Infected::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-
 }
 
 void CBody_Infected::Late_Tick(_float fTimeDelta)

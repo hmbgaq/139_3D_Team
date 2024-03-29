@@ -12,22 +12,22 @@
 ==============================================================*/
 struct FOG_DESC
 {
-    bool bFog_Active;
-    float fFogStartDepth;
-    float fFogStartDistance;
-    float fFogDistanceValue;
-    float fFogHeightValue;
-    float fFogDistanceDensity;
-    float fFogHeightDensity;
-    float padding; // 4 
-    float4 vFogColor;
+    bool    bFog_Active;
+    float   fFogStartDepth;
+    float   fFogStartDistance;
+    float   fFogDistanceValue;
+    float   fFogHeightValue;
+    float   fFogDistanceDensity;
+    float   fFogHeightDensity;
+    float   padding;              // 4 
+    float4  vFogColor;
 };
 
 struct BLOOMRIM_DESC
 {
     // 패딩을 추가하지않아도 메모리가 정렬됨 
-    bool bBloomBlur_Active;
-    bool bRimBlur_Active;
+    bool    bBloomBlur_Active;
+    bool    bRimBlur_Active;
 };
 /*=============================================================
  
@@ -462,16 +462,17 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
         Out.vColor = vPriority;
     }
     else
-    { // MRT_LightAcc : Shade 
+    { 
+        // MRT_LightAcc : Shade 
         vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
         vShade = saturate(vShade);
 	
-    // MRT_GameObject : Specular 
+        // MRT_GameObject : Specular 
         vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
         vSpecular = saturate(vSpecular);
 	
     
-    // Target_HBAO
+        // Target_HBAO
         vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
         if (g_bSSAO_Active)
             vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
@@ -546,18 +547,30 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     // 추가사항 : g_vLightDir, g_fBias, g_vLightDir
     PS_OUT Out = (PS_OUT) 0;
 	
+    // 감마보정 -> Linear space로 변형후 빛계산을 하고 다시 감마보정을 통해서 그린다.
+    float gamma = 2.2f;
     // Diffuse -> Albedo, Properties-> Specular, ORM : Occulusion, Roughness Metallic, 
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vAlbedo.a == 0.f)
+    {
+        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        if (vPriority.a == 0.f)
+            discard;
+        
+        Out.vColor = vPriority;
+        
+        return Out;
+    }
+    vAlbedo = pow(vAlbedo, gamma);
     
-    vAlbedo = pow(vAlbedo, 2.2f);
     vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     float3 N = vNormal.xyz * 2.f - 1.f;
     vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
     /* (R)Occlusion ,(G)Roughness , (B)Metalic */
     
+    //float fAmbient_Occlusion = vORMDesc.r;
     float fRoughness = vORMDesc.g;
     float fMetallic = vORMDesc.b;
-    float fAmbient_Occlusion = vORMDesc.r;
     
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     
@@ -575,49 +588,12 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
     
-    float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
-    float3 F0 = float3(0.04f, 0.04f, 0.04f);
-    F0 = lerp(F0, vAlbedo.xyz, fMetallic); // 반사율 F0
-
-	// calculate per-light radiance
-    float3 L = normalize(-g_vLightDir);
-    float3 H = normalize(V + L);
-
-    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
-    // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
-   
-    if (vAlbedo.a == 0.f)
-    {
-        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
-        if (vPriority.a == 0.f)
-            discard;
-        
-        Out.vColor = vPriority;
-    }
-    
-    // Shadow 
+    // = Shadow ====================
+       
     float ShadowColor = 1.f;
-    
-    //if (true == g_bFog_Active)
-    //{
-    //    float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
-    //    vTexCoord.x += g_vFogUVAcc.x;
-    //    vTexCoord.y += g_vFogUVAcc.y;
-    //
-    //    float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
-    //
-    //    float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
-    //
-    //    Out.vColor = vector(vFinalColor.rgb, 1.f);
-    //}
     
     if (true == g_bShadow_Active)
     {
-        //float fDot = saturate(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal.xyz));
-        //
-        //float fNormalOffset = g_fBias;
-        //float fBias = max((fNormalOffset * 5.0f) * (1.0f - (fDot * -1.0f)), fNormalOffset);
-   
         vector vPosition = mul(vWorldPos, g_LightViewMatrix);
         vPosition = mul(vPosition, g_LightProjMatrix);
    
@@ -629,8 +605,25 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
         float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
    
         if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-            Out.vColor = Out.vColor * 0.8f;
+            ShadowColor = 0.8f;
     }
+    
+    // =====================
+    float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
+    float3 F0 = float3(0.04f, 0.04f, 0.04f);
+    F0 = lerp(F0, vAlbedo.xyz, fMetallic); // 반사율 F0
+
+	// calculate per-light radiance
+    float3 L = normalize(-g_vLightDir);
+    float3 H = normalize(V + L);
+
+    // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
+    float3 vBRDF = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
+   
+    float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
+    vEmissive = pow(vEmissive, gamma);
+    
+    Out.vColor.rgb = vBRDF * ShadowColor + vEmissive;
     
     Out.vColor.a = 1.f;
 	
@@ -692,7 +685,56 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
 
     return Out;
 }
-/* ------------------ Technique ------------------ */
+/* ------------------ 7 - PBR Deferred ------------------ */
+PS_OUT_LIGHT PS_MAIN_PBR_DIRECTIONAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 vDepthTarget = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+
+    float depth = max(input.Pos.z, DepthTx.SampleLevel(LinearClampSampler, input.Tex, 2));
+    float3 viewSpacePosition = GetViewSpacePosition(input.Tex, depth);
+    float3 V = float3(0.0f, 0.0f, 0.0f) - viewSpacePosition;
+    float cameraDistance = length(V);
+    V /= cameraDistance;
+
+    float3 L = lightData.direction.xyz;
+    const uint SAMPLE_COUNT = 16;
+
+    float3 rayEnd = float3(0.0f, 0.0f, 0.0f);
+    float stepSize = length(viewSpacePosition - rayEnd) / SAMPLE_COUNT;
+    viewSpacePosition = viewSpacePosition + V * stepSize * BayerDither(input.Pos.xy);
+
+    float marchedDistance = 0;
+    float3 accumulation = 0;
+	[loop(SAMPLE_COUNT)]
+    for (uint i = 0; i < SAMPLE_COUNT; ++i)
+    {
+        float4 shadowMapCoords = mul(float4(viewSpacePosition, 1.0), shadowData.shadowMatrices[0]);
+        float3 UVD = shadowMapCoords.xyz / shadowMapCoords.w;
+
+        UVD.xy = 0.5 * UVD.xy + 0.5;
+        UVD.y = 1.0 - UVD.y;
+     
+     [branch]
+        if (IsSaturated(UVD.xy))
+        {
+            float attenuation = CalcShadowFactor_PCF3x3(ShadowSampler, ShadowMap, UVD, shadowData.shadowMapSize, shadowData.softness);
+            accumulation += attenuation;
+        }
+        marchedDistance += stepSize;
+        viewSpacePosition = viewSpacePosition + V * stepSize;
+    }
+    accumulation /= SAMPLE_COUNT;
+    return max(0, float4(accumulation * lightData.color.rgb * lightData.volumetricStrength, 1));
+    return Out;
+}
+
+/*=============================================================
+ 
+                         Technique 
+                                
+==============================================================*/
 
 technique11 DefaultTechnique
 {
@@ -768,5 +810,15 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_NEW_PBR();
+    }
+
+    pass PBR_DIRECTIONAL // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PBR_DIRECTIONAL();
     }
 }

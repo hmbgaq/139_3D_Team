@@ -34,9 +34,6 @@ float3      g_vBlack_Discard;
 int			g_iColorMode;
 //float4	g_vColor_Mul;
 
-
-
-
 // 소영 Test ( + 참고 주석 )  ================= 
 // 일단 값 때려박은거. 수정해도됨. 
 // 생각못한게 있었는데, 림라이트 적용하려면 노말벡터가 필요함. 
@@ -531,15 +528,12 @@ PS_OUT PS_MAIN_DISTORTION_POST(PS_IN In)
     In.vTexcoord = In.vTexcoord * g_UVScale + g_UVOffset;
     In.vTexcoord = Rotate_Texcoord(In.vTexcoord, g_fDegree);
     
-    
-
 	/* Distortion ============================================================ */ 
     float4 vDistortion;
     
     vDistortion = Calculation_Distortion(In.vTexcoord, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
     Out.vDistortion = vDistortion;
     
-	
 	/* RimBloom ============================================================== */
     Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
     Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;

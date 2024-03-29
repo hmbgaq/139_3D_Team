@@ -458,30 +458,31 @@ PS_OUT PS_MAIN_DOF (PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    float4 color = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
-    float depth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
-    float3 colorBlurred = g_BlurTarget.Sample(LinearSampler, In.vTexcoord).xyz;
-    depth = ConvertZToLinearDepth(depth);
-    color = float4(DistanceDOF(color.xyz, colorBlurred, depth), 1.0);
-    Out.vColor = color;
+   vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);    
+   vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+   vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
     
-    //vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);    
-    //vector vTarget = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
-    //vector vBlur = g_BlurTarget.Sample(LinearSampler, In.vTexcoord);
-    //
-    //float fViewZ = vDepth.y * g_fCamFar;
-    //
-    //if (g_DOF.fFocusDistance - g_DOF.fFocusRange > fViewZ) /* 초점거리 앞 */ 
-    //{
-    //    Out.vColor = vBlur;
-    //}
+    //depth = ConvertZToLinearDepth(depth);
+    //color = float4(DistanceDOF(color.xyz, colorBlurred, depth), 1.0);
+    //Out.vColor = color;
+    
+
+    float fViewZ = vDepth.y * g_fCamFar; /* 해당 픽셀이 카메라에서 얼마나 떨어져 있는지를 나타내는 월드 공간에서의 Z 값 */ 
+    
+    if (g_DOF.DOFParams.x > fViewZ) 
+    {
+        Out.vColor = vTarget;
+    }
+    else
+        Out.vColor = vBlur;
     //else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ) /* 초첨거리 뒤 */
     //{
     //    Out.vColor = vBlur;
     //}
-    //else /* 정상출력할곳 */ 
-    //    Out.vColor = vTarget;
-
+    
+    //if (vDepth.a < 0.5)
+    //    return vTarget;
+    
     return Out;
 }
 
@@ -492,20 +493,19 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
-    vector Object_Blur = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = Effect_Solid;
+   // Out.vColor = Effect_Solid;
 
-    if (Out.vColor.a == 0) 
-        Out.vColor += Effect_Distortion;
+   // if (Out.vColor.a == 0) 
+        Out.vColor = Effect_Distortion;
     
     if (Out.vColor.a == 0) 
-        Out.vColor += Deferred + Effect + Object_Blur + Effect_Blur;
+        Out.vColor += Deferred + Effect + Effect_Blur;
        // Out.vColor += Deferred + Effect + Effect_Blur;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
