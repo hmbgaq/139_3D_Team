@@ -48,7 +48,13 @@ void CSon_ColliderBody::Priority_Tick(_float fTimeDelta)
 
 void CSon_ColliderBody::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
+	auto start = chrono::high_resolution_clock::now();
+
+	__super::Tick(fTimeDelta);   
+
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son ColliderBody 실행시간 : " << duration0.count() << endl;
 }
 
 void CSon_ColliderBody::Late_Tick(_float fTimeDelta)
@@ -58,8 +64,13 @@ void CSon_ColliderBody::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_ColliderBody::Render()
 {
+	auto start = chrono::high_resolution_clock::now();
 	if (FAILED(__super::Render()))
 		return E_FAIL;
+
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son ColliderBody 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }

@@ -49,10 +49,13 @@ void CSon_Weapon_Head::Priority_Tick(_float fTimeDelta)
 
 void CSon_Weapon_Head::Tick(_float fTimeDelta)
 {
+	auto start = chrono::high_resolution_clock::now();
 	__super::Tick(fTimeDelta);
 
 	
-
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son Weapon Head Tick 실행시간 : " << duration0.count() << endl;
 }
 
 void CSon_Weapon_Head::Late_Tick(_float fTimeDelta)
@@ -73,9 +76,13 @@ void CSon_Weapon_Head::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_Weapon_Head::Render()
 {
+	auto start = chrono::high_resolution_clock::now();
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son Weapon Head Render 실행시간 : " << duration0.count() << endl;
 	return S_OK;
 }
 

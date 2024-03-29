@@ -402,12 +402,12 @@ void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
 	_vector		vPosition = Get_State(STATE_POSITION);
 	_vector		vLook = vTargetPos - vPosition;
 
-	vLook = XMVector3Rotate(vLook, XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.0f)));
+	
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
+	_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, vLook)) * vScale.x;
 
-	_vector		vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
-
-	vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
+	vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp)) * vScale.z;
 
 
 
@@ -416,13 +416,14 @@ void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
 	//
 	//vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
 
-	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	//_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
 
 	Set_State(STATE_RIGHT, vRight);
 	Set_State(STATE_UP, vUp);
 	Set_State(STATE_LOOK, vLook);
 
-	Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToDegrees(m_fRadian-90));
+	Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_fRadian + XMConvertToRadians(270)));
+
 
 }
 

@@ -54,7 +54,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_fDamage = 20.f;
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_SNOWMOUNTAINBOSS, LAYER_EFFECT, "Projectile_Range1_04.json", this);
-	m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", this);
+	m_pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Yellow_Blood_Test.json");
 
 
 	return S_OK;
@@ -72,13 +72,16 @@ void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 
 void CSon_Projectile::Tick(_float fTimeDelta)
 {
+	auto start = chrono::high_resolution_clock::now();
 	__super::Tick(fTimeDelta);
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
-
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son Projectile Tick 실행시간 : " << duration0.count() << endl;
 }
 
 void CSon_Projectile::Late_Tick(_float fTimeDelta)
@@ -88,9 +91,12 @@ void CSon_Projectile::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_Projectile::Render()
 {
+	auto start = chrono::high_resolution_clock::now();
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-
+	auto End = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration0 = End - start;
+	cout << "Son Projectile Render 실행시간 : " << duration0.count() << endl;
 	return S_OK;
 }
 
