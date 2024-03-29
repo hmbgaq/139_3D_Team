@@ -774,7 +774,7 @@ void CWindow_ShaderTool::Select_Level()
 					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO_BOSS;
 					m_eCurrLevel_String = "LEVEL_INTRO_BOSS";
 					break;
-				case 4:
+				case 4: // snowmountain
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainNormalMapping_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
 					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";

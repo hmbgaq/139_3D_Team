@@ -68,6 +68,9 @@ void CEnvironment_Object::Tick(_float fTimeDelta)
 	//
 	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
 	//
+	wstring strTemp = Get_ModelTag();
+	int a = 0;
+
 }
 
 void CEnvironment_Object::Late_Tick(_float fTimeDelta)
@@ -82,13 +85,17 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 	}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return ;
+	if (true == bRenderIce && false == bIcarusTexture)
+		FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_ICE, this));
+	else
+		FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_NONBLEND, this));
 
 	//if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	//{
 	//	m_pGameInstance->Add_DebugRender(m_pPickingCollider);
 	//}
+
+	return;
 }
 
 HRESULT CEnvironment_Object::Render()
@@ -97,29 +104,8 @@ HRESULT CEnvironment_Object::Render()
 
 	wstring strTemp = Get_ModelTag();
 
-	if (true == bRenderIce && false == bIcarusTexture)	// Icicle Render
+	if (false == bRenderIce && true == bIcarusTexture)	// Icarus Ground Render
 	{
-		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-		for (size_t i = 0; i < iNumMeshes; i++)
-		{
-			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
-			m_pIceNoise->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture");
-			m_pIceDiffuse->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse");
-			m_vCamPosition = m_pGameInstance->Get_CamPosition();
-			m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPosition, sizeof(_float4));
-
-			if (i == m_iIceMeshNumber)
-				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ICICLE));
-			else
-				m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
-
-			m_pModelCom->Render((_uint)i);
-		}
-	}
-	else if (false == bRenderIce && true == bIcarusTexture)	// Icarus Ground Render
-	{
-	
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 		for (size_t i = 0; i < iNumMeshes; i++)
@@ -164,6 +150,36 @@ HRESULT CEnvironment_Object::Render_Shadow()
 		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
+
+	return S_OK;
+}
+
+HRESULT CEnvironment_Object::Render_Ice()
+{
+	FAILED_CHECK(Bind_ShaderResources());
+
+	if (true == bRenderIce)	// Icicle Render
+	{
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pIceNoise->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture");
+			m_pIceDiffuse->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse");
+			m_vCamPosition = m_pGameInstance->Get_CamPosition();
+			m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPosition, sizeof(_float4));
+
+			if (i == m_iIceMeshNumber)
+				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ICICLE));
+			else
+				m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+
+			m_pModelCom->Render((_uint)i);
+		}
+	}
+	else
+		return S_OK;
 
 	return S_OK;
 }

@@ -369,6 +369,13 @@ namespace Engine
 #pragma region Shader Control Struct - Screen 
 	/* 각자 구분용 */
 
+	typedef struct ENGINE_DLL tagGodRay_Desc
+	{
+		_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825, 2.0f);
+		_float2 vScreenSunPosition;
+		_float2 Padding;
+	}LIGHTSHAFT_DESC;
+
 	typedef struct ENGINE_DLL tagPBR_Desc
 	{
 		_bool bPBR_ACTIVE = { false };

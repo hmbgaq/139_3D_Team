@@ -9,7 +9,7 @@ class CRenderer final : public CBase
 public:
 	enum RENDERGROUP
 	{	/* Priority */
-		RENDER_PRIORITY, RENDER_NONLIGHT,
+		RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_ICE,
 		/* Post Processing  */
 		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL, RENDER_OUTLINE,
 		/* EFFECT */
@@ -41,6 +41,7 @@ public:
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonLight();
+	HRESULT Render_Ice();
 
 	HRESULT Render_NonBlend();
 	HRESULT Render_Shadow();

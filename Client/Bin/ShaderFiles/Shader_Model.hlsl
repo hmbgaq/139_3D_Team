@@ -162,6 +162,12 @@ struct PS_OUT
     float4      vEmissive       : SV_Target5;
 };
 
+struct PS_ICEGROUP
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal  : SV_TARGET1;
+};
+
 struct PS_OUT_SHADOW
 {
     vector vLightDepth : SV_TARGET0;
@@ -530,6 +536,50 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     return Out;
 }
 
+PS_ICEGROUP PS_MAIN_ICEGROUP(PS_IN_ICICLE In)
+{
+    /* 얼음, 물 전용으로 아에 RenderGroup을 빼서 하는것 전용 */
+    
+    PS_ICEGROUP Out = (PS_ICEGROUP) 0;
+ 
+    /* 좌표를 (-1, 1) -> (0, 1) 로 변환 */ 
+    float2 RefractTexCoord;
+    RefractTexCoord.x = In.vRefractionPos.x / In.vRefractionPos.w / 2.0f + 0.5f;
+    RefractTexCoord.y = -In.vRefractionPos.y / In.vRefractionPos.w / 2.0f + 0.5f;
+    
+    /* 노말맵은 (0, 1) 의 좌표를 (-1, 1)로 변환 */
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = (vNormalDesc.xyz * 2.f) - 1.f;
+    
+    /* 굴절크기변수를 노말값에 곱하기 + 흩뜨려놓기 */ 
+    RefractTexCoord = RefractTexCoord + (vNormal.xy * g_fReflectionScale);
+    
+    float4 RefractionColor = g_NoiseTexture.Sample(LinearSampler, RefractTexCoord);
+    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vDiffuse = lerp(RefractionColor, vMtrlDiffuse, 0.5f);
+    
+    /* 현재 픽셀까지의 거리를 계산 */
+    float distanceToCamera = distance(In.vRefractionPos, g_vCamPosition);
+    
+    /* 거리에 따라 투명도를 조절 (예시로 설정한 값) */
+    float maxDistance = 30.0f; // 최대 거리
+    float minTransparency = 0.2f; // 최소 투명도
+    float maxTransparency = 1.0f; // 최대 투명도
+    float transparency = lerp(maxTransparency, minTransparency, saturate(distanceToCamera / maxDistance));
+    
+    /* 최종 색상을 계산할 때 알파 값을 조절 */
+    Out.vDiffuse = lerp(RefractionColor, vMtrlDiffuse, 0.5f);
+    Out.vDiffuse.a *= transparency;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+    Out.vNormal = (vector(vNormal * 0.5f + 0.5f, 0.f)) * 0.2;
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    //Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    return Out;
+}
 /*=============================================================
  
                           Technique
@@ -673,4 +723,15 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_ICICLE();
     }
 
+    pass RenderICE_GROUP
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_ICICLE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_ICEGROUP();
+    }
 }

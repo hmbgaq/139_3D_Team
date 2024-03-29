@@ -42,6 +42,7 @@ public:
 public: /* For. Additional Render */
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
+	virtual HRESULT Render_Ice() { return S_OK; }
 
 public: /* For. Picking */
 	virtual _bool	Picking(_Out_ _float3 * vPickedPos);

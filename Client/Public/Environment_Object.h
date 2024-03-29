@@ -46,6 +46,7 @@ public:
 	virtual void		Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT		Render() override;
 	virtual HRESULT		Render_Shadow() override;
+	virtual HRESULT		Render_Ice() override;
 
 public:
 	virtual _bool		Write_Json(json& Out_Json) override;

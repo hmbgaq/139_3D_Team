@@ -104,6 +104,9 @@ SSR_DESC g_SSR_Desc;
 // Chroma
 CHROMA_DESC g_Chroma_Desc;
 
+// Ice
+Texture2D g_Ice_Target;
+
 /*=============================================================
  
                              Function 
@@ -493,19 +496,20 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
-    
+    vector Ice = g_Ice_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
-   // Out.vColor = Effect_Solid;
+    
+    Out.vColor = Effect_Solid;
 
-   // if (Out.vColor.a == 0) 
+    if (Out.vColor.a == 0) 
         Out.vColor = Effect_Distortion;
     
     if (Out.vColor.a == 0) 
-        Out.vColor += Deferred + Effect + Effect_Blur;
+        Out.vColor += Deferred + Effect + Effect_Blur + Ice;
        // Out.vColor += Deferred + Effect + Effect_Blur;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
@@ -699,8 +703,8 @@ PS_OUT PS_MAIN_CHROMA(PS_IN In)
         const float thresh = softness * 2.0 / 3 + 1.0 / 3;
         float3 color =
 			lerp(float3(0, 0, 1), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 0.5 / 3)))
-		+ lerp(float3(0, 1, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 1.5 / 3)))
-		+ lerp(float3(1, 0, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 2.5 / 3)));
+		    + lerp(float3(0, 1, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 1.5 / 3)))
+		    + lerp(float3(1, 0, 0), float3(0, 0, 0), smoothstep(0, thresh, abs(t - 2.5 / 3)));
 
         color_sum += color;
 
@@ -716,7 +720,13 @@ PS_OUT PS_MAIN_CHROMA(PS_IN In)
   
     return Out;
 }
-/* ------------------- Technique  -------------------*/
+
+/*=============================================================
+ 
+                         Technique 
+                                
+==============================================================*/
+
 technique11 DefaultTechnique
 {
     pass Origin // 0

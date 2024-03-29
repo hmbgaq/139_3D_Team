@@ -243,6 +243,23 @@ VS_OUT VS_MAIN(VS_IN In)
 
 }
 
+inline bool IsSaturated(float value)
+{
+    return value == saturate(value);
+}
+inline bool IsSaturated(float2 value)
+{
+    return IsSaturated(value.x) && IsSaturated(value.y);
+}
+inline bool IsSaturated(float3 value)
+{
+    return IsSaturated(value.x) && IsSaturated(value.y) && IsSaturated(value.z);
+}
+inline bool IsSaturated(float4 value)
+{
+    return IsSaturated(value.x) && IsSaturated(value.y) && IsSaturated(value.z) && IsSaturated(value.w);
+}
+
 /*=============================================================
  
                           Pixel Shader  
@@ -574,6 +591,9 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vSpecular = saturate(vSpecular);
+    
     float fAO = 1.f; 
     fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
     
@@ -623,112 +643,15 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
     vEmissive = pow(vEmissive, gamma);
     
-    Out.vColor.rgb = vBRDF * ShadowColor + vEmissive;
+    Out.vColor.rgb = vBRDF * ShadowColor + vEmissive + vSpecular;
     
     Out.vColor.a = 1.f;
 	
     return Out;
 }
 
-/* ------------------ 6 - PBR Deferred ------------------ */
-PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-    	
-    // 감마보정 -> Linear space로 변형후 빛계산을 하고 다시 감마보정을 통해서 그린다.
-    float gamma = 2.2f;
-    
-    vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    vAlbedo = pow(vAlbedo, gamma);
-    
-    // ORM : (R)Occlusion ,(G)Roughness , (B)Metalic */ 에 저장 
-    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord); 
-    float fAmbient_Occlusion = vORMDesc.r;
-    float fRoughness = vORMDesc.g;
-    float fMetallic = vORMDesc.b;
-    float fAO;
-    fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
-    
-    // N
-    vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    float3 N = vNormal.xyz * 2.f - 1.f;
-    
-    // F0
-    float3 F0 = 0.04f; //  F0 : reflectance ratio - 0.04 looks visually correct for non-metallic sufaces
-    F0 = lerp(F0, vAlbedo.rgb, fMetallic);
-    
-    // N(위에), V, L, H
-    vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
-    vector vWorldPos;
-    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
-    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
-    vWorldPos.z = vNormal.w;
-    vWorldPos.w = 1.f;
-    
-    float fViewZ = vDepthDesc.w * g_CamFar;
-    vWorldPos = vWorldPos * fViewZ;
-    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-    
-    float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
-    float3 L = normalize(-g_vLightDir);
-    float3 H = normalize(V + L);
-    
-    //// Li(p, wi)
-    //float distance = length(g_vLightPos - In.vPosition);
-    //float attenuation = 1.0f / (distance * distance); //  inverse-square law
-    //float3 radiance = g_vLightColor * attenuation;
-    
-    // BRDF
-    float3 DFG_4WW = MY_BRDF(fRoughness, fMetallic, vAlbedo.rgb, F0, N, V, L, H);
-    
+/* ------------------ 7 -  ------------------ */
 
-    return Out;
-}
-/* ------------------ 7 - PBR Deferred ------------------ */
-PS_OUT_LIGHT PS_MAIN_PBR_DIRECTIONAL(PS_IN In)
-{
-    PS_OUT Out = (PS_OUT) 0;
-    
-    float4 vDepthTarget = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
-
-    float depth = max(input.Pos.z, DepthTx.SampleLevel(LinearClampSampler, input.Tex, 2));
-    float3 viewSpacePosition = GetViewSpacePosition(input.Tex, depth);
-    float3 V = float3(0.0f, 0.0f, 0.0f) - viewSpacePosition;
-    float cameraDistance = length(V);
-    V /= cameraDistance;
-
-    float3 L = lightData.direction.xyz;
-    const uint SAMPLE_COUNT = 16;
-
-    float3 rayEnd = float3(0.0f, 0.0f, 0.0f);
-    float stepSize = length(viewSpacePosition - rayEnd) / SAMPLE_COUNT;
-    viewSpacePosition = viewSpacePosition + V * stepSize * BayerDither(input.Pos.xy);
-
-    float marchedDistance = 0;
-    float3 accumulation = 0;
-	[loop(SAMPLE_COUNT)]
-    for (uint i = 0; i < SAMPLE_COUNT; ++i)
-    {
-        float4 shadowMapCoords = mul(float4(viewSpacePosition, 1.0), shadowData.shadowMatrices[0]);
-        float3 UVD = shadowMapCoords.xyz / shadowMapCoords.w;
-
-        UVD.xy = 0.5 * UVD.xy + 0.5;
-        UVD.y = 1.0 - UVD.y;
-     
-     [branch]
-        if (IsSaturated(UVD.xy))
-        {
-            float attenuation = CalcShadowFactor_PCF3x3(ShadowSampler, ShadowMap, UVD, shadowData.shadowMapSize, shadowData.softness);
-            accumulation += attenuation;
-        }
-        marchedDistance += stepSize;
-        viewSpacePosition = viewSpacePosition + V * stepSize;
-    }
-    accumulation /= SAMPLE_COUNT;
-    return max(0, float4(accumulation * lightData.color.rgb * lightData.volumetricStrength, 1));
-    return Out;
-}
 
 /*=============================================================
  
@@ -798,27 +721,5 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_PBR_DEFERRED();
-    }
-
-    pass New_PBR // 6
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        HullShader = NULL;
-        DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_NEW_PBR();
-    }
-
-    pass PBR_DIRECTIONAL // 7
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Blend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
-        GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_PBR_DIRECTIONAL();
     }
 }
