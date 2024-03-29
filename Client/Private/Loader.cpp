@@ -780,7 +780,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 캐릭터 모델 : 주석 풀고 병합해야함!!!
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//FAILED_CHECK(Loading_Player(LEVEL_TOOL));
+	FAILED_CHECK(Loading_Player(LEVEL_TOOL));
 
 	//TODO VampireCommander
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));

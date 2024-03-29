@@ -2902,8 +2902,7 @@ void CWindow_EffectTool::Update_TrailTab()
 					{
 						// 플레이어 공격
 						//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
-
-						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Dodge_R);
+						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);
 					}
 
 					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4484,7 +4483,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					// 플레이어 공격
 					//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
 
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Dodge_R);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4536,7 +4535,14 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	ImGui::SeparatorText("");
 	if (ImGui::Button("         Create Test        "))
 	{
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
+		m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+	}
+
+	if (ImGui::Button("         Blood Delete        "))
+	{
+		m_pTestEffect->Set_Dead(TRUE);
+		m_pTestEffect = nullptr;
 	}
 
 	ImGui::SameLine();

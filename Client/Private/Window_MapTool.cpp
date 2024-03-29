@@ -59,8 +59,8 @@ HRESULT CWindow_MapTool::Initialize()
 {
 	FAILED_CHECK(__super::Initialize());
 
-	FAILED_CHECK(Ready_ModelTags());
-	FAILED_CHECK(Ready_PrototypeTags());
+	//FAILED_CHECK(Ready_ModelTags());
+	//FAILED_CHECK(Ready_PrototypeTags());
 	
 
 	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();
@@ -190,37 +190,49 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	}
 	ImGui::Separator();
 
+
+	if (false == m_mapNonAnimModelTag.empty() || false == m_mapAnimModelTag.empty())
+	{
+		if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
+		{
+			EnvironmentMode_Function();
+		}
+		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER) //! OBJECTMODE_CHARACTER
+		{
+			CharacterMode_Function();
+		}
+		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_NAVIGATION)
+		{
+			NavigationMode_Function();
+		}
+		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_TRIGGER)
+		{
+			TriggerMode_Function();
+		}
+
+
+
+
+		if (m_eModeType != CWindow_MapTool::MODE_TYPE::MODE_CREATE && m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT && nullptr != m_pPreviewObject)
+		{
+			m_pPreviewObject->Set_Dead(true);
+			m_pPreviewObject = nullptr;
+		}
+		else if (m_eModeType != CWindow_MapTool::MODE_TYPE::MODE_CREATE && m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER && nullptr != m_pPreviewCharacter)
+		{
+			m_pPreviewCharacter->Set_Dead(true);
+			m_pPreviewCharacter = nullptr;
+		}
+	}
+	else
+	{
+		if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_NAVIGATION)
+		{
+			NavigationMode_Function();
+		}
+	}
+
 	
-	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT)
-	{
-		EnvironmentMode_Function();
-	}
-	else if(m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER) //! OBJECTMODE_CHARACTER
-	{
-		CharacterMode_Function();
-	}
-	else if(m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_NAVIGATION)
-	{
-		NavigationMode_Function();
-	}
-	else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_TRIGGER)
-	{
-		TriggerMode_Function();
-	}
-
-
-	
-
-	if (m_eModeType != CWindow_MapTool::MODE_TYPE::MODE_CREATE && m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_ENVIRONMENT && nullptr != m_pPreviewObject)
-	{
-		m_pPreviewObject->Set_Dead(true);
-		m_pPreviewObject = nullptr;
-	}
-	else if (m_eModeType != CWindow_MapTool::MODE_TYPE::MODE_CREATE && m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER && nullptr != m_pPreviewCharacter)
-	{
-		m_pPreviewCharacter->Set_Dead(true);
-		m_pPreviewCharacter = nullptr;
-	}
 
 	__super::End();
 
