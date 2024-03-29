@@ -44,7 +44,6 @@ CState<CMother>* CMother_State::Stun_State(CMother* pActor, _float fTimeDelta, _
 CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 
-	pActor->m_fTimeDelta += fTimeDelta;
 	//TODO 페이즈1 //////////////////////////////////////////
 	if (pActor->m_bPhase == true)
 	{
@@ -60,6 +59,8 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 	//TODO 페이즈2,3 //////////////////////////////////////////
 	else if(pActor->m_bPhase == false)
 	{
+		pActor->m_fTimeDelta += fTimeDelta;
+
 		if (pActor->m_fTimeDelta >= 15)
 		{
 			return new CMother_SpittingStart;

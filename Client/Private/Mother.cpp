@@ -125,7 +125,10 @@ void CMother::Tick(_float fTimeDelta)
 	Look_At_Target();
 	//m_pTransformCom->m_fRadian += 90.f;
 
-
+	if (m_pGameInstance->Key_Down(DIK_1))
+	{
+		m_bPhase = !m_bPhase;
+	}
 
 }
 
