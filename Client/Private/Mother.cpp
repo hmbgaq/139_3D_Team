@@ -84,8 +84,7 @@ void CMother::Priority_Tick(_float fTimeDelta)
 
 void CMother::Tick(_float fTimeDelta)
 {
-	auto start = chrono::high_resolution_clock::now();
-
+	
 	__super::Tick(fTimeDelta);
 
 	Search_Target(200.f);
@@ -122,13 +121,11 @@ void CMother::Tick(_float fTimeDelta)
 // 		/*m_bLookAt = false;*/
 // 
 // 	}
-	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTransformCom->m_fRadian + XMConvertToRadians(270)));
+	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTransformCom->m_fRadian + XMConvertToRadians(270)));
 	Look_At_Target();
 	//m_pTransformCom->m_fRadian += 90.f;
 
-	auto End = chrono::high_resolution_clock::now();
-	chrono::duration<double> duration0 = End - start;
-	cout << "Mother Tick 실행시간 : " << duration0.count() << endl;
+
 
 }
 

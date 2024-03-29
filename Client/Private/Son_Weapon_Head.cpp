@@ -38,7 +38,7 @@ HRESULT CSon_Weapon_Head::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-
+	m_iDamage = 20.f;
 	return S_OK;
 }
 
@@ -49,13 +49,11 @@ void CSon_Weapon_Head::Priority_Tick(_float fTimeDelta)
 
 void CSon_Weapon_Head::Tick(_float fTimeDelta)
 {
-	auto start = chrono::high_resolution_clock::now();
+
 	__super::Tick(fTimeDelta);
 
 	
-	auto End = chrono::high_resolution_clock::now();
-	chrono::duration<double> duration0 = End - start;
-	cout << "Son Weapon Head Tick 실행시간 : " << duration0.count() << endl;
+
 }
 
 void CSon_Weapon_Head::Late_Tick(_float fTimeDelta)
@@ -76,13 +74,10 @@ void CSon_Weapon_Head::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_Weapon_Head::Render()
 {
-	auto start = chrono::high_resolution_clock::now();
+	
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	auto End = chrono::high_resolution_clock::now();
-	chrono::duration<double> duration0 = End - start;
-	cout << "Son Weapon Head Render 실행시간 : " << duration0.count() << endl;
 	return S_OK;
 }
 
@@ -115,21 +110,35 @@ HRESULT CSon_Weapon_Head::Ready_Components()
 
 void CSon_Weapon_Head::OnCollisionEnter(CCollider* other)
 {
-
 // 	CCharacter* pTarget_Character = Get_Target_Character(other);
-// 	CSon* parent = dynamic_cast<CSon*>(Get_Object_Owner());
-// 	if (nullptr != pTarget_Character && m_bSynced == false)// 일반 타격 
+// 
+// 	if (nullptr != pTarget_Character)// 일반 타격 
 // 	{
-// 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-// 		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
-// 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
-//  		string Test = "Data_Animation/";
-// 		parent->Set_EventNotify(Test, "Test2_AnimationData.json");
-// 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, parent->Get_CharcterDesc().EffectFileName + ".json");
-// 		_float3 vPos =this->Get_WorldPosition();
+// 		pTarget_Character->Set_Hitted(m_iDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+// 
+// 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
+// 		_float3 vPos = m_pTransformCom->Get_Position();
 // 		pEffect->Set_Position(vPos);
 // 
+// 		m_pColliders[0]->Set_Enable(false);
+// 		this->Set_Dead(true);
+// 		pEffect->Set_Dead(true);
 // 	}
+		// 이펙트 죽이기
+	CCharacter* pTarget_Character = Get_Target_Character(other);
+	CSon* parent = dynamic_cast<CSon*>(Get_Object_Owner());
+	if (nullptr != pTarget_Character)// 일반 타격 
+	{
+		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
+		pTarget_Character->Set_Hitted(m_iDamage, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
+		//string Test = "Data_Animation/";
+		//parent->Set_EventNotify(Test, "Test2_AnimationData.json");
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
+		_float3 vPos =this->Get_WorldPosition();
+		pEffect->Set_Position(vPos);
+
+	}
 // 	else if(nullptr != pTarget_Character && m_bSynced == true)//잡기 걸렸을때 
 // 	{
 // 		parent->Get_Actor()->Set_State(new CVampireCommander_SyncedAttack);
@@ -162,12 +171,26 @@ void CSon_Weapon_Head::OnCollisionEnter(CCollider* other)
 // 
 // 	}
 
-	Set_Enable(false);
+	//Set_Enable(false);
 
 }
 
 void CSon_Weapon_Head::OnCollisionStay(CCollider* other)
 {
+// 	CCharacter* pTarget_Character = Get_Target_Character(other);
+// 
+// 	if (nullptr != pTarget_Character)// 일반 타격 
+// 	{
+// 		pTarget_Character->Set_Hitted(m_iDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+// 
+// 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
+// 		_float3 vPos = m_pTransformCom->Get_Position();
+// 		pEffect->Set_Position(vPos);
+// 
+// 		m_pColliders[0]->Set_Enable(false);
+// 		this->Set_Dead(true);
+// 		pEffect->Set_Dead(true);
+// 	}
 }
 
 void CSon_Weapon_Head::OnCollisionExit(CCollider* other)

@@ -167,7 +167,7 @@ HRESULT CSon::Ready_PartObjects()
 	
 	
 	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_head"));
-	m_pWeapon_Punch_R->Set_Enable(false);
+	m_pWeapon_Punch_R->Set_Enable(true);
 
 
 	return S_OK;

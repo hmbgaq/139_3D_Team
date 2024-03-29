@@ -60,7 +60,7 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 	//TODO ÆäÀÌÁî2,3 //////////////////////////////////////////
 	else if(pActor->m_bPhase == false)
 	{
-		if (pActor->m_fTimeDelta >= 10)
+		if (pActor->m_fTimeDelta >= 15)
 		{
 			return new CMother_SpittingStart;
 			pActor->m_fTimeDelta = 0.f;
