@@ -74,14 +74,17 @@ HRESULT CBody_Bandit_Heavy::Render_Shadow()
 
 void CBody_Bandit_Heavy::OnCollisionEnter(CCollider* other)
 {
+	__super::OnCollisionEnter(other);
 }
 
 void CBody_Bandit_Heavy::OnCollisionStay(CCollider* other)
 {
+	__super::OnCollisionStay(other);
 }
 
 void CBody_Bandit_Heavy::OnCollisionExit(CCollider* other)
 {
+	__super::OnCollisionExit(other);
 }
 
 HRESULT CBody_Bandit_Heavy::Ready_Components()
