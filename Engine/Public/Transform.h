@@ -81,6 +81,9 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeedPerSec = fSpeed; }
 	_float Get_Speed() { return m_fSpeedPerSec; }
 
+	void Set_RotationSpeed(_float fRotationSpeed) { m_fRotationPerSec = fRotationSpeed;}
+	_float Get_RotationSpeed() { return m_fRotationPerSec;}
+
 
 	void Set_Position(const _float3& vState)
 	{
@@ -125,16 +128,19 @@ public:
 
 	void	Turn(_fvector vAxis, _float fTimeDelta);
 	void	Rotation(_fvector vAxis, _float fRadian);
-	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta);
+	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);
+	void	Rotation_Quaternion(_float3 vRotation);
+	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 0.5f);
 
 	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
 
 	void	Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
+	_bool	Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta, _float fSpare = 0.1f);
 	void	Look_At(_fvector vTargetPos);
 	void	Look_At_OnLand(_fvector vTargetPos);
 	void	Look_At_OnLandBoss(_fvector vTargetPos);
 	void	Look_At_Direction(_fvector _vLook);
-	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta);
+	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta, _float fMinRadian = 0.5f);
 
 	_vector Calc_Look_Dir(_fvector vTargetPos);
 	_vector Calc_Look_Dir_XZ(_fvector vTargetPos);

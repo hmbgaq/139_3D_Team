@@ -257,6 +257,7 @@ public:
 	void Set_RootMoveRate(_float3 vRate) { m_vRootMoveRate = vRate; };
 	void Reset_RootMoveRate() { m_vRootMoveRate = _float3(1.f, 1.f, 1.f); };
 	void Set_MonsterAttackState(_bool bState) { m_bMonsterAttackState = bState; };
+	_bool Get_MonsterAttackState() { return m_bMonsterAttackState; };
 
 public:
 	_bool Is_KnockUp() { return m_bIsKnockUp; };

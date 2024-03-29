@@ -21,6 +21,7 @@ public:
 	/* For. ShaderTool */
 	class CLight*	Find_Light(const _int iIndex);
 	class CLight*   Get_DirectionLight();
+	void			Get_AllLight(list<class CLight*>* pTemp);
 	void			Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc);
 
 	/* For. Shadow */

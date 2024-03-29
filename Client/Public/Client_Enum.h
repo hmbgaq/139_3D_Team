@@ -3,13 +3,19 @@
 
 namespace Engine
 {
-	enum class MODEL_SHADER { 
+	enum class MODEL_SHADER {
 		MODEL_ORIGIN,				// 0 - 원래 모델 그래도 Render
 		MODEL_NODEOPTH,				// 1 - 깊이기록x -> SkyBox 같은것 용도 
 		MODEL_SHADOW,				// 2 - 그림자 그리기 
 		MODEL_WHITEBLINK,			// 3 - 흰색으로 깜빡거림 
 		MODEL_OUTLINE,				// 4
 		MODEL_NONECULL_NONEDSS,		// 5
+		MODEL_INTROBOSS_BLOODPOOL,  // 6 - Intro보스맵 바닥렌더용
+		MODEL_NORMAL_MAPPING,		// 7 - 노말맵핑 한거 
+		MODEL_DIFFUSE,				// 8 - Diffuse 컬러만 외부에서 던지는용도 
+		MODEL_ALPHA,				// 9 - AlphaTexture 바인딩 
+		MODEL_ICICLE,				// 10 - 고드름 얼음 모델들 렌더용
+		MODEL_INTROGROUND,			// 11 - RAD 텍스쳐파일 전용 
 		MODEL_SHADER_END
 	};
 
@@ -76,18 +82,17 @@ namespace Client
 		
 		// GAME_OPTION
 			/* SHADER */
-			HBAO_PLUS,	// 세기 조절 할수도
-			FOG,
-			RADIAL_BLUR,
-			DOF,
+			HBAO_PLUS,	 // 세기 조절 할수도
+			FOG,		
+			RADIAL_BLUR, 
+			DOF,		
 			HDR,
 			FXAA,
-			HSV,
+			HSV,		 // 세기 조절 할수도
 			SHADOW,
-			RIGHT_SHAFT, // 예정
-			PBR,		 // 예정
-			SSD,		 // 예정
-			SSR,		 // 예정
+			LIGHT_SHAFT, // 예정 - 빼야함
+			PBR,		 // 예정 - 없는채로 만들기 
+			SSR,		 // 예정 - 없는채로 만들기 
 			/* SHADER_END */
 			/* SOUND */
 			MASTER_SOUND,
@@ -108,15 +113,19 @@ namespace Client
 	};
 #pragma endregion End
 
-	enum class MODE_COLOR // 컬러 합성모드
-	{
-		MUL,      // 곱하기      0
-		SCREEN,      // 스크린      1
-		OVERLAY,   // 오버레이      2
-		ADD,      // 더하기      3 
-		BURN,      // 번(Burn)      4
 
-		MODE_COLOR_END   //         5
+	enum class MODE_COLOR // 컬러 합성모드
+	{ 
+		MUL,		// 곱하기		0
+		SCREEN,		// 스크린		1
+		OVERLAY,	// 오버레이		2
+		ADD,		// 더하기		3 
+		BURN,		// 번(Burn)		4
+		
+		MODE_COLOR_END	//			5
 	};
+
+
+
 }
 #endif // Client_Enum_h__

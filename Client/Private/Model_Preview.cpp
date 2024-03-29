@@ -85,6 +85,8 @@ void CModel_Preview::Tick(_float fTimeDelta)
 	{
 		__super::Tick(fTimeDelta);
 
+		Move(fTimeDelta);
+
 		for (auto& Pair : m_PartObjects)
 		{
 			if (nullptr != Pair.second)
@@ -160,6 +162,34 @@ void CModel_Preview::Set_AnimIndex(_uint iAnimIndex)
 	{
 		m_tDesc.iAnimIndex = iAnimIndex;
 		m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
+	}
+
+}
+
+void CModel_Preview::Move(_float fTimeDelta)
+{
+
+	// ALT + ¹æÇâÅ°
+	if (m_pGameInstance->Key_Pressing(DIK_LMENU))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_UP))
+		{
+			m_pTransformCom->Go_Straight(fTimeDelta * 0.5f);
+
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_DOWN))
+		{
+			m_pTransformCom->Go_Backward(fTimeDelta * 0.5f);
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_LEFT))
+		{
+			m_pTransformCom->Go_Left(fTimeDelta * 0.5f);
+
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
+		{
+			m_pTransformCom->Go_Right(fTimeDelta * 0.5f);
+		}
 	}
 
 }

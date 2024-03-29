@@ -56,9 +56,9 @@ CEffect* CCharacter_Client::Create_Effect(CGameObject* pOwner)
 	string strEffectFileName = Get_CharcterDesc().EffectFileName;
 	if ("" == strEffectFileName)
 	{
-		strEffectFileName = "Test_Effect";
+		strEffectFileName = "Hit_Normal";
 	}
-	return EFFECT_MANAGER->Create_Effect(strEffectFileName + ".json", pOwner);
+	return EFFECT_MANAGER->Create_Effect("Hit/", strEffectFileName + ".json", pOwner);
 }
 
 CEffect* CCharacter_Client::Create_Effect(_float3 vPos, CGameObject* pOwner)
@@ -103,7 +103,7 @@ void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string
 {
 	string strEffectFileName;
 	strEffectFileName = strEffectName != "" ? strEffectName : Get_CharcterDesc().EffectFileName;
-	strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Test_Effect";
+	strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Hit_Normal";
 
 	if (nullptr == m_pEffectManager)
 	{

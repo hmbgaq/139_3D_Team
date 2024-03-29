@@ -67,7 +67,8 @@ private:
 	CVIBuffer_Trail*		m_pVIBufferCom				= { nullptr };
 
 private:
-	TRAIL_DESC				m_tTrailDesc = {};
+	TRAIL_DESC				m_tTrailDesc		= {};
+	DISTORTION_DESC			m_tDistortionDesc	= {};
 
 	_bool					m_bPause = { FALSE };
 

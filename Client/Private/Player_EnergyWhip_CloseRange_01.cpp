@@ -26,6 +26,8 @@ void CPlayer_EnergyWhip_CloseRange_01::Initialize(CPlayer* pActor)
 	pWeapon->Set_Enable_Collisions(false);
 
 	
+	// 이펙트 생성 테스트
+	EFFECT_MANAGER->Create_Effect("Player/Zapper_Shield/", "Zapper_Shield_15_distortionTest.json", pActor);
 }
 
 CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _float fTimeDelta)

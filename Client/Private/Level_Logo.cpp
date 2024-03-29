@@ -17,6 +17,8 @@ HRESULT CLevel_Logo::Initialize()
 {
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
+	
+
 	//{
 
 	//	IMFSourceReader* pSourceReader = NULL;
@@ -106,9 +108,7 @@ void CLevel_Logo::Set_Filter()
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::MONSTER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_PARRYING, (_uint)COLLISION_LAYER::MONSTER_ATTACK);
 
-
 	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
-
 }
 
 CLevel_Logo * CLevel_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

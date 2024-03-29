@@ -22,20 +22,18 @@
 #include "Monster_Character.h"
 #pragma endregion
 
-
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
 #include "Environment_SpecialObject.h"
+#include "Environment_Interact.h"
 #pragma endregion
 
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
 #include "Light.h"
-
-
 
 CLevel_SnowMountain::CLevel_SnowMountain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -151,6 +149,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
 		LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
 		LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+		LightObjectDesc.iSpecialGroupIndex = LightObjectJson[i]["SpecialGroupIndex"];
 		LightObjectDesc.bPreview = false;
 
 		m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
@@ -299,9 +298,54 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
 
+		Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InteractJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+		Desc.bPreview = false;
+		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+		Desc.eInteractState = InteractJson[i]["InteractState"];
+		Desc.eInteractType = InteractJson[i]["InteractType"];
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+
+		
+
+		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+
+		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		CEnvironment_Interact* pObject = { nullptr };
+
+		pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
 		//! L"Layer_Event"
+		if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+		{
+			CData_Manager::GetInstance()->Set_SnowMountainWagon(pObject);
+		}
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
@@ -373,6 +417,95 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
 			return E_FAIL;
 
+	}
+
+	json SpecialJson = Stage1MapJson["Special_Json"];
+	_int iSpecialJsonSize = (_int)SpecialJson.size();
+
+	for (_int i = 0; i < iSpecialJsonSize; ++i)
+	{
+		CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc = {};
+
+		SpecialDesc.iShaderPassIndex = SpecialJson[i]["iShaderPassIndex"];
+		SpecialDesc.bAnimModel = SpecialJson[i]["AnimType"];
+		SpecialDesc.iPlayAnimationIndex = SpecialJson[i]["PlayAnimationIndex"];
+		SpecialDesc.iSpecialGroupIndex = SpecialJson[i]["SpecialGroupIndex"];
+		SpecialDesc.eSpecialType = SpecialJson[i]["SpecialType"];
+		//TODOSpecialDesc.iBloomMeshIndex =		SpecialJson[i]["BloomMeshIndex"];
+		SpecialDesc.bPreview = false;
+
+
+		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
+
+		if (SpecialDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
+		{
+			const json& TransformJson = SpecialJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			SpecialDesc.WorldMatrix = WorldMatrix;
+
+			CEnvironment_SpecialObject* pSpecialObject = dynamic_cast<CEnvironment_SpecialObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc));
+
+			if (pSpecialObject == nullptr)
+			{
+				MSG_BOX("스페셜오브젝트 생성실패");
+				return E_FAIL;
+			}
+				
+		}
+		else
+			continue;
+	}
+
+	for (_int i = 0; i < iSpecialJsonSize; ++i)
+	{
+		CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc = {};
+
+		SpecialDesc.iShaderPassIndex = SpecialJson[i]["iShaderPassIndex"];
+		SpecialDesc.bAnimModel = SpecialJson[i]["AnimType"];
+		SpecialDesc.iPlayAnimationIndex = SpecialJson[i]["PlayAnimationIndex"];
+		SpecialDesc.iSpecialGroupIndex = SpecialJson[i]["SpecialGroupIndex"];
+		SpecialDesc.eSpecialType = SpecialJson[i]["SpecialType"];
+		//TODOSpecialDesc.iBloomMeshIndex =		SpecialJson[i]["BloomMeshIndex"];
+		SpecialDesc.bPreview = false;
+
+
+		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
+
+		if (SpecialDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
+		{
+			const json& TransformJson = SpecialJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			SpecialDesc.WorldMatrix = WorldMatrix;
+
+			CEnvironment_SpecialObject* pSpecialObject = dynamic_cast<CEnvironment_SpecialObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc));
+
+			if (pSpecialObject == nullptr)
+			{
+				MSG_BOX("스페셜오브젝트 생성실패");
+				return E_FAIL;
+			}
+			
+		}
+		else
+			continue;
 	}
 
 	//CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc;
@@ -538,6 +671,20 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
 	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+
+
+	//pPlayer->Set_Position
+	LIGHT_DESC desc = {};
+	desc.bEnable = true;
+	desc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+	desc.vPosition = _float4(60.5f, 0.f, 26.f, 0.f);
+	desc.fRange = 10.f;
+	desc.fCutOff = 0.5f;
+	desc.fOuterCutOff = 0.7f;
+	desc.vDiffuse = { 1.f, 1.f, 1.f, 1.f };
+	desc.vAmbient = { 1.f, 1.f, 1.f, 1.f };
+	desc.vSpecular = { 1.f, 1.f, 1.f, 1.f };
+	desc.fVolumetricStrength = 10.f;
 
 	return S_OK;
 }

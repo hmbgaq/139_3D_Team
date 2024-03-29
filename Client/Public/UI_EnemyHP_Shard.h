@@ -41,9 +41,11 @@ public:
 
 private:
 	CCharacter*				m_pCharacterOwner = { nullptr };
-	_float					m_fPreHP = 100.f;
-	_float					m_fCurHP = 100.f;
-	_float					m_fMaxHP = 100.f;
+	_float					m_fPreHP = 40.f;
+	_float					m_fCurHP = 40.f;
+	_float					m_fMaxHP = 40.f;
+	_float2					m_vStartPoint = { 0.f, 0.f };
+	_float2					m_vEndPoint = { 0.f, 0.f };
 	_float					m_fTimeAcc = 0.f;
 	_float					m_fVariationSpeed = 1.7f;
 	_bool					m_bLerp = false;

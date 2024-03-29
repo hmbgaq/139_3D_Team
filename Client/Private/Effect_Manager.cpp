@@ -52,6 +52,25 @@ CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, const wstring& strLay
 	//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
 }
 
+CEffect* CEffect_Manager::Create_Effect(_uint iLevelIndex, string strAddPath, string strFileName, CGameObject* pOwner)
+{
+	CEffect::EFFECT_DESC	tEffectDesc = {};
+	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
+
+	string strPath = "../Bin/DataFiles/Data_Effect";
+	string strLoadPath = strPath + "/" + strAddPath + "/" + strFileName;
+
+	json In_Json;
+	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+	if (nullptr != pOwner)
+		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
+
+	pEffect->Load_FromJson(In_Json);
+
+	return	pEffect;
+}
+
 
 CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
 {
@@ -59,16 +78,57 @@ CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
 }
 
 
-CEffect* CEffect_Manager::Create_Effect_Pos(string strFileName, _float3 vPos, CGameObject* pOwner)
+CEffect* CEffect_Manager::Create_Effect(string strAddPath, string strFileName, CGameObject* pOwner)
 {
-	CEffect* pEffect = Create_Effect(strFileName, pOwner);
 
-	pEffect->Set_Position(vPos);	// 이펙트 위치 설정
+	CEffect::EFFECT_DESC	tEffectDesc = {};
+	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
+
+	string strPath = "../Bin/DataFiles/Data_Effect";
+	string strLoadPath = strPath + "/" + strAddPath + strFileName;
+
+	json In_Json;
+	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+	if (nullptr != pOwner)
+		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
+
+	pEffect->Load_FromJson(In_Json);
 
 	return	pEffect;
 }
 
-HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strEffectFileName
+CEffect* CEffect_Manager::Create_Effect(string strAddPath, string strFileName, _float3 vPos
+										, _bool bLookTarget, _float3 vTargetPos)
+{
+	CEffect::EFFECT_DESC	tEffectDesc = {};
+	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
+
+	string strPath = "../Bin/DataFiles/Data_Effect";
+	string strLoadPath = strPath + "/" + strAddPath + strFileName;
+
+	json In_Json;
+	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+
+	pEffect->Load_FromJson(In_Json);
+
+
+	// 위치 설정
+	pEffect->Set_Position(vPos);
+
+	if (TRUE == bLookTarget)
+	{
+		// 타겟을 바라볼거면 Look_At 해주기
+		_float4 vTargetPos_float4 = _float4(vTargetPos.x, vTargetPos.y, vTargetPos.z, 1.f);
+		pEffect->Get_Transform()->Look_At(vTargetPos_float4);
+	}
+
+	return	pEffect;
+}
+
+
+HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strAddPath, string strEffectFileName
 	, _float3 vPos
 	, _bool bLookTarget, _float4 vTargetPos )
 {
@@ -80,7 +140,7 @@ HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime
 		*fTimeAcc = 0.f;
 
 		// 현재 레벨에 생성
-		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), LAYER_EFFECT, strEffectFileName);
+		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), strAddPath, strEffectFileName);
 
 		CTransform* pTransform = pEffect->Get_Transform();
 

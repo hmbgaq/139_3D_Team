@@ -29,6 +29,8 @@ HRESULT CEffect_Void::Initialize(void* pArg)
 	
 	m_tVoidDesc = *static_cast<EFFECTVOID_DESC*>(pArg);
 
+		
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 	
@@ -205,7 +207,8 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Write_Float4(Out_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
-
+	Out_Json["eMode_Color"] = m_tVoidDesc.eMode_Color;
+	
 
 	/* Rim & Bloom */
 	CJson_Utility::Write_Float3(Out_Json["vBloomPower"], m_tVoidDesc.vBloomPower);
@@ -245,6 +248,7 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	string strTag = "";
 	strTag = static_cast<string>(In_Json["strProtoTag"]);
 	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strProtoTag);
+
 
 	strTag = static_cast<string>(In_Json["strPartTag"]);
 	m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strPartTag);
@@ -288,7 +292,8 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Load_Float4(In_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Load_Float4(In_Json["vColor_Mul"], m_tVoidDesc.vColor_Mul);
-
+	if(In_Json.contains("eMode_Color")) //! TODO 다시 저장 후 if문 삭제
+		m_tVoidDesc.eMode_Color = In_Json["eMode_Color"];
 
 	/* Rim & Bloom */
 	CJson_Utility::Load_Float3(In_Json["vBloomPower"], m_tVoidDesc.vBloomPower);	
@@ -319,6 +324,37 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 }
 
 
+void CEffect_Void::ReNumber_PartTag()
+{
+	// 현재 파트 태그에서 번호를 가져온다
+	_int iNumLength = 3; // 파트 번호의 길이 (000, 001, 002)
+	wstring strNum = m_tVoidDesc.strPartTag.substr(m_tVoidDesc.strPartTag.size() - iNumLength);
+
+	// 현재 번호를 정수로 변환
+	_int iCurrentNum = stoi(strNum);
+
+	// 현재 번호가 0보다 큰지 확인하고, 0보다 크다면 하나 감소
+	if (iCurrentNum > 0)
+	{
+		// 번호를 하나 줄인다.
+		--iCurrentNum;
+
+		// 새로운 번호를 문자열로 변환
+		wstring strNewNum;
+		if (iCurrentNum < 10)
+			strNewNum = L"00" + std::to_wstring(iCurrentNum);
+		else if (iCurrentNum < 100)
+			strNewNum = L"0" + std::to_wstring(iCurrentNum);
+		else
+			strNewNum = std::to_wstring(iCurrentNum);
+
+		// 파트 태그에서 현재 번호 부분을 새 번호로 대체한다.
+		m_tVoidDesc.strPartTag.replace(m_tVoidDesc.strPartTag.size() - iNumLength, iNumLength, strNewNum);
+	}
+
+}
+
+
 void CEffect_Void::ReSet_Effect()
 {
 	// 자식에서 각자 필요한 리셋 행동해주기
@@ -328,6 +364,12 @@ void CEffect_Void::ReSet_Effect()
 	//m_tEffectDesc.fDissolveAmount	 = 0.f;
 	//m_tEffectDesc.bDissolve		 = FALSE;
 	//m_tEffectDesc.bRender			 = FALSE;
+
+}
+
+void CEffect_Void::Init_ReSet_Effect()
+{
+	m_tVoidDesc.Reset_Times();
 
 }
 
