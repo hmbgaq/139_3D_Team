@@ -10,6 +10,8 @@ void CBanditHeavy_Run_F::Initialize(CBandit_Heavy* pActor)
 
 CState<CBandit_Heavy>* CBanditHeavy_Run_F::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	pActor->Go_Straight(fTimeDelta);
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);

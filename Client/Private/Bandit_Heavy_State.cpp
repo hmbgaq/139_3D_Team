@@ -128,8 +128,10 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Run(CBandit_Heavy* pActor, _float fT
 {
 	//CState<CBandit_Heavy>* pState = { nullptr };
 
-	if (CBanditHeavy_Run_F::g_iAnimIndex != _iAnimIndex)
+	if (pActor->Get_Target() && CBanditHeavy_Run_F::g_iAnimIndex != _iAnimIndex)
+	{
 		return new CBanditHeavy_Run_F();
+	}
 
 	return nullptr;
 }
