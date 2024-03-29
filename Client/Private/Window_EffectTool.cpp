@@ -130,9 +130,11 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 
 
 #pragma region 이펙트 툴
-	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 700.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
+	SetUp_ImGuiDESC(u8"이펙트 툴", ImVec2{ 300.f, 700.f }, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 0.2f));
 	
 	__super::Begin();
+
+	Update_SaveLoad_Part_Menu();		// 저장 불러오기 메뉴 업데이트
 
 	if (ImGui::BeginTabBar("Tab_Effect", ImGuiTabBarFlags_None))
 	{
@@ -142,11 +144,11 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem(" Rect "))
-		{
-			Update_RectTab();		// 렉트 탭 업데이트
-			ImGui::EndTabItem();
-		}
+		//if (ImGui::BeginTabItem(" Rect "))
+		//{
+		//	Update_RectTab();		// 렉트 탭 업데이트
+		//	ImGui::EndTabItem();
+		//}
 
 		if (ImGui::BeginTabItem(" Mesh "))
 		{
@@ -349,6 +351,11 @@ void CWindow_EffectTool::Update_Timeline_Window()
 		if (ImGui::Button("   Reset   ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 30)))
 		{
 			m_pCurEffect->Init_ReSet_Effect();
+
+			if (nullptr != m_pModel_Preview)
+			{
+				dynamic_cast<CModel_Preview*>(m_pModel_Preview)->Get_ModelCom()->Reset_Animation();
+			}
 		}
 
 	}
@@ -384,47 +391,47 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				/* 이름_파티클 */
 				ImGui::SeparatorText("Name");
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
-
+				//ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				ImGui::Text(m_szPartNames[m_iCurPartIndex]);
+				ImGui::SeparatorText("");
 
 #pragma region 텍스처 설정_파티클
 				/* 텍스처 변경_파티클 */
 				if (ImGui::CollapsingHeader(" Texture_Particle "))
 				{
 
-					if (m_pCurVoidDesc->bUseSpriteAnim)
-					{
-						// 디퓨즈_스프라이트_파티클 텍스처 ============================================================================================
-						ImGui::SeparatorText("Diffuse_Sprte_Particle");
+					//if (m_pCurVoidDesc->bUseSpriteAnim)
+					//{
+					//	// 디퓨즈_스프라이트_파티클 텍스처 ============================================================================================
+					//	ImGui::SeparatorText("Diffuse_Sprte_Particle");
 
-						if (ImGui::Button("Sprite_Base"))	// 베이스 스프라이트로 변경
-						{
-							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 24;
-							m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("Sprite_Smokes"))	// 스모크 스프라이트로 변경
-						{
-							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 34;
-							m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
-						}
+					//	if (ImGui::Button("Sprite_Base"))	// 베이스 스프라이트로 변경
+					//	{
+					//		dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite"));
+					//		m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 24;
+					//		m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
+					//	}
+					//	ImGui::SameLine();
+					//	if (ImGui::Button("Sprite_Smokes"))	// 스모크 스프라이트로 변경
+					//	{
+					//		dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"));
+					//		m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 34;
+					//		m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
+					//	}
 
-						if (ImGui::InputInt("Sprite_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
-						{
-							if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
-								m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] - 1;
+					//	if (ImGui::InputInt("Sprite_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE], 1))
+					//	{
+					//		if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
+					//			m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] - 1;
 
-							if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
-								m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
+					//		if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE])
+					//			m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = 0;
 
-							m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
-						}
+					//		m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE];
+					//	}
 
-
-					}
-					else
+					//}
+					//else
 					{
 						// 디퓨즈_파티클 텍스처 ===============================================================================================
 						ImGui::SeparatorText("Diffuse_Particle");
@@ -432,15 +439,42 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 11;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 24;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 
+						// 스프라이트 텍스처 시작
+						if (ImGui::Button("Sprite_Base"))	// 베이스 스프라이트로 변경
+						{
+							m_eType_Sprite_Particle = CEffect_Void::TEXTURE_DIFFUSE;
+
+							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite"));
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 25;
+							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						}
+						if (ImGui::Button("Sprite_Blood"))	// 피 스프라이트로 변경
+						{
+							m_eType_Sprite_Particle = CEffect_Void::TEXTURE_DIFFUSE;
+
+							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite_Blood"));
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 29;
+							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Sprite_Smokes"))	// 스모크 스프라이트로 변경
+						{
+							m_eType_Sprite_Particle = CEffect_Void::TEXTURE_DIFFUSE;
+
+							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite_Smokes"));
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 34;
+							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						}
+						// 스프라이트 텍스처 끝
 
 						if (ImGui::InputInt("Diffuse_Particle", &m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE], 1))
 						{
 							if (m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] <= m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
-								m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE];
+								m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] - 1;
 
 							if (0 > m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE])
 								m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
@@ -464,6 +498,15 @@ void CWindow_EffectTool::Update_ParticleTab()
 					{
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask_Waves"));
 						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 6;
+						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
+					}
+
+					if (ImGui::Button("Mask_Sprites"))	// 스프라이트 마스크로 변경
+					{
+						m_eType_Sprite_Particle = CEffect_Void::TEXTURE_MASK;
+
+						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask_Sprite"));
+						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 28;
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 					}
 
@@ -559,29 +602,38 @@ void CWindow_EffectTool::Update_ParticleTab()
 						//m_pSpriteDesc_Particle->Reset_Sprite();
 					}
 
+	
 					/* 스프라이트 최대 가로 세로 지정_파티클 */
-					if (ImGui::InputInt2(" Max_TileCount ", m_vUV_MaxTileCount_Particle, 1))
+					if (CEffect_Void::TEXTURE_END != m_eType_Sprite_Particle)
 					{
-						_uint iX, iY;
-						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_TextureCom(CEffect_Void::TEXTURE_SPRITE)->Get_TextureSize(&iX, &iY, m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE]);
-						m_pSpriteDesc_Particle->vTextureSize.x = (_float)iX;
-						m_pSpriteDesc_Particle->vTextureSize.y = (_float)iY;
+						if (ImGui::InputInt2(" Max_TileCount ", m_vUV_MaxTileCount_Particle, 1))
+						{
+							_uint iX, iY;
+							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_TextureCom(m_eType_Sprite_Particle)->Get_TextureSize(&iX, &iY, m_iTexIndex_Particle[m_eType_Sprite_Particle]);
+							m_pSpriteDesc_Particle->vTextureSize.x = (_float)iX;
+							m_pSpriteDesc_Particle->vTextureSize.y = (_float)iY;
 
-						_float fTileX, fTileY;
-						fTileX = (_float)iX / m_vUV_MaxTileCount_Particle[0];
-						fTileY = (_float)iY / m_vUV_MaxTileCount_Particle[1];
+							_float fTileX, fTileY;
+							fTileX = (_float)iX / m_vUV_MaxTileCount_Particle[0];
+							fTileY = (_float)iY / m_vUV_MaxTileCount_Particle[1];
 
-						m_pSpriteDesc_Particle->vTileSize.x = fTileX;
-						m_pSpriteDesc_Particle->vTileSize.y = fTileY;
+							m_pSpriteDesc_Particle->vTileSize.x = fTileX;
+							m_pSpriteDesc_Particle->vTileSize.y = fTileY;
 
-						m_pSpriteDesc_Particle->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Particle[0];
-						m_pSpriteDesc_Particle->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Particle[1];
+							m_pSpriteDesc_Particle->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Particle[0];
+							m_pSpriteDesc_Particle->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Particle[1];
 
-						m_pSpriteDesc_Particle->Reset_Sprite();
-						m_pCurPartEffect->ReSet_Effect();
+							m_pSpriteDesc_Particle->Reset_Sprite();
+							m_pCurPartEffect->ReSet_Effect();
+						}
+
+						ImGui::Text("Current Index : %d, %d", m_pSpriteDesc_Particle->vUV_CurTileIndex.x, m_pSpriteDesc_Particle->vUV_CurTileIndex.y);
 					}
 
-					ImGui::Text("Current Index : %d, %d", m_pSpriteDesc_Particle->vUV_CurTileIndex.x, m_pSpriteDesc_Particle->vUV_CurTileIndex.y);
+				}
+				else
+				{
+					m_eType_Sprite_Particle = CEffect_Void::TEXTURE_END;
 				}
 #pragma endregion
 
@@ -1365,7 +1417,8 @@ void CWindow_EffectTool::Update_RectTab()
 				CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Get_Distortion_Desc();
 
 				/* 이름 */
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				//ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				ImGui::Text(m_szPartNames[m_iCurPartIndex]);
 
 				/* 텍스처 변경 */
 
@@ -1379,17 +1432,15 @@ void CWindow_EffectTool::Update_RectTab()
 
 					if (ImGui::Button("Sprite_Base_Rect"))	// 베이스 스프라이트로 변경
 					{
-						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite"));
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 24;
+						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite"));
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 25;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 					ImGui::SameLine();
 					if (ImGui::Button("Sprite_Smokes_Rect"))	// 스모크 스프라이트로 변경
 					{
-						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes"));
-						m_pCurVoidDesc->strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite_Smokes");
+						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite_Smokes"));
 						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 34;
-						m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = 0;	// 텍스처 인덱스 초기화
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_SPRITE] = 0;
 					}
 
@@ -1414,7 +1465,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 					{
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 13;
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 24;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 					}
 
@@ -1906,8 +1957,8 @@ void CWindow_EffectTool::Update_MeshTab()
 
 				/* 이름 */
 				ImGui::SeparatorText(" NAME ");
-				ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
-
+				//ImGui::Text(m_pGameInstance->ConverWStringtoC(m_pCurVoidDesc->strPartTag));
+				ImGui::Text(m_szPartNames[m_iCurPartIndex]);
 
 				/* 인스턴스 개수 변경 */
 				ImGui::SeparatorText(" Instance Count ");
@@ -1937,7 +1988,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 					{
 						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 13;
+						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 24;
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						
 
@@ -2747,7 +2798,9 @@ void CWindow_EffectTool::Update_TrailTab()
 					if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 					{
 						// 플레이어 공격
-						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
+						//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
+
+						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Dodge_R);
 					}
 
 					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -2827,20 +2880,20 @@ void CWindow_EffectTool::Update_TrailTab()
 #pragma region 텍스처 번경_트레일
 		/* 텍스처 변경 */
 		ImGui::SeparatorText("TEXTURE_TRAIL");
-		if (m_pVoidTrailDesc->bUseSpriteAnim)
-		{
-			if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE], 1))
-			{
-				if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
-					m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] - 1;
+		//if (m_pVoidTrailDesc->bUseSpriteAnim)
+		//{
+		//	if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE], 1))
+		//	{
+		//		if (m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] <= m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
+		//			m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] - 1;
 
-				if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
-					m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = 0;
+		//		if (0 > m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE])
+		//			m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE] = 0;
 
-				m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
-			}
-		}
-		else
+		//		m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = m_iTexIndex_Trail[CEffect_Void::TEXTURE_SPRITE];
+		//	}
+		//}
+		//else
 		{
 			if (ImGui::InputInt("Diffuse_Trail", &m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE], 1))
 			{
@@ -3046,11 +3099,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vTimes_Part[2] = m_pCurVoidDesc->fRemainTime; // 리메인 타임??
 
 			// 텍스처 업데이트 =============================================================================================================
-			if (m_pCurVoidDesc->bUseSpriteAnim)
-			{
-				m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE];
-			}
-			else
+			//if (m_pCurVoidDesc->bUseSpriteAnim)
+			//{
+			//	m_iTexIndex_Particle[CEffect_Void::TEXTURE_SPRITE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_SPRITE];
+			//}
+			//else
 			{
 				m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
 			}
@@ -4283,7 +4336,24 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
 				m_pCurEffect->Delete_Object_Owner();
 			}
+
+
+			if (ImGui::Button("Set Position"))
+			{
+				m_pCurEffect->Set_Position(m_pModel_Preview->Get_Position());
+			}
+
+
+			if (ImGui::Button("Look_At"))
+			{
+				m_pCurEffect->Get_Transform()->Look_At(m_pModel_Preview->Get_Position());
+			}
+
 		}
+
+
+
+
 
 		// 애님 모델일 경우에만 애니메이션 변경
 		if (CModel::TYPE_ANIM == m_pModel_Preview->Get_Desc()->eType)
@@ -4309,7 +4379,9 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
 					// 플레이어 공격
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
+					//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
+
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Dodge_R);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4361,13 +4433,13 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	ImGui::SeparatorText("");
 	if (ImGui::Button("         Create Test        "))
 	{
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Effect.json");
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
 	}
 
 	ImGui::SameLine();
 	if (ImGui::Button("   Create Test Effect Trail   "))
 	{
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect_With_Trail("Test_Impact.json", "Test_Effect_Trail.json");
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect_With_Trail("Test_Effect.json", "Test_Effect_Trail.json");
 	}
 
 	if (nullptr != m_pModel_Preview)
@@ -4376,7 +4448,7 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		{
 			if (ImGui::Button("         Skull Test        "))
 			{
-				m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, "Test_Skull.json", m_pModel_Preview);
+				m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", m_pModel_Preview);
 			}
 		}
 		else
@@ -4386,11 +4458,6 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				m_pTestEffect->Set_Dead(TRUE);
 				m_pTestEffect = nullptr;
 			}
-		}
-
-		if (ImGui::Button("         Zapper Dash Test        "))
-		{
-			CEffect* pEffect = EFFECT_MANAGER->Create_Effect_Pos("Zapper_Dash", "Zapper_Dash_12.json", m_pModel_Preview->Get_Position());
 		}
 
 	}
@@ -4499,9 +4566,12 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		if (ImGui::ListBox(" Part List ", &m_iCurPartIndex, m_szPartNames, (_int)m_CurPartObjects.size(), (_int)6))
 		{
 			wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
-			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.find(strCurName)->second);
 
-			Update_CurParameters_Parts();
+			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Find_PartObject(strCurName));
+
+			if(nullptr != m_pCurPartEffect)
+				Update_CurParameters_Parts();
+			
 		}
 
 		if (nullptr != m_pCurPartEffect)
@@ -4913,7 +4983,7 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tVoidDesc.strTextureTag[CEffect_Particle::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tVoidDesc.iTextureIndex[CEffect_Particle::TEXTURE_DIFFUSE] = { 0 };
 
-		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("");
 		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
 
 		tVoidDesc.strTextureTag[CEffect_Particle::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
@@ -5029,7 +5099,7 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_DIFFUSE] = TEXT("Prototype_Component_Texture_Effect_Diffuse");
 		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = { 0 };
 
-		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("Prototype_Component_Texture_Effect_Sprite");
+		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_SPRITE] = TEXT("");
 		tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_SPRITE] = { 0 };
 
 		tVoidDesc.strTextureTag[CEffect_Void::TEXTURE_MASK] = TEXT("Prototype_Component_Texture_Effect_Mask");
@@ -5456,10 +5526,11 @@ void CWindow_EffectTool::Delete_CurEffectObject()
 
 void CWindow_EffectTool::Delete_CurPart()
 {
-	m_pCurEffect->Delete_PartObject(m_pCurPartEffect->Get_Desc()->strPartTag);	
-
-
 	wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
+	wstring strCurPartName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
+
+	m_pCurEffect->Delete_PartObject(strCurPartName);
+
 
 	/* 문자열 초기화 */
 	m_iCurPartIndex = (_int)m_CurPartObjects.size();
@@ -5480,6 +5551,7 @@ void CWindow_EffectTool::Delete_CurPart()
 	_int iCount = 0;
 	for (auto& Pair : m_CurPartObjects)
 	{
+		//const string utf8Str = m_pGameInstance->Wstring_To_UTF8(dynamic_cast<CEffect_Void*>(Pair.second)->Get_Desc()->strPartTag);
 		const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
 		m_szPartNames[iCount] = new char[utf8Str.length() + 1];
 		strcpy(m_szPartNames[iCount], utf8Str.c_str());
@@ -5492,6 +5564,8 @@ void CWindow_EffectTool::Delete_CurPart()
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.begin()->second);
 	else
 		m_pCurPartEffect = nullptr;
+
+
 
 }
 
@@ -5553,6 +5627,13 @@ void CWindow_EffectTool::Update_CurParameters()
 		m_vRotate_Effect[0] = vRotated.x;
 		m_vRotate_Effect[1] = vRotated.y;
 		m_vRotate_Effect[2] = vRotated.z;
+
+
+
+
+
+
+
 	}
 
 }
@@ -5651,7 +5732,77 @@ void CWindow_EffectTool::Update_SaveLoad_Menu()
 		}
 		ImGui::EndMenuBar();
 	}
+
 }
+
+
+void CWindow_EffectTool::Update_SaveLoad_Part_Menu()
+{
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{
+			if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하고
+			{
+				if (nullptr != m_pCurPartEffect)	// 현재 파트이펙트도 존재하면
+				{
+					CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
+
+					if (CEffect_Void::PARTICLE == eType_Effect) 
+					{
+						// 파티클 저장 로드
+						if (ImGui::MenuItem("Save_Particle"))
+						{
+							m_eFile = FILE_PART_PARTICLE;
+							m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Particle/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+
+						}
+						if (ImGui::MenuItem("Load_Particle"))
+						{
+							m_eFile = FILE_PART_PARTICLE;
+							m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Particle/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+
+						}
+					}
+					else if (CEffect_Void::MESH == eType_Effect)
+					{
+						// 메쉬 저장 로드
+						if (ImGui::MenuItem("Save_Mesh"))
+						{
+							m_eFile = FILE_PART_MESH;
+							m_eDialogType = DIALOG_TYPE::SAVE_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Mesh/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+
+						}
+						if (ImGui::MenuItem("Load_Mesh"))
+						{
+							m_eFile = FILE_PART_MESH;
+							m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+							m_strDialogPath = "../Bin/DataFiles/Data_Effect/Data_Mesh/";
+
+							OpenDialog(IMGUI_EFFECTTOOL_WINDOW);
+						}
+					}
+
+				}
+
+			}
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+}
+
 
 HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 {
@@ -5665,6 +5816,13 @@ HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 			m_pCurEffect->Write_Json(Out_Json);
 		}
 	}
+
+
+	if (FILE_PART_PARTICLE == m_eFile || FILE_PART_MESH == m_eFile)
+	{
+		m_pCurPartEffect->Write_Json(Out_Json);
+	}
+
 
 	if (FILE_TRAIL == m_eFile)
 	{
@@ -5709,7 +5867,84 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 
 		m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_pCurEffect->Get_FirstPartObject());
 		Update_CurParameters_Parts();
+
+
+		/* 문자열 초기화 */
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
+		if (nullptr != m_szPartNames)
+		{
+			for (_int i = 0; i < m_iCurPartIndex; ++i)
+			{
+				m_szPartNames[i] = nullptr;
+			}
+			m_szPartNames = nullptr;
+		}
+
+		wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szEffectNames[m_iCurEffectIndex]);
+		Update_CurMembers(strCurName);
+
+		m_iCurPartIndex = (_int)m_CurPartObjects.size();
+		m_szPartNames = new char* [m_iCurPartIndex];
+
+		_int iCount = 0;
+		for (auto& Pair : m_CurPartObjects)
+		{
+			const string utf8Str = m_pGameInstance->Wstring_To_UTF8(Pair.first);
+			m_szPartNames[iCount] = new char[utf8Str.length() + 1];
+			strcpy(m_szPartNames[iCount], utf8Str.c_str());
+
+			iCount++;
+		}
+
+		m_iCurPartIndex = 0;
+		if (!m_CurPartObjects.empty())
+		{
+			m_pCurPartEffect = dynamic_cast<CEffect_Void*>(m_CurPartObjects.begin()->second);
+			Update_CurParameters_Parts();
+		}
+		else
+			m_pCurPartEffect = nullptr;
+
 	}
+
+
+	// 파트_파티클 로드
+	if (FILE_PART_PARTICLE == m_eFile)
+	{
+		//wstring strCurName = m_pGameInstance->Char_To_Wstring(m_szPartNames[m_iCurPartIndex]);
+		wstring strCurName = m_pCurPartEffect->Get_Desc()->strPartTag;
+
+		m_pCurPartEffect->Load_FromJson(In_Json);
+		m_pCurPartEffect->Get_Desc()->strPartTag = strCurName;
+
+		_int iTextureIndex[CEffect_Void::TEXTURE_END];
+
+		for (_int i = 0; i < ECast(CEffect_Void::TEXTURE_END); ++i)
+		{
+			iTextureIndex[i] = m_pCurPartEffect->Get_Desc()->iTextureIndex[i];
+		}
+
+		// 텍스처 재설정
+		for (_int i = 0; i < ECast(CEffect_Void::TEXTURE_END); ++i)
+		{
+			dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(m_pCurPartEffect->Get_Desc()->strTextureTag[i]);
+			m_pCurPartEffect->Get_Desc()->iTextureIndex[i] = iTextureIndex[i];
+		}
+
+
+		Update_CurParameters_Parts();
+		return S_OK;
+	}
+
+
+	// 파트_메쉬 로드
+	if (FILE_PART_MESH == m_eFile)
+	{
+
+
+		return S_OK;
+	}
+
 
 
 	if (FILE_TRAIL == m_eFile)
@@ -5736,6 +5971,7 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 
 	return S_OK;
 }
+
 
 
 CWindow_EffectTool* CWindow_EffectTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -15,7 +15,7 @@ class CSky;
 class CWindow_EffectTool final : public CImgui_Window
 {
 public:
-	enum TYPE_FILE { FILE_EFFECT, FILE_TRAIL, TYPE_FILE_END };
+	enum TYPE_FILE { FILE_EFFECT, FILE_PART_PARTICLE, FILE_PART_MESH, FILE_TRAIL, TYPE_FILE_END };
 
 	struct Window_EffectTool_DESC : public ImGuiDESC
 	{
@@ -34,7 +34,8 @@ public:
 
 /* For.Save&Load */
 public:
-	void	Update_SaveLoad_Menu();	// 저장 불러오기 메뉴 업데이트
+	void	Update_SaveLoad_Menu();			// 저장 불러오기 메뉴 업데이트
+	void	Update_SaveLoad_Part_Menu();	// 저장 불러오기 메뉴(파트이펙트) 업데이트
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
@@ -104,10 +105,10 @@ private:
 	map<const wstring, class CEffect*>		m_pEffects;
 	map<const wstring, class CGameObject*>	m_CurPartObjects;
 
-	char**			m_szEffectNames = { nullptr };
-	char*			m_cCurEffectName = { nullptr };
-	_int			m_iCurEffectIndex = { 0 };
-	class CEffect*	m_pCurEffect = { nullptr };
+	char**			m_szEffectNames		= { nullptr };
+	char*			m_cCurEffectName	= { nullptr };
+	_int			m_iCurEffectIndex	= { 0 };
+	class CEffect*	m_pCurEffect		= { nullptr };
 
 
 	char**		  m_szPartNames			= { nullptr };
@@ -151,28 +152,28 @@ private:
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 4 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 12, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 24, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 24, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 12, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 24, 0, 164, 243, 24 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 12, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 24, 0, 164, 243, 24 };
 
 
 private:
@@ -199,6 +200,9 @@ private:
 
 
 	_int	m_iLoop_Part = { 0 };
+
+
+
 
 #pragma region Particle 옵션 시작 =====================================================
 private:
@@ -299,6 +303,8 @@ private:
 	_int	m_iSpriteLoop					= { 0 };
 	_int	m_vUV_MaxTileCount_Particle[2]	= { 7, 7 };
 	_float	m_fSequenceTerm_Particle		= { 0.05f };
+
+	CEffect_Void::TEXTURE m_eType_Sprite_Particle = { CEffect_Void::TEXTURE_END };
 	/* For.Sprite ======================================== */
 
 

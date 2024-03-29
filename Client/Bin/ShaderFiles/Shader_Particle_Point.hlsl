@@ -280,13 +280,15 @@ struct VS_OUT
     float2 vTexcoord1 : TEXCOORD0;
     float2 vTexcoord2 : TEXCOORD1;
     float2 vTexcoord3 : TEXCOORD2;
-    
+ 
+    float4 vProjPos : TEXCOORD3;
     
     float4 vPosition : POSITION;
     float2 vPSize : PSIZE;
     float4 vColor : COLOR0;
 
-     
+
+    
     uint iInstanceID : SV_INSTANCEID;
 	
 };
@@ -303,6 +305,8 @@ VS_OUT VS_MAIN_PARTICLE(VS_IN In)
     Out.vPSize = float2(In.vPSize.x * In.TransformMatrix._11, In.vPSize.y * In.TransformMatrix._22);
     Out.vColor = In.vColor;
 
+    Out.vProjPos = Out.vPosition;
+    
     Out.iInstanceID = In.iInstanceID;
 
     return Out;
@@ -315,6 +319,8 @@ struct GS_IN
     float2 vTexcoord1   : TEXCOORD0;
     float2 vTexcoord2   : TEXCOORD1;
     float2 vTexcoord3   : TEXCOORD2;
+    
+    float4 vProjPos : TEXCOORD3;
     
     float4 vPosition    : POSITION;
     float2 vPSize       : PSIZE;
@@ -331,8 +337,11 @@ struct GS_OUT
     float2 vTexcoord2   : TEXCOORD1;
     float2 vTexcoord3   : TEXCOORD2;
     
+    
+    float4 vProjPos     : TEXCOORD3;
+    
     float4 vPosition    : SV_POSITION;
-    float2 vTexcoord    : TEXCOORD3;
+    float2 vTexcoord    : TEXCOORD4;
     float4 vColor       : COLOR0;
 	
      
@@ -348,7 +357,8 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
     float3 vLook;
     float3 vRight, vUp;
-	
+    float3x3 WorldMatrix = (float3x3) g_WorldMatrix;
+    
     if (g_bBillBoard)
     {
         vLook = g_vCamPosition - In[0].vPosition;
@@ -364,9 +374,14 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 		//vLook.rgb = normalize(cross(vRight, vUp)); vLook.a = 0.f;
 		
 		
-        vRight = normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
-        vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
-        vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
+        //vRight = normalize(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb) * In[0].vPSize.x * 0.5f;
+        //vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
+        //vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
+        
+        
+        vRight = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb, WorldMatrix)) * In[0].vPSize.x * 0.5f;
+        vUp = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb, WorldMatrix)) * In[0].vPSize.y * 0.5f;
+        vLook = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vLook, WorldMatrix));
 		
     }
 
@@ -421,6 +436,11 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
         Out[i].vTexcoord3 = In[0].vTexcoord3;
     }
 
+    
+    Out[0].vProjPos = Out[0].vPosition;
+    Out[1].vProjPos = Out[1].vPosition;
+    Out[2].vProjPos = Out[2].vPosition;
+    Out[3].vProjPos = Out[3].vPosition;
 
   
     OutStream.Append(Out[0]);
@@ -443,8 +463,10 @@ struct PS_IN
     float2 vTexcoord2   : TEXCOORD1;
     float2 vTexcoord3   : TEXCOORD2;
     
+    float4 vProjPos : TEXCOORD3;
+    
     float4 vPosition    : SV_POSITION;
-    float2 vTexcoord    : TEXCOORD3;
+    float2 vTexcoord    : TEXCOORD4;
     float4 vColor       : COLOR0;
 	
      
@@ -472,7 +494,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     float4 vAlphaColor;
 
     float4 vDistortion;
-    float fPerturb;
+    float  fPerturb;
     float2 vDistortedCoord;
     
     
@@ -490,12 +512,12 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     vDistortedCoord = (vDistortion.xy * fPerturb) + In.vTexcoord.xy;
 
 
-	// 디퓨즈 텍스처 (clamp 샘플러 사용)
-    vFinalDiffuse = g_DiffuseTexture.Sample(ClampSampler, vDistortedCoord.xy);
+	// 디퓨즈 텍스처 (clamp 샘플러 사용?)
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, vDistortedCoord.xy);
 
 
-	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
-    vAlphaColor = g_MaskTexture.Sample(ClampSampler, vDistortedCoord.xy);
+	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용?)
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
     vFinalDiffuse.a *= vAlphaColor;
 
 	/* Discard & Color Mul ==================================================== */
@@ -503,13 +525,18 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
         discard;
 	
 	// 컬러 혼합
-    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode);
-    Out.vColor.a = g_EffectDesc[In.iInstanceID].g_vColors_Mul.a;
+    Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
+    Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a;
 		
+ 
+    
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     //Out.vColor += vRimColor;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, g_EffectDesc[In.iInstanceID].g_vColors_Mul.a); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    
+    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     
 	
     if (bSolid)
@@ -517,8 +544,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     
 	
     return Out;
-    
-  
+   
 }
 
 
@@ -542,8 +568,9 @@ PS_OUT PS_MAIN_DISTORTION_POST(PS_IN In)
 	
 	/* RimBloom ============================================================== */
     Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, g_EffectDesc[In.iInstanceID].g_vColors_Mul.a); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
       
     return Out;
 }
@@ -559,7 +586,7 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Cull_None);
 		SetDepthStencilState(DSS_Default, 0);
-		SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* 렌더스테이츠 */
 		VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
@@ -573,7 +600,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* 렌더스테이츠 */
         VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
@@ -588,7 +615,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
 		/* 렌더스테이츠 */
         VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();

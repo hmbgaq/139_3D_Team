@@ -230,6 +230,9 @@ void CEffect_Instance::End_Effect()
 
 HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 {
+	if (TEXT("") == strProtoTextureTag)
+		return S_OK;
+
 	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
 
 	wstring strDiffuse	= TEXT("Diffuse");
