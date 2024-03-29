@@ -52,9 +52,9 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
 	m_fDamage = 20.f;
-	// ÀÌÆåÆ® »ı¼º
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_SNOWMOUNTAINBOSS, LAYER_EFFECT, "Projectile_Range1_04.json", this);
-	m_pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Yellow_Blood_Test.json");
+
+
+
 
 
 	return S_OK;
@@ -79,6 +79,12 @@ void CSon_Projectile::Tick(_float fTimeDelta)
 	
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
+	// ÀÌÆåÆ® »ı¼º
+	if (m_bfirst2)
+	{
+		m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test.json", this);
+		m_bfirst2 = false;
+	}
 
 }
 
@@ -113,9 +119,8 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 	{
 		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
+
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 
 	}
 	m_pCollider->Set_Enable(false);
