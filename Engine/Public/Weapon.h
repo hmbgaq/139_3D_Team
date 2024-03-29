@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "AttackObject.h"
 
 BEGIN(Engine)
 
@@ -11,7 +11,7 @@ class CShader;
 class CModel;
 class CBone;
 
-class ENGINE_DLL CWeapon abstract : public CGameObject
+class ENGINE_DLL CWeapon abstract : public CAttackObject
 {
 public:
 	typedef struct tagWeaponDesc
@@ -40,16 +40,19 @@ public:
 	void		Set_WeaponWorldMatrix(_float4x4 _WorldMatrix) { m_WorldMatrix = _WorldMatrix; }
 	_float3		Get_Weapon_Pos() { return { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43 }; }
 
-	CCharacter* Get_Target_Character(CCollider* other);
-	CCharacter* Get_PartOwner();
+	//CCharacter* Get_Target_Character(CCollider* other);
+	//CCharacter* Get_PartOwner();
 
-	CWeapon* Set_Damage(_float _iDamage);
-	CWeapon* Set_Direction(Direction _eHitDirection);
-	CWeapon* Set_Power(Power _eHitPower);
+	//CWeapon* Set_Damage(_float _iDamage);
+	//CWeapon* Set_Direction(Direction _eHitDirection);
+	//CWeapon* Set_Power(Power _eHitPower);
+	
+	//CWeapon* Set_Force(_float _fForce);
+	
+	//CWeapon* Set_KnockUp(_bool _bKnockUp);
+
 	CWeapon* Activate_Collisions(_bool _bActivate);
-	CWeapon* Set_Force(_float _fForce);
 	CWeapon* Set_Dir(_float3 _vDir);
-	CWeapon* Set_KnockUp(_bool _bKnockUp);
 
 
 public:
@@ -72,6 +75,10 @@ public:
 public:
 	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f));
 	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f)) {};
+
+public:
+	void Set_Follow(_bool _bIsFollow) { m_bIsFollow = _bIsFollow; };
+	_bool Get_Follow() { return m_bIsFollow; }
 
 
 protected:
@@ -101,17 +108,23 @@ protected:
 	vector<CCollider*> m_pColliders = { nullptr };
 	_uint	m_iColliderSize = { 0 };
 
-	Direction	m_eHitDirection = { Direction::Front };
-	Power		m_eHitPower = { Power::Light };
-	_float		m_fStiffnessRate = { 1.f };
+	//Direction	m_eHitDirection = { Direction::Front };
+	//Power		m_eHitPower = { Power::Light };
+	//_float		m_fStiffnessRate = { 1.f };
 
-	_float		m_iDamage = { 0.f };
-	_float		m_fForce = { 0.f };
+	//_float		m_fDamage = { 0.f };
+	//_float		m_fForce = { 0.f };
 	_float3		m_vDir = { 0.f, 0.f, 0.f };
-	_bool		m_bKnockUp = { false };
+	//_bool		m_bKnockUp = { false };
 
 protected://몬스터가 Player 잡아서 던지는거 쓸때 쓰는거
 	_bool	m_bSynced = false;
+
+protected:
+	_bool m_bIsFollow = { true };
+
+
+
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual void Free() override;

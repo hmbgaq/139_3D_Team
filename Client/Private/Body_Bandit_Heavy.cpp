@@ -74,14 +74,17 @@ HRESULT CBody_Bandit_Heavy::Render_Shadow()
 
 void CBody_Bandit_Heavy::OnCollisionEnter(CCollider* other)
 {
+	__super::OnCollisionEnter(other);
 }
 
 void CBody_Bandit_Heavy::OnCollisionStay(CCollider* other)
 {
+	__super::OnCollisionStay(other);
 }
 
 void CBody_Bandit_Heavy::OnCollisionExit(CCollider* other)
 {
+	__super::OnCollisionExit(other);
 }
 
 HRESULT CBody_Bandit_Heavy::Ready_Components()
@@ -115,36 +118,36 @@ HRESULT CBody_Bandit_Heavy::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBody_Bandit_Heavy* CBody_Bandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-{
-	CBody_Bandit_Heavy* pInstance = new CBody_Bandit_Heavy(pDevice, pContext, strPrototypeTag);
+//CBody_Bandit_Heavy* CBody_Bandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+//{
+//	CBody_Bandit_Heavy* pInstance = new CBody_Bandit_Heavy(pDevice, pContext, strPrototypeTag);
+//
+//	/* 원형객체를 초기화한다.  */
+//	if (FAILED(pInstance->Initialize_Prototype()))
+//	{
+//		MSG_BOX("Failed to Created : CBody_Bandit_Heavy");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
 
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CBody_Bandit_Heavy");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CBody_Bandit_Heavy::Clone(void* pArg)
-{
-	CBody_Bandit_Heavy* pInstance = new CBody_Bandit_Heavy(*this);
-
-	/* 원형객체를 초기화한다.  */
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Cloned : CBody_Bandit_Heavy");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CBody_Bandit_Heavy::Pool()
-{
-	return new CBody_Bandit_Heavy(*this);
-}
+//CGameObject* CBody_Bandit_Heavy::Clone(void* pArg)
+//{
+//	CBody_Bandit_Heavy* pInstance = new CBody_Bandit_Heavy(*this);
+//
+//	/* 원형객체를 초기화한다.  */
+//	if (FAILED(pInstance->Initialize(pArg)))
+//	{
+//		MSG_BOX("Failed to Cloned : CBody_Bandit_Heavy");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
+//
+//CGameObject* CBody_Bandit_Heavy::Pool()
+//{
+//	return new CBody_Bandit_Heavy(*this);
+//}
 
 void CBody_Bandit_Heavy::Free()
 {

@@ -198,6 +198,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
   <ItemGroup>
     <ClInclude Include="..\public\AlphaObject.h" />
     <ClInclude Include="..\public\Animation.h" />
+    <ClInclude Include="..\Public\AttackObject.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\Public\Bone.h" />
@@ -267,7 +268,6 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClInclude Include="..\public\Navigation.h" />
     <ClInclude Include="..\Public\NvCloth_Manager.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
-    <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\PhysXCharacterController.h" />
     <ClInclude Include="..\Public\PhysXCollider.h" />
     <ClInclude Include="..\Public\PhysXController.h" />
@@ -309,6 +309,7 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
   <ItemGroup>
     <ClCompile Include="..\private\AlphaObject.cpp" />
     <ClCompile Include="..\private\Animation.cpp" />
+    <ClCompile Include="..\Private\AttackObject.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Bone.cpp" />
@@ -357,7 +358,6 @@ xcopy "$(SolutionDir)Engine\Bin\ShaderFiles\*.*" "$(SolutionDir)Client\Bin\Shade
     <ClCompile Include="..\private\Navigation.cpp" />
     <ClCompile Include="..\Private\NvCloth_Manager.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
-    <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\PhysXCharacterController.cpp" />
     <ClCompile Include="..\Private\PhysXCollider.cpp" />
     <ClCompile Include="..\Private\PhysXController.cpp" />

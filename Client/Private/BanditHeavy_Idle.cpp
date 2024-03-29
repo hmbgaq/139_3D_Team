@@ -4,7 +4,7 @@ void CBanditHeavy_Idle::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
 
 }
 

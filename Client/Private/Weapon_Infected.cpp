@@ -26,7 +26,7 @@ HRESULT CWeapon_Infected::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
-	m_iDamage = 3.f;
+	m_fDamage = 3.f;
 	m_fForce = 0.1f;
 
 	return S_OK;
@@ -84,7 +84,6 @@ void CWeapon_Infected::OnCollisionEnter(CCollider* other)
 		m_eHitPower = Power::Medium;
 		m_fForce = 0.5f;
 
-		//_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 		pTarget_Character->Set_Hitted(4.f, m_vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 		m_pColliders[0]->Set_Enable(false);

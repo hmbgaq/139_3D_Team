@@ -36,6 +36,19 @@ public:		//상태 그룹 별 업데이트
 public:		//개별 동작 상태 집합
 	CState<CTank>* Normal(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CTank>* Idle(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CTank>* Run(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	CState<CTank>* Attack(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+
+	CState<CTank>* MeleeDynamic(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CTank>* GroundSlam(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CTank>* GroundWave(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CTank>* Charge(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	CState<CTank>* ShieldRegain(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+
 
 
 protected:

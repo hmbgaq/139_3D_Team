@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "AttackObject.h"
 #include "Client_Defines.h"
 
 BEGIN(Engine)
@@ -16,7 +16,7 @@ END
 
 BEGIN(Client)
 
-class CProjectile abstract : public CGameObject
+class CProjectile abstract : public CAttackObject
 {
 
 protected:
@@ -35,11 +35,11 @@ public:
 
 
 public:
-	CCharacter* Get_Target_Character(CCollider * other);
-	CProjectile* Set_Damage(_float _iDamage);
-	CProjectile* Set_Direction(Direction _eHitDirection);
-	CProjectile* Set_Power(Power _eHitPower);
-	CProjectile* Set_Force(_float _fForce);
+	//CCharacter* Get_Target_Character(CCollider * other);
+	//CProjectile* Set_Damage(_float _iDamage);
+	//CProjectile* Set_Direction(Direction _eHitDirection);
+	//CProjectile* Set_Power(Power _eHitPower);
+	//CProjectile* Set_Force(_float _fForce);
 
 
 public:
@@ -65,11 +65,11 @@ protected:
 	CCollider* m_pCollider = { nullptr };
 
 protected:
-	Direction	m_eHitDirection = { Direction::Front };
-	Power		m_eHitPower = { Power::Light };
-	_float		m_fStiffnessRate = { 1.f };
-	_float		m_fDamage = { 0 };
-	_float		m_fForce = { 0.f };
+	//Direction	m_eHitDirection = { Direction::Front };
+	//Power		m_eHitPower = { Power::Light };
+	//_float		m_fStiffnessRate = { 1.f };
+	//_float		m_fDamage = { 0 };
+	//_float		m_fForce = { 0.f };
 	_bool		m_bUse = { true };
 
 protected:

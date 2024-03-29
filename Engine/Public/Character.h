@@ -307,6 +307,9 @@ protected:
 	_bool		m_bIsKnockUp = { false };
 
 protected:
+	_bool		m_bIsFixed = { false };
+
+protected:
 	_float3		m_vRootMoveRate = { 1.f, 1.f, 1.f };
 
 
