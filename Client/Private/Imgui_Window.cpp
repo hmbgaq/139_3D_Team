@@ -195,10 +195,6 @@ void CImgui_Window::Set_Guizmo(CGameObject* pGameObject)
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
-	CUI* pUI = dynamic_cast<CUI*>(pGameObject);
-	if (pUI)
-		return;
-
 	if (ImGui::IsKeyPressed(ImGuiKey_T))
 		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 	if (ImGui::IsKeyPressed(ImGuiKey_R))

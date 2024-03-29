@@ -31,7 +31,7 @@ public:
 	void					Check_TargetWorld();
 
 private:
-	HRESULT					Setting_Owner();
+	virtual HRESULT			Setting_Owner();
 
 private:
 	virtual HRESULT			Ready_Components() override;

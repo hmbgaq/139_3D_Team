@@ -17,6 +17,8 @@ HRESULT CLevel_Logo::Initialize()
 {
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
+	
+
 	//{
 
 	//	IMFSourceReader* pSourceReader = NULL;
@@ -62,7 +64,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
 			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN)),);
 			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAINBOSS)), );
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
 
 			/* Test 이거 맵 터짐 아무 쓸모 없는거 같은데 ㅋㅋ 쓰는 사람 있니? */
 			/* 나 쓴다. 난안터짐 */

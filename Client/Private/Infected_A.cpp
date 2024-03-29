@@ -12,6 +12,9 @@
 #include "Infected_SpawnGround.h"
 #include "Infected_SpawnFromEgg_02.h"
 
+/* UI */
+#include "UI_Manager.h"
+
 CInfected_A::CInfected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CInfected(pDevice, pContext, strPrototypeTag)
 {
@@ -37,6 +40,9 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	m_pTarget = m_pGameInstance->Get_Player();
 
+	/* !ADD : UI_HUD */
+	CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
+
 	return S_OK;
 }
 
@@ -53,6 +59,9 @@ void CInfected_A::Tick(_float fTimeDelta)
 	//{
 	//	m_pActor->Update_State(fTimeDelta);
 	//}
+
+	/* !ADD : UI_HUD */
+	CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
 
 }	
 
