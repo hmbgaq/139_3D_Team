@@ -349,6 +349,32 @@ void CTransform::Look_At_OnLand(_fvector vTargetPos)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
+{
+	_float3		vScale = Get_Scaled();
+
+	_vector		vPosition = Get_State(STATE_POSITION);
+	_vector		vLook = vTargetPos - vPosition;
+
+	_vector		vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
+
+	vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
+
+
+	Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToDegrees(-90));
+
+
+	//vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
+	//
+	//vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
+
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
 void CTransform::Look_At_Direction(_fvector _vLook)
 {
 	_float3		vScale = Get_Scaled();

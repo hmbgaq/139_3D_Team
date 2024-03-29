@@ -165,6 +165,7 @@ public:
 	void Look_At_OnLand(_fvector vTargetPos);
 
 	void Look_At_Target();
+	void Look_At_TargetBoss();
 	void Look_At_Target_Lerp(_float fTimeDelta);
 	void Search_Target(const wstring& strLayerTag, const _float fSearchDistance = MAX_SEARCH);
 

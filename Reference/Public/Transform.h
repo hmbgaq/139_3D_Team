@@ -132,6 +132,7 @@ public:
 	void	Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
 	void	Look_At(_fvector vTargetPos);
 	void	Look_At_OnLand(_fvector vTargetPos);
+	void	Look_At_OnLandBoss(_fvector vTargetPos);
 	void	Look_At_Direction(_fvector _vLook);
 	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta);
 

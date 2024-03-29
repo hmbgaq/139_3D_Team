@@ -120,7 +120,7 @@ void CMother::Tick(_float fTimeDelta)
 // 		/*m_bLookAt = false;*/
 // 
 // 	}
-	Look_At_Target();
+	Look_At_TargetBoss();
 	//m_pTransformCom->m_fRadian += 90.f;
 }
 
