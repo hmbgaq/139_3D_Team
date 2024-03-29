@@ -1854,6 +1854,16 @@ void CWindow_EffectTool::Update_MeshTab()
 		// 이펙트용 스태틱 메쉬 생성
 		if (ImGui::CollapsingHeader(" Mesh_Static "))
 		{
+			if (ImGui::Button("Aoe_Lens"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
+			}
+
+			if (ImGui::Button("Billboard_Circle_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
+			}
+
 			if (ImGui::Button("Ring"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring"));
@@ -1886,6 +1896,11 @@ void CWindow_EffectTool::Update_MeshTab()
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_cream"));
 			}
 
+			if (ImGui::Button("Tornado_splineMesh"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_splineMesh"));
+			}
+
 			if (ImGui::Button("WinchesterElectric"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_WinchesterElectric"));
@@ -1906,8 +1921,91 @@ void CWindow_EffectTool::Update_MeshTab()
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_HemiSphere"));
 			}
 
+			if (ImGui::Button("Coil"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Coil"));
+			}
+
+
 			ImGui::SeparatorText("");
 		}
+
+
+		// 공격(투사체) 이펙트 메쉬 생성
+		if (ImGui::CollapsingHeader(" Mesh_Static_Attack "))
+		{
+			if (ImGui::Button("Slash_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Slash_00"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Slash_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Slash_01"));
+			}
+
+			if (ImGui::Button("Bioball_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Bioball_00"));
+			}
+
+			if (ImGui::Button("Bioball_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Bioball_01"));
+			}
+
+			if (ImGui::Button("Bioball_02"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Bioball_02"));
+			}
+
+			ImGui::SeparatorText("");
+		}
+
+
+		// 파티클용 이펙트 메쉬 생성
+		if (ImGui::CollapsingHeader(" Mesh_Particle "))
+		{
+			if (ImGui::Button("Rock_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_00"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Rock_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_01"));
+			}
+
+			if (ImGui::Button("Rock_02"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_02"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Rock_03"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_03"));
+			}
+
+
+			if (ImGui::Button("LightningParticle_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningParticle_00"));
+			}
+
+			if (ImGui::Button("LightningParticle_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningParticle_01"));
+			}
+
+
+			if (ImGui::Button("LeafPlane"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LeafPlane"));
+			}
+
+			ImGui::SeparatorText("");
+		}
+
 
 
 		// 인트로 보스용 이펙트 메쉬 생성
@@ -1937,6 +2035,22 @@ void CWindow_EffectTool::Update_MeshTab()
 			//{
 			//	//EFFECT_MANAGER->Tick_Create_Effect();
 			//}
+
+			ImGui::SeparatorText("");
+		}
+
+		// 두번째 보스용 이펙트 메쉬 생성
+		if (ImGui::CollapsingHeader(" Mesh_Parasiter "))
+		{
+			if (ImGui::Button("Egg"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Egg"));
+			}
+
+			if (ImGui::Button("Egg_Mother"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
+			}
 
 			ImGui::SeparatorText("");
 		}
