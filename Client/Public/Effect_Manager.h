@@ -18,7 +18,7 @@ class CEffect_Manager : public CBase
 	DECLARE_SINGLETON(CEffect_Manager);
 
 private:
-	CEffect_Manager();
+	CEffect_Manager(); 
 	virtual ~CEffect_Manager() = default;
 
 public:
