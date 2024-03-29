@@ -53,7 +53,8 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 
 	m_fDamage = 20.f;
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_SNOWMOUNTAINBOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
+	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_SNOWMOUNTAINBOSS, LAYER_EFFECT, "Projectile_Range1_04.json", this);
+	m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", this);
 
 
 	return S_OK;

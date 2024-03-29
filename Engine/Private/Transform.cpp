@@ -402,6 +402,9 @@ void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
 	_vector		vPosition = Get_State(STATE_POSITION);
 	_vector		vLook = vTargetPos - vPosition;
 
+	vLook = XMVector3Rotate(vLook, XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.0f)));
+
+
 	_vector		vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
 
 	vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
