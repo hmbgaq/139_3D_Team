@@ -21,4 +21,6 @@ CState<CMother>* CMother_ShakeTreeEnd::Update(CMother* pActor, _float fTimeDelta
 void CMother_ShakeTreeEnd::Release(CMother* pActor)
 {
 	__super::Release(pActor);
+	pActor->m_iSonDead = 0;
+	pActor->m_bPhase = false;
 }

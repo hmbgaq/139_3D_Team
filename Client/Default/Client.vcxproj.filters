@@ -5952,9 +5952,6 @@
     <ClInclude Include="..\Public\Effect_Manager.h">
       <Filter>96.Manager\Effect_Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Back</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\BanditHeavy_HitLight_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Light\Front\1</Filter>
     </ClInclude>
@@ -7106,6 +7103,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Son_ColliderBody.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Back</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -70,6 +70,9 @@ void CBody_Mother::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Mother::Render()
 {
+	auto start = chrono::high_resolution_clock::now();
+
+
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -131,6 +134,9 @@ HRESULT CBody_Mother::Render()
 // 		}
 // 	}
 
+// 	auto End = chrono::high_resolution_clock::now();
+// 	chrono::duration<double> duration0 = End - start;
+// 	cout << "Body Monther 실행시간 : " << duration0.count() << endl;
 	return S_OK;
 }
 
