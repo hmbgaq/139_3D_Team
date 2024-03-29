@@ -2,9 +2,8 @@
 #include "Son_Weapon_Head.h"
 #include "GameInstance.h"
 #include "Character.h"
-#include "VampireCommander_SyncedAttack.h"
+#include "Son.h"
 #include "Player.h"
-#include "Player_VampireCommander_SyncedAttack.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "Transform.h"
@@ -93,7 +92,7 @@ HRESULT CSon_Weapon_Head::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 0.8f };
+	BoundingDesc.fRadius = { 3.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -111,7 +110,7 @@ void CSon_Weapon_Head::OnCollisionEnter(CCollider* other)
 {
 
 // 	CCharacter* pTarget_Character = Get_Target_Character(other);
-// 	CVampireCommander* parent = dynamic_cast<CVampireCommander*>(Get_Object_Owner());
+// 	CSon* parent = dynamic_cast<CSon*>(Get_Object_Owner());
 // 	if (nullptr != pTarget_Character && m_bSynced == false)// 일반 타격 
 // 	{
 // 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();

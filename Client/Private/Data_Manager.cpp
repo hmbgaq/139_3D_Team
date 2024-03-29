@@ -7,6 +7,7 @@
 #include "Camera_Dynamic.h"
 #include "MasterCamera.h"
 #include "Sky.h"
+#include "Son.h"
 
 IMPLEMENT_SINGLETON(CData_Manager);
 
@@ -74,6 +75,26 @@ void CData_Manager::Reset_Player(LEVEL eLEVEL)
 	//m_pPlayer->Initialize(&GameObjectDesc);
 	m_pPlayer->Set_Position(vPos);
 
+}
+
+void CData_Manager::Set_Mother(CMother* _pMother)
+{
+	m_pMother = _pMother;
+}
+
+CMother* CData_Manager::Get_Mother()
+{
+	return m_pMother;
+}
+
+void CData_Manager::Set_Son(CSon* _pSon)
+{
+	m_pSon = _pSon;
+}
+
+CSon* CData_Manager::Get_Son()
+{
+	return m_pSon;
 }
 
 void CData_Manager::Apply_Shake_And_Blur(Power ePower)

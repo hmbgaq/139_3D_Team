@@ -2911,9 +2911,6 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother">
       <UniqueIdentifier>{b0e2d0b2-b1c4-4391-b190-4682b4e3176b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth">
-      <UniqueIdentifier>{f34050bb-7f94-4640-8b39-8b664ef6d4ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son">
       <UniqueIdentifier>{f06b1276-1740-4955-af8c-22ac7385e7a7}</UniqueIdentifier>
     </Filter>
@@ -2923,12 +2920,6 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State">
       <UniqueIdentifier>{20b3ce92-2131-4e40-a1c4-c1e469a2bea5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts">
-      <UniqueIdentifier>{865fb57d-970c-42bc-840e-018ad2aff2ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State">
-      <UniqueIdentifier>{0da72d6a-eb3f-41fd-b41b-875726fb1acc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts">
       <UniqueIdentifier>{7ef74908-4606-41c3-8822-efb5de5df624}</UniqueIdentifier>
     </Filter>
@@ -2937,9 +2928,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\Parts\Body">
       <UniqueIdentifier>{5a3d5f49-0cf0-4b85-971b-5b470211ce9d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body">
-      <UniqueIdentifier>{51453eaa-6fe9-4850-bd80-a8ebfbd178be}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body">
       <UniqueIdentifier>{1c885c30-9096-4fab-b8fc-920079e92902}</UniqueIdentifier>
@@ -3015,30 +3003,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\7.ShakeTree\ShakeTreeEnd">
       <UniqueIdentifier>{7b00641b-549c-44b8-9cc2-c4cbcde2c7f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin">
-      <UniqueIdentifier>{931a684b-aed6-4bb0-a053-03374c2a5fa0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle">
-      <UniqueIdentifier>{80b7de68-2106-4fbd-8a33-e4f08c5322db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine">
-      <UniqueIdentifier>{462ae2e9-14fa-4f21-a819-75cd247fdb4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent">
-      <UniqueIdentifier>{c5250dc7-5805-4427-8b08-1269ac214601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1">
-      <UniqueIdentifier>{b47d1b57-3419-4e46-b14a-737f83cb1ef8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start">
-      <UniqueIdentifier>{68ec963e-1f7d-4c4b-afc6-2bced8541b4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End">
-      <UniqueIdentifier>{d3b8d0c4-e01c-460b-8b68-f6449d83009b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop">
-      <UniqueIdentifier>{333539fb-7c63-4983-80e2-cacd15643149}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\ELShotgun\Bullet">
       <UniqueIdentifier>{43eee4a2-d026-4268-bcf5-7e74ccd32deb}</UniqueIdentifier>
@@ -3606,6 +3570,15 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox">
       <UniqueIdentifier>{6de15db7-490e-49fe-97dc-b4f2376897e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Egg">
+      <UniqueIdentifier>{fb43b313-ab37-4920-a05e-04289c65fa5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile">
+      <UniqueIdentifier>{4cf2a6d5-8845-4ab9-82f8-0ac296cd921e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody">
+      <UniqueIdentifier>{4c03b81c-d85e-4d2a-9a83-5854ee665961}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -6582,9 +6555,6 @@
     <ClInclude Include="..\Public\Mother.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MotherMouth.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Son.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son</Filter>
     </ClInclude>
@@ -6593,9 +6563,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Body_Son.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Body_MotherMouth.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Son_Weapon.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon</Filter>
@@ -6656,24 +6623,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Mother_VomitLoop.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MotherMouth_State.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MotherMouth_State_Normal.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MotherMouth_Idle.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MotherMouth_SpittingMineEnd.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MotherMouth_SpittingMineLoop.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MotherMouth_SpittingMineStart.h">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_EnergyWhip_Pull.h">
       <Filter>02.GameObjects\00. Character\Player\State\02. Attack\5. EnergyWhip\3. Pull</Filter>
@@ -7148,6 +7097,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_MainMenuList.h">
       <Filter>02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mother_Egg.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Egg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_Projectile.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_ColliderBody.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -9526,9 +9484,6 @@
     <ClCompile Include="..\Private\Mother.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MotherMouth.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Son.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son</Filter>
     </ClCompile>
@@ -9537,9 +9492,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Son.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Body_MotherMouth.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\Parts\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Son_Weapon.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\Weapon</Filter>
@@ -9597,24 +9549,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mother_VomitLoop.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Mother\State\2.Vomit\VomitLoop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MotherMouth_State.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\0.Origin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MotherMouth_State_Normal.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\0.Parent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MotherMouth_Idle.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\1.Idle\1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MotherMouth_SpittingMineEnd.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\End</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MotherMouth_SpittingMineLoop.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Loop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MotherMouth_SpittingMineStart.cpp">
-      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherMouth\State\2.SpittingMine\Start</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_State_Electrocute.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\5. Hit\6. Electrocute\0. Parent</Filter>
@@ -10134,6 +10068,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MainMenuList.cpp">
       <Filter>02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mother_Egg.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Egg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_Projectile.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_ColliderBody.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

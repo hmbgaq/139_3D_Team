@@ -530,6 +530,15 @@ void CCharacter::Look_At_Target()
 	m_pTransformCom->Look_At_OnLand(vTargetPos);
 }
 
+void CCharacter::Look_At_TargetBoss()
+{
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+	m_pTransformCom->Look_At_OnLandBoss(vTargetPos);
+}
+
 void CCharacter::Look_At_Target_Lerp(_float fTimeDelta)
 {
 	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
