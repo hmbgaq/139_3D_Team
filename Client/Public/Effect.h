@@ -77,6 +77,7 @@ public:
 
 public:
 	void	ReSet_Effect();
+	void	Init_ReSet_Effect();
 	void	End_Effect();
 
 

@@ -152,14 +152,12 @@ void CVIBuffer_Environment_Model_Instance::Init_Instance(_int iNumInstance)
 
 HRESULT CVIBuffer_Environment_Model_Instance::Render(_int iMeshIndex)
 {
-	
-
 	CModel* pModel = m_tModelDesc.pModel;
 
 	if(nullptr == pModel)
 		return E_FAIL;
 	//pModel->Bind_ShaderResource(pShader, pConstantName, iMeshIndex, eTextureType);
-	
+	//pModel->Bind_MaterialResource(class CShader* pShader, _uint iMeshIndex);
 	Bind_VIBuffers(iMeshIndex);
 
 	m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[iMeshIndex]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);

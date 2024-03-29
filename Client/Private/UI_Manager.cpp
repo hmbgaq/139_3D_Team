@@ -6,6 +6,7 @@
 #include "..\Public\UI_Manager.h"
 
 #pragma region UI
+//#include "UI.h"
 #include "UI_EnemyHP_Bar.h"
 #include "UI_EnemyHP_Shard.h"
 #include "UI_Distortion.h"

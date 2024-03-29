@@ -28,13 +28,19 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 
 	CCamera_Dynamic::DYNAMIC_CAMERA_DESC		Desc = {};
 
+	m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
+	
+
 	Desc.fMouseSensor = 0.05f;
 
 	Desc.fFovy = XMConvertToRadians(60.0f);
 	Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	Desc.fNear = 0.1f;
 	Desc.fFar = 1000.f;
-	Desc.fSpeedPerSec = 20.f;
+	if (m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
+		Desc.fSpeedPerSec = 300.f;
+	else 
+		Desc.fSpeedPerSec = 20.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 
 
@@ -87,10 +93,10 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 		////m_eCameraType = CameraType::SpringCamera;
 	}
 		
-	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+	
 
 
-	if(iCurrentLevel == (_uint)LEVEL_TOOL)
+	if(m_iCurrnetLevel == (_uint)LEVEL_TOOL)
 		m_eCameraType = CMasterCamera::DynamicCamera;
 	else
 		m_eCameraType = CameraType::SpringCamera;

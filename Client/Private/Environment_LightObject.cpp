@@ -27,8 +27,6 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 {	
 	m_tEnvironmentDesc = *(ENVIRONMENT_LIGHTOBJECT_DESC*)pArg;
 
-	
-	
 //! C:\Users\PC\Desktop\3D_TeamPortpolio\Client\Bin\DataFiles\Data_Effect\Data_Fire\FIre_Torch
 
 
@@ -37,19 +35,26 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-	
+
+
+	CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.LightDesc.iLightIndex);
+
+	if (pLight == nullptr)
+		return E_FAIL;
+
+	m_tEnvironmentDesc.iLightIndex = pLight->Get_LightIndex();
+
 	if (false == m_tEnvironmentDesc.bPreview)
 	{
 		m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 
-		CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.LightDesc.iLightIndex);
-
-		if (pLight == nullptr)
-			return E_FAIL;
-
-		m_tEnvironmentDesc.iLightIndex = pLight->Get_LightIndex();
+		//CLight* pLight = m_pGameInstance->Add_Light_AndGet(m_tEnvironmentDesc.LightDesc, m_tEnvironmentDesc.LightDesc.iLightIndex);
+		//
+		//if (pLight == nullptr)
+		//	return E_FAIL;
+		//
+		//m_tEnvironmentDesc.iLightIndex = pLight->Get_LightIndex();
 	}
-
 
 	if(true == m_tEnvironmentDesc.bAnimModel)
 	{
@@ -59,15 +64,10 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (true == m_tEnvironmentDesc.bEffect)
 	{
-		m_pEffect = EFFECT_MANAGER->Create_Effect("FIre_Torch_05.json", this);
+		m_pEffect = EFFECT_MANAGER->Create_Effect("Fire/", "Fire_Torch_05.json", this);
 		//m_pEffect->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
 	}
 	
-	
-	
-	
-
-
 	return S_OK;
 }
 
@@ -117,12 +117,8 @@ HRESULT CEnvironment_LightObject::Render()
 		{
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		}
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		m_pShaderCom->Begin(0);
-
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -131,32 +127,18 @@ HRESULT CEnvironment_LightObject::Render()
 
 HRESULT CEnvironment_LightObject::Render_Shadow()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	//#몬스터모델렌더
-	_float4x4		ViewMatrix, ProjMatrix;
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 100.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
-
-	//TODO 클라에서 모델의 메시 개수를 받아와서 순회하면서 셰이더 바인딩해주자.
-
-	_uint	iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-
-		m_pShaderCom->Begin(2); //TODO 추후 ENUM 으로 변경
-
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -183,6 +165,11 @@ void CEnvironment_LightObject::Set_Diffuse(_float4 vDiffuse)
 	pLight->Set_Diffuse(vDiffuse);
 	m_tEnvironmentDesc.LightDesc.vDiffuse = vDiffuse;
 	//pLight->Set_LightDesc()
+}
+
+void CEnvironment_LightObject::Set_AnimationIndex(_int iAnimIndex)
+{
+	m_pModelCom->Set_Animation(iAnimIndex);
 }
 
 void CEnvironment_LightObject::Set_Specular(_float4 vSpecular)
@@ -270,15 +257,7 @@ void CEnvironment_LightObject::Change_LightType(LIGHT_DESC::TYPE eLightType)
 
 }
 
-void CEnvironment_LightObject::Set_Select(_bool bSelect)
-{
-	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
 
-	if (nullptr == pLight)
-		return;
-		
-	pLight->Set_Select(bSelect);
-}
 
 void CEnvironment_LightObject::Set_EffectPos(_float3 vEffectPos)
 {
@@ -483,13 +462,11 @@ void CEnvironment_LightObject::Free()
 	__super::Free();
 
 
-	//if (false == m_tEnvironmentDesc.bPreview)
-	//{
-	//	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
-	//
-	//	if (pLight != nullptr)
-	//		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
-	//}
+	
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+	
+	if (pLight != nullptr)
+		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
 	
 	if (m_pEffect != nullptr)
 		Safe_Release(m_pEffect);

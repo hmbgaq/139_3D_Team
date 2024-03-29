@@ -28,6 +28,16 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+private:
+	CTexture*	m_pDissolveTexture = { nullptr };
+	_bool		m_bDissolve = { false };
+
+	/* Dissolve */
+	_float		m_fDissolveWeight = 0.f;
+	_float		m_fDissolve_feather = 0.f;
+	_float3		m_vDissolve_Color = { 0.f, 0.f, 0.f };
+	_float		m_fDissolve_Discard = 0.f;
+
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

@@ -985,9 +985,18 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PBR.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MyPBR.hlsl">
+      <Filter>98.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">
+      <Filter>98.ShaderFiles</Filter>
+    </None>
+    <None Include="..\Bin\ShaderFiles\VolumetricFog.hlsli">
+      <Filter>98.ShaderFiles</Filter>
+    </None>
+    <None Include="..\Bin\ShaderFiles\DitherUtil.hlsli">
       <Filter>98.ShaderFiles</Filter>
     </None>
   </ItemGroup>

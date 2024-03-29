@@ -145,7 +145,6 @@ void CEffect::Tick(_float fTimeDelta)
 void CEffect::Late_Tick(_float fTimeDelta)
 {
 #ifdef _DEBUG
-
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
@@ -223,7 +222,6 @@ void CEffect::Load_FromJson(const json& In_Json)
 {
 	__super::Load_FromJson(In_Json);
 
-
 	m_tEffectDesc.eType_Dead = In_Json["Effect"]["eType_Dead"];
 
 	m_tEffectDesc.bPlay			= In_Json["Effect"]["bPlay"];
@@ -287,7 +285,9 @@ void CEffect::Load_FromJson(const json& In_Json)
 		}
 	}
 
-	ReSet_Effect();
+
+	Init_ReSet_Effect();
+
 }
 
 void CEffect::Update_PivotMat()
@@ -328,16 +328,20 @@ void CEffect::ReSet_Effect()
 	m_tEffectDesc.fRemainAcc	 = 0.f;
 	m_tEffectDesc.fLifeTimeRatio = 0.f;
 
+
+}
+
+void CEffect::Init_ReSet_Effect()
+{
+	ReSet_Effect();
 	for (auto& Pair : m_PartObjects)
 	{
 		if (nullptr != Pair.second)
-		{
-			dynamic_cast<CEffect_Void*>(Pair.second)->ReSet_Effect();
-		}
-		
-		dynamic_cast<CEffect_Void*>(Pair.second)->Get_Desc()->bRender = { TRUE };
+			dynamic_cast<CEffect_Void*>(Pair.second)->Init_ReSet_Effect();
 	}
 }
+
+
 
 void CEffect::End_Effect()
 {
@@ -423,10 +427,25 @@ void CEffect::Delete_PartObject(const wstring& strPartTag)
 	if (iter == m_PartObjects.end())
 		return;
 
+
+	// 삭제된 객체 이후의 모든 객체의 번호를 하나씩 앞으로 당김
+	auto erase_iter = iter;
+	++erase_iter; // 삭제된 항목 이후의 첫 번째 항목
+
 	iter->second->Set_Dead(TRUE);		// 객체 삭제
 	m_PartObjects.erase(strPartTag);	// 맵컨테이너에서 삭제
 
+
+	while (erase_iter != m_PartObjects.end())
+	{
+		// 번호를 하나 앞으로 당김
+		dynamic_cast<CEffect_Void*>(erase_iter->second)->ReNumber_PartTag();
+
+		++erase_iter;
+	}
+
 	m_tEffectDesc.iPartSize -= 1;
+
 }
 
 

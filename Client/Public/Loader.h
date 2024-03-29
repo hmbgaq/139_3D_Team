@@ -38,9 +38,13 @@ public:
 	HRESULT Loading_For_IntroBoss_Level();
 
 	HRESULT Loading_For_SnowMountain_Level();
+	HRESULT Loading_For_SnowMountainBoss_Level();
 	HRESULT Loading_For_Lava_Level();
 
 	HRESULT	Loading_For_Tool_Level();
+
+	HRESULT	Loading_Player(LEVEL eLEVEL);
+	HRESULT Loading_For_Shader(LEVEL eLevel);
 
 private:
 	ID3D11Device*			m_pDevice = { nullptr };
@@ -62,7 +66,16 @@ private:
 	HRESULT Ready_Environment_Model(LEVEL eLevel); //TODO 승용
 	HRESULT Ready_UI_Tool_Texture(LEVEL eLevel); //TODO 성희
 	HRESULT Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLevel, _int iAnimType); //! 시작 디렉토리 부터 안에 있는 경로를 전부 탐색 , 승용
+	HRESULT Read_FBXModelPath_NoScale(const _tchar* StartDirectoryPath, LEVEL eLevel, _int iAnimType); //! 백배 스케일 안함
 
+
+/* For.Effect */
+private:
+	HRESULT Ready_Effect_Origin();
+	HRESULT Ready_Effect_All(LEVEL eLevel);
+	HRESULT Ready_Effect_Texture(LEVEL eLevel);
+	HRESULT Ready_Effect_Model(LEVEL eLevel);
+	HRESULT Ready_Effect_Buffer(LEVEL eLevel);
 
 
 public:

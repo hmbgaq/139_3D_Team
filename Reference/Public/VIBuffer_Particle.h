@@ -13,7 +13,7 @@ public:
 	typedef struct tagParticleBufferDESC
 	{
 		// 저장해야 하는 고정 정보들
-		_int		iCurNumInstance = { 500 };	// 초기화 값이 Max인스턴스 개수가 됨
+		_int		iCurNumInstance = { 1000 };	// 초기화 값이 Max인스턴스 개수가 됨
 
 
 		/* Types */
@@ -26,16 +26,29 @@ public:
 		/* LifeTime */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
+		/* Emitter */
+		_float		fEmissionTime = { 0.f };		// 저장 O
+		_uint		iAddEmitCount = { 0 };			// 저장 O	한번 방출 할 때 몇개씩 추가로 방출할건지
+		_float		fEmissionTimeAcc = { 0.f };		// 저장 X
+		_uint		iEmitCount = { 0 };				// 저장 X
+		_bool		bEmitFinished = { FALSE };		// 저장 X
 
 		/* RigidBody */
-		_bool		bUseRigidBody = { TRUE };
-		_bool		bKinetic = { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
-		_bool		bUseGravity = { TRUE };
-		FORCE_MODE	eForce_Mode = { FORCE_MODE::IMPULSE };
+		_bool		bUseRigidBody	= { TRUE };
+		_bool		bKinetic		= { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
+		_bool		bUseGravity		= { TRUE };
+		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 
 		_float		fGravity = { -9.8f };			// 중력 가속도
-		_float		fFriction = { 0.1f };			// 마찰 계수
+		
+
+		EASING_TYPE	eType_FrictionLerp = { EASING_TYPE::LINEAR };
+		_float2		vFrictionLerp_Pos = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
+		_float2		vStartEnd_Friction = { 0.1f, 0.1f };	// 시작과 끝 마찰 계수
+
+		
+		
 		_float		fSleepThreshold = { 0.05f };	// 슬립 한계점
 		_byte		byFreezeAxis = { 0 };			// 축 고정 확인용 바이트
 
@@ -44,24 +57,33 @@ public:
 
 		EASING_TYPE	eType_SpeedLerp = { EASING_TYPE::LINEAR };
 		_float2		vMinMaxSpeed = { 1.f, 1.f };
+		_float2		vMinMaxTornadoSpeed = { 1.f, 1.f };
 
 		/* For.Position */
 		_float3		vMinCenterOffsetPos = { 0.f, 0.f, 0.f };
 		_float3		vMaxCenterOffsetPos = { 0.f, 0.f, 0.f };
 
 		_float2		vMinMaxRange = { 0.1f, 3.f };
+		_float2		vMinMaxAddRange = { 0.f, 0.f };
+		
+
+		_float2		vMinMaxPosY = { 0.1f, 3.f };	// 파티클이 올라갈 최고 높이
+		_float2		vMinMaxTheta = { 0.f, 360.f };	// 3.14f * 2.f
 
 
 		/* For.Rotation */
+		_float3		vRadian = { 0.f, 0.f, 0.f };
+
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetZ = { 0.0f, 360.f };
 
 
 		/* For.Scale */
+		_bool		bUseScaleLerp	= { TRUE };
 		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
-		_float2		vLerpScale_Pos	= { 0.f, 0.5f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작할건지(커지고, 작아진다)
-		_float2		vScaleSpeed		= { 0.005f, 0.05f };	// 크기 증가 스피드, 감소 스피드
+		_float2		vScaleLerp_Up_Pos	= { 0.f, 0.3f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
+		_float2		vScaleLerp_Down_Pos = { 1.f, 1.f };			// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(작아지는 용)
 		_float2		vMinMaxWidth	= { 1.f, 1.f };
 		_float2		vMinMaxHeight	= { 1.f, 1.f };
 
@@ -81,9 +103,9 @@ public:
 
 
 		// 크기
-		_float		fUpScaleTimeAcc = { 0.f };
+/*		_float		fUpScaleTimeAcc = { 0.f };
 		_float		fDownScaleTimeAcc = { 0.f };
-		_float2		vCurScale		= { 1.f, 1.f };				
+		_float2		vCurScale		= { 1.f, 1.f };	*/			
 
 		_float4     vCurrentColor	= { 1.f, 1.f, 1.f, 1.f };	// 색
 
@@ -93,8 +115,10 @@ public:
 			fTimeAcc = { 0.f };
 			fLifeTimeRatio = { 0.f };
 
-			fUpScaleTimeAcc = { 0.f };
-			fDownScaleTimeAcc = { 0.f };
+			fEmissionTimeAcc = { 0.f };
+
+			//fUpScaleTimeAcc = { 0.f };
+			//fDownScaleTimeAcc = { 0.f };
 		}
 
 		void Reset_Desc()
@@ -108,6 +132,7 @@ public:
 	typedef struct tagParticleDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
+		_bool bEmit = { FALSE };
 		_bool bDie = { FALSE };
 
 		// 시간
@@ -118,22 +143,44 @@ public:
 
 		// 위치
 		_float4	vCenterPositions = { 0.f, 0.f, 0.f, 1.f };
-		_float fMaxRange = { 3.f };
+		_float	fMaxRange = { 3.f };
+		_float	fAddRange = { 0.f };
+
+		_float	fMaxPosY = { 3.f };
+
+
+		//  방향 
+		_float3	vDir = { 1.f, 0.f, 0.f };
+
+		_float3  vOffsetTheta = { 0.f, 0.f, 0.f };
+
 
 		// 스피드
-		_float			fCurSpeed = { 1.f };
+		_float	fCurSpeed = { 1.f };
+		_float  fCurTheta = { 0.f };
+		_float	fCurTornadoSpeed = { 1.f };
+
 
 		// 크기
-		_float2	vCurScales	= { 1.f, 1.f };
-		_float2	vMaxScales = { 1.f, 1.f };
+		_float	fUpScaleTimeAccs	= { 0.f };
+		_float	fDownScaleTimeAccs	= { 0.f };
+
+
+		_float2	vCurScales			= { 1.f, 1.f };
+		_float2	vMaxScales			= { 1.f, 1.f };
+		
 
 		// 색
-		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
+		//_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
+
 
 		void Reset_ParticleTimes()
 		{
 			fTimeAccs = { 0.f };
 			fLifeTimeRatios = { 0.f };
+
+			fUpScaleTimeAccs = { 0.f };
+			fDownScaleTimeAccs = { 0.f };
 		}
 
 
@@ -141,27 +188,37 @@ public:
 
 	typedef struct tagParticleShaderDesc
 	{
-		// 16 배수여야함
+		// 16 배수여야함 (64)
 		
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_float3	vDir	= { 1.f, 0.f, 0.f };
-		_float	Padding = { 0.f };
+		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f }; // 16
 
+		_float3 vRight	= { 1.f, 0.f, 0.f };		// 12
+		_float  fPadding1 = { 0.f };				// 4	
+
+		_float3 vUp			= { 0.f, 1.f, 0.f };	// 12
+		_float  fPadding2	= { 0.f };				// 4	
+
+		_float3 vLook		= { 0.f, 0.f, 1.f };	//12
+		_float  fPadding3	= { 0.f };				// 4	
 
 	} PARTICLE_SHADER_INFO_DESC;
 
 	typedef struct tagParticleRigidbodyDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_bool			bSleep = { FALSE };
+		_bool			bForced = { FALSE };
+		_bool			bSleep	= { FALSE };
 
 		_float3			vAccel = {0.f, 0.f, 0.f};		// 가속도
 		_float3			vVelocity = { 0.f, 0.f, 0.f };	// 속도
 
-		_float3			vDir = { 1.f, 0.f, 0.f };
-
+		//_float3			vDir = { 1.f, 0.f, 0.f };
 
 		_float			fMass = { 10.f };				// 질량
+
+		_float			fFriction = { 0.1f };			// 마찰 계수
+		_float			fFrictionTimeAccs = { 0.f };
 
 	} PARTICLE_RIGIDBODY_DESC;
 
@@ -190,6 +247,9 @@ public:
 
 public:
 	_float4 Make_Dir(_uint iNum);
+	void	Rotation_Instance(_uint iNum);
+	void	Update_Spark_Rotation(_uint iNum);
+	void	Update_Dir_Rotation(_uint iNum);
 
 
 	/* For.RigidBody */

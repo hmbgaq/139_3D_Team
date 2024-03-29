@@ -80,11 +80,8 @@ void CBody::Late_Tick(_float fTimeDelta)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
 
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-			return;
-
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this)))
-			return;
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 	}
 
 #ifdef _DEBUG
@@ -131,11 +128,7 @@ HRESULT CBody::Render_Shadow()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-
 		m_pShaderCom->Begin(2);
-
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -151,6 +144,11 @@ void CBody::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState,
 {
 	m_pModelCom->Set_Animation(_iNextAnimation, _eAnimState, _bIsTransition, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
 	m_pModelCom->Set_UseAnimationPos(_bUseAnimationPos);
+}
+
+void CBody::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_pModelCom->Set_AnimState(_eAnimState);
 }
 
 _bool CBody::Is_Animation_End()
@@ -199,27 +197,23 @@ void CBody::OnCollisionExit(CCollider* other)
 {
 }
 
-void CBody::Set_MouseMove(_float fTimeDelta)
+void CBody::Set_MouseMove(_float fTimeDelta, _bool bIsUseMouseMove)
 {
 	_float2 vMouseMove = { 0.f, 0.f };
 
-	//_float fSpeed = 10.f;
-
 	vMouseMove.x = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_X) * 12.f * fTimeDelta;
 	vMouseMove.y = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_Y) * 3.5f * fTimeDelta;
-	//vMouseMove.y = (_float)m_pGameInstance->Get_DIMouseMove(DIMS_Y) * 10.f * fTimeDelta;
+	m_fRotateUpperY += vMouseMove.y;
 
-	//vMouseMove *= fSpeed * fTimeDelta;
 
+	if (false == bIsUseMouseMove)
+	{
+		m_pModelCom->Set_MouseMove(vMouseMove);
+		return;
+	}
 
 	_float2 vResult = vMouseMove;
-
-	m_fRotateUpperY += vMouseMove.y;
-	//m_fRotateUpperY += vMouseMove.y / (10.f / 3.5f);
-	
-
 	vResult.y = m_fRotateUpperY - m_fShootingReaction;
-
 	vResult.x += m_fRotateUpperX;
 
 	m_pModelCom->Set_MouseMove(vResult);

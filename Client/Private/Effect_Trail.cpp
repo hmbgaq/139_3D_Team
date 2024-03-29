@@ -219,21 +219,20 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	 /* 빌보드 */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 
-	/* 빌보드 */
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 
-
-	/* Discard ============================================================================================ */
+	/* Color & Discard ===============================================================================*/
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fAlpha_Discard", &m_tVoidDesc.vColor_Clip.w, sizeof(_float)));
 
 	_float3 vBlack_Discard = _float3(m_tVoidDesc.vColor_Clip.x, m_tVoidDesc.vColor_Clip.y, m_tVoidDesc.vColor_Clip.z);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vBlack_Discard", &vBlack_Discard, sizeof(_float3)));
 
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tVoidDesc.eMode_Color, sizeof(_int)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tVoidDesc.vColor_Mul, sizeof(_float4)));
 
 	/* UV ============================================================================================ */
-	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
-
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
 
 	/* Camera ============================================================================================ */
@@ -289,8 +288,6 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 
 	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Offset"], m_tVoidDesc.vUV_Offset);
 	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Scale"], m_tVoidDesc.vUV_Scale);
-
-
 	Out_Json["Trail"]["fUV_RotDegree"] = m_tVoidDesc.fUV_RotDegree;
 
 	Out_Json["Trail"]["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
@@ -300,7 +297,7 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
-
+	Out_Json["eMode_Color"] = m_tVoidDesc.eMode_Color;
 
 	/* Rim & Bloom */
 	CJson_Utility::Write_Float3(Out_Json["Trail"]["vBloomPower"], m_tVoidDesc.vBloomPower);
@@ -362,7 +359,8 @@ void CEffect_Trail::Load_FromJson(const json& In_Json)
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Clip"], m_tVoidDesc.vColor_Clip);
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Mul"], m_tVoidDesc.vColor_Mul);
-
+	if (In_Json.contains("eMode_Color")) //! TODO 다시 저장 후 if문 삭제
+		m_tVoidDesc.eMode_Color = In_Json["eMode_Color"];
 
 	/* Rim & Bloom */ 
 	CJson_Utility::Load_Float3(In_Json["Trail"]["vBloomPower"], m_tVoidDesc.vBloomPower);

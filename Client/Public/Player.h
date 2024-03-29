@@ -9,7 +9,7 @@ END
 
 
 BEGIN(Client)
-class CUI_Manager;
+//class CUI_Manager;
 
 class CPlayer final : public CCharacter_Client
 {
@@ -43,6 +43,10 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+private:
+	HRESULT Ready_Components();
+	HRESULT Ready_PartObjects();
+
 public:
 	_bool Is_Rotate_In_CameraDir() {
 		return m_bRotate_In_CameraDir;
@@ -55,7 +59,7 @@ public:
 
 public:
 	void Aim_Walk(_float fTimeDelta);
-	void Activate_ShootingReaction();
+	void Activate_ShootingReaction(_float fHeight = 20.f);
 
 public://!For. Interact
 	void SetState_InteractJumpDown100(); 
@@ -63,6 +67,9 @@ public://!For. Interact
 	void SetState_InteractJumpDown300();
 	void SetState_InteractVault100();
 	void SetState_InteractVault200();
+	void SetState_InteractCartRideStart();
+	void SetState_InteractCartRideLoop();
+	void SetState_InteractCartRideWagonJump();
 	
 
 public:
@@ -70,13 +77,13 @@ public:
 
 	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
-private:
-	void	KeyInput(_float fTimeDelta);
-	CUI_Manager* m_pUIManager = nullptr;
 
 private:
-	HRESULT Ready_Components();
-	HRESULT Ready_PartObjects();
+	void		 KeyInput(_float fTimeDelta);
+	//CUI_Manager* m_pUIManager = nullptr;
+	_bool		 m_bShowOption = false;
+	_bool		 m_bShowSkillWindow = false;
+	_bool		 m_bShowDiedScreen = false;
 
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }

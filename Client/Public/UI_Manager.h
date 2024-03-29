@@ -12,7 +12,7 @@ END
 
 
 BEGIN(Client)
-class CUI;
+//class CUI;
 
 class CUI_Manager : public CBase
 {

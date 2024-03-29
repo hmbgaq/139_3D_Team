@@ -21,10 +21,10 @@ private:
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
 	HRESULT Ready_Layer_BackGround(const wstring& strLayerTag);
-	HRESULT Ready_LandObjects();
-	HRESULT Ready_Layer_Player(const wstring& strLayerTag, void* pArg);
-	HRESULT Ready_Layer_Monster(const wstring& strLayerTag, void* pArg);
-	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
+
+	
+	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
+	HRESULT Ready_Layer_Monster(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
 
 private: /* UI */
@@ -32,8 +32,16 @@ private: /* UI */
 	HRESULT Ready_Layer_UI_Monster(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_UI_Player(const wstring& strLayerTag, void* pArg);
 
+private: /* Map*/
+	HRESULT Ready_Event();
+
+private: /* Shader */
+	HRESULT Ready_Shader();
+
+
 private:
 	_int			TempLightNumber = 0;
+	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainTrackSignal_MapData_MapData_MapData.json";
 
 public:
 	static CLevel_SnowMountain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

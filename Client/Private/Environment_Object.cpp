@@ -24,8 +24,6 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 {	
 	m_tEnvironmentDesc = *(ENVIRONMENT_OBJECT_DESC*)pArg;
 
-	
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;	
 
@@ -47,9 +45,6 @@ HRESULT CEnvironment_Object::Initialize(void* pArg)
 			return E_FAIL;
 	}
 
-	
-
-
 	return S_OK;
 }
 
@@ -59,6 +54,16 @@ void CEnvironment_Object::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Object::Tick(_float fTimeDelta)
 {
+	//if (m_pGameInstance->Key_Down(DIK_8))
+	//{
+	//	iCheckMeshNum += 1;
+	//
+	//	if (iCheckMeshNum >= m_pModelCom->Get_NumMeshes())
+	//		iCheckMeshNum = 0;
+	//
+	//	cout << iCheckMeshNum << endl;
+	//}
+
 	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	//
 	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
@@ -88,57 +93,75 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 
 HRESULT CEnvironment_Object::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
-	
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	
-	for (size_t i = 0; i < iNumMeshes; i++)
+	FAILED_CHECK(Bind_ShaderResources());
+
+	wstring strTemp = Get_ModelTag();
+
+	if (true == bRenderIce && false == bIcarusTexture)	// Icicle Render
 	{
-		if(m_tEnvironmentDesc.bAnimModel == true)
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (size_t i = 0; i < iNumMeshes; i++)
 		{
-			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pIceNoise->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture");
+			m_pIceDiffuse->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse");
+			m_vCamPosition = m_pGameInstance->Get_CamPosition();
+			m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPosition, sizeof(_float4));
+
+			if (i == m_iIceMeshNumber)
+				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ICICLE));
+			else
+				m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+
+			m_pModelCom->Render((_uint)i);
 		}
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		
-		m_pShaderCom->Begin(0);
-
-		m_pModelCom->Render((_uint)i);
 	}
+	else if (false == bRenderIce && true == bIcarusTexture)	// Icarus Ground Render
+	{
+	
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pRADTexture->Bind_ShaderResource(m_pShaderCom, "g_RADTexture");
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
+			m_pModelCom->Render((_uint)i);
+		}
+	}
+	else
+	{
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (m_tEnvironmentDesc.bAnimModel == true)
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			}
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+			m_pModelCom->Render((_uint)i);
+		}
+	}
 	return S_OK;
 }
 
 HRESULT CEnvironment_Object::Render_Shadow()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	//#몬스터모델렌더
-	_float4x4		ViewMatrix, ProjMatrix;
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 100.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
-
-	//TODO 클라에서 모델의 메시 개수를 받아와서 순회하면서 셰이더 바인딩해주자.
-
-	_uint	iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-
-		m_pShaderCom->Begin(2); //TODO 추후 ENUM 으로 변경
-
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -155,7 +178,14 @@ void CEnvironment_Object::Load_FromJson(const json& In_Json)
 	return __super::Load_FromJson(In_Json);
 }
 
+void CEnvironment_Object::Set_AnimationIndex(_uint iAnimIndex)
+{
+	m_pModelCom->Set_Animation(iAnimIndex);
+}
+
+
 #ifdef _DEBUG
+
 
 _bool CEnvironment_Object::Picking(_float3* vPickedPos)
 {
@@ -225,46 +255,55 @@ HRESULT CEnvironment_Object::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	//CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
-	//
-	//m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
-	//Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
+	/* 소영 얼음중 */		
+	
+	wstring strTemp = Get_ModelTag();
 
-		//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-		//!
-		//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
-		//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
-		//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
-
-	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
-	//{
-	//	MSG_BOX("ㅈ댐");
-	//	return E_FAIL;
-	//}
-
-	//!if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
-	//!{
-	//!	MSG_BOX("ㅈ댐");
-	//!	return E_FAIL;
-	//!}
-
-//	m_pPickingCollider
+	if (TEXT("Prototype_Component_Model_TeslaIcicle1") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle3") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle4") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle5") == strTemp ||
+		TEXT("Prototype_Component_Model_TeslaIcicle6") == strTemp)
+	{
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceNoise"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pIceNoise)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), TEXT("Com_Texture2"), reinterpret_cast<CComponent**>(&m_pIceDiffuse)));
+		bRenderIce = true;
+		m_iIceMeshNumber = 1;
+	}
+	else if (TEXT("Prototype_Component_Model_TeslaIcicle2") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicle3") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong1") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong2") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong3") == strTemp ||
+			 TEXT("Prototype_Component_Model_TeslaIcicleLong4") == strTemp)
+	{
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceNoise"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pIceNoise)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), TEXT("Com_Texture2"), reinterpret_cast<CComponent**>(&m_pIceDiffuse)));
+		bRenderIce = true;
+		m_iIceMeshNumber = 0;
+	}
+	else if (TEXT("Prototype_Component_Model_ICarusGround2") == strTemp ||
+		TEXT("Prototype_Component_Model_ICarusRockCliff4") == strTemp)
+	{
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IcarusRAD"), TEXT("Com_Texture3"), reinterpret_cast<CComponent**>(&m_pIceDiffuse)));
+		bIcarusTexture = true;
+	}
+	else
+	{
+		bRenderIce = false;
+	}
 
 	return S_OK;
 }
 
 HRESULT CEnvironment_Object::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
-		_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-		return E_FAIL;
+	_float fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 	
 	return S_OK;
 }
@@ -306,7 +345,11 @@ void CEnvironment_Object::Free()
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
-
+	
+	if(nullptr != m_pIceNoise)
+		Safe_Release(m_pIceNoise);
+	if(nullptr != m_pIceDiffuse)
+		Safe_Release(m_pIceDiffuse);
 
 	//m_pGameInstance->Add_Light()
 

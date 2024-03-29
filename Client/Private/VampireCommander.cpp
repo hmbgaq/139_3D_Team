@@ -71,8 +71,9 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
-	m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
-	m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
+
+	m_pMapEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
+
 
 	if (nullptr == m_pTarget)
 	{
@@ -101,7 +102,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	//cout << "introBossHP:" << m_iHp << endl;
 	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
 
-	cout << "VampireCommander : " << fAngle << endl;
+	//cout << "VampireCommander : " << fAngle << endl;
 	if (m_bLookAt == true)
 	{
 		

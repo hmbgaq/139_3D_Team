@@ -28,6 +28,9 @@
 #include "Player_InteractionJumpDown300.h"
 #include "Player_InteractionVault100.h"
 #include "Player_InteractionVault200.h"
+#include "Player_CartRide_Start.h"
+#include "Player_L06_Wagon_Jump.h"
+#include "Player_CartRide_Loop.h"
 
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
@@ -69,12 +72,18 @@ HRESULT CPlayer::Initialize(void* pArg)
 // 	{
 		m_pActor = new CActor<CPlayer>(this);
 		m_pActor->Set_State(new CPlayer_IdleLoop());
+		//m_pActor->Set_State(new CPlayer_CartRide_Loop());
+
 // 	}
 
 
 	m_pRigidBody->Set_UseGravity(true);
 
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+
+
+	CData_Manager::GetInstance()->Set_Player(this);
+	m_pGameInstance->Set_Player(this);
 
 
 	///* For.Com_PhysXController */
@@ -91,17 +100,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
-	CData_Manager::GetInstance()->Set_Player(this);
-	m_pGameInstance->Set_Player(this);
-	/* Temp - 맵에 맞게 위치 조정한값*/
-	//m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, XMVectorSet(-26.f, 0.f, -6.f, 1.f));
-
-	//! Add_UIManager
-	m_pUIManager = CUI_Manager::GetInstance();
-	//! Add_DeidScreen
-	m_pUIManager->Ready_DiedScreen(LEVEL_STATIC); // 생성
-	m_pUIManager->NonActive_DiedScreen(); // 끄기
-
 	return S_OK;
 }
 
@@ -116,7 +114,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor/* && m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL)*/)
+	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
@@ -132,6 +130,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
+
+
 
 	//_float3 vPos = Get_Position();
 
@@ -323,9 +323,9 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 	}
 }
 
-void CPlayer::Activate_ShootingReaction()
+void CPlayer::Activate_ShootingReaction(_float fHeight)
 {
-	m_pBody->Activate_ShootingReaction();
+	m_pBody->Activate_ShootingReaction(fHeight);
 }
 
 
@@ -354,7 +354,21 @@ void CPlayer::SetState_InteractVault100()
 void CPlayer::SetState_InteractVault200()
 {
 	m_pActor->Set_State(new CPlayer_InteractionVault200());
-	
+}
+
+void CPlayer::SetState_InteractCartRideStart()
+{
+	m_pActor->Set_State(new CPlayer_CartRide_Start());
+}
+
+void CPlayer::SetState_InteractCartRideLoop()
+{
+	m_pActor->Set_State(new CPlayer_CartRide_Loop());
+}
+
+void CPlayer::SetState_InteractCartRideWagonJump()
+{
+	m_pActor->Set_State(new CPlayer_L06_Wagon_Jump());
 }
 
 #pragma endregion 상호작용
@@ -381,25 +395,42 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 		{
 			Move_In_Proportion_To_Enemy(fTimeDelta);
 		}
-		
 	}
 }
 
 void CPlayer::KeyInput(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_ESCAPE))
-	{
-		m_pUIManager->NonActive_DiedScreen(); // 끄기
-	}
+	///* ! UI : ShaderOption Window / Key : Esc */
+	//if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+	//{
+	//	m_bShowOption = !m_bShowOption;
+	//
+	//	if(m_bShowOption == true)
+	//		m_pUIManager->Active_Option();
+	//	else
+	//		m_pUIManager->NonActive_Option();
+	//}
+	//
+	///* ! UI : DiedScreen / Key : I */
+	//if (m_pGameInstance->Key_Down(DIK_I))
+	//{
+	//	m_bShowDiedScreen = !m_bShowDiedScreen;
+	//
+	//	if (m_bShowDiedScreen == true)
+	//		m_pUIManager->Active_DiedScreen();
+	//	else
+	//		m_pUIManager->NonActive_DiedScreen();
+	//}
 
-	if (m_pGameInstance->Key_Down(DIK_I))
-	{
-		m_pUIManager->Active_DiedScreen();	// 켜기
-	}
-
+	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */
 	if (m_pGameInstance->Key_Down(DIK_K))
 	{
+		//m_bShowSkillWindow = !m_bShowSkillWindow;
 
+		//if (m_bShowSkillWindow == true)
+		//	m_pUIManager->Active_SkillWindow();
+		//else
+		//	m_pUIManager->NonActive_SkillWindwo();
 	}
 }
 
@@ -417,20 +448,39 @@ HRESULT CPlayer::Ready_PartObjects()
 	//{
 		
 	CWeapon::WEAPON_DESC		WeaponDesc = {};
-	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc, WEAPON_PUNCH_L));
-	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc, WEAPON_PUNCH_R));
-	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc, WEAPON_WINCHESTER));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "LeftHandIK", WeaponDesc,				PLAYER_WEAPON_PUNCH_L));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Punch"), "RightHandIK", WeaponDesc,			PLAYER_WEAPON_PUNCH_R));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc,		PLAYER_WEAPON_WINCHESTER));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_REVOLVER));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELShotgun"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_SHOTGUN));
 
-	//}
 
-	CWeapon* m_pWeapon_Punch_L = Get_Weapon(WEAPON_PUNCH_L);
-	m_pWeapon_Punch_L->Set_Enable(false);
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Kick"), "RightFoot", WeaponDesc,			PLAYER_WEAPON_KICK));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Zapper"), "LeftHandIK", WeaponDesc,		PLAYER_WEAPON_ZAPPER));
+
 	
-	CWeapon* m_pWeapon_Punch_R = Get_Weapon(WEAPON_PUNCH_R);
-	m_pWeapon_Punch_R->Set_Enable(false);
-	
-	CWeapon* m_pWeapon_Winchester = Get_Weapon(WEAPON_WINCHESTER);
-	m_pWeapon_Winchester->Set_Enable(false);
+	Set_Weapons_Enable_False();
+
+	//CWeapon* m_pWeapon_Punch_L = Get_Weapon(PLAYER_WEAPON_PUNCH_L);
+	//m_pWeapon_Punch_L->Set_Enable(false);
+	//
+	//CWeapon* m_pWeapon_Punch_R = Get_Weapon(PLAYER_WEAPON_PUNCH_R);
+	//m_pWeapon_Punch_R->Set_Enable(false);
+	//
+	//CWeapon* m_pWeapon_Winchester = Get_Weapon(PLAYER_WEAPON_WINCHESTER);
+	//m_pWeapon_Winchester->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Revolver = Get_Weapon(PLAYER_WEAPON_REVOLVER);
+	//m_pWeapon_Revolver->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Shotgun = Get_Weapon(PLAYER_WEAPON_SHOTGUN);
+	//m_pWeapon_Shotgun->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Kick = Get_Weapon(PLAYER_WEAPON_KICK);
+	//m_pWeapon_Kick->Set_Enable(false);
+
+	//CWeapon* m_pWeapon_Zapper = Get_Weapon(PLAYER_WEAPON_ZAPPER);
+	//m_pWeapon_Zapper->Set_Enable(false);
 
 	
 	

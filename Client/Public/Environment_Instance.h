@@ -27,6 +27,7 @@ public:
 	virtual void	Tick(_float fTimeDelta) override;
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Shadow() override;
 
 public:
 	_bool			Picking_Instance(RAY* pRay, _float3* vOutPoint); 
@@ -53,6 +54,7 @@ public:
 	vector<INSTANCE_INFO_DESC>*				Get_InstanceInfoDesc() { return &m_tInstanceDesc.vecInstanceInfoDesc; }
 
 	INSTANCE_INFO_DESC*						Get_InstanceInfo(_uint iIndex) { return &m_tInstanceDesc.vecInstanceInfoDesc[iIndex]; }
+	void									Set_ShaderPassIndex(_uint iShaderPassIndex) { m_tInstanceDesc.iShaderPassIndex = iShaderPassIndex;}
 
 private:
 	CShader*								m_pShaderCom = { nullptr };	
@@ -65,7 +67,6 @@ private:
 
 	_uint									m_iCurrentLevel = (_uint)LEVEL_TOOL;
 	
-
 
 private:
 	HRESULT Ready_Components();

@@ -94,6 +94,15 @@ CLight* CLight_Manager::Get_DirectionLight()
 	return nullptr;
 }
 
+void CLight_Manager::Get_AllLight(list<class CLight*>* pTemp)
+{
+	for (auto& Lights : m_Lights)
+	{
+		pTemp->push_back(Lights);
+	}
+}
+
+
 void CLight_Manager::Change_Light_Desc(const _int iIndex, LIGHT_DESC newDesc)
 {
 	Find_Light(iIndex)->Set_LightDesc(newDesc);

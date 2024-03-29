@@ -38,7 +38,6 @@ public:
 	virtual CGameObject* Pool() override;
 	virtual void Free() override;
 
-
 };
 
 END

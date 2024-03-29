@@ -25,11 +25,9 @@ HRESULT CEnvironment_Instance::Initialize_Prototype()
 HRESULT CEnvironment_Instance::Initialize(void* pArg)
 {	
 	m_tInstanceDesc = *(MAPTOOL_INSTANCE_DESC*)pArg;
-
 	
 	if (FAILED(__super::Initialize(nullptr)))
 		return E_FAIL;	
-
 
 	if (m_pGameInstance->Get_CurrentLevel() == (UINT)LEVEL_TOOL)
 	{
@@ -41,24 +39,16 @@ HRESULT CEnvironment_Instance::Initialize(void* pArg)
 		}
 	}
 
-
 	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
-
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-
-
-	
-	
-	
 	
 	return S_OK;
 }
 
 void CEnvironment_Instance::Priority_Tick(_float fTimeDelta)
 {
-
 }
 
 void CEnvironment_Instance::Tick(_float fTimeDelta)
@@ -103,30 +93,34 @@ void CEnvironment_Instance::Late_Tick(_float fTimeDelta)
 
 HRESULT CEnvironment_Instance::Render()
 {
-	if(FAILED(Bind_ShaderResources()))
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	wstring strTemp = Get_ModelTag();
+
+	if (strTemp == TEXT("Prototype_Component_Model_OakTreeDry1") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry2") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry3") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry4") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry5") ||
+		strTemp == TEXT("Prototype_Component_Model_OakTreeDry6"))
+			int a = 0;
+
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-	
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		
-
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
-
-
-
 		m_pInstanceModelCom->Render((_uint)i);
-
-		//m_pModelCom->Render(i);
 	}
 
-	
-	
 
+	return S_OK;
+}
+
+HRESULT CEnvironment_Instance::Render_Shadow()
+{
 	return S_OK;
 }
 
@@ -218,7 +212,6 @@ HRESULT CEnvironment_Instance::Remove_Instance(_uint iIndex)
 
 HRESULT CEnvironment_Instance::Ready_Components()
 {
-
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -268,22 +261,17 @@ HRESULT CEnvironment_Instance::Ready_Components()
 
 HRESULT CEnvironment_Instance::Bind_ShaderResources()
 {
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	//	return E_FAIL;
 	_float4x4 WorldMatrix;
 	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ))))
-		return E_FAIL;
+	_float gCamFar = m_pGameInstance->Get_CamFar();
+	_float4 m_vCamPos = m_pGameInstance->Get_CamPosition();
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float))))
-		return E_FAIL;
-
+	m_pShaderCom->Bind_RawValue("g_fCamFar", &gCamFar, sizeof(_float));
+	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
 
 	return S_OK;
 }

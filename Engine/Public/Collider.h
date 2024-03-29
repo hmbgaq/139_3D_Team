@@ -48,6 +48,9 @@ public:
 public:
 	virtual void Set_Enable(_bool _Enable) override;
 
+public:
+	_uint Get_Layer() { return m_iLayer; }
+
 #ifdef _DEBUG
 public:
 	virtual HRESULT Render();

@@ -1,12 +1,14 @@
-#include "stdafx.h"
-#include "Window_ShaderTool.h"
-#include "GameInstance.h"
-#include "Environment_Object.h"
-#include "Environment_Instance.h"
-#include "Data_Manager.h"
 #include "Light.h"
-#include "ShaderParsed_Object.h"
+#include "SMath.h"
+#include "stdafx.h"
+#include "Data_Manager.h"
+#include "GameInstance.h"
+#include "Light_Manager.h"
 #include "Monster_Character.h"
+#include "Window_ShaderTool.h"
+#include "Environment_Object.h"
+#include "ShaderParsed_Object.h"
+#include "Environment_Instance.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -111,8 +113,6 @@ void CWindow_ShaderTool::Create_Object()
 
 	ImGui::SeparatorText(" Modify Object ");
 
-
-
 	ImGui::End();
 }
 
@@ -180,6 +180,11 @@ void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
 
 void CWindow_ShaderTool::Layer_Light_Control()
 {
+	/* 모든 빛 다 가져오기 */
+	//m_pGameInstance->Get_AllLight(&m_listLight);
+	//
+	//Show_N_Controll_Light();
+
 	if (ImGui::TreeNode(" Save / Losad "))
 	{
 		Save_Load_Light();
@@ -195,6 +200,8 @@ void CWindow_ShaderTool::Layer_Light_Control()
 	}
 	if (ImGui::TreeNode("Spot Light"))
 	{
+		Compress_SpotLight();
+
 		ImGui::TreePop();
 	}
 }
@@ -252,6 +259,42 @@ void CWindow_ShaderTool::Save_Load_Light()
 		Load_Function(strPath, strFileName);
 }
 
+void CWindow_ShaderTool::Show_N_Controll_Light()
+{
+	const char* items[128];
+
+	for (auto& Lights : m_listLight)
+	{
+		_int iIndex = Lights->Get_LightIndex();
+		switch (Lights->Get_LightDesc().eType)
+		{
+		case LIGHT_DESC::TYPE::TYPE_DIRECTIONAL:
+			break;
+		case LIGHT_DESC::TYPE::TYPE_POINT:
+			break;
+		case LIGHT_DESC::TYPE::TYPE_SPOTLIGHT:
+			break;
+		}
+	}
+
+	//const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
+	static int item_current_idx = 0; // Here we store our selection data as an index.
+	if (ImGui::BeginListBox("listbox 1"))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+		{
+			const bool is_selected = (item_current_idx == n);
+			if (ImGui::Selectable(items[n], is_selected))
+				item_current_idx = n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+}
+
 void CWindow_ShaderTool::Compress_Directional_Light()
 {
 	/* 현재 레벨의 전역빛 가져오기 */
@@ -307,6 +350,32 @@ void CWindow_ShaderTool::Compress_Directional_Light()
 	}
 }
 
+void CWindow_ShaderTool::Compress_SpotLight()
+{
+	if (ImGui::Button(u8"예시 만들기"))
+	{
+		_uint Temp = {};
+
+		LIGHT_DESC LightDesc = {};
+		LightDesc.bEnable = true;
+		LightDesc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+		LightDesc.vPosition = _float4(60.5f, 0.f, 26.f, 0.f);
+		LightDesc.fRange = 10.f;
+		LightDesc.fCutOff = 0.5f;
+		LightDesc.fOuterCutOff = 0.7f;
+		LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
+		LightDesc.fVolumetricStrength = 10.f;
+
+		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, Temp);
+	}
+}
+
+void CWindow_ShaderTool::Compress_PointLight()
+{
+}
+
 
 #pragma endregion
 
@@ -316,6 +385,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 {
 	ImGui::SeparatorText("Pre-Post");
 
+	if (ImGui::TreeNode("PBR"))
+	{
+		Compress_PBR_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Bloom / Rim Setting"))
 	{
 		Compress_BloomRim_Setting();
@@ -336,6 +410,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 
 	ImGui::SeparatorText("Post");
 
+	if (ImGui::TreeNode("SSR Setting"))
+	{
+		Compress_SSR_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Radial Blur Setting"))
 	{
 		Compress_Radial_Setting();
@@ -363,6 +442,70 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_HSV_Setting();
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("Vignette Setting"))
+	{
+		Compress_Vignette_Setting();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Chroma Setting"))
+	{
+		Compress_Chroma_Setting();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Screen Effect"))
+	{
+		Compress_ScreenEffect_Setting();
+		ImGui::TreePop();
+	}
+	ImGui::PushID(3);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.8f));
+	if (ImGui::Button("Shader Save"))
+	{
+		m_bShaderSave = true;
+	}
+	ImGui::PopStyleColor(3); //PushStyleColor를 3번 호출해서 3번 지우는거
+	ImGui::PopID();
+
+	ImGui::SameLine();
+
+	ImGui::PushID(4);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1 / 7.0f, 0.6f, 0.6f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1 / 7.0f, 0.7f, 0.7f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1 / 7.0f, 0.8f, 0.8f));
+	if (ImGui::Button("Shader Load"))
+	{
+		m_eDialogType = DIALOG_TYPE::LOAD_DIALOG;
+		m_strDialogPath = "../Bin/DataFiles/Data_Shader/";
+		OpenDialog(CImgui_Window::IMGUI_SHADER_WINDOW);
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
+
+	if (m_bShaderSave)
+		Save_Shader();
+
+	//if (m_bShaderLoad)
+	//{
+	//	Load_Shader();
+	//}
+}
+
+void CWindow_ShaderTool::Compress_PBR_Setting()
+{
+	ImGui::Checkbox("PBR Active", &m_ePBR_Desc.bPBR_ACTIVE);
+
+	ImGui::InputInt("PBR Texture", &m_iPBRTextureNumber);
+
+	if (m_iPBRTextureNumber < 0)
+		m_iPBRTextureNumber = 0;
+	if (m_iPBRTextureNumber >= 10)
+		m_iPBRTextureNumber = 10;
+
+	m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTextureNumber);
+	m_pGameInstance->Get_Renderer()->Set_PBR_Option(m_ePBR_Desc);
+
 }
 
 void CWindow_ShaderTool::Compress_HBAO_Plus_Setting()
@@ -443,12 +586,14 @@ void CWindow_ShaderTool::Compress_Radial_Setting()
 
 void CWindow_ShaderTool::Compress_DOF_Setting()
 {
+	static float Params[4] = { 0.10f, 0.20f, 0.30f, 0.4f };
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
+	ImGui::SliderFloat4("DOF Parameters", reinterpret_cast<float*>(&m_eDOF_Desc.DOFParams), -1.0f, 5.0f, "Param %0.3f");
 
-	ImGui::SliderFloat("Distance", &m_eDOF_Desc.fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
-	ImGui::SliderFloat("Range", &m_eDOF_Desc.fFocusRange, 0.0f, 100.0f, "Range = %.3f");
-	//ImGui::SliderFloat("Att", &m_eDOF_Desc.fMaxAtt, 0.0f, 100.0f, "MaxAtt = %.3f");
-
+	//ImGui::SliderFloat4("DOFParams", &m_eDOF_Desc.DOFParams, -1.0f, 1.0f, "DOFParams = %.3f");
+	//ImGui::SliderFloat("Distance", &m_eDOF_Desc.fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
+	//ImGui::SliderFloat("Range", &m_eDOF_Desc.fFocusRange, 0.0f, 100.0f, "Range = %.3f");
+	
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
 
@@ -481,6 +626,107 @@ void CWindow_ShaderTool::Compress_HSV_Setting()
 
 	m_pGameInstance->Get_Renderer()->Set_HSV_Option(m_eHSV_Desc);
 }
+
+void CWindow_ShaderTool::Compress_Vignette_Setting()
+{
+	ImGui::Checkbox("Vignette Active", &m_eVignette_Desc.bVignette_Active);
+
+	ImGui::SliderFloat("fVignetteRatio", &m_eVignette_Desc.fVignetteRatio, 0.0f, 6.0f, "Ratio = %.3f");
+
+	ImGui::SliderFloat("fVignetteRadius", &m_eVignette_Desc.fVignetteRadius, -1.0f, 3.0f, "Radius = %.3f");
+
+	ImGui::SliderFloat("fVignetteAmount", &m_eVignette_Desc.fVignetteAmount, -2.0f, 1.0f, "Amount = %.3f");
+	
+	ImGui::SliderFloat("fVignetteSlope", &m_eVignette_Desc.fVignetteSlope, 0.0f, 16.0f, "Slope = %.3f");
+
+	ImGui::SliderFloat("fVignetteCenter_X", &m_eVignette_Desc.fVignetteCenter_X, 0.0f, 1.0f, "Center_X = %.3f");
+
+	ImGui::SliderFloat("fVignetteCenter_Y", &m_eVignette_Desc.fVignetteCenter_Y, 0.0f, 1.0f, "Center_Y = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Vignette_Option(m_eVignette_Desc);
+}
+
+void CWindow_ShaderTool::Compress_ScreenEffect_Setting()
+{
+	ImGui::Checkbox("Gray Active", &m_eScreenDEffect_Desc.bGrayScale_Active);
+	ImGui::Checkbox("Sephia Active", &m_eScreenDEffect_Desc.bSephia_Active);
+
+	ImGui::SliderFloat("Grey Power", &m_eScreenDEffect_Desc.GreyPower, 0.0f, 1.0f, "GreyPower = %.3f");
+	ImGui::SliderFloat("Sephia Power", &m_eScreenDEffect_Desc.SepiaPower, 0.0f, 1.0f, "SepiaPower = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(m_eScreenDEffect_Desc);
+	
+}
+
+void CWindow_ShaderTool::Compress_SSR_Setting()
+{
+	ImGui::Checkbox("SSR Active", &m_eSSR_Desc.bSSR_Active);
+
+	ImGui::SliderFloat("RayStep", &m_eSSR_Desc.fRayStep, 0.0f, 3.0f, "RayStep = %.3f");
+	ImGui::SliderFloat("RayHitThreshold", &m_eSSR_Desc.fStepCnt	, 0.0f, 150.f, "RayHitThreshold = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_SSR_Option(m_eSSR_Desc);
+}
+
+void CWindow_ShaderTool::Compress_Chroma_Setting()
+{
+	ImGui::Checkbox("Chroma Active", &m_eChroma_Desc.bChroma_Active);
+	ImGui::SliderFloat("Intensity", &m_eChroma_Desc.fChromaticIntensity, 0.0f, 50.0f, "Intensity = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_Chroma_Option(m_eChroma_Desc);
+}
+
+void CWindow_ShaderTool::Save_Shader()
+{
+	string path = "../Bin/DataFiles/Data_Shader/Level/";
+
+	string LevelString = SMath::capitalizeString(m_eCurrLevel_String);
+	path += "_Shader.json";
+
+	json Out_Json;
+
+	Out_Json["HBAO"]["bHBAO_Active"] = m_eHBAO_Desc.bHBAO_Active;
+	Out_Json["HBAO"]["fBias"] = m_eHBAO_Desc.fBias;
+	Out_Json["HBAO"]["fBlur_Sharpness"] = m_eHBAO_Desc.fBlur_Sharpness;
+	Out_Json["HBAO"]["fPowerExponent"] = m_eHBAO_Desc.fPowerExponent;
+	Out_Json["HBAO"]["fRadius"] = m_eHBAO_Desc.fRadius;
+
+	Out_Json["Deferred"]["bRimBloom_Blur_Active"] = m_eDeferred_Desc.bRimBloom_Blur_Active;
+	Out_Json["Deferred"]["bShadow_Active"] = m_eDeferred_Desc.bShadow_Active;
+
+	Out_Json["Fog"]["bFog_Active"] = m_eFog_Desc.bFog_Active;
+	Out_Json["Fog"]["fFogStartDepth"] = m_eFog_Desc.fFogStartDepth;
+	Out_Json["Fog"]["fFogStartDistance"] = m_eFog_Desc.fFogStartDistance;
+	Out_Json["Fog"]["fFogDistanceValue"] = m_eFog_Desc.fFogDistanceValue;
+	Out_Json["Fog"]["fFogHeightValue"] = m_eFog_Desc.fFogHeightValue;
+	Out_Json["Fog"]["fFogDistanceDensity"] = m_eFog_Desc.fFogDistanceDensity;
+	Out_Json["Fog"]["fFogHeightDensity"] = m_eFog_Desc.fFogHeightDensity;
+	Out_Json["Fog"]["vFogColor_x"] = m_eFog_Desc.vFogColor.x;
+	Out_Json["Fog"]["vFogColor_y"] = m_eFog_Desc.vFogColor.y;
+	Out_Json["Fog"]["vFogColor_z"] = m_eFog_Desc.vFogColor.z;
+	Out_Json["Fog"]["vFogColor_w"] = m_eFog_Desc.vFogColor.w;
+
+	Out_Json["HDR"]["bHDR_Active"] = m_eHDR_Desc.bHDR_Active;
+	Out_Json["HDR"]["fmax_white"] = m_eHDR_Desc.fmax_white;
+
+	Out_Json["Anti"]["bFXAA_Active"] = m_eAnti_Desc.bFXAA_Active;
+
+	Out_Json["HSV"]["bScreen_Active"] = m_eHSV_Desc.bScreen_Active;
+	Out_Json["HSV"]["fFinal_Saturation"] = m_eHSV_Desc.fFinal_Saturation;
+	Out_Json["HSV"]["fFinal_Brightness"] = m_eHSV_Desc.fFinal_Brightness;
+
+	Out_Json["Radial"]["bRadial_Active"] = m_eRadial_Desc.bRadial_Active;
+	Out_Json["Radial"]["fRadial_Quality"] = m_eRadial_Desc.fRadial_Quality;
+	Out_Json["Radial"]["fRadial_Power"] = m_eRadial_Desc.fRadial_Power;
+
+	Out_Json["DOF"]["bDOF_Active"] = m_eDOF_Desc.bDOF_Active;
+	//Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
+	//Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
+
+	CJson_Utility::Save_Json(path.c_str(), Out_Json);
+
+}
+
 #pragma endregion
 
 #pragma region [LAYER] : Object Shader
@@ -497,7 +743,7 @@ void CWindow_ShaderTool::Select_Level()
 {
 	ImGui::SeparatorText(" Select Level ");
 	/* 레벨셋팅 - 어떤레벨에 대한 셋팅을할것인지 지정 */
-	const char* items[] = { "None", "GamePlay", "Intro", "Intro Boss", "SnowMountain", "Larva" };
+	const char* items[] = { "None", "GamePlay", "Intro", "Intro Boss", "SnowMountain", "Lava" };
 	static int item_current_idx = 0; // Here we store our selection data as an index.
 	const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 	if (ImGui::BeginCombo(" ", combo_preview_value))
@@ -515,16 +761,28 @@ void CWindow_ShaderTool::Select_Level()
 					break;
 				case 1: // GamePlay
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
+					m_eCurrLevel_String = "LEVEL_GAMEPLAY";
 					break;
 				case 2: // Intro
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO;
+					m_eCurrLevel_String = "LEVEL_INTRO";
 					break;
 				case 3: //Intro Boss 
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1BossAddLight_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO_BOSS;
+					m_eCurrLevel_String = "LEVEL_INTRO_BOSS";
 					break;
 				case 4:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainNormalMapping_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
+					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;
 				case 5:
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_LAVA;
+					m_eCurrLevel_String = "LEVEL_LAVA";
 					break;
 				}
 			}
@@ -609,7 +867,6 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 
 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 	}
-
 
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();
@@ -791,6 +1048,8 @@ HRESULT CWindow_ShaderTool::Save_Function(string strPath, string strFileName)
 
 HRESULT CWindow_ShaderTool::Load_Function(string strPath, string strFileName)
 {
+	__super::Load_Function(strPath, strFileName);
+
 	return S_OK;
 }
 
@@ -803,5 +1062,6 @@ _bool CWindow_ShaderTool::Write_Json(json& Out_Json)
 
 	return _bool();
 }
+
 
 #pragma endregion

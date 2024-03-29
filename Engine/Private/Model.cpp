@@ -221,11 +221,6 @@ void CModel::Calculate_ModelSize(_float* fOutWidth, _float* fOutHeight)
 	*fOutHeight = vMax.y - vMin.y;
 }
 
-
-
-
-
-
 void CModel::Set_MouseMove(_float2 vMouseMove)
 {
 	m_vMouseMove = vMouseMove;
@@ -376,6 +371,37 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 }
 
+void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos,_float3 pPlayerPos)
+{
+	if (m_iCurrentAnimIndex >= m_iNumAnimations)
+		return;
+
+	//m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix(m_eAnimState, fTimeDelta, m_Bones, m_bIsSplitted);
+	
+		//HERE
+	m_bIsAnimEnd = m_Animations[m_iCurrentAnimIndex]->Invalidate_TransformationMatrix_Parasiter(m_eAnimState, fTimeDelta, m_Bones, pPlayerPos);
+	
+	
+
+	_float3 NowPos;
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Invalidate_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PivotMatrix), NowPos);
+	}
+
+	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
+	{
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		{
+			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
+			_Pos = ChangedPos;
+		}
+
+		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
+	}
+
+}
+
 HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices)
 {
 	if (BoneMatrices != nullptr)
@@ -388,31 +414,48 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
 
 HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 {
+	// Bone도 연계하고싶은데 Anim만 연계되는거고 NonAnim은 들어가면 안되서 터지니까 안넣음. 하 
+
 	/* 해당 메시가 가진 MaterialIndex*/
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
 
-	for (auto& pTexture : m_Materials[iMaterialIndex].pMtrlTextures)
+	MATERIAL_DESC& material = m_Materials[iMaterialIndex];
+
+	for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
 	{
-		if (nullptr == pTexture)
+		if (nullptr == material.pMtrlTextures[i])
 			continue;
 
-		for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
+		switch (i)
 		{
-			switch (i) 
-			{
-			case (_int)aiTextureType_DIFFUSE:
-				Bind_ShaderResource(pShader, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-				break;
-			case (_int)aiTextureType_SPECULAR:
-				Bind_ShaderResource(pShader, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-				break;
-			case (_int)aiTextureType_NORMALS:
-				Bind_ShaderResource(pShader, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				break;
-			}
+		case (_int)aiTextureType_DIFFUSE:
+			Bind_ShaderResource(pShader, "g_DiffuseTexture", iMeshIndex, aiTextureType_DIFFUSE);
+			break;
+		case (_int)aiTextureType_SPECULAR:
+			Bind_ShaderResource(pShader, "g_SpecularTexture", iMeshIndex, aiTextureType_SPECULAR);
+			break;
+		case (_int)aiTextureType_EMISSIVE:
+			Bind_ShaderResource(pShader, "g_EmissiveTexture", iMeshIndex, aiTextureType_EMISSIVE);
+			break;
+		case (_int)aiTextureType_NORMALS:
+			Bind_ShaderResource(pShader, "g_NormalTexture", iMeshIndex, aiTextureType_NORMALS);
+			break;
+		case (_int)aiTextureType_OPACITY:
+			Bind_ShaderResource(pShader, "g_OpacityTexture", iMeshIndex, aiTextureType_OPACITY);
+			break;
+		case (_int)aiTextureType_METALNESS:
+			Bind_ShaderResource(pShader, "g_MetalicTexture", iMeshIndex, aiTextureType_METALNESS);
+			break;
+		case (_int)aiTextureType_DIFFUSE_ROUGHNESS:
+			Bind_ShaderResource(pShader, "g_RoughnessTexture", iMeshIndex, aiTextureType_DIFFUSE_ROUGHNESS);
+			break;
+		//case (_int)aiTextureType_AMBIENT_OCCLUSION:
+		//	Bind_ShaderResource(pShader, "g_AmbientOcclusionTexture", iMeshIndex, aiTextureType_AMBIENT_OCCLUSION);
+		//	break;
 		}
+		/* AO 컬러는 모델의 디테일과 형태를 강조하는데 사용 - EX. SNOW맵 표지판. PBR에서 쓰는 O는 Opacity를 말한것임. */
 	}
 
 	return S_OK;
@@ -420,6 +463,7 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 
 HRESULT CModel::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType)
 {
+
 	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
 	if (iMaterialIndex >= m_iNumMaterials)
 		return E_FAIL;
@@ -435,7 +479,7 @@ HRESULT CModel::Bind_ShaderCascade(CShader* pShader)
 
 void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _bool _bIsTransition, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
-	if (m_Animations.size() <= 0)
+	if (m_Animations.size() <= _iAnimationIndex)
 		return;
 
 	m_eAnimState = _eAnimState;
@@ -492,6 +536,11 @@ void CModel::Reset_Animation(_int iAnimIndex)
 		m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
 	else
 		m_Animations[iAnimIndex]->Reset_Animation(m_Bones, m_bIsSplitted);
+}
+
+void CModel::Set_AnimState(CModel::ANIM_STATE _eAnimState)
+{
+	m_eAnimState = _eAnimState;
 }
 
 void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -642,9 +691,6 @@ vector<CBone*>* CModel::Get_Bones()
 
 _uint CModel::Get_BoneNum(const _char* _szName)
 {
-	
-
-
 	return _uint();
 }
 
@@ -690,10 +736,6 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			_splitpath_s(strModelFilePath.c_str(), szDrive, MAX_PATH, szDirectory, MAX_PATH, nullptr, 0, nullptr, 0);
 
-			//aiString			strPath;
-			//if (FAILED(pAIMaterial.GetTexture(aiTextureType(j), 0, &strPath)))
-			//	continue;
-
 			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
 				continue;
@@ -704,12 +746,14 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			//_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
 			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
 
+			if (szFileName == "ICarusGround2")
+				_int iCheck = 0;
+
 			_char		szTmp[MAX_PATH] = "";
 			strcpy_s(szTmp, szDrive);
 			strcat_s(szTmp, szDirectory);
 			strcat_s(szTmp, szFileName);
 			strcat_s(szTmp, szEXT);
-
 
 			//_char szTest[MAX_PATH] = ".dds";
 			//strcat_s(szTmp, szTest);
@@ -725,6 +769,64 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	
 				return E_FAIL;
+			
+			string TestfileName(szFileName);
+
+			if (TestfileName == "T_GiantTreeBark_01_BC")
+				int a = 0;
+
+			// Diffuse 일때 한번 검사 + Normal일때 Diffuse에서 못만들었다면 추가 검사 
+			if ((j == (size_t)aiTextureType_DIFFUSE) || (j == (size_t)aiTextureType_NORMALS && false == m_bSpecularExist)) // Diffuse 있을때 ORM넣기 
+			{
+				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT);
+
+				if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR]) /* 1글자 뺴서 하는 ORM 실패 */
+				{
+					m_bSpecularExist = false;
+					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT, 2);
+
+					if (nullptr != MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])/* 2글자 뺴서 하는 ORM 성공  */
+						m_bSpecularExist = true;
+					else
+					{
+						/* 뭘해도 Specular가 없다 : 다른텍스쳐로 대체 */
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
+						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS])
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
+						else
+							cout << "Metalic : " << szFileName << endl;
+						
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT);
+						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY])
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT, 2);
+						else
+							cout << "Opacity : " << szFileName << endl;
+						
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT);
+						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS])
+							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT, 2);
+						else
+							cout << " Roughness: " << szFileName << endl;
+
+						//cout << "Model : " << strModelFilePath << endl;
+						//cout << "Texture : " << szFileName << endl;
+						//cout << endl;
+					}
+
+					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT);
+					if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE])
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT, 2);
+					else
+						cout << " Emissive: " << szFileName << endl;
+				}
+				else
+					m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */
+			}
+
+			if (j == (size_t)aiTextureType_DIFFUSE)
+			{
+				
+			}
 		}
 
 		m_Materials.push_back(MaterialDesc);
@@ -806,6 +908,75 @@ HRESULT CModel::Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& 
 	FAILED_CHECK(m_Meshes[iMeshIndex]->Render());
 
 	return S_OK;
+}
+
+CTexture* CModel::Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* strOriginFileName, const char* strOriginDrive, const char* strOriginDirectory, const char* strOriginExt, _int iCnt)
+{
+	/* Diffuse 기준, ORM텍스쳐는 아니지만 Roughness, Opacity, Metalic 으로도 읽지않아서 만들어줘야하는 텍스쳐 */
+	string PBRfileName(strOriginFileName);
+
+	for (_int i = 0; i < iCnt; ++i)
+	{
+		PBRfileName.pop_back();
+	}
+
+	switch (eType)
+	{
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_METALIC:
+		PBRfileName += "Metalic";
+		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_ROUGHNESS:
+		PBRfileName += "Roughness";
+		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_OPACITY:
+		PBRfileName += "Opacity";
+		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_ORM:
+		PBRfileName += "ORM";
+		break;
+	case Engine::CModel::ADD_TEXTURE_TYPE::TYPE_EMISSIVE:
+		PBRfileName += "Emissive";
+		break;
+
+	}
+
+	_char		szPBRTmp[MAX_PATH] = "";
+	strcpy_s(szPBRTmp, strOriginDrive);
+	strcat_s(szPBRTmp, strOriginDirectory);
+	strcat_s(szPBRTmp, PBRfileName.c_str());
+	strcat_s(szPBRTmp, strOriginExt);
+
+	_tchar		szPBRFullPath[MAX_PATH] = TEXT("");
+	MultiByteToWideChar((_uint)CP_ACP, 0, szPBRTmp, (_int)strlen(szPBRTmp), szPBRFullPath, (_int)MAX_PATH);
+	CTexture* pTexture = CTexture::Create(m_pDevice, m_pContext, szPBRFullPath, 1, true);
+
+	if (eType == CModel::ADD_TEXTURE_TYPE::TYPE_ORM && nullptr == pTexture)
+	{
+		string ORMfileName_2(strOriginFileName);
+
+		for (_int i = 0; i < iCnt; ++i)
+		{
+			ORMfileName_2.pop_back();
+		}
+
+		ORMfileName_2 += "M";
+
+		_char		szORMTmp[MAX_PATH] = "";
+		strcpy_s(szORMTmp, strOriginDrive);
+		strcat_s(szORMTmp, strOriginDirectory);
+		strcat_s(szORMTmp, ORMfileName_2.c_str());
+		strcat_s(szORMTmp, strOriginExt);
+
+		_tchar		szORMFullPath[MAX_PATH] = TEXT("");
+
+		MultiByteToWideChar((_uint)CP_ACP, 0, szORMTmp, (_int)strlen(szORMTmp), szORMFullPath, (_int)MAX_PATH);
+
+		CTexture* pTexture_New = CTexture::Create(m_pDevice, m_pContext, szORMFullPath, 1, true);
+
+		return pTexture_New;
+	}
+
+	return pTexture;
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)

@@ -13,7 +13,7 @@ void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 
 	_int iRandomInfected = SMath::Random(0, 9);//ÀÎÆåÆ¼µå »ý¼º ·£´ý È®·ü 
 	
-	if (iRandomInfected <= 8)
+	if (iRandomInfected < 2)
 	{
 
 		for (int i = 0; i < 3; ++i)

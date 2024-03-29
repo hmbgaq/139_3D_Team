@@ -112,22 +112,29 @@ HRESULT CBullet_Winchester::Render_Shadow()
 void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 {
 
+	if (other->m_iLayer == (_uint)COLLISION_LAYER::WEAKNESS)
+	{
+		other->Get_Owner()->Set_Enable(false);
+	}
+
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
-	if (nullptr != pTarget_Character)// 일반 타격 
+	//if (nullptr != pTarget_Character)// 일반 타격 
 	{
 		m_eHitDirection = Direction::Front;
 		m_eHitPower = Power::Medium;
 		m_fForce = 0.f;
+		if (nullptr != pTarget_Character)
+		{
+			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
+			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
+			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
+			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		}
+		
 
-		_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
-		_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
-		//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-		pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
 	}
 
 	Set_Dead(true);

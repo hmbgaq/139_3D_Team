@@ -10,7 +10,7 @@ void CPlayer_Winchester_Ironsights_Reload_01::Initialize(CPlayer* pActor)
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(true);
 
-	pActor->Set_Weapon_Enable(WEAPON_WINCHESTER, true);
+	pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
 }
 
 CState<CPlayer>* CPlayer_Winchester_Ironsights_Reload_01::Update(CPlayer* pActor, _float fTimeDelta)

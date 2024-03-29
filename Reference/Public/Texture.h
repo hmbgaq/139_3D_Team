@@ -22,7 +22,7 @@ public:
 	virtual void  Load_FromJson(const json & In_Json)	override;
 
 public:
-	virtual HRESULT Initialize_Prototype(const wstring& strTextureFilePath, _uint iNumTextures);
+	virtual HRESULT Initialize_Prototype(const wstring& strTextureFilePath, _uint iNumTextures, _bool bORM);
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
@@ -40,7 +40,7 @@ private:
 	vector<ID3D11ShaderResourceView*>			m_SRVs;	
 
 public:
-	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strTextureFilePath, _uint iNumTextures = 1);
+	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strTextureFilePath, _uint iNumTextures = 1, _bool bORM = false);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 };

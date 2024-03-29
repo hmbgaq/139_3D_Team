@@ -16,18 +16,22 @@ float     g_TimeDelta;
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_SpecularTexture;
+Texture2D g_EmissiveTexture;
+Texture2D g_OpacityTexture;
+
 Texture2D g_DissolveTexture;
 Texture2D g_MaskingTexture;
 
 /* =========== Value =========== */
-float   g_fDissolveWeight;    /* Dissolve  */
+float   g_fDissolveWeight;      /* Dissolve  */
 
-float4  g_vLineColor;        /* OutLine */
-float   g_LineThick;          /* OutLine */
+float4  g_vLineColor;           /* OutLine */
+float   g_LineThick;            /* OutLine */
 
-float3  g_vBloomPower = { 0.f, 0.f, 0.f }; /* Bloom */
-float4  g_vRimColor = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
-float   g_fRimPower = 5.f; /* RimLight */
+float3  g_vBloomPower   = { 0.f, 0.f, 0.f };        /* Bloom */
+float4  g_vRimColor     = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
+float   g_fRimPower     = 5.f;                      /* RimLight */
+
 /* ------------------- function ------------------- */ 
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
@@ -55,39 +59,44 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
 
 struct VS_IN
 {
-    float3 vPosition : POSITION;
-    float3 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float3 vTangent : TANGENT;
-    uint4 vBlendIndices : BLENDINDEX;
-    float4 vBlendWeights : BLENDWEIGHT;
+    float3  vPosition       : POSITION;
+    float3  vNormal         : NORMAL;
+    float2  vTexcoord       : TEXCOORD0;
+    float3  vTangent        : TANGENT;
+    uint4   vBlendIndices   : BLENDINDEX;
+    float4  vBlendWeights   : BLENDWEIGHT;
 };
 
 struct VS_OUT
 {
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float4 vWorldPos : TEXCOORD1;
-    float4 vProjPos : TEXCOORD2;
+    float4 vPosition        : SV_POSITION;
+    float4 vNormal          : NORMAL;
+    float2 vTexcoord        : TEXCOORD0;
+    float4 vWorldPos        : TEXCOORD1;
+    float4 vProjPos         : TEXCOORD2;
+    float4 vTangent         : TANGENT;
+    float4 vBinormal        : BINORMAL;
 };
 
 struct PS_IN
 {
-    float4 vPosition : SV_POSITION;
-    float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
-    float4 vWorldPos : TEXCOORD1;
-    float4 vProjPos : TEXCOORD2;
+    float4 vPosition        : SV_POSITION;
+    float4 vNormal          : NORMAL;
+    float2 vTexcoord        : TEXCOORD0;
+    float4 vWorldPos        : TEXCOORD1;
+    float4 vProjPos         : TEXCOORD2;
+    float4 vTangent         : TANGENT;
+    float4 vBinormal        : BINORMAL;
 };
 
 struct PS_OUT
 {
-    float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
-    float4 vORM : SV_TARGET3;
-    float4 vRimBloom : SV_TARGET4; /* Rim + Bloom */
+    float4 vDiffuse         : SV_TARGET0;
+    float4 vNormal          : SV_TARGET1;
+    float4 vDepth           : SV_TARGET2;
+    float4 vORM             : SV_TARGET3;
+    float4 vRimBloom        : SV_TARGET4; /* Rim + Bloom */
+    float4 vEmissive        : SV_Target5;
 };
 
 /* ------------------- Base Vertex Shader -------------------*/
@@ -110,11 +119,13 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
 
-    Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
-    Out.vTexcoord = In.vTexcoord;
-    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
-    Out.vProjPos = Out.vPosition;
+    Out.vPosition   = mul(vPosition, matWVP);
+    Out.vNormal     = normalize(mul(vNormal, g_WorldMatrix));
+    Out.vTexcoord   = In.vTexcoord;
+    Out.vWorldPos   = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vProjPos    = Out.vPosition;
+    Out.vTangent    = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
+    Out.vBinormal   = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
 	
     return Out;
 }
@@ -130,13 +141,30 @@ PS_OUT PS_MAIN(PS_IN In)
     if (vMtrlDiffuse.a == 0.f)
         discard;
     
+    /* 0 ~ 1 */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    
+	/* -1 ~ 1 */
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
     Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    
+    
+    //Out.vDiffuse = vMtrlDiffuse;
+    //Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
- 
-    if(Out.vDiffuse.a < 0.8f)
+    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord); // 새로 추가된 Emissive Texture -> PBR에 사용된다. 
+    
+    if(Out.vDiffuse.a < 0.1f)
         discard;
+    
     /* ---------------- New ---------------- */
     // float4 vRimColor = Calculation_RimColor(In.vNormal, In.vPosition);
     // Out.vDiffuse += vRimColor;
@@ -167,12 +195,14 @@ PS_OUT PS_BOSS(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 
     Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
@@ -192,19 +222,21 @@ PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
     if (vMtrlDiffuse.a == 0.f)
         discard;
     
     Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
-    
+    Out.vRimBloom += g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
@@ -215,12 +247,14 @@ PS_OUT PS_MAIN_RIMBLOOM_B(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
     if (vMtrlDiffuse.a == 0.f)
         discard;
     
     Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  
@@ -238,12 +272,14 @@ PS_OUT PS_MAIN_RIMBLOOM_C(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
     if (vMtrlDiffuse.a == 0.f)
         discard;
     
     Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
  

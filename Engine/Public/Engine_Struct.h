@@ -39,6 +39,7 @@ namespace Engine
 		/* Spot Light  */
 		_float fCutOff = 0.f;
 		_float fOuterCutOff = 0.f;
+		_float fVolumetricStrength = 0.f;
 
 		/* Common */
 		_float4 vDiffuse = { 0.f, 0.f, 0.f, 0.f }; /* 반사될때 출력되는 주된 색 */
@@ -368,15 +369,33 @@ namespace Engine
 #pragma region Shader Control Struct - Screen 
 	/* 각자 구분용 */
 
+	typedef struct ENGINE_DLL tagPBR_Desc
+	{
+		_bool bPBR_ACTIVE = { false };
+	}PBR_DESC;
+
 	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
 	{
-		_bool  bHBAO_Active			= false;
+		_bool  bHBAO_Active = { false };
 		_float fRadius				= 1.f;
 		_float fBias				= 0.1f;
 		_float fPowerExponent		= 2.f;
 		_float fBlur_Sharpness		= 16.f;
 
 	}HBAO_PLUS_DESC;
+
+	typedef struct ENGINE_DLL tagSSR_Desc
+	{
+		_bool	bSSR_Active = { false };
+		_float  fRayStep = 0.005f;
+		_float  fStepCnt = 75.f;
+	}SSR_DESC;
+
+	typedef struct ENGINE_DLL tagChroma_Desc
+	{
+		_bool bChroma_Active = { false };
+		_float fChromaticIntensity = 11.f; 
+	}CHROMA_DESC;
 
 	typedef struct ENGINE_DLL tagBloomRim_Desc
 	{
@@ -394,7 +413,7 @@ namespace Engine
 		_float	fFogHeightValue			= 50.f;
 		_float	fFogDistanceDensity		= 0.05f;
 		_float	fFogHeightDensity		= 0.05f;
-		_float3 padding = {};
+		_float	padding					= 0.f; //4 
 		_float4 vFogColor				= { 0.5f, 0.5f, 0.5f, 0.2f };
 
 	} FOG_DESC;
@@ -428,43 +447,41 @@ namespace Engine
 	typedef struct ENGINE_DLL tagDOF
 	{
 		_bool  bDOF_Active		= false;
-		float  fFocusDistance = 10.f;
-		float  fFocusRange = 3.f;
+		_float4  DOFParams = { 0.f, 0.f, 0.f, 0.f };
+		//float  fFocusDistance = 10.f;
+		//float  fFocusRange = 3.f;
 
 	}DOF_DESC;
 
-	/* 전체 컨트롤 - 레벨시작할때 초기 컨트롤용도 */
-	typedef struct ENGINE_DLL tagLevelShader
+	typedef struct ENGINE_DLL tagVignette
 	{
-		/* 활성여부 */
-		_bool bHBAO_Plus_Active		= { false };
-		_bool bFog_Active			= { false };
-		_bool bHDR_Active			= { false };
-		_bool bFXAA_Active			= { false };
+		_bool   bVignette_Active = false;
+		_float  fVignetteRatio = 1.f;			//[0.15 to 6.00]  Sets a width to height ratio. 1.00 (1/1) is perfectly round, while 1.60 (16/10) is 60 % wider than it's high.
+		_float  fVignetteRadius = 1.f;		//[-1.00 to 3.00] lower values = stronger radial effect from center
+		_float  fVignetteAmount = -1.f;		//[-2.00 to 1.00] Strength of black. -2.00 = Max Black, 1.00 = Max White.
+		_float  fVignetteSlope = 8.f;			//[2 to 16] How far away from the center the change should start to really grow strong (odd numbers cause a larger fps drop than even numbers)
+		_float fVignetteCenter_X = 0.5f;  //[0.000 to 1.000, 0.000 to 1.000] Center of effect for VignetteType 1. 2 and 3 do not obey this setting.
+		_float fVignetteCenter_Y = 0.5f;  //[0.000 to 1.000, 0.000 to 1.000] Center of effect for VignetteType 1. 2 and 3 do not obey this setting.
+	}VIGNETTE_DESC;
 
-		/* HBAO+ */
-		_float fRadius				= 1.f;
-		_float fBias				= 0.1f;
-		_float fPowerExponent		= 2.f;
-		_float fBlur_Sharpness		= 16.f;
+	typedef struct ENGINE_DLL tagLumaSharpen
+	{
+		_bool  bLumaSharpen_Active = false;
+		_float fsharp_strength	= 1.25f;	//[0.10 to 3.00] Strength of the sharpening
+		_float fsharp_clamp		= 0.035f;	//[0.000 to 1.000] Limits maximum amount of sharpening a pixel recieves - Default is 0.035
+		_float fpattern			= 2.f;      //[1|2|3|4] Choose a sample pattern. 1 = Fast, 2 = Normal, 3 = Wider, 4 = Pyramid shaped.
+		_float foffset_bias		= 1.f;		//[0.0 to 6.0] Offset bias adjusts the radius of the sampling pattern.
+											//I designed the pattern for offset_bias 1.0, but feel free to experiment.
+		_float fshow_sharpen	= 0.f;		//[0 or 1] Visualize the strength of the sharpen (multiplied by 4 to see it better)
+	}LUMASHARPEN_DESC;
 
-		/* Fog */
-		_float fFogStartDepth		= 100.f;
-		_float fFogStartDistance	= 10.f;
-		_float fFogDistanceValue	= 30.f;
-		_float fFogHeightValue		= 50.f;
-		_float fFogDistanceDensity	= 0.04f;
-		_float fFogHeightDensity	= 0.04f;
-		
-		/* HDR */
-		_float fmax_white			= 0.4f;
-
-		/* Screen */
-		_float fFinal_Saturation	= 1.f;
-		_float fFinal_Brightness	= 1.f;
-
-	}LEVEL_SHADER_DESC;
-
+	typedef struct ENGINE_DLL tagScreenTone
+	{
+		_bool bGrayScale_Active = false;
+		_bool bSephia_Active = false;
+		_float GreyPower = 0.11f;
+		_float SepiaPower = 0.58f;
+	}SCREENEFFECT_DESC;
 
 #pragma endregion
 

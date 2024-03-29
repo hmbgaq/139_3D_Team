@@ -4,6 +4,7 @@
 //#include "UI.h"
 //#include "UI_Weakness.h"
 #include "UI_Manager.h"
+#include "SMath.h"
 
 CScreamer::CScreamer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -120,9 +121,7 @@ HRESULT CScreamer::Render()
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
 		//m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
@@ -199,8 +198,17 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For.Com_Model */
 	{
-		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Horse"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		int a = SMath::Random(1, 5);
+
+		if (a > 3)
+		{
+			FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_LootCreate_Small"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		}
+		else
+		{
+			FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_LootCreate"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		}
 	}
 
 	/* For.Com_Collider */

@@ -126,6 +126,8 @@
 #include "Player_EnergyWhip_Pull.h"
 #include "Player_OpenStateCombo_8hit.h"
 #include "Player_SlamTwoHand_TEMP.h"
+#include "Player_MeleeKick.h"
+#include "Player_CartRide_Loop.h"
 
 #pragma endregion
 
@@ -288,7 +290,7 @@ CState<CPlayer>* CPlayer_State::Crossbow_State(CPlayer* pActor, _float fTimeDelt
 
 CState<CPlayer>* CPlayer_State::Revolver_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	if (m_pGameInstance->Key_Up(DIK_E))
 	{
 		if (CPlayer_Revolver_WeaponHolster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Revolver_WeaponHolster();
@@ -394,37 +396,44 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
-	pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
-	//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
-
-	//pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
-
-	//pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
-
-	//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
-
-	//pState = FlameBelcher(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
-
-	//pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL_TOOL))
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_C))
+		{
+			return new CPlayer_CartRide_Loop();
+		}
 
 
+		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+
+		pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+
+		//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
+
+		pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+
+		pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+
+		//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
+
+		//pState = FlameBelcher(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
+
+		//pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
+		//if (pState)	return pState;
+
+		pState = Attack(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
 
 	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
-	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
 	pState = Run(pActor, fTimeDelta, _iAnimIndex);
@@ -580,14 +589,9 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 	pState = Slam(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-	
-	
+	pState = Kick(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
-	if (0.3f <= pActor->Get_ChargingTime())
-	{
-		pActor->Set_ChargingTime(0.f);
-		return new CPlayer_MeleeUppercut_01v2();
-	}
 
 	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -603,6 +607,13 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 
 CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (0.3f <= pActor->Get_ChargingTime())
+	{
+		pActor->Set_ChargingTime(0.f);
+		return new CPlayer_MeleeUppercut_01v2();
+	}
+
+
 	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
@@ -772,7 +783,7 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 		if (pSpringCam)
 		{
-			pSpringCam->Set_CameraOffset(_float3(0.8f, 0.6f, -2.f));
+			pSpringCam->Set_CameraOffset(_float3(1.f, 0.3f, -1.7f));
 		}
 		
 
@@ -805,8 +816,18 @@ CState<CPlayer>* CPlayer_State::Crossbow(CPlayer* pActor, _float fTimeDelta, _ui
 
 CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	if (m_pGameInstance->Key_Pressing(DIK_E))
 	{
+		//if (CPlayer_William_RevolverFanningStart_01::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_William_RevolverFanningStart_01();
+
+		//if (CPlayer_William_RevolverFanningStart_02::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_William_RevolverFanningStart_02();
+
+		//if (CPlayer_Bandit_Special_01::g_iAnimIndex != _iAnimIndex)
+		//	return new CPlayer_Bandit_Special_01();
+
+
 		if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Revolver_WeaponUnholster();
 	}
@@ -816,10 +837,10 @@ CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _ui
 
 CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	if (m_pGameInstance->Key_Down(DIK_F))
 	{
-		if (CPlayer_Shotgun_Fire_LongRange::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_Shotgun_Fire_LongRange();
+		if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_ShotgunElectric_Fire_ShortRange();
 	}
 
 	return nullptr;
@@ -933,7 +954,7 @@ CState<CPlayer>* CPlayer_State::Melee_Dynamic(CPlayer* pActor, _float fTimeDelta
 
 CState<CPlayer>* CPlayer_State::OpenStateCombo_8hit(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	pActor->Search_Target(3.f);
+	pActor->Search_Target(1.f);
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget && pTarget->Is_ElectrocuteTime())
 	{
@@ -967,6 +988,17 @@ CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _
 		default:
 			return new CPlayer_SlamDown_v2();
 		}
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Key_Down(DIK_R))
+	{
+		if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_MeleeKick();
 	}
 
 	return nullptr;

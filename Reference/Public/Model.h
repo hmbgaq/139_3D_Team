@@ -11,11 +11,11 @@ class CMesh;
 class CBone;
 class CShader;
 
-
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
 	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
+	enum class ADD_TEXTURE_TYPE { TYPE_ORM, TYPE_METALIC, TYPE_ROUGHNESS, TYPE_OPACITY, TYPE_EMISSIVE, TYPE_END };
 
 public:
 	enum ANIM_STATE { ANIM_STATE_NORMAL, ANIM_STATE_LOOP, ANIM_STATE_REVERSE, ANIM_STATE_LOOP_REVERSE, ANIM_STATE_STOP, ANIM_STATE_END };
@@ -86,6 +86,8 @@ public:
 	void					Play_Animation(_float fTimeDelta, _bool bIsLoop);
 	void					Play_Animation(_float fTimeDelta, _float3& _Pos);
 
+	void Play_Animation(_float fTimeDelta, _float3& _Pos, _float3 pPlayerPos);
+
 	void					Stop_Animation(_float fTimeDelta,_bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 	void					Ctrl_Animation(_float fTimeDelta, _bool bIsLoop) { Play_Animation(fTimeDelta, bIsLoop); }
 
@@ -99,10 +101,10 @@ public:
 	void					Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _bool _bIsTransition = true, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_Animation(_int iAnimIndex = -1);
+	void					Set_AnimState(CModel::ANIM_STATE _eAnimState);
 
 	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_UpperAnimation(_int iAnimIndex = -1);
-
 
 	_float					Get_TickPerSecond();
 	void					Set_TickPerSecond(_float _TickPerSecond);
@@ -128,9 +130,8 @@ public:
 	vector<CBone*>*			Get_Bones();
 	_uint					Get_BoneNum(const _char* szName);
 
-
 public:
-	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
+	_uint					Get_CurrentKeyFrames(_uint iIndex = 0);
 
 private:
 	CMyAssimp				m_MyAssimp;
@@ -174,6 +175,9 @@ private:
 	_float					m_fModelWidth = 0.f;
 	_float					m_fModelHeight = 0.f;
 
+	// PBR
+	_bool					m_bSpecularExist = { false };
+
 public:
 	typedef vector<CBone*>	BONES;
 
@@ -196,6 +200,9 @@ public:
 public: /* Cascade */
 	HRESULT SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* strConstantName);
 	HRESULT Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName);
+
+	/* ORM Texture */
+	CTexture* Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* strOriginFileName, const char* strOriginDrive, const char* strOriginDirectory, const char* strOriginExt, _int iCnt = 1);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);

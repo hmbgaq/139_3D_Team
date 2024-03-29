@@ -19,6 +19,7 @@ namespace Client
 		LEVEL_INTRO,
 		LEVEL_INTRO_BOSS,
 		LEVEL_SNOWMOUNTAIN,
+		LEVEL_SNOWMOUNTAINBOSS,
 		LEVEL_LAVA,
 	
 		LEVEL_TOOL,
@@ -58,9 +59,17 @@ namespace Client
 
 
 	//Player_Weapon
-	#define WEAPON_PUNCH_L					TEXT("Weapon_Punch_L")
-	#define WEAPON_PUNCH_R					TEXT("Weapon_Punch_R")
-	#define WEAPON_WINCHESTER				TEXT("Weapon_Winchester")
+	#define PLAYER_WEAPON_PUNCH_L			TEXT("Weapon_Punch_L")
+	#define PLAYER_WEAPON_PUNCH_R			TEXT("Weapon_Punch_R")
+	#define PLAYER_WEAPON_WINCHESTER		TEXT("Weapon_Winchester")
+	#define PLAYER_WEAPON_KICK				TEXT("Weapon_Kick")
+	#define PLAYER_WEAPON_ZAPPER			TEXT("Weapon_Zapper")
+	#define PLAYER_WEAPON_REVOLVER			TEXT("Weapon_Revolver")
+	#define PLAYER_WEAPON_SHOTGUN			TEXT("Weapon_Shotgun")
+
+
+
+
 
 
 
@@ -72,23 +81,25 @@ namespace Client
 		PLAYER_ATTACK,
 		MONSTER_ATTACK,
 		WEAKNESS,
-		EDIT_NAVIMESH,
-		DYNAMIC_PROP,
-		BOSS_DYNAMIC_PROP,
-		TRIGGER,
-		LADDER_UP,
-		LADDER_DOWN,
-		DOOR,
-		ELEVATOR,
-		CHECKPOINT,
-		PLAYER_BATCOL,
-		ITEM,
-		ONLY_VIEW,
-		CHECK_DIR,
-		INTERIOR,
+		PLAYER_PARRYING,
 		INTERACT,
 		PICKING_INSTANCE,
-		PICKING_MESH,
+		
+		//EDIT_NAVIMESH,
+		//DYNAMIC_PROP,
+		//BOSS_DYNAMIC_PROP,
+		//TRIGGER,
+		//LADDER_UP,
+		//LADDER_DOWN,
+		//DOOR,
+		//ELEVATOR,
+		//CHECKPOINT,
+		//PLAYER_BATCOL,
+		//ITEM,
+		//ONLY_VIEW,
+		//CHECK_DIR,
+		//INTERIOR,
+		//PICKING_MESH,
 		LAYER_END
 	};
 

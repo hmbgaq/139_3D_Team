@@ -81,6 +81,9 @@ public:
 	void Set_Speed(_float fSpeed) { m_fSpeedPerSec = fSpeed; }
 	_float Get_Speed() { return m_fSpeedPerSec; }
 
+	void Set_RotationSpeed(_float fRotationSpeed) { m_fRotationPerSec = fRotationSpeed;}
+	_float Get_RotationSpeed() { return m_fRotationPerSec;}
+
 
 	void Set_Position(const _float3& vState)
 	{
@@ -125,16 +128,18 @@ public:
 
 	void	Turn(_fvector vAxis, _float fTimeDelta);
 	void	Rotation(_fvector vAxis, _float fRadian);
-	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta);
+	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);
 	void	Rotation_Quaternion(_float3 vRotation);
+	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 0.5f);
 
 	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
 
 	void	Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
+	_bool	Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta, _float fSpare = 0.1f);
 	void	Look_At(_fvector vTargetPos);
 	void	Look_At_OnLand(_fvector vTargetPos);
 	void	Look_At_Direction(_fvector _vLook);
-	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta);
+	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta, _float fMinRadian = 0.5f);
 
 	_vector Calc_Look_Dir(_fvector vTargetPos);
 	_vector Calc_Look_Dir_XZ(_fvector vTargetPos);
@@ -169,10 +174,17 @@ public:
 public:
 	_float3		Calculate_SlidingVector(const _fvector& velocity, const _fvector& normal);
 
-
 public:
 	HRESULT		Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
 	
+public:
+	_bool Is_Ground() { return m_bIsGround; };
+	_float Get_GravityAcc() { return m_fGravityAcc; }
+	void Update_GravityAcc(_float fTimeDelta) { 
+		_float fAcc = (m_fGravityAcc + fTimeDelta * 1.5f);
+		m_fGravityAcc = ((true == m_bIsGround) ? 0 : fAcc);
+	}
+	void Reset_GravityAcc() { m_fGravityAcc = 0.f; };
 
 private:
 	_float				m_fSpeedPerSec = { 0.0f };
@@ -183,6 +195,8 @@ private:
 	_float				m_fRadian = { 0.f };
 
 	_float4				m_fPosition = {};
+	_bool				m_bIsGround = { false };
+	_float				m_fGravityAcc = { 0.f };
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float fSpeedPerSec, _float fRotationPerSec);

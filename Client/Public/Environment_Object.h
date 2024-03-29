@@ -59,7 +59,10 @@ public:
 	CModel*				Get_ModelCom() { return m_pModelCom; }
 	
 public:
+	_int				Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
+	void				Set_AnimationIndex(_uint iAnimIndex);
 	void				Set_ColliderRender(_bool bColliderRender) { m_bColliderRender = bColliderRender;}
+	void				Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex;}
 
 #ifdef _DEBUG
 public: //! For.Tool
@@ -81,13 +84,22 @@ private:
 	_bool						m_bPlay = false;
 	_bool						m_bColliderRender = false;
 
-
 	_uint						m_iCurrentLevel = LEVEL_TOOL;
 
 private:
 	HRESULT				Ready_Components();
 	HRESULT				Bind_ShaderResources();
 
+	/* 고드름용 - 소영 작업중 */
+	_int		iCheckMeshNum = 0;
+	_int		m_iIceMeshNumber = 0;
+	_float4		m_vCamPosition = {};
+
+	_bool		bRenderIce = { false };
+	_bool		bIcarusTexture = { false };
+	CTexture*	m_pIceNoise = { nullptr };
+	CTexture*	m_pIceDiffuse = { nullptr };
+	CTexture*	m_pRADTexture = { nullptr };
 
 public:
 	/* 원형객체를 생성한다. */
