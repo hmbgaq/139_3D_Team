@@ -18,7 +18,7 @@
 #include "VampireCommander_BloodRange_Stun_Start.h"
 #include "Player_Finisher_VampireCommander_VS.h"
 
-#include "UI_Manager.h"
+//#include "UI_Manager.h"
 
 #include "Data_Manager.h"
 #include "Player.h"
@@ -71,8 +71,9 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
-	m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
-	m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
+
+	m_pMapEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
+
 
 	if (nullptr == m_pTarget)
 	{

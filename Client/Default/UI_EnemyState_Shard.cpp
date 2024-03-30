@@ -37,7 +37,10 @@ HRESULT CUI_EnemyState_Shard::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	m_bActive = false;
+	//Setting_Owner();
+
+	//m_bActive = false;
+	m_bActive = true;
 	m_tUIInfo.bWorld = true;
 	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
 	m_fAlpha = 1.f;
@@ -53,6 +56,16 @@ void CUI_EnemyState_Shard::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 {
+	if (m_pCharacterOwner == nullptr)
+		return;
+
+	if (m_pCharacterOwner != nullptr)
+	{
+		if (m_pCharacterOwner->Is_Dead() == true)
+			Set_Dead(true);
+	}
+
+
 	if (m_pGameInstance->Key_Down(DIK_V))
 		m_fOffsetY -= 0.1f;
 	if (m_pGameInstance->Key_Down(DIK_B))
@@ -65,7 +78,7 @@ void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 	//if(m_pOwner != nullptr)
 	//	Set_WorldMatrix(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
-	// m_pCharacterOwner->Get
+	
 
 	if (m_bActive == true)
 	{
@@ -87,7 +100,7 @@ void CUI_EnemyState_Shard::Late_Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
 	}
 }
@@ -221,32 +234,42 @@ HRESULT CUI_EnemyState_Shard::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	
-	switch (m_eCurState)
+	if (m_pCharacterOwner != nullptr)
 	{
-	case CUI_EnemyState_Shard::NONE:
-		break;
-	case CUI_EnemyState_Shard::ATTACK:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyState_Shard::ELECTRIC:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyState_Shard::SKULL:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyState_Shard::SKULLRED:
-		if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
-		break;
-	case CUI_EnemyState_Shard::TEXTURE_END:
-		break;
-	default:
-		break;
+		if (m_pCharacterOwner->Get_MonsterAttackState() == true)
+		{
+			if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
 	}
+
+
+
+	//switch (m_eCurState)
+	//{
+	//case CUI_EnemyState_Shard::NONE:
+	//	break;
+	//case CUI_EnemyState_Shard::ATTACK:
+	//	if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+	//		return E_FAIL;
+	//	break;
+	//case CUI_EnemyState_Shard::ELECTRIC:
+	//	if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+	//		return E_FAIL;
+	//	break;
+	//case CUI_EnemyState_Shard::SKULL:
+	//	if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+	//		return E_FAIL;
+	//	break;
+	//case CUI_EnemyState_Shard::SKULLRED:
+	//	if (FAILED(m_pTextureCom[m_eCurState]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+	//		return E_FAIL;
+	//	break;
+	//case CUI_EnemyState_Shard::TEXTURE_END:
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	return S_OK;
 }

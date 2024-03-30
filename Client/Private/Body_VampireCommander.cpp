@@ -38,15 +38,15 @@ void CBody_VampireCommander::Priority_Tick(_float fTimeDelta)
 void CBody_VampireCommander::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		iDiscardMeshNumber += 1;
-		if (iDiscardMeshNumber > (_int)m_pModelCom->Get_NumMeshes())
-		{
-			iDiscardMeshNumber = 0;
-		}
-		cout << iDiscardMeshNumber << endl;
-	}
+// 	if (m_pGameInstance->Key_Down(DIK_K))
+// 	{
+// 		iDiscardMeshNumber += 1;
+// 		if (iDiscardMeshNumber > (_int)m_pModelCom->Get_NumMeshes())
+// 		{
+// 			iDiscardMeshNumber = 0;
+// 		}
+// 		cout << iDiscardMeshNumber << endl;
+// 	}
 }
 
 void CBody_VampireCommander::Late_Tick(_float fTimeDelta)
@@ -185,8 +185,8 @@ HRESULT CBody_VampireCommander::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.fRadius = 1.0f;
-	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
+	BoundingDesc.fRadius = 1.3f;
+	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
 
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),

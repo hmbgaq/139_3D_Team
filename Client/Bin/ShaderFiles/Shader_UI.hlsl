@@ -14,6 +14,7 @@ Texture2D g_DiffuseTexture;
 Texture2D g_DiffuseTexture_Second;
 Texture2D g_DiffuseTexture_Third;
 Texture2D g_DiffuseTexture_Fourth;
+Texture2D g_SelectTexture;
 
 Texture2D g_MaskTexture;
 Texture2D g_NoiseTexture;
@@ -33,6 +34,10 @@ float g_MaxHP;
 float g_CurrentHP;
 float g_LerpHP;
 
+// 시작점과 끝점의 UV 좌표 설정
+float2 g_StartPoint; // 시작점 (좌상단)
+float2 g_EndPoint; // 끝점 (우하단)
+
 /* Aim */
 float2 g_Recoil;
 float2 g_Offset;
@@ -45,6 +50,9 @@ Texture2D g_AimRight_Texture;
 Texture2D g_CoolDownTexture;
 float2    g_Center;
 float     g_Radius;
+float     g_CoolTime;
+float     g_MaxCoolTime;
+float     g_Ratio;
 
 texture2D g_DissolveTexture;
 texture2D g_AlphaTexture;
@@ -297,21 +305,102 @@ float Circle(float2 uv, float2 center, float radius)
     float2 diff = uv - center;
     return saturate(1 - length(diff) / radius);
 }
-// 픽셀 셰이더 메인 함수
+
 PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
 {
-    PS_OUT Out;
+    PS_OUT Out = (PS_OUT) 0; // 초기화
 
-    // 쿨타임 텍스처에서 샘플링하여 색상을 가져오고, 원형 이미지로 변환
-    float  fCircleValue = Circle(In.vTexcoord, g_Center, g_Radius);
-    float4 vTexColor = g_CoolDownTexture.Sample(LinearSampler, In.vTexcoord);
+    float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord); // Diffuse Tex Sampling
+    float4 vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord); // Mask Tex Sampling
 
-    // 샘플된 색상을 원형 이미지에 맞게 조절하여 출력
-    Out.vColor = vTexColor * fCircleValue;
+    if (vMaskColor.r > 0.9f && vMaskColor.g > 0.9f && vMaskColor.b > 0.9f)
+    {
+        Out.vColor = saturate(vColor);
+        if (Out.vColor.a < 0.1f)
+            discard;
+    }
+    else
+        discard;
 
-    //Out.vColor.a = g_Alpha;
+	// 여기까지 마스크를 씌운 상태
+
+    float2 vDir = In.vTexcoord - float2(0.5f, 0.5f); // float2(0.5f, 0.5f)는 중점이다.
+    vDir = normalize(vDir); // 방향벡터 Normalize
+    float2 vUpDir = float2(0.0f, sign(vDir.x));
+    vUpDir = normalize(vUpDir);
+
+    float fDot = dot(vUpDir, vDir); // 두 벡터를 내적한다.
+    float fDotRatio = g_Ratio;
+
+	// 방향벡터가 음수인 경우, 비교할 기준 벡터의 방향은 위
+    if (vDir.x < 0.f)
+    {
+        fDotRatio -= 0.5f;
+    }
+
+    fDotRatio = fDotRatio * 4.f - 1.f;
+
+    if (fDotRatio < fDot) // 잔여 쿨타임이 직관적으로 보여지는 픽셀이다
+    {
+		//Out.vColor.rgb = lerp(vColor.rgb, float3(0.0f, 0.0f, 0.0f), 0.5f);
+        Out.vColor.a = 0.f;
+    }
+
+	// 특정 영역에서만 온전한 원본 이미지가 표시된다.
     return Out;
 }
+
+//// 픽셀 셰이더 메인 함수
+//PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
+//{
+//    PS_OUT Out = (PS_OUT) 0;
+//    
+//    float2 center = float2(0.5f, 0.5f); // 중심 좌표
+//    float radius = 0.4f; // 반지름
+//    float thickness = 0.1f; // 게이지 두께
+//
+//    // 현재 쿨타임 값을 이용하여 게이지를 계산
+//    float progress = saturate(1.0f - g_CoolTime / g_MaxCoolTime); // 현재 쿨타임을 [0, 1] 범위로 변환
+//    float angle = progress * 1 * 3.14159265359f; // 0부터 2파이까지의 각도 범위로 변환
+//    //        (* 가운데 *) 이부분의 값은 증감시켰을 때 이미지가 잘리는 범위크기.
+//    
+//    // 게이지의 시작과 끝 각도 계산
+//    float startAngle = 0.0f;
+//    float endAngle = angle;
+//
+//    // 게이지 색상
+//    float4 gaugeColor = float4(0.0f, 1.0f, 0.0f, 1.0f); // 녹색
+//
+//    // 게이지를 그리기 위한 조건식
+//    float2 uv = In.vTexcoord;
+//    float2 diff = uv - center;
+//    float distance = length(diff);
+//    float angleUV = atan2(diff.y, diff.x);
+//    float angleDeg = angleUV * (360.0f / 3.14159265359f);
+//
+//    // 게이지를 그리기 위한 조건식
+//    float gaugeValue = saturate((angleDeg - startAngle) / (endAngle - startAngle));
+//    float gauge = smoothstep(radius - thickness, radius, distance);
+//
+//    // 게이지를 그리는 부분
+//    float4 finalColor = lerp(float4(0.0f, 0.0f, 0.0f, 0.0f), gaugeColor, gauge * gaugeValue);
+//
+//    Out.vColor = finalColor;
+//    
+//    return Out;
+//    
+//    //PS_OUT Out;
+//    //
+//    //// 쿨타임 텍스처에서 샘플링하여 색상을 가져오고, 원형 이미지로 변환
+//    //float  fCircleValue = Circle(In.vTexcoord, g_Center, g_Radius);
+//    //float4 vTexColor = g_CoolDownTexture.Sample(LinearSampler, In.vTexcoord);
+//    //
+//    //// 샘플된 색상을 원형 이미지에 맞게 조절하여 출력
+//    //Out.vColor = vTexColor * fCircleValue;
+//    //
+//    ////Out.vColor.a = g_Alpha;
+//    //return Out;
+//}
 
 VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 {
@@ -396,13 +485,93 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In) // 6
 	// 왜곡되고 교란된 텍스쳐 좌표를 이용하여 알파 텍스쳐에서 알파값을 샘플링한다. (불꽃의 투명도를 지정하는 데 사용)
 	// wrap를 사용하는 스테이트 대신 clamp를 사용하는 스테이트를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지한다.
     vAlphaColor = g_MaskTexture.Sample(ClampSampler, vNoiseCoords.xy);
-
+    
     vFireColor.a = vAlphaColor;
 
        // 컬러 혼합
     Out.vColor = Calculation_ColorBlend(vFireColor, g_vColor_Mul, g_iColorMode);
     
+    Out.vColor.a -= g_Alpha;
+    
+    //if (Out.vColor.a < 0.1f)
+    //    discard;
+    
     return Out;
+}
+
+PS_OUT PS_MAIN_SHARD_HP(PS_IN In) // 7
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float2 uvDiff = g_EndPoint - g_StartPoint;
+    float2 uvNormalized = In.vTexcoord - g_StartPoint;
+
+    // 시작점과 끝점 사이의 거리 계산
+    float distance = dot(uvNormalized, normalize(uvDiff));
+    
+    // 체력이 감소할 때의 UV 좌표 범위 계산
+    float healthRatio = saturate(g_CurrentHP / g_MaxHP); // 예시로 체력이 40일 때를 가정
+    float2 uvRange = lerp(uvDiff, float2(0.0f, 0.0f), g_LerpHP); // 체력이 낮아질수록 UV 좌표 범위를 줄임
+
+    //// 현재 체력에 따른 투명도 계산
+    //float healthRatio = saturate(g_CurrentHP / g_MaxHP); // 예시로 체력이 40일 때를 가정
+    //float alpha = lerp(1.0f, 0.0f, healthRatio); // 체력이 낮아질수록 투명도가 증가하도록 보간
+    //
+    //// 투명한 픽셀에는 흰색을 그리고 그 외에는 배경색을 그립니다.
+    //float4 vColor = lerp(vDiffuseColor, float4(1.0f, 1.0f, 1.0f, 1.0f), alpha);
+    
+    
+    // 현재 픽셀이 UV 좌표 범위 내에 있는지 확인하여 흰색으로 깎임
+    float2 uvDifference = In.vTexcoord - g_StartPoint;
+    float inRange = dot(uvDifference, normalize(uvRange - g_StartPoint)); // 현재 픽셀이 UV 좌표 범위 내에 있는지 확인
+    // 흰색으로 깎인 부분만을 나타냄
+    float4 vColor = vDiffuseColor;
+    if (inRange > 0.0f)
+    {
+        vColor = float4(1.0f, 1.0f, 1.0f, 1.0f); // 흰색으로 설정
+    }
+    
+    // 대각선 방향으로 체력바가 서서히 줄어드는 효과 생성
+    //float4 vResult = vColor * (1.0f - saturate(distance));
+    float4 vResult = vColor;
+    
+    Out.vColor = vResult;
+    
+    return Out;
+    
+    //float DecreaseAmount = 0.0f; // 흰색 표시 효과
+    //
+    //// 시작점과 끝점의 각 좌표의 차이 계산
+    //float2 DeltaUV = g_EndPoint - g_StartPoint;
+    //
+    //// 현재 체력에 따른 UV 좌표 계산
+    //float2 CurrentUV = g_StartPoint + DeltaUV * (g_CurrentHP / g_MaxHP);
+    //
+    //// 체력이 감소할 때마다 흰색으로 표시하도록 반복
+    //while (g_CurrentHP > 0.0f)
+    //{
+    //// 흰색 표시 효과 갱신
+    //    g_LerpHP += DecreaseRate;
+    //
+    //// 흰색 표시 효과가 1.0을 초과하지 않도록 설정
+    //    if (DecreaseAmount > 1.0f)
+    //        DecreaseAmount = 1.0f;
+    //
+    //// 현재 체력 감소
+    //    g_CurrentHP -= 1.0f;
+    //
+    //// 현재 체력에 따른 UV 좌표 재계산
+    //    CurrentUV = g_StartPoint + DeltaUV * (g_CurrentHP / maxHealth);
+    //
+    //// 흰색으로 표시되는 부분 계산
+    //    float2 WhiteUV = g_StartPoint + DeltaUV * ((g_CurrentHP + g_LerpHP) / maxHealth);
+    //
+    //// 여기서 currentUV부터 whiteUV까지를 흰색으로 표시하여 체력바가 서서히 줄어드는 효과를 구현할 수 있습니다.
+    //}
+    
+    //return Out;
 }
 
 technique11 DefaultTechnique
@@ -479,7 +648,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(1.f, 1.f, 1.f, 1.f), 0xffffffff);
    
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -491,7 +660,7 @@ technique11 DefaultTechnique
     pass Distortion // 6
     {
         SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetRasterizerState(RS_Cull_None);
 
         VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
@@ -499,5 +668,18 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
+    }
+
+    pass Shard_Hp // 7
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SHARD_HP();
     }
 }

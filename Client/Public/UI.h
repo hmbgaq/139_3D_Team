@@ -2,6 +2,7 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 #include "Renderer.h"
+//#include "UI_Manager.h"
 
 BEGIN(Engine)
 class CCharacter;
@@ -19,20 +20,24 @@ public:
 	// 키프레임 구조체
 	typedef struct tagUIKeyframe
 	{
-		_float	fTime = 0.f;					// 키프레임의 시간 (0.0f ~ MaxTime 범위)
-		_float	fValue = 0.f;					// 애니메이션 값 (크기, 회전, 이동 등)
-		_float	fAnimSpeed = 1.f;				// 애니메이션 재생 속도
+		_float	fTime = 0.f;						// 키프레임의 시간 (0.0f ~ MaxTime 범위)
+		_float	fValue = 0.f;						// 애니메이션 값 (크기, 회전, 이동 등)
+		_float	fAnimSpeed = 1.f;					// 애니메이션 재생 속도
 
-		_int	iType = 0;						// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
+		_int	iType = 0;							// 애니메이션 타입 (0: 크기, 1: 회전, 2: 이동)
 
-		_bool	isEaseIn = false;				// Ease In 설정 (True 또는 False)
-		_bool	isEaseOut = false;				// Ease Out 설정 (True 또는 False)
+		_bool	isEaseIn = false;					// Ease In 설정 (True 또는 False)
+		_bool	isEaseOut = false;					// Ease Out 설정 (True 또는 False)
 
-		_int	iTexureframe = 0;				// 텍스처 변경 값
+		_int	iTexureframe = 0;					// 텍스처 변경 값
 
 		_float2	vScale = { 50.f, 50.f };			// 크기를 담을 그릇
-		_float	fRot = 0.f;						// 회전을 담을 그릇
-		_float2	vPos = { 10.f, 10.f };			// 위치를 담을 그릇
+		_float	fRot = 0.f;							// 회전을 담을 그릇
+		_float2	vPos = { 10.f, 10.f };				// 위치를 담을 그릇
+		
+		_float3	vWorld_Scale = { 0.02f, 0.02f, 0.1f };		// 회전을 담을 그릇
+		_float3	vWorld_Rot = { 0.f, 0.f, 0.f };		// 회전을 담을 그릇
+		_float3	vWorld_Pos = { 0.f, 0.f, 0.1f };	// 위치를 담을 그릇
 
 		_float2	vKeyFramePos = { 0.00000000f, 0.00000000f };	// 툴에서의 해당 키프레임 위치
 
@@ -106,7 +111,7 @@ public:
 		_float		fScaleY = 100.f;
 
 		/* 회전 */
-		_float		fRotationZ = 0.0f;
+		_float		fRotationZ = 0.5f;
 
 		/* 이동 */
 		_float		fPositionX = (_float)g_iWinSizeX / 2;
@@ -187,6 +192,9 @@ public:
 		_int		iNoiseNum = 0;
 
 		MODE_COLOR eColorMode = MODE_COLOR::MODE_COLOR_END;
+		//CRenderer::RENDERGROUP eRenderGroup = CRenderer::RENDER_UI;
+		_int		iRenderGroup = (_int)CRenderer::RENDER_UI;
+
 	}UI_DESC;
 
 	enum UI_BUTTON_STATE
@@ -238,6 +246,11 @@ public: /* ============================== Get / Set ============================
 	void			Set_Tool(_bool bTool) { m_bTool = bTool; }
 	_bool			m_bTool = true;
 
+	/* RenderGroup */
+	void						Set_RenderGroup(CRenderer::RENDERGROUP eGroup) { m_tUIInfo.iRenderGroup = eGroup; }
+	//CRenderer::RENDERGROUP*		Get_RenderGroup() {	return &m_tUIInfo.eRenderGroup; }
+	_int*						Get_RenderGroup() {	return &m_tUIInfo.iRenderGroup; }
+
 //protected:
 public:
 	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
@@ -263,10 +276,10 @@ public: /* ============================== Basic =============================== 
 	virtual void	Tick(_float fTimeDelta);
 
 	/* State */
-	virtual void	UI_Ready(_float fTimeDelta) = 0;
-	virtual void	UI_Enter(_float fTimeDelta) = 0;
-	virtual void	UI_Loop(_float fTimeDelta) = 0;
-	virtual void	UI_Exit(_float fTimeDelta) = 0;
+	virtual void	UI_Ready(_float fTimeDelta);
+	virtual void	UI_Enter(_float fTimeDelta);
+	virtual void	UI_Loop(_float fTimeDelta);
+	virtual void	UI_Exit(_float fTimeDelta);
 
 	virtual void	UI_AppearTick(_float fTimeDelta);
 	virtual void	UI_DisappearTick(_float fTimeDelta);
@@ -293,6 +306,8 @@ public: /* ============================== SetUp ============================== *
 	void			SetUp_WorldToScreen(_matrix vWorldPos, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	HRESULT			SetUp_BillBoarding();
 	_matrix			matTargetWorld = XMMatrixIdentity();
+	_bool			Calculation_Direcion(_vector vTargetPos, _float4 vCurrentDir);
+	_float			Target_Contained_Angle(_vector vStandard, _float4 vTargetPos);
 
 	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
 	void			Tick_LevelUp(_float fTimeDelta);
@@ -310,10 +325,14 @@ public:
 	string			Get_FilePathTag() { return m_tUIInfo.strFilePath; }
 	string			Get_ObjectNameTag() { return m_tUIInfo.strObjectName; }
 	_int			Get_ObjectNum() { return m_tUIInfo.iObjectNum; }
+	void			Set_UIName(string strName) { m_tUIInfo.strUIName = strName; }
 
 protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
 	virtual HRESULT Bind_ShaderResources();
+
+public:
+	virtual HRESULT	Setting_Owner();
 
 public: /* =========================== Save/Load ============================== */
 	virtual void	Load_FromJson(const json& In_Json);
@@ -358,13 +377,13 @@ public: /* =========================== Animation ============================== 
 	_float			fFrameTimeDelta, fCurFrameTimeDelta;
 
 	// 크기
-	_float			fSizeX_Delta, fSizeY_Delta;
+	_float			fSizeX_Delta, fSizeY_Delta, fSizeZ_Delta;
 
 	// 회전
 	_float			fRotX_Delta, fRotY_Delta, fRotZ_Delta;
 
 	// 이동
-	_float			fPosX_Delta, fPosY_Delta;
+	_float			fPosX_Delta, fPosY_Delta, fPosZ_Delta;
 
 	// 알파
 	_float			fAlpha_Delta;
@@ -412,6 +431,7 @@ protected:
 protected:
 	_bool				Alpha_Minus(_float fTimeDelta);
 	_bool				Alpha_Plus(_float fTimeDelta);
+	_bool				Alpha_Plus_Control(_float fTimeDelta, _float fAlpha);
 	_float				m_fAlphaSpeed = 1.f;
 
 protected:
@@ -439,6 +459,8 @@ protected: /* =========================== Space ============================ */
 protected: /* =========================== Screen ============================ */
 	_float				m_fWorldToScreenX = 0.f;
 	_float				m_fWorldToScreenY = 0.f;
+	_float				m_fScreenOffsetX = 300.f;
+	_float				m_fScreenOffsetY = 150.f;
 
 protected: /* ============================= UI =============================== */
 	vector<CUI*>		m_vecUIParts;
@@ -450,6 +472,7 @@ protected: /* ============================= UI =============================== *
 	_bool				m_bActive = false;
 	_bool				m_bReset = false;
 	_bool				m_bRestore = false;
+	_bool				m_bRenderOut = false;
 	// UI_Member
 	_float				m_fPositionX = 0.f, m_fPositionY = 0.f;
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
@@ -471,6 +494,7 @@ protected: /* ============================= UI =============================== *
 public:
 	void				Set_MaskNum(_int iMaskNum) { m_tUIInfo.iMaskNum = iMaskNum; }
 	void				Set_NoiseNum(_int iNoiseNum) { m_tUIInfo.iNoiseNum = iNoiseNum; }
+	void				Set_WorldUI(_bool bWorld) { m_tUIInfo.bWorld = bWorld; }
 	void				Set_DiffuseColor(_float fColorR, _float fColorG, _float fColorB, _float fColorA)
 	{
 		m_tUIInfo.vColor.m128_f32[0] = fColorR;
@@ -479,6 +503,7 @@ public:
 		m_tUIInfo.vColor.m128_f32[3] = fColorA;
 	}
 	void				Set_ColorMode(MODE_COLOR eColorMode) { m_tUIInfo.eColorMode = eColorMode; }
+	_bool*				Get_WorldUI() { return &m_tUIInfo.bWorld; }
 
 public:
 	void	Set_OffsetX(_float fOffsetX) { m_fOffsetX = fOffsetX; }
@@ -495,7 +520,19 @@ public:
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
+	_bool				m_bSelect = false;
+	_bool				m_bSelectPressing = false;
 	_uint				m_iButtonState = {};
+	_bool				m_bChange_Proj = false;
+
+public:
+	void				Set_Select(_bool bSelect) { m_bSelect = bSelect; }
+	_bool				Get_Select() { return m_bSelect; }
+	void				Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
+	_bool				Get_SelectPressing() { return m_bSelectPressing; };
+
+public:
+	void	ChangeProj() { m_bChange_Proj = true; }
 
 public:
 	virtual void		 Free() override;

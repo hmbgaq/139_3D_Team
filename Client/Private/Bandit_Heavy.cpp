@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Body_Bandit_Heavy.h"
 #include "BanditHeavy_Idle.h"
+#include "Data_Manager.h"
+#include "Player.h"
 
 CBandit_Heavy::CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -53,6 +55,11 @@ void CBandit_Heavy::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
+	if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
+	{
+		m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	}
+
 }
 
 void CBandit_Heavy::Late_Tick(_float fTimeDelta)
@@ -80,34 +87,34 @@ HRESULT CBandit_Heavy::Ready_PartObjects()
 	return S_OK;
 }
 
-CBandit_Heavy* CBandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-{
-	CBandit_Heavy* pInstance = new CBandit_Heavy(pDevice, pContext, strPrototypeTag);
+//CBandit_Heavy* CBandit_Heavy::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+//{
+//	CBandit_Heavy* pInstance = new CBandit_Heavy(pDevice, pContext, strPrototypeTag);
+//
+//	if (FAILED(pInstance->Initialize_Prototype()))
+//	{
+//		MSG_BOX("Failed to Created : CBandit_Heavy");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
 
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CBandit_Heavy");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CBandit_Heavy::Clone(void* pArg)
-{
-	CBandit_Heavy* pInstance = new CBandit_Heavy(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed to Cloned : CBandit_Heavy");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-CGameObject* CBandit_Heavy::Pool()
-{
-	return new CBandit_Heavy(*this);
-}
+//CGameObject* CBandit_Heavy::Clone(void* pArg)
+//{
+//	CBandit_Heavy* pInstance = new CBandit_Heavy(*this);
+//
+//	if (FAILED(pInstance->Initialize(pArg)))
+//	{
+//		MSG_BOX("Failed to Cloned : CBandit_Heavy");
+//		Safe_Release(pInstance);
+//	}
+//	return pInstance;
+//}
+//
+//CGameObject* CBandit_Heavy::Pool()
+//{
+//	return new CBandit_Heavy(*this);
+//}
 
 void CBandit_Heavy::Free()
 {

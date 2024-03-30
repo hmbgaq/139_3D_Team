@@ -45,6 +45,8 @@ HRESULT CBullet_ELShotgun::Initialize(void* pArg)
 
 	m_fLifeTime = 0.5f;
 
+	m_bIsMelee = true;
+
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
 
@@ -97,13 +99,12 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
 			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee);
 		}
 
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+
 	}
 
 	//Set_Dead(true);

@@ -13,6 +13,8 @@ END
 BEGIN(Client)
 
 class CPlayer;
+class CMother;
+class CSon;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
@@ -34,6 +36,12 @@ public:
 	void Set_Player(CPlayer* _pPlayer);
 	CPlayer* Get_Player();
 	void Reset_Player(LEVEL eLEVEL);
+
+	void Set_Mother(CMother* _pMother);
+	CMother* Get_Mother();
+
+	void Set_Son(CSon* _pSon);
+	CSon* Get_Son();
 
 public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
@@ -77,20 +85,23 @@ private: /* _int */
 	_int	m_iCurLevel = 2;
 
 private: /* _bool */
-	_bool	m_bLevelUp = false;
-	_bool	m_bShowLevelBox = false;
-	_bool	m_bShowInterface = false;
-	_bool	m_bShowTutorial = false;
-	_bool	m_bShowQuestBox = false;
-	_bool	m_bShowRewardBox = false;
-	_bool	m_bShowCrosshair = false;
-	_bool	m_bTriggerCrosshair = false;
-
+	_bool	m_bLevelUp = false;				// 레벨업		On/Off
+	_bool	m_bShowLevelBox = false;		// 레벨 박스		On/Off
+	_bool	m_bShowInterface = false;		// 인터페이스	On/Off
+	_bool	m_bShowTutorial = false;		// 튜토리얼 박스 On/Off
+	_bool	m_bShowQuestBox = false;		// 퀘스트 박스	On/Off
+	_bool	m_bShowRewardBox = false;		// 리워드 박스	On/Off
+	_bool	m_bShowCrosshair = false;		// 크로스헤어	On/Off
+	_bool	m_bTriggerCrosshair = false;	// 크로스헤어	PlayAnim
+	_bool	m_bHit = false;					// 피격받음		On/Off
 
 // ! SH_Add
 public: /* ========================== Player Info ========================== */
 	void	PlayerInfo_Setting();	// Player Setting
 	void	Limit_Manager();		// Limit_Manager
+#pragma region =========> Hit <=========
+	_bool	Get_HitState() { return m_bHit; }
+	void	Set_HitState(_bool bHit) { m_bHit = bHit; }
 #pragma region =========> MAX_HP <=========
 	// => HP (Limit)
 	void	Limit_HP();
@@ -187,6 +198,8 @@ public: /* ========================== Player Info ========================== */
 private:
 	CMasterCamera* m_pMasterCamera = { nullptr };
 	CPlayer* m_pPlayer = { nullptr };
+	CMother* m_pMother = { nullptr };
+	CSon*	m_pSon = { nullptr };
 
 	CSky* m_pSky = { nullptr };
 	CNavigation* m_pNavigation = { nullptr };

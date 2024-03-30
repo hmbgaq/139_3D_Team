@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 
 #include "Character_Client.h"
 #include "Actor.h"
@@ -7,7 +7,9 @@ BEGIN(Engine)
 class CPhysXCollider;
 END
 
+
 BEGIN(Client)
+//class CUI_Manager;
 
 class CPlayer final : public CCharacter_Client
 {
@@ -99,6 +101,12 @@ public:
 	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
 
+private:
+	void		 KeyInput(_float fTimeDelta);
+	//CUI_Manager* m_pUIManager = nullptr;
+	_bool		 m_bShowOption = false;
+	_bool		 m_bShowSkillWindow = false;
+	_bool		 m_bShowDiedScreen = false;
 
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }

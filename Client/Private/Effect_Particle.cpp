@@ -45,9 +45,8 @@ void CEffect_Particle::Priority_Tick(_float fTimeDelta)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
+
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
-	{
 		if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
@@ -134,7 +133,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 					if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
 					{
 						m_tVoidDesc.fDissolveAmount = 1.f;
-						m_tVoidDesc.bRender = TRUE;
+						//m_tVoidDesc.bRender = TRUE;
 						return;
 					}
 				}
@@ -144,8 +143,8 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 					m_pVIBufferCom->Update(fTimeDelta);
 				}
 			}
+
 #ifdef _DEBUG
-		}
 	}
 #endif // _DEBUG
 
@@ -153,52 +152,50 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 void CEffect_Particle::Late_Tick(_float fTimeDelta)
 {
+
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tVoidDesc.bActive_Tool)
-		{
 #endif // _DEBUG
-			if (m_tVoidDesc.bRender)
+		if (m_tVoidDesc.bRender)
+		{
+			__super::Update_PivotMat();
+
+			if (m_bSortZ)
 			{
-				__super::Update_PivotMat();
-
-				if (m_bSortZ)
-				{
-					//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
-				}
-				Compute_CamDistance();
-
-				// CRenderer::RENDER_BLEND
-				FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
+				//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
 			}
-#ifdef _DEBUG
+			Compute_CamDistance();
+
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 		}
+#ifdef _DEBUG
 	}
 #endif // _DEBUG
+
 }
 
 HRESULT CEffect_Particle::Render()
 {
+
 #ifdef _DEBUG
-	//if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
+	if (m_tVoidDesc.bActive_Tool)
 	{
-		if (m_tVoidDesc.bActive_Tool)
-		{
 #endif // _DEBUG
-			if (FAILED(Bind_ShaderResources()))
-				return E_FAIL;
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-			/* 이 쉐이더에 0번째 패스로 그릴거야. */
-			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+		/* 이 쉐이더에 0번째 패스로 그릴거야. */
+		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
 
-			/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
-			m_pVIBufferCom->Bind_VIBuffers();
+		/* 내가 그리려고하는 정점, 인덱스버퍼를 장치에 바인딩해. */
+		m_pVIBufferCom->Bind_VIBuffers();
 
-			/* 바인딩된 정점, 인덱스를 그려. */
-			m_pVIBufferCom->Render();
+		/* 바인딩된 정점, 인덱스를 그려. */
+		m_pVIBufferCom->Render();
+
+
 #ifdef _DEBUG
-		}
 	}
 #endif // _DEBUG
 
@@ -344,6 +341,9 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 HRESULT CEffect_Particle::Change_TextureCom(wstring strProtoTextureTag)	// 툴 용
 {
+	if (TEXT("") == strProtoTextureTag)
+		return S_OK;
+
 	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
 
 	wstring strDiffuse	= TEXT("Diffuse");
@@ -483,8 +483,8 @@ HRESULT CEffect_Particle::Ready_Components()
 			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
 		// Sprite
-		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		//if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
+		//	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 
@@ -510,13 +510,13 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 	/* Texture ============================================================================================ */
-	if (m_tVoidDesc.bUseSpriteAnim)
-	{
-		// 스프라이트 사용이고, 
-		if(nullptr != m_pTextureCom[TEXTURE_SPRITE])	// 스프라이트 텍스처 있으면 바인드
-			FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
-	}
-	else
+	//if (m_tVoidDesc.bUseSpriteAnim)
+	//{
+	//	// 스프라이트 사용이고, 
+	//	if(nullptr != m_pTextureCom[TEXTURE_SPRITE])	// 스프라이트 텍스처 있으면 바인드
+	//		FAILED_CHECK(m_pTextureCom[TEXTURE_SPRITE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_SPRITE]));
+	//}
+	//else
 	{
 		// 기본은 디퓨즈만 바인드
 		if (nullptr != m_pTextureCom[TEXTURE_DIFFUSE])

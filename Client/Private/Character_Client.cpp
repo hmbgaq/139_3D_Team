@@ -56,9 +56,9 @@ CEffect* CCharacter_Client::Create_Effect(CGameObject* pOwner)
 	string strEffectFileName = Get_CharcterDesc().EffectFileName;
 	if ("" == strEffectFileName)
 	{
-		strEffectFileName = "Test_Effect";
+		strEffectFileName = "Hit_Normal";
 	}
-	return EFFECT_MANAGER->Create_Effect(strEffectFileName + ".json", pOwner);
+	return EFFECT_MANAGER->Create_Effect("Hit/", strEffectFileName + ".json", pOwner);
 }
 
 CEffect* CCharacter_Client::Create_Effect(_float3 vPos, CGameObject* pOwner)
@@ -101,16 +101,18 @@ void CCharacter_Client::Apply_Shake_And_Blur(Power ePower)
 
 void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string strEffectName, CGameObject* pOwner)
 {
-	string strEffectFileName;
-	strEffectFileName = strEffectName != "" ? strEffectName : Get_CharcterDesc().EffectFileName;
-	strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Test_Effect";
+	//string strEffectFileName;
+	//strEffectFileName = strEffectName != "" ? strEffectName : Get_CharcterDesc().EffectFileName;
+	//strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Hit_Normal";
 
 	if (nullptr == m_pEffectManager)
 	{
 		m_pEffectManager = EFFECT_MANAGER;
 	}
 
-	CEffect* pEffect = m_pEffectManager->Create_Effect(strEffectFileName + ".json", pOwner);
+	//CEffect* pEffect = m_pEffectManager->Create_Effect(strEffectFileName + ".json", pOwner);
+	CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", vPos, TRUE, m_pGameInstance->Get_Player()->Get_Position());
+
 	if (pEffect)
 		pEffect->Set_Position(vPos);
 

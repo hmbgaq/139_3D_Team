@@ -452,8 +452,11 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	//_float3 vUp = { 0.f, 1.f, 0.f };
 	//Add_Force(XMLoadFloat3(&vUp), 1.0f);
 
-
-	m_pTransformCom->Look_At_Direction(vDir * -1);
+	if (false == m_bIsFixed || Power::Heavy == eHitPower)
+	{
+		m_pTransformCom->Look_At_Direction(vDir * -1);
+	}
+	
 
 	if (m_iHp <= 0)
 	{
@@ -530,6 +533,15 @@ void CCharacter::Look_At_Target()
 
 	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
 	m_pTransformCom->Look_At_OnLand(vTargetPos);
+}
+
+void CCharacter::Look_At_TargetBoss()
+{
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+	m_pTransformCom->Look_At_OnLandBoss(vTargetPos);
 }
 
 void CCharacter::Look_At_Target_Lerp(_float fTimeDelta)

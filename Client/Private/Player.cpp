@@ -4,6 +4,8 @@
 #include "Weapon_Player.h"
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
+// Add_UIManager
+#include "UI_Manager.h"
 
 #include "Player_HitNormal_B.h"
 #include "Player_HitNormal_F.h"
@@ -149,6 +151,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	Update_ChargingTime(fTimeDelta);
 
+	KeyInput(fTimeDelta);
 
 	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
 
@@ -504,6 +507,42 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 		{
 			Move_In_Proportion_To_Enemy(fTimeDelta);
 		}
+	}
+}
+
+void CPlayer::KeyInput(_float fTimeDelta)
+{
+	///* ! UI : ShaderOption Window / Key : Esc */
+	//if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+	//{
+	//	m_bShowOption = !m_bShowOption;
+	//
+	//	if(m_bShowOption == true)
+	//		m_pUIManager->Active_Option();
+	//	else
+	//		m_pUIManager->NonActive_Option();
+	//}
+	//
+	///* ! UI : DiedScreen / Key : I */
+	//if (m_pGameInstance->Key_Down(DIK_I))
+	//{
+	//	m_bShowDiedScreen = !m_bShowDiedScreen;
+	//
+	//	if (m_bShowDiedScreen == true)
+	//		m_pUIManager->Active_DiedScreen();
+	//	else
+	//		m_pUIManager->NonActive_DiedScreen();
+	//}
+
+	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		//m_bShowSkillWindow = !m_bShowSkillWindow;
+
+		//if (m_bShowSkillWindow == true)
+		//	m_pUIManager->Active_SkillWindow();
+		//else
+		//	m_pUIManager->NonActive_SkillWindwo();
 	}
 }
 

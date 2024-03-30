@@ -52,38 +52,89 @@ void CUI_EnemyHP_Shard::Priority_Tick(_float fTimeDelta)
 void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_V))
-		m_fOffsetY -= 0.1f;
+		m_fCurHP -= 10.f;
 	if (m_pGameInstance->Key_Down(DIK_B))
-		m_fOffsetY += 0.1f;
+		m_fCurHP += 10.f;
+
+	if (m_pGameInstance->Key_Down(DIK_5))
+	{
+		m_vStartPoint = { 0.0f, 1.0f };
+		m_vEndPoint = { 1.0f, 0.0f };
+	}
+	if (m_pGameInstance->Key_Down(DIK_6))
+	{
+		m_vStartPoint = { 1.0f, 0.0f };
+		m_vEndPoint = { 0.0f, 1.0f };
+	}
+	if (m_pGameInstance->Key_Down(DIK_7))
+	{
+		m_vStartPoint = { 1.0f, 1.0f };
+		m_vEndPoint = { 0.0f, 0.0f };
+	}
+	if (m_pGameInstance->Key_Down(DIK_8))
+	{
+		m_vStartPoint = { 0.0f, 0.0f };
+		m_vEndPoint = { 1.0f, 1.0f };
+	}
 
 	__super::Tick(fTimeDelta);
 
 	//if (m_pOwner != nullptr)
 	//	Set_WorldMatrix(m_pOwner->Get_Transform()->Get_WorldMatrix());
+
+		// 회복
+	if (m_fPreHP < m_fCurHP)
+		m_fPreHP = m_fCurHP;
+
+	//m_pData_Manager->Limit_HP();
+
+	if (m_bActive == true)
+	{
+		m_fTimeAcc += fTimeDelta * 0.1f;
+
+		if (m_fCurHP < m_fPreHP)
+			m_bLerp = false;
+
+		if (!m_bLerp && m_fPreHP > m_fCurHP)
+		{
+			m_fPreHP -= fTimeDelta * m_fVariationSpeed * (m_fMaxHP / 4.f);
+
+			if (m_fPreHP <= m_fCurHP)
+			{
+				m_fPreHP = m_fCurHP;
+				m_bLerp = true;
+			}
+		}
+	}
 }
 
 void CUI_EnemyHP_Shard::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
-
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this)))
-		return;
+	if (m_bActive == true)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+			return;
+	}
 }
 
 HRESULT CUI_EnemyHP_Shard::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(5); //!
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }
@@ -185,6 +236,18 @@ HRESULT CUI_EnemyHP_Shard::Bind_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_LerpHP", &m_fPreHP, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_CurrentHP", &m_fCurHP, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_MaxHP", &m_fMaxHP, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_StartPoint", &m_vStartPoint, sizeof(_float2))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_EndPoint", &m_vEndPoint, sizeof(_float2))))
+		return E_FAIL;
+
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;

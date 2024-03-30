@@ -48,7 +48,7 @@ HRESULT CSky::Initialize(void* pArg)
 		}
 		case LEVEL::LEVEL_SNOWMOUNTAINBOSS:
 		{
-			m_eSkyType = CSky::SKYTYPE::SKY_END;
+			m_eSkyType = CSky::SKYTYPE::SKY_STAGE2;
 			break;
 		}
 		case  LEVEL::LEVEL_TOOL:

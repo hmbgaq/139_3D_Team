@@ -197,6 +197,10 @@ public:
 public:
 	EFFECTVOID_DESC* Get_Desc() { return &m_tVoidDesc; }
 
+	
+public:
+	void	ReNumber_PartTag();	// Åø¿ë
+
 
 protected:
 	EFFECTVOID_DESC	m_tVoidDesc = {};

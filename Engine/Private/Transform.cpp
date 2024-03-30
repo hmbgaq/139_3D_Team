@@ -305,6 +305,26 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 	return false;
 }
 
+void CTransform::Rotation_Quaternion(_float3 vRotation)
+{
+	_float3 vScale = Get_Scaled();
+
+	_vector      vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector      vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector      vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_vector      vRot = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(vRotation.x)
+															, XMConvertToRadians(vRotation.y)
+															, XMConvertToRadians(vRotation.z));
+
+	_matrix      RotationMatrix = XMMatrixRotationQuaternion(vRot);
+
+	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+
+}
+
 void CTransform::Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare)
 {
 	_vector		vPosition = Get_State(STATE_POSITION);
@@ -373,6 +393,38 @@ void CTransform::Look_At_OnLand(_fvector vTargetPos)
 	Set_State(STATE_RIGHT, vRight);
 	Set_State(STATE_UP, vUp);
 	Set_State(STATE_LOOK, vLook);
+}
+
+void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
+{
+	_float3		vScale = Get_Scaled();
+
+	_vector		vPosition = Get_State(STATE_POSITION);
+	_vector		vLook = vTargetPos - vPosition;
+
+	
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, vLook)) * vScale.x;
+
+	vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp)) * vScale.z;
+
+
+
+
+	//vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
+	//
+	//vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
+
+	//_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+
+	Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_fRadian + XMConvertToRadians(270)));
+
+
 }
 
 void CTransform::Look_At_Direction(_fvector _vLook)
@@ -450,7 +502,8 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDe
 
 	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
 
-	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	Move_On_Navigation(vResult, pNavigation);
+	//Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
 }
 
 

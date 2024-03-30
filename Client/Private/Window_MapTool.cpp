@@ -59,8 +59,8 @@ HRESULT CWindow_MapTool::Initialize()
 {
 	FAILED_CHECK(__super::Initialize());
 
-	FAILED_CHECK(Ready_ModelTags());
-	FAILED_CHECK(Ready_PrototypeTags());
+	//FAILED_CHECK(Ready_ModelTags());
+	//FAILED_CHECK(Ready_PrototypeTags());
 	
 
 	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();

@@ -51,8 +51,19 @@ public:
 	_int iMeshNumber = 0;
 	MONSTER_DESC* Get_MonsterDesc() { return &m_tMonsterDesc; }
 
+	_float Get_AttackDelay() { return m_fAttackDelay; };
+	void Set_AttackDelay(_bool _fAttackDelay) { m_fAttackDelay = max(m_fAttackDelay, _fAttackDelay); };
+
+	_uint Get_AttackCount() { return m_iAttackCount; };
+	void Add_AttackCount() { m_iAttackCount += 1; };
+	void Reset_AttackCount() { m_iAttackCount = 0; };
+
+
+
 protected:
 	MONSTER_DESC			m_tMonsterDesc = {};
+	_float					m_fAttackDelay = { 0.f };
+	_uint					m_iAttackCount = { 0 };
 
 protected:
 	HRESULT Ready_Components() PURE;
