@@ -44,12 +44,24 @@ HRESULT CBandit_Heavy::Initialize(void* pArg)
 	}
 	else
 	{
-		CMonster_Character::MONSTER_DESC MonsterDesc = *(CMonster_Character::MONSTER_DESC*)pArg;
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
 
-		MonsterDesc.fSpeedPerSec = 10.f;
-		MonsterDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		if (GameObjectDesc.eDescType == CGameObject::MONSTER_DESC)
+		{
+			CMonster_Character::MONSTER_DESC MonsterDesc = *(CMonster_Character::MONSTER_DESC*)pArg;
 
-		FAILED_CHECK(__super::Initialize(&MonsterDesc));
+			MonsterDesc.fSpeedPerSec = 7.f;
+			MonsterDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+			FAILED_CHECK(__super::Initialize(&MonsterDesc));
+		}
+		else
+		{
+			GameObjectDesc.fSpeedPerSec = 7.f;
+			GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+			FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+		}
+		
 	}
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))

@@ -173,6 +173,9 @@ public:
 	void		Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 public:
+	_bool		Calc_FrontCheck(const _float3& vTargetPos);
+
+public:
 	_float3		Calculate_SlidingVector(const _fvector& velocity, const _fvector& normal);
 
 public:

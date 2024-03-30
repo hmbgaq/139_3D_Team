@@ -42,7 +42,7 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	
 	/* !ADD : UI_HUD */
-	//todoCUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
+	//CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
 
 	return S_OK;
 }
@@ -62,7 +62,7 @@ void CInfected_A::Tick(_float fTimeDelta)
 	//}
 
 	/* !ADD : UI_HUD */
-	//todoCUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
+	//CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
 
 }	
 
