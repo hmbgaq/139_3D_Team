@@ -55,6 +55,12 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 		Init_WagonEvent();
 	}
 
+	if (m_tEnvironmentDesc.eInteractType == INTERACT_WAGONPUSH)
+	{
+		if (FAILED(Find_InteractGroupObject()))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -186,6 +192,13 @@ void CEnvironment_Interact::Set_AnimationIndex(_uint iAnimIndex)
 	m_pModelCom->Set_Animation(iAnimIndex);
 }
 
+void CEnvironment_Interact::Reset_Interact()
+{
+	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+	m_bInteractStart = false;
+	m_bInteract = false;
+}
+
 #ifdef _DEBUG
 
 void CEnvironment_Interact::Set_ColliderSize(_float3 vColliderSize)
@@ -253,7 +266,7 @@ void CEnvironment_Interact::Interact()
 
 		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP)
 		{
-			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
+			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()) || m_bInteractStart == true)
 			{
 				switch (m_tEnvironmentDesc.eInteractType)
 				{
@@ -328,7 +341,7 @@ void CEnvironment_Interact::Interact()
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
 		{
-			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
+			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()) || m_bInteractStart == true)
 			{
 				switch (m_tEnvironmentDesc.eInteractType)
 				{
@@ -382,11 +395,19 @@ void CEnvironment_Interact::Interact()
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 						{
 							m_pPlayer->SetState_InteractVault200();
-							//m_pPlayer->Set_RootMoveRate(_float3(1.f, 0.5f, 1.f));	// 이런 식으로 루트 모션 비율 조정하면 됨
 							
 						}
 
 						break;
+					}
+
+					case CEnvironment_Interact::INTERACT_WAGONPUSH:
+					{
+						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						{
+							m_pPlayer->SetState_InteractionPush_Rock_Start();
+
+						}
 					}
 
 
@@ -430,6 +451,77 @@ void CEnvironment_Interact::Interact()
 			//}
 			
 		}
+}
+
+void CEnvironment_Interact::Move_For_PlayerRootMotion()
+{
+	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pPlayer->Get_AddRootMotion());
+}
+
+HRESULT CEnvironment_Interact::Find_InteractGroupObject()
+{
+	
+
+	list<CGameObject*> BackGroundObjects = *m_pGameInstance->Get_GameObjects(m_iCurrentLevelIndex, L"Layer_BackGround");
+
+	if (true == BackGroundObjects.empty())
+		return E_FAIL;
+
+	for (auto& iter : BackGroundObjects)
+	{
+		if (typeid(*iter) == typeid(CEnvironment_Interact))
+		{
+			CEnvironment_Interact* pInteractObject = dynamic_cast<CEnvironment_Interact*>(iter);
+
+			if (pInteractObject == nullptr)
+				return E_FAIL;
+			else
+			{
+				_int iFindObjectGroupIndex = pInteractObject->Get_InteractGroupIndex();
+
+				if (iFindObjectGroupIndex != -1 && iFindObjectGroupIndex == m_tEnvironmentDesc.iInteractGroupIndex)
+				{
+					m_vecInteractGroup.push_back(pInteractObject);
+				}
+				else
+					continue;
+			}
+		}
+	}
+
+	return S_OK;
+}
+
+_bool CEnvironment_Interact::Check_EnablePosition(CEnvironment_Interact* pInteractObject)
+{
+	if (pInteractObject == nullptr || m_tEnvironmentDesc.vEnablePosition == _float4())
+		return false;
+
+	_vector		vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	_vector		vDir = m_tEnvironmentDesc.vEnablePosition - vPosition;
+
+	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
+
+	if (fDistance >= 1.f)
+	{
+		
+		pInteractObject->StartInteract();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+HRESULT CEnvironment_Interact::Add_InteractGroupObject(CEnvironment_Interact* pInteractObject)
+{
+	if (pInteractObject == nullptr)
+		return E_FAIL;
+
+	m_vecInteractGroup.push_back(pInteractObject);
+
+	return S_OK;
 }
 
 void CEnvironment_Interact::Start_SplineEvent()

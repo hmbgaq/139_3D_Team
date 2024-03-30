@@ -26,11 +26,41 @@
 #include "Player_InteractionJumpDown100.h"
 #include "Player_InteractionJumpDown200.h"
 #include "Player_InteractionJumpDown300.h"
+
 #include "Player_InteractionVault100.h"
 #include "Player_InteractionVault200.h"
+
 #include "Player_CartRide_Start.h"
 #include "Player_L06_Wagon_Jump.h"
 #include "Player_CartRide_Loop.h"
+
+#include "Player_InteractionPush_Rock_Start.h"
+#include "Player_InteractionPush_Rock_Idle.h"
+#include "Player_InteractionPush_Rock_Loop.h"
+#include "Player_InteractionPush_Rock_End.h"
+
+#include "Player_InteractionClimb100.h"
+#include "Player_InteractionClimb200.h"
+#include "Player_InteractionClimb300.h"
+#include "Player_InteractionClimb450.h"
+
+#include "Player_Interaction_Slide_Sequence.h"
+#include "Player_Interaction_SmallLever.h"
+
+#include "Player_InteractionPlank_Up_Start.h"
+#include "Player_InteractionLadder_Up_Start.h"
+
+#include "Player_InteractionWhipSwing.h"
+#include "Player_InteractionWhipPull.h"
+
+#include "Player_InteractionRotateValve_01.h"
+
+#include "Player_InteractionDoor_Open.h"
+#include "Player_InteractionDoorPush.h"
+
+#include "Player_InteractionClimbRope_Start.h"
+#include "Player_InteractionRope_Down_Start.h"
+
 
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
@@ -370,6 +400,88 @@ void CPlayer::SetState_InteractCartRideWagonJump()
 {
 	m_pActor->Set_State(new CPlayer_L06_Wagon_Jump());
 }
+
+void CPlayer::SetState_InteractionPush_Rock_Start()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPush_Rock_Start());
+}
+
+void CPlayer::SetState_InteractClimb100()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb100());
+}
+
+void CPlayer::SetState_InteractClimb200()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb200());
+}
+
+void CPlayer::SetState_InteractClimb300()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb300());
+}
+
+void CPlayer::SetState_InteractClimb450()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb450());
+}
+
+void CPlayer::SetState_InteractSlide()
+{
+	m_pActor->Set_State(new CPlayer_Interaction_Slide_Sequence());
+}
+
+void CPlayer::SetState_InteractSmallLever()
+{
+	m_pActor->Set_State(new CPlayer_Interaction_SmallLever());
+}
+
+void CPlayer::SetState_InteractPlankStart()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPlank_Up_Start());
+}
+
+void CPlayer::SetState_InteractRopeDown()
+{
+	m_pActor->Set_State(new CPlayer_InteractionRope_Down_Start());
+}
+
+void CPlayer::SetState_InteractClimbRope()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimbRope_Start());
+}
+
+
+void CPlayer::SetState_InteractDoorOpen()
+{
+	m_pActor->Set_State(new CPlayer_InteractionDoor_Open());
+}
+
+void CPlayer::SetState_InteractDoorPush()
+{
+	m_pActor->Set_State(new CPlayer_InteractionDoorPush());
+}
+
+void CPlayer::SetState_InteractLadderUpStart()
+{
+	m_pActor->Set_State(new CPlayer_InteractionLadder_Up_Start());
+}
+
+void CPlayer::SetState_InteractWhipSwing()
+{
+	m_pActor->Set_State(new CPlayer_InteractionWhipSwing());
+}
+
+void CPlayer::SetState_InteractWhipPull()
+{
+	m_pActor->Set_State(new CPlayer_InteractionWhipPull());
+}
+
+void CPlayer::SetState_InteractRotationValve()
+{
+	m_pActor->Set_State(new CPlayer_InteractionRotateValve_01());
+}
+
 
 #pragma endregion 상호작용
 

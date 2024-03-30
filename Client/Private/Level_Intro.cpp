@@ -38,6 +38,7 @@
 #include "SpringCamera.h"
 #include "LandObject.h"
 #include "Monster_Character.h"
+#include "Light.h"
 
 CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel(pDevice, pContext)
@@ -79,24 +80,83 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 {
     CGameObject* pMonster = nullptr;
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_Position(_float3(50.0f, 0.f, 35.f));
-    pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
+    json Stage1MapJson = {};
+
+    if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+    {
+        MSG_BOX("몬스터 불러오기 실패");
+        return E_FAIL;
+    }
+
+
+    _bool bSpawnSniper = true;
+    _bool bSpawnTanker = true;
+    _bool bSpawnInfected = true;
+    _bool bSpawnZenuGiant = true;
     
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(61.f, 0.f, 37.f));
 
+    json MonsterJson = Stage1MapJson["Monster_Json"];
+    _int iMonsterJsonSize = (_int)MonsterJson.size();
 
-    //CGameObject* 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(71.f, 0.f, 37.f));
+    for (_int i = 0; i < iMonsterJsonSize; ++i)
+    {
+        CMonster_Character::MONSTER_DESC MonsterDesc = {};
 
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
+        string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
+
+        m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
+        MonsterDesc.bPreview = false;
+        MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
+        MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
+
+        if (bSpawnSniper == false && MonsterDesc.strProtoTypeTag == L"Prototype_GameObject_Bandit_Sniper")
+        {
+            continue;
+        }
+
+        if (bSpawnTanker == false && MonsterDesc.strProtoTypeTag == L"Prototype_GameObject_Tank")
+        {
+            continue;
+        }
+
+        if (bSpawnZenuGiant == false && MonsterDesc.strProtoTypeTag == L"Prototype_GameObject_Heavy_Vampiric_Zombie")
+        {
+            continue;
+        }
+
+        if (bSpawnInfected == false)
+        {
+            if(MonsterDesc.strProtoTypeTag == L"Prototype_GameObject_Infected_A" || MonsterDesc.strProtoTypeTag == L"Prototype_GameObject_Infected_B" || MonsterDesc.strProtoTypeTag == L"Prototype_GameObject_Infected_C" || MonsterDesc.strProtoTypeTag == L"Prototype_GameObject_Infected_D")
+                continue;
+        }
+        
+
+        const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+        _float4x4 WorldMatrix;
+
+        for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+        {
+            for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+            {
+                WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+            }
+        }
+
+        MonsterDesc.WorldMatrix = WorldMatrix;
+
+        if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+            return E_FAIL;
+
+    }
+
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
     //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(71.f, 0.f, 47.f));
+    ////pMonster->Set_Position(_float3(50.0f, 0.f, 35.f));
+    //pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
+    //
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_InitPosition(_float3(61.f, 0.f, 37.f));
     
     //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
     //NULL_CHECK_RETURN(pMonster, E_FAIL);
@@ -135,7 +195,9 @@ HRESULT CLevel_Intro::Ready_Layer_Player(const wstring& strLayerTag)
     FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
     CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-    pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
+    pPlayer->Set_Position(_float3(3.0f, 0.f, 3.84f));
+
+
 
     CNavigation* pNavigation = pPlayer->Get_Navigation();
     pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
@@ -242,60 +304,31 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
     }
 
-    json MonsterJson = Stage1MapJson["Monster_Json"];
-    _int iMonsterJsonSize = (_int)MonsterJson.size();
+    
 
-    for (_int i = 0; i < iMonsterJsonSize; ++i)
-    {
-        CMonster_Character::MONSTER_DESC MonsterDesc = {};
+    //CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
+    //
+    //LightObjectDesc.bAnimModel = false;
+    //LightObjectDesc.bPreview = false;
+    //LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
+    //XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
+    //
+    //LightObjectDesc.iLightIndex = 4;
 
-        string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-
-        m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-        MonsterDesc.bPreview = false;
-
-
-        const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-        _float4x4 WorldMatrix;
-
-        for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-        {
-            for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-            {
-                WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-            }
-        }
-
-        MonsterDesc.WorldMatrix = WorldMatrix;
-
-        if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-            return E_FAIL;
-
-    }
-
-    CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
-
-    LightObjectDesc.bAnimModel = false;
-    LightObjectDesc.bPreview = false;
-    LightObjectDesc.strModelTag = L"Prototype_Component_Model_SecretTempleStatue1";
-    XMStoreFloat4x4(&LightObjectDesc.WorldMatrix, XMMatrixIdentity());
-
-    LightObjectDesc.iLightIndex = 4;
-
-    LIGHT_DESC LightDesc;
-
-
-    LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
-    LightDesc.fRange = 100.f;
-    LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
-    LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
-    LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
-    LightDesc.vSpecular = LightDesc.vDiffuse;
-
-    LightObjectDesc.LightDesc = LightDesc;
-
-    FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+    //LIGHT_DESC LightDesc;
+    //
+    //
+    //LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+    //XMStoreFloat4(&LightDesc.vPosition, XMLoadFloat4x4(&LightObjectDesc.WorldMatrix).r[3]);
+    //LightDesc.fRange = 100.f;
+    //LightDesc.vPosition = _float4(60.0f, 0.f, 55.f, 1.f);
+    //LightDesc.vDiffuse = _float4(0.6f, 0.2f, 0.05f, 1.0f);
+    //LightDesc.vAmbient = _float4(0.1f, 0.1f, 0.1f, 1.f);
+    //LightDesc.vSpecular = LightDesc.vDiffuse;
+    //
+    //LightObjectDesc.LightDesc = LightDesc;
+    //
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
 
     return S_OK;
 
@@ -726,16 +759,125 @@ HRESULT CLevel_Intro::Ready_LightDesc()
     m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
     m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-    LIGHT_DESC         LightDesc{};
-    {
-        LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-        LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
-        LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, 0.5f);
-        LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604f);
-        LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
+   //LIGHT_DESC         LightDesc{};
+   //{
+   //    LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+   //    LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
+   //    LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, 0.5f);
+   //    LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604f);
+   //    LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
+   //
+   //    FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+   //}
 
-        FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
+    json Stage1MapJson = {};
+
+    if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+    {
+        MSG_BOX("조명 불러오기 실패");
+        return E_FAIL;
     }
+
+    json LightJson = Stage1MapJson["Light_Json"];
+    _int iLightJsonSize = (_int)LightJson.size();
+
+    for (_int i = 0; i < iLightJsonSize; ++i)
+    {
+        LIGHT_DESC LightDesc = {};
+
+        LightDesc.iLightIndex = LightJson[i]["LightIndex"];
+        LightDesc.bEnable = LightJson[i]["LightEnable"];
+        LightDesc.fCutOff = LightJson[i]["CutOff"];
+        LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+
+        LightDesc.eType = LightJson[i]["Type"];
+        CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
+        LightDesc.fRange = LightJson[i]["Range"];
+        CJson_Utility::Load_Float4(LightJson[i]["Position"], LightDesc.vPosition);
+        CJson_Utility::Load_Float4(LightJson[i]["Diffuse"], LightDesc.vDiffuse);
+        CJson_Utility::Load_Float4(LightJson[i]["Specular"], LightDesc.vSpecular);
+        CJson_Utility::Load_Float4(LightJson[i]["Ambient"], LightDesc.vAmbient);
+
+
+        if (LightDesc.eType == tagLightDesc::TYPE_DIRECTIONAL)
+        {
+            CLight* pDirectionLight = m_pGameInstance->Get_DirectionLight();
+
+            if (pDirectionLight != nullptr)
+            {
+                m_pGameInstance->Remove_Light(pDirectionLight->Get_LightIndex());
+
+            }
+        }
+
+        CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+
+        if (pLight == nullptr)
+        {
+            MSG_BOX("라이트 불러오기 실패");
+            return E_FAIL;
+        }
+
+    }
+
+    json LightObjectJson = Stage1MapJson["LightObject_Json"];
+    _int iLightObjectJsonSize = (_int)LightObjectJson.size();
+
+    for (_int i = 0; i < iLightObjectJsonSize; ++i)
+    {
+        CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = {};
+
+        LightObjectDesc.bAnimModel = LightObjectJson[i]["AnimType"];
+        LightObjectDesc.bEffect = LightObjectJson[i]["Effect"];
+        LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
+        LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
+        LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+        LightObjectDesc.bPreview = false;
+
+        m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
+
+        const json& TransformJson = LightObjectJson[i]["Component"]["Transform"];
+        _float4x4 WorldMatrix;
+
+        for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+        {
+            for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+            {
+                WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+            }
+        }
+
+        LightObjectDesc.WorldMatrix = WorldMatrix;
+
+
+
+        LIGHT_DESC LightDesc = {};
+
+        LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
+        LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
+        LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
+        LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+
+        LightDesc.eType = LightObjectJson[i]["LightType"];
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
+        LightDesc.fRange = LightObjectJson[i]["Range"];
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Position"], LightDesc.vPosition);
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Diffuse"], LightDesc.vDiffuse);
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
+        CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
+
+
+        LightObjectDesc.LightDesc = LightDesc;
+
+        CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+
+        if (pLightObject == nullptr)
+        {
+            MSG_BOX("라이트오브젝트 생성실패");
+            return E_FAIL;
+        }
+    }
+
     return S_OK;
 }
 

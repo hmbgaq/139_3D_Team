@@ -205,7 +205,7 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 
 	if (true == m_Cells.empty())
 	{
-		MSG_BOX("네비게이션 셀이 없어요");
+		//MSG_BOX("네비게이션 셀이 없어요");
 		return false;
 	}
 

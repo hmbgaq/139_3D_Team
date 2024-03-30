@@ -70,13 +70,12 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 	//if (m_pGameInstance->Key_Pressing(DIK_I))
 	//	m_fRadius += 0.1f;
 
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		m_fCoolTime += 1.f;
-		//m_vCenter.x += 0.1f;
-		//m_vCenter.y += 0.1f;
-	}
-
+	//if (m_pGameInstance->Key_Down(DIK_K))
+	//{
+	//	m_fCoolTime += 1.f;
+	//	//m_vCenter.x += 0.1f;
+	//	//m_vCenter.y += 0.1f;
+	//}
 	//if (m_pGameInstance->Key_Down(DIK_Z))
 	//	m_iMaskNum -= 1;
 	//if (m_pGameInstance->Key_Down(DIK_X))

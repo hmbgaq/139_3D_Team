@@ -60,12 +60,20 @@ HRESULT CTank::Initialize_Prototype()
 
 HRESULT CTank::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else
+	{
+		FAILED_CHECK(__super::Initialize(pArg));
+	}
+
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{

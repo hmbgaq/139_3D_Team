@@ -46,13 +46,19 @@ HRESULT CVampireCommander::Initialize_Prototype()
 
 HRESULT CVampireCommander::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else
+	{
+		FAILED_CHECK(__super::Initialize(pArg));
+	}
 
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -93,27 +99,31 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	
+	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
+	{
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+		//cout << "introBossHP:" << m_iHp << endl;
+		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
+
+		//cout << "VampireCommander : " << fAngle << endl;
+		if (m_bLookAt == true)
+		{
+
+			if (0 <= fAngle && fAngle <= 45)
+				Look_At_Target_Lerp(fTimeDelta);
+			else if (-45 <= fAngle && fAngle < 0)
+				Look_At_Target_Lerp(fTimeDelta);
+
+			/*m_bLookAt = false;*/
+
+		}
+	}
 	//Search_Target(200.f);
 
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
-	//cout << "introBossHP:" << m_iHp << endl;
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
-
-	//cout << "VampireCommander : " << fAngle << endl;
-	if (m_bLookAt == true)
-	{
-		
-		if (0 <= fAngle && fAngle <= 45)
-			Look_At_Target_Lerp(fTimeDelta);
-		else if (-45 <= fAngle && fAngle < 0)
-			Look_At_Target_Lerp(fTimeDelta);
-
-		/*m_bLookAt = false;*/
-
-	}
+	
 	
 }
 
