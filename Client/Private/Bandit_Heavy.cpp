@@ -44,6 +44,11 @@ HRESULT CBandit_Heavy::Initialize(void* pArg)
 	}
 	else
 	{
+		CMonster_Character::MONSTER_DESC MonsterDesc = *(CMonster_Character::MONSTER_DESC*)pArg;
+
+		MonsterDesc.fSpeedPerSec = 10.f;
+		MonsterDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
 		FAILED_CHECK(__super::Initialize(pArg));
 	}
 
@@ -52,6 +57,7 @@ HRESULT CBandit_Heavy::Initialize(void* pArg)
 		m_pActor = new CActor<CBandit_Heavy>(this);
 		m_pActor->Set_State(new CBanditHeavy_Idle());
 	}
+
 
 	return S_OK;
 }

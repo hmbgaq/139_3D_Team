@@ -71,6 +71,10 @@ HRESULT CTank::Initialize(void* pArg)
 	}
 	else
 	{
+		CMonster_Character::MONSTER_DESC MonsterDesc = *(CMonster_Character::MONSTER_DESC*)pArg;
+
+		MonsterDesc.fSpeedPerSec = 10.f;
+		MonsterDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 		FAILED_CHECK(__super::Initialize(pArg));
 	}
 
