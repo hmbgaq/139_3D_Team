@@ -3,12 +3,12 @@
 #include "Body_Infected.h"
 
 CBody_Infected::CBody_Infected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CBody(pDevice, pContext, strPrototypeTag)
+	: CBody_Monster(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CBody_Infected::CBody_Infected(const CBody_Infected& rhs)
-	: CBody(rhs)
+	: CBody_Monster(rhs)
 {
 }
 

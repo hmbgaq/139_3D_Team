@@ -82,7 +82,7 @@ HRESULT CTank::Initialize(void* pArg)
 	}
 
 	//m_iHp = 150;
-	m_iHp = 1;
+	m_fHp = 100;
 
 
 	m_bIsFixed = true;
@@ -106,6 +106,8 @@ void CTank::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
+
+	m_bIsFixed = !Is_ShieldBroken();
 
 	if (Is_ShieldBroken())
 	{

@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CBody_Tank::CBody_Tank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CBody(pDevice, pContext, strPrototypeTag)
+	: CBody_Monster(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CBody_Tank::CBody_Tank(const CBody_Tank& rhs)
-	: CBody(rhs)
+	: CBody_Monster(rhs)
 {
 }
 

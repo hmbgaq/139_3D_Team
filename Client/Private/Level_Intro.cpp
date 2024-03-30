@@ -60,6 +60,7 @@ HRESULT CLevel_Intro::Initialize()
 
     FAILED_CHECK(Ready_Shader());
 
+
     return S_OK;
 }
 

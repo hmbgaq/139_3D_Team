@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 #include "SMath.h"
 #include "BanditHeavy_Idle.h"
+#include "BanditHeavy_Run_F.h"
 
 #include "BanditHeavy_Melee_LD.h"
 #include "BanditHeavy_MeleeDynamic_LD.h"
@@ -44,6 +45,14 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Walk_State(CBandit_Heavy* pActor, _f
 
 CState<CBandit_Heavy>* CBandit_Heavy_State::Run_State(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	CState<CBandit_Heavy>* pState = { nullptr };
+
+	pState = Normal(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
+
+	//pState = Run(pActor, fTimeDelta, _iAnimIndex);
+	//if (pState)	return pState;
+
 	return nullptr;
 }
 
@@ -97,6 +106,8 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Normal(CBandit_Heavy* pActor, _float
 	pState = Idle(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
+	pState = Run(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 	return nullptr;
 }
@@ -111,6 +122,18 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Idle(CBandit_Heavy* pActor, _float f
 	}
 
 	return pState;
+}
+
+CState<CBandit_Heavy>* CBandit_Heavy_State::Run(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	//CState<CBandit_Heavy>* pState = { nullptr };
+
+	if (pActor->Get_Target() && CBanditHeavy_Run_F::g_iAnimIndex != _iAnimIndex)
+	{
+		return new CBanditHeavy_Run_F();
+	}
+
+	return nullptr;
 }
 
 CState<CBandit_Heavy>* CBandit_Heavy_State::Attack(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex)

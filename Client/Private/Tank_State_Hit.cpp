@@ -3,8 +3,6 @@
 void CTank_State_Hit::Initialize(CTank* pActor)
 {
 	__super::Initialize(pActor);
-
-	//pActor->Set_ShieldBroken();
 }
 
 CState<CTank>* CTank_State_Hit::Update(CTank* pActor, _float fTimeDelta)

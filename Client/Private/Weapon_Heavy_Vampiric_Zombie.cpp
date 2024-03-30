@@ -50,9 +50,9 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 	m_pColliders.resize(m_iColliderSize);
 
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_SHIELD);
-	BoundingDesc.fRadius = { 1.0f };
-	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
+	BoundingDesc.fRadius = { 0.6f };
+	BoundingDesc.vCenter = _float3(0.f, 1.3f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc)))
@@ -64,10 +64,10 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 
 HRESULT CWeapon_Heavy_Vampiric_Zombie::Load_Json()
 {
-	//string path = "../Bin/DataFiles/Data_Weapon/Monster/Tank/Shield.json";
-	//json In_Json;
-	//CJson_Utility::Load_Json(path.c_str(), In_Json);
-	//m_pTransformCom->Load_FromJson(In_Json);
+	string path = "../Bin/DataFiles/Data_Weapon/Monster/Bandit_Heavy/Axe.json";
+	json In_Json;
+	CJson_Utility::Load_Json(path.c_str(), In_Json);
+	m_pTransformCom->Load_FromJson(In_Json);
 
 	return S_OK;
 }

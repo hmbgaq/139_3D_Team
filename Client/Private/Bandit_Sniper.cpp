@@ -70,7 +70,7 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 	
-	m_iHp = 20.f;
+	m_fHp = 20.f;
 	m_pTransformCom->Set_Look(0.f, 0.f, -1.f);
 
 	return S_OK;

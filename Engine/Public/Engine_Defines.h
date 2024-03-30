@@ -81,12 +81,12 @@ using namespace std;
 
 namespace Engine 
 {
-	//static float					g_iWinsizeX = 1280.f;
-	//static float					g_iWinsizeY = 720.f;
+	static float					g_iWinsizeX = 1280.f;
+	static float					g_iWinsizeY = 720.f;
 	//static float					g_iWinsizeX = 1600;
 	//static float					g_iWinsizeY = 900.f;
-	static float					g_iWinsizeX = 1920;
-	static float					g_iWinsizeY = 1080.f;
+	//static float					g_iWinsizeX = 1920;
+	//static float					g_iWinsizeY = 1080.f;
 
 	static float					g_fLightNear = 0.1f;
 	static float					g_fLightFar = 3000.f;
@@ -116,6 +116,15 @@ using namespace Engine;
 using namespace physx;
 
 #define IMGUI_DEFIfine IMGUI_DEFINE_MATH_OPERATORfine IMGUI_DEFINE_MATH_OPERATORNE_MATH_OPERATORS
+
+
+#include "../Fmod/core/fmod.h"
+#include "../Fmod/core/fmod.hpp"
+#include "../Fmod/core/fmod_errors.h"
+#include "../Fmod/studio/fmod_studio.h"
+#include "../Fmod/studio/fmod_studio.hpp"
+#include "../Fmod/core/fmod_common.h"
+
 
 /* Leak */
 #ifdef _DEBUG

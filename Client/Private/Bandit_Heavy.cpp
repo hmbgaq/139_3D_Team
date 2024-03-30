@@ -5,6 +5,15 @@
 #include "BanditHeavy_Idle.h"
 #include "Data_Manager.h"
 #include "Player.h"
+#include "SMath.h"
+
+#include "BanditHeavy_HitNormal_F_01.h"
+#include "BanditHeavy_HitNormal_F_02.h"
+#include "BanditHeavy_HitNormal_L_01.h"
+#include "BanditHeavy_HitNormal_R_01.h"
+#include "BanditHeavy_HitHeavy_F_01.h"
+#include "BanditHeavy_DeathHeavy_F_01.h"
+
 
 CBandit_Heavy::CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -29,7 +38,7 @@ HRESULT CBandit_Heavy::Initialize(void* pArg)
 	{
 		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fSpeedPerSec = 7.f;
 		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 	}
@@ -78,6 +87,49 @@ HRESULT CBandit_Heavy::Render()
 	FAILED_CHECK(__super::Render());
 
 	return S_OK;
+}
+
+void CBandit_Heavy::Hitted_Left(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Medium:
+		m_pActor->Set_State(new CBanditHeavy_HitNormal_L_01());
+	case Engine::Heavy:
+		m_pActor->Set_State(new CBanditHeavy_HitHeavy_F_01());
+	}
+}
+
+void CBandit_Heavy::Hitted_Right(Power ePower)
+{
+	switch (ePower)
+	{
+	case Engine::Medium:
+		m_pActor->Set_State(new CBanditHeavy_HitNormal_R_01());
+	case Engine::Heavy:
+		m_pActor->Set_State(new CBanditHeavy_HitHeavy_F_01());
+	}
+}
+
+void CBandit_Heavy::Hitted_Front(Power ePower)
+{
+	_uint iRand = SMath::Random(0, 1);
+
+	switch (ePower)
+	{
+	case Engine::Medium:
+		if (1 == iRand)
+			m_pActor->Set_State(new CBanditHeavy_HitNormal_F_02());
+		else 
+			m_pActor->Set_State(new CBanditHeavy_HitNormal_F_01());
+	case Engine::Heavy:
+		m_pActor->Set_State(new CBanditHeavy_HitHeavy_F_01());
+	}
+}
+
+void CBandit_Heavy::Hitted_Dead(Power ePower)
+{
+	m_pActor->Set_State(new CBanditHeavy_DeathHeavy_F_01());
 }
 
 HRESULT CBandit_Heavy::Ready_Components()

@@ -25,11 +25,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
-public:
-	virtual void	OnCollisionEnter(CCollider* other)	override;
-	virtual void	OnCollisionStay(CCollider* other)	override;
-	virtual void	OnCollisionExit(CCollider* other)	override;
-
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
