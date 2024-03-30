@@ -38,6 +38,16 @@ public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
 	void Create_Hitting_Effect(_float3 vPos, Power ePower = Power::Light, string strEffectName = "", CGameObject* pOwner = nullptr);
 	
+public:
+	void Hit_Direct(CCharacter* pTarget, _float fDamage, _float fForce, Direction eDir, Power ePower, _bool bIsMelee = false, _bool bIsKnockUp = false)
+	{
+		_vector vPlayerPos = Get_Position_Vector();
+		_vector vDir = pTarget->Calc_Look_Dir_XZ(vPlayerPos);
+
+		pTarget->Set_Hitted(fDamage, vDir, fForce, 1.f, eDir, ePower, bIsMelee);
+		Create_Hitting_Effect(pTarget->Get_Position(), ePower);
+
+	}
 
 public:
 	_bool Check_EffectOnTrackPosition();

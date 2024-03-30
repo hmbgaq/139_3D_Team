@@ -1,10 +1,10 @@
 #pragma once
-#include "Bandit_Heavy_State_Normal.h"
+#include "Bandit_Heavy_State_Attack.h"
 
 
 BEGIN(Client)
 
-class CBanditHeavy_Idle : public CBandit_Heavy_State_Normal
+class CBanditHeavy_Charge_Start : public CBandit_Heavy_State_Attack
 {
 public:
 	virtual void Initialize(CBandit_Heavy* pActor) override;
@@ -12,10 +12,7 @@ public:
 	virtual void Release(CBandit_Heavy* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CBandit_Heavy::Bandit_Heavy_State::BanditHeavy_Idle;
-
-private:
-	_float m_fDelay = { 0.f };
+	static const _uint g_iAnimIndex = CBandit_Heavy::Bandit_Heavy_State::BanditHeavy_Charge_Start;
 
 };
 

@@ -50,9 +50,9 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 	m_pColliders.resize(m_iColliderSize);
 
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_SHIELD);
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
 	BoundingDesc.fRadius = { 0.6f };
-	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	BoundingDesc.vCenter = _float3(0.f, 1.3f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc)))

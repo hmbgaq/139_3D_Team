@@ -68,8 +68,10 @@ HRESULT CHeavy_Vampiric_Zombie::Ready_PartObjects()
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Heavy_Vampiric_Zombie"), "LeftInHandMiddle", WeaponDesc, TEXT("Weapon_Axe")));
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Heavy_Vampiric_Zombie"), "LeftInHandMiddle", WeaponDesc, BANDIT_HEAVY_WEAPON));
 	}
+
+	Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
 
 
 	return S_OK;

@@ -1,6 +1,6 @@
-#include "..\Public\BanditHeavy_Melee_LM.h"
+#include "..\Public\BanditHeavy_Charge_Attack_Full.h"
 
-void CBanditHeavy_Melee_LM::Initialize(CBandit_Heavy* pActor)
+void CBanditHeavy_Charge_Attack_Full::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
 
@@ -15,14 +15,13 @@ void CBanditHeavy_Melee_LM::Initialize(CBandit_Heavy* pActor)
 		;
 
 	pWeapon->Set_Enable_Collisions(false);
-
 }
 
-CState<CBandit_Heavy>* CBanditHeavy_Melee_LM::Update(CBandit_Heavy* pActor, _float fTimeDelta)
+CState<CBandit_Heavy>* CBanditHeavy_Charge_Attack_Full::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
 	if (false == m_bFlags[0])
 	{
-		m_bFlags[0] = pActor->Is_Inputable_Front(35);
+		m_bFlags[0] = pActor->Is_Inputable_Front(36);
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
@@ -30,7 +29,7 @@ CState<CBandit_Heavy>* CBanditHeavy_Melee_LM::Update(CBandit_Heavy* pActor, _flo
 	}
 	else if (false == m_bFlags[1])
 	{
-		m_bFlags[1] = pActor->Is_Inputable_Front(60);
+		m_bFlags[1] = pActor->Is_Inputable_Front(48);
 		if (true == m_bFlags[1])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
@@ -44,7 +43,7 @@ CState<CBandit_Heavy>* CBanditHeavy_Melee_LM::Update(CBandit_Heavy* pActor, _flo
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
-void CBanditHeavy_Melee_LM::Release(CBandit_Heavy* pActor)
+void CBanditHeavy_Charge_Attack_Full::Release(CBandit_Heavy* pActor)
 {
 	__super::Release(pActor);
 }

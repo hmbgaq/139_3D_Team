@@ -70,8 +70,8 @@ namespace Client
 	#define TANK_WEAPON_PUNCH_L				TEXT("Weapon_Punch_L")
 	#define TANK_WEAPON_PUNCH_R				TEXT("Weapon_Punch_R")
 
-
-
+	#define BANDIT_HEAVY_WEAPON				TEXT("Weapon_Axe")
+	
 
 
 

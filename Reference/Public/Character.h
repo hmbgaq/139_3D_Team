@@ -69,7 +69,10 @@ public:
 	CCollider*		Get_Collider();
 	CNavigation*	Get_Navigation();
 
+#ifdef _DEBUG
 	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
+#endif
+
 public:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Ready_PartObjects() PURE;

@@ -3583,6 +3583,15 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\1. Parts">
       <UniqueIdentifier>{f7dc8737-b5b3-45ac-9bf1-1a3d9f086c52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge">
+      <UniqueIdentifier>{6c5de3e6-f67d-4181-8e2b-f739b89340e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\1. Start">
+      <UniqueIdentifier>{89ef28b5-f4c4-42d7-b573-8e45fe5d329d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack">
+      <UniqueIdentifier>{6c5d24df-1ce3-4e13-b2fa-0da2920798aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7111,6 +7120,12 @@
     <ClInclude Include="..\Public\Body_Monster.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\1. Parts</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Charge_Start.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Charge_Attack_Full.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10084,6 +10099,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Monster.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\1. Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_Charge_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_Charge_Attack_Full.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

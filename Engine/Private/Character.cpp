@@ -797,10 +797,13 @@ void CCharacter::Check_Frustum()
 }
 
 
+#ifdef _DEBUG
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {
 	return m_pBody->Picking(vPickedPos);
 }
+#endif 
+
 
 void CCharacter::Free()
 {
