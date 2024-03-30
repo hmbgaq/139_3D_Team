@@ -49,7 +49,7 @@ HRESULT CBandit_Heavy::Initialize(void* pArg)
 		MonsterDesc.fSpeedPerSec = 10.f;
 		MonsterDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
-		FAILED_CHECK(__super::Initialize(pArg));
+		FAILED_CHECK(__super::Initialize(&MonsterDesc));
 	}
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
