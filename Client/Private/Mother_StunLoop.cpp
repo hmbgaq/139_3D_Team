@@ -88,7 +88,8 @@ CState<CMother>* CMother_StunLoop::Update(CMother* pActor, _float fTimeDelta)
 			pActor->m_bStun = true;
 			pActor->m_bStunCheck1 = true;
 			pActor->m_bStunCheck2 = true;
-
+			pActor->m_bWeakness1 = false;
+			pActor->m_bWeakness2 = false;
 			return new CMother_StunEnd;
 		}
 	}
