@@ -93,6 +93,10 @@ private:
 		void			Interact_DeleteTab();
 		void			Interact_SplineSave();
 		void			Interact_SplineLoad();
+		void			Interact_SplineFucntion();
+		void			Interact_LevelChangeFunction();
+		void			Interact_PushFunction();
+		void			Interact_GroupFunction();
 
 	void			SpecialTab_Function();
 		void			Special_CreateTab();
@@ -314,6 +318,7 @@ private: //!For.Interact //! 상호작용
 	_int							m_eInteractState = 0; //! 전부 이넘 캐스팅해야함
 	_int							m_eInteractType = 0;  //! 전부 이넘 캐스팅해야함
 	_int							m_eInteractLevel = 0;
+	
 	_bool							m_bInteractLevelChange = false;
 
 	_float							m_fColliderSizeArray[3] = { 1.f, 1.f, 1.f};
@@ -325,6 +330,9 @@ private: //!For.Interact //! 상호작용
 	_float3							m_vInteractRootMoveRate = { 1.f, 1.f, 1.f };
 	_bool							m_bInteractUseGravity = false;
 	_bool							m_bInteractUseSpline = false;
+	_bool							m_bInteractUseGroup = false;
+
+	_int							m_iInteractGroupIndex = -1;
 
 	map<string, vector<_float4>>	m_mapSplinePoints;
 	map<string, _float>				m_mapSplineSpeeds;

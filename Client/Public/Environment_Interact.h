@@ -68,7 +68,6 @@ public:
 	
 	ENVIRONMENT_INTERACTOBJECT_DESC*	Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
-	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex;}
 	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
 #ifdef _DEBUG
@@ -88,8 +87,10 @@ public:
 
 
 public: //! For Public
-	void								StartInteract() { m_bInteractStart = true; }
+	void								StartInteract();
 	void								Reset_Interact();
+	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex; }
+	void								Set_InteractGroupIndex(_int iGroupIndex) { m_tEnvironmentDesc.iInteractGroupIndex = iGroupIndex; }
 
 public:	//! For Spline
 	void								Set_SplineJsonPath(string strJsonPath) { m_tEnvironmentDesc.strSplineJsonPath = strJsonPath;}
