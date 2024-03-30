@@ -73,6 +73,15 @@ private: /* _float */
 	_float	m_fMaxSkillGuige = 100.f;
 	_float	m_fCurSkillGuige = 0.f;
 
+	GAME_STATE m_eGame_State = GAME_STATE::GAMEPLAY;
+
+private:
+	LEVEL	m_eSelectLevel = LEVEL::LEVEL_END;
+
+public:
+	void	Set_SelectLevel(LEVEL eSelectLevel) { m_eSelectLevel = eSelectLevel; }
+	LEVEL	Get_SelectLevel() { return m_eSelectLevel; }
+
 private: /* _int */
 	_int	m_iCurLevel = 2;
 
@@ -91,9 +100,14 @@ private: /* _bool */
 public: /* ========================== Player Info ========================== */
 	void	PlayerInfo_Setting();	// Player Setting
 	void	Limit_Manager();		// Limit_Manager
+#pragma region =========> GameState <=========
+	GAME_STATE	Get_GameState() { return m_eGame_State; }
+	void		Set_GameState(GAME_STATE eGame_State) { m_eGame_State = eGame_State; }
+
 #pragma region =========> Hit <=========
 	_bool	Get_HitState() { return m_bHit; }
 	void	Set_HitState(_bool bHit) { m_bHit = bHit; }
+
 #pragma region =========> MAX_HP <=========
 	// => HP (Limit)
 	void	Limit_HP();
@@ -103,6 +117,7 @@ public: /* ========================== Player Info ========================== */
 	void	Set_MaxHP(_float fMaxHP) { m_fMaxHP = fMaxHP; }
 	// =>최대체력 Add함수
 	void	Add_MaxHP(_float fAddMaxHP) { m_fMaxHP += fAddMaxHP; }
+
 #pragma region =========> CUR_HP <=========
 	// =>현재체력 Get함수
 	_float	Get_CurHP() { return m_fCurHP; }
@@ -110,6 +125,7 @@ public: /* ========================== Player Info ========================== */
 	void	Set_CurHP(_float fCurHP) { m_fCurHP = fCurHP; }
 	// =>현재체력 Add함수
 	void	Add_CurHP(_float fAddCurHP) { m_fCurHP += fAddCurHP; }
+
 #pragma region =========> MAX_EXP <=========
 	// =>Player_EXP(Limit)
 	_bool	Limit_EXP();
@@ -121,6 +137,7 @@ public: /* ========================== Player Info ========================== */
 	void	Add_MaxEXP(_float fAddMaxEXP) { m_fMaxEXP += fAddMaxEXP; }
 	// =>LevelUp시 비율로 최대경험치를 증가시키는 함수
 	void	NextLevl_MaxEXP() { m_fMaxEXP = m_fMaxEXP + (m_fMaxEXP / 3); }
+
 #pragma region =========> CUR_EXP <=========
 	// =>현재 경험치 Get함수
 	_float	Get_CurEXP() { return m_fCurEXP; }
@@ -128,6 +145,7 @@ public: /* ========================== Player Info ========================== */
 	void	Set_CurEXP(_float fCurEXP) { m_fCurEXP = fCurEXP; }
 	// =>현재 경험치 Add함수
 	void	Add_CurEXP(_float fAddCurEXP) { m_fCurEXP += fAddCurEXP; }
+
 #pragma region =========> MAX_SKILLGUIGE <=========
 	// =>SkillGuige (Limit)
 	void	Limit_SkillGuige();
@@ -137,6 +155,7 @@ public: /* ========================== Player Info ========================== */
 	void	Set_MaxSkillGuige(_float fMaxSkillGuige) { m_fMaxSkillGuige = fMaxSkillGuige; }
 	// =>맥스 스킬게이지 Add함수
 	void	Add_MaxSkillGuige(_float fAddMaxSkillGuige) { m_fMaxSkillGuige += fAddMaxSkillGuige; }
+
 #pragma region =========> CUR_SKILLGUIGE <=========
 	// =>현재 스킬게이지 Get함수
 	_float	Get_CurSkillGuige() { return m_fCurSkillGuige; }
@@ -144,6 +163,7 @@ public: /* ========================== Player Info ========================== */
 	void	Set_CurSkillGuige(_float fCurSkillGuige) { m_fCurSkillGuige = fCurSkillGuige; }
 	// =>현재 스킬게이지 Add함수
 	void	Add_CurSkillGuige(_float fAddCurSkillGuige) { m_fCurSkillGuige += fAddCurSkillGuige; }
+
 #pragma region =========> PLAYER_LEVEL <=========
 	// =>LevelUP (Limit)
 	void	Limit_Level();
@@ -157,31 +177,37 @@ public: /* ========================== Player Info ========================== */
 	_bool	Get_ShowLevelBox() { return m_bShowLevelBox; }
 	// =>LevelUP_UI를 보여줄지 말지 세팅할 수 있는 Set함수
 	void	Set_ShowLevelBox(_float bShowLevelBox) { m_bShowLevelBox = bShowLevelBox; }
-#pragma region =========> HUD(Interface) <=========
+
+#pragma region =========> HUD(_Interface_) <=========
 	// =>PlayerHUD를 보여줄지 말지 결정하는 Get함수
 	_bool	Get_ShowInterface() { return m_bShowInterface; };
 	// =>PlayerHUD를 보여줄지 말지 세팅할 수 있는 Set함수
-	void	Set_ShowInterface(_bool bShowInterface) { m_bShowInterface = bShowInterface; };
+	void	Set_ShowInterface(_bool bShowInterface) { m_bShowInterface = bShowInterface; }
+	/* !!! ShowInterface가 true일때 UI가 켜지며, LifeTime을 계속 갱신시킴 / false일때 시간이 지나면 꺼짐 !!! */
+
 #pragma region =========> TutorialBox <=========
 	// =>TutorialBox를 보여줄지 말지 결정하는 Get함수
 	_bool	Get_ShowTutorialBox() { return m_bShowTutorial; };
 	// =>TutorialBox를 보여줄지 말지 세팅할 수 있는 Set함수
-	void	Set_ShowTutorialBox(_bool bShowTutorial) { m_bShowTutorial = bShowTutorial; };
+	void	Set_ShowTutorialBox(_bool bShowTutorial) { m_bShowTutorial = bShowTutorial; }
+
 #pragma region =========> QuestBox <=========
 	// =>QuestBox를 보여줄지 말지 결정하는 Get함수
 	_bool	Get_ShowQuestBox() { return m_bShowQuestBox; };
 	// =>QuestBox를 보여줄지 말지 세팅할 수 있는 Set함수
-	void	Set_ShowQuestBox(_bool bShowQuestBox) { m_bShowQuestBox = bShowQuestBox; };
+	void	Set_ShowQuestBox(_bool bShowQuestBox) { m_bShowQuestBox = bShowQuestBox; }
+
 #pragma region =========> RewardBox <=========
 	// =>RewardBox를 보여줄지 말지 결정하는 Get함수
 	_bool	Get_ShowRewardBox() { return m_bShowRewardBox; };
 	// =>RewardBox를 보여줄지 말지 세팅할 수 있는 Set함수
-	void	Set_ShowRewardBox(_bool bShowRewardBox) { m_bShowRewardBox = bShowRewardBox; };
+	void	Set_ShowRewardBox(_bool bShowRewardBox) { m_bShowRewardBox = bShowRewardBox; }
+
 #pragma region =========> Crosshair <=========
 	// =>Crosshair를 보여줄지 말지 결정하는 Get함수
-	_bool	Get_ShowCrosshair() { return m_bShowCrosshair; };
+	_bool	Get_ShowCrosshair() { return m_bShowCrosshair; }
 	// =>Crosshair를 보여줄지 말지 세팅할 수 있는 Set함수
-	void	Set_ShowCrosshair(_bool bCrosshair) { m_bShowCrosshair = bCrosshair; };
+	void	Set_ShowCrosshair(_bool bCrosshair) { m_bShowCrosshair = bCrosshair; }
 	// =>총을 발사했을 때 Crosshair발사 애니메이션 재생을 세팅할 수 있는 Set함수
 	_bool	Get_TriggerCrosshair() { return m_bTriggerCrosshair; }
 	// =>총을 발사했을 때 Crosshair발사 애니메이션 활성화 여부를 결정하는 Get함수

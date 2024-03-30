@@ -67,8 +67,8 @@ HRESULT CMother::Initialize(void* pArg)
 	//m_fCurHP = m_fMaxHP;
 
 	// Ready BossHUDBar
-	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
-
+	FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this, "TheParasiter"));
+	
 	
 
 	m_pMonster = dynamic_cast<CMotherMouth*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_Boss", TEXT("Prototype_GameObject_MotherMouth")));

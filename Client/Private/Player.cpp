@@ -114,22 +114,34 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor)
+	if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
 	{
-		m_pActor->Update_State(fTimeDelta);
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+		
+		Update_ChargingTime(fTimeDelta);
+
+		KeyInput(fTimeDelta);
+
+		CData_Manager::GetInstance()->Set_CurHP(m_iHp);
+
+		if (m_pGameInstance->Key_Down(DIK_C))
+			m_iHp = 100;
 	}
 
-	Update_ChargingTime(fTimeDelta);
 
-	KeyInput(fTimeDelta);
-
-	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
-
-	if (m_pGameInstance->Key_Down(DIK_C))
-		m_iHp = 100;
+	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
+	m_pDataManager->Set_ShowInterface(bIsNotIdle);
+	
+	
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
+
+	
+
 
 
 

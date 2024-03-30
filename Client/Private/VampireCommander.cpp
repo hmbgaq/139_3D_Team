@@ -18,7 +18,7 @@
 #include "VampireCommander_BloodRange_Stun_Start.h"
 #include "Player_Finisher_VampireCommander_VS.h"
 
-//#include "UI_Manager.h"
+#include "UI_Manager.h"
 
 #include "Data_Manager.h"
 #include "Player.h"
@@ -67,11 +67,11 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	//m_fCurHP = m_fMaxHP;
 
 	// Ready BossHUDBar
-	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this, "VampireCommander"));
 
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
-
+	 
 	m_pMapEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
 
 

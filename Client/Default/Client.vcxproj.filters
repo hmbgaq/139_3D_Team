@@ -3517,6 +3517,12 @@
     <Filter Include="02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox">
       <UniqueIdentifier>{6de15db7-490e-49fe-97dc-b4f2376897e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect">
+      <UniqueIdentifier>{54375d57-5543-47e2-826c-f6fded4774a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect\00. MoveEffect">
+      <UniqueIdentifier>{ae8bc895-8152-47b0-bce5-1815257b4484}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7041,6 +7047,9 @@
     <ClInclude Include="..\Public\UI_MainMenuList.h">
       <Filter>02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MoveEffect.h">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10002,6 +10011,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MainMenuList.cpp">
       <Filter>02.GameObjects\UI\02. System\05. MainMenu\0. SelectBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MoveEffect.cpp">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

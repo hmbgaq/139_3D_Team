@@ -1,22 +1,22 @@
 #include "stdafx.h"
-#include "UI_Distortion.h"
+#include "UI_MoveEffect.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
 #include "Data_Manager.h"
 
-CUI_Distortion::CUI_Distortion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_MoveEffect::CUI_MoveEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_Distortion::CUI_Distortion(const CUI_Distortion& rhs)
+CUI_MoveEffect::CUI_MoveEffect(const CUI_MoveEffect& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_Distortion::Initialize_Prototype()
+HRESULT CUI_MoveEffect::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -25,7 +25,7 @@ HRESULT CUI_Distortion::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_Distortion::Initialize(void* pArg)
+HRESULT CUI_MoveEffect::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -55,19 +55,22 @@ HRESULT CUI_Distortion::Initialize(void* pArg)
 
 	m_iMaskNum = m_tUIInfo.iMaskNum;
 	m_iNoiseNum = m_tUIInfo.iNoiseNum;
+	m_fLeftSize = 100.f;
+	m_bBottomChange = true;
+	m_bStart = true;
 
 	return S_OK;
 }
 
-void CUI_Distortion::Priority_Tick(_float fTimeDelta)
+void CUI_MoveEffect::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_Distortion::Tick(_float fTimeDelta)
+void CUI_MoveEffect::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	
+
 	m_iMaskNum = m_tUIInfo.iMaskNum;
 	m_iNoiseNum = m_tUIInfo.iNoiseNum;
 
@@ -81,10 +84,40 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 		{
 			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
 		}
+
+		if (m_bStart == true)
+		{
+			m_rcUI.top = m_fOriginPoint;
+			m_rcUI.bottom = m_fOriginPoint;
+			m_bStart = false;
+		}
+
+		if (m_rcUI.bottom >= m_rcUI.top && m_bTopChange == true)
+		{
+			Change_SizeTop(-m_fChangeValue);
+			if (m_rcUI.bottom >= m_rcUI.top || m_rcUI.bottom == m_rcUI.top)
+			{
+				m_bTopChange = false;
+				m_bBottomChange = true;
+				m_bStart = true;
+			}
+		}
+
+
+		if (m_rcUI.bottom <= m_fBottomSize && m_bBottomChange == true)
+		{
+			Change_SizeBottom(m_fChangeValue);
+			if (m_rcUI.bottom >= m_fBottomSize || m_rcUI.bottom == m_fBottomSize)
+			{
+				m_bTopChange = true;
+				m_bBottomChange = false;
+			}
+		}
+
 	}
 }
 
-void CUI_Distortion::Late_Tick(_float fTimeDelta)
+void CUI_MoveEffect::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive == true)
 	{
@@ -93,7 +126,7 @@ void CUI_Distortion::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CUI_Distortion::Render()
+HRESULT CUI_MoveEffect::Render()
 {
 	if (m_bActive == true)
 	{
@@ -113,23 +146,23 @@ HRESULT CUI_Distortion::Render()
 	return S_OK;
 }
 
-void CUI_Distortion::UI_Ready(_float fTimeDelta)
+void CUI_MoveEffect::UI_Ready(_float fTimeDelta)
 {
 }
 
-void CUI_Distortion::UI_Enter(_float fTimeDelta)
+void CUI_MoveEffect::UI_Enter(_float fTimeDelta)
 {
 }
 
-void CUI_Distortion::UI_Loop(_float fTimeDelta)
+void CUI_MoveEffect::UI_Loop(_float fTimeDelta)
 {
 }
 
-void CUI_Distortion::UI_Exit(_float fTimeDelta)
+void CUI_MoveEffect::UI_Exit(_float fTimeDelta)
 {
 }
 
-HRESULT CUI_Distortion::Ready_Components()
+HRESULT CUI_MoveEffect::Ready_Components()
 {
 	/* 공통 */
 	if (FAILED(__super::Ready_Components())) // Ready : Texture / MapTexture
@@ -157,7 +190,7 @@ HRESULT CUI_Distortion::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CUI_Distortion::Bind_ShaderResources() 
+HRESULT CUI_MoveEffect::Bind_ShaderResources()
 {
 	/* 공통 */
 	if (FAILED(__super::Bind_ShaderResources()))
@@ -195,7 +228,7 @@ HRESULT CUI_Distortion::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CUI_Distortion::Compute_OwnerCamDistance()
+void CUI_MoveEffect::Compute_OwnerCamDistance()
 {
 	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
 	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
@@ -203,18 +236,18 @@ void CUI_Distortion::Compute_OwnerCamDistance()
 	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
 }
 
-_bool CUI_Distortion::In_Frustum()
+_bool CUI_MoveEffect::In_Frustum()
 {
 	return false;
 	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-void CUI_Distortion::Set_OwnerHp(/*CPlayer pPlayer*/)
+void CUI_MoveEffect::Set_OwnerHp(/*CPlayer pPlayer*/)
 {
 
 }
 
-json CUI_Distortion::Save_Desc(json& out_json)
+json CUI_MoveEffect::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
@@ -226,43 +259,43 @@ json CUI_Distortion::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_Distortion::Load_Desc()
+void CUI_MoveEffect::Load_Desc()
 {
 
 }
 
-CUI_Distortion* CUI_Distortion::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_MoveEffect* CUI_MoveEffect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_Distortion* pInstance = new CUI_Distortion(pDevice, pContext, strPrototypeTag);
+	CUI_MoveEffect* pInstance = new CUI_MoveEffect(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_Distortion");
+		MSG_BOX("Failed to Created : CUI_MoveEffect");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Distortion::Clone(void* pArg)
+CGameObject* CUI_MoveEffect::Clone(void* pArg)
 {
-	CUI_Distortion* pInstance = new CUI_Distortion(*this);
+	CUI_MoveEffect* pInstance = new CUI_MoveEffect(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_Distortion");
+		MSG_BOX("Failed to Cloned : CUI_MoveEffect");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_Distortion::Pool()
+CGameObject* CUI_MoveEffect::Pool()
 {
-	return new CUI_Distortion(*this);
+	return new CUI_MoveEffect(*this);
 }
 
-void CUI_Distortion::Free()
+void CUI_MoveEffect::Free()
 {
 	__super::Free();
 

@@ -12,6 +12,9 @@ namespace Client
 	//static const unsigned int	g_iWinSizeX = 1920;
 	//static const unsigned int	g_iWinSizeY = 1080;
 
+	// ! Close Window
+	_bool g_CloseWindow = false;
+
 	enum LEVEL { 
 		LEVEL_STATIC, 
 		LEVEL_LOGO, 
@@ -119,6 +122,18 @@ namespace Client
 		LAYER_END
 	};
 
+	enum class GAME_STATE 
+	{
+		GAMEPLAY,
+		UI,
+		MAINMENU,
+		OPTION,
+		SKILLWINDOW,
+		CUTSCENE,
+		DEAD,
+		TALK,
+		GAME_STATE_END
+	};
 
 /* Yoojeong_Add */
 #define EFFECT_MANAGER CEffect_Manager::GetInstance()

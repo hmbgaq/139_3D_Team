@@ -12,6 +12,7 @@ BEGIN(Client)
 class CEffect;
 class CEffect_Manager;
 class CData_Manager;
+class CUI_Manager;
 
 
 class CCharacter_Client abstract : public CCharacter
@@ -48,6 +49,7 @@ public:
 protected:
 	CEffect_Manager* m_pEffectManager = { nullptr };
 	CData_Manager* m_pDataManager = { nullptr };
+	CUI_Manager* m_pUIManager = { nullptr };
 
 
 };

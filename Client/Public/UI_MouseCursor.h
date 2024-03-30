@@ -5,7 +5,7 @@
 /* 체력 프레임 */
 class CUI_MouseCursor final : public CUI
 {
-	enum TEXTUREKIND { PLAYGAME_CURSOR, OPTION_CURSOR, TEXTURE_END };
+	enum TEXTUREKIND { PLAYGAME_CROSSHAIR, CURSOR,  CURSOR_LEFTCLICK, CURSOR_RIGHTCLICK, TEXTURE_END };
 
 private:
 	CUI_MouseCursor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -36,10 +36,11 @@ public:
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
-	POINT m_ptMouse = {};
-	POINT m_ptOffset = {};
+	_bool	m_bGamePlayMouse = false;
+	POINT	m_ptMouse = {};
+	POINT	m_ptOffset = {};
 
-	TEXTUREKIND m_eCurMouse = PLAYGAME_CURSOR;
+	//TEXTUREKIND m_eCurMouse = PLAYGAME_CURSOR;
 
 public:
 	static CUI_MouseCursor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

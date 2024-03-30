@@ -42,7 +42,7 @@ private:
 
 private:
 	CDevConsole*			m_pDevConsole = { nullptr };
-	CUI_Manager*			m_pUI_Manager = { nullptr };
+	CUI_Manager*			m_pUIManager = { nullptr };
 
 private:
 	_tchar					m_szFPS[MAX_PATH] = TEXT("");

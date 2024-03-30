@@ -52,6 +52,7 @@ namespace Client
 		ENTER,
 		LOOP,
 		EXIT,
+		PLAYER_HUD,
 		STATE_END
 	};
 
@@ -60,6 +61,7 @@ namespace Client
 		NONE,
 		LEFT_HUD,
 		RIGHT_HUD,
+		PLAYER_HUD,
 		LEVEL_UP,
 		REWARD,
 		QUESTBOX,

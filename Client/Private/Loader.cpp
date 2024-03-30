@@ -161,6 +161,7 @@
 #include "UI_Interaction.h"
 /* MainMenu */
 #include "UI_MainMenuList.h"
+#include "UI_MoveEffect.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -303,16 +304,16 @@ HRESULT CLoader::Loading_For_Logo_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_Logo"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Logo/10_dickinson_post.png"))));
 
 	///* !UI : MainMenu */
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Start"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Start/MainMenu_Start (%d).dds"), 729)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Loop"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_Loop (%d).dds"), 341)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Start"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Start/MainMenu_Start (%d).dds"), 729)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Loop"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_Loop (%d).dds"), 341)));
 	
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_GamePlay"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_GamePlay.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Intro"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_Intro.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_IntroBoss"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_IntroBoss.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_SnowMountain"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_SnowMountain.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_SnowMountainBoss"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_SnowMountainBoss.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Tool"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_Tool.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Exit"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_Exit.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_GamePlay"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_GamePlay.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Intro"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_Intro.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_IntroBoss"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_IntroBoss.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_SnowMountain"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_SnowMountain.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_SnowMountainBoss"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_SnowMountainBoss.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Tool"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_Tool.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("MainMenu_Exit"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_Exit.dds"))));
 
 	lstrcpy(m_szLoadingText, TEXT("모델를(을) 로드하는 중입니다."));
 
@@ -797,15 +798,15 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 캐릭터 모델 : 주석 풀고 병합해야함!!!
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	FAILED_CHECK(Loading_Player(LEVEL_TOOL));
+	//FAILED_CHECK(Loading_Player(LEVEL_TOOL));
 
 	//TODO VampireCommander
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_VampireCommander"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/VampireCommander/VampireCommander", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_VampireCommander"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/VampireCommander/VampireCommander", PivotMatrix)));
 	//TODO Parasiter
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Mother/Mother", PivotMatrix)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_MotherMouth"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/MotherMouth/MotherMouth", PivotMatrix)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Mother/Mother", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_MotherMouth"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/MotherMouth/MotherMouth", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix)));
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
@@ -852,7 +853,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
-	Ready_Environment_Model(LEVEL_TOOL);
+	//Ready_Environment_Model(LEVEL_TOOL);
 #pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
@@ -1177,6 +1178,7 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma endregion End
 #pragma region MainMenu
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MainMenuList"), CUI_MainMenuList::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MainMenuList"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MoveEffect"), CUI_MoveEffect::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MoveEffect"))));
 #pragma endregion End
 
 	return S_OK;
@@ -1245,7 +1247,7 @@ HRESULT CLoader::Ready_UI_Tool_Texture(LEVEL eLevel)
 	/* !UI : MainMenu */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("MainMenu_Start"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Start/MainMenu_Start (%d).dds"), 729)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("MainMenu_Loop"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Video/MainMenu/Loop/MainMenu_Loop (%d).dds"), 341)));
-
+	
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("MainMenu_GamePlay"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_GamePlay.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("MainMenu_Intro"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_Intro.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("MainMenu_IntroBoss"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/MainMenu/MainMenu_IntroBoss.dds"))));

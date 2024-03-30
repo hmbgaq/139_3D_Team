@@ -57,15 +57,15 @@ void CUI_AimCrosshair::Tick(_float fTimeDelta)
 	/* 크로스헤어 UI 이거 그대로 가져다 쓰면 됨 */
 	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 	{
-		m_pUI_Manager->Active_Crosshair(true);
+		m_pUIManager->Active_Crosshair(true);
 
 		//if (m_pGameInstance->Mouse_Down(DIM_LB))
-		//	m_pUI_Manager->Trigger_Crosshair(true);
+		//	m_pUIManager->Trigger_Crosshair(true);
 	}
 	else
 	{
-		m_pUI_Manager->Active_Crosshair(false);
-		m_pUI_Manager->Trigger_Crosshair(false);
+		m_pUIManager->Active_Crosshair(false);
+		m_pUIManager->Trigger_Crosshair(false);
 	}
 
 	__super::Tick(fTimeDelta);

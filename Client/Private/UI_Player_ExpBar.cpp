@@ -148,7 +148,7 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 				m_fPreEXP = 0.f; // PreEXP는 초기화
 
 				//m_pData_Manager->Set_ShowLevelBox(true);
-				m_pUI_Manager->Set_Active(UITYPE::LEVEL_UP);
+				m_pUIManager->Set_Active(UITYPE::LEVEL_UP);
 				m_fTimeAcc = 0.f;
 				m_bLerp = true;
 			}

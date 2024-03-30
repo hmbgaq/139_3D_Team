@@ -239,6 +239,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
 		return true;
 
+    if (g_CloseWindow == true)
+    {
+        PostQuitMessage(0);
+
+        g_CloseWindow = false;
+    }
+
     switch (message)
     {
     case WM_COMMAND:
@@ -267,7 +274,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_KEYDOWN:
-        //if (wParam == VK_ESCAPE)
+        //if (g_CloseWindow == true)
         //    ::DestroyWindow(hWnd);
         break;
     case WM_DESTROY:

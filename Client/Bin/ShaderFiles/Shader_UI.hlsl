@@ -220,7 +220,10 @@ PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In) // 1
     if (g_CurrentHP / g_MaxHP > In.vTexcoord.x) 
         Out.vColor = vGaugeColor;
 
-
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
     //if (vGaugeColor.a < 0.1f)
     //    discard;
     //
@@ -246,6 +249,10 @@ PS_OUT PS_MAIN_LOADING(PS_IN In) // 2
 		//Out.vColor = float4(0.0, 0.0, 0.0, 0.0);
     }
 
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
     //Out.vColor.a = g_Alpha;
     
     return Out;
@@ -264,6 +271,10 @@ PS_OUT PS_MAIN_OPTION_BACKGROUND(PS_IN In) // 3
     //
     Out.vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
     //Out.vColor.a = g_Alpha;
     return Out;
 }
@@ -294,6 +305,10 @@ PS_OUT PS_MAIN_AIM_CROSSHAIR(PS_IN In) // 4
     // 조합된 결과를 출력
     Out.vColor = vCombinedColor;
 
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
     //Out.vColor.a = g_Alpha;
     return Out;
 }
@@ -346,6 +361,11 @@ PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
         Out.vColor.a = 0.f;
     }
 
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
+    
 	// 특정 영역에서만 온전한 원본 이미지가 표시된다.
     return Out;
 }
@@ -415,7 +435,7 @@ VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
     Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
     Out.vProjPos = Out.vPosition;
-
+    
     return Out;
 }
 
@@ -493,6 +513,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In) // 6
     
     Out.vColor.a -= g_Alpha;
     
+    if (Out.vColor.a < 0.1f)
+        discard;
     //if (Out.vColor.a < 0.1f)
     //    discard;
     
@@ -538,6 +560,11 @@ PS_OUT PS_MAIN_SHARD_HP(PS_IN In) // 7
     float4 vResult = vColor;
     
     Out.vColor = vResult;
+    
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
     
     return Out;
     
