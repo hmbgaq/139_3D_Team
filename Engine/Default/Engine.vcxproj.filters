@@ -331,6 +331,12 @@
     <Filter Include="01.Utility\02.GameObjects\AttackObject">
       <UniqueIdentifier>{334fd65c-0f34-409c-8fca-572b5002f1b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\94. Sound_Manaher">
+      <UniqueIdentifier>{0278425d-dd89-4c75-af7d-50f5c4594cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\94. Sound_Manaher\fmod">
+      <UniqueIdentifier>{24332950-05c7-4287-a508-d844ab020cf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -672,6 +678,30 @@
     <ClInclude Include="..\Public\AttackObject.h">
       <Filter>01.Utility\02.GameObjects\AttackObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>01.Utility\94. Sound_Manaher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LogicDeviceBasic.h">
+      <Filter>01.Utility\94. Sound_Manaher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\core\fmod.hpp">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\core\fmod_errors.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\core\fmod.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\studio\fmod_studio.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\studio\fmod_studio.hpp">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\studio\fmod_studio_common.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -949,6 +979,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\AttackObject.cpp">
       <Filter>01.Utility\02.GameObjects\AttackObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>01.Utility\94. Sound_Manaher</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

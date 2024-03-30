@@ -12,6 +12,7 @@
 #include "Font_Manager.h"
 #include "PhysX_Manager.h"
 #include "RandomManager.h"
+#include "Sound_Manager.h"
 
 #include "Renderer.h"
 #include "Frustum.h"
@@ -78,6 +79,9 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, _uint iNumCollsionLay
 
 	m_pRandom_Manager = CRandom_Manager::Create();
 	NULL_CHECK_RETURN(m_pRandom_Manager, E_FAIL);
+
+	m_pSoundManager = CSound_Manager::Create();
+	NULL_CHECK_RETURN(m_pSoundManager, E_FAIL);
 
 	return S_OK;
 }
@@ -1057,6 +1061,31 @@ int64_t CGameInstance::GenerateUniqueID()
 	return m_pRandom_Manager->GenerateUniqueID();
 }
 
+void CGameInstance::Play_Sound(const wstring& strGroupKey, const wstring& strSoundKey, CHANNELID eID, float fVolume)
+{
+	m_pSoundManager->Play_Sound(strGroupKey, strSoundKey, eID, fVolume);
+}
+
+void CGameInstance::Play_BGM(const wstring& strGroupKey, const wstring& strSoundKey, float fVolume)
+{
+	m_pSoundManager->Play_BGM(strGroupKey, strSoundKey, fVolume);
+}
+
+void CGameInstance::Stop_Sound(CHANNELID eID)
+{
+	m_pSoundManager->Stop_Sound(eID);
+}
+
+void CGameInstance::Stop_All()
+{
+	m_pSoundManager->Stop_All();
+}
+
+void CGameInstance::Set_ChannelVolume(CHANNELID eID, float fVolume)
+{
+	m_pSoundManager->Set_ChannelVolume(eID, fVolume);
+}
+
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)
 {
 	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
@@ -1305,6 +1334,7 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! ¸¶Áö¸· _ 
 
 void CGameInstance::Release_Manager()
 {
+	Safe_Release(m_pSoundManager);
 	Safe_Release(m_pRandom_Manager);
 	Safe_Release(m_pPhysX_Manager);
 	Safe_Release(m_pEvent_Manager);
