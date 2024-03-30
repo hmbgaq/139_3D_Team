@@ -49,8 +49,8 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 	{
 		if (pActor->m_iSonDead == 1 && pActor->m_bfirstCheck)
 		{
-			return new CMother_VomitStart;
 			pActor->m_bfirstCheck = false;
+			return new CMother_VomitStart;
 		}
 		else if (pActor->m_iSonDead >= 2)//Son이 두마리다 죽었을때
 		{
@@ -67,14 +67,14 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 
 		if (pActor->m_fTimeDelta >= 15)
 		{
-			return new CMother_SpittingStart;
 			pActor->m_fTimeDelta = 0.f;
+			return new CMother_SpittingStart;
 		}
 
 		if (pActor->m_iSonDead == 1 && pActor->m_bfirstCheck)
 		{
-			return new CMother_VomitStart;
 			pActor->m_bfirstCheck = false;
+			return new CMother_VomitStart;
 		}
 		else if (pActor->m_iSonDead >= 2)//Son이 두마리다 죽었을때
 		{

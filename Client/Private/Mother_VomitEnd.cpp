@@ -21,4 +21,5 @@ CState<CMother>* CMother_VomitEnd::Update(CMother* pActor, _float fTimeDelta)
 void CMother_VomitEnd::Release(CMother* pActor)
 {
 	__super::Release(pActor);
+	//pActor->m_bfirstCheck = true;
 }
