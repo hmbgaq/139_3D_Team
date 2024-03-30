@@ -16,13 +16,15 @@ void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 
 	//pActor->Set_Animation(CPlayer::Player_State::Player_IdleLoop, CModel::ANIM_STATE_LOOP, true, false);
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_LOOP);
+	//pActor->Reset_UpperAngle();
 	pActor->Set_Splitted(true);
 	pActor->Set_UseMouseMove(true);
 	//pActor->Set_StiffnessRate_Upper(0.5f);
 
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
-
-	//pActor->Reset_UpperAngle();
+	
+	//CSpringCamera* pCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	//pCamera->Reset_Angle();
 
 
 	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));

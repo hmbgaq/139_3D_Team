@@ -236,8 +236,8 @@ void CUI::Picking_UI()
 	if (PtInRect(&m_rcUI, pt))   //  PtInRect(렉트주소, 마우스 포인트)
 	{
 		m_bPick = true;
-		if (m_pGameInstance->Mouse_Down(DIM_LB)) // 다른곳에서 입력이 겹칠거같은데 공통으로 쓸 글로벌 변수로 마우스 클릭을 하나 두는게 좋을수도
-			m_bSelect = true;
+		//if (m_pGameInstance->Mouse_Down(DIM_LB)) // 다른곳에서 입력이 겹칠거같은데 공통으로 쓸 글로벌 변수로 마우스 클릭을 하나 두는게 좋을수도
+		//	m_bSelect = true;
 		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 			m_bSelectPressing = true;
 	}

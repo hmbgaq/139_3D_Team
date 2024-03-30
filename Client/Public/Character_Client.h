@@ -35,6 +35,9 @@ public:
 	CEffect* Create_Effect(const wstring& strPartTag);
 
 public:
+	void Reset_UpperAngle();
+
+public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
 	void Create_Hitting_Effect(_float3 vPos, Power ePower = Power::Light, string strEffectName = "", CGameObject* pOwner = nullptr);
 	

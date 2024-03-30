@@ -3,6 +3,7 @@
 void CPlayer_State_Winchester::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
+	
 }
 
 CState<CPlayer>* CPlayer_State_Winchester::Update(CPlayer* pActor, _float fTimeDelta)

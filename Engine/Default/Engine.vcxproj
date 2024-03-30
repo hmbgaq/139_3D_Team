@@ -113,6 +113,7 @@
       <AdditionalIncludeDirectories>$(CUDA_PATH)\include;../Public/;../Public/PhysX/;../Default/;../Public/NvCloth/;../Public/NvClothExt/</AdditionalIncludeDirectories>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -7116,7 +7116,6 @@
     <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Back</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h" />
     <ClInclude Include="..\Public\Body_Monster.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\1. Parts</Filter>
     </ClInclude>

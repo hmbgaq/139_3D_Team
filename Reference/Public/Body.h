@@ -107,7 +107,7 @@ public:	//!For Animation Split
 	void Activate_ShootingReaction(_float fHeight = 20.f);
 	void Update_ShootingReaction(_float fTimeDelta);
 
-	void Reset_UpperAngle();
+	void Reset_UpperAngle(_float fPitch = 0.f);
 	void Set_UseMouseMove(_bool _bIsUseMouseMove) { m_bIsUseMouseMove = _bIsUseMouseMove; };
 
 public:

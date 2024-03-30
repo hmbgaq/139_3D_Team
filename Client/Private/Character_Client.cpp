@@ -83,6 +83,16 @@ CEffect* CCharacter_Client::Create_Effect(const wstring& strPartTag)
 	return nullptr;
 }
 
+void CCharacter_Client::Reset_UpperAngle()
+{
+	if (nullptr == m_pDataManager) m_pDataManager = CData_Manager::GetInstance();
+	//_float fPitch = m_pDataManager->Get_MasterCamera()->Get_SpringCamera()->Get_Pitch();
+	m_pDataManager->Get_MasterCamera()->Get_SpringCamera()->Reset_Angle();
+
+	//m_pBody->Reset_UpperAngle(fPitch);
+	m_pBody->Reset_UpperAngle();
+}
+
 void CCharacter_Client::Apply_Shake_And_Blur(Power ePower)
 {
 	if (nullptr == m_pDataManager)

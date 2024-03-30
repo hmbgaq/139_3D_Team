@@ -732,10 +732,11 @@ void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE 
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
 }
 
-void CCharacter::Reset_UpperAngle()
-{
-	m_pBody->Reset_UpperAngle();
-}
+//void CCharacter::Reset_UpperAngle()
+//{
+//	m_pBody->Reset_UpperAngle();
+//	
+//}
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
 {
