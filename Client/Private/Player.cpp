@@ -34,10 +34,10 @@
 #include "Player_L06_Wagon_Jump.h"
 #include "Player_CartRide_Loop.h"
 
-#include "Player_InteractionPush_Rock_Start.h"
+#include "Player_InteractionPull_Rock_Idle.h"
 #include "Player_InteractionPush_Rock_Idle.h"
-#include "Player_InteractionPush_Rock_Loop.h"
-#include "Player_InteractionPush_Rock_End.h"
+
+
 
 #include "Player_InteractionClimb100.h"
 #include "Player_InteractionClimb200.h"
@@ -401,9 +401,15 @@ void CPlayer::SetState_InteractCartRideWagonJump()
 	m_pActor->Set_State(new CPlayer_L06_Wagon_Jump());
 }
 
-void CPlayer::SetState_InteractionPush_Rock_Start()
+
+void CPlayer::SetState_InteractionPush_Rock_Idle()
 {
-	m_pActor->Set_State(new CPlayer_InteractionPush_Rock_Start());
+	m_pActor->Set_State(new CPlayer_InteractionPush_Rock_Idle());
+}
+
+void CPlayer::SetState_InteractionPull_Rock_Idle()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPull_Rock_Idle());
 }
 
 void CPlayer::SetState_InteractClimb100()

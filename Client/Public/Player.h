@@ -70,7 +70,9 @@ public://!For. Interact
 	void SetState_InteractCartRideStart();
 	void SetState_InteractCartRideLoop();
 	void SetState_InteractCartRideWagonJump();
-	void SetState_InteractionPush_Rock_Start();
+
+	void SetState_InteractionPush_Rock_Idle();
+	void SetState_InteractionPull_Rock_Idle();
 
 
 	void SetState_InteractClimb100();
