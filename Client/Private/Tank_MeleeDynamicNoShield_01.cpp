@@ -36,6 +36,10 @@ CState<CTank>* CTank_MeleeDynamicNoShield_01::Update(CTank* pActor, _float fTime
 			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(TANK_WEAPON_PUNCH_R, false);
 		}
 	}
+	else
+	{
+		pActor->Look_At_Target_Lerp(fTimeDelta);
+	}
 
 	if (pActor->Is_Animation_End())
 	{

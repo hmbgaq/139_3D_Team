@@ -57,7 +57,7 @@ HRESULT CBody_Monster::Render_Shadow()
 
 void CBody_Monster::OnCollisionEnter(CCollider* other)
 {
-	if (other->Get_Layer() != COLLISION_LAYER::MONSTER)
+	if (other->Get_Layer() != ECast(COLLISION_LAYER::MONSTER))
 	{
 		m_bIsNotUseMovePos = true;
 		m_vMovePos = _float3(0.f, 0.f, 0.f);
@@ -68,7 +68,7 @@ void CBody_Monster::OnCollisionEnter(CCollider* other)
 
 void CBody_Monster::OnCollisionStay(CCollider* other)
 {
-	if (other->Get_Layer() != COLLISION_LAYER::MONSTER)
+	if (other->Get_Layer() != ECast(COLLISION_LAYER::MONSTER))
 	{
 		m_bIsNotUseMovePos = true;
 		m_vMovePos = _float3(0.f, 0.f, 0.f);

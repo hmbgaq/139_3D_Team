@@ -18,6 +18,10 @@ CState<CTank>* CTank_GroundWave_01::Update(CTank* pActor, _float fTimeDelta)
 			pActor->Create_GroundWave();
 		}
 	}
+	else
+	{
+		pActor->Look_At_Target_Lerp(fTimeDelta);
+	}
 
 	if (pActor->Is_Animation_End())
 	{

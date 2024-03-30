@@ -15,6 +15,7 @@
 #include "BanditHeavy_MeleeHeavy.h"
 #include "BanditHeavy_MeleeHeavy_02.h"
 #include "BanditHeavy_StrongSlamDouble.h"
+#include "BanditHeavy_Charge_Start.h"
 
 
 void CBandit_Heavy_State::Initialize(CBandit_Heavy* pActor)
@@ -60,7 +61,7 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Attack_State(CBandit_Heavy* pActor, 
 {
 	if (pActor->Is_Animation_End())
 	{
-		return Normal(pActor, fTimeDelta, _iAnimIndex);
+		return Idle(pActor, fTimeDelta, _iAnimIndex);
 	}
 
 	return nullptr;
@@ -161,7 +162,7 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Attack(CBandit_Heavy* pActor, _float
 			return new CBanditHeavy_Melee_LM();
 		}
 	}
-	else if (8.f > fDistance)
+	else if (6.f > fDistance)
 	{
 		_uint iRand = SMath::Random(0, 6);
 		switch (iRand)
@@ -181,6 +182,10 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Attack(CBandit_Heavy* pActor, _float
 		default:
 			return new CBanditHeavy_MeleeDynamic_LM();
 		}
+	}
+	else if (9.f > fDistance)
+	{
+		return new CBanditHeavy_Charge_Start();
 	}
 
 	return nullptr;
