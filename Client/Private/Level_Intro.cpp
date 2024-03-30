@@ -88,9 +88,9 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     }
 
 
-    _bool bSpawnSniper = true;
+    _bool bSpawnSniper = false;
     _bool bSpawnTanker = true;
-    _bool bSpawnInfected = true;
+    _bool bSpawnInfected = false;
     _bool bSpawnZenuGiant = true;
     
 
@@ -143,8 +143,18 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 
         MonsterDesc.WorldMatrix = WorldMatrix;
 
-        if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
+        CMonster_Character* pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc));
+
+        if (pMonster != nullptr)
+        {
+            pMonster->Set_InitPosition(pMonster->Get_Transform()->Get_State(CTransform::STATE_POSITION));
+        }
+        else
             return E_FAIL;
+
+        
+
+        
 
     }
 

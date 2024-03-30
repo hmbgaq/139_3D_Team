@@ -89,7 +89,7 @@
       },
       "MonsterGroupIndex": 0,
       "PrototypeTag": "Prototype_GameObject_Heavy_Vampiric_Zombie",
-      "StartNaviIndex": 1
+      "StartNaviIndex": 0
     },
     {
       "Component": {
@@ -102,7 +102,7 @@
       },
       "MonsterGroupIndex": 0,
       "PrototypeTag": "Prototype_GameObject_Tank",
-      "StartNaviIndex": 1
+      "StartNaviIndex": 0
     },
     {
       "Component": {

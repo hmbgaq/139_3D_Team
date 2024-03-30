@@ -55,7 +55,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 		Init_WagonEvent();
 	}
 
-	if (m_tEnvironmentDesc.eInteractType == INTERACT_WAGONPUSH)
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == INTERACT_WAGONPUSH)
 	{
 		if (FAILED(Find_InteractGroupObject()))
 			return E_FAIL;
@@ -190,6 +190,11 @@ void CEnvironment_Interact::Load_FromJson(const json& In_Json)
 void CEnvironment_Interact::Set_AnimationIndex(_uint iAnimIndex)
 {
 	m_pModelCom->Set_Animation(iAnimIndex);
+}
+
+void CEnvironment_Interact::StartInteract()
+{
+	m_bInteractStart = true;
 }
 
 void CEnvironment_Interact::Reset_Interact()
@@ -451,6 +456,9 @@ void CEnvironment_Interact::Interact()
 			//}
 			
 		}
+
+		if(m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
+			Move_For_PlayerRootMotion();
 }
 
 void CEnvironment_Interact::Move_For_PlayerRootMotion()
