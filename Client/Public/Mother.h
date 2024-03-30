@@ -5,7 +5,7 @@
 #include "Actor.h"
 
 BEGIN(Client)
-class CUI_Weakness;
+
 
 class CMother final : public CMonster_Character
 {
@@ -51,6 +51,7 @@ public:
 
 	_uint m_iSonDead = 0;
 	_uint m_iLoopCount = 0;
+	_uint m_iShootingCount = 0;
 	_float m_fTimeDelta = 0.f;
 public:
 	/* 원형객체를 생성한다. */
