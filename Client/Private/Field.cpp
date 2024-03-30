@@ -161,18 +161,18 @@ HRESULT CField::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
-		return E_FAIL;
-
-	/* For.Com_Mask */ // 지형을 섞기위한 Mask // 에러 : 툴 레벨로 ID를 주지않아서 터레인 생성에 실패했었고, 제대로 동작이 안되니, Imgui shutdown에 들어가 터졌음
-	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Mask"),
-		TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
-		return E_FAIL;
-
-	if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Brush"),
-		TEXT("Com_Brush"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BRUSH]))))
-		return E_FAIL;
+	//if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain"),
+	//	TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_DIFFUSE]))))
+	//	return E_FAIL;
+	//
+	///* For.Com_Mask */ // 지형을 섞기위한 Mask // 에러 : 툴 레벨로 ID를 주지않아서 터레인 생성에 실패했었고, 제대로 동작이 안되니, Imgui shutdown에 들어가 터졌음
+	//if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Mask"),
+	//	TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_MASK]))))
+	//	return E_FAIL;
+	//
+	//if (FAILED(__super::Add_Component(eCurrentLevel, TEXT("Prototype_Component_Texture_Terrain_Brush"),
+	//	TEXT("Com_Brush"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BRUSH]))))
+	//	return E_FAIL;
 
 	
 
@@ -194,13 +194,13 @@ HRESULT CField::Bind_ShaderResources()
 
 	_float4 vColor = { 0.f, 1.f, 0.f, 1.f };
 
-	// 마스크
-	if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", 0)))
-		return E_FAIL;
-
-	//// 브러쉬
-	if (FAILED(m_pTextureCom[TYPE_BRUSH]->Bind_ShaderResource(m_pShaderCom, "g_BrushTexture", 0))) // error : 
-		return E_FAIL;
+	//// 마스크
+	//if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", 0)))
+	//	return E_FAIL;
+	//
+	////// 브러쉬
+	//if (FAILED(m_pTextureCom[TYPE_BRUSH]->Bind_ShaderResource(m_pShaderCom, "g_BrushTexture", 0))) // error : 
+	//	return E_FAIL;
 
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &vColor, sizeof(_float4))))

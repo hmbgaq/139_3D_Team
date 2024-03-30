@@ -48,6 +48,7 @@ private:
 	string			m_strShader_FilepPath = "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Shader.json";
 	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
 
+
 public:
 	static CLevel_Intro* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

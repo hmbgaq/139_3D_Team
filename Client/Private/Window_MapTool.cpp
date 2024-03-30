@@ -59,8 +59,8 @@ HRESULT CWindow_MapTool::Initialize()
 {
 	FAILED_CHECK(__super::Initialize());
 
-	//FAILED_CHECK(Ready_ModelTags());
-	//FAILED_CHECK(Ready_PrototypeTags());
+	FAILED_CHECK(Ready_ModelTags());
+	FAILED_CHECK(Ready_PrototypeTags());
 	
 
 	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();
@@ -1367,8 +1367,19 @@ HRESULT CWindow_MapTool::Ready_PrototypeTags()
 	m_vecMonsterTag.push_back("Prototype_GameObject_Infected_B");
 	m_vecMonsterTag.push_back("Prototype_GameObject_Infected_C");
 	//m_vecMonsterTag.push_back("Prototype_GameObject_Assassin");
-	m_vecMonsterTag.push_back("Prototype_GameObject_Bandit_Heavy");
+	//m_vecMonsterTag.push_back("Prototype_GameObject_Bandit_Heavy");
 	m_vecMonsterTag.push_back("Prototype_GameObject_Bandit_Sniper");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Heavy_Vampiric_Zombie");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Tank");
+
+
+	m_vecMonsterTag.push_back("Prototype_GameObject_VampireCommander");
+	
+	m_vecMonsterTag.push_back("Prototype_GameObject_Mother");
+	m_vecMonsterTag.push_back("Prototype_GameObject_Son");
+	
+	
+		
 	//m_vecMonsterTag.push_back("Prototype_GameObject_Screamer");
 
 	return S_OK;
@@ -4221,8 +4232,8 @@ void CWindow_MapTool::Monster_CreateTab()
 
 			if (ImGui::Selectable(vecModelTag[i].c_str(), isSelected))
 			{
-				
-				m_iSelectCharacterTag = i;
+				iSelectTag = i;
+				m_iSelectModelTag = i;
 
 				m_bChange = true;
 				if (isSelected)
@@ -5984,13 +5995,13 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 			switch (eTabType)
 			{
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
-					m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strPrototypeTag);
+					m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectModelTag], strPrototypeTag);
 					break;
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_BOSSMONSTER:
-					m_pGameInstance->String_To_WString(m_vecBossTag[m_iSelectCharacterTag], strPrototypeTag);
+					m_pGameInstance->String_To_WString(m_vecBossTag[m_iSelectModelTag], strPrototypeTag);
 					break;
 				case Client::CWindow_MapTool::TAP_TYPE::TAB_NPC:
-					m_pGameInstance->String_To_WString(m_vecNpcTag[m_iSelectCharacterTag], strPrototypeTag);
+					m_pGameInstance->String_To_WString(m_vecNpcTag[m_iSelectModelTag], strPrototypeTag);
 					break;
 				default:
 					break;
@@ -7380,13 +7391,13 @@ void CWindow_MapTool::Character_CreateFunction()
 	{
 		case Client::CWindow_MapTool::TAP_TYPE::TAB_NORMALMONSTER:
 		{
-			Monster_CreateTab();
+			Monster_CreateFunction();
 			break;
 		}
 
 		case Client::CWindow_MapTool::TAP_TYPE::TAB_NPC:
 		{
-			NPC_CreateTab();
+			NPC_CreateFunction();
 			break;
 		}
 	default:
@@ -7403,7 +7414,7 @@ void CWindow_MapTool::Monster_CreateFunction()
 	Desc.iMonsterGroupIndex = m_iMonsterSpawnGroupIndex;
 
 	wstring strProtoTag;
-	m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectCharacterTag], strProtoTag);
+	m_pGameInstance->String_To_WString(m_vecMonsterTag[m_iSelectModelTag], strProtoTag);
 
 	Desc.strProtoTypeTag = strProtoTag;
 	Desc.eDescType = CGameObject::MONSTER_DESC;
@@ -7413,7 +7424,7 @@ void CWindow_MapTool::Monster_CreateFunction()
 	m_vecCreateMonster.push_back(pMonster);
 
 
-	string strCreateMonsterTag = m_vecMonsterTag[m_iSelectCharacterTag] + "@" + to_string(m_iCreateMonsterIndex);
+	string strCreateMonsterTag = m_vecMonsterTag[m_iSelectModelTag] + "@" + to_string(m_iCreateMonsterIndex);
 
 	m_vecCreateMonsterTag.push_back(strCreateMonsterTag);
 

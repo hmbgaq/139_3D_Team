@@ -45,13 +45,18 @@ HRESULT CMother::Initialize_Prototype()
 
 HRESULT CMother::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else
+	{
+		FAILED_CHECK(__super::Initialize(pArg));
+	}
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -87,48 +92,54 @@ void CMother::Tick(_float fTimeDelta)
 	
 	__super::Tick(fTimeDelta);
 
-	Search_Target(200.f);
-
-
-	if (m_pActor)
+	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
 	{
-		m_pActor->Update_State(fTimeDelta);
-	}
-	
-	//cout << "introBossHP:" << m_iHp << endl;
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
-	
-	//cout << "Mother : " << fAngle << endl;
-// 	if (m_bLookAt == true)
-// 	{
-// 	
-// 		if (0 <= fAngle && fAngle <= 180)
-// 			Look_At_Target_Lerp(fTimeDelta);
-// 		else if (-180 <= fAngle && fAngle < 0)
-// 			Look_At_Target_Lerp(fTimeDelta);
-// 	
-// 		/*m_bLookAt = false;*/
-// 	
-// 	}
-	/*if (m_bLookAt == true)*/
-// 	{
-// 
-// 		if (0 <= fAngle && fAngle <= 180)
-// 			Look_At_Target();
-// 		else if (-180 <= fAngle && fAngle < 0)
-// 			Look_At_Target();
-// 
-// 		/*m_bLookAt = false;*/
-// 
-// 	}
-	//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTransformCom->m_fRadian + XMConvertToRadians(270)));
-	Look_At_Target();
-	//m_pTransformCom->m_fRadian += 90.f;
+		Search_Target(200.f);
 
-	if (m_pGameInstance->Key_Down(DIK_1))
-	{
-		m_bPhase = !m_bPhase;
+
+
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+
+		//cout << "introBossHP:" << m_iHp << endl;
+		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
+
+		//cout << "Mother : " << fAngle << endl;
+	// 	if (m_bLookAt == true)
+	// 	{
+	// 	
+	// 		if (0 <= fAngle && fAngle <= 180)
+	// 			Look_At_Target_Lerp(fTimeDelta);
+	// 		else if (-180 <= fAngle && fAngle < 0)
+	// 			Look_At_Target_Lerp(fTimeDelta);
+	// 	
+	// 		/*m_bLookAt = false;*/
+	// 	
+	// 	}
+		/*if (m_bLookAt == true)*/
+	// 	{
+	// 
+	// 		if (0 <= fAngle && fAngle <= 180)
+	// 			Look_At_Target();
+	// 		else if (-180 <= fAngle && fAngle < 0)
+	// 			Look_At_Target();
+	// 
+	// 		/*m_bLookAt = false;*/
+	// 
+	// 	}
+		//m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pTransformCom->m_fRadian + XMConvertToRadians(270)));
+		Look_At_Target();
+		//m_pTransformCom->m_fRadian += 90.f;
+
+		if (m_pGameInstance->Key_Down(DIK_1))
+		{
+			m_bPhase = !m_bPhase;
+		}
 	}
+
+	
 
 }
 

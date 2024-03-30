@@ -38,7 +38,112 @@
       "Type": 0
     }
   ],
-  "Monster_Json": null,
+  "Monster_Json": [
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, -1.0, -1.8199258420281694e-06, 0.0 ],
+          [ 0.0, 1.8199258420281694e-06, -1.0, 0.0 ],
+          [ 1.2534446716308594, -0.015633583068847656, 28.65621566772461, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": 0
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, -1.0, -1.8199258420281694e-06, 0.0 ],
+          [ 0.0, 1.8199258420281694e-06, -1.0, 0.0 ],
+          [ 27.34622573852539, -0.015633583068847656, 29.273700714111328, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": 0
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, -1.0, -1.8199258420281694e-06, 0.0 ],
+          [ 0.0, 1.8199258420281694e-06, -1.0, 0.0 ],
+          [ 16.869483947753906, -0.015633558854460716, 29.131738662719727, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": 0
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 17.08489418029785, -0.015634536743164063, 13.669404983520508, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Heavy_Vampiric_Zombie",
+      "StartNaviIndex": 1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 21.551963806152344, -0.015634536743164063, 14.225231170654297, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Tank",
+      "StartNaviIndex": 1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 5.6746826171875, -0.015633583068847656, 14.361733436584473, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 0
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 17.440231323242188, -0.015636444091796875, 24.96591567993164, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 0
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 26.182458877563477, -0.015636444091796875, 11.283576965332031, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 1
+    }
+  ],
   "Special_Json": null,
   "Trigger_Json": null
 }
