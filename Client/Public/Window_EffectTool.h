@@ -217,7 +217,7 @@ private:
 	_int	m_iType_Emit_Particle		= { 0 };
 	_int	m_iType_Action_Particle		= { 0 };
 	_int	m_iType_Fade_Particle		= { 0 };
-
+	_int	m_iType_Fade_Takes_Particle = { 0 };
 
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
 
@@ -281,12 +281,15 @@ private:
 
 	/* For.Color */
 	_int	m_iDynamic_Color_Particle = { 0 };
-	_float	m_fColor_Min_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fColor_Max_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
-	_float	m_fColor_Cur_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	_float	m_fColor_Min_Particle[3] = { 1.f, 1.f, 1.f };
+	_float	m_fColor_Max_Particle[3] = { 1.f, 1.f, 1.f };
+	_float	m_fColor_Cur_Particle[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_fMinMaxAlpha_Particle[2] = { 1.f, 1.f };
+
 
 	_int	m_iColor_Mode_Particle = { 0 };
-	_float	m_fColor_Mul_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
+	//_float	m_fColor_Mul_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
 	/* UV Option_Particle */

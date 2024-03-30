@@ -7,9 +7,10 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle final : public CVIBuffer
 {
 public:
-	enum TYPE_ACTION	{ SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
-	enum TYPE_FADE		{ FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
-	enum TYPE_DIRAXIS	{ DIR_RIGHT, DIR_UP, DIR_LOOK, TYPE_DIRAXIS_END };
+	enum TYPE_ACTION		{ SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
+	enum TYPE_FADE			{ FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
+	enum TYPE_FADE_TAKES	{ LIFE, DIST, HEIGHT, SCALE, TYPE_FADE_TAKES_END };
+	enum TYPE_DIRAXIS		{ DIR_RIGHT, DIR_UP, DIR_LOOK, TYPE_DIRAXIS_END };
 
 	typedef struct tagParticleBufferDESC
 	{
@@ -21,7 +22,6 @@ public:
 		_bool		bRecycle = { TRUE };			// 입자를 재사용 할건지
 		_bool		bReverse = { FALSE };			// 진행방향 리버스
 		TYPE_ACTION eType_Action = { SPARK };		// 움직이는 모양
-		TYPE_FADE	eType_Fade = { FADE_NONE };
 
 
 		/* LifeTime */
@@ -99,6 +99,9 @@ public:
 		_float2     vMinMaxBlue		= { 1.f, 1.f };
 		_float2     vMinMaxAlpha	= { 1.f, 1.f };
 
+
+		TYPE_FADE		eType_Fade = { FADE_NONE };
+		TYPE_FADE_TAKES	eType_Fade_Takes = { TYPE_FADE_TAKES_END };
 
 		// 업데이트 돌면서 변하는 정보들(저장X)
 		_float		fTimeAcc = { 0.f };			// 시간 누적
@@ -197,7 +200,7 @@ public:
 		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f }; // 16
 
 		_float3 vRight	= { 1.f, 0.f, 0.f };		// 12
-		_float  fPadding1 = { 0.f };				// 4	
+		_float  fAddAlpha = { 1.f };				// 4	
 
 		_float3 vUp			= { 0.f, 1.f, 0.f };	// 12
 		_float  fPadding2	= { 0.f };				// 4	

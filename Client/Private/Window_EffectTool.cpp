@@ -1200,7 +1200,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				/* 파티클 페이드 인아웃 사용 */
 				ImGui::SeparatorText(" Fade Type ");
-				ImGui::RadioButton("FADE_NONE_Particle", &m_iType_Fade_Particle, 0);  ImGui::SameLine();
+				ImGui::RadioButton("FADE_NONE_Particle", &m_iType_Fade_Particle, 0); 
 				ImGui::RadioButton("FADE_OUT_Particle", &m_iType_Fade_Particle, 1);
 				ImGui::RadioButton("FADE_IN_Particle", &m_iType_Fade_Particle, 2);
 				if (0 == m_iType_Fade_Particle)
@@ -1211,17 +1211,41 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pParticleBufferDesc->eType_Fade = CVIBuffer_Particle::TYPE_FADE::FADE_IN;
 
 
+				/* 파티클 페이드 인아웃 조건 */
+				ImGui::SeparatorText(u8" Fade 조건 ");
+				ImGui::RadioButton(u8"라이프타임_Particle", &m_iType_Fade_Takes_Particle, 0);
+				ImGui::RadioButton(u8"거리_Particle", &m_iType_Fade_Takes_Particle, 1);
+				ImGui::RadioButton(u8"높이_Particle", &m_iType_Fade_Takes_Particle, 2);
+				ImGui::RadioButton(u8"크기_Particle", &m_iType_Fade_Takes_Particle, 3);
+				ImGui::RadioButton(u8"TYPE_DIRAXIS_END_Particle", &m_iType_Fade_Takes_Particle, 4);
+				if (0 == m_iType_Fade_Takes_Particle)
+					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::LIFE;
+				else if (1 == m_iType_Fade_Takes_Particle)
+					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::DIST;
+				else if (2 == m_iType_Fade_Takes_Particle)
+					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::HEIGHT;
+				else if (3 == m_iType_Fade_Takes_Particle)
+					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::SCALE;
+				else if (4 == m_iType_Fade_Takes_Particle)
+					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::TYPE_FADE_TAKES_END;
+
+
 				/* 색 변경 */
 				if (ImGui::CollapsingHeader(" Color_Particle "))
 				{
-
 					/* 디퓨즈 색상혼합 모드_Particle */
 					ImGui::RadioButton(u8"곱하기_Particle", &m_iColor_Mode_Particle, 0);
 					ImGui::RadioButton(u8"스크린_Particle", &m_iColor_Mode_Particle, 1);
 					ImGui::RadioButton(u8"오버레이_Particle", &m_iColor_Mode_Particle, 2);
 					ImGui::RadioButton(u8"더하기_Particle", &m_iColor_Mode_Particle, 3);
 					ImGui::RadioButton(u8"번_Particle", &m_iColor_Mode_Particle, 4);
-					ImGui::RadioButton(u8"혼합안함_Particle", &m_iColor_Mode_Particle, 5);
+					ImGui::RadioButton(u8"비비드 라이트_Particle", &m_iColor_Mode_Particle, 5);
+					ImGui::RadioButton(u8"소프트 라이트_Particle", &m_iColor_Mode_Particle, 6);
+					ImGui::RadioButton(u8"하드 라이트_Particle", &m_iColor_Mode_Particle, 7);
+					ImGui::RadioButton(u8"컬러 닷지_Particle", &m_iColor_Mode_Particle, 8);
+					ImGui::RadioButton(u8"혼합 번_Particle", &m_iColor_Mode_Particle, 9);
+					ImGui::RadioButton(u8"혼합안함_Particle", &m_iColor_Mode_Particle, 10);
+
 					if (0 == m_iColor_Mode_Particle)
 						m_pCurVoidDesc->eMode_Color = MODE_COLOR::MUL;
 					else if (1 == m_iColor_Mode_Particle)
@@ -1233,6 +1257,16 @@ void CWindow_EffectTool::Update_ParticleTab()
 					else if (4 == m_iColor_Mode_Particle)
 						m_pCurVoidDesc->eMode_Color = MODE_COLOR::BURN;
 					else if (5 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::VIVID_RIGHT;
+					else if (6 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::SOFT_RIGHT;
+					else if (7 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::HARD_RIGHT;
+					else if (8 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::COLOR_DODGE;
+					else if (9 == m_iColor_Mode_Particle)
+						m_pCurVoidDesc->eMode_Color = MODE_COLOR::MIX_BURN;
+					else if (10 == m_iColor_Mode_Particle)
 						m_pCurVoidDesc->eMode_Color = MODE_COLOR::MODE_COLOR_END;
 
 
@@ -1255,7 +1289,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pParticleBufferDesc->vMinMaxRed.x = m_fColor_Min_Particle[0];
 						m_pParticleBufferDesc->vMinMaxGreen.x = m_fColor_Min_Particle[1];
 						m_pParticleBufferDesc->vMinMaxBlue.x = m_fColor_Min_Particle[2];
-						m_pParticleBufferDesc->vMinMaxAlpha.x = m_fColor_Min_Particle[3];
 					}
 
 					/* Max 색 설정_파티클 */
@@ -1264,7 +1297,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pParticleBufferDesc->vMinMaxRed.y = m_fColor_Max_Particle[0];
 						m_pParticleBufferDesc->vMinMaxGreen.y = m_fColor_Max_Particle[1];
 						m_pParticleBufferDesc->vMinMaxBlue.y = m_fColor_Max_Particle[2];
-						m_pParticleBufferDesc->vMinMaxAlpha.y = m_fColor_Max_Particle[3];
 					}
 
 					if (1 == m_iDynamic_Color_Particle) // 입자 색 일괄변경이면 현재 색 변화 보여주기
@@ -1273,7 +1305,15 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_fColor_Cur_Particle[0] = m_pParticleBufferDesc->vCurrentColor.x;
 						m_fColor_Cur_Particle[1] = m_pParticleBufferDesc->vCurrentColor.y;
 						m_fColor_Cur_Particle[2] = m_pParticleBufferDesc->vCurrentColor.z;
-						m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.w;
+					}
+
+
+					/* 알파 가중치 */
+					ImGui::SeparatorText(u8"알파 가중치_Particle");
+					if (ImGui::DragFloat2("Add Alpha_Particle", m_fMinMaxAlpha_Particle, 0.1f, -255.f, 255.f))
+					{
+						m_pParticleBufferDesc->vMinMaxAlpha.x = m_fMinMaxAlpha_Particle[0];
+						m_pParticleBufferDesc->vMinMaxAlpha.y = m_fMinMaxAlpha_Particle[1];
 					}
 
 
@@ -3289,15 +3329,26 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iColor_Mode_Particle = 3;
 			else if (MODE_COLOR::BURN == m_pCurVoidDesc->eMode_Color)
 				m_iColor_Mode_Particle = 4;
-			else if (MODE_COLOR::MODE_COLOR_END == m_pCurVoidDesc->eMode_Color)
+			else if (MODE_COLOR::VIVID_RIGHT == m_pCurVoidDesc->eMode_Color)
 				m_iColor_Mode_Particle = 5;
+			else if (MODE_COLOR::SOFT_RIGHT == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 6;
+			else if (MODE_COLOR::HARD_RIGHT == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 7;
+			else if (MODE_COLOR::COLOR_DODGE == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 8;
+			else if (MODE_COLOR::MIX_BURN == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 9;
+			else if (MODE_COLOR::MODE_COLOR_END == m_pCurVoidDesc->eMode_Color)
+				m_iColor_Mode_Particle = 10;
 
 
-			/* 쉐이더에 던져져서 곱해질 색상 값_파티클  */
-			m_fColor_Mul_Particle[0] = m_pCurVoidDesc->vColor_Mul.x;
-			m_fColor_Mul_Particle[1] = m_pCurVoidDesc->vColor_Mul.y;
-			m_fColor_Mul_Particle[2] = m_pCurVoidDesc->vColor_Mul.z;
-			m_fColor_Mul_Particle[3] = m_pCurVoidDesc->vColor_Mul.w;
+
+			///* 쉐이더에 던져져서 곱해질 색상 값_파티클  */
+			//m_fColor_Mul_Particle[0] = m_pCurVoidDesc->vColor_Mul.x;
+			//m_fColor_Mul_Particle[1] = m_pCurVoidDesc->vColor_Mul.y;
+			//m_fColor_Mul_Particle[2] = m_pCurVoidDesc->vColor_Mul.z;
+			//m_fColor_Mul_Particle[3] = m_pCurVoidDesc->vColor_Mul.w;
 
 
 			/* 쉐이더에 던져서 자를 값 */
@@ -3533,6 +3584,20 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iType_Fade_Particle = 1;
 			else if (CVIBuffer_Particle::FADE_IN == m_pParticleBufferDesc->eType_Fade)
 				m_iType_Fade_Particle = 2;
+
+
+			/* 페이드 조건 업데이트 */
+			if (CVIBuffer_Particle::TYPE_FADE_TAKES::LIFE == m_pParticleBufferDesc->eType_Fade_Takes)
+				m_iType_Fade_Takes_Particle = 0;
+			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::DIST == m_pParticleBufferDesc->eType_Fade_Takes)
+				m_iType_Fade_Takes_Particle = 1;
+			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::HEIGHT == m_pParticleBufferDesc->eType_Fade_Takes)
+				m_iType_Fade_Takes_Particle = 2;
+			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::SCALE == m_pParticleBufferDesc->eType_Fade_Takes)
+				m_iType_Fade_Takes_Particle = 3;
+			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::TYPE_FADE_TAKES_END == m_pParticleBufferDesc->eType_Fade_Takes)
+				m_iType_Fade_Takes_Particle = 4;
+
 
 
 			/* 림 블룸 값 업데이트 */
@@ -4704,10 +4769,10 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		//	//Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
 		//}
 
-		if (ImGui::Button(" Copy Part "))
-		{
-			Copy_CurPart();
-		}
+		//if (ImGui::Button(" Copy Part "))
+		//{
+		//	Copy_CurPart();
+		//}
 
 
 		// =========================================
