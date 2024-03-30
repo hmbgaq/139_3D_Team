@@ -1,0 +1,44 @@
+{
+  
+  "Basic_Json": [
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 15.161497116088867, -1.9073486328125e-06, 15.646393775939941, 1.0 ]
+        ]
+      },
+      "Index": 0,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_PUBGSnowField3",
+      "ObjectTag": "PUBGSnowField3",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    }
+  ],
+  "Instance_Json": null,
+  "Interact_Json": null,
+  "LightObject_Json": null,
+  "Light_Json": [
+    {
+      "Ambient": [ 0.20000000298023224, 0.20000000298023224, 0.20000000298023224, 1.0 ],
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 1.0, 1.0, 1.0 ],
+      "Direction": [ 1.0, -1.0, 1.0, 0.0 ],
+      "LightEnable": true,
+      "LightIndex": 0,
+      "OuterCutOff": 0.0,
+      "Position": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Range": 0.0,
+      "Specular": [ 0.0, 0.0, 0.0, 1.0 ],
+      "Type": 0
+    }
+  ],
+  "Monster_Json": null,
+  "Special_Json": null,
+  "Trigger_Json": null
+}

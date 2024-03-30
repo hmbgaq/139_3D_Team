@@ -150,7 +150,11 @@ public:
 
 	
 public:
-	void Add_Force(_vector In_vDir, _float In_fPower);
+	void	 Add_Force(_vector In_vDir, _float In_fPower);
+
+public:
+	_float3& Get_AddRootMotion() { return m_vAddRootPosition; }
+
 
 public:
 	_float Get_Hp() { return m_iHp; };
@@ -277,7 +281,7 @@ protected:
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
 	_float m_fElectrocuteTime = { 0.f };
-
+	_float3	m_vAddRootPosition = {};
 
 
 protected:

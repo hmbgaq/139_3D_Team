@@ -14,7 +14,7 @@ BEGIN(Client)
 class CEnvironment_Interact final : public CGameObject
 {
 public:
-	enum INTERACT_TYPE { INTERACT_JUMP100, INTERACT_JUMP200, INTERACT_JUMP300, INTERACT_VAULT100, INTERACT_VAULT200, INTERACT_WAGONJUMP, INTERACT_WAGONEVENT, INTERACT_END };
+	enum INTERACT_TYPE { INTERACT_JUMP100, INTERACT_JUMP200, INTERACT_JUMP300, INTERACT_VAULT100, INTERACT_VAULT200, INTERACT_WAGONPUSH, INTERACT_WAGONJUMP, INTERACT_WAGONEVENT, INTERACT_END };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
 
 public:
@@ -39,6 +39,9 @@ public:
 		_bool			bLevelChange = false;
 		LEVEL			eChangeLevel = LEVEL_INTRO_BOSS;
 		string			strSplineJsonPath = "";
+
+		_int			iInteractGroupIndex = -1;
+		_float4			vEnablePosition = {};
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
 private:
@@ -65,6 +68,7 @@ public:
 	
 	ENVIRONMENT_INTERACTOBJECT_DESC*	Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
+	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex;}
 	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
 	
 #ifdef _DEBUG
@@ -81,6 +85,13 @@ public:
 	_int								Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
 	void								Set_AnimationIndex(_uint iAnimIndex);
 	void								Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex; }
+
+
+public: //! For Public
+	void								StartInteract() { m_bInteractStart = true; }
+	void								Reset_Interact();
+
+public:	//! For Spline
 	void								Set_SplineJsonPath(string strJsonPath) { m_tEnvironmentDesc.strSplineJsonPath = strJsonPath;}
 	void								Set_SplineDivergingCount(_int iDivergingCount) { m_iDivergingCount = iDivergingCount;} 
 
@@ -96,7 +107,19 @@ public:
 public:
 	void								Interact();
 
-public:
+
+public:	//! For Public
+	void								Move_For_PlayerRootMotion();
+	HRESULT								Find_InteractGroupObject();
+	
+
+	
+public: //! For PushCartWagon			
+	_bool								Check_EnablePosition(CEnvironment_Interact* pInteractObject); //! 카트웨건이 특정 상호작용오브젝트를 활성화시켜주자.
+		//! For ToolTest
+	HRESULT								Add_InteractGroupObject(CEnvironment_Interact* pInteractObject);
+
+public: //! For RollerCoster Wagon && Spline
 	void								Start_SplineEvent();
 	void								Reset_TestEvent();
 
@@ -132,6 +155,7 @@ private:
 	_bool								m_bPlay = false;
 	
 	_bool								m_bInteract = false;
+	_bool								m_bInteractStart = false;
 	
 	_bool								m_bFindPlayer = false;
 
@@ -160,6 +184,9 @@ private:
 
 	_int								m_iCalcCount = 0;
 	_bool								m_bArrival = false;
+
+
+	vector<CEnvironment_Interact*>		m_vecInteractGroup;
 
 private:
 	CPlayer*						    m_pPlayer = { nullptr };

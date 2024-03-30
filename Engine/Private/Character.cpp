@@ -112,13 +112,18 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 
 		if (0.0001f < fDiff)
 		{
-			_float3 vResult = vBodyMovePos;
-			vResult.x *= m_vRootMoveRate.x;
-			vResult.y *= m_vRootMoveRate.y;
-			vResult.z *= m_vRootMoveRate.z;
+			m_vAddRootPosition = vBodyMovePos;
 
+			//_float3 vResult = vBodyMovePos;
+			m_vAddRootPosition.x *= m_vRootMoveRate.x;
+			m_vAddRootPosition.y *= m_vRootMoveRate.y;
+			m_vAddRootPosition.z *= m_vRootMoveRate.z;
 			//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-			m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+			m_pTransformCom->Add_RootBone_Position(m_vAddRootPosition, fTimeDelta, m_pNavigationCom);
+		}
+		else
+		{
+			m_vAddRootPosition = {};
 		}
 		
 	}
