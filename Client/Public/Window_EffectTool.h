@@ -150,7 +150,7 @@ private:
 private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
-	_int m_iMaxShaderPassIndex_Particle						= { 4 };
+	_int m_iMaxShaderPassIndex_Particle						= { 10 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
 	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 24, 0, 164, 243, 24 };
 
@@ -250,6 +250,8 @@ private:
 
 
 	/* For.Position */
+	_int	m_iType_Dir_Particle = { 0 };
+
 	_float	m_vMinCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMaxCenterOffsetPos_Particle[3] = { 0.f, 0.f, 0.f };
 
@@ -269,8 +271,8 @@ private:
 
 	/* For.Scale */
 	//_float	m_vLerpScale_Pos_Particle[2]	= { 0.f, 1.f };
-
-	_int	m_iUseScaleLerp					= { 0 };
+	_int	m_iUseScaleLerp_Particle		= { 0 };
+	_int	m_iScaleRatio_Particle = { 0 }; // 크기 정비율
 	_float	m_vScaleLerp_Up_Pos[2]			= { 0.f, 0.3f };
 	_float	m_vScaleLerp_Down_Pos[2]		= { 1.f, 1.f };
 	_float	m_vMinMaxWidth_Particle[2]		= { 0.f, 1.f };

@@ -37,6 +37,8 @@
 #include "Preset_PhysXColliderDesc.h"
 
 
+#include "Effect.h"
+#include "Effect_Manager.h"
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -99,6 +101,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
+
 
 	return S_OK;
 }

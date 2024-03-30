@@ -665,29 +665,29 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 					/* 렌더그룹 변경_파티클(현재는 Effect그룹으로 고정(9번) */
-					ImGui::SeparatorText(" Render Group_Particle ");
-					if (ImGui::InputInt(" Render Group_Particle ", &m_iRenderGroup_Particle, 1))
-					{
-						if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Particle)
-						{
-							m_iRenderGroup_Particle = (_int)CRenderer::RENDER_END - 1;
-						}
-						m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Particle;
-					}
+					//ImGui::SeparatorText(" Render Group_Particle ");
+					//if (ImGui::InputInt(" Render Group_Particle ", &m_iRenderGroup_Particle, 1))
+					//{
+					//	if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Particle)
+					//	{
+					//		m_iRenderGroup_Particle = (_int)CRenderer::RENDER_END - 1;
+					//	}
+					//	m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Particle;
+					//}
 
 					ImGui::SeparatorText("");
 				}
 
 
 
-				/* Z소트 키고 끄기 */
-				ImGui::SeparatorText("SortZ");
-				ImGui::RadioButton("SortZ", &m_iSortZ, 0);  ImGui::SameLine();
-				ImGui::RadioButton("Off SortZ", &m_iSortZ, 1);
-				if (0 == m_iSortZ)
-					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_SortZ(TRUE);
-				else if (1 == m_iSortZ)
-					dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_SortZ(FALSE);
+				///* Z소트 키고 끄기 */
+				//ImGui::SeparatorText("SortZ");
+				//ImGui::RadioButton("SortZ", &m_iSortZ, 0);  ImGui::SameLine();
+				//ImGui::RadioButton("Off SortZ", &m_iSortZ, 1);
+				//if (0 == m_iSortZ)
+				//	dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_SortZ(TRUE);
+				//else if (1 == m_iSortZ)
+				//	dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Set_SortZ(FALSE);
 
 
 				/* 인스턴스 개수 변경 */
@@ -860,7 +860,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::RadioButton(" Kinematic_Particle ", &m_iKinetic_Particle, 1);
 						if (0 == m_iKinetic_Particle)
 						{
-
 							m_pParticleBufferDesc->bKinetic = TRUE;
 						}
 						else if (1 == m_iKinetic_Particle)
@@ -1032,7 +1031,9 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 				/* 센터위치 오프셋(000 에서 어느정도 떨어진 지점에서 스폰 될건지) */
-				ImGui::SeparatorText("Center Offset_Particle");
+				ImGui::SeparatorText("Center Offset_Particle"); 
+				ImGui::SameLine();
+				HelpMarker(u8"원점0,0,0 에서 어느정도 떨어진 지점에서 스폰될건지");
 				/* MinCenterOffsetPos */
 				if (ImGui::DragFloat3("MinCenterOffsetPos_Mesh", m_vMinCenterOffsetPos_Particle, 0.1f, -500.f, 500.f))
 				{
@@ -1049,11 +1050,24 @@ void CWindow_EffectTool::Update_ParticleTab()
 				}
 
 
-				if (ImGui::CollapsingHeader(" Dir Rot Offset _Particle "))
+				if (ImGui::CollapsingHeader(u8" 방향벡터 회전_Particle "))
 				{
+					ImGui::SeparatorText(" Dir To Axis_Particle ");
+					ImGui::RadioButton("DIR_RIGHT_Particle", &m_iType_Dir_Particle, 0);
+					ImGui::RadioButton("DIR_UP_Particle ", &m_iType_Dir_Particle, 1);
+					ImGui::RadioButton("DIR_LOOK_Particle", &m_iType_Dir_Particle, 2);
+
+					if (0 == m_iType_Dir_Particle)
+						m_pParticleBufferDesc->eType_Dir = CVIBuffer_Particle::DIR_RIGHT;					
+					else if (1 == m_iType_Dir_Particle)
+						m_pParticleBufferDesc->eType_Dir = CVIBuffer_Particle::DIR_UP;
+					else if (2 == m_iType_Dir_Particle)
+						m_pParticleBufferDesc->eType_Dir = CVIBuffer_Particle::DIR_LOOK;
+
+
 					/* 회전 범위(오프셋) */
 					/* RotX */
-					ImGui::SeparatorText("");
+					ImGui::SeparatorText(u8"가는 방향벡터 회전범위");
 					if (ImGui::DragFloat2("RotationX", m_vRotationOffsetX_Particle, 1.f, 0.f, 360.f))
 					{
 						if (m_vRotationOffsetX_Particle[0] > m_vRotationOffsetX_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
@@ -1093,6 +1107,18 @@ void CWindow_EffectTool::Update_ParticleTab()
 #pragma region 크기 변경 러프_파티클 시작
 				if (ImGui::CollapsingHeader(" Scale_Particle "))
 				{
+					if (1 == m_iUseScaleLerp_Particle)
+					{
+						// 크기러프 안쓸 때만 정비율 랜덤인지 선택_메쉬 파티클
+						ImGui::SeparatorText(" ScaleRatio_Particle ");
+						ImGui::RadioButton("ScaleRatio_Particle", &m_iScaleRatio_Particle, 0);
+						ImGui::RadioButton("None_ScaleRatio_Particle", &m_iScaleRatio_Particle, 1);
+						if (0 == m_iScaleRatio_Particle)
+							m_pParticleBufferDesc->bScaleRatio = TRUE;
+						else if (1 == m_iScaleRatio_Particle)
+							m_pParticleBufferDesc->bScaleRatio = FALSE;
+					}
+
 					ImGui::SeparatorText("MinMax Width");
 					if (ImGui::DragFloat2("MinMax Width_Particle", m_vMinMaxWidth_Particle, 0.1f, 0.f, 5000.f))
 					{
@@ -1116,11 +1142,11 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 					/* 파티클 크기 변경 러프 사용 */
 					ImGui::SeparatorText(" Use_ScaleLerp _Particle ");
-					ImGui::RadioButton("Use_ScaleLerp_Particle", &m_iUseScaleLerp, 0);  ImGui::SameLine();
-					ImGui::RadioButton("None_ScaleLerp_Particle", &m_iUseScaleLerp, 1);
-					if (0 == m_iUseScaleLerp)
+					ImGui::RadioButton("Use_ScaleLerp_Particle", &m_iUseScaleLerp_Particle, 0);  ImGui::SameLine();
+					ImGui::RadioButton("None_ScaleLerp_Particle", &m_iUseScaleLerp_Particle, 1);
+					if (0 == m_iUseScaleLerp_Particle)
 						m_pParticleBufferDesc->bUseScaleLerp = TRUE;
-					else if (1 == m_iUseScaleLerp)
+					else if (1 == m_iUseScaleLerp_Particle)
 						m_pParticleBufferDesc->bUseScaleLerp = FALSE;
 
 					if (TRUE == m_pParticleBufferDesc->bUseScaleLerp)
@@ -3361,6 +3387,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_fMinMaxAddRange_Particle[0] = m_pParticleBufferDesc->vMinMaxAddRange.x;
 			m_fMinMaxAddRange_Particle[1] = m_pParticleBufferDesc->vMinMaxAddRange.y;
 
+
 			/* 파티클이 올라갈 최고 높이 */
 			m_vMinMaxPosY_Particle[0] = m_pParticleBufferDesc->vMinMaxPosY.x;
 			m_vMinMaxPosY_Particle[1] = m_pParticleBufferDesc->vMinMaxPosY.y;
@@ -3424,6 +3451,15 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
 
 
+			/* 라업룩 어느 축을 진행방향으로 할건지 업데이트 */
+			if (CVIBuffer_Particle::DIR_RIGHT == m_pParticleBufferDesc->eType_Dir)
+				m_iType_Dir_Particle = 0;
+			else if (CVIBuffer_Particle::DIR_UP == m_pParticleBufferDesc->eType_Dir)
+				m_iType_Dir_Particle = 1;
+			else if (CVIBuffer_Particle::DIR_LOOK == m_pParticleBufferDesc->eType_Dir)
+				m_iType_Dir_Particle = 2;
+
+
 			/* 회전 범위 */
 			m_vRotationOffsetX_Particle[0] = m_pParticleBufferDesc->vMinMaxRotationOffsetX.x;
 			m_vRotationOffsetX_Particle[1] = m_pParticleBufferDesc->vMinMaxRotationOffsetX.y;
@@ -3437,9 +3473,9 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			/* 스케일 러프 */
 			if (TRUE == m_pParticleBufferDesc->bUseScaleLerp)
-				m_iUseScaleLerp = 0;
+				m_iUseScaleLerp_Particle = 0;
 			else if (FALSE == m_pParticleBufferDesc->bUseScaleLerp)
-				m_iUseScaleLerp = 1;
+				m_iUseScaleLerp_Particle = 1;
 
 
 			m_vScaleLerp_Up_Pos[0] = m_pParticleBufferDesc->vScaleLerp_Up_Pos.x;
@@ -3454,6 +3490,12 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vMinMaxHeight_Particle[0] = m_pParticleBufferDesc->vMinMaxHeight.x;
 			m_vMinMaxHeight_Particle[1] = m_pParticleBufferDesc->vMinMaxHeight.y;
 
+
+			/* 스케일 정비율 */
+			if (TRUE == m_pParticleBufferDesc->bScaleRatio)
+				m_iScaleRatio_Particle = 0;
+			else if (FALSE == m_pParticleBufferDesc->bScaleRatio)
+				m_iScaleRatio_Particle = 1;
 
 
 

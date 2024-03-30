@@ -54,8 +54,8 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_fDamage = 20.f;
 
 
-
-
+	// 이펙트 생성
+	m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
 
 	return S_OK;
 }
@@ -79,12 +79,6 @@ void CSon_Projectile::Tick(_float fTimeDelta)
 	
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
-	// 이펙트 생성
-	if (m_bfirst2)
-	{
-		m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test.json", this);
-		m_bfirst2 = false;
-	}
 
 }
 
@@ -120,8 +114,9 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
-
+		// 이펙트 생성
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
@@ -197,6 +192,9 @@ CGameObject* CSon_Projectile::Pool()
 void CSon_Projectile::Free()
 {
 	__super::Free();
+
+	if (nullptr != m_pEffect)
+		m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 
 	//if(nullptr != m_pEffect)
 	//	Safe_Release(m_pEffect);

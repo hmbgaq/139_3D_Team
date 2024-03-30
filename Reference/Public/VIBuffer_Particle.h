@@ -7,8 +7,9 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Particle final : public CVIBuffer
 {
 public:
-	enum TYPE_ACTION { SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
-	enum TYPE_FADE { FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
+	enum TYPE_ACTION	{ SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
+	enum TYPE_FADE		{ FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
+	enum TYPE_DIRAXIS	{ DIR_RIGHT, DIR_UP, DIR_LOOK, TYPE_DIRAXIS_END };
 
 	typedef struct tagParticleBufferDESC
 	{
@@ -66,12 +67,13 @@ public:
 		_float2		vMinMaxRange = { 0.1f, 3.f };
 		_float2		vMinMaxAddRange = { 0.f, 0.f };
 		
-
 		_float2		vMinMaxPosY = { 0.1f, 3.f };	// 파티클이 올라갈 최고 높이
 		_float2		vMinMaxTheta = { 0.f, 360.f };	// 3.14f * 2.f
 
 
 		/* For.Rotation */
+		TYPE_DIRAXIS eType_Dir = { DIR_UP };
+
 		_float3		vRadian = { 0.f, 0.f, 0.f };
 
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
@@ -80,6 +82,7 @@ public:
 
 
 		/* For.Scale */
+		_bool		bScaleRatio = { TRUE };						// 크기 정비율
 		_bool		bUseScaleLerp	= { TRUE };
 		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
 		_float2		vScaleLerp_Up_Pos	= { 0.f, 0.3f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
@@ -248,8 +251,11 @@ public:
 public:
 	_float4 Make_Dir(_uint iNum);
 	void	Rotation_Instance(_uint iNum);
-	void	Update_Spark_Rotation(_uint iNum);
-	void	Update_Dir_Rotation(_uint iNum);
+
+	void	Update_DirToAxis(_uint iNum);
+	void	Make_DirToRight(_uint iNum);
+	void	Make_DirToUp(_uint iNum);
+	void	Make_DirToLook(_uint iNum);
 
 
 	/* For.RigidBody */

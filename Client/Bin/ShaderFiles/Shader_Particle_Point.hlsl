@@ -351,12 +351,11 @@ struct GS_OUT
 
 /* Áö¿À¸ÞÆ®¸® ½¦ÀÌ´õ : ¼ÎÀÌ´õ¾È¿¡¼­ Á¤Á¡À» Ãß°¡ÀûÀ¸·Î »ý¼ºÇØ ÁØ´Ù. */
 [maxvertexcount(6)]
-void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
+void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream, uniform int iOriginType)
 {
     GS_OUT Out[4];
 
-    float3 vLook;
-    float3 vRight, vUp;
+    float3 vRight, vLook, vUp;
     float3x3 WorldMatrix = (float3x3) g_WorldMatrix;
     
     if (g_bBillBoard)
@@ -378,35 +377,49 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
         //vUp = normalize(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb) * In[0].vPSize.y * 0.5f;
         //vLook = normalize(g_EffectDesc[In[0].iInstanceID].g_vLook);
         
-        
+        // ºôº¸µå°¡ ¾Æ´Ò °æ¿ì¿£ »ó¼ö¹öÆÛ·Î ³Ñ°Ü¹ÞÀº ¶ó¾÷·è »ç¿ë
         vRight = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vRight.rgb, WorldMatrix)) * In[0].vPSize.x * 0.5f;
         vUp = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vUp.rgb, WorldMatrix)) * In[0].vPSize.y * 0.5f;
-        vLook = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vLook, WorldMatrix));
+        vLook = normalize(mul(g_EffectDesc[In[0].iInstanceID].g_vLook, WorldMatrix)) * In[0].vPSize.y * 0.5f;;
 		
     }
 
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-	// Áß¾Ó ¿øÁ¡
-    //Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
-    //Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
-    //Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
-    //Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
-	
-	
-	// Áß¾Ó ¿øÁ¡ÀÌ ¾Æ´Ô! (Áß¾Ó À§·Î ¿øÁ¡ ¹Ù²ã¼­ Âï¾úÀ½!!)
-    Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight, 1.f), matVP);
-    Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight, 1.f), matVP);
-    Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - (vUp * 2), 1.f), matVP);
-    Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - (vUp * 2), 1.f), matVP);
-	
-	
-	// ¾Æ·¡·Î ´©¿ò
-    //Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vLook.rgb, 1.f), matVP);
-    //Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vLook.rgb, 1.f), matVP);
-    //Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vLook.rgb, 1.f), matVP);
-    //Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vLook.rgb, 1.f), matVP);
-	
+    
+    if (0 == iOriginType)
+    {
+        //Áß¾Ó ¿øÁ¡
+        Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vUp, 1.f), matVP);
+        Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vUp, 1.f), matVP);
+        Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vUp, 1.f), matVP);
+        Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vUp, 1.f), matVP);
+        
+    }else if (1 == iOriginType)
+    {
+        // Áß¾Ó ¿øÁ¡ÀÌ ¾Æ´Ô! (Áß¾Ó À§·Î ¿øÁ¡ ¹Ù²ã¼­ Âï¾úÀ½!!)
+        Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight, 1.f), matVP);
+        Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight, 1.f), matVP);
+        Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - (vUp * 2), 1.f), matVP);
+        Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - (vUp * 2), 1.f), matVP);
+        
+    }else if(2 == iOriginType)
+    {
+        // ¾Æ·¡·Î ´©¿ò
+        Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight + vLook, 1.f), matVP);
+        Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight + vLook, 1.f), matVP);
+        Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - vLook, 1.f), matVP);
+        Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - vLook, 1.f), matVP);
+    }
+    else if (3 == iOriginType)
+    {
+        // ¾Æ·¡·Î ´©¿ò + Áß¾Ó À§
+        Out[0].vPosition = mul(float4(In[0].vPosition.xyz + vRight, 1.f), matVP);
+        Out[1].vPosition = mul(float4(In[0].vPosition.xyz - vRight, 1.f), matVP);
+        Out[2].vPosition = mul(float4(In[0].vPosition.xyz - vRight - (vLook * 2), 1.f), matVP);
+        Out[3].vPosition = mul(float4(In[0].vPosition.xyz + vRight - (vLook * 2), 1.f), matVP);
+    }
+    
 	
     Out[0].vTexcoord = Rotate_Texcoord(float2(0.f, 0.f), g_fDegree);
     Out[0].vColor = In[0].vColor;
@@ -454,6 +467,7 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
     OutStream.RestartStrip();
 	
 }
+
 
 
 
@@ -518,7 +532,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
 
 	// ¸¶½ºÅ© ÅØ½ºÃ³¸¦ ¾ËÆÄ·Î »ç¿ë (clamp »ùÇÃ·¯ »ç¿ë?)
     vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
-    vFinalDiffuse.a *= vAlphaColor;
+    vFinalDiffuse.a *= vAlphaColor.r;
 
 	/* Discard & Color Mul ==================================================== */
     if (vFinalDiffuse.a <= g_fAlpha_Discard) // ¾ËÆÄ Àß¶ó³»±â
@@ -533,7 +547,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     //Out.vColor += vRimColor;
-    Out.vRimBloom = float4(g_vBloomPower, g_EffectDesc[In.iInstanceID].g_vColors_Mul.a); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
     
     
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
@@ -557,7 +571,7 @@ PS_OUT PS_MAIN_DISTORTION_POST(PS_IN In)
     In.vTexcoord = In.vTexcoord * g_UVScale + g_UVOffset;
     In.vTexcoord = Rotate_Texcoord(In.vTexcoord, g_fDegree);
     
-    
+
 
 	/* Distortion ============================================================ */ 
     float4 vDistortion;
@@ -590,7 +604,7 @@ technique11 DefaultTechnique
 
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
 		VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
-		GeometryShader	= compile gs_5_0 GS_MAIN();
+		GeometryShader	= compile gs_5_0 GS_MAIN(1);
 		HullShader		= NULL;
 		DomainShader	= NULL;
 		PixelShader		= compile ps_5_0 PS_MAIN_PARTICLE(false);
@@ -604,12 +618,11 @@ technique11 DefaultTechnique
 
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
         VertexShader	= compile vs_5_0 VS_MAIN_PARTICLE();
-        GeometryShader = compile gs_5_0 GS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN(1);
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(true);
     }
-
 
     pass Distortion_Post // 2
     {
@@ -619,10 +632,123 @@ technique11 DefaultTechnique
 
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
         VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
-        GeometryShader = compile gs_5_0 GS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN(1);
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_POST();
+    }
+
+    pass Particle_Center // 3
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(0);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(false);
+    }
+
+    pass Particle_Center_Solid // 4
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(0);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(true);
+    }
+
+
+    pass Particle_Floor // 5
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(3);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(false);
+    }
+
+    pass Particle_Floor_Solid // 6
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(3);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(true);
+    }
+
+    pass Distortion_Post_Floor // 7
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(3);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_POST();
+    }
+
+    pass Particle_Floor_Center // 8
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(2);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(false);
+    }
+
+    pass Particle_Floor_Center_Solid // 9
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(2);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(true);
+    }
+
+    pass Particle_Wireframe // 10
+    {
+        SetRasterizerState(RS_NoneCull_Wireframe);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(0);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(true);
     }
 
 }
