@@ -152,28 +152,28 @@ private:
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 10 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 24, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 25, 9, 170, 243, 24 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 24, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 25, 9, 170, 243, 24 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 24, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 25, 9, 170, 243, 24 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 24, 0, 164, 243, 24 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 25, 9, 170, 243, 24 };
 
 
 private:
@@ -521,6 +521,7 @@ private:
 private:
 	/* Camera */
 	CCamera*	m_pCamera = { nullptr };
+	_float		m_fCameraSpeed = { 60.f };
 	_float3		m_Camera_ResetPos = { 0.f, 1.8f, -5.f };		// 카메라 리셋 위치
 	_float4		m_Camera_ResetLookAt = { 0.f, 0.f, 0.f, 1.f };	// 카메라 리셋 LookAt
 
@@ -530,12 +531,12 @@ private:
 
 	/* Grid */
 	CGrid*	m_pGrid	= { nullptr };
-	_float	m_fColor_Grid[4] = { 0.3f, 0.3f, 0.3f, 1.f };	// 그리드(와이어프레임) 컬러
+	_float	m_fColor_Grid[4] = { 0.5f, 0.5f, 0.5f, 1.f };	// 그리드(와이어프레임) 컬러
 	_int	m_iShaderPass_Grid = { 2 };
 
 
 	/* Test Floor */
-	CModel_Preview* m_pFloor_Preview = { nullptr };				// 땅바닥
+	CModel_Preview* m_pFloor_Preview = { nullptr };					// 땅바닥
 	_float			m_vWorldPosition_Floor[3] = { 0.f, 0.f, 0.f };	// 바닥 모델 월드 이동
 	_float			m_vScale_Floor[3] = { 0.f, 0.f, 0.f };			// 바닥 모델 크기
 

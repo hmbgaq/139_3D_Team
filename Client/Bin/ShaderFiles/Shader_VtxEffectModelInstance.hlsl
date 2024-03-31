@@ -529,8 +529,8 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
 
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-	
-	
+
+    
 	
 	/* RimBloom ================================================================ */
     float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
@@ -683,8 +683,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = float4(g_vBloomPower, Out.vDiffuse.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
-	
-    
+
     
     if (bSolid)
         Out.vSolid = Out.vDiffuse;

@@ -163,7 +163,7 @@ HRESULT CEffect_Instance::Render()
 			if (FALSE == m_tInstanceDesc.bUseCustomTex)
 			{
 				m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
-				//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+				//m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)0, aiTextureType_NORMALS);
 			}
 
 			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
