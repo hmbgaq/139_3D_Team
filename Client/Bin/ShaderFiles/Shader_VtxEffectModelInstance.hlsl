@@ -504,7 +504,10 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
         discard;
 	
   
-    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
+
+   // 색상 혼합
+    Out.vDiffuse.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
+    Out.vDiffuse.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
  
 	
 	/* Dissolve ============================================================== */
@@ -532,7 +535,7 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
 	/* RimBloom ================================================================ */
     float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     Out.vDiffuse += vRimColor;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, Out.vDiffuse.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
 	
 	
@@ -570,7 +573,7 @@ VS_OUT_DISTORTION VS_MAIN_DISTORTION(VS_IN In)
 
 
 	matrix WorldMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
-
+    
 	vector vPosition = mul(vector(In.vPosition, 1.f), WorldMatrix);
 
 	matrix matWV, matWVP;
@@ -637,12 +640,12 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 
 	// 디퓨즈 텍스처 (clamp 샘플러 사용)
-    vFinalDiffuse = g_DiffuseTexture.Sample(ClampSampler, vDistortedCoord.xy);
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, vDistortedCoord.xy);
 
 
 	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
     vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
-    vFinalDiffuse.a = vAlphaColor;
+    vFinalDiffuse.a *= vAlphaColor.r;
 	
     
 	/* Discard & Color Mul ==================================================== */
@@ -650,8 +653,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
         discard;
 	
      // 색상 혼합
-    Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
-	
+    Out.vDiffuse.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
+    Out.vDiffuse.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
     
 	/* Dissolve ============================================================== */
     vector vDissolveTex = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
@@ -678,10 +681,11 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 	/* RimBloom ================================================================ */
     float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     Out.vDiffuse += vRimColor;
-    Out.vRimBloom = float4(g_vBloomPower, 1.0f);	//Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, Out.vDiffuse.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
 	
 	
-	
+    
+    
     if (bSolid)
         Out.vSolid = Out.vDiffuse;
 	

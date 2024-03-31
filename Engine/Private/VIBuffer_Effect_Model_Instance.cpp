@@ -140,8 +140,9 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 				pModelInstance[i].vUp = _float4{ m_vecParticleShaderInfoDesc[i].vUp.x		, m_vecParticleShaderInfoDesc[i].vUp.y		, m_vecParticleShaderInfoDesc[i].vUp.z		, 0.f };
 				pModelInstance[i].vLook = _float4{ m_vecParticleShaderInfoDesc[i].vLook.x	, m_vecParticleShaderInfoDesc[i].vLook.y	, m_vecParticleShaderInfoDesc[i].vLook.z	, 0.f };
 
-				// 센터 + 방향 위치로 세팅
-				XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
+
+				// 초기 위치 세팅
+				XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions));
 
 			}
 
@@ -149,9 +150,9 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 		else
 		{
 			// 파티클 모드가 아니면
-			pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
-			pModelInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
-			pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.z;
+			pModelInstance[i].vRight	= _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
+			pModelInstance[i].vUp		= _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
+			pModelInstance[i].vLook		= _float4(0.f, 0.f, 1.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.z;
 
 			// 원점 위치로 고정
 			//XMStoreFloat4(&pModelInstance[i].vTranslation, m_tBufferDesc.vCenterPosition);
@@ -214,8 +215,9 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 				pModelInstance[i].vUp		= _float4{ m_vecParticleShaderInfoDesc[i].vUp.x		, m_vecParticleShaderInfoDesc[i].vUp.y		, m_vecParticleShaderInfoDesc[i].vUp.z		, 0.f };
 				pModelInstance[i].vLook		= _float4{ m_vecParticleShaderInfoDesc[i].vLook.x	, m_vecParticleShaderInfoDesc[i].vLook.y	, m_vecParticleShaderInfoDesc[i].vLook.z	, 0.f };
 
-				// 센터 + 방향 위치로 세팅
-				XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
+
+				// 초기 위치 세팅
+				XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions));
 
 			}
 
@@ -345,6 +347,18 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	// 방향 만들기
 	m_vecParticleInfoDesc[iNum].vDir = Make_Dir(iNum);	// 방향 저장
 
+	if (m_tBufferDesc.bReverse) // 리버스면 센터위치는 센터 + 길이를 가진 방향
+	{
+		m_vecParticleInfoDesc[iNum].vCenterPositions += m_vecParticleInfoDesc[iNum].vDir;
+		m_vecParticleInfoDesc[iNum].vCenterPositions.w = 1.f;
+
+		m_vecParticleInfoDesc[iNum].vDir = XMVector3Normalize(m_vecParticleInfoDesc[iNum].vDir) * -1.f; // 방향벡터 노멀라이즈 + 반대방향으로 만들기
+	}
+	else
+	{
+		m_vecParticleInfoDesc[iNum].vDir = XMVector3Normalize(m_vecParticleInfoDesc[iNum].vDir);
+	}
+
 
 	// 색 초기화
 	m_vecParticleShaderInfoDesc[iNum].vCurrentColors = { m_tBufferDesc.vMinMaxRed.x, m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxAlpha.x };
@@ -378,15 +392,12 @@ _float4 CVIBuffer_Effect_Model_Instance::Make_Dir(_uint iNum)
 {
 	_vector		vDir = XMVectorSet(1.f, 0.f, 0.f, 0.f);
 
-	if (m_tBufferDesc.bReverse)
-		vDir = XMVectorSet(-1.f, 0.f, 0.f, 0.f);	// 리버스면 반대방향
-
 	vDir = XMVector3Normalize(vDir) * m_vecParticleInfoDesc[iNum].fMaxRange;
 
 	_vector		vRotation = XMQuaternionRotationRollPitchYaw(m_vecParticleInfoDesc[iNum].vOffsetTheta.x, m_vecParticleInfoDesc[iNum].vOffsetTheta.y, m_vecParticleInfoDesc[iNum].vOffsetTheta.z);
 	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
-	vDir = XMVector3Normalize(XMVector3TransformNormal(vDir, RotationMatrix));	// 가야할 방향벡터 회전 적용
+	vDir = XMVector3TransformNormal(vDir, RotationMatrix);	// 가야할 방향벡터 회전 적용
 
 	return vDir;
 }
@@ -632,8 +643,11 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 					// 랜덤 값 다시 뽑기
 					ReSet_ParticleInfo(i);
-					// 센터 + 방향 위치로 세팅
-					XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions) + m_vecParticleInfoDesc[i].vDir);
+
+
+					// 초기 위치 세팅
+					XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions));
+
 
 					m_vecParticleInfoDesc[i].Reset_ParticleTimes();		// 시간 초기화
 				}
@@ -735,10 +749,10 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 						}
 					}
 
-					// 크기변경 적용
-					pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
-					pModelInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
-					pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
+					//// 크기변경 적용
+					//pModelInstance[i].vRight = _float4(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
+					//pModelInstance[i].vUp = _float4(0.f, 1.f, 0.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
+					//pModelInstance[i].vLook = _float4(0.f, 0.f, 1.f, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
 
 #pragma region 크기 러프 끝
 
@@ -746,6 +760,11 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 #pragma region 회전 : 자체 회전 시작
 
 					Update_DirToAxis(i);
+
+					// 회전, 크기 적용
+					pModelInstance[i].vRight	= _float4(m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f) * m_vecParticleInfoDesc[i].vCurScales.x;
+					pModelInstance[i].vUp		= _float4(m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f) * m_vecParticleInfoDesc[i].vCurScales.y;
+					pModelInstance[i].vLook		= _float4(m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f) * m_vecParticleInfoDesc[i].vCurScales.z;
 
 #pragma region 회전 : 자체 회전 끝
 
@@ -822,8 +841,6 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 							// 초기화 조건		
 							_vector vCurPos = XMLoadFloat4(&pModelInstance[i].vTranslation);
-							//_vector vZeroCenter = { 0.f, 0.f, 0.f, 1.f };
-							//_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - vZeroCenter));	// 센터에서 현재 위치까지의 거리
 							_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
 
 							if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음

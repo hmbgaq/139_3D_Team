@@ -203,7 +203,6 @@ private:
 
 
 
-
 #pragma region Particle 옵션 시작 =====================================================
 private:
 	_int	m_iNumInstance_Particle		= { 200 };
@@ -214,7 +213,6 @@ private:
 	/* 파티클만의 속성 */
 	_int	m_iRecycle_Particle			= { 0 };
 	_int	m_iReverse_Particle			= { 0 };
-	_int	m_iType_Emit_Particle		= { 0 };
 	_int	m_iType_Action_Particle		= { 0 };
 	_int	m_iType_Fade_Particle		= { 0 };
 	_int	m_iType_Fade_Takes_Particle = { 0 };
@@ -222,7 +220,7 @@ private:
 	_float	m_vMinMaxLifeTime_Particle[2] = { 0.f, 0.f };	// 라이프타임
 
 	/* Emitter */
-	_float	m_fEmissionTime_Particle = { 0.f };	// 방출 시간 텀
+	_float	m_fEmissionTime_Particle = { 0.f };			// 방출 시간 텀
 	_int	m_iAddEmitCount_Particle = { 0 };			// 한번 방출 할 때 몇개씩 추가로 방출할건지
 
 
@@ -272,7 +270,7 @@ private:
 	/* For.Scale */
 	//_float	m_vLerpScale_Pos_Particle[2]	= { 0.f, 1.f };
 	_int	m_iUseScaleLerp_Particle		= { 0 };
-	_int	m_iScaleRatio_Particle = { 0 }; // 크기 정비율
+	_int	m_iScaleRatio_Particle			= { 0 }; // 크기 정비율
 	_float	m_vScaleLerp_Up_Pos[2]			= { 0.f, 0.3f };
 	_float	m_vScaleLerp_Down_Pos[2]		= { 1.f, 1.f };
 	_float	m_vMinMaxWidth_Particle[2]		= { 0.f, 1.f };
@@ -286,7 +284,6 @@ private:
 	_float	m_fColor_Cur_Particle[3] = { 1.f, 1.f, 1.f };
 
 	_float	m_fMinMaxAlpha_Particle[2] = { 1.f, 1.f };
-
 
 	_int	m_iColor_Mode_Particle = { 0 };
 	//_float	m_fColor_Mul_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
@@ -388,11 +385,22 @@ private:
 
 
 	_int	m_iType_Mode_Mesh = { 1 }; // MODE_STATIC, MODE_PARTICLE, MODE_END
+
 	_int	m_iType_Action_Mesh = { 0 };
 	_int	m_iRecycle_Mesh = { 0 };
+	_int	m_iReverse_Mesh = { 0 };
+	_int	m_iType_Fade_Mesh = { 0 };
+	_int	m_iType_Fade_Takes_Mesh = { 0 };
+
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 	_float	m_vMinMaxSpeed_Mesh[2] = { 1.f, 1.f };
+
+
+	/* Emitter */
+	_float	m_fEmissionTime_Mesh = { 0.f };			// 방출 시간 텀
+	_int	m_iAddEmitCount_Mesh= { 0 };			// 한번 방출 할 때 몇개씩 추가로 방출할건지
+
 
 	/* Morph */
 	_float m_fMorphTimeTerm = { 0.05f };
@@ -411,9 +419,15 @@ private:
 	/* RigidBody ============================================== */
 
 
-	/* Color */
+	/* For.Color */
+	_int	m_iDynamic_Color_Mesh = { 0 };
+	_float	m_fColor_Min_Mesh[3] = { 1.f, 1.f, 1.f };
+	_float	m_fColor_Max_Mesh[3] = { 1.f, 1.f, 1.f };
+	_float	m_fColor_Cur_Mesh[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_fMinMaxAlpha_Mesh[2] = { 1.f, 1.f };
+
 	_int	m_iColor_Mode_Mesh = { 0 };
-	_float	m_fColor_Mul_Mesh[4] = { 1.f, 1.f, 1.f, 1.f };
 
 
 	/* For.Scale_Mesh */
@@ -426,9 +440,16 @@ private:
 
 
 	/* Position_Mesh Particle */
+	_int	m_iType_Dir_Mesh = { 0 };
+
 	_float	m_vMinCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
 	_float	m_vMaxCenterOffsetPos_Mesh[3] = { 0.f, 0.f, 0.f };
+
 	_float	m_vMinMaxRange_Mesh[2] = { 0.f, 0.f };
+	_float	m_fMinMaxAddRange_Mesh[2] = { 0.f, 0.f };
+
+	_float	m_vMinMaxPosY_Mesh[2] = { 0.1f, 3.f };		// 파티클이 올라갈 최고 높이
+	_float	m_vMinMaxTheta_Mesh[2] = { 0.f, 6.28f };	// 3.14f * 2.f
 
 
 	/* Rotation_Mesh */

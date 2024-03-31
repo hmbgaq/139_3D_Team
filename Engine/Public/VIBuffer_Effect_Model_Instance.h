@@ -80,7 +80,7 @@ public:
 
 
 		/* For.Rotation */
-		TYPE_DIRAXIS eType_Dir = { DIR_UP };
+		TYPE_DIRAXIS eType_Dir = { DIR_LOOK };
 
 		_float3		vRadian = { 0.f, 0.f, 0.f };
 
