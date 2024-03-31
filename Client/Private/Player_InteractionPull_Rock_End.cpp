@@ -1,4 +1,5 @@
 #include "..\Public\Player_InteractionPull_Rock_End.h"
+//#include "Player_IdleLoop.h"
 
 void CPlayer_InteractionPull_Rock_End::Initialize(CPlayer* pActor)
 {
@@ -10,6 +11,12 @@ void CPlayer_InteractionPull_Rock_End::Initialize(CPlayer* pActor)
 CState<CPlayer>* CPlayer_InteractionPull_Rock_End::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
+
+	//if (pActor->Is_Animation_End())
+	//{
+	//	return new CPlayer_IdleLoop();
+	//}
+	//return nullptr;
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }

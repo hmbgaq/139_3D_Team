@@ -1,4 +1,5 @@
 #include "..\Public\Player_InteractionPush_Rock_Pull_to_Push.h"
+#include "Player_InteractionPush_Rock_Loop.h"
 
 void CPlayer_InteractionPush_Rock_Pull_to_Push::Initialize(CPlayer* pActor)
 {
@@ -11,7 +12,13 @@ CState<CPlayer>* CPlayer_InteractionPush_Rock_Pull_to_Push::Update(CPlayer* pAct
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return new CPlayer_InteractionPush_Rock_Loop();
+	}
+	return nullptr;
+
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CPlayer_InteractionPush_Rock_Pull_to_Push::Release(CPlayer* pActor)
