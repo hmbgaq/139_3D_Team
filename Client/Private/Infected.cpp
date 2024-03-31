@@ -196,21 +196,21 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
-	switch (ePower)
-	{
-	case Engine::Light:
-		m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
-		break;
-	case Engine::Medium:
-		m_pActor->Set_State(new CInfected_DeathLight_B_01_NEW());
-		break;
-	case Engine::Heavy:
-		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
-		break;
+	//switch (ePower)
+	//{
+	//case Engine::Light:
+	//	m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
+	//	break;
+	//case Engine::Medium:
+	//case Engine::Heavy:
+	//	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
+	//	break;
 
-	default:
-		break;
-	}
+	//default:
+	//	break;
+	//}
+
+	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
 }
 
 void CInfected::Hitted_Electrocute()

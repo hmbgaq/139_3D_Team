@@ -273,6 +273,21 @@ void CWeapon::Fire(const wstring& strBulletTag, const wstring& strLayerTag, _flo
 	pBullet->Get_Transform()->Look_At(vTargetVector);
 }
 
+void CWeapon::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
+{
+	m_pModelCom->Set_Animation(_iNextAnimation, _eAnimState, false, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
+}
+
+_bool CWeapon::Is_Animation_End()
+{
+	return m_pModelCom->Is_AnimEnd();
+}
+
+CModel::ANIM_STATE CWeapon::Get_AnimState()
+{
+	return m_pModelCom->Get_AnimState();
+}
+
 HRESULT CWeapon::Bind_ShaderResources()
 {
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));

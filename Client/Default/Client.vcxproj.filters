@@ -3598,6 +3598,9 @@
     <Filter Include="02.GameObjects\UI\04. UIEffect\00. MoveEffect">
       <UniqueIdentifier>{ae8bc895-8152-47b0-bce5-1815257b4484}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Whip">
+      <UniqueIdentifier>{80654d8a-bcc0-48ef-8f52-a31ef40a1cde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7134,6 +7137,9 @@
     <ClInclude Include="..\Public\UI_MoveEffect.h">
       <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Whip.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Whip</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10116,6 +10122,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MoveEffect.cpp">
       <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Whip.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Whip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

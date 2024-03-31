@@ -969,6 +969,7 @@
     <ClInclude Include="..\Public\Player_Weapon_Punch.h" />
     <ClInclude Include="..\Public\Player_Weapon_Revolver.h" />
     <ClInclude Include="..\Public\Player_Weapon_Shotgun.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Whip.h" />
     <ClInclude Include="..\Public\Player_Weapon_Winchester.h" />
     <ClInclude Include="..\Public\Player_Weapon_Zapper.h" />
     <ClInclude Include="..\Public\Player_WhipPull.h" />
@@ -1916,6 +1917,7 @@
     <ClCompile Include="..\Private\Player_Weapon_Punch.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Revolver.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Shotgun.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Whip.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Winchester.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Zapper.cpp" />
     <ClCompile Include="..\Private\Player_WhipPull.cpp" />
