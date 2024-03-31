@@ -15,7 +15,7 @@ namespace Engine
 		MODEL_DIFFUSE,				// 8 - Diffuse 컬러만 외부에서 던지는용도 
 		MODEL_ALPHA,				// 9 - AlphaTexture 바인딩 
 		MODEL_ICICLE,				// 10 - 고드름 얼음 모델들 렌더용
-		MODEL_INTROGROUND,			// 11 - RAD 텍스쳐파일 전용 
+		MODEL_FOLIAGECLIP,			// 11 - 
 		MODEL_SHADER_END
 	};
 

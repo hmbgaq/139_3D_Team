@@ -569,7 +569,7 @@ void CUI::LifeTime(_float fTimeDelta)
 
 void CUI::ResetTime()
 {
-	m_fTime = GetTickCount64(); // TimeReset
+	m_fTime = (_float)GetTickCount64(); // TimeReset
 	m_bActive = true;
 }
 

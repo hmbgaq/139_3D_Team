@@ -103,7 +103,7 @@ void CUI_Sprite::Tick(_float fTimeDelta)
 			m_iCurrentFrame = 0;
 		}
 
-		m_Time = GetTickCount64();
+		m_Time = (DWORD)GetTickCount64();
 	}
 }
 
@@ -162,7 +162,7 @@ void CUI_Sprite::Start_Setting()
 
 	// 20으로 여태 속도 잘 맞춰서 쓰고있었는데, 왜 인지 모르겠지만 갑자기 속도가 늦음 (갑자기 20으로 잘됨)
 	m_fFrameChangeTime = 20.f;	 // FrameSpeed
-	m_iCurrentFrame = 0.f;		 // Frame
+	m_iCurrentFrame = 0;		 // Frame
 }
 
 HRESULT CUI_Sprite::Ready_Components()

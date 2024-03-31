@@ -86,7 +86,6 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
     m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
     m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-
     CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
     if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.

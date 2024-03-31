@@ -48,10 +48,23 @@ HRESULT CShaderParsed_Object::Ready_Components(void* pArg)
 
 	/* For.Com_Model */
 	{
-		FAILED_CHECK(__super::Add_Component(iCurrentLevel, SMath::string_To_WString(Desc->strModelProtoTag), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		wstring ModelTag = SMath::string_To_WString(Desc->strModelProtoTag);
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, ModelTag, TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+	}
+
+	/* For.Com_Collider */
+	{
+		CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
+		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
+		BoundingDesc.vExtents = _float3(0.3f, 0.5f, 0.3f);
+		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
+
+		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}
 
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
+	m_eType = Desc->eType;
+	m_iRenderPass = Desc->iRenderPass;
 
 	return S_OK;
 }
@@ -68,7 +81,11 @@ void CShaderParsed_Object::Tick(_float fTimeDelta)
 
 void CShaderParsed_Object::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
+	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
+
+	m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
+
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 }
 
 HRESULT CShaderParsed_Object::Render()
@@ -77,17 +94,47 @@ HRESULT CShaderParsed_Object::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	for (size_t i = 0; i < iNumMeshes; i++)
+	if (m_eRenderType == RENDER_TYPE::NORMAL)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (m_eType == CModel::TYPE::TYPE_ANIM)
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+			m_pModelCom->Render(_uint(i));
+		}
+	}
+	else if (m_eRenderType == RENDER_TYPE::MESH_CHECK)
+	{
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (m_eType == CModel::TYPE::TYPE_ANIM)
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 
-		m_pModelCom->Render(_uint(i));
+			if (i == m_iDiscardMeshNumber)
+				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_MESHCHECK));
+			else
+				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+
+			m_pModelCom->Render(_uint(i));
+		}
+
+	}
+	else if (m_eRenderType == RENDER_TYPE::RENDER_TEST)
+	{
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (m_eType == CModel::TYPE::TYPE_ANIM)
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+			m_pShaderCom->Begin(m_iRenderPass);
+			m_pModelCom->Render(_uint(i));
+		}
 	}
 
 	return S_OK;

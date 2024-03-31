@@ -808,9 +808,6 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 						else
 							cout << " Roughness: " << szFileName << endl;
 
-						//cout << "Model : " << strModelFilePath << endl;
-						//cout << "Texture : " << szFileName << endl;
-						//cout << endl;
 					}
 
 					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT);
@@ -823,12 +820,14 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 					m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */
 			}
 
-			if (j == (size_t)aiTextureType_DIFFUSE)
-			{
-				
-			}
+			
 		}
-
+		if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])
+		{
+			//cout << "Model : " << strModelFilePath << endl;
+			////cout << "Texture : " << szFileName << endl;
+			//cout << endl;
+		}
 		m_Materials.push_back(MaterialDesc);
 	}
 

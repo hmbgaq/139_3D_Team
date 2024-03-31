@@ -162,6 +162,12 @@ struct PS_OUT
     float4      vEmissive       : SV_Target5;
 };
 
+struct PS_ICEGROUP
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal  : SV_TARGET1;
+};
+
 struct PS_OUT_SHADOW
 {
     vector vLightDepth : SV_TARGET0;
@@ -524,9 +530,7 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
     Out.vNormal = (vector(vNormal * 0.5f + 0.5f, 0.f)) * 0.2;
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
-    
+   
     return Out;
 }
 
@@ -552,7 +556,11 @@ PS_OUT PS_MAIN_CLIP(PS_IN In)
     return Out;
 }
 
-/* ------------------- Technique -------------------*/ 
+/*=============================================================
+ 
+                          Technique
+                                
+==============================================================*/
 
 technique11 DefaultTechnique
 {	
@@ -679,6 +687,7 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHACOLOR();
     }
+    
     pass Icicle // 10
     {
         SetRasterizerState(RS_Cull_None);
@@ -690,7 +699,7 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ICICLE();
     }
-    
+
     pass FoliageClip // 11
     {
         SetRasterizerState(RS_Cull_None);
@@ -703,5 +712,4 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_CLIP();
     }
 
-    
 }
