@@ -3,6 +3,9 @@
 void CBandit_Heavy_State_Attack::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
+
+	pActor->Add_AttackCount();
+
 	//pActor->Look_At_Target();
 }
 

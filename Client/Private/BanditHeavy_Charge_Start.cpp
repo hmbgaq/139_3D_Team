@@ -5,6 +5,8 @@ void CBanditHeavy_Charge_Start::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
 
+	pActor->Reset_AttackCount();
+
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	pActor->Look_At_Target();
@@ -22,8 +24,11 @@ void CBanditHeavy_Charge_Start::Initialize(CBandit_Heavy* pActor)
 
 CState<CBandit_Heavy>* CBanditHeavy_Charge_Start::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
+	pActor->Look_At_Target();
 	_float fDistance = pActor->Calc_Distance();
-	if (3.f >= fDistance)
+	if (5.f >= fDistance)
 	{
 		return new CBanditHeavy_Charge_Attack_Full();
 	}

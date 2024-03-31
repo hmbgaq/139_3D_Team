@@ -162,7 +162,7 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Attack(CBandit_Heavy* pActor, _float
 			return new CBanditHeavy_Melee_LM();
 		}
 	}
-	else if (6.f > fDistance)
+	else if (4.f > fDistance)
 	{
 		_uint iRand = SMath::Random(0, 6);
 		switch (iRand)
@@ -183,9 +183,10 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Attack(CBandit_Heavy* pActor, _float
 			return new CBanditHeavy_MeleeDynamic_LM();
 		}
 	}
-	else if (9.f > fDistance)
+	else if (7.f > fDistance)
 	{
-		return new CBanditHeavy_Charge_Start();
+		if (pActor->Get_AttackCount() > 3.f)
+			return new CBanditHeavy_Charge_Start();
 	}
 
 	return nullptr;
