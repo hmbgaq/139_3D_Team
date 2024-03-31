@@ -328,14 +328,14 @@ PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
     float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord); // Diffuse Tex Sampling
     float4 vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord); // Mask Tex Sampling
 
-    if (vMaskColor.r > 0.9f && vMaskColor.g > 0.9f && vMaskColor.b > 0.9f)
+   // if (vMaskColor.r > 0.9f && vMaskColor.g > 0.9f && vMaskColor.b > 0.9f)
     {
         Out.vColor = saturate(vColor);
         if (Out.vColor.a < 0.1f)
             discard;
     }
-    else
-        discard;
+    //else
+    //    discard;
 
 	// 여기까지 마스크를 씌운 상태
 
@@ -509,7 +509,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In) // 6
     vFireColor.a = vAlphaColor;
 
        // 컬러 혼합
-    Out.vColor = Calculation_ColorBlend(vFireColor, g_vColor_Mul, g_iColorMode);
+    Out.vColor.rgb = Calculation_ColorBlend(vFireColor, g_vColor_Mul, g_iColorMode).rgb;
     
     Out.vColor.a -= g_Alpha;
     

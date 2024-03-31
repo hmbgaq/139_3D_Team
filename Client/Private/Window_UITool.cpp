@@ -1074,6 +1074,8 @@ void CWindow_UITool::Setting_Child()
 				m_pCurrSelectUI->Set_DiffuseColor(m_fColor_Mul_Mesh[0], m_fColor_Mul_Mesh[1], m_fColor_Mul_Mesh[2], m_fColor_Mul_Mesh[3]);
 			}
 
+			ImGui::InputFloat("Alpha", m_pCurrSelectUI->Get_PointAlpha(), 0.01f, 0.01f);
+
 			ImGui::SeparatorText("");
 		}
 	}
@@ -1090,7 +1092,7 @@ void CWindow_UITool::Setting_Child()
 
 		if (*m_pCurrSelectUI->Get_WorldUI() == true)
 		{
-			if(m_pCurrSelectGameObject != nullptr)
+			if (m_pCurrSelectGameObject != nullptr)
 				Set_Guizmo(m_pCurrSelectGameObject);
 		}
 		else
@@ -3761,16 +3763,18 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 4. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
 			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
-		if (object.contains("UINum"))						// "ObjectName" 키가 있으면
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
 			tUI_Info.iUINum = object["UINum"];
-		if (object.contains("UIName"))						// "ObjectName" 키가 있으면
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
 			tUI_Info.strUIName = object["UIName"];
-		if (object.contains("ObjectName"))						// "ObjectName" 키가 있으면
-			tUI_Info.strObjectName = object["ObjectName"];		// 7. ObjectName
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
 		if (object.contains("LayerTag"))
 			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
 		if (object.contains("CloneTag"))
@@ -3792,7 +3796,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		if (object.contains("ColorMode"))
 			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
 		if (object.contains("RenderGroup"))
-			tUI_Info.iRenderGroup = object["RenderGroup"];				// 16. RenderGroup
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrLayer = TEXT("");
 		if (m_strLayer[m_iCurrLayerNum] != "")
@@ -3942,6 +3946,9 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 
 		if (object.contains("Distortion")) // 키가 있으면
 		{
+
+			if (object["Distortion"].contains("TimeAcc")) // 키가 있으면
+				tUI_Info.fTimeAcc = object["Distortion"]["TimeAcc"];
 			if (object["Distortion"].contains("ScrollSpeedsX")) // 키가 있으면
 				tUI_Info.vScrollSpeeds.x = object["Distortion"]["ScrollSpeedsX"];
 			if (object["Distortion"].contains("ScrollSpeedsY")) // 키가 있으면
@@ -3968,8 +3975,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 				tUI_Info.vDistortion3.y = object["Distortion"]["Distortion3Y"];
 			if (object["Distortion"].contains("DistortionScale")) // 키가 있으면
 				tUI_Info.fDistortionScale = object["Distortion"]["DistortionScale"];
-			if (object["Distortion"].contains("DistortionBias")) // 키가 있으면
-				tUI_Info.fDistortionBias = object["Distortion"]["DistortionBias"];
+
 			if (object["Distortion"].contains("DistortionUI")) // 키가 있으면
 				tUI_Info.bDistortionUI = object["Distortion"]["DistortionUI"];
 			if (object["Distortion"].contains("MaskNum")) // 키가 있으면

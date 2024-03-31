@@ -77,7 +77,6 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 			break;
 		case Client::LEVEL_TOOL:
 			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL)), );
-			ShowCursor(true);
 			break;
 		case Client::LEVEL_LOADING:
 			break;

@@ -152,7 +152,8 @@ public:
 		*/
 
 		/* 알파 */
-		_float		fAlpha = 1.f;
+		_float		fAlpha = 0.f;
+		_float		fAlphaTrue = 0.f;
 
 		_int		iObjectNum = 0;			// 몇번째 녀석인지
 		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
@@ -403,6 +404,7 @@ public: /* =========================== Animation ============================== 
 
 	void			Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 	_float			Get_Alpha() { return m_fAlpha; }
+	_float*			Get_PointAlpha() { return &m_tUIInfo.fAlpha; }
 
 	// dt 값
 	_float			fFrameTimeDelta, fCurFrameTimeDelta;

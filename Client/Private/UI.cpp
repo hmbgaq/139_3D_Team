@@ -265,15 +265,17 @@ HRESULT CUI::Ready_Components()
 
 HRESULT CUI::Bind_ShaderResources()
 {
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tUIInfo.vColor, sizeof(_float4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tUIInfo.eColorMode, sizeof(_int))))
-		return E_FAIL;
-
 	if (m_tUIInfo.bDistortionUI == false) // Distortion을 사용 안하는 UI일 경우
 		return S_OK;
+
+	_float4 vColor = m_tUIInfo.vColor;
+	vColor.w = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &vColor, sizeof(_float4))))
+		return E_FAIL;
+
+	_int iColorMode = (_int)m_tUIInfo.eColorMode;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMode", &iColorMode, sizeof(_int))))
+		return E_FAIL;
 
 	if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
 		return E_FAIL;
@@ -1104,6 +1106,8 @@ json CUI::Save_Desc(json& out_json)
 	//out_json["PositionZ"] = m_tUIInfo.fPositionZ;
 	//if (out_json.contains("Alpha")) // 키가 있으면
 		out_json["Alpha"] = m_tUIInfo.fAlpha;
+		out_json["AlphaTrue"] = m_tUIInfo.fAlphaTrue;
+
 	//if (out_json.contains("ObjectNum")) // 키가 있으면
 		out_json["ObjectNum"] = m_tUIInfo.iObjectNum;
 	//if (out_json.contains("ShaderNum")) // 키가 있으면

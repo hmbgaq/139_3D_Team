@@ -47,7 +47,7 @@ HRESULT CUI_Player_Skill_Guige::Initialize(void* pArg)
 
 	m_bActive = true;
 
-	m_iMaskNum = 42;
+	m_iMaskNum = 128;
 	m_fCoolTime = m_fMaxCoolTime;
 
 	return S_OK;
@@ -62,47 +62,20 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//if(m_fCoolTime < m_fMaxCoolTime)
-	//	m_fCoolTime += fTimeDelta;
-	//else
-	//	m_fCoolTime = m_fMaxCoolTime;
-
-	//if (m_pGameInstance->Key_Pressing(DIK_I))
-	//	m_fRadius += 0.1f;
-
-	//if (m_pGameInstance->Key_Down(DIK_K))
-	//{
-	//	m_fCoolTime += 1.f;
-	//	//m_vCenter.x += 0.1f;
-	//	//m_vCenter.y += 0.1f;
-	//}
-	//if (m_pGameInstance->Key_Down(DIK_Z))
-	//	m_iMaskNum -= 1;
 	if (m_pGameInstance->Key_Down(DIK_X))
 		m_bActive = true;
-		//m_iMaskNum += 1;
 
 	if (m_bActive == true)
 	{
-		/*if (GRANDPRIXSKILL_END == m_eType)
-			return;*/
+		m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
+		m_iShaderNum = 5; // 원형 게이지 pass
 
-		/*if (nullptr != m_pFrame)
-			m_pFrame->Tick(fTimeDelta);*/
-
-		/* */
-		if (m_bPick == true) // true일때 쿨타임 증가 시작 (스킬 쿨타임 변수를 0값으로 시작하게 하고[게이지가 꽉찬상태]
+		if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
 		{
-			m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
-			m_iShaderNum = 5; // 원형 게이지 pass
+			//m_bClicked = false;
 
-			if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
-			{
-				//m_bClicked = false;
-
-				//m_iShaderNum = 0;
-				m_fCoolTime = m_fMaxCoolTime; // 초기화 (게이지 없애기) => 스킬 사용시 CoolTime에 MaxCoolTime을 줘서 스킬 쿨이 돌게하면 될듯하다.
-			}
+			//m_iShaderNum = 0;
+			//m_fCoolTime = m_fMaxCoolTime; // 초기화 (게이지 없애기) => 스킬 사용시 CoolTime에 MaxCoolTime을 줘서 스킬 쿨이 돌게하면 될듯하다.
 		}
 	}
 
@@ -199,14 +172,14 @@ HRESULT CUI_Player_Skill_Guige::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 	// error : 셰이더 파일에 있는거랑 타입 안맞았음.
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_Center", &m_vCenter, sizeof(_float2))))
-	//	return E_FAIL;
-	//
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_Radius", &m_fRadius, sizeof(_float))))
-	//	return E_FAIL;
-	//
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_CoolTime", &m_fCoolTime, sizeof(_float))))
-	//	return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Center", &m_vCenter, sizeof(_float2))))
+		return E_FAIL;
+	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Radius", &m_fRadius, sizeof(_float))))
+		return E_FAIL;
+	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_CoolTime", &m_fCoolTime, sizeof(_float))))
+		return E_FAIL;
 
 	// 현재 쿨타임을 계산해서 던져준다.
 	_float fRatio = (m_fMaxCoolTime - m_fCoolTime) / m_fMaxCoolTime;

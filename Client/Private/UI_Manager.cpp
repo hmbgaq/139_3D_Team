@@ -207,6 +207,8 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -235,7 +237,10 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -339,6 +344,8 @@ HRESULT CUI_Manager::Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -367,7 +374,10 @@ HRESULT CUI_Manager::Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -443,6 +453,8 @@ HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerT
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -471,7 +483,10 @@ HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerT
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -554,6 +569,8 @@ HRESULT CUI_Manager::Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -582,7 +599,10 @@ HRESULT CUI_Manager::Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -665,6 +685,8 @@ HRESULT CUI_Manager::Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -693,7 +715,10 @@ HRESULT CUI_Manager::Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -776,6 +801,8 @@ HRESULT CUI_Manager::Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -804,7 +831,10 @@ HRESULT CUI_Manager::Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -873,6 +903,8 @@ HRESULT CUI_Manager::Add_Distortion(_uint iLevelIndex, const wstring& strLayerTa
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -901,7 +933,10 @@ HRESULT CUI_Manager::Add_Distortion(_uint iLevelIndex, const wstring& strLayerTa
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -984,6 +1019,8 @@ HRESULT CUI_Manager::Add_Loading_Intro(_uint iLevelIndex, const wstring& strLaye
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1012,7 +1049,10 @@ HRESULT CUI_Manager::Add_Loading_Intro(_uint iLevelIndex, const wstring& strLaye
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1095,6 +1135,8 @@ HRESULT CUI_Manager::Add_Loading_IntroBoss(_uint iLevelIndex, const wstring& str
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1123,7 +1165,10 @@ HRESULT CUI_Manager::Add_Loading_IntroBoss(_uint iLevelIndex, const wstring& str
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1205,6 +1250,8 @@ HRESULT CUI_Manager::Add_Loading_SnowMountain(_uint iLevelIndex, const wstring& 
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1233,7 +1280,10 @@ HRESULT CUI_Manager::Add_Loading_SnowMountain(_uint iLevelIndex, const wstring& 
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1315,6 +1365,8 @@ HRESULT CUI_Manager::Add_Loading_SnowMountainBoss(_uint iLevelIndex, const wstri
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1343,7 +1395,10 @@ HRESULT CUI_Manager::Add_Loading_SnowMountainBoss(_uint iLevelIndex, const wstri
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1425,6 +1480,8 @@ HRESULT CUI_Manager::Add_Loading_ToolLevel(_uint iLevelIndex, const wstring& str
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1453,7 +1510,10 @@ HRESULT CUI_Manager::Add_Loading_ToolLevel(_uint iLevelIndex, const wstring& str
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1535,6 +1595,8 @@ HRESULT CUI_Manager::Add_Loading_TestLevel(_uint iLevelIndex, const wstring& str
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1563,7 +1625,10 @@ HRESULT CUI_Manager::Add_Loading_TestLevel(_uint iLevelIndex, const wstring& str
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1645,6 +1710,8 @@ HRESULT CUI_Manager::Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1673,7 +1740,10 @@ HRESULT CUI_Manager::Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
-
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1773,6 +1843,8 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1801,6 +1873,10 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -1928,6 +2004,8 @@ HRESULT CUI_Manager::Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLay
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -1956,6 +2034,10 @@ HRESULT CUI_Manager::Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLay
 			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
 		wstring wstrClonetag;
 		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
@@ -2077,6 +2159,8 @@ HRESULT CUI_Manager::Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTa
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -2194,6 +2278,8 @@ HRESULT CUI_Manager::Add_Option(_uint iLevelIndex, const wstring& strLayerTag, C
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -2310,6 +2396,8 @@ HRESULT CUI_Manager::Add_MainMenu(_uint iLevelIndex, const wstring& strLayerTag,
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -2426,6 +2514,8 @@ HRESULT CUI_Manager::Add_MainList(_uint iLevelIndex, const wstring& strLayerTag,
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -2542,6 +2632,8 @@ HRESULT CUI_Manager::Add_LevelList(_uint iLevelIndex, const wstring& strLayerTag
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -2657,6 +2749,8 @@ HRESULT CUI_Manager::Add_MainLogo(_uint iLevelIndex, const wstring& strLayerTag,
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -2805,6 +2899,8 @@ HRESULT CUI_Manager::Add_HitUI(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.bGroup = object["Group"];						// 3. Group
 		if (object.contains("Alpha"))
 			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
 		if (object.contains("ObjectNum"))
 			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
 		if (object.contains("ShaderNum"))
@@ -2899,6 +2995,8 @@ void CUI_Manager::Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_In
 		tUI_Info->bGroup = Out_Json["Group"];						// 3. Group
 	if (Out_Json.contains("Alpha"))
 		tUI_Info->fAlpha = Out_Json["Alpha"];						// 4. Alpha
+	if (Out_Json.contains("AlphaTrue"))
+		tUI_Info->fAlphaTrue = Out_Json["AlphaTrue"];				// 0. Alpha
 	if (Out_Json.contains("ObjectNum"))
 		tUI_Info->iObjectNum = Out_Json["ObjectNum"];				// 5. Out_JsonNum
 	if (Out_Json.contains("ShaderNum"))
