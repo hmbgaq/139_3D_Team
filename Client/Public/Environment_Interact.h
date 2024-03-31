@@ -14,7 +14,32 @@ BEGIN(Client)
 class CEnvironment_Interact final : public CGameObject
 {
 public:
-	enum INTERACT_TYPE { INTERACT_JUMP100, INTERACT_JUMP200, INTERACT_JUMP300, INTERACT_VAULT100, INTERACT_VAULT200, INTERACT_WAGONPUSH, INTERACT_WAGONJUMP, INTERACT_WAGONEVENT, INTERACT_END };
+	enum INTERACT_TYPE { 
+							INTERACT_JUMP100, 
+							INTERACT_JUMP200, 
+							INTERACT_JUMP300, 
+							INTERACT_VAULT100, 
+							INTERACT_VAULT200, 
+							INTERACT_WAGONPUSH, 
+							INTERACT_WAGONJUMP, 
+							INTERACT_WAGONEVENT, 
+							INTEARCT_WAGONROPEJUMP, 
+							INTERACT_CLIMB100, 
+							INTERACT_CLIMB200, 
+							INTERACT_CLIMB300, 
+							INTERACT_CLIMB450,
+							INTERACT_SLIDE,
+							INTERACT_LEVER,
+							INTERACT_PLANK,
+							INTERACT_ROPECLIMB,
+							INTERACT_ROPEDOWN,
+							INTERACT_DOOROPEN,
+							INTERACT_LADDERUP,
+							INTERACT_WHIPSWING,
+							INTERACT_WHIPPULL,
+							INTERACT_ROTATIONVALVE,
+							INTERACT_END 
+					    };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
 
 public:
@@ -34,14 +59,25 @@ public:
 
 		_bool			bAnimModel = { false };
 		_bool			bPreview = true; //! 미리보기용 오브젝트인지 확인
-		_bool			bUseGravity = true;
+		_bool			bUseGravity = true; //! 상호작용시 플레이어가 중력의 영향을 받을 것인지
 
-		_bool			bLevelChange = false;
+		_bool			bLevelChange = false; //! 상호작용시 레벨을 체인지 할 것인지.
 		LEVEL			eChangeLevel = LEVEL_INTRO_BOSS;
 		string			strSplineJsonPath = "";
 
-		_int			iInteractGroupIndex = -1;
-		_float4			vEnablePosition = {};
+		_int			iInteractGroupIndex = -1; //! 특정 상호작용 오브젝트가 활성화될시 다른 상호작용 오브젝트도 활성시키기 위한 그룹핑인덱스
+		_float4			vEnablePosition = {}; //!  특정 상호작용 오브젝트가 다른 상호작용 오브젝트를 활성화시키기 위한 위치 조건을 위한 위치벡터
+		_float4			vArrivalPosition = {}; //! 특정 상호작용 오브젝트가 위치벡터에 도달하면 종료시키기위한 위치벡터
+		_float4			vOffset = {}; //!  특정 상호작용 오브젝트를 기준으로 위치해야하기 위한 오프셋
+		_float			fRotationAngle = 90.f; //! 특정 상호작용 오브젝트가 활성화될시 회전해야할 각도
+		_float			fRotationSpeed = 90.f; //! 회전해야하는 오브젝트인경우 회전 속도를 저장시키기위함.
+
+		_bool			bOffset = false; //! 오프셋 위치가 적용시켜져야하는 지.
+		_bool			bRotate = false; //! 활성화시 회전해야할지
+		_bool			bOwner = false; //! 오너임을 알기위함.
+		_bool			bRootTranslate = false; //! 플레이어의 루트모션에 따라 이동되여야하는지
+		_bool			bArrival = false; //! 특정 지점에 가야하는 지
+
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
 private:
@@ -78,6 +114,7 @@ public:
 	void								Set_PlayerRootMoveRate(_float3 vRootMoveRate) { m_tEnvironmentDesc.vPlayerRootMoveRate = vRootMoveRate;}
 	void								Set_UseGravity(_bool bUseGravity) { m_tEnvironmentDesc.bUseGravity = bUseGravity; }
 	
+
 	void								Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel);
 	
 #endif // _DEBUG
@@ -87,8 +124,9 @@ public:
 
 
 public: //! For Public
-	void								StartInteract();
+	void								StartGroupInteract();
 	void								Reset_Interact();
+	void								Set_Interact(_bool bInteract) { m_bInteract = bInteract;}
 	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex; }
 	void								Set_InteractGroupIndex(_int iGroupIndex) { m_tEnvironmentDesc.iInteractGroupIndex = iGroupIndex; }
 
@@ -110,18 +148,49 @@ public:
 
 
 public:	//! For Public
-	void								Move_For_PlayerRootMotion();
-	HRESULT								Find_InteractGroupObject();
+
+
+	void								Move_For_PlayerRootMotion(); //! 플레이어의 애니메이션 움직임에 맞춰서 이동
+	void								Move_For_Offset(); //! 특저 오브젝트의 위치(오프셋)기준으로 같이 이동
+
+	HRESULT								Find_InteractGroupObject(); //! 상호작용 활성화시 상호작용시켜야 할 오브젝트 찾기
+	void								Set_OwnerObject(CEnvironment_Interact* pOwnerObject) { m_pOwnerInteract = pOwnerObject; }
+	
+	_bool								Check_OwnerEnablePosition(); //! 주체 상호작용오브젝트가 목표위치에 도달했는지 확인해주자
 	
 
+	_bool								ArrivalCheck(); //! 위치벡터에 도달했는지
+	_bool								RotationCheck(const _float fTimeDelta); //! 회전해야할 각도에 도달했는지.
 	
-public: //! For PushCartWagon			
-	_bool								Check_EnablePosition(CEnvironment_Interact* pInteractObject); //! 카트웨건이 특정 상호작용오브젝트를 활성화시켜주자.
-		//! For ToolTest
+
+
+	//!_int			iInteractGroupIndex = -1; //! 특정 상호작용 오브젝트가 활성화될시 다른 상호작용 오브젝트도 활성시키기 위한 그룹핑인덱스
+	//!_float4			vEnablePosition = {}; //!  특정 상호작용 오브젝트가 다른 상호작용 오브젝트를 활성화시키기 위한 위치 조건을 위한 위치벡터
+	//!_float4			vArrivalPosition = {}; //! 특정 상호작용 오브젝트가 위치벡터에 도달하면 종료시키기위한 위치벡터
+	//!_float4			vOffset = {}; //!  특정 상호작용 오브젝트를 기준으로 위치해야하기 위한 오프셋
+	//!_float			fRadian = XMConvertToRadians(90.f); //! 특정 상호작용 오브젝트가 활성화될시 회전해야할 각도
+	//!_float			fRotationSpeed = 90.f; //! 회전해야하는 오브젝트인경우 회전 속도를 저장시키기위함.
+	//!_bool			bOffset = false; //! 오프셋 위치가 적용시켜져야하는 지.
+	//! _bool			bLeft = true; // ! 왼쪽으로 회전할지 오른쪽으로 회전할지
+
+	
+public: //! For ToolTest
 	HRESULT								Add_InteractGroupObject(CEnvironment_Interact* pInteractObject);
+	void								Set_Rotate(_bool bRotate) { m_tEnvironmentDesc.bRotate = bRotate; }
+	void								Set_RotationAngle(_float fAngle) { m_tEnvironmentDesc.fRotationAngle = fAngle;}
+	void								Set_RotationSpeed(_float fRotationSpeed) { m_tEnvironmentDesc.fRotationSpeed = fRotationSpeed; }
+	void								Set_OwnerPromotion(_bool bOwnerPromotion) { m_tEnvironmentDesc.bOwner = bOwnerPromotion;}
+	void								Set_RootTranslate(_bool bRootTranslate) { m_tEnvironmentDesc.bRootTranslate = bRootTranslate;}
+	void								Set_Offset(_bool bOffset, _float4 vOffset) { m_tEnvironmentDesc.bOffset = bOffset; m_tEnvironmentDesc.vOffset = vOffset; }
+	void								Set_ArrivalMission(_bool bArrivalMission, _float4 vArrivalPosition) { m_tEnvironmentDesc.bArrival = bArrivalMission; m_tEnvironmentDesc.vArrivalPosition = vArrivalPosition;} //! 
+	void								Set_EnablePosition(_float4 vEnablePosition) { m_tEnvironmentDesc.vEnablePosition= vEnablePosition; } //! 
+
+	vector<CEnvironment_Interact*>&		Get_InteractGroupVector() { return m_vecInteractGroup;}
+	vector<string>&						Get_InteractGroupTag() { return m_vecInteractGroupTag;}
+	CEnvironment_Interact*				Get_InteractOwner() { return m_pOwnerInteract; }
 
 public: //! For RollerCoster Wagon && Spline
-	void								Start_SplineEvent();
+	void								Start_SplineEvent() { m_bSpline = true; }
 	void								Reset_TestEvent();
 
 	void								Start_Spline(vector<_float4>* SplinePoints);
@@ -188,7 +257,8 @@ private:
 
 
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;
-
+	vector<string>						m_vecInteractGroupTag; //! 툴 또는 디버깅용
+	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
 private:
 	CPlayer*						    m_pPlayer = { nullptr };
 

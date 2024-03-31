@@ -95,8 +95,11 @@ private:
 		void			Interact_SplineLoad();
 		void			Interact_SplineFucntion();
 		void			Interact_LevelChangeFunction();
-		void			Interact_PushFunction();
 		void			Interact_GroupFunction();
+		void			Interact_ColliderFunction();
+		void			Interact_RotationFunction();
+		void			Interact_ArrivalMissonFunction();
+		void			Interact_ShowInfoWindow();
 
 	void			SpecialTab_Function();
 		void			Special_CreateTab();
@@ -331,6 +334,15 @@ private: //!For.Interact //! 상호작용
 	_bool							m_bInteractUseGravity = false;
 	_bool							m_bInteractUseSpline = false;
 	_bool							m_bInteractUseGroup = false;
+	_bool							m_bInteractUseRotate = false;
+	_bool							m_bInteractUseRootTranslate = false;
+	_bool							m_bInteractUseArrivalMissionSetting = false;
+	_bool							m_bInteractUseOffsetSetting = false;
+
+	_bool							m_bInteractColliderSetting = false;
+
+	_float4							m_vArrivalPosition = {};
+	_float4							m_vEnablePosition = {};
 
 	_int							m_iInteractGroupIndex = -1;
 

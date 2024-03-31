@@ -19,6 +19,8 @@
 #include "Environment_Instance.h"
 #include "Environment_LightObject.h"
 #include "Environment_SpecialObject.h"
+#include "Environment_Interact.h"
+
 #pragma endregion
 
 #pragma region Test
@@ -50,10 +52,16 @@ HRESULT CLevel_Intro::Initialize()
     m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
     m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
+
+    
+
     FAILED_CHECK(Ready_LightDesc());
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
+
+    if(m_bMonsterTest == true)
+       FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
+
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
@@ -81,6 +89,8 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     CGameObject* pMonster = nullptr;
 
     json Stage1MapJson = {};
+
+
 
     if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
     {
@@ -219,6 +229,9 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
     FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
+    
+
+
     json Stage1MapJson = {};
 
     if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
@@ -265,14 +278,57 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
         pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
     }
 
-    json InteractJson = Stage1MapJson["Interact_Json"];
-    _int InteractJsonSize = (_int)InteractJson.size();
 
-    for (_int i = 0; i < InteractJsonSize; ++i)
+    if (m_bInteractTest == true)
     {
-        //TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-        //! L"Layer_Event"
+        json InteractJson = Stage1MapJson["Interact_Json"];
+        _int InteractJsonSize = (_int)InteractJson.size();
+
+        for (_int i = 0; i < InteractJsonSize; ++i)
+        {
+            CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
+
+            Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+            wstring strLoadModelTag;
+            string strJsonModelTag = InteractJson[i]["ModelTag"];
+
+            m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+            Desc.strModelTag = strLoadModelTag;
+            Desc.bPreview = false;
+            Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+            Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+            Desc.bLevelChange = InteractJson[i]["LevelChange"];
+            Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+            Desc.eInteractState = InteractJson[i]["InteractState"];
+            Desc.eInteractType = InteractJson[i]["InteractType"];
+            Desc.bUseGravity = InteractJson[i]["UseGravity"];
+
+            CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+            CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
+            CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+
+            const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+            _float4x4 WorldMatrix;
+
+            for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+            {
+                for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+                {
+                    WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+                }
+            }
+
+            XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+            Desc.WorldMatrix = WorldMatrix;
+
+            CEnvironment_Interact* pObject = { nullptr };
+
+            pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+        }
     }
+   
 
     json InstanceJson = Stage1MapJson["Instance_Json"];
     _int InstanceJsonSize = (_int)InstanceJson.size();
