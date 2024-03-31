@@ -44,6 +44,8 @@ private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
 
 public:
+	CGameObject* m_pMonster1 = { nullptr };
+	CGameObject* m_pMonster2 = { nullptr };
 	vector<CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
 	_bool m_bPhase = true;

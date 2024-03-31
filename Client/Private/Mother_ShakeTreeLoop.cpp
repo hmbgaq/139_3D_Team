@@ -18,9 +18,9 @@ CState<CMother>* CMother_ShakeTreeLoop::Update(CMother* pActor, _float fTimeDelt
 	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(37))
 	{
 		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
+		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
 		pSpringCam->Set_ShakeCameraTime(0.3f);
-		pActor->Apply_Shake_And_Blur(Power::Light);
+		pActor->Apply_Shake_And_Blur(Power::Medium);
 		//이떄 카메라 쉐이킹 하면서 맵에 전체 공격 패턴 추가하면 될 거같음 
 		m_bFlags[0] = true;
 	}
