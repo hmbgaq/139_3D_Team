@@ -58,7 +58,9 @@ HRESULT CBody_Infected::Render()
 				if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
 				{
 					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+					m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+					m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
 					m_pModelCom->Render((_uint)i);
 				}
@@ -68,7 +70,9 @@ HRESULT CBody_Infected::Render()
 			else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
 			{
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
 				m_pModelCom->Render((_uint)i);
 			}

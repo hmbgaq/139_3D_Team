@@ -87,8 +87,6 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, strLayerTag, TEXT("Prototype_GameObject_Sky")));
 
-
-
 	return S_OK;
 }
 
@@ -99,7 +97,7 @@ HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 	CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
 	//if(pDynamicCam == nullptr)
 	//	return E_FAIL;
-	//
+	// 
 	//pDynamicCam->Set_Enable(true);
 
 	return S_OK;

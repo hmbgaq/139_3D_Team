@@ -725,11 +725,11 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     // BRDF : Cook-Torrance Specular BRDF / Radiance 계산은 여기 함수 내부에서 처리할예정 
     float3 CT_BRDF = MY_BRDF_Irradiance(fRoughness, fMetallic, vAlbedo.rgb, F0, fAO, N, V, L, H);
     
-    //float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
-    //vEmissive = pow(vEmissive, gamma);
+    float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
+    vEmissive = pow(vEmissive, gamma);
     
-   // Out.vColor.rgb = CT_BRDF * ShadowColor + vEmissive ;
-    Out.vColor.rgb = CT_BRDF * ShadowColor;
+    Out.vColor.rgb = CT_BRDF * ShadowColor + vEmissive ;
+    //Out.vColor.rgb = CT_BRDF * ShadowColor;
     Out.vColor.a = 1.f;
 	
     return Out;

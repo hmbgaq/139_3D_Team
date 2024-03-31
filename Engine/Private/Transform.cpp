@@ -352,7 +352,7 @@ _bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta,
 
 	if (fDistance >= fSpare)
 	{
-		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * fTimeDelta;
+		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * (_float)fTimeDelta;
 
 		Set_State(STATE_POSITION, vPosition);
 		

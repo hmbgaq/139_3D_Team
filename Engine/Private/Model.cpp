@@ -412,7 +412,7 @@ HRESULT CModel::Bind_BoneMatrices(CShader* pShader, const _char* pConstantName, 
 	}
 }
 
-HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
+HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex, _bool* bORM, _bool* bEmissive)
 {
 	// Bone도 연계하고싶은데 Anim만 연계되는거고 NonAnim은 들어가면 안되서 터지니까 안넣음. 하 
 
@@ -434,9 +434,11 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex)
 			Bind_ShaderResource(pShader, "g_DiffuseTexture", iMeshIndex, aiTextureType_DIFFUSE);
 			break;
 		case (_int)aiTextureType_SPECULAR:
+			*bORM = true;
 			Bind_ShaderResource(pShader, "g_SpecularTexture", iMeshIndex, aiTextureType_SPECULAR);
 			break;
 		case (_int)aiTextureType_EMISSIVE:
+			*bEmissive = true;
 			Bind_ShaderResource(pShader, "g_EmissiveTexture", iMeshIndex, aiTextureType_EMISSIVE);
 			break;
 		case (_int)aiTextureType_NORMALS:
@@ -743,20 +745,13 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			_char		szFileName[MAX_PATH] = "";
 			_char		szEXT[MAX_PATH] = "";
 
-			//_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
 			_splitpath_s(strPath.c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szEXT, MAX_PATH);
-
-			if (szFileName == "ICarusGround2")
-				_int iCheck = 0;
 
 			_char		szTmp[MAX_PATH] = "";
 			strcpy_s(szTmp, szDrive);
 			strcat_s(szTmp, szDirectory);
 			strcat_s(szTmp, szFileName);
 			strcat_s(szTmp, szEXT);
-
-			//_char szTest[MAX_PATH] = ".dds";
-			//strcat_s(szTmp, szTest);
 
 			_tchar		szFullPath[MAX_PATH] = TEXT("");
 
@@ -787,34 +782,28 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 					if (nullptr != MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])/* 2글자 뺴서 하는 ORM 성공  */
 						m_bSpecularExist = true;
-					else
-					{
-						/* 뭘해도 Specular가 없다 : 다른텍스쳐로 대체 */
-						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
-						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS])
-							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
-						else
-							cout << "Metalic : " << szFileName << endl;
-						
-						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT);
-						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY])
-							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT, 2);
-						else
-							cout << "Opacity : " << szFileName << endl;
-						
-						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT);
-						if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS])
-							MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT, 2);
-						else
-							cout << " Roughness: " << szFileName << endl;
-
-					}
-
-					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT);
-					if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE])
-						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT, 2);
-					else
-						cout << " Emissive: " << szFileName << endl;
+					//else
+					//{
+					//	/* 뭘해도 Specular가 없다 : 다른텍스쳐로 대체 */
+					//	MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
+					//	if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS])
+					//		MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
+					//	else
+					//		cout << "Metalic : " << szFileName << endl;
+					//	
+					//	MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT);
+					//	if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY])
+					//		MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT, 2);
+					//	else
+					//		cout << "Opacity : " << szFileName << endl;
+					//	
+					//	MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT);
+					//	if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS])
+					//		MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT, 2);
+					//	else
+					//		cout << " Roughness: " << szFileName << endl;
+					//
+					//}
 				}
 				else
 					m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */

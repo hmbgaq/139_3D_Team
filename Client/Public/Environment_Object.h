@@ -103,6 +103,9 @@ private:
 	CTexture*	m_pIceDiffuse = { nullptr };
 	CTexture*	m_pRADTexture = { nullptr };
 
+	/* 렌더링용 */
+private:
+
 public:
 	/* 원형객체를 생성한다. */
 	static CEnvironment_Object* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

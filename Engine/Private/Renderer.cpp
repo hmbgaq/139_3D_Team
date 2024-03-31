@@ -186,6 +186,11 @@ HRESULT CRenderer::Render_NonLight()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Fog()
+{
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Ice()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_ICE")));
@@ -1455,6 +1460,10 @@ HRESULT CRenderer::Create_RenderTarget()
 	/* MRT_Deferred */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Deferred"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Deferred"), TEXT("Target_Deferred")));
+	
+	/* MRT_Fog */
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Fog"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog")));
 
 	/* MRT_HDR */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_HDR"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)));

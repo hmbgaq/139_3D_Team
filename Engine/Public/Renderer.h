@@ -41,6 +41,7 @@ public:
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonLight();
+	HRESULT Render_Fog();
 	HRESULT Render_Ice();
 
 	HRESULT Render_NonBlend();

@@ -74,6 +74,8 @@ public: /* For. Model */
 public: /*For. RenderPass */
 	void Set_RenderPass(_int iPass) { m_iRenderPass = iPass; }
 	_int Get_Rednerpass() { return m_iRenderPass; }
+	_bool				m_bORM_Available		= false;
+	_bool				m_bEmissive_Available	= false;
 
 public: /* For. Base Setting */
 	const wstring&		Get_ProtoTypeTag() { return m_strPrototypeTag; };
