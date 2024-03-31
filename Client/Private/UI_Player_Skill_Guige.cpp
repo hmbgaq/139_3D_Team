@@ -78,10 +78,11 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 	//}
 	//if (m_pGameInstance->Key_Down(DIK_Z))
 	//	m_iMaskNum -= 1;
-	//if (m_pGameInstance->Key_Down(DIK_X))
-	//	m_iMaskNum += 1;
+	if (m_pGameInstance->Key_Down(DIK_X))
+		m_bActive = true;
+		//m_iMaskNum += 1;
 
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		/*if (GRANDPRIXSKILL_END == m_eType)
 			return;*/
@@ -103,20 +104,13 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 				m_fCoolTime = m_fMaxCoolTime; // 초기화 (게이지 없애기) => 스킬 사용시 CoolTime에 MaxCoolTime을 줘서 스킬 쿨이 돌게하면 될듯하다.
 			}
 		}
-
-		__super::Tick(fTimeDelta);
-	}
-
-	if (m_bActive)
-	{
-
 	}
 
 }
 
 void CUI_Player_Skill_Guige::Late_Tick(_float fTimeDelta)
 {
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
@@ -125,7 +119,7 @@ void CUI_Player_Skill_Guige::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_Player_Skill_Guige::Render()
 {
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(Bind_ShaderResources()))
 			return E_FAIL;

@@ -361,16 +361,16 @@ PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
         Out.vColor.a = 0.f;
     }
 
-    Out.vColor.a -= g_Alpha;
-    
-    if (Out.vColor.a < 0.1f)
-        discard;
+    //Out.vColor.a -= g_Alpha;
+    //
+    //if (Out.vColor.a < 0.1f)
+    //    discard;
     
 	// 특정 영역에서만 온전한 원본 이미지가 표시된다.
     return Out;
 }
 
-//// 픽셀 셰이더 메인 함수
+//// 픽셀 셰이더 메인 함수 (이거아님)
 //PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
 //{
 //    PS_OUT Out = (PS_OUT) 0;
