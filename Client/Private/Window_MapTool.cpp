@@ -1277,6 +1277,7 @@ void CWindow_MapTool::ObjectMode_Change_For_Reset()
 		{
 			m_iSelectCharacterTag = 0;
 			m_pPickingObject = nullptr;
+			m_iSelectModelTag = 0;
 
 			if (m_pPreviewCharacter != nullptr)
 			{
@@ -1290,6 +1291,7 @@ void CWindow_MapTool::ObjectMode_Change_For_Reset()
 			m_iSelectEnvironmentIndex = 0;
 			m_iSelectInstanceIndex = 0;
 			m_iSelectObjectIndex = 0;
+			m_iSelectModelTag = 0;
 
 			if(m_pPreviewObject != nullptr)
 			{
@@ -3672,7 +3674,7 @@ void CWindow_MapTool::Interact_LevelChangeFunction()
 		case 0:
 		{
 #ifdef _DEBUG
-			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_LevelChangeType(m_bInteractLevelChange, LEVEL_INTRO_BOSS);
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_LevelChangeType(m_tSelectInteractDesc.bLevelChange, LEVEL_INTRO_BOSS);
 #endif // _DEBUG
 			break;
 		}
@@ -3680,7 +3682,7 @@ void CWindow_MapTool::Interact_LevelChangeFunction()
 		case 1:
 		{
 #ifdef _DEBUG
-			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_LevelChangeType(m_bInteractLevelChange, LEVEL_SNOWMOUNTAIN);
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_LevelChangeType(m_tSelectInteractDesc.bLevelChange, LEVEL_SNOWMOUNTAIN);
 #endif // _DEBUG
 			break;
 		}
@@ -3701,40 +3703,76 @@ void CWindow_MapTool::Interact_GroupFunction()
 
 	ImGui::SeparatorText(u8"상호작용 그룹설정");
 	{
-		if (ImGui::InputInt(u8"상호작용 그룹 인덱스", &m_iInteractGroupIndex))
+		if (ImGui::InputInt(u8"상호작용 그룹 인덱스", &m_tSelectInteractDesc.iInteractGroupIndex))
 		{
-			pInteractObject->Set_InteractGroupIndex(m_iInteractGroupIndex);
+			pInteractObject->Set_InteractGroupIndex(m_tSelectInteractDesc.iInteractGroupIndex);
 		}
 
 		ImGui::SameLine();
 
-		if (ImGui::Checkbox(u8"오너 승격", &InteractInfo.bOwner))
+		if (ImGui::Checkbox(u8"오너 승격", &m_tSelectInteractDesc.bOwner))
 		{
-			pInteractObject->Set_OwnerPromotion(InteractInfo.bOwner);
+			pInteractObject->Set_OwnerPromotion(m_tSelectInteractDesc.bOwner);
 		}
 
 
-		if (ImGui::InputFloat4(u8"그룹오브젝트 활성화위치", &InteractInfo.vEnablePosition.x))
+		if (ImGui::InputFloat4(u8"그룹오브젝트 활성화위치", &m_tSelectInteractDesc.vEnablePosition.x))
 		{
-			pInteractObject->Set_EnablePosition(InteractInfo.vEnablePosition);
+			pInteractObject->Set_EnablePosition(m_tSelectInteractDesc.vEnablePosition);
 		}
 
 
 
-		ImGui::Checkbox(u8"오프셋 셋팅", &m_bInteractUseOffsetSetting);
-		
-		
+		ImGui::Checkbox(u8"오프셋 셋팅", &m_tSelectInteractDesc.bOffset);
 
-		if (m_bInteractUseOffsetSetting == true)
+		if (m_tSelectInteractDesc.bOffset == true)
 		{
 			
-			if (ImGui::InputFloat4(u8"오프셋", &InteractInfo.vOffset.x))
+			if (ImGui::InputFloat4(u8"오프셋", &m_tSelectInteractDesc.vOffset.x))
 			{
-				pInteractObject->Set_Offset(m_bInteractUseOffsetSetting, InteractInfo.vOffset);
+				pInteractObject->Set_Offset(m_tSelectInteractDesc.bOffset, m_tSelectInteractDesc.vOffset);
 			}
 
 		}
+
+		ImGui::Checkbox(u8"그룹 오브젝트 추가", &m_bShowAddInteract);
+
+		if (m_bShowAddInteract == true)
+		{
+			if (ImGui::BeginListBox(u8"그룹에 추가할 상호작용오브젝트 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				_uint iObjectTagSize = (_uint)m_vecCreateInteractObject.size();
+
+				for (_uint i = 0; i < iObjectTagSize; ++i)
+				{
+					const _bool isSelected = (m_iAddInteractSelectIndex  == i);
+
+					if (ImGui::Selectable(m_vecCreateInteractObjectTag[i].c_str(), isSelected))
+					{
+						m_iAddInteractSelectIndex = i;
+
+						CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractDesc = *m_vecCreateInteractObject[m_iAddInteractSelectIndex]->Get_EnvironmentDesc();
+
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndListBox();
+			}
+		}
+
+		if (ImGui::Button(u8"선택한 상호작용 오브젝트 그룹추가"))
+		{
+			if (m_iSelectObjectIndex == m_iAddInteractSelectIndex)
+				return;
+
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Add_InteractGroupObject(m_vecCreateInteractObject[m_iAddInteractSelectIndex]);
+		}
 	}
+
+
 
 	if (ImGui::Button(u8"오너 부여"))
 	{
@@ -3808,16 +3846,15 @@ void CWindow_MapTool::Interact_RotationFunction()
 
 	CEnvironment_Interact* pInteractObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
 
-	CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractInfo = *pInteractObject->Get_EnvironmentDesc();
 
-	if (ImGui::InputFloat(u8"로테이션 각도", &InteractInfo.fRotationAngle))
+	if (ImGui::InputFloat(u8"로테이션 각도", &m_tSelectInteractDesc.fRotationAngle))
 	{
-		pInteractObject->Set_RotationAngle(InteractInfo.fRotationAngle);
+		pInteractObject->Set_RotationAngle(m_tSelectInteractDesc.fRotationAngle);
 	}
 
-	if (ImGui::InputFloat(u8"로테이션 스피드", &InteractInfo.fRotationSpeed))
+	if (ImGui::InputFloat(u8"로테이션 스피드", &m_tSelectInteractDesc.fRotationSpeed))
 	{
-		pInteractObject->Set_RotationSpeed(InteractInfo.fRotationSpeed);
+		pInteractObject->Set_RotationSpeed(m_tSelectInteractDesc.fRotationSpeed);
 	}
 	
 }
@@ -3829,13 +3866,9 @@ void CWindow_MapTool::Interact_ArrivalMissonFunction()
 
 	CEnvironment_Interact* pInteractObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
 	
-	CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractInfo = *pInteractObject->Get_EnvironmentDesc();
-
-
-	
-	if (ImGui::InputFloat4(u8"도착 지점", &InteractInfo.vArrivalPosition.x))
+	if (ImGui::InputFloat4(u8"도착 지점", &m_tSelectInteractDesc.vArrivalPosition.x))
 	{
-		pInteractObject->Set_ArrivalMission(m_bInteractUseArrivalMissionSetting, InteractInfo.vArrivalPosition);
+		pInteractObject->Set_ArrivalMission(m_tSelectInteractDesc.bArrival, m_tSelectInteractDesc.vArrivalPosition);
 	}
 	
 }
@@ -8289,16 +8322,16 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_eInteractState = InteractDesc.eInteractState;
 					m_vInteractRootMoveRate = InteractDesc.vPlayerRootMoveRate;
 					m_iShaderPassIndex = InteractDesc.iShaderPassIndex;
+					m_tSelectInteractDesc = InteractDesc;
+					//if(InteractDesc.iInteractGroupIndex != -1)
+					//	m_bInteractUseGroup = true;
+					//else
+					//	m_bInteractUseGroup = false;
 
-					if(InteractDesc.iInteractGroupIndex != -1)
-						m_bInteractUseGroup = true;
-					else
-						m_bInteractUseGroup = false;
 
-
-					m_bInteractUseRotate = InteractDesc.bRotate;
-					m_bInteractUseRootTranslate = InteractDesc.bRootTranslate;
-					m_bInteractUseArrivalMissionSetting = InteractDesc.bArrival;
+					//m_bInteractUseRotate = InteractDesc.bRotate;
+					//m_bInteractUseRootTranslate = InteractDesc.bRootTranslate;
+					//m_bInteractUseArrivalMissionSetting = InteractDesc.bArrival;
 
 					if (InteractDesc.bAnimModel == true)
 					{
@@ -8444,10 +8477,10 @@ void CWindow_MapTool::Interact_SelectTab()
 
 			ImGui::SameLine();
 
-			if (ImGui::Checkbox(u8"중력 사용", &m_bInteractUseGravity))
+			if (ImGui::Checkbox(u8"중력 사용", &m_tSelectInteractDesc.bUseGravity))
 			{
 				#ifdef _DEBUG
-					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_UseGravity(m_bInteractUseGravity);
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_UseGravity(m_tSelectInteractDesc.bUseGravity);
 				#endif // _DEBUG
 			}
 
@@ -8460,7 +8493,7 @@ void CWindow_MapTool::Interact_SelectTab()
 			}
 			
 			ImGui::SameLine();
-			ImGui::Checkbox(u8"레벨 체인지", &m_bInteractLevelChange);
+			ImGui::Checkbox(u8"레벨 체인지", &m_tSelectInteractDesc.bLevelChange);
 
 			if (m_bInteractLevelChange == true)
 			{
@@ -8476,24 +8509,23 @@ void CWindow_MapTool::Interact_SelectTab()
 			ImGui::NewLine();
 
 
-			if (ImGui::Checkbox(u8"로테이션 셋팅", &m_bInteractUseRotate))
+			if (ImGui::Checkbox(u8"로테이션 셋팅", &m_tSelectInteractDesc.bRotate))
 			{
-				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_Rotate(m_bInteractUseRotate);
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_Rotate(m_tSelectInteractDesc.bRotate);
 			}
 
 			ImGui::SameLine();
 
-			if (ImGui::Checkbox(u8"플레이어루트모션에영향받기", &m_bInteractUseRootTranslate))
+			if (ImGui::Checkbox(u8"플레이어루트모션에영향받기", &m_tSelectInteractDesc.bRootTranslate))
 			{
-				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_RootTranslate(m_bInteractUseRootTranslate);
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_RootTranslate(m_tSelectInteractDesc.bRootTranslate);
 			}
 
 			ImGui::SameLine();
 
-			ImGui::Checkbox(u8"도착미션 셋팅", &m_bInteractUseArrivalMissionSetting);
+			ImGui::Checkbox(u8"도착미션 셋팅", &m_tSelectInteractDesc.bArrival);
 
 			
-
 			if (m_bInteractUseGroup == true)
 			{
 				Interact_GroupFunction();
@@ -8504,17 +8536,21 @@ void CWindow_MapTool::Interact_SelectTab()
 				Interact_ColliderFunction();
 			}
 
-			if (m_bInteractUseRotate == true)
+			if (m_tSelectInteractDesc.bRotate == true)
 			{
 				Interact_RotationFunction();
 			}
 
-			if (m_bInteractUseArrivalMissionSetting == true)
+			if (m_tSelectInteractDesc.bArrival == true)
 			{
 				Interact_ArrivalMissonFunction();
 			}
 
 			
+			if (ImGui::Button(u8"네비게이션 컴주기"))
+			{
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_Navigation(m_pNavigation);
+			}
 
 
 			

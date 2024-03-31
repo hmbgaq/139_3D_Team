@@ -60,9 +60,9 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	{
 		if (FAILED(Find_InteractGroupObject()))
 			return E_FAIL;
-
-		
 	}
+
+	//if(m_tEnvironmentDesc.)
 
 	return S_OK;
 }
@@ -141,6 +141,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	if (m_tEnvironmentDesc.bRootTranslate == true)
 	{
 		Move_For_PlayerRootMotion();
+		
 	}
 
 	if (m_tEnvironmentDesc.bOwner == false)
@@ -151,6 +152,8 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 			m_bEnable = true;
 	}
 
+
+	
 
 }
 
@@ -364,17 +367,13 @@ void CEnvironment_Interact::Interact()
 
 					case CEnvironment_Interact::INTERACT_WAGONPUSH:
 					{
-						if (true == m_pTransformCom->Calc_FrontCheck(m_pPlayer->Get_Position()) && m_pPlayer->Get_CurrentAnimIndex() != (_int)CPlayer::Player_State::Player_InteractionPush_Rock_Idle)
+						_int iCurrentAnimIndex = m_pPlayer->Get_CurrentAnimIndex();
+
+						if (iCurrentAnimIndex != (_int)CPlayer::Player_State::Player_InteractionPush_Rock_Idle)
 						{
-							if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							if (iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Run_F || iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Walk_F)
 								m_pPlayer->SetState_InteractionPush_Rock_Idle();
 						}
-						else if(m_pPlayer->Get_CurrentAnimIndex() != (_int)CPlayer::Player_State::Player_InteractionPull_Rock_Idle)
-						{
-							if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-								m_pPlayer->SetState_InteractionPull_Rock_Idle();
-						}
-
 						break;
 					}
 
@@ -585,15 +584,12 @@ void CEnvironment_Interact::Interact()
 
 					case CEnvironment_Interact::INTERACT_WAGONPUSH:
 					{
-						if (true == m_pTransformCom->Calc_FrontCheck(m_pPlayer->Get_Position()))
+						_int iCurrentAnimIndex = m_pPlayer->Get_CurrentAnimIndex();
+
+						if (iCurrentAnimIndex != (_int)CPlayer::Player_State::Player_InteractionPush_Rock_Idle)
 						{
-							if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+							if (iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Run_F || iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Walk_F)
 								m_pPlayer->SetState_InteractionPush_Rock_Idle();
-						}
-						else
-						{
-							if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-								m_pPlayer->SetState_InteractionPull_Rock_Idle();
 						}
 
 					}
@@ -756,18 +752,17 @@ void CEnvironment_Interact::Interact()
 
 void CEnvironment_Interact::Move_For_PlayerRootMotion()
 {
-	if(m_pPlayer == nullptr && m_bInteract == false)
+	if(m_pPlayer == nullptr || m_bInteract == false)
 		return;
 
-	_float4 vMyPostion = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_float4 vPlayerRootMotion = m_pPlayer->Get_AddRootMotion();
-	vPlayerRootMotion.w = 1.f;
+	m_bArrival = ArrivalCheck();
 
-
-
-	_vector vCalcPosition = XMLoadFloat4(&vMyPostion) + XMLoadFloat4(&vPlayerRootMotion);
-	vCalcPosition.m128_f32[3] = 1.f;
-	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCalcPosition);
+	if (m_bArrival == false)
+	{
+		_float3 vPlayerRootMotion = m_pPlayer->Get_AddRootMotion();
+		m_pTransformCom->Add_RootBone_ForTarget(vPlayerRootMotion, m_pNavigationCom, m_pPlayer->Get_Transform());
+	}
+	
 }
 
 void CEnvironment_Interact::Move_For_Offset()
@@ -780,6 +775,8 @@ void CEnvironment_Interact::Move_For_Offset()
 	_vector vCalcPosition = XMLoadFloat4(&vOwnerPosition) + XMLoadFloat4(&m_tEnvironmentDesc.vOffset);
 
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCalcPosition);
+
+
 }
 
 HRESULT CEnvironment_Interact::Find_InteractGroupObject()
@@ -823,6 +820,9 @@ HRESULT CEnvironment_Interact::Find_InteractGroupObject()
 
 _bool CEnvironment_Interact::ArrivalCheck()
 {
+	if(m_tEnvironmentDesc.bArrival == false)
+		return true;
+
 	_vector		vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 	_vector		vDir = m_tEnvironmentDesc.vEnablePosition - vPosition;
 
@@ -1623,6 +1623,20 @@ HRESULT CEnvironment_Interact::Ready_Components()
 		FAILED_CHECK(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	
+
+	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
+	{
+		/* For.Com_Model */
+		if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Navigation"),
+			TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom))))
+			return E_FAIL;
+
+		
+	}
+
+
+	
+
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, m_tEnvironmentDesc.strModelTag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))

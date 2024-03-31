@@ -334,12 +334,11 @@ private: //!For.Interact //! 상호작용
 	_bool							m_bInteractUseGravity = false;
 	_bool							m_bInteractUseSpline = false;
 	_bool							m_bInteractUseGroup = false;
-	_bool							m_bInteractUseRotate = false;
-	_bool							m_bInteractUseRootTranslate = false;
-	_bool							m_bInteractUseArrivalMissionSetting = false;
-	_bool							m_bInteractUseOffsetSetting = false;
+	_bool							m_bShowAddInteract = false;
+	_int							m_iAddInteractSelectIndex = 0;
 
 	_bool							m_bInteractColliderSetting = false;
+	CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC m_tSelectInteractDesc = {};
 
 	_float4							m_vArrivalPosition = {};
 	_float4							m_vEnablePosition = {};

@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CShader;
 class CModel;
 class CCollider;
+class CNavigation;
 END
 
 BEGIN(Client)
@@ -184,10 +185,12 @@ public: //! For ToolTest
 	void								Set_Offset(_bool bOffset, _float4 vOffset) { m_tEnvironmentDesc.bOffset = bOffset; m_tEnvironmentDesc.vOffset = vOffset; }
 	void								Set_ArrivalMission(_bool bArrivalMission, _float4 vArrivalPosition) { m_tEnvironmentDesc.bArrival = bArrivalMission; m_tEnvironmentDesc.vArrivalPosition = vArrivalPosition;} //! 
 	void								Set_EnablePosition(_float4 vEnablePosition) { m_tEnvironmentDesc.vEnablePosition= vEnablePosition; } //! 
+	void								Set_Navigation(CNavigation* pNavigation) { m_pNavigationCom = pNavigation;}
 
 	vector<CEnvironment_Interact*>&		Get_InteractGroupVector() { return m_vecInteractGroup;}
 	vector<string>&						Get_InteractGroupTag() { return m_vecInteractGroupTag;}
 	CEnvironment_Interact*				Get_InteractOwner() { return m_pOwnerInteract; }
+
 
 public: //! For RollerCoster Wagon && Spline
 	void								Start_SplineEvent() { m_bSpline = true; }
@@ -217,6 +220,7 @@ private:
 	CShader*							m_pShaderCom = { nullptr };	
 	CModel*								m_pModelCom = { nullptr };
 	CCollider*							m_pColliderCom = { nullptr };
+	CNavigation*						m_pNavigationCom = { nullptr };
 
 	_int								m_iCurrentLevelIndex = -1;
 
@@ -254,13 +258,17 @@ private:
 
 	_int								m_iCalcCount = 0;
 	_bool								m_bArrival = false;
+	
 
 
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;
 	vector<string>						m_vecInteractGroupTag; //! 툴 또는 디버깅용
 	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
+
+
 private:
 	CPlayer*						    m_pPlayer = { nullptr };
+
 
 private:
 	HRESULT						Ready_Components();
