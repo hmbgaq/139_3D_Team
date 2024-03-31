@@ -38,10 +38,9 @@ private: /* Map*/
 private: /* Shader */
 	HRESULT Ready_Shader();
 
-
 private:
 	_int			TempLightNumber = 0;
-	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap_MapData.json";
+	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap.json";
 
 public:
 	static CLevel_SnowMountainBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -323,6 +323,7 @@
     <ClInclude Include="..\Public\Body_Infected_A.h" />
     <ClInclude Include="..\Public\Body_Infected_B.h" />
     <ClInclude Include="..\Public\Body_Infected_C.h" />
+    <ClInclude Include="..\Public\Body_Infected_D.h" />
     <ClInclude Include="..\Public\Body_Mother.h" />
     <ClInclude Include="..\Public\Body_MotherMouth.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
@@ -353,6 +354,7 @@
     <ClInclude Include="..\Public\Infected_A.h" />
     <ClInclude Include="..\Public\Infected_B.h" />
     <ClInclude Include="..\Public\Infected_C.h" />
+    <ClInclude Include="..\Public\Infected_D.h" />
     <ClInclude Include="..\Public\Infected_DeathHeavy_F_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_DeathLight_B_01_NEW.h" />
     <ClInclude Include="..\Public\Infected_DeathLight_F_01_NEW.h" />
@@ -439,6 +441,7 @@
     <ClInclude Include="..\Public\Infected_SpawnJumpDown_01.h" />
     <ClInclude Include="..\Public\Infected_SpawnJumpOut_01.h" />
     <ClInclude Include="..\Public\Infected_SpawnJumpOut_03.h" />
+    <ClInclude Include="..\Public\Infected_Sprint_F_01.h" />
     <ClInclude Include="..\Public\Infected_Sprint_F_Melee_02.h" />
     <ClInclude Include="..\Public\Infected_Sprint_F_Melee_03.h" />
     <ClInclude Include="..\Public\Infected_State.h" />
@@ -455,6 +458,7 @@
     <ClInclude Include="..\Public\Infected_State_Stun.h" />
     <ClInclude Include="..\Public\Infected_State_Walk.h" />
     <ClInclude Include="..\Public\Infected_Stun_Loop_NEW.h" />
+    <ClInclude Include="..\Public\Infected_Taunt_01.h" />
     <ClInclude Include="..\Public\Infected_Walk_B.h" />
     <ClInclude Include="..\Public\Infected_Walk_F.h" />
     <ClInclude Include="..\Public\Infected_Walk_FL.h" />
@@ -1250,6 +1254,7 @@
     <ClInclude Include="..\Public\Weapon_Infected_C.h" />
     <ClInclude Include="..\Public\Son_Weapon.h" />
     <ClInclude Include="..\Public\Son_Weapon_Head.h" />
+    <ClInclude Include="..\Public\Weapon_Infected_D.h" />
     <ClInclude Include="..\Public\Weapon_Tank.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -1419,6 +1424,7 @@
     <ClCompile Include="..\Private\Body_Infected_A.cpp" />
     <ClCompile Include="..\Private\Body_Infected_B.cpp" />
     <ClCompile Include="..\Private\Body_Infected_C.cpp" />
+    <ClCompile Include="..\Private\Body_Infected_D.cpp" />
     <ClCompile Include="..\Private\Body_Mother.cpp" />
     <ClCompile Include="..\Private\Body_MotherMouth.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
@@ -1446,6 +1452,7 @@
     <ClCompile Include="..\Private\Infected_A.cpp" />
     <ClCompile Include="..\Private\Infected_B.cpp" />
     <ClCompile Include="..\Private\Infected_C.cpp" />
+    <ClCompile Include="..\Private\Infected_D.cpp" />
     <ClCompile Include="..\Private\Infected_DeathHeavy_F_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_DeathLight_B_01_NEW.cpp" />
     <ClCompile Include="..\Private\Infected_DeathLight_F_01_NEW.cpp" />
@@ -1532,6 +1539,7 @@
     <ClCompile Include="..\Private\Infected_SpawnJumpDown_01.cpp" />
     <ClCompile Include="..\Private\Infected_SpawnJumpOut_01.cpp" />
     <ClCompile Include="..\Private\Infected_SpawnJumpOut_03.cpp" />
+    <ClCompile Include="..\Private\Infected_Sprint_F_01.cpp" />
     <ClCompile Include="..\Private\Infected_Sprint_F_Melee_02.cpp" />
     <ClCompile Include="..\Private\Infected_Sprint_F_Melee_03.cpp" />
     <ClCompile Include="..\Private\Infected_State.cpp" />
@@ -1548,6 +1556,7 @@
     <ClCompile Include="..\Private\Infected_State_Stun.cpp" />
     <ClCompile Include="..\Private\Infected_State_Walk.cpp" />
     <ClCompile Include="..\Private\Infected_Stun_Loop_NEW.cpp" />
+    <ClCompile Include="..\Private\Infected_Taunt_01.cpp" />
     <ClCompile Include="..\Private\Infected_Walk_B.cpp" />
     <ClCompile Include="..\Private\Infected_Walk_F.cpp" />
     <ClCompile Include="..\Private\Infected_Walk_FL.cpp" />
@@ -2211,6 +2220,7 @@
     <ClCompile Include="..\Private\Window_ShaderTool.cpp" />
     <ClCompile Include="..\Private\Window_UITool.cpp" />
     <ClCompile Include="..\Private\Actor.cpp" />
+    <ClCompile Include="..\Public\Weapon_Infected_D.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CUI_HUD.cpp" />
     <ClCompile Include="stdafx.cpp">

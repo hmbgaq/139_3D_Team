@@ -27,6 +27,7 @@
 #include "Infected_Run_FL45.h"
 #include "Infected_Run_FR.h"
 #include "Infected_Run_FR45.h"
+#include "Infected_Sprint_F_01.h"
 
 #include "Infected_Melee_RD_01.h"
 #include "Infected_Melee_RM_01.h"
@@ -123,7 +124,6 @@ CState<CInfected>* CInfected_State::Dodge_State(CInfected* pActor, _float fTimeD
 {
 	if (pActor->Is_Animation_End())
 	{
-
 		return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 	}
 
@@ -172,9 +172,12 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 	{
 		if (false == m_bFlags[0] )
 		{
-			//CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
-			//pBody->Collider_Off(); // 바디 콜라이더 off 
-			CData_Manager::GetInstance()->Add_CurEXP(15); // 플레이어 15 경험치 얻음 
+			if (ECast(LEVEL::LEVEL_INTRO_BOSS) != m_pGameInstance->Get_NextLevel())
+			{
+				// 플레이어 15 경험치 얻음 - A, B, C 해당
+				// D는 무조건 Release Summoning임. 다른곳에서 안나타나므로 
+				CData_Manager::GetInstance()->Add_CurEXP(15); 
+			}
 			m_bFlags[0] = true;
 			pActor->Set_Dead(true);
 		}	
@@ -182,6 +185,22 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 		return nullptr;
 	}
 
+	return nullptr;
+}
+
+CState<CInfected>* CInfected_State::Release_Summoning(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	/* Death = 경험치 줌. <> Release Summoning = 경험치 안줌 */
+	if (pActor->Is_Animation_End())
+	{
+		if (false == m_bFlags[0])
+		{
+			CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
+			pBody->Collider_Off(); // 바디 콜라이더 off 
+			m_bFlags[0] = true;
+			pActor->Set_Dead(true);
+		}
+	}
 	return nullptr;
 }
 
@@ -208,15 +227,14 @@ CState<CInfected>* CInfected_State::Electrocute_State(CInfected* pActor, _float 
 /* 중앙제어 */
 CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	_float WalkDistance = pActor->Get_Info().fWalk_Distance;	 // 10.f
-	_float AttackDistance = pActor->Get_Info().fAttack_Distance; // 3.5f
+	_float WalkDistance = pActor->Get_Info().fWalk_Distance;	 // 10.f // 2.f 
+	_float AttackDistance = pActor->Get_Info().fAttack_Distance; // 3.5f // 2.f
 
 	CState<CInfected>* pState = { nullptr };
 
-	pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
-
-	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());	
+	// 그외일때 
+	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());	// 현재 플레이어와의 거리 계산 
+	cout << fDist << endl;
 
 	// 0 ~ Attack ~ Walk  
 	if (fDist > WalkDistance)
@@ -270,6 +288,7 @@ CState<CInfected>* CInfected_State::Walk(CInfected* pActor, _float fTimeDelta, _
 
 CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	pActor->Set_MonsterAttackState(false);
 	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());
 
 	CInfected::INFECTED_TYPE Type = pActor->Get_Info().Get_Type();
@@ -279,13 +298,12 @@ CState<CInfected>* CInfected_State::Run(CInfected* pActor, _float fTimeDelta, _u
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_A:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case Client::CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
-
-			pActor->Set_MonsterAttackState(false);
 			return new CInfected_Run_F();
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_PROTEUS:
 		break;
 	case Client::CInfected::INFECTED_TYPE::INFECTED_WASTER:
+			return new CInfected_Sprint_F_01();
 		break;
 	}
 
