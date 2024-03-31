@@ -19,10 +19,10 @@
 
 CWindow_UITool::CWindow_UITool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
-	, m_pUI_Manager(CUI_Manager::GetInstance())
+	, m_pUIManager(CUI_Manager::GetInstance())
 	//, m_tSelectedKeyframe(CUI::UIKEYFRAME()) // &멤버변수는 생성자에서 초기화 시켜줘야함
 {
-	Safe_AddRef(m_pUI_Manager);
+	Safe_AddRef(m_pUIManager);
 }
 
 HRESULT CWindow_UITool::Initialize()
@@ -35,11 +35,11 @@ HRESULT CWindow_UITool::Initialize()
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));		// Option
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Menu"))));			// Menu
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Menu"))));			// Menu
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Blood"))));			// Blood
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/DeathScreen"))));	// DeathScreen
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));		// PlayerHUD
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));		// WorldMap
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));		// WorldMap
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Crosshairs"))));	// Crosshairs
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/EnemyHUD"))));		// EnemyHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Misc"))));			// Misc
@@ -1028,6 +1028,21 @@ void CWindow_UITool::Setting_Child()
 		if (ImGui::InputInt("NoiseNum", &m_iNoiseNum))
 		{
 			m_pCurrSelectUI->Set_NoiseNum(m_iNoiseNum);
+		}
+
+		if (m_pCurrSelectUI != nullptr)
+		{
+			if (m_pCurrSelectUI->Get_UIDesc().strCloneTag == "Prototype_GameObject_UI_MoveEffect")
+			{
+				ImGui::InputFloat(u8"LeftSize", m_pCurrSelectUI->Get_LeftSize());
+
+				ImGui::InputFloat(u8"BottomSize", m_pCurrSelectUI->Get_BottomSize());
+
+				ImGui::InputFloat(u8"Speed", m_pCurrSelectUI->Get_ChangeValue());
+
+				ImGui::InputFloat(u8"OriginPoint", m_pCurrSelectUI->Get_OriginPoint());
+
+			}
 		}
 
 		/* 디퓨즈 색상혼합 모드_Mesh */
@@ -4048,50 +4063,74 @@ void CWindow_UITool::UI_Preset()
 	/* Test 프리셋 */
 	if (ImGui::Button("Interface"))
 	{
-		m_pUI_Manager->Ready_Interface(LEVEL_STATIC);
+		m_pUIManager->Ready_Interface(LEVEL_STATIC);
 	}
 	if (ImGui::Button("Crosshair"))
 	{
-		m_pUI_Manager->Ready_Crosshair(LEVEL_STATIC);
+		m_pUIManager->Ready_Crosshair(LEVEL_STATIC);
 	}
 	if (ImGui::Button("Loading_Intro"))
 	{
-		m_pUI_Manager->Ready_Loading_Intro(LEVEL_STATIC);
+		m_pUIManager->Ready_Loading_Intro(LEVEL_STATIC);
 	}
 	if (ImGui::Button("BossHUD_Bar"))
 	{
-		m_pUI_Manager->Ready_BossHUD_Bar(LEVEL_STATIC);
+		m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC);
 	}
 	if (ImGui::Button("EnemyHUD_Shard"))
 	{
-		m_pUI_Manager->Ready_EnemyHUD_Shard(LEVEL_STATIC);
+		m_pUIManager->Ready_EnemyHUD_Shard(LEVEL_STATIC);
 	}
 	if (ImGui::Button("DiedScreen"))
 	{
-		m_pUI_Manager->Ready_DiedScreen(LEVEL_STATIC);
+		m_pUIManager->Ready_DiedScreen(LEVEL_STATIC);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("TestPlayDied"))
 	{
-		m_pUI_Manager->Active_DiedScreen();
+		m_pUIManager->Active_DiedScreen();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("TestNotPlayDied"))
 	{
-		m_pUI_Manager->NonActive_DiedScreen();
+		m_pUIManager->NonActive_DiedScreen();
 	}
 	if (ImGui::Button("Option"))
 	{
-		m_pUI_Manager->Ready_Option(LEVEL_STATIC);
+		m_pUIManager->Ready_Option(LEVEL_STATIC);
 	}
 	if (ImGui::Button("TestPlayOption"))
 	{
-		m_pUI_Manager->Active_Option();
+		m_pUIManager->Active_Option();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("TestNotPlayOption"))
 	{
-		m_pUI_Manager->NonActive_Option();
+		m_pUIManager->NonActive_Option();
+	}
+
+	if (ImGui::Button("MainMenu"))
+	{
+		m_pUIManager->Ready_MainMenu(LEVEL_STATIC);
+	}
+	if (ImGui::Button("MainListPlay"))
+	{
+		m_pUIManager->Active_MainMenu();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("MainListNonPlay"))
+	{
+		m_pUIManager->NonActive_MainList();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("MainLogoPlay"))
+	{
+		m_pUIManager->Active_MainLogo();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("LevelListPlay"))
+	{
+		m_pUIManager->Active_LevelList();
 	}
 }
 
@@ -4166,9 +4205,9 @@ void CWindow_UITool::Free()
 		m_vecTexture.clear();
 	}
 
-	if (m_pUI_Manager)
+	if (m_pUIManager)
 	{
-		Safe_Release(m_pUI_Manager);
+		Safe_Release(m_pUIManager);
 	}
 	//if (!m_vecTimeline->empty())
 	//{

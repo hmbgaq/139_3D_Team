@@ -2,6 +2,7 @@
 #include "UI_MouseCursor.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "Data_Manager.h"
 
 CUI_MouseCursor::CUI_MouseCursor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -41,6 +42,9 @@ HRESULT CUI_MouseCursor::Initialize(void* pArg)
 
 	m_eType = UITYPE::CROSSHAIR;
 	m_bActive = true;
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), 0.35f);
+
+	m_tUIInfo.iRenderGroup = 11;
 
 	return S_OK;
 }
@@ -52,40 +56,50 @@ void CUI_MouseCursor::Priority_Tick(_float fTimeDelta)
 
 void CUI_MouseCursor::Tick(_float fTimeDelta)
 {
-	if (m_bActive)
+	__super::Tick(fTimeDelta);
+
+	//if (m_pGameInstance->Key_Down(DIK_V))
+	//	m_pData_Manager->Set_GameState(GAME_STATE::GAMEPLAY);
+	//if (m_pGameInstance->Key_Down(DIK_B))
+	//	m_pData_Manager->Set_GameState(GAME_STATE::OPTION);
+
+	if (m_bActive == true)
 	{
-
-		// Test : Play / Option
-		if (m_pGameInstance->Key_Down(DIK_X))
+		if (m_pData_Manager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		{
-			if (m_eCurMouse == PLAYGAME_CURSOR)
-			{
-				m_eCurMouse = OPTION_CURSOR;
-			}
-			else
-			{
-				m_eCurMouse = PLAYGAME_CURSOR;
-			}
+			m_bGamePlayMouse = true;
+		}
+		else if (m_pData_Manager->Get_GameState() == GAME_STATE::MAINMENU ||
+			m_pData_Manager->Get_GameState() == GAME_STATE::OPTION ||
+			m_pData_Manager->Get_GameState() == GAME_STATE::SKILLWINDOW ||
+			m_pData_Manager->Get_GameState() == GAME_STATE::UI)
+		{
+			m_bGamePlayMouse = false;
 		}
 
-		if (m_eCurMouse == PLAYGAME_CURSOR)
+		if (m_bGamePlayMouse == true)
 		{
-			m_pTransformCom->Set_Scaling(70.f, 70.f, 1.f);
+			/* 이 좌표는 화면 우측 맨 위에 고정되는 좌표. */
+			//m_fPositionX = _float(g_iWinSizeX * 0.5f);
+			//m_fPositionY = _float(g_iWinSizeY * 0.5f);
+			m_fPositionX = 0.0f;
+			m_fPositionY = 0.0f;
+
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+				XMVectorSet(m_fPositionX, m_fPositionY, 0.1f, 1.f));
+			m_pTransformCom->Set_Scaling(4.f, 4.f, 0.1f);
 		}
-		if (m_eCurMouse == OPTION_CURSOR)
+		else
 		{
-			m_pTransformCom->Set_Scaling(5.f, 5.f, 1.f);
+			GetCursorPos(&m_ptMouse);
+			ScreenToClient(g_hWnd, &m_ptMouse);  // 클라이언트 내에 마우스 포인터 가져오기 
+
+			m_fPositionX = _float(m_ptMouse.x + m_ptOffset.x);
+			m_fPositionY = _float(m_ptMouse.y + m_ptOffset.y);
+			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
+				XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -(m_fPositionY - g_iWinSizeY * 0.5f), 0.1, 1.f));
+			m_pTransformCom->Set_Scaling(40.f, 40.f, 0.1f);
 		}
-
-		GetCursorPos(&m_ptMouse);
-		ScreenToClient(g_hWnd, &m_ptMouse);  // 클라이언트 내에 마우스 포인터 가져오기 
-
-		m_fPositionX = _float(m_ptMouse.x + m_ptOffset.x);
-		m_fPositionY = _float(m_ptMouse.y + m_ptOffset.y);
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-			XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -(m_fPositionY - g_iWinSizeY * 0.5f), 0.f, 1.f));
-
-		__super::Tick(fTimeDelta);
 	}
 }
 
@@ -142,14 +156,24 @@ HRESULT CUI_MouseCursor::Ready_Components()
 
 	//! For.Com_Texture 인게임 커서
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_aim_dot"),
-		TEXT("Com_Texture_GamePlay_Cursor"), reinterpret_cast<CComponent**>(&m_pTextureCom[PLAYGAME_CURSOR]))))
+		TEXT("Com_Texture_GamePlay_Cursor"), reinterpret_cast<CComponent**>(&m_pTextureCom[PLAYGAME_CROSSHAIR]))))
 		return E_FAIL;
 
 	//! For.Com_Texture 옵션 커서
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_cursor"),
-		TEXT("Com_Texture_Option_Cursor"), reinterpret_cast<CComponent**>(&m_pTextureCom[OPTION_CURSOR]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Keyboard_Black_Mouse_Middle"),
+		TEXT("Com_Texture_Cursor"), reinterpret_cast<CComponent**>(&m_pTextureCom[CURSOR]))))
 		return E_FAIL;
 
+	//! For.Com_Texture 옵션 클릭 커서
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Keyboard_Black_Mouse_Left"),
+		TEXT("Com_Texture_Left_ClickCursor"), reinterpret_cast<CComponent**>(&m_pTextureCom[CURSOR_LEFTCLICK]))))
+		return E_FAIL;
+
+	//! For.Com_Texture 옵션 클릭 커서
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Keyboard_Black_Mouse_Right"),
+		TEXT("Com_Texture_Right_ClickCursor"), reinterpret_cast<CComponent**>(&m_pTextureCom[CURSOR_RIGHTCLICK]))))
+		return E_FAIL;
+	
 	return S_OK;
 }
 
@@ -165,22 +189,29 @@ HRESULT CUI_MouseCursor::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	switch (m_eCurMouse)
+	if (m_bGamePlayMouse == true)
 	{
-	case CUI_MouseCursor::PLAYGAME_CURSOR:
-	{
-		if (FAILED(m_pTextureCom[PLAYGAME_CURSOR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+		if (FAILED(m_pTextureCom[PLAYGAME_CROSSHAIR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 			return E_FAIL;
-		break;
 	}
-	case CUI_MouseCursor::OPTION_CURSOR:
+	else
 	{
-		if (FAILED(m_pTextureCom[OPTION_CURSOR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+		if (FAILED(m_pTextureCom[CURSOR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 			return E_FAIL;
-		break;
-	}
-	default:
-		break;
+
+		if (m_bMouseDown_LB == true ||
+			m_bMousePressing_LB == true)
+		{
+			if (FAILED(m_pTextureCom[CURSOR_LEFTCLICK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else if (m_bMouseDown_RB == true ||
+			m_bMousePressing_RB == true)
+		{
+			if (FAILED(m_pTextureCom[CURSOR_RIGHTCLICK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+
 	}
 
 	return S_OK;

@@ -4,6 +4,7 @@
 #include "Json_Utility.h"
 
 #include "Data_Manager.h"
+#include "UI_Manager.h"
 //#include <mfapi.h>
 //#include <mfidl.h>
 //#include <mfreadwrite.h>
@@ -65,12 +66,28 @@ void CUI_Sprite::Tick(_float fTimeDelta)
 		m_fFrameChangeTime -= 5.f;
 	if(m_pGameInstance->Key_Down(DIK_M))
 		m_fFrameChangeTime += 5.f;
-	if (m_pGameInstance->Key_Down(DIK_H))
+	if (m_pGameInstance->Key_Down(DIK_R))
 		Start_Setting();
 
 	if (m_Time + m_fFrameChangeTime < GetTickCount64())
 	{
 		++m_iCurrentFrame;
+
+		if (m_bMainStart_Finish == false && m_bSkip == false)
+		{
+			if (m_pGameInstance->Key_Down(DIK_SPACE))
+			{
+				m_iCurrentFrame = 565;
+				m_bSkip = true;
+			}
+		}
+
+
+		if (m_bMainStart_Finish == false && m_iCurrentFrame == 565)
+		{
+			m_pUIManager->Active_MainList();
+			m_pUIManager->Active_MainLogo();
+		}
 
 		// MainStart Finish -> MainLoop Change
 		if (m_iCurrentFrame >= m_iMainStart_MaxFrame && m_bMainStart_Finish == false)
@@ -131,26 +148,30 @@ void CUI_Sprite::UI_Exit(_float fTimeDelta)
 
 void CUI_Sprite::Start_Setting()
 {
-	m_pTransformCom->Set_Scaling(g_iWinSizeX, g_iWinSizeY, 1.f); // Window Size
-	m_pTransformCom->Set_Position(XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f)); // Center Position
+	//m_pTransformCom->Set_Scaling(g_iWinSizeX, g_iWinSizeY, 0.1f); // Window Size
+	//m_pTransformCom->Set_Position(XMVectorSet(0.0f, 0.0f, 0.5f, 1.0f)); // Center Position
 
 	m_bMainStart_Finish = false; // Start -> Go
 	m_bMainLoop_Finish = true;	 // Loop -> Wait
+	m_bSkip = false;			 // Skip
 
 	m_iShaderNum = 0;			 // Defualt
 
 	m_iMainStart_MaxFrame = 729; // StartMax
 	m_iMainLoop_MaxFrame = 341;	 // LoopMax
 
+	// 20으로 여태 속도 잘 맞춰서 쓰고있었는데, 왜 인지 모르겠지만 갑자기 속도가 늦음 (갑자기 20으로 잘됨)
 	m_fFrameChangeTime = 20.f;	 // FrameSpeed
+	m_iCurrentFrame = 0.f;		 // Frame
 }
 
 HRESULT CUI_Sprite::Ready_Components()
 {
 	_uint iLevel = 0;
-	if (m_bTool == true)
+
+	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
 		iLevel = (_uint)LEVEL_TOOL;
-	else
+	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_LOGO)
 		iLevel = (_uint)LEVEL_LOGO;
 
 	//! For.Com_Texture // MainStart (LogoLevel)

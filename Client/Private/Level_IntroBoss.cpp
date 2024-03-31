@@ -608,23 +608,7 @@ HRESULT CLevel_IntroBoss::Ready_Layer_UI_Monster(const wstring& strLayerTag, voi
 
 HRESULT CLevel_IntroBoss::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
-    // Ready Interface
-    FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
-    // Ready Crosshair
-    FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Crosshair(LEVEL_STATIC));
 
-    //// =>Left_Interface
-    //Ready_LeftInterface(strLayerTag, pArg);
-    //// =>Right_Interface
-    //Ready_RightInterface(strLayerTag, pArg);
-    //// =>Quest_Box
-    //Ready_QuestBox(strLayerTag, pArg);
-    //// =>Tutorial_Box
-    //Ready_TutorialBox(strLayerTag, pArg);
-    //// =>LevelUp
-    //Ready_LevelUp(strLayerTag, pArg);
-    //// =>Reward_Item
-    //Ready_Reward_Item(strLayerTag, pArg);
     return S_OK;
 }
 

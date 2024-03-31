@@ -3592,6 +3592,12 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack">
       <UniqueIdentifier>{6c5d24df-1ce3-4e13-b2fa-0da2920798aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect">
+      <UniqueIdentifier>{54375d57-5543-47e2-826c-f6fded4774a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect\00. MoveEffect">
+      <UniqueIdentifier>{ae8bc895-8152-47b0-bce5-1815257b4484}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7125,6 +7131,9 @@
     <ClInclude Include="..\Public\BanditHeavy_Charge_Attack_Full.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MoveEffect.h">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10104,6 +10113,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BanditHeavy_Charge_Attack_Full.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MoveEffect.cpp">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

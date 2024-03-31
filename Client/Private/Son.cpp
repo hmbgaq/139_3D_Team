@@ -74,7 +74,7 @@ HRESULT CSon::Initialize(void* pArg)
 	//m_fCurHP = m_fMaxHP;
 	m_pMother = CData_Manager::GetInstance()->Get_Mother();
 	// Ready BossHUDBar
-	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	//FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 	
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	CData_Manager::GetInstance()->Set_Son(this);
