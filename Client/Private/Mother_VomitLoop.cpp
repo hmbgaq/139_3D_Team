@@ -12,9 +12,9 @@ CState<CMother>* CMother_VomitLoop::Update(CMother* pActor, _float fTimeDelta)
 {
 	//일정 시간이 지나가면 End로 전환 
 	m_fTimeDelta += fTimeDelta;
-	if (m_fTimeDelta >= 5)
+	if (m_fTimeDelta >= 7.f)
 	{
-		m_fTimeDelta = 0.0f;
+		//m_fTimeDelta = 0.0f;
 		return new CMother_VomitEnd;
 	}
 

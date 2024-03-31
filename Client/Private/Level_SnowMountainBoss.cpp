@@ -54,7 +54,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	FAILED_CHECK(Ready_Shader());
+	//FAILED_CHECK(Ready_Shader());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 

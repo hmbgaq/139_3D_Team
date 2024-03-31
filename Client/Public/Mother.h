@@ -6,6 +6,7 @@
 
 BEGIN(Client)
 
+
 class CMother final : public CMonster_Character
 {
 private:
@@ -43,11 +44,21 @@ private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
 
 public:
-	//vector<class CUI_Weakness*> m_pWeakneesUIs;
+	vector<CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
 	_bool m_bPhase = true;
+	_bool m_bfirstCheck = true;
+	_bool m_bSonRespawn = false;
+	_bool m_bStun = true;
+	_bool m_bStunCheck1 = true;
+	_bool m_bStunCheck2 = true;
+	//motherweakness
+	_bool m_bWeakness1 = false;
+	_bool m_bWeakness2 = false;
 
 	_uint m_iSonDead = 0;
+	_uint m_iLoopCount = 0;
+	_uint m_iShootingCount = 0;
 	_float m_fTimeDelta = 0.f;
 public:
 	/* 원형객체를 생성한다. */

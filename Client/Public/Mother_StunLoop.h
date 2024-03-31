@@ -11,6 +11,8 @@ public:
 	virtual void Release(CMother* pActor) override;
 
 public:
+	_float m_fPreHP = 0.f;
+public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::Parasiter_Stun_Loop;
 
 };
