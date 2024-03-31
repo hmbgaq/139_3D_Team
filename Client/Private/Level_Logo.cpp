@@ -31,6 +31,8 @@ HRESULT CLevel_Logo::Initialize()
 	m_pUIManager->NonActive_MainList();
 	m_pUIManager->NonActive_LevelList();
 	m_pUIManager->NonActive_MainLogo();
+	m_pDataManager->Set_GameState(GAME_STATE::UI);
+	ShowCursor(false);
 
 	return S_OK;
 }
@@ -40,23 +42,16 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		_int iCheckPoint = 0;
-		iCheckPoint = MessageBox(g_hWnd, L"확인 선택 시 스테이지, 취소 선택 시 맵 툴이 실행됩니다.", L"실행 조건 확인", MB_OKCANCEL);
+		iCheckPoint = MessageBox(g_hWnd, L"확인 선택 시 Intro(테스트맵), 취소 선택 시 되돌아가기.", L"Intro(테스트) 맵으로", MB_OKCANCEL);
 	
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY)), );
-			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN)), );
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAINBOSS)), );
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
-	
-			/* Test 이거 맵 터짐 아무 쓸모 없는거 같은데 ㅋㅋ 쓰는 사람 있니? */
-			/* 나 쓴다. 난안터짐 */
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO)),);
+			m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{
-			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL)), );
+
 		}
 	}
 
@@ -82,6 +77,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 			break;
 		case Client::LEVEL_TOOL:
 			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL)), );
+			ShowCursor(true);
 			break;
 		case Client::LEVEL_LOADING:
 			break;
@@ -118,6 +114,9 @@ HRESULT CLevel_Logo::Ready_Static_UI()
 		//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_SkillWindow(LEVEL_STATIC));
 		// Ready OptionWindow
 		FAILED_CHECK(m_pUIManager->Ready_Option(LEVEL_STATIC));
+		// Ready HitUI
+		FAILED_CHECK(m_pUIManager->Ready_HitUI(LEVEL_STATIC));
+		m_pUIManager->NonActive_HitUI();
 
 		m_pUIManager->NonActive_UI();
 		m_pUIManager->Active_MouseCursor();
@@ -145,12 +144,16 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const wstring & strLayerTag)
 
 void CLevel_Logo::Set_Filter()
 {
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_PARRYING, (_uint)COLLISION_LAYER::MONSTER_ATTACK);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER_SHIELD);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::WEAKNESS);
+
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER, (_uint)COLLISION_LAYER::MONSTER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::MONSTER, (_uint)COLLISION_LAYER::MONSTER);
-	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::PLAYER_PARRYING, (_uint)COLLISION_LAYER::MONSTER_ATTACK);
+
+
 
 	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
 }

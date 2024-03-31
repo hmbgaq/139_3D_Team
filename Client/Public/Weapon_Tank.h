@@ -4,6 +4,9 @@
 #include "Weapon.h"
 
 BEGIN(Engine)
+
+class CModel;
+
 END
 
 BEGIN(Client)
@@ -25,7 +28,20 @@ public:
 	virtual	HRESULT Render_Shadow() override { return S_OK; };
 
 public:
-	void			Sniping(_float4 vDir, _float3 fPos);
+	virtual void	OnCollisionEnter(CCollider* other)	override;
+	virtual void	OnCollisionStay(CCollider* other)	override;
+	virtual void	OnCollisionExit(CCollider* other)	override;
+
+public:
+	void	Set_Animation(
+		_uint _iNextAnimation
+		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
+		, _uint iTargetKeyFrameIndex = 0);
+	_bool	Is_Animation_End();
+	CModel::ANIM_STATE Get_AnimState();
+
+public:
+	virtual void	Set_Enable(_bool _Enable) override;
 
 private:
 	HRESULT			Load_Json();
@@ -34,14 +50,6 @@ private:
 protected:
 	virtual HRESULT Ready_Components();
 	HRESULT			Bind_ShaderResources();
-
-private: /* For. Shader */
-	_float			m_fCamFar = {};
-	_float4			m_vCamPos = {};
-
-	_float4			m_vRimColor = {};
-	_float3			m_vBloomPower = {};
-	_float			m_fRimPower = {};
 
 public:
 	static CWeapon_Tank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

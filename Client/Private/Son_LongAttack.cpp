@@ -6,6 +6,9 @@ void CSon_LongAttack::Initialize(CSon* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->m_bLookAt = false;
+	pActor->Get_Weapon(L"Weapon_head")->Set_Enable_Collisions(true);
+
 }
 
 CState<CSon>* CSon_LongAttack::Update(CSon* pActor, _float fTimeDelta)
@@ -17,7 +20,7 @@ CState<CSon>* CSon_LongAttack::Update(CSon* pActor, _float fTimeDelta)
 
 	return nullptr;
 }
-
+	
 void CSon_LongAttack::Release(CSon* pActor)
 {
 	__super::Release(pActor);

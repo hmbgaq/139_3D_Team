@@ -15,6 +15,7 @@ CState<CTank>* CTank_State_Hit::Update(CTank* pActor, _float fTimeDelta)
 void CTank_State_Hit::Release(CTank* pActor)
 {
 	__super::Release(pActor);
+
 }
 
 CState<CTank>* CTank_State_Hit::Update_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)

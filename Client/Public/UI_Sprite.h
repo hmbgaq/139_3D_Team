@@ -44,6 +44,7 @@ private: // Frame
 private: // Sprite Info
 	_int		m_iMainStart_MaxFrame = 0;
 	_bool		m_bMainStart_Finish = false;
+	_bool		m_bSkip = false;
 	_int		m_iMainLoop_MaxFrame = 0;
 	_bool		m_bMainLoop_Finish = false;
 

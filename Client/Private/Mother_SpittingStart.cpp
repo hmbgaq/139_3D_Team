@@ -1,7 +1,6 @@
 #include "Mother_SpittingStart.h"
 #include "Mother_SpittingLoop.h"
-#include "MotherMouth.h"
-#include "MotherMouth_SpittingMineStart.h"
+
 
 void CMother_SpittingStart::Initialize(CMother* pActor)
 {
@@ -23,6 +22,5 @@ CState<CMother>* CMother_SpittingStart::Update(CMother* pActor, _float fTimeDelt
 void CMother_SpittingStart::Release(CMother* pActor)
 {
 	__super::Release(pActor);
-	pActor->m_pMonster->Set_Enable(true);
-	pActor->m_pMonster->Get_Actor()->Set_State(new CMotherMouth_SpittingMineStart);
+
 }

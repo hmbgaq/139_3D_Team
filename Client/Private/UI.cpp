@@ -117,7 +117,8 @@ void CUI::Tick(_float fTimeDelta)
 	//Check_Change_WorldUI(fTimeDelta);
 
 	/* Check_MouseInput */
-	Check_MouseInput(fTimeDelta);
+	if(m_pData_Manager->Get_GameState() == GAME_STATE::UI)
+		Check_MouseInput(fTimeDelta);
 
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 	{
@@ -217,8 +218,8 @@ void CUI::Picking_UI()
 	if (PtInRect(&m_rcUI, pt))   //  PtInRect(렉트주소, 마우스 포인트)
 	{
 		m_bPick = true;
-		if (m_pGameInstance->Mouse_Down(DIM_LB)) // 다른곳에서 입력이 겹칠거같은데 공통으로 쓸 글로벌 변수로 마우스 클릭을 하나 두는게 좋을수도
-			m_bSelect = true;
+		//if (m_pGameInstance->Mouse_Down(DIM_LB)) // 다른곳에서 입력이 겹칠거같은데 공통으로 쓸 글로벌 변수로 마우스 클릭을 하나 두는게 좋을수도
+		//	m_bSelect = true;
 		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 			m_bSelectPressing = true;
 	}
@@ -407,9 +408,8 @@ void CUI::Check_Change_WorldUI(_float fTimeDelta)
 void CUI::Check_MouseInput(_float fTimeDelta)
 {
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
-		m_bMouseDown_LB = true;
-	else
-		m_bMouseDown_LB = false;
+		g_UIMouseDownLB = true;
+
 	if (m_pGameInstance->Mouse_Down(DIM_RB))
 		m_bMouseDown_RB = true;
 	else
@@ -435,7 +435,10 @@ void CUI::Check_MouseInput(_float fTimeDelta)
 
 
 	if (m_pGameInstance->Mouse_Up(DIM_LB))
+	{
 		m_bMouseUp_LB = true;
+		g_UIMouseDownLB = false;
+	}
 	else
 		m_bMouseUp_LB = false;
 	if (m_pGameInstance->Mouse_Up(DIM_RB))

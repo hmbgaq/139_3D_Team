@@ -84,7 +84,7 @@ public: /* For.Renderer */
 	HRESULT		Add_DebugRender(class CComponent* pDebugCom);
 	CRenderer*	Get_Renderer(); /* Åø¿ë */
 	HRESULT		Off_Shader();
-	void			Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture);
+	void		Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture);
 
 #ifdef _DEBUG
 	void		Set_RenderDebugCom(_bool _bRenderDebug);
@@ -201,6 +201,13 @@ public: /* For.Random_Manager*/
 	const _bool&			Random_Coin(_float fProbality);
 	int64_t					GenerateUniqueID();
 
+public: /* For.Sound_Manager*/
+	void Play_Sound(const wstring& strGroupKey, const wstring& strSoundKey, CHANNELID eID, float fVolume);
+	void Play_BGM(const wstring& strGroupKey, const wstring& strSoundKey, float fVolume);
+	void Stop_Sound(CHANNELID eID);
+	void Stop_All();
+	void Set_ChannelVolume(CHANNELID eID, float fVolume);
+
 public: /* Common */
 	void		String_To_WString(string _string, wstring & _wstring);
 	void		WString_To_String(wstring _wstring, string & _string);
@@ -267,6 +274,7 @@ private:
 	class CEvent_Manager*			m_pEvent_Manager = { nullptr };
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CRandom_Manager*			m_pRandom_Manager = { nullptr };
+	class CSound_Manager*			m_pSoundManager = { nullptr };
 
 
 private:

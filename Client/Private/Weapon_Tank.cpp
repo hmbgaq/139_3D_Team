@@ -2,6 +2,10 @@
 #include "Bone.h"
 #include "GameInstance.h"
 #include "Weapon_Tank.h"
+#include "Model.h"
+#include "AttackObject.h"
+#include "Tank.h"
+#include "Data_Manager.h"
 
 CWeapon_Tank::CWeapon_Tank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -28,6 +32,9 @@ HRESULT CWeapon_Tank::Initialize(void* pArg)
 
 	FAILED_CHECK(Option_Setting());
 
+	m_fMaxHp = 50.f;
+	m_fHp = m_fMaxHp;
+
 	return S_OK;
 }
 
@@ -39,14 +46,54 @@ HRESULT CWeapon_Tank::Ready_Components()
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Tank_Weapon"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For. Com_Shader */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+
+	///* For.Com_Collider */
+	m_iColliderSize = 1;
+	m_pColliders.resize(m_iColliderSize);
+	
+	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_SHIELD);
+	BoundingDesc.fRadius = { 1.2f };
+	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc)))
+		return E_FAIL;
+
 
 	return S_OK;
 }
 
+void CWeapon_Tank::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
+{
+	m_pModelCom->Set_Animation(_iNextAnimation, _eAnimState, false, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
+}
+
+_bool CWeapon_Tank::Is_Animation_End()
+{
+	return m_pModelCom->Is_AnimEnd();
+}
+
+CModel::ANIM_STATE CWeapon_Tank::Get_AnimState()
+{
+	return m_pModelCom->Get_AnimState();
+}
+
+void CWeapon_Tank::Set_Enable(_bool _Enable)
+{
+	__super::Set_Enable(_Enable);
+	m_bIsFollow = _Enable;
+	if (true == _Enable) 
+	{
+		Refill_Hp();
+	}
+}
+
+
 HRESULT CWeapon_Tank::Load_Json()
 {
-	string path = "../Bin/DataFiles/Data_Monster/Tank/Weapon.json";
+	string path = "../Bin/DataFiles/Data_Weapon/Monster/Tank/Shield.json";
 	json In_Json;
 	CJson_Utility::Load_Json(path.c_str(), In_Json);
 	m_pTransformCom->Load_FromJson(In_Json);
@@ -69,34 +116,34 @@ void CWeapon_Tank::Priority_Tick(_float fTimeDelta)
 void CWeapon_Tank::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (CModel::ANIM_STATE::ANIM_STATE_NORMAL == Get_AnimState() 
+		&& true == Is_Animation_End()
+		&& 0 != m_pModelCom->Get_CurrentKeyFrames()
+		)
+	{
+		Set_Enable(false);
+	}
 }
 
 void CWeapon_Tank::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+	{
+		m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
+	}
+
 }
 
 HRESULT CWeapon_Tank::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	//if (m_iRenderPass == ECast(MONSTER_SHADER::SNIPER_WEAPON))
-	//{
-	//	/* Camera */
-	//	m_fCamFar = m_pGameInstance->Get_CamFar();
-	//	m_vCamPos = m_pGameInstance->Get_CamPosition();
-	//	m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float));
-	//	m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
+	//_float fCamFar = m_pGameInstance->Get_CamFar();
+	//FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
-	//	/* RimLight */
-	//	m_vRimColor = { 0.0f, 0.0f, 0.f, 1.f };
-	//	m_vBloomPower = _float3(0.7f, 0.7f, 0.7f);
-	//	m_fRimPower = 5.f;
-
-	//	m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
-	//	m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
-	//	m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
-	//}
 
 	return S_OK;
 }
@@ -125,12 +172,44 @@ HRESULT CWeapon_Tank::Render()
 	return S_OK;
 }
 
-void CWeapon_Tank::Sniping(_float4 vTargetPos, _float3 StartfPos)
+void CWeapon_Tank::OnCollisionEnter(CCollider* other)
 {
-	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_MONSTER_BULLET, L"Prototype_GameObject_Bullet_Tank");
+	CAttackObject* pTarget_AttackObject = Get_Target_AttackObject(other);
 
-	pBullet->Set_Position(StartfPos);
-	pBullet->Get_Transform()->Look_At(vTargetPos);
+	if (pTarget_AttackObject != nullptr)
+	{
+		_float fDamage = pTarget_AttackObject->Get_Damage();
+		if (true == pTarget_AttackObject->Is_Melee()) 
+		{
+			fDamage *= 2.0f;
+		}
+
+		Get_Damaged(fDamage);
+		CData_Manager::GetInstance()->Apply_Shake_And_Blur(Power::Heavy);
+
+		if (0 >= m_fHp) 
+		{
+			CCharacter* pOwner = Get_PartOwner();
+			CTank* pTank = dynamic_cast<CTank*>(pOwner);
+			if (pTank)
+			{
+				pTank->Set_ShieldBroken();
+				pTank->Hitted_Front(Power::Heavy);
+			}
+			
+			Set_Enable(false);
+		}
+		
+		other->Set_Enable(false);
+	}
+}
+
+void CWeapon_Tank::OnCollisionStay(CCollider* other)
+{
+}
+
+void CWeapon_Tank::OnCollisionExit(CCollider* other)
+{
 }
 
 #pragma region Create, Clone, Pool, Free

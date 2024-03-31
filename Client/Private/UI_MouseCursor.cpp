@@ -42,7 +42,9 @@ HRESULT CUI_MouseCursor::Initialize(void* pArg)
 
 	m_eType = UITYPE::CROSSHAIR;
 	m_bActive = true;
-	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), 30.f);
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), 0.35f);
+
+	m_tUIInfo.iRenderGroup = 11;
 
 	return S_OK;
 }
@@ -56,12 +58,12 @@ void CUI_MouseCursor::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_V))
-		m_pData_Manager->Set_GameState(GAME_STATE::GAMEPLAY);
-	if (m_pGameInstance->Key_Down(DIK_B))
-		m_pData_Manager->Set_GameState(GAME_STATE::OPTION);
+	//if (m_pGameInstance->Key_Down(DIK_V))
+	//	m_pData_Manager->Set_GameState(GAME_STATE::GAMEPLAY);
+	//if (m_pGameInstance->Key_Down(DIK_B))
+	//	m_pData_Manager->Set_GameState(GAME_STATE::OPTION);
 
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (m_pData_Manager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		{
@@ -69,18 +71,23 @@ void CUI_MouseCursor::Tick(_float fTimeDelta)
 		}
 		else if (m_pData_Manager->Get_GameState() == GAME_STATE::MAINMENU ||
 			m_pData_Manager->Get_GameState() == GAME_STATE::OPTION ||
-			m_pData_Manager->Get_GameState() == GAME_STATE::SKILLWINDOW)
+			m_pData_Manager->Get_GameState() == GAME_STATE::SKILLWINDOW ||
+			m_pData_Manager->Get_GameState() == GAME_STATE::UI)
 		{
 			m_bGamePlayMouse = false;
 		}
 
 		if (m_bGamePlayMouse == true)
 		{
-			m_fPositionX = _float(g_iWinSizeX * 0.5f);
-			m_fPositionY = _float(g_iWinSizeY * 0.5f);
+			/* 이 좌표는 화면 우측 맨 위에 고정되는 좌표. */
+			//m_fPositionX = _float(g_iWinSizeX * 0.5f);
+			//m_fPositionY = _float(g_iWinSizeY * 0.5f);
+			m_fPositionX = 0.0f;
+			m_fPositionY = 0.0f;
+
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
 				XMVectorSet(m_fPositionX, m_fPositionY, 0.1f, 1.f));
-			m_pTransformCom->Set_Scaling(8.f, 8.f, 0.1f);
+			m_pTransformCom->Set_Scaling(4.f, 4.f, 0.1f);
 		}
 		else
 		{
@@ -90,8 +97,8 @@ void CUI_MouseCursor::Tick(_float fTimeDelta)
 			m_fPositionX = _float(m_ptMouse.x + m_ptOffset.x);
 			m_fPositionY = _float(m_ptMouse.y + m_ptOffset.y);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-				XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -(m_fPositionY - g_iWinSizeY * 0.5f), m_tUIInfo.fPositionZ, 1.f));
-			m_pTransformCom->Set_Scaling(50.f, 50.f, 0.1f);
+				XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -(m_fPositionY - g_iWinSizeY * 0.5f), 0.1, 1.f));
+			m_pTransformCom->Set_Scaling(40.f, 40.f, 0.1f);
 		}
 	}
 }

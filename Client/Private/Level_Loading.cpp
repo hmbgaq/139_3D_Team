@@ -11,12 +11,15 @@
 #include "Level_SnowMountainBoss.h"
 #include "Level_Tool.h"
 #include "UI_Manager.h"
+#include "Data_Manager.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 	, m_pUIManager(CUI_Manager::GetInstance())
+	, m_pDataManager(CData_Manager::GetInstance())
 {
 	Safe_AddRef(m_pUIManager);
+	Safe_AddRef(m_pDataManager);
 }
 
 HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
@@ -43,29 +46,38 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 			break;
 		case Client::LEVEL_LOGO:
 			//m_pUIManager->Ready_Loading_MainMenu(LEVEL_LOGO);
+			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
 			break;
 		case Client::LEVEL_INTRO:
-			m_pUIManager->Ready_Loading_Intro(LEVEL_INTRO);		 // Loading UI 持失
-			m_pUIManager->Active_Loading_Intro(true);			 // UI ON
+			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
 			break;
 		case Client::LEVEL_INTRO_BOSS:
 			m_pUIManager->Ready_Loading_IntroBoss(LEVEL_INTRO_BOSS);	 // Loading UI 持失
 			m_pUIManager->Active_Loading_IntroBoss(true);			 // UI ON
+			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
 			break;
 		case Client::LEVEL_SNOWMOUNTAIN:
 			//m_pUIManager->Ready_Loading_SnowMountain(LEVEL_SNOWMOUNTAIN);
+			m_pUIManager->Ready_Loading_SnowMountain(LEVEL_INTRO_BOSS);	 // Loading UI 持失
+			m_pUIManager->Active_Loading_SnowMountain(true);			 // UI ON
+			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
 			break;
 		case Client::LEVEL_SNOWMOUNTAINBOSS:
+			m_pUIManager->Ready_Loading_SnowMountainBoss(LEVEL_INTRO_BOSS);	 // Loading UI 持失
+			m_pUIManager->Active_Loading_SnowMountainBoss(true);			 // UI ON
+			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
 			break;
 		case Client::LEVEL_LAVA:
 			break;
 		case Client::LEVEL_TOOL:
+			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
 			break;
 		case Client::LEVEL_LOADING:
 			break;
 		case Client::LEVEL_GAMEPLAY:
-			//m_pUIManager->Ready_Loading_Intro(LEVEL_INTRO);	 // Loading UI 持失
-			//m_pUIManager->Active_Loading_Intro(true);			 // UI ON
+			m_pUIManager->Ready_Loading_Intro(LEVEL_INTRO);		 // Loading UI 持失
+			m_pUIManager->Active_Loading_Intro(true);			 // UI ON
+			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
 			break;
 		case Client::LEVEL_END:
 			break;
@@ -93,30 +105,36 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			{
 			case LEVEL_LOGO:
 				pNewLevel = CLevel_Logo::Create(m_pDevice, m_pContext);
+				m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> GamePlay
 				break;
 			case LEVEL_INTRO:
 				pNewLevel = CLevel_Intro::Create(m_pDevice, m_pContext);
 				//m_pUIManager->Active_Loading_Intro(false);			 // UI OFF
+				m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY); // KeyInput -> GamePlay
 				break;
 			case LEVEL_INTRO_BOSS:
 				pNewLevel = CLevel_IntroBoss::Create(m_pDevice, m_pContext);
-				m_pUIManager->Active_LeftHUD();
-				m_pUIManager->Active_RightHUD();
-				m_pUIManager->Active_RightHUD();
-				m_pUIManager->Active_Loading_IntroBoss(false);			 // UI ON
+				m_pUIManager->NonActive_Loading_IntroBoss();			 // UI OFF
+				m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY); // KeyInput -> GamePlay
 				break;
 			case LEVEL_SNOWMOUNTAIN:
 				pNewLevel = CLevel_SnowMountain::Create(m_pDevice, m_pContext);
+				m_pUIManager->NonActive_Loading_SnowMountain();			 // UI Off
+				m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY); // KeyInput -> GamePlay
 				break;
 			case LEVEL_SNOWMOUNTAINBOSS:
 				pNewLevel = CLevel_SnowMountainBoss::Create(m_pDevice, m_pContext);
+				m_pUIManager->NonActive_Loading_SnowMountainBoss();			 // UI Off
+				m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY); // KeyInput -> GamePlay
 				break;
 			case LEVEL_GAMEPLAY:
 				pNewLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
-				m_pUIManager->Active_Loading_Intro(false);			 // UI ON
+				m_pUIManager->NonActive_Loading_Intro();			 // UI Off
+				m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY); // KeyInput -> GamePlay
 				break;
 			case LEVEL_TOOL:
 				pNewLevel = CLevel_Tool::Create(m_pDevice, m_pContext);
+				m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY); // KeyInput -> GamePlay
 				break;
 			}
 
@@ -157,5 +175,7 @@ void CLevel_Loading::Free()
 	/* UIManager Delete */
 	if (m_pUIManager)
 		Safe_Release(m_pUIManager);
+	if (m_pDataManager)
+		Safe_Release(m_pDataManager);
 
 }

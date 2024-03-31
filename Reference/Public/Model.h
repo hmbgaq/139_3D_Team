@@ -102,6 +102,8 @@ public:
 	void					Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_Animation(_int iAnimIndex = -1);
 	void					Set_AnimState(CModel::ANIM_STATE _eAnimState);
+	CModel::ANIM_STATE		Get_AnimState() { return m_eAnimState; };
+
 
 	void					Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _float _fTransitionDuration = 0.2f, _uint iTargetKeyFrameIndex = 0);
 	void					Reset_UpperAnimation(_int iAnimIndex = -1);

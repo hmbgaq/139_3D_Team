@@ -66,12 +66,22 @@ void CUI_Sprite::Tick(_float fTimeDelta)
 		m_fFrameChangeTime -= 5.f;
 	if(m_pGameInstance->Key_Down(DIK_M))
 		m_fFrameChangeTime += 5.f;
-	if (m_pGameInstance->Key_Down(DIK_H))
+	if (m_pGameInstance->Key_Down(DIK_R))
 		Start_Setting();
 
 	if (m_Time + m_fFrameChangeTime < GetTickCount64())
 	{
 		++m_iCurrentFrame;
+
+		if (m_bMainStart_Finish == false && m_bSkip == false)
+		{
+			if (m_pGameInstance->Key_Down(DIK_SPACE))
+			{
+				m_iCurrentFrame = 565;
+				m_bSkip = true;
+			}
+		}
+
 
 		if (m_bMainStart_Finish == false && m_iCurrentFrame == 565)
 		{
@@ -143,15 +153,16 @@ void CUI_Sprite::Start_Setting()
 
 	m_bMainStart_Finish = false; // Start -> Go
 	m_bMainLoop_Finish = true;	 // Loop -> Wait
+	m_bSkip = false;			 // Skip
 
 	m_iShaderNum = 0;			 // Defualt
 
 	m_iMainStart_MaxFrame = 729; // StartMax
 	m_iMainLoop_MaxFrame = 341;	 // LoopMax
 
-	// 20으로 여태 속도 잘 맞춰서 쓰고있었는데, 왜 인지 모르겠지만 갑자기 속도가 늦음
-	//m_fFrameChangeTime = 20.f;	 // FrameSpeed
-	m_fFrameChangeTime = 0.f;	 // FrameSpeed
+	// 20으로 여태 속도 잘 맞춰서 쓰고있었는데, 왜 인지 모르겠지만 갑자기 속도가 늦음 (갑자기 20으로 잘됨)
+	m_fFrameChangeTime = 20.f;	 // FrameSpeed
+	m_iCurrentFrame = 0.f;		 // Frame
 }
 
 HRESULT CUI_Sprite::Ready_Components()

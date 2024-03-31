@@ -94,6 +94,16 @@ CEffect* CCharacter_Client::Create_Effect(const wstring& strPartTag)
 	return nullptr;
 }
 
+void CCharacter_Client::Reset_UpperAngle()
+{
+	if (nullptr == m_pDataManager) m_pDataManager = CData_Manager::GetInstance();
+	//_float fPitch = m_pDataManager->Get_MasterCamera()->Get_SpringCamera()->Get_Pitch();
+	m_pDataManager->Get_MasterCamera()->Get_SpringCamera()->Reset_Angle();
+
+	//m_pBody->Reset_UpperAngle(fPitch);
+	m_pBody->Reset_UpperAngle();
+}
+
 void CCharacter_Client::Apply_Shake_And_Blur(Power ePower)
 {
 	if (nullptr == m_pDataManager)
@@ -112,16 +122,18 @@ void CCharacter_Client::Apply_Shake_And_Blur(Power ePower)
 
 void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string strEffectName, CGameObject* pOwner)
 {
-	string strEffectFileName;
-	strEffectFileName = strEffectName != "" ? strEffectName : Get_CharcterDesc().EffectFileName;
-	strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Hit_Normal";
+	//string strEffectFileName;
+	//strEffectFileName = strEffectName != "" ? strEffectName : Get_CharcterDesc().EffectFileName;
+	//strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Hit_Normal";
 
 	if (nullptr == m_pEffectManager)
 	{
 		m_pEffectManager = EFFECT_MANAGER;
 	}
 
-	CEffect* pEffect = m_pEffectManager->Create_Effect(strEffectFileName + ".json", pOwner);
+	//CEffect* pEffect = m_pEffectManager->Create_Effect(strEffectFileName + ".json", pOwner);
+	CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", vPos, TRUE, m_pGameInstance->Get_Player()->Get_Position());
+
 	if (pEffect)
 		pEffect->Set_Position(vPos);
 

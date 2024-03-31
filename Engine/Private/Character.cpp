@@ -97,10 +97,10 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	for (auto& Pair : m_PartObjects)
 	{
 		if (nullptr != Pair.second)
-			Pair.second->Late_Tick(fTimeDelta);
+			Pair.second->Late_Tick(fTimeDelta);	
 	}
 
-	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+	Check_Frustum();
 
 	if (true == m_bIsInFrustum)
 	{		
@@ -112,13 +112,18 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 
 		if (0.0001f < fDiff)
 		{
-			_float3 vResult = vBodyMovePos;
-			vResult.x *= m_vRootMoveRate.x;
-			vResult.y *= m_vRootMoveRate.y;
-			vResult.z *= m_vRootMoveRate.z;
+			m_vAddRootPosition = vBodyMovePos;
 
+			//_float3 vResult = vBodyMovePos;
+			m_vAddRootPosition.x *= m_vRootMoveRate.x;
+			m_vAddRootPosition.y *= m_vRootMoveRate.y;
+			m_vAddRootPosition.z *= m_vRootMoveRate.z;
 			//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-			m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+			m_pTransformCom->Add_RootBone_Position(m_vAddRootPosition, fTimeDelta, m_pNavigationCom);
+		}
+		else
+		{
+			m_vAddRootPosition = {};
 		}
 		
 	}
@@ -447,10 +452,13 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	//_float3 vUp = { 0.f, 1.f, 0.f };
 	//Add_Force(XMLoadFloat3(&vUp), 1.0f);
 
+	if (false == m_bIsFixed || Power::Heavy == eHitPower)
+	{
+		m_pTransformCom->Look_At_Direction(vDir * -1);
+	}
+	
 
-	m_pTransformCom->Look_At_Direction(vDir * -1);
-
-	if (m_iHp <= 0)
+	if (m_fHp <= 0)
 	{
 		if (bIsMelee)
 		{
@@ -525,6 +533,15 @@ void CCharacter::Look_At_Target()
 
 	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
 	m_pTransformCom->Look_At_OnLand(vTargetPos);
+}
+
+void CCharacter::Look_At_TargetBoss()
+{
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+		return;
+
+	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
+	m_pTransformCom->Look_At_OnLandBoss(vTargetPos);
 }
 
 void CCharacter::Look_At_Target_Lerp(_float fTimeDelta)
@@ -720,10 +737,11 @@ void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE 
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
 }
 
-void CCharacter::Reset_UpperAngle()
-{
-	m_pBody->Reset_UpperAngle();
-}
+//void CCharacter::Reset_UpperAngle()
+//{
+//	m_pBody->Reset_UpperAngle();
+//	
+//}
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
 {
@@ -779,11 +797,19 @@ void CCharacter::Set_UseMouseMove(_bool _bIsUseMouseMove)
 	m_pBody->Set_UseMouseMove(_bIsUseMouseMove);
 }
 
+void CCharacter::Check_Frustum()
+{
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+}
 
+
+#ifdef _DEBUG
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {
 	return m_pBody->Picking(vPickedPos);
 }
+#endif 
+
 
 void CCharacter::Free()
 {

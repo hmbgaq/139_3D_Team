@@ -13,6 +13,8 @@ END
 BEGIN(Client)
 
 class CPlayer;
+class CMother;
+class CSon;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
@@ -34,6 +36,12 @@ public:
 	void Set_Player(CPlayer* _pPlayer);
 	CPlayer* Get_Player();
 	void Reset_Player(LEVEL eLEVEL);
+
+	void Set_Mother(CMother* _pMother);
+	CMother* Get_Mother();
+
+	void Set_Son(CSon* _pSon);
+	CSon* Get_Son();
 
 public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
@@ -83,7 +91,7 @@ public:
 	LEVEL	Get_SelectLevel() { return m_eSelectLevel; }
 
 private: /* _int */
-	_int	m_iCurLevel = 2;
+	_int	m_iCurLevel = 1;
 
 private: /* _bool */
 	_bool	m_bLevelUp = false;				// ·¹º§¾÷		On/Off
@@ -216,6 +224,8 @@ public: /* ========================== Player Info ========================== */
 private:
 	CMasterCamera* m_pMasterCamera = { nullptr };
 	CPlayer* m_pPlayer = { nullptr };
+	CMother* m_pMother = { nullptr };
+	CSon*	m_pSon = { nullptr };
 
 	CSky* m_pSky = { nullptr };
 	CNavigation* m_pNavigation = { nullptr };

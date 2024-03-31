@@ -26,6 +26,8 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 
+#include "Mother.h"
+
 CSon::CSon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
@@ -46,13 +48,18 @@ HRESULT CSon::Initialize_Prototype()
 
 HRESULT CSon::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else
+	{
+		FAILED_CHECK(__super::Initialize(pArg));
+	}
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -60,16 +67,17 @@ HRESULT CSon::Initialize(void* pArg)
 		m_pActor->Set_State(new CSon_Spawn);
 	}
 	//HP
-	m_iMaxHp = 150;
-	m_iHp = m_iMaxHp;
+	m_fMaxHp = 150;
+	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;
 	//m_fCurHP = m_fMaxHP;
-
+	m_pMother = CData_Manager::GetInstance()->Get_Mother();
 	// Ready BossHUDBar
 	//FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this));
-	Search_Target(200.f);
-
+	
+	m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	CData_Manager::GetInstance()->Set_Son(this);
 	return S_OK;
 }
 
@@ -83,26 +91,55 @@ void CSon::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 
-
-	if (m_pActor)
+	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
 	{
-		m_pActor->Update_State(fTimeDelta);
-	}
-	//cout << "introBossHP:" << m_iHp << endl;
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
+		Search_Target(200.f);
 
-	//cout << "Son : " << fAngle << endl;
-	if (m_bLookAt == true)
-	{
-	
-		if (0 <= fAngle && fAngle <= 90)
-			Look_At_Target_Lerp(fTimeDelta);
-		else if (-90 <= fAngle && fAngle < 0)
-			Look_At_Target_Lerp(fTimeDelta);
-	
-		/*m_bLookAt = false;*/
-	
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+		m_fTimeDelta += fTimeDelta;
+
+		if (m_fTimeDelta >= 1.f)
+		{
+			cout << "SonHP:" << m_fHp << endl;
+			m_fTimeDelta = 0.f;
+		}
+		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
+
+		//cout << "Son : " << fAngle << endl;
+	// 	if (m_bLookAt == true)
+	// 	{
+	// 	
+	// 		if (0 <= fAngle && fAngle <= 180)
+	// 			Look_At_Target_Lerp(fTimeDelta);
+	// 		else if (-180 <= fAngle && fAngle < 0)
+	// 			Look_At_Target_Lerp(fTimeDelta);
+	// 	
+	// 		/*m_bLookAt = false;*/
+	// 	
+	// 	}
+		if (m_bLookAt == true)
+		{
+
+			if (0 <= fAngle && fAngle <= 180)
+				Look_At_Target();
+			else if (-180 <= fAngle && fAngle < 0)
+				Look_At_Target();
+
+			/*m_bLookAt = false;*/
+
+		}
+		if (m_fHp <= 0.f)
+		{
+			m_fHp = m_fMaxHp;
+			++m_pMother->m_iSonDead;
+			//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
+			this->Set_Enable(false);
+		}
 	}
+	
 
 }
 
@@ -130,13 +167,17 @@ HRESULT CSon::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Son"), BodyDesc)))
 		return E_FAIL;
 
-	//CWeapon::WEAPON_DESC		WeaponDesc = {};
-	////FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Hand"), "RightHandIK", WeaponDesc, TEXT("Weapon_hand_R")));
-	//
-	//
-	//
-	//CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_hand_R"));
-	//m_pWeapon_Punch_R->Set_Enable(false);
+	CWeapon::WEAPON_DESC		WeaponDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_Weapon_Head"), "Bone020", WeaponDesc, TEXT("Weapon_head")));
+	
+	//! 가라 몸전용 콜라이더 
+	CWeapon::WEAPON_DESC		ColliderBodyDesc = {};
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Son_ColliderBody"), "Bone020", ColliderBodyDesc, TEXT("Body")));
+
+	
+	
+	CWeapon* m_pWeapon_Punch_R = Get_Weapon(TEXT("Weapon_head"));
+	m_pWeapon_Punch_R->Set_Enable(true);
 
 
 	return S_OK;

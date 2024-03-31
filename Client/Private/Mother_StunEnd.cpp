@@ -1,5 +1,5 @@
 #include "Mother_StunEnd.h"
-#include "Mother_VomitStart.h"
+#include "Mother_ShakeTreeStart.h"
 
 void CMother_StunEnd::Initialize(CMother* pActor)
 {
@@ -12,7 +12,7 @@ CState<CMother>* CMother_StunEnd::Update(CMother* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
 	{
-		return new CMother_VomitStart;
+		return new CMother_ShakeTreeStart;
 	}
 
 	return nullptr;

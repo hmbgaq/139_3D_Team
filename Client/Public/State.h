@@ -16,7 +16,7 @@ public:
 	virtual void Release(T* pActor) = 0;
 
 protected:
-	_bool	m_bFlags[30];
+	_bool	m_bFlags[30] = {false};
 
 };
 

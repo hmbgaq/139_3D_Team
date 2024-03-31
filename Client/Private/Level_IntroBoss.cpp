@@ -61,7 +61,7 @@ HRESULT CLevel_IntroBoss::Initialize()
     if (FAILED(Ready_UI()))
         return E_FAIL;
 
-   FAILED_CHECK(Ready_Shader());
+   //FAILED_CHECK(Ready_Shader());
 
     return S_OK;
 }

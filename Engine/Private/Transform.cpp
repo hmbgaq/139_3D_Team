@@ -395,6 +395,38 @@ void CTransform::Look_At_OnLand(_fvector vTargetPos)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Look_At_OnLandBoss(_fvector vTargetPos)
+{
+	_float3		vScale = Get_Scaled();
+
+	_vector		vPosition = Get_State(STATE_POSITION);
+	_vector		vLook = vTargetPos - vPosition;
+
+	
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector		vRight = XMVector3Normalize(XMVector3Cross(vUp, vLook)) * vScale.x;
+
+	vLook = XMVector3Normalize(XMVector3Cross(vRight, vUp)) * vScale.z;
+
+
+
+
+	//vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook)) * vScale.x;
+	//
+	//vLook = XMVector3Normalize(XMVector3Cross(vRight, XMVectorSet(0.f, 1.f, 0.f, 0.f))) * vScale.z;
+
+	//_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+
+	Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_fRadian + XMConvertToRadians(270)));
+
+
+}
+
 void CTransform::Look_At_Direction(_fvector _vLook)
 {
 	_float3		vScale = Get_Scaled();
@@ -470,7 +502,32 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDe
 
 	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
 
-	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	Move_On_Navigation(vResult, pNavigation);
+	//Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+}
+
+_bool CTransform::Calc_FrontCheck(const _float3& vTargetPos)
+{
+	_float3 vMyPos = Get_Pos();
+	_float3 vMyLook = Get_Look(); 
+
+	_float3 vTargetDir = vTargetPos - vMyPos;
+	
+	//! 내가 바라보는 방향 벡터와 타겟까지의 방향 벡터의 내적 계산
+	_float3 vTargetDirDot;
+	XMStoreFloat3(&vTargetDirDot, XMVector3Dot(XMLoadFloat3(&vMyLook), XMVector3Normalize(XMLoadFloat3(&vTargetDir))));
+	
+	//!타겟이 앞에 있는경우
+	//! 
+	if (vTargetDirDot.x >= 0)
+	{
+		return true;
+	}
+	//!타겟이 뒤에 있는 경우
+	else
+	{
+		return false;
+	}
 }
 
 

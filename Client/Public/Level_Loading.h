@@ -26,7 +26,8 @@ private:
 	class CLoader*	m_pLoader = { nullptr };
 
 	/* UI */
-	class CUI_Manager*	m_pUIManager = { nullptr };
+	class CUI_Manager*		m_pUIManager = { nullptr };
+	class CData_Manager*	m_pDataManager = { nullptr };
 
 public:
 	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

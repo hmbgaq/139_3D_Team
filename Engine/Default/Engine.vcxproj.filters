@@ -328,6 +328,15 @@
     <Filter Include="00.System\00.Device\mediaFoundation">
       <UniqueIdentifier>{693ec139-0774-4890-a296-59ea919a4c49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02.GameObjects\AttackObject">
+      <UniqueIdentifier>{334fd65c-0f34-409c-8fca-572b5002f1b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\94. Sound_Manaher">
+      <UniqueIdentifier>{0278425d-dd89-4c75-af7d-50f5c4594cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\94. Sound_Manaher\fmod">
+      <UniqueIdentifier>{24332950-05c7-4287-a508-d844ab020cf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -663,11 +672,35 @@
     <ClInclude Include="..\Public\VIBuffer_Grid.h">
       <Filter>01.Utility\03.Components\01.VIBuffer\Grid</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PartObject.h">
-      <Filter>01.Utility\02.GameObjects\Character\Part</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Media_Foundation.h">
       <Filter>00.System\00.Device\mediaFoundation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AttackObject.h">
+      <Filter>01.Utility\02.GameObjects\AttackObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>01.Utility\94. Sound_Manaher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LogicDeviceBasic.h">
+      <Filter>01.Utility\94. Sound_Manaher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\core\fmod.hpp">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\core\fmod_errors.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\core\fmod.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\studio\fmod_studio.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\studio\fmod_studio.hpp">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\3D_Personal\Engine\Fmod\studio\fmod_studio_common.h">
+      <Filter>01.Utility\94. Sound_Manaher\fmod</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -941,11 +974,14 @@
     <ClCompile Include="..\Private\VIBuffer_Grid.cpp">
       <Filter>01.Utility\03.Components\01.VIBuffer\Grid</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PartObject.cpp">
-      <Filter>01.Utility\02.GameObjects\Character\Part</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Media_Foundation.cpp">
       <Filter>00.System\00.Device\mediaFoundation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AttackObject.cpp">
+      <Filter>01.Utility\02.GameObjects\AttackObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>01.Utility\94. Sound_Manaher</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

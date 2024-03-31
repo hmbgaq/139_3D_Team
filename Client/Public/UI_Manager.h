@@ -61,6 +61,7 @@ public: /* Ready_Preset */
 	HRESULT Ready_Option(_uint iLevelIndex);
 	HRESULT Ready_MainMenu(_uint iLevelIndex);
 	HRESULT Ready_MouseCursor(_uint iLevelIndex);
+	HRESULT Ready_HitUI(_uint iLevelIndex);
 
 public:
 	/* PlayerHUD */
@@ -201,9 +202,15 @@ public:
 	HRESULT			Add_MouseCursor(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_MouseCursor();
 	void			NonActive_MouseCursor();
-	CUI*			m_pMouseCursor;
+	CUI*			m_pMouseCursor = nullptr;
 
-	CUI*			m_pMainLogo;
+	/* HitUI */
+	HRESULT			Add_HitUI(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_HitUI();
+	void			NonActive_HitUI();
+	CUI*			m_pHitUI = nullptr;
+
+	CUI*			m_pMainLogo = nullptr;
 	vector<CUI*>	m_vecMainMenu;
 	vector<CUI*>	m_vecMainList;
 	vector<CUI*>	m_vecLevelList;

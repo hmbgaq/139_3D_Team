@@ -145,7 +145,7 @@ void CUI_MainMenuList::Check_Picking(_float fTimeDelta)
 			}
 			else if (m_tUIInfo.strUIName == "INTRO")
 			{
-				m_pData_Manager->Set_SelectLevel(LEVEL_INTRO);
+				m_pData_Manager->Set_SelectLevel(LEVEL_GAMEPLAY);
 			}
 			else if (m_tUIInfo.strUIName == "INTROBOSS")
 			{

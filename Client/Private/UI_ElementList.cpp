@@ -104,8 +104,10 @@ void CUI_ElementList::UI_Exit(_float fTimeDelta)
 
 void CUI_ElementList::Check_Picking(_float fTimeDelta)
 {
+	if (m_bPick == false)
+		return;
 
-	if (m_bSelect || m_bSelectPressing)
+	if (g_UIMouseDownLB == true)
 	{
 		if (m_tUIInfo.strUIName == "HBAO")
 		{

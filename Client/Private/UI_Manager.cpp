@@ -146,6 +146,13 @@ HRESULT CUI_Manager::Ready_MouseCursor(_uint iLevelIndex)
 	return S_OK;
 }
 
+HRESULT CUI_Manager::Ready_HitUI(_uint iLevelIndex)
+{
+	Add_HitUI(iLevelIndex, TEXT("Layer_HitUI"));
+
+	return S_OK;
+}
+
 void CUI_Manager::Active_PlayerHUD()
 {
 	if (m_vecLeftHUD.empty())
@@ -1742,7 +1749,7 @@ HRESULT CUI_Manager::Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerT
 	string strFile;
 
 	if (strBossName == "") // MessageBox No Name
-		MessageBox(g_hWnd, L"HUD를 가질 보스 이름을 넣어주셔야 합니다.", L"보스이름 없음", MB_OK);
+		MessageBox(g_hWnd, L"HUD를 가질 보스의 이름을 넣어주셔야 합니다.", L"보스HUD UI 생성 실패", MB_OK);
 
 	if (strBossName == "VampireCommander")	// Stage1 Boss
 		strFile = "../Bin/DataFiles/Data_UI/BossHUD/BossHUD_VampireCommander.json";
@@ -2770,6 +2777,115 @@ void CUI_Manager::NonActive_MouseCursor()
 	m_pMouseCursor->Set_AnimPlay(false);	// UI Animation 재생
 	m_pMouseCursor->Set_CurrTime(0.f);		// UI Animation 시간 초기화
 	m_pMouseCursor->Set_Disappear(true);	// UI 사라짐 Off
+}
+
+HRESULT CUI_Manager::Add_HitUI(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/PlayerInterface/Blood.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_pHitUI = pUI_Object;
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_HitUI()
+{
+	if (m_pHitUI == nullptr)
+		return;
+
+	m_pHitUI->Set_Alpha(0.f);			// UI 알파값 초기화
+	m_pHitUI->Set_Active(true);		// UI 활성화
+	m_pHitUI->Set_AnimPlay(true);		// UI Animation 재생
+	m_pHitUI->Set_CurrTime(0.f);		// UI Animation 시간 초기화
+	m_pHitUI->Set_Disappear(false);	// UI 사라짐 Off
+}
+
+void CUI_Manager::NonActive_HitUI()
+{
+	if (m_pHitUI == nullptr)
+		return;
+
+	m_pHitUI->Set_Alpha(1.f);			// UI 알파값 초기화
+	m_pHitUI->Set_Active(false);		// UI 활성화
+	m_pHitUI->Set_AnimPlay(false);	// UI Animation 재생
+	m_pHitUI->Set_CurrTime(0.f);		// UI Animation 시간 초기화
+	m_pHitUI->Set_Disappear(true);	// UI 사라짐 Off
 }
 
 void CUI_Manager::Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info)

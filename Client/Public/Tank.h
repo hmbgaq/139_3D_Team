@@ -14,6 +14,19 @@ private:
 	virtual ~CTank() = default;
 
 public:
+	_bool Is_ShieldBroken() { return m_fShieldBrokenTime > 0.f; };
+	void Set_ShieldBroken();
+	void Update_ShieldBrokenTime(_float fTimeDelta)
+	{
+		_float fResult = m_fShieldBrokenTime - fTimeDelta;
+		m_fShieldBrokenTime = fResult > 0.f ? fResult : 0.f;
+	}
+	_bool Get_Shield_Enable() { return Get_Weapon(L"Weapon_Shield")->Get_Enable(); }
+	_bool Get_Shield_Follow() { return Get_Weapon(L"Weapon_Shield")->Get_Follow(); }
+
+
+
+public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Tick(_float fTimeDelta) override;
@@ -22,12 +35,27 @@ public:
 	virtual HRESULT Render() override;
 
 
+public:
+	virtual void Hitted_Left(Power ePower)	override;	
+	virtual void Hitted_Right(Power ePower) override;	
+	virtual void Hitted_Front(Power ePower) override;	
+	//virtual void Hitted_Knock(Power ePower) override;
+					
+	virtual void Hitted_Stun(Power ePower)	override;
+	virtual void Hitted_Finish() override;
+	virtual void Hitted_Dead(Power ePower)	override;	
+
+public:
+	void Create_GroundWave();
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 
 private:
 	CActor<CTank>* m_pActor = { nullptr };
+	//_bool m_bIsShieldBroken = { true };
+	_float m_fShieldBrokenTime = { 0.f };
 
 public:
 	static CTank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
