@@ -60,7 +60,7 @@ HRESULT CInfected::Initialize_Prototype()
 {
 	FAILED_CHECK(__super::Initialize_Prototype());
 
-	return S_OK;
+	return S_OK; 
 }
 
 HRESULT CInfected::Initialize(void* pArg)
