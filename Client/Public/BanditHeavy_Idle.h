@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CBandit_Heavy::Bandit_Heavy_State::BanditHeavy_Idle;
 
+private:
+	_float m_fDelay = { 0.f };
+
 };
 
 END

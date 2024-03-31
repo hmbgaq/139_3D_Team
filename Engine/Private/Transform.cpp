@@ -506,6 +506,30 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDe
 	//Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
 }
 
+_bool CTransform::Calc_FrontCheck(const _float3& vTargetPos)
+{
+	_float3 vMyPos = Get_Pos();
+	_float3 vMyLook = Get_Look(); 
+
+	_float3 vTargetDir = vTargetPos - vMyPos;
+	
+	//! 내가 바라보는 방향 벡터와 타겟까지의 방향 벡터의 내적 계산
+	_float3 vTargetDirDot;
+	XMStoreFloat3(&vTargetDirDot, XMVector3Dot(XMLoadFloat3(&vMyLook), XMVector3Normalize(XMLoadFloat3(&vTargetDir))));
+	
+	//!타겟이 앞에 있는경우
+	//! 
+	if (vTargetDirDot.x >= 0)
+	{
+		return true;
+	}
+	//!타겟이 뒤에 있는 경우
+	else
+	{
+		return false;
+	}
+}
+
 
 _float3 Calculate_SlidingVector(const _fvector& velocity, const _fvector& normal) {
 	// velocity: 물체의 현재 속도

@@ -47,6 +47,12 @@ public:
 public:
 	void RotatePlayer();
 	void Mouse_Fix();
+	void Reset_Angle() { 
+		//m_fAngle = 0.f; 
+		m_fPitch = 0.f;
+	};
+	_float Get_Pitch() { return m_fPitch; };
+
 public:
 	void Set_CameraOffset(_float3 _CameraOffset); /*{ m_CameraOffset = _CameraOffset; }*/
 	_float3 Get_CameraOffset() { return m_CameraOffset; }

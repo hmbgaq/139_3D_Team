@@ -54,7 +54,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_fDamage = 20.f;
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_SNOWMOUNTAINBOSS, LAYER_EFFECT, "Projectile_Range1_04.json", this);
-	m_pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Yellow_Blood_Test.json");
+	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Yellow_Blood_Test.json"); // (EffectOut : 당장 안쓰는 이펙트라고 해서 일단 빼뒀습니다. [성희])
 
 
 	return S_OK;
@@ -120,7 +120,7 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
-	m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기 (EffectOut : 당장 안쓰는 이펙트라고 해서 일단 빼뒀습니다. [성희])
 }
 
 void CSon_Projectile::OnCollisionStay(CCollider* other)

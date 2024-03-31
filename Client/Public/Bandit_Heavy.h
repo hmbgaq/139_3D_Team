@@ -21,6 +21,12 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	virtual void Hitted_Left(Power ePower)	override;
+	virtual void Hitted_Right(Power ePower) override;
+	virtual void Hitted_Front(Power ePower) override;
+	virtual void Hitted_Dead(Power ePower)	override;
+
 
 protected:
 	HRESULT Ready_Components();

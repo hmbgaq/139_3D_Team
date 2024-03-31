@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Body.h"
+#include "Body_Monster.h"
 
 BEGIN(Engine)
 END
 
 BEGIN(Client)
 
-class CBody_Infected abstract : public CBody
+class CBody_Infected abstract : public CBody_Monster
 {
 public:
 	enum class RENDER_STATE { ORIGIN, ATTACK, HITTED, NAKED, RENDER_STATE_END };

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Body.h"
+#include "Body_Monster.h"
 
 BEGIN(Engine)
 END
 
 BEGIN(Client)
 
-class CBody_Bandit_Heavy abstract : public CBody
+class CBody_Bandit_Heavy abstract : public CBody_Monster
 {
 
 protected:

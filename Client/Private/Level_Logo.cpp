@@ -4,48 +4,35 @@
 #include "BackGround.h"
 #include "Level_Loading.h"
 #include "UI_Manager.h"
+#include "Data_Manager.h"
 
 //#include <mfapi.h>
 //#include <mfreadwrite.h>
 
 CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
+	Safe_AddRef(m_pUIManager);
 }
 
 HRESULT CLevel_Logo::Initialize()
 {
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-
-	
-
-	//{
-
-	//	IMFSourceReader* pSourceReader = NULL;
-	//	IMFMediaType* pMediaType = NULL;
-
-	//	HRESULT hr = MFCreateSourceReaderFromURL(TEXT("C:\\Users\\hmbga\\OneDrive\\3D_Personal\\Client\\Bin\\Resources\\Video\\starcraft.mp4"), NULL, &pSourceReader);
-	//	
-	//	FAILED_CHECK(hr);
-
-	//	hr = pSourceReader->GetCurrentMediaType(0, &pMediaType);
-	//	FAILED_CHECK(hr);
-
-	//	// 비디오 텍스처 생성
-	//	ID3D11Texture2D* pVideoTexture = NULL;
-
-	//	D3D11_TEXTURE2D_DESC textureDesc;
-	//	textureDesc.Width = MF_MT_FRAME_SIZE.Data1;
-	//	textureDesc.Height = MF_MT_FRAME_SIZE.Data2;
-	//	textureDesc.MipLevels = 1;
-	//	textureDesc.ArraySize = 1;
-	//	textureDesc.Format = DXGI_FORMAT_NV12;
-
-	//	//pSourceReader->Release();
-	//}
+	//FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
 	Set_Filter();
 	
+	m_pDataManager = CData_Manager::GetInstance();
+
+	FAILED_CHECK(Ready_Static_UI());
+
+	FAILED_CHECK(m_pUIManager->Ready_MainMenu(LEVEL_LOGO));
+	m_pUIManager->Active_MainMenu();
+	m_pUIManager->NonActive_MainList();
+	m_pUIManager->NonActive_LevelList();
+	m_pUIManager->NonActive_MainLogo();
+	m_pDataManager->Set_GameState(GAME_STATE::UI);
+	ShowCursor(false);
 
 	return S_OK;
 }
@@ -55,30 +42,86 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		_int iCheckPoint = 0;
-		iCheckPoint = MessageBox(g_hWnd, L"확인 선택 시 스테이지, 취소 선택 시 맵 툴이 실행됩니다.", L"실행 조건 확인", MB_OKCANCEL);
-
+		iCheckPoint = MessageBox(g_hWnd, L"확인 선택 시 Intro(테스트맵), 취소 선택 시 되돌아가기.", L"Intro(테스트) 맵으로", MB_OKCANCEL);
+	
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY)), );
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN)),);
-			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAINBOSS)), );
-			
-			/* Test 이거 맵 터짐 아무 쓸모 없는거 같은데 ㅋㅋ 쓰는 사람 있니? */
-			/* 나 쓴다. 난안터짐 */
-			//FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO)),);
+			m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{
-			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL)),);
+
 		}
+	}
+
+	switch (m_pDataManager->Get_SelectLevel())
+	{
+		case Client::LEVEL_STATIC:
+			break;
+		case Client::LEVEL_LOGO:
+			break;
+		case Client::LEVEL_INTRO:
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO)), );
+			break;
+		case Client::LEVEL_INTRO_BOSS:
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS)),);
+			break;
+		case Client::LEVEL_SNOWMOUNTAIN:
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN)), );
+			break;
+		case Client::LEVEL_SNOWMOUNTAINBOSS:
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAINBOSS)), );
+			break;
+		case Client::LEVEL_LAVA:
+			break;
+		case Client::LEVEL_TOOL:
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL)), );
+			ShowCursor(true);
+			break;
+		case Client::LEVEL_LOADING:
+			break;
+		case Client::LEVEL_GAMEPLAY:
+			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY)), );
+			break;
+		case Client::LEVEL_END:
+			break;
+		default:
+			break;
 	}
 }
 
 HRESULT CLevel_Logo::Render()
 {
-	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("메인화면입니다."));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Logo::Ready_Static_UI()
+{
+	if (m_bUI_ReadyOK == false)
+	{
+		// Ready Interface
+		FAILED_CHECK(m_pUIManager->Ready_Interface(LEVEL_STATIC));
+		// Ready Crosshair
+		FAILED_CHECK(m_pUIManager->Ready_Crosshair(LEVEL_STATIC));
+		// Ready DiedScreen
+		FAILED_CHECK(m_pUIManager->Ready_DiedScreen(LEVEL_STATIC));
+		// Ready MouseCursor
+		FAILED_CHECK(m_pUIManager->Ready_MouseCursor(LEVEL_STATIC));
+		// Ready SkillWindow
+		//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_SkillWindow(LEVEL_STATIC));
+		// Ready OptionWindow
+		FAILED_CHECK(m_pUIManager->Ready_Option(LEVEL_STATIC));
+		// Ready HitUI
+		FAILED_CHECK(m_pUIManager->Ready_HitUI(LEVEL_STATIC));
+		m_pUIManager->NonActive_HitUI();
+
+		m_pUIManager->NonActive_UI();
+		m_pUIManager->Active_MouseCursor();
+		m_bUI_ReadyOK = true;
+	}
 
 	return S_OK;
 }
@@ -130,4 +173,8 @@ CLevel_Logo * CLevel_Logo::Create(ID3D11Device * pDevice, ID3D11DeviceContext * 
 void CLevel_Logo::Free()
 {
 	__super::Free();
+
+	/* UIManager Delete */
+	if (m_pUIManager)
+		Safe_Release(m_pUIManager);
 }

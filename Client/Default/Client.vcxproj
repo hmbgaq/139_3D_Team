@@ -235,6 +235,8 @@
     <ClInclude Include="..\Public\Assassin_Walk_FR45.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Bandit.h" />
+    <ClInclude Include="..\Public\BanditHeavy_Charge_Attack_Full.h" />
+    <ClInclude Include="..\Public\BanditHeavy_Charge_Start.h" />
     <ClInclude Include="..\Public\BanditHeavy_DeathHeavy_F_01.h" />
     <ClInclude Include="..\Public\BanditHeavy_DeathLight_B_01.h" />
     <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h" />
@@ -324,6 +326,7 @@
     <ClInclude Include="..\Public\Body_Infected_A.h" />
     <ClInclude Include="..\Public\Body_Infected_B.h" />
     <ClInclude Include="..\Public\Body_Infected_C.h" />
+    <ClInclude Include="..\Public\Body_Monster.h" />
     <ClInclude Include="..\Public\Body_Mother.h" />
     <ClInclude Include="..\Public\Body_Player.h" />
     <ClInclude Include="..\Public\Body_Son.h" />
@@ -1171,6 +1174,7 @@
     <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_MainMenuList.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\Public\UI_MoveEffect.h" />
     <ClInclude Include="..\Public\UI_Obtain_Button.h" />
     <ClInclude Include="..\Public\UI_Option_Button.h" />
     <ClInclude Include="..\Public\UI_Option_SubTitle_Button.h" />
@@ -1354,6 +1358,8 @@
     <ClCompile Include="..\Private\Assassin_Walk_FR45.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\Bandit.cpp" />
+    <ClCompile Include="..\Private\BanditHeavy_Charge_Attack_Full.cpp" />
+    <ClCompile Include="..\Private\BanditHeavy_Charge_Start.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_DeathHeavy_F_01.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_DeathLight_B_01.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_DeathLight_F_01.cpp" />
@@ -1427,6 +1433,7 @@
     <ClCompile Include="..\Private\Body_Infected_A.cpp" />
     <ClCompile Include="..\Private\Body_Infected_B.cpp" />
     <ClCompile Include="..\Private\Body_Infected_C.cpp" />
+    <ClCompile Include="..\Private\Body_Monster.cpp" />
     <ClCompile Include="..\Private\Body_Mother.cpp" />
     <ClCompile Include="..\Private\Body_Player.cpp" />
     <ClCompile Include="..\Private\Body_Son.cpp" />
@@ -2094,6 +2101,7 @@
     <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_MainMenuList.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\Private\UI_MoveEffect.cpp" />
     <ClCompile Include="..\Private\UI_Obtain_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_SubTitle_Button.cpp" />

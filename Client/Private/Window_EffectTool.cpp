@@ -490,7 +490,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 					if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 					{
 						dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 164;
+						m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 170;
 						m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 					}ImGui::SameLine();
@@ -1489,7 +1489,7 @@ void CWindow_EffectTool::Update_RectTab()
 				if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 				{
 					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 44;
+					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 170;
 					m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 0;
 
 				}ImGui::SameLine();
@@ -1839,21 +1839,20 @@ void CWindow_EffectTool::Update_MeshTab()
 		}
 
 
-		// 메쉬 파티클용 이펙트 메쉬 생성
-		if (ImGui::CollapsingHeader(" Mesh_Particle "))
-		{
-			if (ImGui::Button("Particle_Test"))
-			{
-				Add_Part_Mesh(TEXT("Prototype_Component_Model_Particle_Test"));
-			}
-
-			ImGui::SeparatorText("");
-		}
-
 
 		// 이펙트용 스태틱 메쉬 생성
 		if (ImGui::CollapsingHeader(" Mesh_Static "))
 		{
+			if (ImGui::Button("Aoe_Lens"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
+			}
+
+			if (ImGui::Button("Billboard_Circle_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
+			}
+
 			if (ImGui::Button("Ring"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring"));
@@ -1886,6 +1885,11 @@ void CWindow_EffectTool::Update_MeshTab()
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_cream"));
 			}
 
+			if (ImGui::Button("Tornado_splineMesh"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_splineMesh"));
+			}
+
 			if (ImGui::Button("WinchesterElectric"))
 			{
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_WinchesterElectric"));
@@ -1906,8 +1910,91 @@ void CWindow_EffectTool::Update_MeshTab()
 				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_HemiSphere"));
 			}
 
+			if (ImGui::Button("Coil"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Coil"));
+			}
+
+
 			ImGui::SeparatorText("");
 		}
+
+
+		// 공격(투사체) 이펙트 메쉬 생성
+		if (ImGui::CollapsingHeader(" Mesh_Static_Attack "))
+		{
+			if (ImGui::Button("Slash_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Slash_00"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Slash_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Slash_01"));
+			}
+
+			if (ImGui::Button("Bioball_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Bioball_00"));
+			}
+
+			if (ImGui::Button("Bioball_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Bioball_01"));
+			}
+
+			if (ImGui::Button("Bioball_02"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Bioball_02"));
+			}
+
+			ImGui::SeparatorText("");
+		}
+
+
+		// 파티클용 이펙트 메쉬 생성
+		if (ImGui::CollapsingHeader(" Mesh_Particle "))
+		{
+			if (ImGui::Button("Rock_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_00"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Rock_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_01"));
+			}
+
+			if (ImGui::Button("Rock_02"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_02"));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Rock_03"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_03"));
+			}
+
+
+			if (ImGui::Button("LightningParticle_00"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningParticle_00"));
+			}
+
+			if (ImGui::Button("LightningParticle_01"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningParticle_01"));
+			}
+
+
+			if (ImGui::Button("LeafPlane"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LeafPlane"));
+			}
+
+			ImGui::SeparatorText("");
+		}
+
 
 
 		// 인트로 보스용 이펙트 메쉬 생성
@@ -1937,6 +2024,22 @@ void CWindow_EffectTool::Update_MeshTab()
 			//{
 			//	//EFFECT_MANAGER->Tick_Create_Effect();
 			//}
+
+			ImGui::SeparatorText("");
+		}
+
+		// 두번째 보스용 이펙트 메쉬 생성
+		if (ImGui::CollapsingHeader(" Mesh_Parasiter "))
+		{
+			if (ImGui::Button("Egg"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Egg"));
+			}
+
+			if (ImGui::Button("Egg_Mother"))
+			{
+				Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
+			}
 
 			ImGui::SeparatorText("");
 		}
@@ -2064,7 +2167,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 					{
 						dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 164;
+						m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 170;
 						m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
 					}ImGui::SameLine();
@@ -2799,8 +2902,7 @@ void CWindow_EffectTool::Update_TrailTab()
 					{
 						// 플레이어 공격
 						//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
-
-						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Dodge_R);
+						m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);
 					}
 
 					if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4381,7 +4483,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					// 플레이어 공격
 					//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
 
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Dodge_R);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -4433,7 +4535,14 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	ImGui::SeparatorText("");
 	if (ImGui::Button("         Create Test        "))
 	{
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
+		m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+	}
+
+	if (ImGui::Button("         Blood Delete        "))
+	{
+		m_pTestEffect->Set_Dead(TRUE);
+		m_pTestEffect = nullptr;
 	}
 
 	ImGui::SameLine();
@@ -4539,11 +4648,11 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		{
 			Add_Part_Particle();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button(" Add Rect "))
-		{
-			Add_Part_Rect();
-		}
+		//ImGui::SameLine();
+		//if (ImGui::Button(" Add Rect "))
+		//{
+		//	Add_Part_Rect();
+		//}
 		//ImGui::SameLine();
 		//if (ImGui::Button(" Add Mesh "))
 		//{

@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 
 #include "Character_Client.h"
 #include "Actor.h"
@@ -70,6 +70,31 @@ public://!For. Interact
 	void SetState_InteractCartRideStart();
 	void SetState_InteractCartRideLoop();
 	void SetState_InteractCartRideWagonJump();
+
+	void SetState_InteractionPush_Rock_Idle();
+	void SetState_InteractionPull_Rock_Idle();
+
+
+	void SetState_InteractClimb100();
+	void SetState_InteractClimb200();
+	void SetState_InteractClimb300();
+	void SetState_InteractClimb450();
+	void SetState_InteractSlide();
+	void SetState_InteractSmallLever();
+	void SetState_InteractPlankStart();
+
+	void SetState_InteractRopeDown();
+	void SetState_InteractClimbRope();
+
+	void SetState_InteractDoorOpen();
+	void SetState_InteractDoorPush();
+
+	void SetState_InteractLadderUpStart();
+
+	void SetState_InteractWhipSwing();
+	void SetState_InteractWhipPull();
+	
+	void SetState_InteractRotationValve();
 	
 
 public:
@@ -88,6 +113,9 @@ private:
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
 	void Set_Actor(CActor<CPlayer>* _pActor) { m_pActor = _pActor; }
+
+public:
+	virtual void Check_Frustum() override;
 
 
 public:

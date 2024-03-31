@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CBody_VampireCommander::CBody_VampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CBody(pDevice, pContext, strPrototypeTag)
+	: CBody_Monster(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CBody_VampireCommander::CBody_VampireCommander(const CBody_VampireCommander& rhs)
-	: CBody(rhs)
+	: CBody_Monster(rhs)
 {
 }
 

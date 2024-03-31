@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CBody_Bandit_Heavy::CBody_Bandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CBody(pDevice, pContext, strPrototypeTag)
+	: CBody_Monster(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CBody_Bandit_Heavy::CBody_Bandit_Heavy(const CBody_Bandit_Heavy& rhs)
-	: CBody(rhs)
+	: CBody_Monster(rhs)
 {
 }
 

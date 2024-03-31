@@ -8,8 +8,9 @@ void CPlayer_Winchester_WeaponUnholster::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
-	//pActor->Reset_UpperAngle();
+	pActor->Reset_UpperAngle();
 	pActor->Set_Splitted(true);
+
 
 }
 

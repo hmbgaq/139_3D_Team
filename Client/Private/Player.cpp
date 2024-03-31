@@ -26,11 +26,41 @@
 #include "Player_InteractionJumpDown100.h"
 #include "Player_InteractionJumpDown200.h"
 #include "Player_InteractionJumpDown300.h"
+
 #include "Player_InteractionVault100.h"
 #include "Player_InteractionVault200.h"
+
 #include "Player_CartRide_Start.h"
 #include "Player_L06_Wagon_Jump.h"
 #include "Player_CartRide_Loop.h"
+
+#include "Player_InteractionPull_Rock_Idle.h"
+#include "Player_InteractionPush_Rock_Idle.h"
+
+
+
+#include "Player_InteractionClimb100.h"
+#include "Player_InteractionClimb200.h"
+#include "Player_InteractionClimb300.h"
+#include "Player_InteractionClimb450.h"
+
+#include "Player_Interaction_Slide_Sequence.h"
+#include "Player_Interaction_SmallLever.h"
+
+#include "Player_InteractionPlank_Up_Start.h"
+#include "Player_InteractionLadder_Up_Start.h"
+
+#include "Player_InteractionWhipSwing.h"
+#include "Player_InteractionWhipPull.h"
+
+#include "Player_InteractionRotateValve_01.h"
+
+#include "Player_InteractionDoor_Open.h"
+#include "Player_InteractionDoorPush.h"
+
+#include "Player_InteractionClimbRope_Start.h"
+#include "Player_InteractionRope_Down_Start.h"
+
 
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
@@ -66,7 +96,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
-	m_iHp = 100;
+	m_fHp = 100;
 
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 // 	{
@@ -114,22 +144,35 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor)
+	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
+	KeyInput(fTimeDelta);
+	
+	if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
 	{
-		m_pActor->Update_State(fTimeDelta);
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+		
+		Update_ChargingTime(fTimeDelta);
+
+	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
+
+		if (m_pGameInstance->Key_Down(DIK_C))
+			m_fHp = 100;
 	}
 
-	Update_ChargingTime(fTimeDelta);
 
-	KeyInput(fTimeDelta);
-
-	CData_Manager::GetInstance()->Set_CurHP(m_iHp);
-
-	if (m_pGameInstance->Key_Down(DIK_C))
-		m_iHp = 100;
+	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
+	m_pDataManager->Set_ShowInterface(bIsNotIdle);
+	
+	
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
+
+	
+
 
 
 
@@ -371,6 +414,94 @@ void CPlayer::SetState_InteractCartRideWagonJump()
 	m_pActor->Set_State(new CPlayer_L06_Wagon_Jump());
 }
 
+
+void CPlayer::SetState_InteractionPush_Rock_Idle()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPush_Rock_Idle());
+}
+
+void CPlayer::SetState_InteractionPull_Rock_Idle()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPull_Rock_Idle());
+}
+
+void CPlayer::SetState_InteractClimb100()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb100());
+}
+
+void CPlayer::SetState_InteractClimb200()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb200());
+}
+
+void CPlayer::SetState_InteractClimb300()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb300());
+}
+
+void CPlayer::SetState_InteractClimb450()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimb450());
+}
+
+void CPlayer::SetState_InteractSlide()
+{
+	m_pActor->Set_State(new CPlayer_Interaction_Slide_Sequence());
+}
+
+void CPlayer::SetState_InteractSmallLever()
+{
+	m_pActor->Set_State(new CPlayer_Interaction_SmallLever());
+}
+
+void CPlayer::SetState_InteractPlankStart()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPlank_Up_Start());
+}
+
+void CPlayer::SetState_InteractRopeDown()
+{
+	m_pActor->Set_State(new CPlayer_InteractionRope_Down_Start());
+}
+
+void CPlayer::SetState_InteractClimbRope()
+{
+	m_pActor->Set_State(new CPlayer_InteractionClimbRope_Start());
+}
+
+
+void CPlayer::SetState_InteractDoorOpen()
+{
+	m_pActor->Set_State(new CPlayer_InteractionDoor_Open());
+}
+
+void CPlayer::SetState_InteractDoorPush()
+{
+	m_pActor->Set_State(new CPlayer_InteractionDoorPush());
+}
+
+void CPlayer::SetState_InteractLadderUpStart()
+{
+	m_pActor->Set_State(new CPlayer_InteractionLadder_Up_Start());
+}
+
+void CPlayer::SetState_InteractWhipSwing()
+{
+	m_pActor->Set_State(new CPlayer_InteractionWhipSwing());
+}
+
+void CPlayer::SetState_InteractWhipPull()
+{
+	m_pActor->Set_State(new CPlayer_InteractionWhipPull());
+}
+
+void CPlayer::SetState_InteractRotationValve()
+{
+	m_pActor->Set_State(new CPlayer_InteractionRotateValve_01());
+}
+
+
 #pragma endregion 상호작용
 
 void CPlayer::Search_Target(_float fMaxDistance)
@@ -400,27 +531,58 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 
 void CPlayer::KeyInput(_float fTimeDelta)
 {
-	///* ! UI : ShaderOption Window / Key : Esc */
-	//if (m_pGameInstance->Key_Down(DIK_ESCAPE))
-	//{
-	//	m_bShowOption = !m_bShowOption;
-	//
-	//	if(m_bShowOption == true)
-	//		m_pUIManager->Active_Option();
-	//	else
-	//		m_pUIManager->NonActive_Option();
-	//}
-	//
-	///* ! UI : DiedScreen / Key : I */
-	//if (m_pGameInstance->Key_Down(DIK_I))
-	//{
-	//	m_bShowDiedScreen = !m_bShowDiedScreen;
-	//
-	//	if (m_bShowDiedScreen == true)
-	//		m_pUIManager->Active_DiedScreen();
-	//	else
-	//		m_pUIManager->NonActive_DiedScreen();
-	//}
+	/* ! UI : ShaderOption Window / Key : Esc */
+	if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+	{
+		m_bShowOption = !m_bShowOption;
+	
+		if (m_bShowOption == true)
+		{
+			m_pUIManager->Active_Option();
+			m_pUIManager->Active_MouseCursor();
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_Option();
+			m_pUIManager->Active_MouseCursor();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
+
+	/* ! UI : DiedScreen / Key : I */
+	if (m_pGameInstance->Key_Down(DIK_I))
+	{
+		m_bShowDiedScreen = !m_bShowDiedScreen;
+	
+		if (m_bShowDiedScreen == true)
+		{
+			m_pUIManager->Active_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
+
+	/* ! UI : DiedScreen / Key : I */
+	if (m_pGameInstance->Key_Down(DIK_B))
+	{
+		m_bShowDiedScreen = !m_bShowDiedScreen;
+
+		if (m_bShowDiedScreen == true)
+		{
+			m_pUIManager->Active_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
 
 	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */
 	if (m_pGameInstance->Key_Down(DIK_K))
@@ -485,6 +647,11 @@ HRESULT CPlayer::Ready_PartObjects()
 	
 	
 	return S_OK;
+}
+
+void CPlayer::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 void CPlayer::Update_ChargingTime(_float fTimeDelta)

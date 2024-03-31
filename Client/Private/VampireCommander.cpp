@@ -18,7 +18,7 @@
 #include "VampireCommander_BloodRange_Stun_Start.h"
 #include "Player_Finisher_VampireCommander_VS.h"
 
-//#include "UI_Manager.h"
+#include "UI_Manager.h"
 
 #include "Data_Manager.h"
 #include "Player.h"
@@ -46,13 +46,19 @@ HRESULT CVampireCommander::Initialize_Prototype()
 
 HRESULT CVampireCommander::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else
+	{
+		FAILED_CHECK(__super::Initialize(pArg));
+	}
 
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -60,18 +66,18 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
 	//HP
-	m_iMaxHp = 1000;
-	m_iHp = m_iMaxHp;
+	m_fMaxHp = 1000;
+	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;
 	//m_fCurHP = m_fMaxHP;
 
 	// Ready BossHUDBar
-	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this, "VampireCommander"));
 
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
-
+	 
 	m_pMapEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
 
 
@@ -93,27 +99,31 @@ void CVampireCommander::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	
+	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
+	{
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+		//cout << "introBossHP:" << m_iHp << endl;
+		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
+
+		//cout << "VampireCommander : " << fAngle << endl;
+		if (m_bLookAt == true)
+		{
+
+			if (0 <= fAngle && fAngle <= 45)
+				Look_At_Target_Lerp(fTimeDelta);
+			else if (-45 <= fAngle && fAngle < 0)
+				Look_At_Target_Lerp(fTimeDelta);
+
+			/*m_bLookAt = false;*/
+
+		}
+	}
 	//Search_Target(200.f);
 
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
-	//cout << "introBossHP:" << m_iHp << endl;
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), Get_Target()->Get_Transform()->Get_Pos());
-
-	//cout << "VampireCommander : " << fAngle << endl;
-	if (m_bLookAt == true)
-	{
-		
-		if (0 <= fAngle && fAngle <= 45)
-			Look_At_Target_Lerp(fTimeDelta);
-		else if (-45 <= fAngle && fAngle < 0)
-			Look_At_Target_Lerp(fTimeDelta);
-
-		/*m_bLookAt = false;*/
-
-	}
+	
 	
 }
 

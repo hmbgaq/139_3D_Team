@@ -17,8 +17,11 @@
 
 CMainApp::CMainApp()
 	: m_pGameInstance(CGameInstance::GetInstance())
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
 	Safe_AddRef(m_pGameInstance);
+	Safe_AddRef(m_pUIManager);
+
 }
 
 HRESULT CMainApp::Initialize()
@@ -48,9 +51,8 @@ HRESULT CMainApp::Initialize()
 	//Client Managers
 	CClone_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
-	m_pUI_Manager = CUI_Manager::GetInstance();
-	Safe_AddRef(m_pUI_Manager);
-	m_pUI_Manager->Initialize(m_pDevice, m_pContext);
+
+	m_pUIManager->Initialize(m_pDevice, m_pContext);
 	CEffect_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	FAILED_CHECK(Ready_Font());
@@ -75,7 +77,9 @@ HRESULT CMainApp::Initialize()
 void CMainApp::Tick(_float fTimeDelta)
 {
 	m_pGameInstance->Tick_Engine(fTimeDelta);
-	m_pUI_Manager->Tick(fTimeDelta);
+
+	/* UIManger Tick */
+	m_pUIManager->Tick(fTimeDelta);
 
 	m_fTimeAcc += fTimeDelta;
 	
@@ -162,6 +166,7 @@ HRESULT CMainApp::Ready_UITexture()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Inventory_Background"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/WorldMap/backgrounds/Inventory_Background.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TutorialBox_Color"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/TutorialBox_Color.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("VampireCommander"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/VampireCommander.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TheParasiter"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/TheParasiter.dds"))));
 	
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_bottom"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_bottom.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_crosshair_pick_left"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Crosshairs/ui_crosshair_pick_left.dds"))));
@@ -179,6 +184,9 @@ HRESULT CMainApp::Ready_UITexture()
 	
 	/* Option */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("headder_active_option"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/headder_active_option.dds"))));
+	
+	/* World(BackGround) */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("17_parasite_pre"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/WorldMap/Quest_Maps_Screens/4k_BG_Quest_Screens/17_parasite_pre.dds"))));
 	
 	/* NonActive Option */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HDR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_HDR.dds"))));
@@ -209,7 +217,7 @@ HRESULT CMainApp::Ready_UITexture()
 // Effect & UI 공통 텍스처
 HRESULT CMainApp::Ready_Mask_Noise()
 {
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask (%d).dds"), 164)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask (%d).dds"), 170)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask_Waves"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Waves/Mask_Wave_%d.dds"), 6)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask_Sprite"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Sprites/Mask_Sprite_%d.dds"), 28)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Noise"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/03_Noise/Noise (%d).dds"), 243)));
@@ -411,14 +419,12 @@ void CMainApp::Free()
 
 	/*  내 멤버를 정리하면. */
 	Safe_Release(m_pGameInstance);
-	
+	/* UIManager Delete */
+	Safe_Release(m_pUIManager);
+
 	CClone_Manager::DestroyInstance();
 	CData_Manager::DestroyInstance();
 	CEffect_Manager::DestroyInstance();
-
-	/* Add UI Manager */
-	Safe_Release(m_pUI_Manager);
-	CUI_Manager::DestroyInstance();
 
 	CGameInstance::Release_Engine();
 }

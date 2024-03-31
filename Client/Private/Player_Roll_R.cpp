@@ -1,10 +1,17 @@
 #include "..\Public\Player_Roll_R.h"
 
+#include "Effect.h"
+#include "Effect_Manager.h"
+
 void CPlayer_Roll_R::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+
+	// ÀÌÆåÆ® »ý¼º
+	EFFECT_MANAGER->Create_Effect("Player/Roll/", "Roll_R_04.json", pActor);
 
 }
 

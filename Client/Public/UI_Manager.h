@@ -51,12 +51,21 @@ public: /* Ready_Preset */
 	HRESULT Ready_Crosshair(_uint iLevelIndex);
 	HRESULT Ready_Loading_Intro(_uint iLevelIndex);
 	HRESULT Ready_Loading_IntroBoss(_uint iLevelIndex);
-	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr);
+	HRESULT Ready_Loading_SnowMountain(_uint iLevelIndex);
+	HRESULT Ready_Loading_SnowMountainBoss(_uint iLevelIndex);
+	HRESULT Ready_Loading_ToolLevel(_uint iLevelIndex);
+	HRESULT Ready_Loading_TestLevel(_uint iLevelIndex);
+	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr, const string& strBossName = "");
 	HRESULT Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 	HRESULT Ready_DiedScreen(_uint iLevelIndex);
 	HRESULT Ready_Option(_uint iLevelIndex);
+	HRESULT Ready_MainMenu(_uint iLevelIndex);
+	HRESULT Ready_MouseCursor(_uint iLevelIndex);
+	HRESULT Ready_HitUI(_uint iLevelIndex);
 
 public:
+	/* PlayerHUD */
+	void	Active_PlayerHUD();
 	/* LeftHUD */
 	HRESULT Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LeftHUD();
@@ -70,15 +79,19 @@ public:
 	/* TutorialBox */
 	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_TutorialBox();
+	void	NonActive_TutorialBox();
 	vector<CUI*>	m_vecTutorialBox;
 	/* LevelUp */
 	HRESULT Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LevelUp();
+	void	NonActive_LevelUp();
 	vector<CUI*>	m_vecLevelUP;
 	/* RewardBox */
 	HRESULT Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_RewardBox();
+	void	NonActive_RewardBox();
 	vector<CUI*>	m_vecRewardBox;
+
 	/* QuestBox */
 	HRESULT Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_QuestBox();
@@ -87,37 +100,70 @@ public:
 	/* Distortion */
 	HRESULT Add_Distortion(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Distortion();
+	void	NonActive_Distortion();
 	vector<CUI*>	m_vecDistortion;
 
+#pragma region Loading
 	/* IntroLoading */
 	HRESULT Add_Loading_Intro(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_Intro(_bool bActive);
+	void	NonActive_Loading_Intro();
 	vector<CUI*>	m_vecLoading;
 
 	/* BossLoading */
 	HRESULT Add_Loading_IntroBoss(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_IntroBoss(_bool bActive);
+	void	NonActive_Loading_IntroBoss();
 	vector<CUI*>	m_vecLoadingIntroBoss;
+
+	/* SnowMountainLoading */
+	HRESULT Add_Loading_SnowMountain(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Loading_SnowMountain(_bool bActive);
+	void	NonActive_Loading_SnowMountain();
+	vector<CUI*>	m_vecLoadingSnowMountain;
+
+	/* SnowMountainBossLoading */
+	HRESULT Add_Loading_SnowMountainBoss(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Loading_SnowMountainBoss(_bool bActive);
+	void	NonActive_Loading_SnowMountainBoss();
+	vector<CUI*>	m_vecLoadingSnowMountainBoss;
+
+	/* ToolLoading */
+	HRESULT Add_Loading_ToolLevel(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Loading_ToolLevel(_bool bActive);
+	void	NonActive_Loading_ToolLevel();
+	vector<CUI*>	m_vecLoadingTool;
+
+	/* GamePlayLoading */
+	HRESULT Add_Loading_TestLevel(_uint iLevelIndex, const wstring& strLayerTag);
+	void	Active_Loading_TestLevel(_bool bActive);
+	void	NonActive_Loading_TestLevel();
+	vector<CUI*>	m_vecLoadingTest;
+#pragma endregion
 
 	/* Crosshair */
 	HRESULT			Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_Crosshair(_bool bActive);
+	void			NonActive_Crosshair();
 	void			Trigger_Crosshair(_bool bPlayAnim);
 	vector<CUI*>	m_vecCrosshair;
 
 	/* BossHUD(Bar) */
-	HRESULT			Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	HRESULT			Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr, const string& strBossName = "");
 	void			Active_BossHUD_Bar(_bool bActive);
+	void			NonActive_BossHUD_Bar();
 	vector<CUI*>	m_vecBossHUD_Bar;
 
 	/* BossHUD(Shard) */
 	HRESULT			Add_BossHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_BossHUD_Shard(_bool bActive);
+	void			NonActive_BossHUD_Shard();
 	vector<CUI*>	m_vecBossHUD_Shard;
 
 	/* EnemyHUD(Shard) */
 	HRESULT			Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_EnemyHUD_Shard(_bool bActive);
+	void			NonActive_EnemyHUD_Shard();
 	void			Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	void			Set_Offset(_float fOffsetX, _float fOffsetY);
 	vector<CUI*>	m_vecEnemyHUD_Shard;
@@ -134,7 +180,44 @@ public:
 	void			NonActive_Option();
 	vector<CUI*>	m_vecOption;
 
+	/* MainMenu */
+	HRESULT			Add_MainMenu(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_MainMenu();
+	void			NonActive_MainMenu();
+	// MainList
+	HRESULT			Add_MainList(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_MainList();
+	void			NonActive_MainList();
+	// LevelList
+	HRESULT			Add_LevelList(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_LevelList();
+	void			NonActive_LevelList();
+
+	// MainLogo
+	HRESULT			Add_MainLogo(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_MainLogo();
+	void			NonActive_MainLogo();
+
+	/* MouseCusor */
+	HRESULT			Add_MouseCursor(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_MouseCursor();
+	void			NonActive_MouseCursor();
+	CUI*			m_pMouseCursor = nullptr;
+
+	/* HitUI */
+	HRESULT			Add_HitUI(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_HitUI();
+	void			NonActive_HitUI();
+	CUI*			m_pHitUI = nullptr;
+
+	CUI*			m_pMainLogo = nullptr;
+	vector<CUI*>	m_vecMainMenu;
+	vector<CUI*>	m_vecMainList;
+	vector<CUI*>	m_vecLevelList;
+
 	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
+	void			Active_UI();
+	void			NonActive_UI();
 
 public:
 	void			Check_UIPicking(_float fTimeDelta);

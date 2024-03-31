@@ -60,12 +60,37 @@ HRESULT CTank::Initialize_Prototype()
 
 HRESULT CTank::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = *(CGameObject::GAMEOBJECT_DESC*)pArg;
+
+		if (GameObjectDesc.eDescType == CGameObject::MONSTER_DESC)
+		{
+			CMonster_Character::MONSTER_DESC MonsterDesc = *(CMonster_Character::MONSTER_DESC*)pArg;
+
+			MonsterDesc.fSpeedPerSec = 10.f;
+			MonsterDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+			FAILED_CHECK(__super::Initialize(&MonsterDesc));
+		}
+		else
+		{
+			GameObjectDesc.fSpeedPerSec = 10.f;
+			GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+			FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+		}
+
+	}
+
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -74,7 +99,7 @@ HRESULT CTank::Initialize(void* pArg)
 	}
 
 	//m_iHp = 150;
-	m_iHp = 1;
+	m_fHp = 100;
 
 
 	m_bIsFixed = true;
@@ -98,6 +123,8 @@ void CTank::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
+
+	m_bIsFixed = !Is_ShieldBroken();
 
 	if (Is_ShieldBroken())
 	{

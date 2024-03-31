@@ -3,16 +3,27 @@
 #include "Effect_Manager.h"
 #include "SpringCamera.h"
 #include "Data_Manager.h"
+#include "UI_Manager.h"
 #include "MasterCamera.h"
 
 CCharacter_Client::CCharacter_Client(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter(pDevice, pContext, strPrototypeTag)
+	, m_pUIManager(CUI_Manager::GetInstance())
+	, m_pDataManager(CData_Manager::GetInstance())
 {
+	/* UIManager Add */
+	Safe_AddRef(m_pUIManager);
+	Safe_AddRef(m_pDataManager);
 }
 
 CCharacter_Client::CCharacter_Client(const CCharacter_Client& rhs)
 	: CCharacter(rhs)
+	, m_pUIManager(rhs.m_pUIManager)
+	, m_pDataManager(rhs.m_pDataManager)
 {
+	/* UIManager Add */
+	Safe_AddRef(m_pUIManager);
+	Safe_AddRef(m_pDataManager);
 }
 
 HRESULT CCharacter_Client::Initialize_Prototype()
@@ -83,6 +94,16 @@ CEffect* CCharacter_Client::Create_Effect(const wstring& strPartTag)
 	return nullptr;
 }
 
+void CCharacter_Client::Reset_UpperAngle()
+{
+	if (nullptr == m_pDataManager) m_pDataManager = CData_Manager::GetInstance();
+	//_float fPitch = m_pDataManager->Get_MasterCamera()->Get_SpringCamera()->Get_Pitch();
+	m_pDataManager->Get_MasterCamera()->Get_SpringCamera()->Reset_Angle();
+
+	//m_pBody->Reset_UpperAngle(fPitch);
+	m_pBody->Reset_UpperAngle();
+}
+
 void CCharacter_Client::Apply_Shake_And_Blur(Power ePower)
 {
 	if (nullptr == m_pDataManager)
@@ -128,4 +149,11 @@ _bool CCharacter_Client::Check_EffectOnTrackPosition()
 void CCharacter_Client::Free()
 {
 	__super::Free();
+
+	/* UIManager Delete */
+	if(m_pUIManager)
+		Safe_Release(m_pUIManager);
+
+	if (m_pDataManager)
+		Safe_Release(m_pDataManager);
 }

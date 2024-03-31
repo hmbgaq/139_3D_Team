@@ -555,9 +555,9 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
     /* (R)Occlusion ,(G)Roughness , (B)Metalic */
     
+    float fAmbient_Occlusion = vORMDesc.r;
     float fRoughness = vORMDesc.g;
     float fMetallic = vORMDesc.b;
-    float fAmbient_Occlusion = vORMDesc.r;
     
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     
@@ -583,8 +583,8 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
 
-    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
     // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
+    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
    
     if (vAlbedo.a == 0.f)
     {

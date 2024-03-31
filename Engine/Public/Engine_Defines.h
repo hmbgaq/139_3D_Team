@@ -117,6 +117,15 @@ using namespace physx;
 
 #define IMGUI_DEFIfine IMGUI_DEFINE_MATH_OPERATORfine IMGUI_DEFINE_MATH_OPERATORNE_MATH_OPERATORS
 
+
+#include "../Fmod/core/fmod.h"
+#include "../Fmod/core/fmod.hpp"
+#include "../Fmod/core/fmod_errors.h"
+#include "../Fmod/studio/fmod_studio.h"
+#include "../Fmod/studio/fmod_studio.hpp"
+#include "../Fmod/core/fmod_common.h"
+
+
 /* Leak */
 #ifdef _DEBUG
 
