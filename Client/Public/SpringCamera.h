@@ -70,7 +70,7 @@ public:
 	_bool Get_ShakeCamera() { return m_bShake; }
 
 	void Set_ShakeCameraTime(_float _Shaketime) { m_fShakeTime = _Shaketime; }
-
+	void Set_ShakeCameraMinMax(_float2 _fShakeMinMax) { m_fShakeMinMax = _fShakeMinMax; }
 private:
 	// 	수평 , 수직 수행거리
 	_float hDist = 0.f;
@@ -96,6 +96,7 @@ private:
 	//shake camera
 	_bool m_bShake = false;// 카메라를 흔들 것인지 아닌것인지 
 	_float m_fShakeTime = 0.2f;
+	_float2 m_fShakeMinMax = { 0.3f ,0.3f};
 	//_float m_fTimeDelta = 0.f;
 private:
 	//카메라 X,Y,Z

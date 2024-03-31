@@ -50,6 +50,7 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 		if (pActor->m_iSonDead == 1 && pActor->m_bfirstCheck)
 		{
 			pActor->m_bfirstCheck = false;
+
 			return new CMother_VomitStart;
 		}
 		else if (pActor->m_iSonDead >= 2)//Son이 두마리다 죽었을때
