@@ -9,7 +9,7 @@ class ENGINE_DLL CVIBuffer_Particle final : public CVIBuffer
 public:
 	enum TYPE_ACTION		{ SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
 	enum TYPE_FADE			{ FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
-	enum TYPE_FADE_TAKES	{ LIFE, DIST, HEIGHT, SCALE, TYPE_FADE_TAKES_END };
+	enum TYPE_FADE_TAKES	{ LIFE, DIST, HEIGHT, SCALE, MAGIC, TYPE_FADE_TAKES_END };
 	enum TYPE_DIRAXIS		{ DIR_RIGHT, DIR_UP, DIR_LOOK, TYPE_DIRAXIS_END };
 
 	typedef struct tagParticleBufferDESC
@@ -24,7 +24,7 @@ public:
 		TYPE_ACTION eType_Action = { SPARK };		// 움직이는 모양
 
 
-		/* LifeTime */
+		/* Times */
 		_float2		vMinMaxLifeTime = { 0.1f, 3.f };
 
 		/* Emitter */
@@ -40,15 +40,11 @@ public:
 		_bool		bUseGravity		= { TRUE };
 		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
-
 		_float		fGravity = { -9.8f };			// 중력 가속도
 		
-
 		EASING_TYPE	eType_FrictionLerp = { EASING_TYPE::LINEAR };
 		_float2		vFrictionLerp_Pos = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
 		_float2		vStartEnd_Friction = { 0.1f, 0.1f };	// 시작과 끝 마찰 계수
-
-		
 		
 		_float		fSleepThreshold = { 0.05f };	// 슬립 한계점
 		_byte		byFreezeAxis = { 0 };			// 축 고정 확인용 바이트
@@ -98,23 +94,16 @@ public:
 		_float2     vMinMaxGreen	= { 1.f, 1.f };
 		_float2     vMinMaxBlue		= { 1.f, 1.f };
 		_float2     vMinMaxAlpha	= { 1.f, 1.f };
+		_float4     vCurrentColor = { 1.f, 1.f, 1.f, 1.f };	// 색
 
 
 		TYPE_FADE		eType_Fade = { FADE_NONE };
-		TYPE_FADE_TAKES	eType_Fade_Takes = { TYPE_FADE_TAKES_END };
+		TYPE_FADE_TAKES	eType_Fade_Takes = { MAGIC };
 
 		// 업데이트 돌면서 변하는 정보들(저장X)
 		_float		fTimeAcc = { 0.f };			// 시간 누적
 		_float		fLifeTimeRatio = { 0.f };	/* 라이프타임을 0~1로 보간한 값 */
-
-
-		// 크기
-/*		_float		fUpScaleTimeAcc = { 0.f };
-		_float		fDownScaleTimeAcc = { 0.f };
-		_float2		vCurScale		= { 1.f, 1.f };	*/			
-
-		_float4     vCurrentColor	= { 1.f, 1.f, 1.f, 1.f };	// 색
-
+	
 
 		void Reset_Times()
 		{
@@ -171,13 +160,12 @@ public:
 		_float	fUpScaleTimeAccs	= { 0.f };
 		_float	fDownScaleTimeAccs	= { 0.f };
 
-
 		_float2	vCurScales			= { 1.f, 1.f };
 		_float2	vMaxScales			= { 1.f, 1.f };
 		
 
-		// 색
-		//_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f };
+		// 색 (알파)
+		_float  fAddAlpha			= { 1.f };
 
 
 		void Reset_ParticleTimes()
@@ -200,7 +188,7 @@ public:
 		_float4 vCurrentColors = { 1.f, 1.f, 1.f, 1.f }; // 16
 
 		_float3 vRight	= { 1.f, 0.f, 0.f };		// 12
-		_float  fAddAlpha = { 1.f };				// 4	
+		_float  fCurAddAlpha = { 1.f };				// 4	
 
 		_float3 vUp			= { 0.f, 1.f, 0.f };	// 12
 		_float  fPadding2	= { 0.f };				// 4	
@@ -291,8 +279,6 @@ private:
 	vector<PARTICLE_RIGIDBODY_DESC>		m_vecParticleRigidbodyDesc;
 
 
-private:
-	_bool bFirst = { true };	// 테스트용
 
 	/* 인스턴스 */
 private:

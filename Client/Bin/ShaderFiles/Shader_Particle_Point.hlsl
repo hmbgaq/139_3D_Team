@@ -73,7 +73,7 @@ struct EffectDesc
     float4 g_vColors_Mul; // 16
     
     float3 g_vRight;    // 12
-    float  g_fAddAlpha; // 4
+    float g_fCurAddAlpha; // 4
     
     float3 g_vUp;       // 12
     float  g_fPadding2; // 4
@@ -604,7 +604,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
 	
 	// ÄÃ·¯ È¥ÇÕ
     Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
-    Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fAddAlpha;
+    Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
 		
  
     
@@ -612,7 +612,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     //Out.vColor += vRimColor;
     //Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * Out.vColor.a; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * g_EffectDesc[In.iInstanceID].g_fAddAlpha;
+    Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
     
     
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);

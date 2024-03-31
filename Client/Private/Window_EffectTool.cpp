@@ -1217,7 +1217,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::RadioButton(u8"거리_Particle", &m_iType_Fade_Takes_Particle, 1);
 				ImGui::RadioButton(u8"높이_Particle", &m_iType_Fade_Takes_Particle, 2);
 				ImGui::RadioButton(u8"크기_Particle", &m_iType_Fade_Takes_Particle, 3);
-				ImGui::RadioButton(u8"TYPE_DIRAXIS_END_Particle", &m_iType_Fade_Takes_Particle, 4);
+				ImGui::RadioButton(u8"매직_Particle", &m_iType_Fade_Takes_Particle, 4); ImGui::SameLine(); HelpMarker(u8"기존 이펙트 유지를 위한 매직넘버");
+				ImGui::RadioButton(u8"TYPE_FADE_TAKES_END_Particle", &m_iType_Fade_Takes_Particle, 5);
 				if (0 == m_iType_Fade_Takes_Particle)
 					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::LIFE;
 				else if (1 == m_iType_Fade_Takes_Particle)
@@ -1227,6 +1228,8 @@ void CWindow_EffectTool::Update_ParticleTab()
 				else if (3 == m_iType_Fade_Takes_Particle)
 					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::SCALE;
 				else if (4 == m_iType_Fade_Takes_Particle)
+					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::MAGIC;
+				else if (5 == m_iType_Fade_Takes_Particle)
 					m_pParticleBufferDesc->eType_Fade_Takes = CVIBuffer_Particle::TYPE_FADE_TAKES::TYPE_FADE_TAKES_END;
 
 
@@ -3595,8 +3598,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iType_Fade_Takes_Particle = 2;
 			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::SCALE == m_pParticleBufferDesc->eType_Fade_Takes)
 				m_iType_Fade_Takes_Particle = 3;
-			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::TYPE_FADE_TAKES_END == m_pParticleBufferDesc->eType_Fade_Takes)
+			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::MAGIC == m_pParticleBufferDesc->eType_Fade_Takes)
 				m_iType_Fade_Takes_Particle = 4;
+			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::TYPE_FADE_TAKES_END == m_pParticleBufferDesc->eType_Fade_Takes)
+				m_iType_Fade_Takes_Particle = 5;
 
 
 

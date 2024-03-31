@@ -440,9 +440,9 @@ HRESULT CEffect_Instance::Ready_Components()
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
 			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
-		// Sprite
-		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		//// Sprite
+		//if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
+		//	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 
@@ -480,7 +480,6 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])	// 노이즈 텍스처 있으면 바인드
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
-
 	}
 
 	/* UV ============================================================================================ */

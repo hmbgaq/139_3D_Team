@@ -65,7 +65,7 @@ struct EffectDesc
     float4 g_vColors_Mul; // 16
     
     float3 g_vRight; // 12
-    float g_fPadding1; // 4
+    float  g_fCurAddAlpha; // 4
     
     float3 g_vUp; // 12
     float g_fPadding2; // 4
@@ -108,35 +108,99 @@ float2 RotateTexture(float2 texCoord, float angle)
 float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int iColorMode)
 {
     float4 vResault = vDiffuse;
-	
     if (0 == iColorMode)
     {
-		// 곱하기
+      // 곱하기
         vResault = vResault * vBlendColor;
     }
     else if (1 == iColorMode)
     {
-		// 스크린
+      // 스크린
         vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));
     }
     else if (2 == iColorMode)
     {
-		// 오버레이
+      // 오버레이
         vResault = max(vResault, vBlendColor);
     }
     else if (3 == iColorMode)
     {
-		// 더하기
+      // 더하기
         vResault = vResault + vBlendColor;
     }
     else if (4 == iColorMode)
     {
-		// 번(Burn)
+      // 번(Burn)
         vResault = vResault + vBlendColor - 1.f;
     }
-	
+    else if (5 == iColorMode)
+    {
+        // 비비드 라이트
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] < 0.5f) ? (1.f - (1.f - vDiffuse[i]) / (2.f * vBlendColor[i]))
+            : (vDiffuse[i] / (2.f * (1.f - vBlendColor[i])));
+
+        }
+        
+        vResault.a = vDiffuse.a;
+    }
+    else if (6 == iColorMode)
+    {
+        // 소프트 라이트
+        for (int i = 0; i < 3; ++i)
+        {
+            if (vBlendColor[i] < 0.5f)
+            {
+                vResault[i] = 2.f * vDiffuse[i] * vBlendColor[i] +
+                    vDiffuse[i] * vDiffuse[i] * (1.f - 2.f * vBlendColor[i]);
+            }
+            else
+            {
+                vResault[i] = 2.f * vDiffuse[i] * (1.f - vBlendColor[i]) +
+                    sqrt(vDiffuse[i]) * (2.f * vBlendColor[i] - 1.f);
+            }
+        }
+        
+        vResault.a = vDiffuse.a;
+    }
+    else if (7 == iColorMode)
+    {
+        // 하드 라이트
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] < 0.5f) ? (2.f * vDiffuse[i] * vBlendColor[i]) :
+                (1.f - 2.f * (1.f - vDiffuse[i]) * (1.f - vBlendColor[i]));
+        }
+        
+        vResault.a = vDiffuse.a;
+    }
+    else if (8 == iColorMode)
+    {
+        // 컬러 닷지
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] == 1.f) ? vBlendColor[i] :
+                min(vDiffuse[i] / (1.f - vBlendColor[i]), 1.f);
+
+        }
+        vResault.a = vDiffuse.a;
+    }
+    else if (9 == iColorMode)
+    {
+        // 혼합 번
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] == 1.f) ? vBlendColor[i] :
+                max(1.f - ((1.f - vDiffuse[i]) / vBlendColor[i]), 0.f);
+
+        }
+        vResault.a = vDiffuse.a;
+    }
+   
  
     return vResault;
+
 }
 
 
@@ -255,6 +319,7 @@ struct VS_IN
 	float4		vLook		 : TEXCOORD3;
 	float4		vTranslation : TEXCOORD4;
 
+    uint iInstanceID         : SV_INSTANCEID;
 };
 
 struct VS_OUT
@@ -264,6 +329,8 @@ struct VS_OUT
 	float2		vTexUV		: TEXCOORD0;
 	float4		vWorldPos	: TEXCOORD1;
 	float4		vProjPos	: TEXCOORD2;
+    
+    uint iInstanceID        : SV_INSTANCEID;
 };
 
 
@@ -299,6 +366,8 @@ struct PS_IN
 	float2		vTexUV		: TEXCOORD0;
 	float4		vWorldPos	: TEXCOORD1;
 	float4		vProjPos	: TEXCOORD2;
+    
+    uint iInstanceID        : SV_INSTANCEID;
 };
 
 
@@ -367,6 +436,8 @@ struct VS_OUT_NORMAL
 	
 	float3 vTangent		: TANGENT;
 	float3 vBinormal	: BINORMAL;
+    
+    uint iInstanceID    : SV_INSTANCEID;
 };
 
 
@@ -406,6 +477,8 @@ struct PS_IN_NORMAL
 	
 	float3 vTangent		: TANGENT;
 	float3 vBinormal	: BINORMAL;
+    
+    uint iInstanceID    : SV_INSTANCEID;
 };
 
 
@@ -486,6 +559,8 @@ struct VS_OUT_DISTORTION
 	float2 vTexcoord1	: TEXCOORD3;
 	float2 vTexcoord2	: TEXCOORD4;
 	float2 vTexcoord3	: TEXCOORD5;
+    
+    uint iInstanceID    : SV_INSTANCEID;
 };
 
 
@@ -525,6 +600,8 @@ struct PS_IN_DISTORTION
 	float2 vTexcoord1	: TEXCOORD3;
 	float2 vTexcoord2	: TEXCOORD4;
 	float2 vTexcoord3	: TEXCOORD5;
+    
+    uint iInstanceID    : SV_INSTANCEID;
 };
 
 

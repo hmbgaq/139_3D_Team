@@ -328,7 +328,7 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleInfoDesc[iNum].vCenterPositions.x = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.x, m_tBufferDesc.vMaxCenterOffsetPos.x);
 	m_vecParticleInfoDesc[iNum].vCenterPositions.y = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.y, m_tBufferDesc.vMaxCenterOffsetPos.y);
 	m_vecParticleInfoDesc[iNum].vCenterPositions.z = SMath::fRandom(m_tBufferDesc.vMinCenterOffsetPos.z, m_tBufferDesc.vMaxCenterOffsetPos.z);
-
+	m_vecParticleInfoDesc[iNum].vCenterPositions.w = 1.f;
 
 
 
@@ -416,8 +416,8 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleShaderInfoDesc[iNum].vCurrentColors.w = fAlpha;
 
 
-	// 쉐이더에 전달할 알파 가중치
-	m_vecParticleShaderInfoDesc[iNum].fAddAlpha = SMath::fRandom(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y);
+	// 알파 가중치
+	m_vecParticleInfoDesc[iNum].fAddAlpha = SMath::fRandom(m_tBufferDesc.vMinMaxAlpha.x, m_tBufferDesc.vMinMaxAlpha.y);
 
 }
 
@@ -560,6 +560,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	m_tBufferDesc.fLifeTimeRatio = min(1.0f, m_tBufferDesc.fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y);
 
 
+#pragma region 방출 시작
 	if (!m_tBufferDesc.bEmitFinished) // 방출이 끝이 아니면 
 	{
 		m_tBufferDesc.fEmissionTimeAcc += fTimeDelta; // 시간누적
@@ -587,6 +588,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 		}
 	}
+#pragma region 방출 끝
 
 #pragma region Map UnMap 전 조건 체크 끝
 
@@ -683,7 +685,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 								{
 									m_vecParticleShaderInfoDesc[i].vCurrentColors.w = 0.f;
 									pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
-									m_vecParticleShaderInfoDesc[i].fAddAlpha = 0.f;
+									m_vecParticleShaderInfoDesc[i].fCurAddAlpha = 0.f;
 								}
 									
 							}
@@ -701,7 +703,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 									m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
 									pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
-									m_vecParticleShaderInfoDesc[i].fAddAlpha = 1.f;
+									m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
 								}
 
 							}
@@ -920,8 +922,6 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					m_vecParticleShaderInfoDesc[i].vCurrentColors.y = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxGreen.x, m_tBufferDesc.vMinMaxGreen.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
 					m_vecParticleShaderInfoDesc[i].vCurrentColors.z = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxBlue.x, m_tBufferDesc.vMinMaxBlue.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_ColorLerp));
 
-					// 쉐이더에 던질 곱하기 색상 값 저장
-					//m_vecParticleShaderInfoDesc[i].vCurrentColors = m_vecParticleInfoDesc[i].vCurrentColors;
 					pVertices[i].vColor = m_vecParticleShaderInfoDesc[i].vCurrentColors;
 				}
 				else // 일괄 색 변경
@@ -961,6 +961,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	
 					m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
 					pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
+					m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
 
 				}
 				else if (DIST == m_tBufferDesc.eType_Fade_Takes)
@@ -978,15 +979,24 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					}
 					else if (FADE_OUT == m_tBufferDesc.eType_Fade)
 					{
-						fAlpha = max(m_vecParticleInfoDesc[i].fMaxRange - fLength, 0.f);
+
+						_float fValue = m_vecParticleInfoDesc[i].fMaxRange - fLength;
+
+						if (0.f != m_vecParticleInfoDesc[i].fMaxRange && 0.f != fValue)
+							fAlpha = max(min(fValue / m_vecParticleInfoDesc[i].fMaxRange, 1.f), 0.f);
+
 					}
 					else if (FADE_IN == m_tBufferDesc.eType_Fade)
 					{
-						fAlpha = min(fLength, 1.f);
+						//fAlpha = min(fLength, 1.f);
+
+						if (0.f != m_vecParticleInfoDesc[i].fMaxRange && 0.f != fLength)
+							fAlpha = max(min(fLength / m_vecParticleInfoDesc[i].fMaxRange, 1.f), 0.f);
 					}
 
 					m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
 					pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
+					m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
 
 				}
 				else if (HEIGHT == m_tBufferDesc.eType_Fade_Takes)
@@ -1001,22 +1011,28 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					}
 					else if (FADE_OUT == m_tBufferDesc.eType_Fade)
 					{
-						fAlpha = max(m_vecParticleInfoDesc[i].fMaxPosY - pVertices[i].vPosition.y, 0.f);
+						_float fValue = m_vecParticleInfoDesc[i].fMaxPosY - pVertices[i].vPosition.y;
+
+						if (0.f != m_vecParticleInfoDesc[i].fMaxPosY && 0.f != fValue)
+							fAlpha = max(min(fValue / m_vecParticleInfoDesc[i].fMaxPosY, 1.f), 0.f);
+
 					}
 					else if (FADE_IN == m_tBufferDesc.eType_Fade)
 					{
-						fAlpha = min(pVertices[i].vPosition.y, 1.f);
+
+						if (0.f != m_vecParticleInfoDesc[i].fMaxPosY && 0.f != pVertices[i].vPosition.y)
+							fAlpha = max(min((pVertices[i].vPosition.y / m_vecParticleInfoDesc[i].fMaxPosY), 1.f), 0.f);
+
 					}
 
 					m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
 					pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
+					m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
 
 				}
-				else if (TYPE_FADE_TAKES_END == m_tBufferDesc.eType_Fade_Takes)
+				else if (MAGIC == m_tBufferDesc.eType_Fade_Takes)
 				{
-					// 알파 업데이트 안함
-
-					// 거리에 따라 알파 업데이트(임시 구멍막기)
+					// 알파 업데이트(구멍막기ㅠㅠ)
 					_float	fAlpha = 1.f;
 
 					_vector vCurPos = XMLoadFloat4(&pVertices[i].vPosition);
@@ -1032,13 +1048,21 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					}
 					else if (FADE_IN == m_tBufferDesc.eType_Fade)
 					{
-						fAlpha = min(fLength, 1.f);
+						fAlpha = max(min(fLength / m_vecParticleInfoDesc[i].fMaxRange, 1.f), 0.f);
 					}
 
 					m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
 					pVertices[i].vColor.w = m_vecParticleShaderInfoDesc[i].vCurrentColors.w;
+					m_vecParticleShaderInfoDesc[i].fCurAddAlpha = 1.f;
 
 				}
+				else if (TYPE_FADE_TAKES_END == m_tBufferDesc.eType_Fade_Takes)
+				{
+					// 알파 업데이트 안함
+
+	
+				}
+
 
 
 #pragma region 알파 업데이트 끝
