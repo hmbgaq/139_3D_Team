@@ -28,7 +28,7 @@ CState<CPlayer>* CPlayer_InteractionPull_Rock_Idle::Update(CPlayer* pActor, _flo
 			return new CPlayer_InteractionPush_Rock_Pull_to_Push();
 		}
 
-		if (m_pGameInstance->Key_Down(DIK_S))
+		if (m_pGameInstance->Key_Pressing(DIK_S))
 		{
 			return new CPlayer_InteractionPull_Rock_Loop();
 		}

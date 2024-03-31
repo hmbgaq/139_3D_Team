@@ -1,5 +1,5 @@
 #include "..\Public\Player_InteractionPush_Rock_Push_to_Pull.h"
-#include "Player_InteractionPull_Rock_Loop.h"
+#include "Player_InteractionPull_Rock_Idle.h"
 
 void CPlayer_InteractionPush_Rock_Push_to_Pull::Initialize(CPlayer* pActor)
 {
@@ -14,7 +14,7 @@ CState<CPlayer>* CPlayer_InteractionPush_Rock_Push_to_Pull::Update(CPlayer* pAct
 
 	if (pActor->Is_Animation_End())
 	{
-		return new CPlayer_InteractionPull_Rock_Loop();
+		return new CPlayer_InteractionPull_Rock_Idle();
 	}
 
 	return nullptr;
