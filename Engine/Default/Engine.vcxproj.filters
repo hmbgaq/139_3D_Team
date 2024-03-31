@@ -973,9 +973,6 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Outline.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Struct.hlsl">
-      <Filter>98.ShaderFiles</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Effect_Engine.hlsl">
       <Filter>98.ShaderFiles</Filter>
     </FxCompile>

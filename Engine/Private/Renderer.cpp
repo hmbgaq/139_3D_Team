@@ -62,7 +62,7 @@ HRESULT CRenderer::Initialize()
 
 HRESULT CRenderer::Draw_RenderGroup()
 {
-#ifdef _DEBUG`
+#ifdef _DEBUG
 	Control_HotKey();
 	if (true == m_bDebugCom)
 		FAILED_CHECK(Render_DebugCom()) /* Debug Component -> MRT 타겟에 저장해서 Finaml 에서 추가연산한다. */
@@ -89,7 +89,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	if ((true == m_tPBR_Option.bPBR_ACTIVE) && (true == m_tHBAO_Option.bHBAO_Active))
 	{
-		FAILED_CHECK(Render_PBR());
+		//FAILED_CHECK(Render_PBR());
+		FAILED_CHECK(Render_MyPBR());
 	}
 	else
 	{
@@ -516,8 +517,8 @@ HRESULT CRenderer::Render_MyPBR()
 	_float4			vLightDir = DirectionalLight_Desc.vDirection;
 
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float))); //
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vLightDir", &CamFar, sizeof(_float))); //
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightFar", &vLightDir, sizeof(_float)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float))); //
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightFar", &LightFar, sizeof(_float)));
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_SunColor", &vLightColor, sizeof(_float3))); // BRDF 함수용 
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vCamPosition", &CamPos, sizeof(_float4))); //
 	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_LightViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_iCurrentLevel)));
@@ -534,17 +535,38 @@ HRESULT CRenderer::Render_MyPBR()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_Deferred, "g_DepthTarget"));//
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ShadowDepth"), m_pShader_Deferred, "g_ShadowDepthTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Emissive"), m_pShader_Deferred, "g_EmissiveTarget"));
 
-	//g_LightDiffuse 이거 올려봐야함 
-	//_float4 LightDir = m_pGameInstance->Get_DirectionLight()->Get_LightDir();
-	_float4 LightDiffuse = m_pGameInstance->Get_DirectionLight()->Get_LightDesc().vDiffuse;
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightDiffuse", &LightDiffuse, sizeof(_float4)));
+	/* Texture */
+	switch (m_pGameInstance->Get_NextLevel())
+	{
+	case 9: // LEVEL_GamePlay
+		FAILED_CHECK(m_pIrradianceTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
+		FAILED_CHECK(m_pPreFilteredTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
+		break;
+	case 3: // LEVEL_INTRO_BOSS
+		FAILED_CHECK(m_pIrradianceTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
+		FAILED_CHECK(m_pPreFilteredTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
+		break;
+	case 4: // LEVEL_SNOWMOUNTAIN
+		FAILED_CHECK(m_pIrradianceTextureCom[2]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
+		FAILED_CHECK(m_pPreFilteredTextureCom[2]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
+		break;
+	case 5: // LEVEL_SNOWMOUNTAINBOSS
+		//FAILED_CHECK(m_pIrradianceTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
+		//FAILED_CHECK(m_pPreFilteredTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
+		break;
 
-	/* Texture *//*
-	FAILED_CHECK(m_pIrradianceTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-	FAILED_CHECK(m_pPreFilteredTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));*/
-	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDFTexture"));
+	case 7:
+		m_bToolLevel = true;
+		break;
+	}
 
+	if (m_bToolLevel)
+	{
+		FAILED_CHECK(m_pTool_IrradianceTextureCom[m_iPBRTexture_InsteadLevel]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
+		FAILED_CHECK(m_pTool_PreFilteredTextureCom[m_iPBRTexture_InsteadLevel]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
+	}
 	if (true == m_tFog_Option.bFog_Active)
 	{
 		FAILED_CHECK(m_pShader_Deferred->Bind_Struct("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
@@ -1532,7 +1554,8 @@ HRESULT CRenderer::Create_DepthStencil()
 
 HRESULT CRenderer::GraphicDebug_Shader()
 {
-	m_psByteCode = CompileShader(L"../Bin/ShaderFiles/Shader_PostProcessing.hlsl", "PS_MAIN_SSR", "ps_5_0");
+	//m_psByteCode = CompileShader(L"../Bin/ShaderFiles/Shader_PostProcessing.hlsl", "PS_MAIN_SSR", "ps_5_0");
+	m_psByteCode = CompileShader(L"../Bin/ShaderFiles/Shader_Deferred.hlsl", "PS_MAIN_NEW_PBR", "ps_5_0");
 
 	return S_OK;
 }

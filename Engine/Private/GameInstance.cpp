@@ -1264,7 +1264,7 @@ const wstring CGameInstance::Get_LastNumChar(const wstring& str, const _uint& iN
 
 void CGameInstance::Get_ModelTag(vector<string>* pVector)
 {
-	NULL_CHECK_RETURN(pVector, );
+	NULL_CHECK_RETURN(m_pComponent_Manager, );
 
 	m_pComponent_Manager->Get_ModelTag(pVector);
 }

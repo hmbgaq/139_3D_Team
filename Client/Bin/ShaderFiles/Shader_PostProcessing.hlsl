@@ -5,9 +5,6 @@
                              Global  
                                 
 ==============================================================*/
-static const float PI = 3.14159265359f;
-static const float EPSILON = 0.000001f;
-
 /*=============================================================
  
                              Struct 
@@ -23,9 +20,7 @@ struct radial
 struct DOF
 {
     bool    bDOF_Active;
-    float4  DOFParams;
-    //float   fFocusDistance;
-    //float   fFocusRange;
+    float   DOF_Distance;
 };
 
 struct VIGNETTE_DESC
@@ -325,7 +320,7 @@ static float ConvertZToLinearDepth(float depth)
 }
 float3 DistanceDOF(float3 colorFocus, float3 colorBlurred, float depth)
 {
-    float blurFactor = BlurFactor(depth, g_DOF.DOFParams);
+    float blurFactor = BlurFactor(depth, g_DOF.DOF_Distance);
     return lerp(colorFocus, colorBlurred, blurFactor);
 }
 
@@ -468,16 +463,16 @@ PS_OUT PS_MAIN_DOF (PS_IN In)
     //depth = ConvertZToLinearDepth(depth);
     //color = float4(DistanceDOF(color.xyz, colorBlurred, depth), 1.0);
     //Out.vColor = color;
-    
-
+   
     float fViewZ = vDepth.y * g_fCamFar; /* 해당 픽셀이 카메라에서 얼마나 떨어져 있는지를 나타내는 월드 공간에서의 Z 값 */ 
     
-    if (g_DOF.DOFParams.x > fViewZ) 
+    if (g_DOF.DOF_Distance > fViewZ) 
     {
         Out.vColor = vTarget;
     }
     else
         Out.vColor = vBlur;
+    
     //else if (g_DOF.fFocusDistance + g_DOF.fFocusRange < fViewZ) /* 초첨거리 뒤 */
     //{
     //    Out.vColor = vBlur;

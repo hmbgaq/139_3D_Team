@@ -178,11 +178,10 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 				// D는 무조건 Release Summoning임. 다른곳에서 안나타나므로 
 				CData_Manager::GetInstance()->Add_CurEXP(15); 
 			}
+			
 			m_bFlags[0] = true;
 			pActor->Set_Dead(true);
 		}	
-
-		return nullptr;
 	}
 
 	return nullptr;
@@ -198,7 +197,6 @@ CState<CInfected>* CInfected_State::Release_Summoning(CInfected* pActor, _float 
 			CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
 			pBody->Collider_Off(); // 바디 콜라이더 off 
 			m_bFlags[0] = true;
-			pActor->Set_Dead(true);
 		}
 	}
 	return nullptr;

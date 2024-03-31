@@ -1,15 +1,13 @@
+#ifndef SHADER_DEFINES_HLSLI
 #include "Shader_Defines.hlsli"
+#define SHADER_DEFINES_HLSLI
+#endif
 
 /* ------------ 공 지 사 항 ----------------- */
 // 보통 ORM텍스쳐를 Occulusuin, Roughness, Metalic 이라고 하는데 
 // 우리는 ORM텍스쳐가 있기때문에 R (Roughness), G (Metallic), B (Ambient Occlusion) 에서 가져와야한다. 
 /* ----------------------------------------- */
 
-#define F_ZERO          float3(0.04f, 0.04f, 0.04f)
-#define PI              3.14159265359f
-#define TWO_PI          6.28318530718f
-#define PI_OVER_TWO     1.5707963268f
-#define EPSILON         0.000001f
 /* ----------------- Variable ----------------- */
 TextureCube g_IrradianceTexture;
 TextureCube g_PreFilteredTexture;

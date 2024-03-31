@@ -91,8 +91,8 @@ HRESULT CInfected_D::Ready_Option()
 	m_eInfo.fAttack_Distance = 2.f; /* 이 사거리 내에 있으면 무조건 자폭 */
 	m_eInfo.fWalk_Distance = 2.f; 
 
-	m_iHp = 40;
-	m_iMaxHp = 30;
+	m_iHp = 10; /* 그냥 쳐도 죽음 얘는 */
+	m_iMaxHp = 10;
 
 	m_pTarget = m_pGameInstance->Get_Player();
 

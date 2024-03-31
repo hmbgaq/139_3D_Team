@@ -147,6 +147,9 @@ void CWindow_ShaderTool::Show_N_Create_ObjectList()
 		ImGui::EndListBox();
 	}
 
+	ImGui::RadioButton("Anim", &iType, 0); ImGui::SameLine();
+	ImGui::RadioButton("NonAnim", &iType, 1);
+
 	/* 리스트에서 선택한 오브젝트 만들기 */
 	if (ImGui::Button("Show"))
 	{
@@ -155,21 +158,26 @@ void CWindow_ShaderTool::Show_N_Create_ObjectList()
 
 	if (m_bCreateObject_Button)
 	{
-		Create_DummyObject(m_strCurrentObjectTag);
+		Create_DummyObject(m_strCurrentObjectTag, iType);
+		m_bCreateObject_Button = false;
 	}
 	
 }
 
-void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
+void CWindow_ShaderTool::Create_DummyObject(string ObjectTag, _int iType)
 {
-	// m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	// 더미라 아무대나 넣음 
 	wstring Temp;
-	m_pGameInstance->String_To_WString(ObjectTag, Temp);
+	m_pGameInstance->String_To_WString(ObjectTag, Temp); //TEXT("Prototype_GameObject_Bandit_Sniper")
 
 	CShaderParsed_Object::CREATE_DESC desc = {};
 	desc.strModelProtoTag = ObjectTag;
-	//desc.strShaderProtoTag = Prototype_Component_Shader_Monster
+
+	if (0 == iType)
+		desc.eType = CModel::TYPE::TYPE_ANIM;
+	else if (0 == iType)
+		desc.eType = CModel::TYPE::TYPE_NONANIM;
+	desc.iRenderPass = 0;
+	
 	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_MONSTER, TEXT("Prototype_GameObject_ShaderParsed_Object"), &desc);
 	
 }
@@ -588,12 +596,8 @@ void CWindow_ShaderTool::Compress_DOF_Setting()
 {
 	static float Params[4] = { 0.10f, 0.20f, 0.30f, 0.4f };
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
-	ImGui::SliderFloat4("DOF Parameters", reinterpret_cast<float*>(&m_eDOF_Desc.DOFParams), -1.0f, 5.0f, "Param %0.3f");
+	ImGui::SliderFloat4("Distance", reinterpret_cast<float*>(&m_eDOF_Desc.DOF_Distance), -1.0f, 10.0f, "Distance %0.3f");
 
-	//ImGui::SliderFloat4("DOFParams", &m_eDOF_Desc.DOFParams, -1.0f, 1.0f, "DOFParams = %.3f");
-	//ImGui::SliderFloat("Distance", &m_eDOF_Desc.fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
-	//ImGui::SliderFloat("Range", &m_eDOF_Desc.fFocusRange, 0.0f, 100.0f, "Range = %.3f");
-	
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
 

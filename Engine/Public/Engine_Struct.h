@@ -371,9 +371,9 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagGodRay_Desc
 	{
-		_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825, 2.0f);
-		_float2 vScreenSunPosition;
-		_float2 Padding;
+		_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825f, 2.0f);
+		_float2 vScreenSunPosition = {};
+		_float2 Padding = {};
 	}LIGHTSHAFT_DESC;
 
 	typedef struct ENGINE_DLL tagPBR_Desc
@@ -388,7 +388,6 @@ namespace Engine
 		_float fBias				= 0.1f;
 		_float fPowerExponent		= 2.f;
 		_float fBlur_Sharpness		= 16.f;
-
 	}HBAO_PLUS_DESC;
 
 	typedef struct ENGINE_DLL tagSSR_Desc
@@ -422,7 +421,6 @@ namespace Engine
 		_float	fFogHeightDensity		= 0.05f;
 		_float	padding					= 0.f; //4 
 		_float4 vFogColor				= { 0.5f, 0.5f, 0.5f, 0.2f };
-
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc
@@ -441,7 +439,6 @@ namespace Engine
 		_bool bScreen_Active = false;
 		_float fFinal_Saturation = 1.f;
 		_float fFinal_Brightness = 1.f;
-
 	}HSV_DESC;
 
 	typedef struct ENGINE_DLL tagRadialBlurDesc
@@ -454,10 +451,7 @@ namespace Engine
 	typedef struct ENGINE_DLL tagDOF
 	{
 		_bool  bDOF_Active		= false;
-		_float4  DOFParams = { 0.f, 0.f, 0.f, 0.f };
-		//float  fFocusDistance = 10.f;
-		//float  fFocusRange = 3.f;
-
+		_float DOF_Distance = 0.f;
 	}DOF_DESC;
 
 	typedef struct ENGINE_DLL tagVignette

@@ -95,7 +95,6 @@ void CCamera::Update_Cascade(const float3& vDirectionalDir)
 	_float4x4 mShadowView;
 	mShadowView = XMMatrixLookAtLH(XMLoadFloat3(&vPos), XMLoadFloat3(&vLookAt), XMLoadFloat3(&vUp));
 
-
 	// Get the bounds for the shadow space
 }
 

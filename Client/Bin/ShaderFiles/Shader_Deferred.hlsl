@@ -1,4 +1,4 @@
-#include "Shader_PBR.hlsl"
+//#include "Shader_PBR.hlsl"
 #include "Shader_MyPBR.hlsl"
 #include "DitherUtil.hlsli"
 //#include "Shader_Defines.hlsli"
@@ -637,8 +637,9 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
 
+    float3 vBRDF = { 0.f, 0.f, 0.f };
     // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
-    float3 vBRDF = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
+    //vBRDF = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
    
     float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
     vEmissive = pow(vEmissive, gamma);
@@ -650,9 +651,88 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     return Out;
 }
 
-/* ------------------ 7 -  ------------------ */
+/* ------------------ 6 - PBR Deferred ------------------ */
+PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
 
+    // 감마보정 -> Linear space로 변형후 빛계산을 하고 다시 감마보정을 통해서 그린다.
+    float gamma = 2.2f;
 
+    vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vAlbedo = pow(vAlbedo, gamma);
+    if (vAlbedo.a == 0.f)
+    {
+        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        if (vPriority.a == 0.f)
+            discard;
+        
+        Out.vColor = vPriority;
+        
+        return Out;
+    }
+    
+    // ORM : (R)Occlusion ,(G)Roughness , (B)Metalic */ 에 저장 
+    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
+    float fAmbient_Occlusion = vORMDesc.r;
+    float fRoughness = vORMDesc.g;
+    float fMetallic = vORMDesc.b;
+    float fAO;
+    fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
+
+    // N
+    vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 N = vNormal.xyz * 2.f - 1.f;
+
+    // F0
+    float3 F0 = 0.04f; //  F0 : reflectance ratio - 0.04 looks visually correct for non-metallic sufaces
+    F0 = lerp(F0, vAlbedo.rgb, fMetallic); // 슈레넬에서 쓸 R0 반사율 
+
+    // N(위에), V, L, H
+    vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vWorldPos;
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vNormal.w;
+    vWorldPos.w = 1.f;
+
+    float fViewZ = vDepthDesc.w * g_CamFar;
+    vWorldPos = vWorldPos * fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+    float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
+    float3 L = normalize(-g_vLightDir);
+    float3 H = normalize(V + L);
+        
+    float ShadowColor = 1.f;
+    if (true == g_bShadow_Active)
+    {
+        vector vPosition = mul(vWorldPos, g_LightViewMatrix);
+        vPosition = mul(vPosition, g_LightProjMatrix);
+   
+        float2 vUV = (float2) 0.0f;
+   
+        vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
+        vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
+   
+        float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
+   
+        if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
+            ShadowColor = 0.8f;
+    }
+    
+    // BRDF : Cook-Torrance Specular BRDF / Radiance 계산은 여기 함수 내부에서 처리할예정 
+    float3 CT_BRDF = MY_BRDF_Irradiance(fRoughness, fMetallic, vAlbedo.rgb, F0, fAO, N, V, L, H);
+    
+    float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
+    vEmissive = pow(vEmissive, gamma);
+    
+    Out.vColor.rgb = CT_BRDF * ShadowColor + vEmissive ;
+    Out.vColor.a = 1.f;
+	
+    return Out;
+}
 /*=============================================================
  
                          Technique 
@@ -721,5 +801,17 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_PBR_DEFERRED();
+    }
+
+    pass New_PBR // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_NEW_PBR();
     }
 }
