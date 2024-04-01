@@ -25,7 +25,7 @@ CState<CPlayer>* CPlayer_InteractionLadder_Up_IdlePose::Update(CPlayer* pActor, 
 		{
 			return new CPlayer_InteractionLadder_Up_Stop();
 		}
-		else if (m_pGameInstance->Key_Down(DIK_W))
+		else if (m_pGameInstance->Key_Pressing(DIK_W))
 		{
 			return new CPlayer_InteractionLadder_Up_Loop();
 		}
