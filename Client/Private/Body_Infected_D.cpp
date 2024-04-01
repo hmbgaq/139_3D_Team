@@ -47,6 +47,9 @@ void CBody_Infected_D::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Infected_D::Render()
 {
+	if (m_bAlive == false)
+		return S_OK;
+
 	FAILED_CHECK(__super::Render());
 
 	return S_OK;
@@ -54,6 +57,9 @@ HRESULT CBody_Infected_D::Render()
 
 HRESULT CBody_Infected_D::Render_Shadow()
 {
+	if (m_bAlive == false)
+		return S_OK;
+
 	FAILED_CHECK(__super::Render_Shadow());
 
 	return S_OK;

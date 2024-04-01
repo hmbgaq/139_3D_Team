@@ -29,6 +29,7 @@ public:
 	void  Set_isCollision(_bool _isCollision) { m_isCollision = _isCollision; }
 
 	void Set_ColliderSize(_float _sizeX, _float _sizeY, _float _sizeZ);
+	void Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ);
 
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType);
@@ -38,7 +39,6 @@ public:
 	_bool Is_Collision(CCollider* pTargetCollider);
 	void Collision(CCollider* pTargetCollider);
 	void End_CollisionCheck();
-
 
 public:
 	virtual void			OnCollisionEnter(CCollider* other);

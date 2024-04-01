@@ -7149,14 +7149,14 @@
     <ClInclude Include="..\Public\Body_Infected_D.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Weapon_Infected_D.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Infected_Sprint_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_Taunt_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10147,14 +10147,14 @@
     <ClCompile Include="..\Private\Body_Infected_D.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\Weapon_Infected_D.cpp">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Infected_Sprint_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_Taunt_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Weapon_Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

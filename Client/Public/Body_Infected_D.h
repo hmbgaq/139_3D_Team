@@ -28,6 +28,13 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
+	void Set_DeadState(_bool bAlive) { m_bAlive = bAlive; }
+
+private:
+	_bool m_bAlive = true;
+
+
+public:
 	static CBody_Infected_D* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;

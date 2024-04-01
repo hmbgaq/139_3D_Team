@@ -88,8 +88,8 @@ HRESULT CInfected_D::Ready_Option()
 	// fWalk	~			: 뛰어오는거리 -> 일반공격에 도달할때까지 뛰어옴 -> 뛰면서 공격하는 이동공격으로 감 
 	m_eInfo.eType = INFECTED_TYPE::INFECTED_WASTER;
 	m_eInfo.RandomNumber = SMath::Random(1, 10);
-	m_eInfo.fAttack_Distance = 2.f; /* 이 사거리 내에 있으면 무조건 자폭 */
-	m_eInfo.fWalk_Distance = 2.f; 
+	m_eInfo.fAttack_Distance = 1.5f; /* 이 사거리 내에 있으면 무조건 자폭 */
+	m_eInfo.fWalk_Distance = 1.5f; 
 
 	m_fHp = 10;
 	m_fMaxHp = 10;
@@ -144,11 +144,11 @@ HRESULT CInfected_D::Ready_PartObjects()
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("RightHandIK");
+		WeaponDesc.m_pSocketBone = m_pBody->Get_BonePtr("HipsStretch");
 		WeaponDesc.m_pParentTransform = m_pTransformCom;
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Infected_D"), "RightHandIK", WeaponDesc, TEXT("Weapon_Punch")));
-
-		CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Punch"));
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Weapon_Infected_D"), "HipsStretch", WeaponDesc, TEXT("Weapon_Bomb")));
+	
+		CWeapon* m_pWeapon = Get_Weapon(TEXT("Weapon_Bomb"));
 		m_pWeapon->Set_Enable(false);
 	}
 	return S_OK;

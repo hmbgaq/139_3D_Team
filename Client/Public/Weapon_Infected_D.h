@@ -27,6 +27,13 @@ protected:
 	HRESULT Bind_ShaderResources();
 
 public:
+	void Set_BombActive(_bool bActive) { m_bBombActive = bActive; }
+
+private:
+	_bool m_bBombActive = { false };
+	_float m_fTimeAcc = { 0.f };
+
+public:
 	static CWeapon_Infected_D* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool();

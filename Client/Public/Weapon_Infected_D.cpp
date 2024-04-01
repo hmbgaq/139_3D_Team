@@ -36,7 +36,20 @@ void CWeapon_Infected_D::Priority_Tick(_float fTimeDelta)
 
 void CWeapon_Infected_D::Tick(_float fTimeDelta)
 {
+	if (m_bBombActive)
+	{
+		m_fTimeAcc += fTimeDelta;
+
+		if (m_fTimeAcc > 1.f)
+		{
+			m_fTimeAcc = 0.f;
+			m_bBombActive = false;
+			m_pColliders[0]->Set_Enable(true);
+			m_pColliders[0]->Update(m_WorldMatrix);
+		}
+	}
 	__super::Tick(fTimeDelta);
+
 }
 
 void CWeapon_Infected_D::Late_Tick(_float fTimeDelta)
@@ -68,14 +81,15 @@ HRESULT CWeapon_Infected_D::Ready_Components()
 
 		CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-		BoundingDesc.fRadius = { 0.2f };
-		BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
+		BoundingDesc.fRadius = { 3.f };
+		BoundingDesc.vCenter = _float3(0.f, -1.f * (BoundingDesc.fRadius / 2.f), 0.f);
 
 		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc));
+		m_pColliders[0]->Set_Enable(false);
 	}
 
-	//! 유정: 트레일 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json", this);
+	//! 유정: 트레일 테스트 - 이 트레일 아님 
+	//m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json", this);
 
 	return S_OK;
 }

@@ -14,7 +14,6 @@ float4          g_vDiffuseColor = { 1.f, 1.f, 1.f, 1.f };
 bool            g_bORM_Available;
 bool            g_bEmissive_Available;
 
-
 /* =========== Texture =========== */
 Texture2D		g_DiffuseTexture;
 Texture2D       g_NormalTexture;

@@ -59,7 +59,6 @@ void CInfected_A::Tick(_float fTimeDelta)
 	
 	/* !ADD : UI_HUD */
 	//CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
-
 }	
 
 void CInfected_A::Late_Tick(_float fTimeDelta)
