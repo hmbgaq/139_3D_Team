@@ -78,6 +78,7 @@ private:
 	string			strFileName;
 	_bool			m_bSave = false;
 	_bool			m_bLoad = false;
+	_int			iType = 0;
 
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
@@ -100,7 +101,7 @@ private:
 	/* 오브젝트 불러오기 */
 	void Create_Object();
 	void Show_N_Create_ObjectList();
-	void Create_DummyObject(string ObjectTag);
+	void Create_DummyObject(string ObjectTag, _int iType);
 
 	/* Collapsing */
 	void Layer_Light_Control();

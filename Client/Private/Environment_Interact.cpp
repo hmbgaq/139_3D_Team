@@ -179,7 +179,9 @@ HRESULT CEnvironment_Interact::Render()
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		}
 
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
 		m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
 
@@ -201,7 +203,6 @@ HRESULT CEnvironment_Interact::Render_Shadow()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
@@ -226,9 +227,9 @@ void CEnvironment_Interact::Set_AnimationIndex(_uint iAnimIndex)
 
 void CEnvironment_Interact::StartGroupInteract()
 {
-	_int iInteractGroupSize = m_vecInteractGroup.size();
+	_int iInteractGroupSize = (_int)m_vecInteractGroup.size();
 
-	for (_uint i = 0; i < iInteractGroupSize; ++i)
+	for (_uint i = 0; i < (_uint)iInteractGroupSize; ++i)
 	{
 		m_vecInteractGroup[i]->Set_Interact(false);
 	}
@@ -841,7 +842,7 @@ _bool CEnvironment_Interact::ArrivalCheck()
 
 _bool CEnvironment_Interact::RotationCheck(const _float fTimeDelta)
 {
-	return m_pTransformCom->Rotation_Lerp(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, 0.1);
+	return m_pTransformCom->Rotation_Lerp(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, 0.1f);
 }
 
 _bool CEnvironment_Interact::Check_OwnerEnablePosition()
@@ -982,8 +983,8 @@ void CEnvironment_Interact::Start_SplineDouble(vector<_float4>* SplinePoints)
 	m_InitMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
 	_vector vFirstPos, vSecondPos, vResultPos;
-	_int iPointSize = SplinePoints->size();
-	_int iRoopCount = SplinePoints->size() / 4;
+	_int iPointSize = (_int)SplinePoints->size();
+	_int iRoopCount = _int(SplinePoints->size() / 4);
 
 
 	for (_int i = 0; i < iPointSize; ++i)
@@ -1152,7 +1153,7 @@ void CEnvironment_Interact::Spline_LoopDoublePoint(const _float fTimeDelta)
 		vMovePoint4 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 3]);
 
 		//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint1, vMovePoint2, vMovePoint2, m_fSplineTimeAcc);
-		vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, t);
+		vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, (_float)t);
 		
 
 
@@ -1413,7 +1414,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 
 				auto iter = m_mapSplineVectors.find(m_strCurrentSplineTrack);
 
-				_int iNewSplineVectorSize = iter->second.size();
+				_int iNewSplineVectorSize = (_int)iter->second.size();
 
 				for (_int i = 0; i < iNewSplineVectorSize; ++i)
 				{
@@ -1539,7 +1540,7 @@ void CEnvironment_Interact::Change_WagonTrack(const _float fTimeDelta)
 	vMovePoint3 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 2]);
 	vMovePoint4 = XMLoadFloat4(&m_vecSplinePoints[m_iCurrentSplineIndex + 3]);
 	
-	vCalcPosition = CatmullRomInterpolation(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, t);
+	vCalcPosition = CatmullRomInterpolation(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, (_float)t);
 	//vCalcPosition = XMVectorCatmullRom(vMovePoint1, vMovePoint2, vMovePoint3, vMovePoint4, t);
 
 	if (false == m_pTransformCom->Go_TargetArrivalCheck(vCalcPosition, fTimeDelta, m_fSplineEndRaidus) )

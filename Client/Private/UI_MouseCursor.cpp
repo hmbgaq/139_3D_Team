@@ -97,7 +97,7 @@ void CUI_MouseCursor::Tick(_float fTimeDelta)
 			m_fPositionX = _float(m_ptMouse.x + m_ptOffset.x);
 			m_fPositionY = _float(m_ptMouse.y + m_ptOffset.y);
 			m_pTransformCom->Set_State(CTransform::STATE_POSITION,
-				XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -(m_fPositionY - g_iWinSizeY * 0.5f), 0.1, 1.f));
+				XMVectorSet(m_fPositionX - g_iWinSizeX * 0.5f, -(m_fPositionY - g_iWinSizeY * 0.5f), 0.1f, 1.f));
 			m_pTransformCom->Set_Scaling(40.f, 40.f, 0.1f);
 		}
 	}
