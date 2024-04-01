@@ -11,6 +11,8 @@ void CPlayer_InteractionPull_Rock_Loop::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	pActor->Set_Rotate_In_CameraDir(false);
+
+	pActor->Set_Interection(true);
 }
 
 CState<CPlayer>* CPlayer_InteractionPull_Rock_Loop::Update(CPlayer* pActor, _float fTimeDelta)

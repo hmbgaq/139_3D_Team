@@ -11,6 +11,8 @@ void CPlayer_InteractionPush_Rock_Start::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	pActor->Set_Rotate_In_CameraDir(false);
+
+	pActor->Set_Interection(true);
 }
 
 CState<CPlayer>* CPlayer_InteractionPush_Rock_Start::Update(CPlayer* pActor, _float fTimeDelta)

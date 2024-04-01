@@ -8,6 +8,8 @@ void CPlayer_InteractionPull_Rock_End::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	pActor->Set_Rotate_In_CameraDir(false);
+
+	pActor->Set_Interection(false);
 }
 
 CState<CPlayer>* CPlayer_InteractionPull_Rock_End::Update(CPlayer* pActor, _float fTimeDelta)
