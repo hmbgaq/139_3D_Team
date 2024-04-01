@@ -29,7 +29,22 @@ CState<CEdgar>* CEdgar_State::Walk_State(CEdgar* pActor, _float fTimeDelta, _uin
 	return nullptr;
 }
 
+CState<CEdgar>* CEdgar_State::Walk_Aim_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 CState<CEdgar>* CEdgar_State::Run_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Cover_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Crouch_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }

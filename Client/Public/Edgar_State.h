@@ -22,7 +22,11 @@ public:
 public:		//상태 그룹 별 업데이트 
 	CState<CEdgar>* Normal_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CEdgar>* Walk_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Walk_Aim_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CEdgar>* Run_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Cover_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Crouch_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 	CState<CEdgar>* Hit_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
