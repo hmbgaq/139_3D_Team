@@ -70,7 +70,7 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 		//{
 		//	/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
 		//	m_bInteractActive = true;
-		//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 		//}
 		//else
 		//	m_bInteractActive = false;
@@ -88,10 +88,6 @@ HRESULT CInteract_Chain::Render()
 	{
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE); // 1
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS); // 6
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_MetallicTexture", (_uint)i, aiTextureType_METALNESS);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_RougnessTexture", (_uint)i, aiTextureType_DIFFUSE_ROUGHNESS);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_OcclusionTexture", (_uint)i, aiTextureType_AMBIENT_OCCLUSION);
-
 		/* 체인부분만 하얗게 변하고 나무부분은 원래 Diffuse로 그리도록함 */
 
 		if (iNumMeshes >= 2)
@@ -99,7 +95,7 @@ HRESULT CInteract_Chain::Render()
 			if (0 == i) /* 체인 */
 			{
 				if (m_bInteractActive)
-					iRenderPass = ECast(MODEL_SHADER::MODEL_WHITEBLINK);
+					iRenderPass = ECast(MODEL_SHADER::MODEL_WHITEBLINK); // 3
 				else
 					iRenderPass = ECast(MODEL_SHADER::MODEL_ORIGIN);
 
@@ -160,7 +156,7 @@ HRESULT CInteract_Chain::Ready_Components()
 
 	/* For.Com_Model */
 	{
-		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Chain"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_ChainBeam4"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	}
 
 	return S_OK;

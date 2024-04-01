@@ -33,8 +33,8 @@ Texture2D       g_RADTexture;
 /* =========== Shader Value =========== */
 float   g_fDissolveWeight;                          /* Dissolve */
                                                     
-float4  g_vLineColor;                               /* OutLine */
-float   g_LineThick;                                /* OutLine */
+float4  g_vLineColor = { 1.f, 1.f, 1.f, 1.f }; /* OutLine */
+float   g_LineThick = 1.f;                                /* OutLine */
                                                     
 float3  g_vBloomPower = { 0.f, 0.f, 0.f };          /* Bloom */
 float4  g_vRimColor = { 0.f, 0.f, 0.f, 0.f };       /* RimLight */
@@ -172,6 +172,11 @@ struct PS_ICEGROUP
 struct PS_OUT_SHADOW
 {
     vector vLightDepth : SV_TARGET0;
+};
+
+struct PS_OUT_OUTLINE
+{
+    vector vColor : SV_TARGET0;
 };
 
 /*=============================================================
@@ -333,32 +338,13 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
 }
 
 /* ------------------- OutLine Pixel Shader(4) -------------------*/
-PS_OUT PS_MAIN_OUTLINE(PS_IN In)
+PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT) 0;
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
-    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vColor = g_vLineColor;
     
-    vector vColor = { 1.f, 1.f, 1.f, 1.f };
-    vColor.a = g_fTimeDelta;
-    
-    /* Normal Setting */ 
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    vNormal = mul(vNormal, WorldMatrix);
-    
-    Out.vDiffuse = vColor;
-    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
-    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
-    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
-            
-    if (true == g_bORM_Available)
-        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    
-    if (true == g_bEmissive_Available)
-        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
-    
+    Out.vColor = vColor;
     
     return Out;
 }

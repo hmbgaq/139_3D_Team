@@ -45,6 +45,8 @@ void CInfected_D::Tick(_float fTimeDelta)
 void CInfected_D::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), ); //m_bIsInFrustum
 }
 
 HRESULT CInfected_D::Render()
@@ -53,6 +55,11 @@ HRESULT CInfected_D::Render()
 }
 
 HRESULT CInfected_D::Render_Shadow()
+{
+	return S_OK;
+}
+
+HRESULT CInfected_D::Render_OutLine()
 {
 	return S_OK;
 }

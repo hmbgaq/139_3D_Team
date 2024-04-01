@@ -199,9 +199,6 @@
     <Filter Include="02.GameObjects\UI\00. Player\00. Blood\Vignette">
       <UniqueIdentifier>{f4d39fbe-3d41-437e-b224-2666fac37121}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\ETC">
-      <UniqueIdentifier>{b18d42ab-99b6-4330-a22a-3033f8d1b25f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. Componenet">
       <UniqueIdentifier>{c773ceaa-99e3-4453-a030-0929a6c32625}</UniqueIdentifier>
     </Filter>
@@ -2889,15 +2886,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList">
       <UniqueIdentifier>{adb0cc32-0a85-4a50-b6cf-4c821167dfe3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\01. Interact">
-      <UniqueIdentifier>{daed6591-e3f1-4e31-8a6a-3942dcf39622}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\01. Interact\0. Chain">
-      <UniqueIdentifier>{4640b070-669a-48d8-9c94-8bed528d2d18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\01. Interact\1. Door">
-      <UniqueIdentifier>{86676779-540a-40d5-8ff0-93cb8fa83b7f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Revolver\Bullet">
       <UniqueIdentifier>{0a49b597-a451-44f1-ae38-45f5170ab851}</UniqueIdentifier>

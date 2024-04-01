@@ -13,6 +13,7 @@ Texture2D g_DebugTarget;
 Texture2D g_UI_Target;
 Texture2D g_Effect_Target;
 Texture2D g_RimBlur_Target;
+Texture2D g_OutLine_Target;
 
 
 /* ------------------ Value ------------------ */ 
@@ -223,6 +224,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
    
     //Out.vColor = vUI;
     
@@ -238,7 +240,7 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     // 안넣는 ver
     //if (Out.vColor.a == 0)
     //{
-        Out.vColor = vFinal + vDebug + vRimBloom + vUI;
+    Out.vColor = vFinal + vDebug + vRimBloom + vUI + vOutLine;
     //}
        
     if (Out.vColor.a == 0)
@@ -268,13 +270,14 @@ PS_OUT PS_MAIN_FINAL_SEPHIA(PS_IN In)
     vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
    
     Out.vColor = vUI;
     
     // 안넣는 ver
     if (Out.vColor.a == 0)
     {
-        Out.vColor += vFinal + vDebug + vRimBloom;
+        Out.vColor += vFinal + vDebug + vRimBloom + vOutLine;
     }
        
     if (Out.vColor.a == 0)
@@ -294,13 +297,14 @@ PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
     vector vFinal = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
-   
+    vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
+    
     Out.vColor = vUI;
     
     // 안넣는 ver
     if (Out.vColor.a == 0)
     {
-        Out.vColor += vFinal + vDebug + vRimBloom;
+        Out.vColor += vFinal + vDebug + vRimBloom + vOutLine;
     }
        
     if (Out.vColor.a == 0)
