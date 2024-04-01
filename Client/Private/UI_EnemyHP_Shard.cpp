@@ -51,31 +51,31 @@ void CUI_EnemyHP_Shard::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_V))
-		m_fCurHP -= 10.f;
-	if (m_pGameInstance->Key_Down(DIK_B))
-		m_fCurHP += 10.f;
+	//if (m_pGameInstance->Key_Down(DIK_V))
+	//	m_fCurHP -= 10.f;
+	//if (m_pGameInstance->Key_Down(DIK_B))
+	//	m_fCurHP += 10.f;
 
-	if (m_pGameInstance->Key_Down(DIK_5))
-	{
-		m_vStartPoint = { 0.0f, 1.0f };
-		m_vEndPoint = { 1.0f, 0.0f };
-	}
-	if (m_pGameInstance->Key_Down(DIK_6))
-	{
-		m_vStartPoint = { 1.0f, 0.0f };
-		m_vEndPoint = { 0.0f, 1.0f };
-	}
-	if (m_pGameInstance->Key_Down(DIK_7))
-	{
-		m_vStartPoint = { 1.0f, 1.0f };
-		m_vEndPoint = { 0.0f, 0.0f };
-	}
-	if (m_pGameInstance->Key_Down(DIK_8))
-	{
-		m_vStartPoint = { 0.0f, 0.0f };
-		m_vEndPoint = { 1.0f, 1.0f };
-	}
+	//if (m_pGameInstance->Key_Down(DIK_5))
+	//{
+	//	m_vStartPoint = { 0.0f, 1.0f };
+	//	m_vEndPoint = { 1.0f, 0.0f };
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_6))
+	//{
+	//	m_vStartPoint = { 1.0f, 0.0f };
+	//	m_vEndPoint = { 0.0f, 1.0f };
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_7))
+	//{
+	//	m_vStartPoint = { 1.0f, 1.0f };
+	//	m_vEndPoint = { 0.0f, 0.0f };
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_8))
+	//{
+	//	m_vStartPoint = { 0.0f, 0.0f };
+	//	m_vEndPoint = { 1.0f, 1.0f };
+	//}
 
 	__super::Tick(fTimeDelta);
 

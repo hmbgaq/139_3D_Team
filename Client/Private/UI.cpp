@@ -147,6 +147,9 @@ void CUI::Tick(_float fTimeDelta)
 		case Client::UISTATE::PLAYER_HUD:
 			Player_HUD(fTimeDelta);
 			break;
+		case Client::UISTATE::TUTORIAL_BOX:
+
+			break;
 		case Client::UISTATE::STATE_END:
 			break;
 		default:
@@ -269,7 +272,6 @@ HRESULT CUI::Bind_ShaderResources()
 		return S_OK;
 
 	_float4 vColor = m_tUIInfo.vColor;
-	vColor.w = 1.f;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &vColor, sizeof(_float4))))
 		return E_FAIL;
 
@@ -555,7 +557,7 @@ void CUI::Parts_Delete()
 	}
 }
 
-void CUI::LifeTime(_float fTimeDelta)
+void CUI::LifeOff(_float fTimeDelta)
 {
 	/* LifeTime이 있는 UI일 경우 */
 	if (m_bLifeTimeUI == true)
@@ -567,6 +569,15 @@ void CUI::LifeTime(_float fTimeDelta)
 			//m_fTime = GetTickCount64();
 		}
 	}
+}
+
+void CUI::LifeOn(_float fTimeDelta)
+{
+	Set_Alpha(0.f);			// UI 알파값 초기화
+	Set_Active(true);		// UI 활성화
+	Set_AnimPlay(true);		// UI Animation 재생
+	Set_Disappear(false);	// UI 사라짐 Off
+	ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
 }
 
 void CUI::ResetTime()
@@ -944,7 +955,20 @@ void CUI::Player_HUD(_float fTimeDelta)
 	}
 	else
 	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
-		LifeTime(fTimeDelta);
+		LifeOff(fTimeDelta);
+	}
+}
+
+void CUI::TutorialBox(_float fTimeDelta)
+{
+	/* LifeTime UI */
+	if (m_pData_Manager->Get_ShowInterface() == true)
+	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
+		LifeOn(fTimeDelta);
+	}
+	else
+	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
+		LifeOff(fTimeDelta);
 	}
 }
 
@@ -1045,6 +1069,7 @@ void CUI::Load_FromJson(const json& In_Json)
 
 		m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 	}
+
 	if (In_Json.contains("Distortion")) // 키가 있으면
 	{
 		if (In_Json["Distortion"].contains("TimeAcc")) // 키가 있으면

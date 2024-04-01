@@ -11,6 +11,7 @@
 #include "UI_Text.h"
 #include "Easing_Utillity.h"
 #include "UI_Manager.h"
+#include "Data_Manager.h"
 #include "UI_Distortion.h"
 
 /* error 외부참조 기호 : define 걸어줘야함 */
@@ -34,12 +35,12 @@ HRESULT CWindow_UITool::Initialize()
 	SetWindowText(g_hWnd, TEXT("TOOL 로딩중."));
 
 	/* 해당 경로안에 있는 모든 이미지들을 불러온다. */
-	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));		// Option
+	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Option"))));		// Option
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Menu"))));			// Menu
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Blood"))));			// Blood
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/DeathScreen"))));	// DeathScreen
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/PlayerHUD"))));		// PlayerHUD
-	LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));		// WorldMap
+	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/WorldMap"))));		// WorldMap
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Crosshairs"))));	// Crosshairs
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/EnemyHUD"))));		// EnemyHUD
 	//LoadImgPath(ConverCtoWC(ConverWStringtoC(TEXT("../Bin/Resources/Textures/UI/Image/Misc"))));			// Misc
@@ -1009,6 +1010,18 @@ void CWindow_UITool::Setting_Child()
 			}
 		}
 
+		if (ImGui::Button("SATE UI"))
+			CData_Manager::GetInstance()->Set_GameState(GAME_STATE::UI);
+		ImGui::SameLine();
+		if (ImGui::Button("SATE GAMEPLAY"))
+			CData_Manager::GetInstance()->Set_GameState(GAME_STATE::GAMEPLAY);
+
+		
+		if (ImGui::Button("ShowInterface"))
+			m_bShowInterface = !m_bShowInterface;
+
+		CData_Manager::GetInstance()->Set_ShowInterface(m_bShowInterface);
+
 		if (ImGui::InputFloat("PosZ", &m_fPosZ, 0.01f, 0.01f))
 		{
 			m_pCurrSelectUI->Set_PosZ(m_fPosZ);
@@ -1074,7 +1087,7 @@ void CWindow_UITool::Setting_Child()
 				m_pCurrSelectUI->Set_DiffuseColor(m_fColor_Mul_Mesh[0], m_fColor_Mul_Mesh[1], m_fColor_Mul_Mesh[2], m_fColor_Mul_Mesh[3]);
 			}
 
-			ImGui::InputFloat("Alpha", m_pCurrSelectUI->Get_PointAlpha(), 0.01f, 0.01f);
+			ImGui::InputFloat("Alpha", &m_fColor_Mul_Mesh[3], 0.01f, 0.01f);
 
 			ImGui::SeparatorText("");
 		}

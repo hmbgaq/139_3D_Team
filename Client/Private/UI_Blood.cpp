@@ -106,6 +106,10 @@ void CUI_Blood::Tick(_float fTimeDelta)
 			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
 		}
 
+		// 피가 모두 소진됐을 경우 (죽음)
+		if (m_pData_Manager->Get_CurHP() <= 0.f)
+			m_bActive = false;
+
 		// 기준으로 잡은 체력보다 낮은 경우 (딸피)
 		if (m_pData_Manager->Get_CurHP() < m_pData_Manager->Get_MaxHP() / 4)
 		{
@@ -115,6 +119,8 @@ void CUI_Blood::Tick(_float fTimeDelta)
 		{
 			m_bLoop = false; // 지워지기
 		}
+
+
 
 		if (m_bLoop == true)
 		{

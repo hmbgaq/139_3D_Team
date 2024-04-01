@@ -567,21 +567,17 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
-	/* ! UI : DiedScreen / Key : I */
-	if (m_pGameInstance->Key_Down(DIK_B))
+	/* ! UI : TestText / Key : 8 */
+	if (m_pGameInstance->Key_Down(DIK_8))
 	{
-		m_bShowDiedScreen = !m_bShowDiedScreen;
-
-		if (m_bShowDiedScreen == true)
-		{
-			m_pUIManager->Active_DiedScreen();
-			m_pDataManager->Set_GameState(GAME_STATE::UI);
-		}
-		else
-		{
-			m_pUIManager->NonActive_DiedScreen();
-			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
-		}
+		m_pUIManager->Active_TutorialBox();
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::START);
+	}
+	/* ! UI : TestText / Key : 9 */
+	if (m_pGameInstance->Key_Down(DIK_9))
+	{
+		m_pUIManager->Active_TutorialBox();
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::PUNCH);
 	}
 
 	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */

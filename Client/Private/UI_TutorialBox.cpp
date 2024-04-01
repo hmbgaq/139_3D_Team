@@ -54,7 +54,7 @@ void CUI_TutorialBox::Priority_Tick(_float fTimeDelta)
 void CUI_TutorialBox::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	Check_Disappear(fTimeDelta);
+	//Check_Disappear(fTimeDelta);
 
 	if (m_bActive == true)
 	{
@@ -82,7 +82,7 @@ HRESULT CUI_TutorialBox::Render()
 			return E_FAIL;
 
 		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		m_pShaderCom->Begin(8); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
 		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
 		m_pVIBufferCom->Bind_VIBuffers();
@@ -139,7 +139,12 @@ HRESULT CUI_TutorialBox::Ready_Components()
 
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_bcg_tut_new"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTBOX]))))
+		TEXT("Com_Texture_TextBox"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTBOX]))))
+		return E_FAIL;
+
+	//! For.Com_Texture
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("TutorialText"),
+		TEXT("Com_Texture_Text"), reinterpret_cast<CComponent**>(&m_pTextureCom[TUTORIALTEXT]))))
 		return E_FAIL;
 
 	/* 효과가 필요한 녀석은 Map텍스쳐도 추가해주기 */
@@ -152,30 +157,11 @@ HRESULT CUI_TutorialBox::Bind_ShaderResources()
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
-	string TestName = m_tUIInfo.strObjectName;
-	for (_int i = (_int)0; i < (_int)m_eTexture_Kind; ++i)
-	{
-		switch (i)
-		{
-		case CUI_TutorialBox::TEXTBOX:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
-			break;
-		}
-		case CUI_TutorialBox::TEXTLINE:
-		{
-			//if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			//	return E_FAIL;
+	if (FAILED(m_pTextureCom[TEXTBOX]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+		return E_FAIL;
 
-			break;
-		}
-		case CUI_TutorialBox::TEXTURE_END:
-			break;
-		default:
-			break;
-		}
-	}
+	if (FAILED(m_pTextureCom[TUTORIALTEXT]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Front", m_iTextNum)))
+		return E_FAIL;
 
 	return S_OK;
 }

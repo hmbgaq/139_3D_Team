@@ -11,6 +11,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexture_Front;
 Texture2D g_DiffuseTexture_Second;
 Texture2D g_DiffuseTexture_Third;
 Texture2D g_DiffuseTexture_Fourth;
@@ -509,7 +510,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In) // 6
     vFireColor.a = vAlphaColor;
 
        // 컬러 혼합
-    Out.vColor.rgb = Calculation_ColorBlend(vFireColor, g_vColor_Mul, g_iColorMode).rgb;
+    Out.vColor = Calculation_ColorBlend(vFireColor, g_vColor_Mul, g_iColorMode);
     
     Out.vColor.a -= g_Alpha;
     
@@ -599,6 +600,29 @@ PS_OUT PS_MAIN_SHARD_HP(PS_IN In) // 7
     //}
     
     //return Out;
+}
+
+PS_OUT PS_MAIN_DIFFUSE_DOUBLE(PS_IN In) // 8
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+	/* 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다. */
+    float4 vCenterColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    float4 vFrontColor = g_DiffuseTexture_Front.Sample(LinearSampler, In.vTexcoord);
+   
+    // 텍스처 두장을 겹쳐서 그리는것 => 위에 그리고싶은 녀석을 먼저 그린 뒤, 먼저그린 텍스처의 알파가 0인곳을 뒤에 그릴 텍스처컬러로 그리면된다.
+    // +로 둘을 합치는건 색을 섞는 것.
+    Out.vColor = vFrontColor;
+    
+    if (Out.vColor.a == 0.f)
+        Out.vColor = vCenterColor;
+    
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
+	
+    return Out;
 }
 
 technique11 DefaultTechnique
@@ -708,5 +732,18 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHARD_HP();
+    }
+
+    pass DoubleDiffuse // 8
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DIFFUSE_DOUBLE();
     }
 }

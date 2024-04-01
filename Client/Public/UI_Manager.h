@@ -66,20 +66,40 @@ public: /* Ready_Preset */
 public:
 	/* PlayerHUD */
 	void	Active_PlayerHUD();
+	void	NonActive_PlayerHUD();
+
 	/* LeftHUD */
 	HRESULT Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LeftHUD();
 	void	NonActive_LeftHUD();
 	vector<CUI*>	m_vecLeftHUD;
+
 	/* RightHUD */
 	HRESULT Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_RightHUD();
 	void	NonActive_RightHUD();
 	vector<CUI*>	m_vecRightHUD;
+
+	/* LeftSkill */
+	HRESULT			Add_LeftSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_LeftSkill();
+	void			NonActive_LeftSkill();
+	CUI*			Get_LeftHUD(const string& strUIName);
+	vector<CUI*>	m_vecLeftSkill;
+
+	/* RightSkill */
+	HRESULT			Add_RightSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_RightSkill();
+	void			NonActive_RightSkill();
+	CUI*			Get_RightHUD(const string& strUIName);
+	vector<CUI*>	m_vecRightSkill;
+
 	/* TutorialBox */
 	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_TutorialBox();
 	void	NonActive_TutorialBox();
+	void	Change_TutorialText(TUTORIAL_TEXT eChangeText);
+
 	vector<CUI*>	m_vecTutorialBox;
 	/* LevelUp */
 	HRESULT Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag);

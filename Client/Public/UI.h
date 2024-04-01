@@ -312,8 +312,10 @@ public: /* ============================= Function ============================= 
 	virtual void	Check_RectPos();	// Moving
 	void			Moving_Picking_Point(POINT pt); // Picking Moving
 	virtual void	Parts_Delete();
-	void			LifeTime(_float fTimeDelta);
 
+public: /* ============================= LifeTime ============================= */
+	void			LifeOff(_float fTimeDelta);
+	void			LifeOn(_float fTimeDelta);
 
 public:
 	void			Set_LifeTimeUI(_bool bLifeTimeUI) { m_bLifeTimeUI = bLifeTimeUI; }
@@ -343,7 +345,10 @@ public: /* ============================== SetUp ============================== *
 
 	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
 	void			Tick_LevelUp(_float fTimeDelta);
+
+public:	// Tick
 	void			Player_HUD(_float fTimeDelta);
+	void			TutorialBox(_float fTimeDelta);
 
 public:
 	void			Check_Disappear(_float fTimeDelta);

@@ -72,7 +72,7 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 	m_iMaskNum = m_tUIInfo.iMaskNum;
 	m_iNoiseNum = m_tUIInfo.iNoiseNum;
 
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (!m_vecAnimation.empty())
 		{
