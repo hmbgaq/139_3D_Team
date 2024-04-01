@@ -273,6 +273,11 @@ HRESULT CRenderer::Render_Shadow()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Cascade()
+{
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_LightAcc()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_LightAcc")));

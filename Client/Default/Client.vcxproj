@@ -1263,8 +1263,8 @@
     <ClInclude Include="..\Public\Weapon_Infected_C.h" />
     <ClInclude Include="..\Public\Son_Weapon.h" />
     <ClInclude Include="..\Public\Son_Weapon_Head.h" />
-    <ClInclude Include="..\Public\Weapon_Punch_Tank.h" />
     <ClInclude Include="..\Public\Weapon_Infected_D.h" />
+    <ClInclude Include="..\Public\Weapon_Punch_Tank.h" />
     <ClInclude Include="..\Public\Weapon_Tank.h" />
     <ClInclude Include="..\Public\Window_Style.h" />
     <ClInclude Include="..\Public\Terrain.h" />

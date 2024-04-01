@@ -493,8 +493,6 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_UI_Monster(const wstring& strLayerT
 
 		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
 	}
-
-
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
 

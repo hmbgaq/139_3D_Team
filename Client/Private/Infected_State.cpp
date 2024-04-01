@@ -190,15 +190,13 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 CState<CInfected>* CInfected_State::Release_Summoning(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	/* Death = 경험치 줌. <> Release Summoning = 경험치 안줌 */
-	if (pActor->Is_Animation_End())
+	if (false == m_bFlags[0])
 	{
-		if (false == m_bFlags[0])
-		{
-			CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
-			pBody->Collider_Off(); // 바디 콜라이더 off 
-			m_bFlags[0] = true;
-		}
+		pActor->Set_CntDead_Time(1.f);
+		pActor->Set_CntDead_Active(true);
+		m_bFlags[0] = true;
 	}
+
 	return nullptr;
 }
 

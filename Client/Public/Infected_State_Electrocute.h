@@ -13,6 +13,7 @@ public:
 public:
 	virtual CState<CInfected>* Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
 	CState<CInfected>* Dead_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CInfected>* Bomb_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 };
 

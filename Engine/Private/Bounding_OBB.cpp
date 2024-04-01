@@ -14,6 +14,11 @@ void CBounding_OBB::Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ)
 	m_pOBB->Extents = _float3(_sizeX, _sizeY, _sizeZ);
 }
 
+void CBounding_OBB::Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ)
+{
+	m_pOBB->Center = _float3(_sizeX, _sizeY, _sizeZ);
+}
+
 HRESULT CBounding_OBB::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_OBB_DESC* pDesc = (BOUNDING_OBB_DESC*)pBoundingDesc;

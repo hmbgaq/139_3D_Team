@@ -46,6 +46,7 @@ private:
 
 	HRESULT Render_NonBlend();
 	HRESULT Render_Shadow();
+	HRESULT Render_Cascade();
 	HRESULT Render_LightAcc();
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
@@ -212,7 +213,7 @@ private:
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
 	_bool			m_bDebugRenderTarget	= { false };
-	_bool			m_bDebugCom				= { false };
+	_bool			m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

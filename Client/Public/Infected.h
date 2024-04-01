@@ -56,9 +56,14 @@ public:
 public:
 	INFECTED_DESC Get_Info() { return m_eInfo; }
 	virtual HRESULT Update_RenderState(_int CurrentHP) PURE;
+	void	Set_CntDead_Time(_float CountDown) { m_fCntDead_Time = CountDown; }
+	void	Set_CntDead_Active(_bool bActive) { m_bCntDead_Active = bActive; }
 
 protected:
 	HRESULT Ready_Components();
+	_bool	m_bCntDead_Active = { false };
+	_float	m_fCntDead_Time = {};
+	_float fTimeAcc = 0.f;
 
 protected:
 	virtual void Hitted_Left(Power ePower)	override;	// (플레이어 기준)왼쪽으로 떄린 평타 
@@ -73,7 +78,6 @@ protected:
 	virtual void Hitted_KnockUp() override;						// 퍼올리기 스킬 맞았을때 
 
 	virtual void Hitted_Dead(Power ePower)	override;	// HP다 닳아서 죽을때 
-
 
 protected:
 	INFECTED_DESC	m_eInfo = {};

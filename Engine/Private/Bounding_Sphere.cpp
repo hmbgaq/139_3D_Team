@@ -14,6 +14,11 @@ void CBounding_Sphere::Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ)
 	m_pSphere->Radius = _sizeX;
 }
 
+void CBounding_Sphere::Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ)
+{
+	m_pSphere->Center = _float3(_sizeX, _sizeY, _sizeZ);
+}
+
 HRESULT CBounding_Sphere::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_SPHERE_DESC* pDesc = (BOUNDING_SPHERE_DESC*)pBoundingDesc;
