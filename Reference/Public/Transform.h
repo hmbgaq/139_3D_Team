@@ -124,6 +124,8 @@ public:
 	void	Go_Backward_R45(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
+	void	Go_Up(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
+	void	Go_Down(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 
 	void	Turn(_fvector vAxis, _float fTimeDelta);

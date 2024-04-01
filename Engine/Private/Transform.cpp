@@ -229,6 +229,43 @@ void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 	//Move_On_Navigation(vResult, pNavigation);
 }
 
+void CTransform::Go_Up(_float fTimeDelta, CNavigation* pNavigation)
+{
+	_vector vPosition = Get_State(STATE_POSITION);
+	_vector vUp = Get_State(CTransform::STATE_UP);
+
+	vPosition += XMVector3Normalize(vUp) * m_fSpeedPerSec * fTimeDelta;
+
+	if (nullptr != pNavigation)
+	{
+		if (false == pNavigation->isMove(vPosition))
+			return;
+
+	}
+
+	Set_State(STATE_POSITION, vPosition);
+}
+
+void CTransform::Go_Down(_float fTimeDelta, CNavigation* pNavigation)
+{
+	_vector vPosition = Get_State(STATE_POSITION);
+	_vector vUp = Get_State(CTransform::STATE_UP);
+
+
+	vPosition -= XMVector3Normalize(vUp) * m_fSpeedPerSec * fTimeDelta;
+
+	if (nullptr != pNavigation)
+	{
+		if (false == pNavigation->isMove(vPosition))
+			return;
+
+	}
+
+	Set_State(STATE_POSITION, vPosition);
+}
+
+
+
 
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)

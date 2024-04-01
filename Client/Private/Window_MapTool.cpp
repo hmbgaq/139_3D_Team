@@ -29,13 +29,23 @@
 #include "Sky.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "UI.h"
 
 #include "Navigation.h"
 #include "Cell.h"
-#include "../../Reference/Public/Delaunator/delaunator.hpp"
-#include "DebugDraw.h"
 #include <chrono>
 #include <iomanip>
+
+#include "../../Reference/Public/Delaunator/delaunator.hpp"
+
+
+
+#include "DebugDraw.h"
+#include "../../Reference/Public/DebugDraw.cpp"
+
+
+//#include "../../Reference/Public/dEBUG"
+//#include "DebugDraw.h"
 
 static ImGuizmo::OPERATION InstanceCurrentGizmoOperation;
 static ImGuizmo::MODE	   InstanceCurrentGizmoMode;
@@ -95,12 +105,13 @@ HRESULT CWindow_MapTool::Initialize()
 	m_pEffect->SetVertexColorEnabled(true);
 
 	const void* pShaderByteCode = { nullptr };
-	size_t   iShaderCodeLength = { 0 };
+	size_t	iShaderCodeLength = { 0 };
 
 	m_pEffect->GetVertexShaderBytecode(&pShaderByteCode, &iShaderCodeLength);
 
 	FAILED_CHECK(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
 		VertexPositionColor::InputElementCount, pShaderByteCode, iShaderCodeLength, &m_pInputLayOut));
+
 
 
 	LIGHT_DESC			LightDesc{};
@@ -241,7 +252,32 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 void CWindow_MapTool::Render()
 {
+	if (false == m_vecPickingPoints.empty() && nullptr != m_pBatch)
+	{
+		_int iPickingPointSize = m_vecPickingPoints.size();
 
+		m_pEffect->SetWorld(XMMatrixIdentity());
+		m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+		m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+
+		m_pEffect->Apply(m_pContext);
+		m_pContext->IASetInputLayout(m_pInputLayOut);
+
+		m_pBatch->Begin();
+
+		for (_int i = 0; i < iPickingPointSize; ++i)
+		{
+			/* m_pAABB가 월드스페이스 상의 정보다. */
+			if (m_vecPickingPoints[i] != nullptr)
+			{
+
+				DX::Draw(m_pBatch, *m_vecPickingPoints[i], XMVectorSet(1.f, 0.f, 0.f, 1.f));
+			}
+			else
+				break;
+		}
+		m_pBatch->End();
+	}
 }
 
 
@@ -363,6 +399,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractLevel", Desc.eChangeLevel);
 				InteractJson[i].emplace("UseGravity", Desc.bUseGravity);
 				InteractJson[i].emplace("SplineJsonPath", Desc.strSplineJsonPath);
+				InteractJson[i].emplace("EnableJsonPath", Desc.strEnableJsonPath);
 				
 				InteractJson[i].emplace("InteractGroupIndex", Desc.iInteractGroupIndex);				
 				InteractJson[i].emplace("RotationAngle", Desc.fRotationAngle);
@@ -372,6 +409,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("Owner", Desc.bOwner);
 				InteractJson[i].emplace("RootTranslate", Desc.bRootTranslate);
 				InteractJson[i].emplace("Arrival", Desc.bArrival);
+				InteractJson[i].emplace("Enable", Desc.bEnable);
 
 				CJson_Utility::Write_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
 				CJson_Utility::Write_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
@@ -381,6 +419,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 				CJson_Utility::Write_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+				CJson_Utility::Write_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+				CJson_Utility::Write_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
 				m_vecCreateInteractObject[i]->Write_Json(InteractJson[i]);
 			}
 
@@ -3699,7 +3739,6 @@ void CWindow_MapTool::Interact_GroupFunction()
 
 	CEnvironment_Interact* pInteractObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
 
-	CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractInfo = *pInteractObject->Get_EnvironmentDesc();
 
 	ImGui::SeparatorText(u8"상호작용 그룹설정");
 	{
@@ -3708,22 +3747,31 @@ void CWindow_MapTool::Interact_GroupFunction()
 			pInteractObject->Set_InteractGroupIndex(m_tSelectInteractDesc.iInteractGroupIndex);
 		}
 
-		ImGui::SameLine();
+		
+
+		ImGui::NewLine();
 
 		if (ImGui::Checkbox(u8"오너 승격", &m_tSelectInteractDesc.bOwner))
 		{
 			pInteractObject->Set_OwnerPromotion(m_tSelectInteractDesc.bOwner);
 		}
+		ImGui::SameLine();
+		ImGui::Checkbox(u8"오프셋 셋팅", &m_tSelectInteractDesc.bOffset);
+		ImGui::SameLine();
+		ImGui::Checkbox(u8"그룹 오브젝트 추가", &m_bShowAddInteract);
+		ImGui::SameLine();
 
 
-		if (ImGui::InputFloat4(u8"그룹오브젝트 활성화위치", &m_tSelectInteractDesc.vEnablePosition.x))
+		if (ImGui::Checkbox(u8"활성화 위치", &m_tSelectInteractDesc.bEnable))
 		{
-			pInteractObject->Set_EnablePosition(m_tSelectInteractDesc.vEnablePosition);
+			m_tSelectInteractDesc.bEnable = m_tSelectInteractDesc.bEnable;
 		}
 
-
-
-		ImGui::Checkbox(u8"오프셋 셋팅", &m_tSelectInteractDesc.bOffset);
+		
+		if (m_tSelectInteractDesc.bEnable == true)
+		{
+			Interact_EnableFunction();
+		}
 
 		if (m_tSelectInteractDesc.bOffset == true)
 		{
@@ -3735,23 +3783,27 @@ void CWindow_MapTool::Interact_GroupFunction()
 
 		}
 
-		ImGui::Checkbox(u8"그룹 오브젝트 추가", &m_bShowAddInteract);
+		
 
 		if (m_bShowAddInteract == true)
 		{
+			ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+			ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 80), ImGuiChildFlags_Border, WindowFlag);
+
 			if (ImGui::BeginListBox(u8"그룹에 추가할 상호작용오브젝트 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 			{
 				_uint iObjectTagSize = (_uint)m_vecCreateInteractObject.size();
 
 				for (_uint i = 0; i < iObjectTagSize; ++i)
 				{
-					const _bool isSelected = (m_iAddInteractSelectIndex  == i);
+					const _bool isSelected = (m_iAddInteractSelectIndex == i);
 
 					if (ImGui::Selectable(m_vecCreateInteractObjectTag[i].c_str(), isSelected))
 					{
 						m_iAddInteractSelectIndex = i;
 
-						CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractDesc = *m_vecCreateInteractObject[m_iAddInteractSelectIndex]->Get_EnvironmentDesc();
+
 
 						if (isSelected)
 						{
@@ -3761,18 +3813,63 @@ void CWindow_MapTool::Interact_GroupFunction()
 				}
 				ImGui::EndListBox();
 			}
-		}
 
-		if (ImGui::Button(u8"선택한 상호작용 오브젝트 그룹추가"))
-		{
-			if (m_iSelectObjectIndex == m_iAddInteractSelectIndex)
-				return;
+			ImGui::EndChild();
 
-			m_vecCreateInteractObject[m_iSelectObjectIndex]->Add_InteractGroupObject(m_vecCreateInteractObject[m_iAddInteractSelectIndex]);
+			ImGui::SameLine();
+
+			ImGui::BeginChild("Create_RightChild", ImVec2(0, 80), ImGuiChildFlags_Border, WindowFlag);
+
+			static _int iSelectincludedIndex = 0;
+			_int iIncludedObjectSize = pInteractObject->Get_InteractGroupVector().size();
+
+			vector<string> vecIncludedObjectTag = pInteractObject->Get_InteractGroupTag();
+
+			if (ImGui::BeginListBox(u8"포함된 상호작용오브젝트 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (_uint i = 0; i < iIncludedObjectSize; ++i)
+				{
+					const _bool isSelected = (iSelectincludedIndex == i);
+
+					if (ImGui::Selectable(vecIncludedObjectTag[i].c_str(), isSelected))
+					{
+						iSelectincludedIndex = i;
+
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+			ImGui::NewLine();
+
+			if (ImGui::Button(u8"선택한 상호작용 오브젝트 그룹추가"))
+			{
+				if (m_iSelectObjectIndex == m_iAddInteractSelectIndex)
+				{
+					MSG_BOX("자기 자신을 그룹에 추가할 수 없습니다.");
+					return;
+				}
+
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Add_InteractGroupObject(m_vecCreateInteractObject[m_iAddInteractSelectIndex]);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(u8"선택된 포함 상호작용오브젝트 제거"))
+			{
+				pInteractObject->Delete_InteractGroupObject(iSelectincludedIndex, &iSelectincludedIndex);
+			}
+
+			ImGui::EndChild();
+			
 		}
 	}
 
-
+	ImGui::NewLine();
 
 	if (ImGui::Button(u8"오너 부여"))
 	{
@@ -3783,20 +3880,23 @@ void CWindow_MapTool::Interact_GroupFunction()
 		for (_int i = 0; i < iInteractObjectSize; ++i)
 		{
 			CEnvironment_Interact* pSearchObject = m_vecCreateInteractObject[i];
-			CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC InteractInfo = *pInteractObject->Get_EnvironmentDesc();
+			CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC FindInteractInfo = *pSearchObject->Get_EnvironmentDesc();
 
-			if (InteractInfo.bOwner == true && InteractInfo.iInteractGroupIndex == m_iInteractGroupIndex)
+			if (FindInteractInfo.bOwner == true && FindInteractInfo.iInteractGroupIndex == m_tSelectInteractDesc.iInteractGroupIndex)
 			{
 				pOwnerObject = pSearchObject;
 				break;
 			}
 		}
 
+		
 		if (pOwnerObject == nullptr)
 			MSG_BOX("오너를 찾지 못했습니다.");
 		else
 			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_OwnerObject(pOwnerObject);
 	}
+
+	ImGui::SameLine();
 
 	if (ImGui::Button(u8"상호작용 테스트"))
 	{
@@ -3869,6 +3969,30 @@ void CWindow_MapTool::Interact_ArrivalMissonFunction()
 	if (ImGui::InputFloat4(u8"도착 지점", &m_tSelectInteractDesc.vArrivalPosition.x))
 	{
 		pInteractObject->Set_ArrivalMission(m_tSelectInteractDesc.bArrival, m_tSelectInteractDesc.vArrivalPosition);
+	}
+
+	static _bool bArrivalPosPicking = false;
+
+	ImGui::Checkbox(u8"도착 지점 픽킹 모드", &bArrivalPosPicking);
+
+	if (bArrivalPosPicking == true)
+	{
+		if (m_pGameInstance->Mouse_Down(DIM_LB) && ImGui_MouseInCheck() == TRUE)
+		{
+			if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+			{
+				m_tSelectInteractDesc.vArrivalPosition = m_fRayPos;
+				pInteractObject->Set_ArrivalMission(m_tSelectInteractDesc.bArrival, m_tSelectInteractDesc.vArrivalPosition);
+				
+			}
+			else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+			{
+				m_tSelectInteractDesc.vArrivalPosition = m_fMeshPos;
+				pInteractObject->Set_ArrivalMission(m_tSelectInteractDesc.bArrival, m_tSelectInteractDesc.vArrivalPosition);
+				
+			}
+		}
+
 	}
 	
 }
@@ -4183,6 +4307,211 @@ void CWindow_MapTool::Interact_ShowInfoWindow()
 	ImGui::End();
 }
 
+void CWindow_MapTool::Interact_EnableFunction()
+{
+	ImGui::SeparatorText(u8"활성화 위치 셋팅");
+
+	static _bool bPickingMode = false;
+
+	ImGui::Checkbox(u8"활성화 위치 픽킹 모드", &bPickingMode);
+
+	if (bPickingMode == true && true == ImGui_MouseInCheck() && m_pGameInstance->Mouse_Down(DIM_LB))
+	{
+		if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD && m_pField != nullptr)
+		{	
+			m_tWorldRay = m_pGameInstance->Get_MouseRayWorld(g_hWnd, g_iWinSizeX, g_iWinSizeY);
+			m_fRayPos = m_pField->GetMousePos(m_tWorldRay);
+
+			_float4 vCurrentRayPos = { m_fRayPos.x, m_fRayPos.y, m_fRayPos.z, 1.f };
+			m_vecEnablePoints.push_back(vCurrentRayPos);
+			m_vecEnableListBox.push_back(to_string(m_iEnablePickingIndex));
+			++m_iEnablePickingIndex;
+		}
+		else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+		{
+			_float4 vCurrentRayPos = { m_fMeshPos.x, m_fMeshPos.y, m_fMeshPos.z, 1.f };
+			m_vecEnablePoints.push_back(vCurrentRayPos);
+			m_vecEnableListBox.push_back(to_string(m_iEnablePickingIndex));
+			++m_iEnablePickingIndex;
+		}
+	}
+	
+
+	_int iPickedSize = (_int)m_vecEnableListBox.size();
+
+	if (false == m_vecEnablePoints.empty())
+	{
+		if (ImGui::BeginListBox(u8"픽킹 정보"))
+		{
+			for (_int i = 0; i < iPickedSize; ++i)
+			{
+				const _bool isSelected = (m_iEnableListIndex == i);
+
+				if (ImGui::Selectable(m_vecEnableListBox[i].c_str(), isSelected))
+				{
+					m_iEnableListIndex = i;
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+			}
+
+			ImGui::EndListBox();
+		}
+
+		if (m_iEnableListIndex < m_vecEnablePoints.size())
+		{
+			ImGui::Text(u8"픽킹 X : %f", m_vecEnablePoints[m_iEnableListIndex].x);
+			ImGui::Text(u8"픽킹 Y : %f", m_vecEnablePoints[m_iEnableListIndex].y);
+			ImGui::Text(u8"픽킹 Z : %f", m_vecEnablePoints[m_iEnableListIndex].z);
+
+			_float vPoints[3] = { m_vecEnablePoints[m_iEnableListIndex].x, m_vecEnablePoints[m_iEnableListIndex].y, m_vecEnablePoints[m_iEnableListIndex].z };
+
+			if (ImGui::InputFloat3(u8"포인트값변경", vPoints))
+			{
+				m_vecEnablePoints[m_iEnableListIndex].x = vPoints[0];
+				m_vecEnablePoints[m_iEnableListIndex].y = vPoints[1];
+				m_vecEnablePoints[m_iEnableListIndex].z = vPoints[2];
+			}
+
+		}
+
+		if (ImGui::Button(u8"픽킹인덱스 삭제"))
+		{
+			if (m_iEnableListIndex < m_vecEnablePoints.size())
+			{
+				m_vecEnablePoints.erase(m_vecEnablePoints.begin() + m_iEnableListIndex);
+				m_vecEnableListBox.erase(m_vecEnableListBox.begin() + m_iEnableListIndex);
+			}
+		}
+	}
+
+	if (ImGui::Button(u8"활성화 위치 컨테이너 넘겨주기"))
+	{
+		m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_EnableForPoint(true);
+		m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_EnablePosition(&m_vecEnablePoints);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"활성화 위치 콜라이더 보기"))
+	{
+		Add_PickingCollider(&m_vecEnablePoints);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"활성화 위치 콜라이더 클리어"))
+	{
+		Clear_PickingCollider();
+	}
+
+	
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"활성화 위치 클리어"))
+	{
+		m_vecCreateInteractObject[m_iSelectObjectIndex]->Reset_EnablePosition();
+		m_vecEnablePoints.clear();
+		m_vecEnableListBox.clear();
+		m_iEnableListIndex = 0;
+		m_iEnablePickingIndex = 0;
+
+		Clear_PickingCollider();
+	}
+
+	ImGui::NewLine();
+
+	if (ImGui::Button(u8"현재 활성화벡터 저장"))
+	{
+		
+
+		_int iSaveEnablePointSize = (_int)m_vecEnablePoints.size();
+
+
+		json EnablePointJson;
+
+		for (_int i = 0; i < iSaveEnablePointSize; ++i)
+		{
+			CJson_Utility::Write_Float4(EnablePointJson[i], m_vecEnablePoints[i]);
+		}
+
+
+
+		string strModelTag = m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_StringModelTag();
+		string strFilePath = "../Bin/DataFiles/Data_Map/Enable/" + strModelTag + to_string(m_iSelectObjectIndex);
+		
+
+		CJson_Utility::Save_Json(strFilePath.c_str(), EnablePointJson);
+
+		m_vecEnablePoints.clear();
+		m_vecEnableListBox.clear();
+
+		m_iEnableListIndex = 0;
+		m_iEnablePickingIndex = 0;
+
+		m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_EnableJsonPath(strFilePath);
+		Clear_PickingCollider();
+		//m_mapSplinePoints()
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"활성화 데이터 불러오기(Json)"))
+	{
+		json LoadEnablePointJson;
+
+		string strModelTag = m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_StringModelTag();
+		string strFilePath = "../Bin/DataFiles/Data_Map/Enable/" + strModelTag + to_string(m_iSelectObjectIndex);
+
+		m_vecEnablePoints.clear();
+		m_vecEnableListBox.clear();
+
+		m_iEnableListIndex = 0;
+		m_iEnablePickingIndex = 0;
+
+		CJson_Utility::Load_Json(strFilePath.c_str(), LoadEnablePointJson);
+
+		_int EnablePointSize = LoadEnablePointJson.size();
+
+		for (_int i = 0; i < EnablePointSize; ++i)
+		{
+			_float4 vEnablePoint = {};
+			CJson_Utility::Load_Float4(LoadEnablePointJson[i], vEnablePoint);
+
+			m_vecEnablePoints.push_back(vEnablePoint);
+			m_vecEnableListBox.push_back(to_string(m_iEnablePickingIndex));
+			m_iEnablePickingIndex++;
+
+		}
+		
+	}
+
+	
+}
+
+void CWindow_MapTool::Interact_MoveColiderFunction()
+{
+	ImGui::SeparatorText(u8"무브 콜라이더 셋팅");
+	{
+		
+		
+
+		if (ImGui::InputFloat3(u8"무브 콜라이더 사이즈", m_fMoveColliderSizeArray))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveRangeColliderSize(_float3(m_fMoveColliderSizeArray[0], m_fMoveColliderSizeArray[1], m_fMoveColliderSizeArray[2]));
+		}
+
+		if (ImGui::InputFloat3(u8"무브 콜라이더 센터", m_fMoveColliderCenterArray))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveRangeColliderCenter(_float3(m_fMoveColliderCenterArray[0], m_fMoveColliderCenterArray[1], m_fMoveColliderCenterArray[2]));
+		}
+		
+
+		
+	}
+}
+
 
 
 void CWindow_MapTool::SpecialTab_Function()
@@ -4372,7 +4701,7 @@ void CWindow_MapTool::Special_SelectTab()
 			{
 				if (ImGui::Button(u8"레버 테스트"))
 				{
-					CUI_Weakness* pLeverWeakUI = m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Get_LeverWeakUI();
+					CUI* pLeverWeakUI = m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Get_LeverWeakUI();
 
 					if (pLeverWeakUI != nullptr)
 					{
@@ -6761,6 +7090,41 @@ void CWindow_MapTool::Delete_Tab(TAP_TYPE eTabType)
 
 }
 
+void CWindow_MapTool::Add_PickingCollider(vector<_float4>* vPickingVector)
+{
+
+	_int iPickingVectorSize = vPickingVector->size();
+
+	vector<_float4> vTempvector = *vPickingVector;
+
+	for (_int i = 0; i < iPickingVectorSize; ++i)
+	{
+		_float3 vCenter = { vTempvector[i].x, vTempvector[i].y, vTempvector[i].z};
+		BoundingSphere* pPickingSphere = new BoundingSphere{ vCenter , 2.f };
+
+		if (pPickingSphere != nullptr)
+		{
+			m_vecPickingPoints.push_back(pPickingSphere);
+		}
+	}
+}
+
+void CWindow_MapTool::Clear_PickingCollider()
+{
+	_int iPickingPointSize = m_vecPickingPoints.size();
+
+	for (_int i = 0; i < iPickingPointSize; ++i)
+	{
+		if (m_vecPickingPoints[i] != nullptr)
+		{
+			Safe_Delete(m_vecPickingPoints[i]);
+			m_vecPickingPoints[i] = nullptr;
+		}
+	}
+
+	m_vecPickingPoints.clear();
+}
+
 
 void CWindow_MapTool::Preview_Function()
 {
@@ -8364,6 +8728,14 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_fSelectColliderCenterArray[1] = vColliderCenter.y;
 					m_fSelectColliderCenterArray[2] = vColliderCenter.z;
 
+					m_fMoveColliderSizeArray[0] = InteractDesc.vMoveRangeColliderSize.x;
+					m_fMoveColliderSizeArray[1] = InteractDesc.vMoveRangeColliderSize.y;
+					m_fMoveColliderSizeArray[2] = InteractDesc.vMoveRangeColliderSize.z;
+
+					m_fMoveColliderCenterArray[0] = InteractDesc.vMoveRangeColliderCenter.x;
+					m_fMoveColliderCenterArray[1] = InteractDesc.vMoveRangeColliderCenter.y;
+					m_fMoveColliderCenterArray[2] = InteractDesc.vMoveRangeColliderCenter.z;
+
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -8546,6 +8918,11 @@ void CWindow_MapTool::Interact_SelectTab()
 				Interact_ArrivalMissonFunction();
 			}
 
+			if (m_tSelectInteractDesc.bRootTranslate == true)
+			{
+				Interact_MoveColiderFunction();
+			}
+
 			
 			if (ImGui::Button(u8"네비게이션 컴주기"))
 			{
@@ -8598,9 +8975,9 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_bInteractUseGroup = false;
 
 
-				m_bInteractUseRotate = InteractDesc.bRotate;
-				m_bInteractUseRootTranslate = InteractDesc.bRootTranslate;
-				m_bInteractUseArrivalMissionSetting = InteractDesc.bArrival;
+				//m_bInteractUseRotate = InteractDesc.bRotate;
+				//m_bInteractUseRootTranslate = InteractDesc.bRootTranslate;
+				//m_bInteractUseArrivalMissionSetting = InteractDesc.bArrival;
 
 				if (InteractDesc.bAnimModel == true)
 				{
@@ -8668,9 +9045,9 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_bInteractUseGroup = false;
 
 
-				m_bInteractUseRotate = InteractDesc.bRotate;
-				m_bInteractUseRootTranslate = InteractDesc.bRootTranslate;
-				m_bInteractUseArrivalMissionSetting = InteractDesc.bArrival;
+				//m_bInteractUseRotate = InteractDesc.bRotate;
+				//m_bInteractUseRootTranslate = InteractDesc.bRootTranslate;
+				//m_bInteractUseArrivalMissionSetting = InteractDesc.bArrival;
 
 				if (InteractDesc.bAnimModel == true)
 				{

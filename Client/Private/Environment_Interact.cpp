@@ -5,6 +5,7 @@
 #include "Character.h"
 #include "Player.h"
 #include "Level_Loading.h"
+#include "SMath.h"
 
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -62,7 +63,16 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 			return E_FAIL;
 	}
 
-	//if(m_tEnvironmentDesc.)
+	if (m_tEnvironmentDesc.bOffset == true && m_tEnvironmentDesc.bOwner == false)
+	{
+		m_bInteractEnable = false;
+	}
+
+	if (m_tEnvironmentDesc.bEnable == true)
+	{
+		if(FAILED(Load_EnableJson()))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -114,8 +124,9 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	}
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pMoveRangeColliderCom->Update(XMMatrixIdentity());
 
-	if(m_bEnable == true)
+	if(m_bInteractEnable == true)
 		Interact();
 
 	if (m_bSpline == true)
@@ -144,16 +155,14 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		
 	}
 
-	if (m_tEnvironmentDesc.bOwner == false)
+	if (m_tEnvironmentDesc.bOwner == false && m_pOwnerInteract != nullptr)
 	{
-		if (Check_OwnerEnablePosition())
-			m_bEnable = false;
+		if (true == Check_OwnerEnablePosition())
+			m_bInteractEnable = true;
 		else
-			m_bEnable = true;
+			m_bInteractEnable = false;
 	}
 
-
-	
 
 }
 
@@ -165,6 +174,7 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
 		m_pGameInstance->Add_DebugRender(m_pColliderCom);
+		m_pGameInstance->Add_DebugRender(m_pMoveRangeColliderCom);
 	}
 }
 
@@ -227,6 +237,36 @@ void CEnvironment_Interact::Set_AnimationIndex(_uint iAnimIndex)
 	m_pModelCom->Set_Animation(iAnimIndex);
 }
 
+void CEnvironment_Interact::Set_MoveRangeColliderSize(_float3 vColliderSize)
+{
+	CBounding* pBounding = m_pMoveRangeColliderCom->Get_Bounding();
+
+	CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
+
+	if (pAABB == nullptr)
+		return;
+
+	BoundingBox* pBox = pAABB->Get_OriginBounding();
+
+	pBox->Extents = vColliderSize;
+	m_tEnvironmentDesc.vMoveRangeColliderSize = vColliderSize;
+}
+
+void CEnvironment_Interact::Set_MoveRangeColliderCenter(_float3 vColliderCenter)
+{
+	CBounding* pBounding = m_pMoveRangeColliderCom->Get_Bounding();
+
+	CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
+
+	if (pAABB == nullptr)
+		return;
+
+	BoundingBox* pBox = pAABB->Get_OriginBounding();
+
+	pBox->Center = vColliderCenter;
+	m_tEnvironmentDesc.vMoveRangeColliderCenter = vColliderCenter;
+}
+
 void CEnvironment_Interact::StartGroupInteract()
 {
 	_int iInteractGroupSize = m_vecInteractGroup.size();
@@ -242,6 +282,8 @@ void CEnvironment_Interact::Reset_Interact()
 	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 	m_bInteractStart = false;
 	m_bInteract = false;
+	m_bInteractEnable = false;
+
 }
 
 #ifdef _DEBUG
@@ -755,9 +797,9 @@ void CEnvironment_Interact::Move_For_PlayerRootMotion()
 	if(m_pPlayer == nullptr || m_bInteract == false)
 		return;
 
-	m_bArrival = ArrivalCheck();
+	_bool bMove = Check_MoveCollider();
 
-	if (m_bArrival == false)
+	if (bMove == true)
 	{
 		_float3 vPlayerRootMotion = m_pPlayer->Get_AddRootMotion();
 		m_pTransformCom->Add_RootBone_ForTarget(vPlayerRootMotion, m_pNavigationCom, m_pPlayer->Get_Transform());
@@ -824,11 +866,11 @@ _bool CEnvironment_Interact::ArrivalCheck()
 		return true;
 
 	_vector		vPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
-	_vector		vDir = m_tEnvironmentDesc.vEnablePosition - vPosition;
+	_vector		vDir = m_tEnvironmentDesc.vArrivalPosition - vPosition;
 
 	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
 
-	if (fDistance >= 0.25f)
+	if (fDistance <= 0.25f)
 	{
 		return true;
 	}
@@ -841,15 +883,53 @@ _bool CEnvironment_Interact::ArrivalCheck()
 
 _bool CEnvironment_Interact::RotationCheck(const _float fTimeDelta)
 {
-	return m_pTransformCom->Rotation_Lerp(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, 0.1);
+	return m_pTransformCom->Rotation_Lerp(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, 1.f);
 }
+
+_bool CEnvironment_Interact::Check_MoveCollider()
+{
+	if(m_pMoveRangeColliderCom == nullptr)
+		return false;
+
+	if (true == m_pColliderCom->Is_Collision(m_pMoveRangeColliderCom))
+		return true;
+	else
+		return false;
+	
+}
+
+_bool CEnvironment_Interact::EnableCheck()
+{
+	_int iEnableCheckCount = m_vecEnablePosition.size();
+
+	for (_int i = 0; i < iEnableCheckCount; ++i)
+	{
+
+		if(true == SMath::Is_InRange(m_pTransformCom->Get_Position_Float4(), m_vecEnablePosition[i], 0.5f))
+			return true;
+	}
+	
+	return false;
+}
+
+
 
 _bool CEnvironment_Interact::Check_OwnerEnablePosition()
 {
-	if (m_pOwnerInteract == nullptr)
-		return false;
+	return m_pOwnerInteract->EnableCheck();
+}
 
-	return m_pOwnerInteract->ArrivalCheck();
+void CEnvironment_Interact::Stop_PlayerForArrival()
+{
+	if (true == ArrivalCheck())
+	{
+
+	}
+	else
+	{
+
+	}
+	//m_pPlayer->
 }
 
 HRESULT CEnvironment_Interact::Add_InteractGroupObject(CEnvironment_Interact* pInteractObject)
@@ -868,6 +948,33 @@ HRESULT CEnvironment_Interact::Add_InteractGroupObject(CEnvironment_Interact* pI
 	return S_OK;
 }
 
+
+
+
+void CEnvironment_Interact::Delete_InteractGroupObject(_int iIndex, _int* iSelectIndex)
+{
+	m_vecInteractGroup.erase(m_vecInteractGroup.begin() + iIndex);
+	m_vecInteractGroupTag.erase(m_vecInteractGroupTag.begin() + iIndex);
+	*iSelectIndex--;
+}
+
+void CEnvironment_Interact::Set_EnablePosition(vector<_float4>* EnablePositions)
+{
+	_int iPointSize = _int(EnablePositions->size());
+
+	for (_int i = 0; i < iPointSize; ++i)
+	{
+		m_vecEnablePosition.push_back((*EnablePositions)[i]);
+		m_vecPointChecks.push_back(false);
+	}
+
+}
+
+void CEnvironment_Interact::Reset_EnablePosition()
+{
+	m_vecPointChecks.clear();
+	m_vecEnablePosition.clear();
+}
 
 void CEnvironment_Interact::Reset_TestEvent()
 {
@@ -1286,6 +1393,27 @@ HRESULT CEnvironment_Interact::Load_SplineJson()
 	return S_OK;
 }
 
+HRESULT CEnvironment_Interact::Load_EnableJson()
+{
+	json EnablePointJson;
+
+	if(CJson_Utility::Load_Json(m_tEnvironmentDesc.strEnableJsonPath.c_str(), EnablePointJson))
+		return E_FAIL;
+
+	_int iJsonSize = EnablePointJson.size();
+
+	for (_int i = 0; i < iJsonSize; ++i)
+	{
+		_float4 vEnablePoint = {};
+		CJson_Utility::Load_Float4(EnablePointJson, vEnablePoint);
+
+		m_vecEnablePosition.push_back(vEnablePoint);
+		m_vecPointChecks.push_back(false);
+	}
+
+	return S_OK;
+}
+
 HRESULT CEnvironment_Interact::Init_WagonEvent()
 {
 	Load_SplineJson();
@@ -1662,6 +1790,20 @@ HRESULT CEnvironment_Interact::Ready_InteractCollider(INTERACT_TYPE eInteractTyp
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
+
+	
+		/* For.Com_Collider */
+	BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
+	BoundingDesc.vExtents = m_tEnvironmentDesc.vMoveRangeColliderSize;
+	BoundingDesc.vCenter = m_tEnvironmentDesc.vMoveRangeColliderCenter;
+
+
+	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_MoveCollider"), reinterpret_cast<CComponent**>(&m_pMoveRangeColliderCom), &BoundingDesc)))
+		return E_FAIL;
+
+	
 	return S_OK;
 }
 

@@ -5,7 +5,10 @@
 #include "Environment_LightObject.h"
 #include "Environment_Interact.h"
 #include "Data_Manager.h"
-//#include "UI_Weakness.h"
+#include "UI.h"
+#include "Cell.h"
+#include "SMath.h"
+///#include "UI_Weakness.h"
 
 CEnvironment_SpecialObject::CEnvironment_SpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -56,7 +59,13 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 	}
 	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
 	{
-		TrackLeverInit();
+		if(FAILED(TrackLeverInit()))
+			return E_FAIL;
+	}
+	else if (m_tEnvironmentDesc.eElevatorType != CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_TYPEEND)
+	{
+		if(FAILED(ElevatorInit()))
+			return E_FAIL;
 	}
 
 	
@@ -84,12 +93,11 @@ void CEnvironment_SpecialObject::Tick(_float fTimeDelta)
 	{
 		TrackLeverFunction();
 	}
+	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR && m_bElevatorOn == true)
+	{
+		ElevatorFunction(fTimeDelta);
+	}
 	
-
-	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	//
-	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
-	//
 }
 
 void CEnvironment_SpecialObject::Late_Tick(_float fTimeDelta)
@@ -298,7 +306,7 @@ void CEnvironment_SpecialObject::Set_SignalChange(_bool bChange)
 
 HRESULT CEnvironment_SpecialObject::TrackLeverInit()
 {
-	m_pLeverWeaknessUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+	m_pLeverWeaknessUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
 	
 
 	m_pLeverWeaknessUI->Set_Active(true);
@@ -399,6 +407,63 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 		}
 	}
 	
+}
+
+HRESULT CEnvironment_SpecialObject::ElevatorInit()
+{
+	if(nullptr == m_pNavigationCom)
+		return E_FAIL;
+
+
+	_int iUpdateCellCount = m_vecUpdateCellIndexs.size();
+
+	for (_int i = 0; i < iUpdateCellCount; ++i)
+	{
+		m_vecUpdateCells.push_back(m_pNavigationCom->Get_CellForIndex(m_vecUpdateCellIndexs[i]));
+	}
+	
+
+	return S_OK;
+}
+
+void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
+{
+	_float4 vPosition = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+
+	if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_UP)
+	{
+		if (m_fMaxY > vPosition.y)
+		{
+			m_pTransformCom->Go_Up(fTimeDelta, nullptr);
+		}
+	}
+	else if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_DOWN)
+	{
+		if (m_fMinY < vPosition.y)
+		{
+			m_pTransformCom->Go_Down(fTimeDelta, nullptr);
+		}
+	}
+	else if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_TARGET)
+	{
+		if (false == SMath::Is_InRange(m_vArrivalPosition, vPosition, 0.5f))
+		{
+			m_pTransformCom->Go_Target(m_vArrivalPosition, fTimeDelta, 0.5f);
+		}
+	}
+		
+	UpdateCell();
+
+}
+
+void CEnvironment_SpecialObject::UpdateCell()
+{
+	_int iUpdateCellCount = m_vecUpdateCells.size();
+
+	for (_int i = 0; i < iUpdateCellCount; ++i)
+	{
+		m_vecUpdateCells[i]->Update(m_pTransformCom->Get_WorldMatrix());
+	}
 }
 
 
