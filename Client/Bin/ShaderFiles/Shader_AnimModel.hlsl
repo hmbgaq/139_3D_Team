@@ -13,6 +13,9 @@ float     g_fCamFar;
 float     g_fLightFar;
 float     g_TimeDelta;
 
+bool      g_bORM_Available;
+bool      g_bEmissive_Available;
+
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_SpecularTexture;
@@ -99,6 +102,11 @@ struct PS_OUT
     float4 vEmissive        : SV_Target5;
 };
 
+struct PS_OUT_SHADOW
+{
+    vector vLightDepth : SV_TARGET0;
+};
+
 /* ------------------- Base Vertex Shader -------------------*/
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -155,12 +163,11 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
-    //Out.vDiffuse = vMtrlDiffuse;
-    //Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord); // 새로 추가된 Emissive Texture -> PBR에 사용된다. 
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     if(Out.vDiffuse.a < 0.1f)
         discard;
@@ -174,11 +181,6 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
-
-struct PS_OUT_SHADOW
-{
-    vector vLightDepth : SV_TARGET0;
-};
 
 PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 {
@@ -204,8 +206,12 @@ PS_OUT PS_BOSS(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
- 
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
@@ -231,7 +237,11 @@ PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
@@ -256,7 +266,11 @@ PS_OUT PS_MAIN_RIMBLOOM_B(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
@@ -281,7 +295,11 @@ PS_OUT PS_MAIN_RIMBLOOM_C(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
@@ -305,7 +323,11 @@ PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);

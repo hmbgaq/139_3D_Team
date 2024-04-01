@@ -14,7 +14,9 @@ CState<CBandit_Heavy>* CBanditHeavy_Idle::Update(CBandit_Heavy* pActor, _float f
 
 	m_fDelay += fTimeDelta;
 
-	if (1.f <= m_fDelay)
+	pActor->Look_At_Target_Lerp(fTimeDelta);
+
+	if (0.5f <= m_fDelay)
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}

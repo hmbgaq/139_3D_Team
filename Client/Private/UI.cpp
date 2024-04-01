@@ -8,20 +8,20 @@
 CUI::CUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CGameObject(pDevice, pContext, strPrototypeTag)
 	, m_pData_Manager(CData_Manager::GetInstance())
-	, m_pUI_Manager(CUI_Manager::GetInstance())
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
 	Safe_AddRef(m_pData_Manager);
-	Safe_AddRef(m_pUI_Manager);
+	Safe_AddRef(m_pUIManager);
 }
 
 CUI::CUI(const CUI& rhs)
 	: CGameObject(rhs)
 	, m_ProjMatrix(rhs.m_ProjMatrix)
 	, m_pData_Manager(rhs.m_pData_Manager)
-	, m_pUI_Manager(rhs.m_pUI_Manager)
+	, m_pUIManager(rhs.m_pUIManager)
 {
 	Safe_AddRef(m_pData_Manager);
-	Safe_AddRef(m_pUI_Manager);
+	Safe_AddRef(m_pUIManager);
 }
 
 HRESULT CUI::Initialize_Prototype()
@@ -110,69 +110,51 @@ void CUI::Priority_Tick(_float fTimeDelta)
 
 void CUI::Tick(_float fTimeDelta)
 {
-	if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
-		m_bActive = m_bTool;
+	//if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
+	//	m_bActive = m_bTool;
 	
-	//if (m_bChange_Proj == true)
-	//{
-	//	if (m_tUIInfo.bWorld == true)
-	//	{
-	//		// View 세팅 카메라에 대한 세팅이다 : 카메라가 위치할 곳, 카메라가 볼 곳, 카메라의 UP vector
-	//		XMMatrixLookAtLH({ 0.f, 0.f, -10.f, 0.f }, { 0.f, 0.f, 10.f, 0.f }, { 0.f, 1.f, 0.f, 0.f });
+	/* World or Orthogonal */
+	//Check_Change_WorldUI(fTimeDelta);
 
-	//		// 기존 Proj를 내려준다.
-	//		XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
-
-	//		// 새 Proj로 올려준다.
-	//		XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ));
-	//	}
-	//	else
-	//	{
-	//		// View 세팅
-	//		XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
-
-	//		// 기존 Proj를 내려준다.
-	//		XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
-
-	//		// 새 Proj로 올려준다.
-	//		XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, m_tUIInfo.fPositionZ, 1.f));
-	//	}
-
-	//	m_bChange_Proj = false;
-	//}
+	/* Check_MouseInput */
+	if(m_pData_Manager->Get_GameState() == GAME_STATE::UI)
+		Check_MouseInput(fTimeDelta);
 
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 	{
 		if (m_pGameInstance->Key_Down(DIK_Q))
-			m_pUI_Manager->Set_Active(UITYPE::QUESTBOX);
+			m_pUIManager->Set_Active(UITYPE::QUESTBOX);
 		if (m_pGameInstance->Key_Down(DIK_W))
-			m_pUI_Manager->Set_Active(UITYPE::REWARD);
+			m_pUIManager->Set_Active(UITYPE::REWARD);
 		if (m_pGameInstance->Key_Down(DIK_E))
-			m_pUI_Manager->Set_Active(UITYPE::TUTORIALBOX);
+			m_pUIManager->Set_Active(UITYPE::TUTORIALBOX);
+	}
+
+	switch (m_eState) // Tick돌다보면 m_eState가 모두 STATE_END타입으로 바뀌는 현상이 일어남... 해결 : (갑자기 됨)
+	{
+		case Client::UISTATE::READY:
+			UI_Ready(fTimeDelta);
+			break;
+		case Client::UISTATE::ENTER:
+			UI_Enter(fTimeDelta);
+			break;
+		case Client::UISTATE::LOOP:
+			UI_Loop(fTimeDelta);
+			break;
+		case Client::UISTATE::EXIT:
+			UI_Exit(fTimeDelta);
+			break;
+		case Client::UISTATE::PLAYER_HUD:
+			Player_HUD(fTimeDelta);
+			break;
+		case Client::UISTATE::STATE_END:
+			break;
+		default:
+			break;
 	}
 
 	if (m_bActive == false)	// ==================== Active ====================
 		return;
-
-	switch (m_eState)
-	{
-	case Client::UISTATE::READY:
-		UI_Ready(fTimeDelta);
-		break;
-	case Client::UISTATE::ENTER:
-		UI_Enter(fTimeDelta);
-		break;
-	case Client::UISTATE::LOOP:
-		UI_Loop(fTimeDelta);
-		break;
-	case Client::UISTATE::EXIT:
-		UI_Exit(fTimeDelta);
-		break;
-	case Client::UISTATE::STATE_END:
-		break;
-	default:
-		break;
-	}
 
 	Play_Animation(fTimeDelta);
 	Update_Child_Transform();
@@ -392,6 +374,84 @@ HRESULT CUI::Set_ParentTransform(CTransform* pParentTransformCom)
 	return S_OK;
 }
 
+void CUI::Check_Change_WorldUI(_float fTimeDelta)
+{
+	if (m_bChange_Proj == true)
+	{
+		if (m_tUIInfo.bWorld == true)
+		{
+			// View 세팅 카메라에 대한 세팅이다 : 카메라가 위치할 곳, 카메라가 볼 곳, 카메라의 UP vector
+			XMMatrixLookAtLH({ 0.f, 0.f, -10.f, 0.f }, { 0.f, 0.f, 10.f, 0.f }, { 0.f, 1.f, 0.f, 0.f });
+
+			// 기존 Proj를 내려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
+
+			// 새 Proj로 올려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ));
+		}
+		else
+		{
+			// View 세팅
+			XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
+
+			// 기존 Proj를 내려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ));
+
+			// 새 Proj로 올려준다.
+			XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH((_float)g_iWinSizeX, (_float)g_iWinSizeY, m_tUIInfo.fPositionZ, 1.f));
+		}
+
+		m_bChange_Proj = false;
+	}
+}
+
+void CUI::Check_MouseInput(_float fTimeDelta)
+{
+	if (m_pGameInstance->Mouse_Down(DIM_LB))
+		g_UIMouseDownLB = true;
+
+	if (m_pGameInstance->Mouse_Down(DIM_RB))
+		m_bMouseDown_RB = true;
+	else
+		m_bMouseDown_RB = false;
+	if (m_pGameInstance->Mouse_Down(DIM_MB))
+		m_bMouseDown_MB = true;
+	else
+		m_bMouseDown_MB = false;
+
+
+	if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+		m_bMousePressing_LB = true;
+	else
+		m_bMousePressing_LB = false;
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+		m_bMousePressing_RB = true;
+	else
+		m_bMousePressing_RB = false;
+	if (m_pGameInstance->Mouse_Pressing(DIM_MB))
+		m_bMousePressing_MB = true;
+	else
+		m_bMousePressing_MB = false;
+
+
+	if (m_pGameInstance->Mouse_Up(DIM_LB))
+	{
+		m_bMouseUp_LB = true;
+		g_UIMouseDownLB = false;
+	}
+	else
+		m_bMouseUp_LB = false;
+	if (m_pGameInstance->Mouse_Up(DIM_RB))
+		m_bMouseUp_RB = true;
+	else
+		m_bMouseUp_RB = false;
+	if (m_pGameInstance->Mouse_Up(DIM_MB))
+		m_bMouseUp_MB = true;
+	else
+		m_bMouseUp_MB = false;
+
+}
+
 void CUI::Add_Create_Parts(void* pArg)
 {
 	if (pArg == nullptr)
@@ -491,6 +551,26 @@ void CUI::Parts_Delete()
 			m_vecUIParts.erase(m_vecUIParts.begin() + i);
 		}
 	}
+}
+
+void CUI::LifeTime(_float fTimeDelta)
+{
+	/* LifeTime이 있는 UI일 경우 */
+	if (m_bLifeTimeUI == true)
+	{
+		if (m_fTime + m_fLifeTime < GetTickCount64())
+		{
+			m_bActive = Alpha_Plus(fTimeDelta); // 안보이게 알파가 지워지게 해준다.
+
+			//m_fTime = GetTickCount64();
+		}
+	}
+}
+
+void CUI::ResetTime()
+{
+	m_fTime = (_float)GetTickCount64(); // TimeReset
+	m_bActive = true;
 }
 
 HRESULT CUI::SetUp_Transform(_float fPosX, _float fPosY, _float fSizeX, _float fSizeY)
@@ -832,9 +912,7 @@ _bool CUI::Calculation_Direcion(_vector vTargetPos, _float4 vCurrentDir)
 	
 _float CUI::Target_Contained_Angle(_vector vStandard, _float4 vTargetPos)
 {
-	 /* ---------- 소영 추가 ---------- */
 	 // 함수설명 : Look 기준으로 우측에 있을경우 +사이각 , 좌측에 있을경우 - 사이각으로 값이 리턴된다. 
-	 /* ------------------------------- */
 	_vector vLook = XMVector3Normalize(vTargetPos - m_pTransformCom->Get_Pos());
 
 	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
@@ -857,30 +935,15 @@ void CUI::Tick_LevelUp(_float fTimeDelta)
 
 void CUI::Player_HUD(_float fTimeDelta)
 {
-	///* 인터페이스를 킬만한 행동(또는 상황)을 했을 경우 */
-	//if (m_pData_Manager->Get_ShowInterface()/*m_pData_Manager->Limit_EXP()*/)
-	//{
-	//	m_pData_Manager->Set_ShowInterface(false);
-	//	m_bActive = true;
-	//	m_fAlpha = 0.f;
-	//}
-
-	//if (m_fTime + m_fLifeTime < GetTickCount64())
-	//{
-	//	m_bEventOn = true;
-	//	m_fTime = (_float)GetTickCount64();
-	//}
-
-	//if (m_bEventOn)
-	//{
-	//	m_fAlpha += fTimeDelta;
-	//}
-
-	//if (m_fAlpha >= 1.f)
-	//{
-	//	m_bActive = false;
-	//	m_bEventOn = false;
-	//}
+	/* LifeTime UI */
+	if (m_pData_Manager->Get_ShowInterface() == true)
+	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
+		m_pUIManager->Active_PlayerHUD();
+	}
+	else
+	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
+		LifeTime(fTimeDelta);
+	}
 }
 
 void CUI::Check_Disappear(_float fTimeDelta)
@@ -1417,7 +1480,8 @@ void CUI::Play_Animation(_float fTimeDelta)
 
 
 			// Linear
-			if (iFrameIndex + 1U < m_vecAnimation.size())
+			if (iFrameIndex + 1U < m_vecAnimation.size() &&
+				m_fCurrTime != m_vecAnimation[iFrameIndex].fTime)
 			{
 				// 키 프레임간 시간 변화율
 				fFrameTimeDelta = m_vecAnimation[iFrameIndex + 1U].fTime - m_vecAnimation[iFrameIndex].fTime;
@@ -1818,8 +1882,8 @@ void CUI::Free()
 	if (m_pData_Manager)
 		Safe_Release(m_pData_Manager);
 
-	if (m_pUI_Manager)
-		Safe_Release(m_pUI_Manager);
+	if (m_pUIManager)
+		Safe_Release(m_pUIManager);
 
 	if (m_pVIBufferCom)
 		Safe_Release(m_pVIBufferCom);

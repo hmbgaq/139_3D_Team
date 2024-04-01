@@ -89,7 +89,7 @@ void CUI_Player_HPBar::Tick(_float fTimeDelta)
 
 	m_pData_Manager->Limit_HP();
 
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		m_fTimeAcc += fTimeDelta * 0.1f;
 
@@ -114,7 +114,7 @@ void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
@@ -123,7 +123,7 @@ void CUI_Player_HPBar::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_Player_HPBar::Render()
 {
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(Bind_ShaderResources()))
 			return E_FAIL;

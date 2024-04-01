@@ -38,12 +38,13 @@ private:
 
 private: // Frame
 	_int		m_iCurrentFrame = 0;
-	DWORD		m_Time = GetTickCount64();
+	DWORD		m_Time = (DWORD)GetTickCount64();
 	_float		m_fFrameChangeTime = 0.f;
 
 private: // Sprite Info
 	_int		m_iMainStart_MaxFrame = 0;
 	_bool		m_bMainStart_Finish = false;
+	_bool		m_bSkip = false;
 	_int		m_iMainLoop_MaxFrame = 0;
 	_bool		m_bMainLoop_Finish = false;
 

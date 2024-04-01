@@ -507,7 +507,8 @@ private:
 		"Video",
 		"Sprite",
 		"Interaction",
-		"MainMenuList"
+		"MainMenuList",
+		"MoveEffect"
 	};
 
 	// 클래스 목록을 저장하는 벡터
@@ -519,7 +520,7 @@ private:
 
 private:
 	void	UI_Preset();
-	class CUI_Manager*	m_pUI_Manager = nullptr;
+	class CUI_Manager*	m_pUIManager = nullptr;
 	_bool				m_bDisappear = false;
 
 private:

@@ -20256,7 +20256,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return it->second;
         }
 
-        JSON_THROW(type_error::create(305, detail::concat("cannot use operator[] with a string argument with ", type_name()), this));
+         JSON_THROW(type_error::create(305, detail::concat("cannot use operator[] with a string argument with ", type_name()), this));
     }
 
     // these two functions resolve a (const) char * ambiguity affecting Clang and MSVC

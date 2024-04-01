@@ -144,22 +144,35 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pActor)
-	{
-		m_pActor->Update_State(fTimeDelta);
-	}
-
-	Update_ChargingTime(fTimeDelta);
-
+	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
 	KeyInput(fTimeDelta);
+	
+	if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
+	{
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+		
+		Update_ChargingTime(fTimeDelta);
 
 	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
-	if (m_pGameInstance->Key_Down(DIK_C))
-		m_fHp = 100;
+		if (m_pGameInstance->Key_Down(DIK_C))
+			m_fHp = 100;
+	}
+
+
+	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
+	m_pDataManager->Set_ShowInterface(bIsNotIdle);
+	
+	
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
+
+	
+
 
 
 
@@ -518,27 +531,58 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 
 void CPlayer::KeyInput(_float fTimeDelta)
 {
-	///* ! UI : ShaderOption Window / Key : Esc */
-	//if (m_pGameInstance->Key_Down(DIK_ESCAPE))
-	//{
-	//	m_bShowOption = !m_bShowOption;
-	//
-	//	if(m_bShowOption == true)
-	//		m_pUIManager->Active_Option();
-	//	else
-	//		m_pUIManager->NonActive_Option();
-	//}
-	//
-	///* ! UI : DiedScreen / Key : I */
-	//if (m_pGameInstance->Key_Down(DIK_I))
-	//{
-	//	m_bShowDiedScreen = !m_bShowDiedScreen;
-	//
-	//	if (m_bShowDiedScreen == true)
-	//		m_pUIManager->Active_DiedScreen();
-	//	else
-	//		m_pUIManager->NonActive_DiedScreen();
-	//}
+	/* ! UI : ShaderOption Window / Key : Esc */
+	if (m_pGameInstance->Key_Down(DIK_ESCAPE))
+	{
+		m_bShowOption = !m_bShowOption;
+	
+		if (m_bShowOption == true)
+		{
+			m_pUIManager->Active_Option();
+			m_pUIManager->Active_MouseCursor();
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_Option();
+			m_pUIManager->Active_MouseCursor();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
+
+	/* ! UI : DiedScreen / Key : I */
+	if (m_pGameInstance->Key_Down(DIK_I))
+	{
+		m_bShowDiedScreen = !m_bShowDiedScreen;
+	
+		if (m_bShowDiedScreen == true)
+		{
+			m_pUIManager->Active_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
+
+	/* ! UI : DiedScreen / Key : I */
+	if (m_pGameInstance->Key_Down(DIK_B))
+	{
+		m_bShowDiedScreen = !m_bShowDiedScreen;
+
+		if (m_bShowDiedScreen == true)
+		{
+			m_pUIManager->Active_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_DiedScreen();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
 
 	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */
 	if (m_pGameInstance->Key_Down(DIK_K))

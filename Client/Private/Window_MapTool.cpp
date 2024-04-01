@@ -1960,7 +1960,7 @@ void CWindow_MapTool::Ground_SelectTab()
 	{
 		_bool bChange = false;
 
-		if (iObjectTagSize - 1 > (_int)m_iSelectObjectIndex)
+		if (iObjectTagSize - 1 > (_uint)m_iSelectObjectIndex)
 		{
 			bChange = true;
 			m_iSelectObjectIndex++;
@@ -2802,7 +2802,7 @@ void CWindow_MapTool::Light_SelectTab()
 
 		if (m_pGameInstance->Key_Down(DIK_HOME))
 		{
-			if (iObjectTagSize - 1 > (_int)m_iSelectLightIndex)
+			if (iObjectTagSize - 1 > (_uint)m_iSelectLightIndex)
 			{
 				m_iSelectLightIndex++;
 				bChange = true;
@@ -2848,7 +2848,7 @@ void CWindow_MapTool::Light_SelectTab()
 
 		if (m_pGameInstance->Key_Down(DIK_HOME))
 		{
-			if (iObjectTagSize - 1 > (_int)m_iSelectLightObjectIndex)
+			if (iObjectTagSize - 1 > (_uint)m_iSelectLightObjectIndex)
 			{
 				m_iSelectLightObjectIndex++;
 				bChange = true;
@@ -3873,7 +3873,7 @@ void CWindow_MapTool::Interact_GroupFunction()
 
 	if (ImGui::Button(u8"오너 부여"))
 	{
-		_int iInteractObjectSize = m_vecCreateInteractObject.size();
+		_int iInteractObjectSize = (_int)m_vecCreateInteractObject.size();
 
 		CEnvironment_Interact* pOwnerObject = nullptr;
 
@@ -4748,7 +4748,7 @@ void CWindow_MapTool::Special_SelectTab()
 		_bool bChange = false;
 
 		
-		if (iObjectTagSize - 1 > (_int)m_iSelectSpecialObjectIndex)
+		if (iObjectTagSize - 1 > (_uint)m_iSelectSpecialObjectIndex)
 		{
 			bChange = true;
 			m_iSelectSpecialObjectIndex++;
@@ -8938,16 +8938,11 @@ void CWindow_MapTool::Interact_SelectTab()
 			
 		}
 
-		
-		
-
-	
-
 		if (m_pGameInstance->Key_Down(DIK_HOME))
 		{
 			_bool bChange = false;
 			bChange = true;
-			if (iObjectTagSize - 1 > (_int)m_iSelectObjectIndex)
+			if (iObjectTagSize - 1 > (_uint)m_iSelectObjectIndex)
 			{
 				bChange = true;
 				m_iSelectObjectIndex++;
@@ -9010,7 +9005,6 @@ void CWindow_MapTool::Interact_SelectTab()
 				m_fSelectColliderCenterArray[1] = vColliderCenter.y;
 				m_fSelectColliderCenterArray[2] = vColliderCenter.z;
 			}
-		
 		}
 
 		if (m_pGameInstance->Key_Down(DIK_END))

@@ -71,7 +71,7 @@ HRESULT CMother::Initialize(void* pArg)
 	//m_fCurHP = m_fMaxHP;
 
 	// Ready BossHUDBar
-	FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this, "TheParasiter"));
 
 	CData_Manager::GetInstance()->Set_Mother(this);
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();

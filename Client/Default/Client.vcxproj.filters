@@ -2176,12 +2176,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C">
       <UniqueIdentifier>{e72a5052-eaeb-40b1-bd8f-832d14139dc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Proteus">
-      <UniqueIdentifier>{0cd381d9-63f0-4246-86cf-fac36ffd3924}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\4. Waster">
-      <UniqueIdentifier>{a468a97f-999c-452d-9f16-8c922afadcfc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Body">
       <UniqueIdentifier>{929df66a-7a17-496d-8fa1-9552f8acfece}</UniqueIdentifier>
     </Filter>
@@ -3591,6 +3585,30 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack">
       <UniqueIdentifier>{6c5d24df-1ce3-4e13-b2fa-0da2920798aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect">
+      <UniqueIdentifier>{54375d57-5543-47e2-826c-f6fded4774a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect\00. MoveEffect">
+      <UniqueIdentifier>{ae8bc895-8152-47b0-bce5-1815257b4484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Whip">
+      <UniqueIdentifier>{80654d8a-bcc0-48ef-8f52-a31ef40a1cde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster">
+      <UniqueIdentifier>{a468a97f-999c-452d-9f16-8c922afadcfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body">
+      <UniqueIdentifier>{28a42e21-1b79-46e4-8c29-164207bcbd60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon">
+      <UniqueIdentifier>{2c751499-b200-4b82-b1e7-112ee4e429de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint">
+      <UniqueIdentifier>{c6191a3e-e66d-48c9-b99c-6b925703ed51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt">
+      <UniqueIdentifier>{c4337cc6-d727-4928-8527-cd3860e02f3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7125,6 +7143,27 @@
     <ClInclude Include="..\Public\BanditHeavy_Charge_Attack_Full.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_MoveEffect.h">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Whip.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Whip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_Sprint_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_Taunt_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10105,6 +10144,27 @@
     <ClCompile Include="..\Private\BanditHeavy_Charge_Attack_Full.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_MoveEffect.cpp">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Whip.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Whip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_Sprint_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_Taunt_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Weapon_Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -10119,9 +10179,6 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
-      <Filter>97.ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl">
@@ -10149,6 +10206,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

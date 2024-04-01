@@ -244,16 +244,36 @@ public: /* ============================== Get / Set ============================
 
 	/* Debug */
 	void			Set_Tool(_bool bTool) { m_bTool = bTool; }
-	_bool			m_bTool = true;
+	_bool			m_bTool = false;
 
 	/* RenderGroup */
-	void						Set_RenderGroup(CRenderer::RENDERGROUP eGroup) { m_tUIInfo.iRenderGroup = eGroup; }
+	void			Set_RenderGroup(CRenderer::RENDERGROUP eGroup) { m_tUIInfo.iRenderGroup = eGroup; }
 	//CRenderer::RENDERGROUP*		Get_RenderGroup() {	return &m_tUIInfo.eRenderGroup; }
-	_int*						Get_RenderGroup() {	return &m_tUIInfo.iRenderGroup; }
+	_int*			Get_RenderGroup() {	return &m_tUIInfo.iRenderGroup; }
+	/* State */
+	void			Set_UIState(UISTATE eState) { m_eState = eState; 
+	int i = 10;
+	}
+	UISTATE			Get_UIState() { return m_eState; }
 
 //protected:
 public:
 	virtual HRESULT	Set_ParentTransform(CTransform* pParentTransformCom);
+	void			Check_Change_WorldUI(_float fTimeDelta);
+	void			Check_MouseInput(_float fTimeDelta);
+
+protected:
+	_bool			m_bMouseDown_LB = false;
+	_bool			m_bMouseDown_RB = false;
+	_bool			m_bMouseDown_MB = false;
+
+	_bool			m_bMousePressing_LB = false;
+	_bool			m_bMousePressing_RB = false;
+	_bool			m_bMousePressing_MB = false;
+
+	_bool			m_bMouseUp_LB = false;
+	_bool			m_bMouseUp_RB = false;
+	_bool			m_bMouseUp_MB = false;
 
 public: /* ============================== Add ============================== */
 	void			Add_Create_Parts(void* pArg);
@@ -291,6 +311,17 @@ public: /* ============================= Function ============================= 
 	virtual void	Check_RectPos();	// Moving
 	void			Moving_Picking_Point(POINT pt); // Picking Moving
 	virtual void	Parts_Delete();
+	void			LifeTime(_float fTimeDelta);
+
+
+public:
+	void			Set_LifeTimeUI(_bool bLifeTimeUI) { m_bLifeTimeUI = bLifeTimeUI; }
+	void			Set_LifeTime(_float fLifeTime) { m_fLifeTime = fLifeTime; }
+	void			ResetTime();
+	_bool			Get_LifeTimeUI() { return m_bLifeTimeUI; }
+
+private:
+	_bool			m_bLifeTimeUI = false;
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
@@ -422,7 +453,7 @@ protected: /* Data */
 	class CData_Manager* m_pData_Manager = { nullptr };
 
 protected:
-	class CUI_Manager* m_pUI_Manager = { nullptr };
+	class CUI_Manager* m_pUIManager = { nullptr };
 	//	class CCharacter*  m_pCharacter = { nullptr };
 	//
 	//public:
@@ -444,6 +475,20 @@ protected: /* LifeTime */
 	_float				m_fLifeTime = 5000.f;
 	_float				m_fActiveTime = 1000.f;
 	_float				m_fTime = (_float)GetTickCount64();
+	_float				m_fLeftSize = 0.f;
+	_float				m_fBottomSize = 0.f;
+	_float				m_fChangeValue = 0.1f;
+	_float				m_fOriginPoint = 0.0f;
+	_bool				m_bStart = false;
+
+public:
+	void				Set_LeftSize(_float fLeftSize) { m_fLeftSize = fLeftSize; }
+	void				Set_ChangeValue(_float fChangeValue) { m_fChangeValue = fChangeValue; }
+
+	_float*				Get_LeftSize() { return &m_fLeftSize; }
+	_float*				Get_BottomSize() { return &m_fBottomSize; }
+	_float*				Get_ChangeValue() { return &m_fChangeValue; }
+	_float*				Get_OriginPoint() { return &m_fOriginPoint; }
 
 protected: /* ========================= Component =========================== */
 	CShader*			m_pShaderCom = { nullptr };
@@ -466,7 +511,7 @@ protected: /* ============================= UI =============================== *
 	vector<CUI*>		m_vecUIParts;
 	UI_DESC				m_tUIInfo;
 	RECT				m_rcUI = {};
-	UISTATE				m_eState;
+	UISTATE				m_eState = UISTATE::STATE_END;
 	UITYPE				m_eType = UITYPE::NONE;
 	_float4x4			m_Origin_WorldMatrix = {};
 	_bool				m_bActive = false;

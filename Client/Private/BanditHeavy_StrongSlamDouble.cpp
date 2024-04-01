@@ -37,6 +37,8 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 	}
 	else if (false == m_bFlags[2])
 	{
+		pActor->Look_At_Target_Lerp(fTimeDelta);
+
 		m_bFlags[1] = pActor->Is_Inputable_Front(72);
 		if (true == m_bFlags[2])
 		{
@@ -50,6 +52,10 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
 		}
+	}
+	else 
+	{
+		pActor->Look_At_Target_Lerp(fTimeDelta);
 	}
 
 

@@ -6,17 +6,7 @@
 // #include "Son_Idle.h"
 #include "Son_Spawn.h"
 #include "Son_Hit.h"
-// #include "Son_HitLeft.h"
-// #include "Son_HitRight.h"
-// #include "Son_CutScene.h"
-// #include "Son_TurnL90.h"
-// #include "Son_TurnL180.h"
-// #include "Son_TurnR90.h"
-// #include "Son_TurnR180.h"
-// #include "Son_Stun_Start.h"
-// #include "Son_CutScene.h"
-// #include "Son_BloodRange_Stun_Start.h"
-// #include "Player_Finisher_Son_VS.h"
+#include "Son_Dead.h"
 
 #include "UI_Manager.h"
 
@@ -74,7 +64,7 @@ HRESULT CSon::Initialize(void* pArg)
 	//m_fCurHP = m_fMaxHP;
 	m_pMother = CData_Manager::GetInstance()->Get_Mother();
 	// Ready BossHUDBar
-	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	//FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 	
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	CData_Manager::GetInstance()->Set_Son(this);
@@ -136,7 +126,7 @@ void CSon::Tick(_float fTimeDelta)
 			m_fHp = m_fMaxHp;
 			++m_pMother->m_iSonDead;
 			//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
-			this->Set_Enable(false);
+			m_pActor->Set_State(new CSon_Dead);
 		}
 	}
 	

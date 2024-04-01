@@ -2,6 +2,7 @@
 #include "UI_Player_Left_Interface.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "Data_Manager.h"
 
 CUI_Player_Left_Interface::CUI_Player_Left_Interface(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -38,6 +39,8 @@ HRESULT CUI_Player_Left_Interface::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	//m_eState = UISTATE::PLAYER_HUD;
+
 	return S_OK;
 }
 
@@ -55,6 +58,8 @@ void CUI_Player_Left_Interface::Priority_Tick(_float fTimeDelta)
 void CUI_Player_Left_Interface::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	//m_pData_Manager->
 
 	if (m_bActive)
 	{

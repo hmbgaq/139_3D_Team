@@ -86,7 +86,6 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
     m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
     m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-
     CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
     if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
@@ -608,23 +607,7 @@ HRESULT CLevel_IntroBoss::Ready_Layer_UI_Monster(const wstring& strLayerTag, voi
 
 HRESULT CLevel_IntroBoss::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
-    // Ready Interface
-    FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
-    // Ready Crosshair
-    FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Crosshair(LEVEL_STATIC));
 
-    //// =>Left_Interface
-    //Ready_LeftInterface(strLayerTag, pArg);
-    //// =>Right_Interface
-    //Ready_RightInterface(strLayerTag, pArg);
-    //// =>Quest_Box
-    //Ready_QuestBox(strLayerTag, pArg);
-    //// =>Tutorial_Box
-    //Ready_TutorialBox(strLayerTag, pArg);
-    //// =>LevelUp
-    //Ready_LevelUp(strLayerTag, pArg);
-    //// =>Reward_Item
-    //Ready_Reward_Item(strLayerTag, pArg);
     return S_OK;
 }
 

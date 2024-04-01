@@ -132,7 +132,7 @@ void CUI_EnemyHUD_Shard::UI_Exit(_float fTimeDelta)
 void CUI_EnemyHUD_Shard::UI_Setting()
 {
 	///* Child Setting */
-	//m_pUI_Manager->Ready_EnemyHUD_Shard(LEVEL_STATIC, );
+	//m_pUIManager->Ready_EnemyHUD_Shard(LEVEL_STATIC, );
 
 }
 

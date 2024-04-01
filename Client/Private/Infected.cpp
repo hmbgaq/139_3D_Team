@@ -60,7 +60,7 @@ HRESULT CInfected::Initialize_Prototype()
 {
 	FAILED_CHECK(__super::Initialize_Prototype());
 
-	return S_OK;
+	return S_OK; 
 }
 
 HRESULT CInfected::Initialize(void* pArg)
@@ -98,10 +98,20 @@ void CInfected::Priority_Tick(_float fTimeDelta)
 void CInfected::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-	
+
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
+	}
+
+	if (true == m_bCntDead_Active)
+	{
+		fTimeAcc += fTimeDelta;
+		if (fTimeAcc >= m_fCntDead_Time)
+		{
+			fTimeAcc = 0.f;
+			Set_Dead(true);
+		}
 	}
 }
 
@@ -109,7 +119,6 @@ void CInfected::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	//m_pGameInstance->Add_DebugRender(m_pNavigationCom); /* 아 테스트로 넣었었음 */ 
 }
 
 HRESULT CInfected::Render()
@@ -196,20 +205,29 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
-	switch (ePower)
+	if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
 	{
-	case Engine::Light:
-		m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
-		break;
-	case Engine::Medium:
-		m_pActor->Set_State(new CInfected_DeathLight_B_01_NEW());
-		break;
-	case Engine::Heavy:
-		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
-		break;
+		
+		m_pActor->Set_State(new CInfected_Electrocute_Loop());
+	}
+	else
+	{
+		// switch (ePower)
+		// {
+		// case Engine::Light:
+		// 	m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
+		// 	break;
+		// case Engine::Medium:
+		// 	m_pActor->Set_State(new CInfected_DeathLight_B_01_NEW());
+		// 	break;
+		// case Engine::Heavy:
+		// 	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
+		// 	break;
 
-	default:
-		break;
+		// default:
+		// 	break;
+		// }
+		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
 	}
 }
 

@@ -132,7 +132,7 @@ public:
 	void	Rotation(_fvector vAxis, _float fRadian);
 	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);
 	void	Rotation_Quaternion(_float3 vRotation);
-	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 0.5f);
+	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 1.0f);
 
 	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
 

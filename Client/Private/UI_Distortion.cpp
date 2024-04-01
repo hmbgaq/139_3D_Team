@@ -143,16 +143,6 @@ HRESULT CUI_Distortion::Ready_Components()
 		TEXT("Com_Texture_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[DIFFUSE]))))
 		return E_FAIL;
 
-	////! For.Com_Texture_Mask
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"),
-	//	TEXT("Com_Texture_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[MASK]))))
-	//	return E_FAIL;
-
-	////! For.Com_Texture_Noise
-	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Noise"),
-	//	TEXT("Com_Texture_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[NOISE]))))
-	//	return E_FAIL;
-
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -201,13 +191,6 @@ HRESULT CUI_Distortion::Bind_ShaderResources()
 	{
 		if (FAILED(m_pTextureCom[DIFFUSE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 			return E_FAIL;
-
-		//if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
-		//	return E_FAIL;
-
-		//if (FAILED(m_pDistortionCom[NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_iNoiseNum)))
-		//	return E_FAIL;
-
 	}
 	return S_OK;
 }

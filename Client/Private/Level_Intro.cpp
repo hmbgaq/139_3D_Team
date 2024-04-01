@@ -90,17 +90,14 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 
     json Stage1MapJson = {};
 
-
-
     if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
     {
         MSG_BOX("몬스터 불러오기 실패");
         return E_FAIL;
     }
 
-
     _bool bSpawnSniper = false;
-    _bool bSpawnTanker = true;
+    _bool bSpawnTanker = false;
     _bool bSpawnInfected = false;
     _bool bSpawnZenuGiant = true;
     
@@ -162,18 +159,13 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
         }
         else
             return E_FAIL;
-
-        
-
-        
-
     }
 
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    ////pMonster->Set_Position(_float3(50.0f, 0.f, 35.f));
-    //pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
-    //
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(50.0f, 0.f, 35.f));
+    pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
+    
     //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
     //NULL_CHECK_RETURN(pMonster, E_FAIL);
     //pMonster->Set_InitPosition(_float3(61.f, 0.f, 37.f));
@@ -457,23 +449,7 @@ HRESULT CLevel_Intro::Ready_Layer_UI_Monster(const wstring& strLayerTag, void* p
 
 HRESULT CLevel_Intro::Ready_Layer_UI_Interface(const wstring& strLayerTag, void* pArg)
 {
-    // Ready Interface
-    FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Interface(LEVEL_STATIC));
-    // Ready Crosshair
-    FAILED_CHECK(CUI_Manager::GetInstance()->Ready_Crosshair(LEVEL_STATIC));
 
-    //// =>Left_Interface
-    //Ready_LeftInterface(strLayerTag, pArg);
-    //// =>Right_Interface
-    //Ready_RightInterface(strLayerTag, pArg);
-    //// =>Quest_Box
-    //Ready_QuestBox(strLayerTag, pArg);
-    //// =>Tutorial_Box
-    //Ready_TutorialBox(strLayerTag, pArg);
-    //// =>LevelUp
-    //Ready_LevelUp(strLayerTag, pArg);
-    //// =>Reward_Item
-    //Ready_Reward_Item(strLayerTag, pArg);
     return S_OK;
 }
 

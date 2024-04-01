@@ -15,7 +15,7 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 	m_iLoopescape = 0;
 	m_fPreHP = pActor->Get_Hp();
 
-	m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke_Smoke.json", pActor);
+	m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json", pActor);
 
 }
 
@@ -136,7 +136,6 @@ void CVampireCommander_BloodRange_Loop::Release(CVampireCommander* pActor)
 	for (int i = 0; i < pActor->m_pWeakneesUIs.size();++i)
 	{
 		pActor->m_pWeakneesUIs[i]->Set_Dead(true);
-		//Safe_Release(pActor->m_pWeakneesUIs[i]);
 	}
 	pActor->m_pWeakneesUIs.clear();
 }

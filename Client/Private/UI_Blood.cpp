@@ -74,10 +74,10 @@ void CUI_Blood::Tick(_float fTimeDelta)
 	m_iMaskNum = m_tUIInfo.iMaskNum;
 	m_iNoiseNum = m_tUIInfo.iNoiseNum;
 
-	if (m_pGameInstance->Key_Down(DIK_A))
-		m_pData_Manager->Add_CurHP(-10.f);
-	if (m_pGameInstance->Key_Down(DIK_S))
-		m_pData_Manager->Add_CurHP(10.f);
+	//if (m_pGameInstance->Key_Down(DIK_A))
+	//	m_pData_Manager->Add_CurHP(-10.f);
+	//if (m_pGameInstance->Key_Down(DIK_S))
+	//	m_pData_Manager->Add_CurHP(10.f);
 
 	// 현재 체력이 이전에 저장한 HP보다 낮아졌을 경우 (공격받음)
 	if (m_fPreHP > m_pData_Manager->Get_CurHP())
@@ -95,7 +95,7 @@ void CUI_Blood::Tick(_float fTimeDelta)
 	//	m_bActive = true;
 
 	// 활성화
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (!m_vecAnimation.empty())
 		{

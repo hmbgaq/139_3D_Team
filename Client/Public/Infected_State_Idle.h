@@ -12,8 +12,7 @@ public:
 
 public:
 	virtual CState<CInfected>* Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
-
-
+	//virtual CState<CInfected>* Boom_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
 };
 
 END

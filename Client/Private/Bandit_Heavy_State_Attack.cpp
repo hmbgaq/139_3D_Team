@@ -3,7 +3,10 @@
 void CBandit_Heavy_State_Attack::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
-	pActor->Look_At_Target();
+
+	pActor->Add_AttackCount();
+
+	//pActor->Look_At_Target();
 }
 
 CState<CBandit_Heavy>* CBandit_Heavy_State_Attack::Update(CBandit_Heavy* pActor, _float fTimeDelta)

@@ -32,11 +32,11 @@ HRESULT CScreamer::Initialize(void* pArg)
 	m_pModelCom->Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_LOOP, true);
 
 	///* Test UI */
-	m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
-	m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());//이거는 Tick 에서 돌리기 
+	//m_pWeakneesUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+	//m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());//이거는 Tick 에서 돌리기 
 	//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
 
-	CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
+	//CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
 
 	return S_OK;
 }
@@ -65,25 +65,25 @@ void CScreamer::Tick(_float fTimeDelta)
 	//	m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_REVERSE, false); /* 문제있음 쓰지마셈 */
 	//}
 
-	if (m_pGameInstance->Key_Down(DIK_G))
-		m_bTestUI = !m_bTestUI;
-
-	if (m_bTestUI)
-	{
-		//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
-		m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
-		CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix());
-	}
-		
-	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
-	{
-		if (m_pGameInstance->Key_Pressing(DIK_T))
-			m_fOffsetY -= 1.f;
-		if (m_pGameInstance->Key_Pressing(DIK_Y))
-			m_fOffsetY += 1.f;
-
-		CUI_Manager::GetInstance()->Set_Offset(m_fOffsetX, m_fOffsetY);
-	}
+	//if (m_pGameInstance->Key_Down(DIK_G))
+	//	m_bTestUI = !m_bTestUI;
+	//
+	//if (m_bTestUI)
+	//{
+	//	//m_pWeakneesUI->SetUp_PositionToScreen(m_pTransformCom->Get_Position());
+	//	//m_pWeakneesUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix());
+	//	//CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix());
+	//}
+	//	
+	//if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	//{
+	//	if (m_pGameInstance->Key_Pressing(DIK_T))
+	//		m_fOffsetY -= 1.f;
+	//	if (m_pGameInstance->Key_Pressing(DIK_Y))
+	//		m_fOffsetY += 1.f;
+	//
+	//	//CUI_Manager::GetInstance()->Set_Offset(m_fOffsetX, m_fOffsetY);
+	//}
 
 
 
@@ -121,7 +121,9 @@ HRESULT CScreamer::Render()
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 		
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
 		//m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
