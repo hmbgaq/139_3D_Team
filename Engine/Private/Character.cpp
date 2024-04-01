@@ -101,7 +101,6 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	}
 
 	Check_Frustum();
-
 	if (true == m_bIsInFrustum)
 	{		
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), ); //m_bIsInFrustum
@@ -126,6 +125,10 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			m_vAddRootPosition = {};
 		}
 		
+	}
+	else 
+	{
+		_uint i = 0;
 	}
 
 	m_pRigidBody->Late_Tick(fTimeDelta);

@@ -307,6 +307,7 @@ protected:
 	CCharacter* m_pTarget = { nullptr };
 	_bool m_bIsInFrustum = { false };
 
+
 protected:
 	_float3		m_vWeaknessPos = { 0.f, 0.f, 0.f };
 	_float3		m_vWeaknessPos_Local = { 0.f, 1.f, 0.f };

@@ -16,7 +16,7 @@ void CPlayer_MeleeUppercut_01v2::Initialize(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_R);
 
 	pWeapon
-		->Set_Damage(0.f)//20.f
+		->Set_Damage(20.f)
 		->Set_Direction(Direction::Front)
 		->Set_Power(Power::Heavy)
 		->Set_Force(0.5f)

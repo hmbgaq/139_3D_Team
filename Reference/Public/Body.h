@@ -145,8 +145,6 @@ protected:
 //	_float x = { 1.f };
 //	_float y = { 4.8f };
 
-
-
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };
 

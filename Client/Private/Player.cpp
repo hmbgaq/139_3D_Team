@@ -158,8 +158,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
-		if (m_pGameInstance->Key_Down(DIK_C))
-			m_fHp = 100;
+		//if (m_pGameInstance->Key_Down(DIK_C))
+		//	m_fHp = 100;
 	}
 
 

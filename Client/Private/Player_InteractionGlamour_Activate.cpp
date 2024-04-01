@@ -11,7 +11,12 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 {
 	__super::Update(pActor, fTimeDelta);
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+
+	return nullptr;
 }
 
 void CPlayer_InteractionGlamour_Activate::Release(CPlayer* pActor)
