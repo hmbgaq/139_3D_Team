@@ -5,7 +5,7 @@
 #include "Environment_LightObject.h"
 #include "Environment_Interact.h"
 #include "Data_Manager.h"
-//#include "UI_Weakness.h"
+#include "UI_Weakness.h"
 
 CEnvironment_SpecialObject::CEnvironment_SpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)

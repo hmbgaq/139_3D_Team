@@ -5,7 +5,6 @@
 #include "Effect.h"
 #include "Effect_Manager.h"
 #include "Player.h"
-
 #include "Effect_Manager.h"
 #include "Effect_Trail.h"
 
@@ -106,7 +105,18 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 
 	}
-
+// 	if (CData_Manager::GetInstance()->Get_Mother() != nullptr)
+// 	{
+// 		CAttackObject* pAttackObject = Get_Target_AttackObject(other);
+// 
+// 		if (pAttackObject != nullptr)
+// 		{
+// 			if (other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER_ATTACK))
+// 			{
+// 				CData_Manager::GetInstance()->Get_Mother()->Get_Damaged(pAttackObject->Get_Damage());
+// 			}
+// 		}
+// 	}
 	Set_Dead(true);
 
 

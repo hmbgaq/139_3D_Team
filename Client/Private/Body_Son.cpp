@@ -2,6 +2,8 @@
 #include "Body_Son.h"
 #include "GameInstance.h"
 #include "Bone.h"
+#include "AttackObject.h"
+#include "Mother.h"
 
 CBody_Son::CBody_Son(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody(pDevice, pContext, strPrototypeTag)
@@ -117,6 +119,7 @@ HRESULT CBody_Son::Render_Shadow()
 void CBody_Son::OnCollisionEnter(CCollider* other)
 {
 	__super::OnCollisionEnter(other);
+
 }
 
 void CBody_Son::OnCollisionStay(CCollider* other)
@@ -192,6 +195,11 @@ HRESULT CBody_Son::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CBody_Son::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 CBody_Son* CBody_Son::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

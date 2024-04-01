@@ -2,10 +2,10 @@
 
 #include "Client_Defines.h"
 #include "Monster_Character.h"
-#include "Actor.h"
 
 BEGIN(Client)
 
+class CUI;
 
 class CMother final : public CMonster_Character
 {
@@ -33,10 +33,13 @@ protected:
 	virtual void Hitted_Finish() override;
 	virtual void Hitted_Weakness() override;
 
+	virtual void Check_Frustum()override;
 
 public:
 	CActor<CMother>* Get_Actor() { return m_pActor; }
 	void Set_Actor(CActor<CMother>* _pActor) { m_pActor = _pActor; }
+	vector<CUI*> m_pWeakneesUIs; 
+
 private:
 	CActor<CMother>* m_pActor = { nullptr };
 
@@ -46,7 +49,6 @@ private:
 public:
 	CGameObject* m_pMonster1 = { nullptr };
 	CGameObject* m_pMonster2 = { nullptr };
-	vector<CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
 	_bool m_bPhase = true;
 	_bool m_bfirstCheck = true;

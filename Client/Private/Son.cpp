@@ -7,6 +7,7 @@
 #include "Son_Spawn.h"
 #include "Son_Hit.h"
 #include "Son_Dead.h"
+#include "Mother.h"
 
 #include "UI_Manager.h"
 
@@ -16,7 +17,7 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 
-#include "Mother.h"
+
 
 CSon::CSon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
@@ -206,6 +207,12 @@ void CSon::Hitted_Finish()
 void CSon::Hitted_Weakness()
 {
 	//m_pActor->Set_State(new CSon_BloodRange_Stun_Start());
+}
+
+void CSon::Check_Frustum()
+{
+	m_bIsInFrustum = true;
+
 }
 
 CSon* CSon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

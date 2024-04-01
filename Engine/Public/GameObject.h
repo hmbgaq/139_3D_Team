@@ -96,7 +96,7 @@ public: /* For. Collision */
 	virtual void		OnPhysXCollisionExit(CPhysXCollider* pOtherCollider) {};
 
 protected: /* Base Setting Value */
-	map<const wstring, class CComponent*>		m_Components;
+	map<const wstring, CComponent*>		m_Components;
 
 	ID3D11Device*								m_pDevice			= { nullptr };
 	ID3D11DeviceContext*						m_pContext			= { nullptr };
