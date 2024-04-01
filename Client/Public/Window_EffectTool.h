@@ -15,6 +15,7 @@ class CSky;
 class CWindow_EffectTool final : public CImgui_Window
 {
 public:
+	enum TYPE_EDIT	{EDIT_EFFECT, EDIT_TRAIL, EDIT_END };
 	enum TYPE_FILE { FILE_EFFECT, FILE_PART_PARTICLE, FILE_PART_MESH, FILE_TRAIL, TYPE_FILE_END };
 
 	struct Window_EffectTool_DESC : public ImGuiDESC
@@ -35,7 +36,9 @@ public:
 /* For.Save&Load */
 public:
 	void	Update_SaveLoad_Menu();			// 저장 불러오기 메뉴 업데이트
+	void	Update_SaveLoad_Trail_Menu();	// 저장 불러오기 메뉴(트레일) 업데이트
 	void	Update_SaveLoad_Part_Menu();	// 저장 불러오기 메뉴(파트이펙트) 업데이트
+
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
@@ -60,7 +63,8 @@ public:
 public:
 	void	Update_LevelSetting_Window();	// 레벨(환경) 세팅 창(카메라, 스카이박스, 크기비교용 모델 등...)
 
-	void	Update_EffectList_Window();		// 이펙트 리스트박스 창
+	void	Update_EffectList_Window();			// 이펙트 리스트박스 창
+	void	Update_EffectTrail_Window();		// 트레일 (왼쪽 창)
 
 	void	Update_EffectTransform_Window();		// 이펙트 트랜스폼 창
 
@@ -72,7 +76,7 @@ public:
 	void	Update_ParticleTab();			// 파티클 탭
 	void	Update_RectTab();				// 렉트 탭
 	void	Update_MeshTab();				// 메쉬 탭
-	void	Update_TrailTab();				// 트레일 탭
+	void	Update_TrailTab(_float fTimeDelta);				// 트레일 탭
 
 
 /* For.Create & Add (이펙트 생성 관련) */
@@ -100,6 +104,7 @@ public:
 	void	Select_EasingType(EASING_TYPE* eType);	// 이징 타입(러프관련) 선택
 
 private:
+	TYPE_EDIT	m_eEdit = { EDIT_EFFECT };
 	TYPE_FILE	m_eFile = { TYPE_FILE_END };
 
 

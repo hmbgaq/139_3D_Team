@@ -35,7 +35,7 @@ CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)
 		if (true == m_bFlags[1])
 		{
 			// ÀÌÆåÆ® »ý¼º
-			EFFECT_MANAGER->Create_Effect("Player/SlamDown/", "SlamDown_v2_15.json", pActor->Get_Position());
+			EFFECT_MANAGER->Create_Effect("Player/SlamDown/", "SlamDown_v2_22_Rock.json", pActor->Get_Position());
 
 			pActor->Apply_Shake_And_Blur(Power::Medium);
 			pActor->Slam();

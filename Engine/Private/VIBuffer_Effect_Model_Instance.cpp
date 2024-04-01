@@ -59,7 +59,7 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 		m_vecParticleInfoDesc.reserve(m_tBufferDesc.iCurNumInstance);
 		m_vecParticleShaderInfoDesc.reserve(m_tBufferDesc.iCurNumInstance);
 
-		if (m_tBufferDesc.bUseRigidBody)
+		//if (m_tBufferDesc.bUseRigidBody)
 			m_vecParticleRigidbodyDesc.reserve(m_tBufferDesc.iCurNumInstance);
 	}
 
@@ -115,7 +115,7 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 			m_vecParticleShaderInfoDesc.push_back(tParticleShaderInfo);
 
 			// 리지드바디 사용이면 입자 하나하나를 위한 초기화용 리지드바디정보 Push_back		
-			if (m_tBufferDesc.bUseRigidBody)
+			//if (m_tBufferDesc.bUseRigidBody)
 			{
 				PARTICLE_RIGIDBODY_DESC tParticleRigidbody = {};
 				m_vecParticleRigidbodyDesc.push_back(tParticleRigidbody);
