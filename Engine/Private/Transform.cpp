@@ -538,7 +538,6 @@ void CTransform::Add_RootBone_ForTarget(const _float3& vPos, CNavigation* pNavig
 {
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
 	_vector vResult = vRootMove;
-
 	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
 
 	Move_On_Navigation(vResult, pNavigation);

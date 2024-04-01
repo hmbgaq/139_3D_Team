@@ -68,21 +68,21 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 		m_pData_Manager->Add_CurEXP(100.f);
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_PGDN))
-	{
-		//Change_SizeRight(-5.f);
-		--m_iShaderNum;
-		if (m_iShaderNum <= 0)
-			m_iShaderNum = 0;
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_PGUP))
-	{
-		//Change_SizeRight(5.f);
-		++m_iShaderNum;
-		if (m_iShaderNum >= 3)
-			m_iShaderNum = 2;																	// 셰이더 패스 최대 번호 제한 (나중에 수정)
-	}
+	//!if (m_pGameInstance->Key_Down(DIK_PGDN))
+	//!{
+	//!	//Change_SizeRight(-5.f);
+	//!	--m_iShaderNum;
+	//!	if (m_iShaderNum <= 0)
+	//!		m_iShaderNum = 0;
+	//!}
+	//!
+	//!if (m_pGameInstance->Key_Down(DIK_PGUP))
+	//!{
+	//!	//Change_SizeRight(5.f);
+	//!	++m_iShaderNum;
+	//!	if (m_iShaderNum >= 3)
+	//!		m_iShaderNum = 2;																	// 셰이더 패스 최대 번호 제한 (나중에 수정)
+	//!}
 	if (m_bActive)
 	{
 		if (m_fPreEXP > m_pData_Manager->Get_MaxEXP())

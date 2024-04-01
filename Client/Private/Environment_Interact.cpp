@@ -135,12 +135,13 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		//Spline_LoopDoublePoint(fTimeDelta);
 	}
 
-	if (m_tEnvironmentDesc.bRotate == true)
+	if (m_tEnvironmentDesc.bRotate == true && m_bInteractEnable == true)
 	{
 		if (RotationCheck(fTimeDelta))
 		{
 			StartGroupInteract();
 			m_tEnvironmentDesc.bRotate = false;
+			m_bInteractEnable = false;
 		}
 	}
 
@@ -151,8 +152,8 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 
 	if (m_tEnvironmentDesc.bRootTranslate == true)
 	{
-		Move_For_PlayerRootMotion();
-		
+		Move_For_PlayerOffset();
+		//Move_For_PlayerRootMotion();
 	}
 
 	if (m_tEnvironmentDesc.bOwner == false && m_pOwnerInteract != nullptr)
@@ -554,8 +555,10 @@ void CEnvironment_Interact::Interact()
 					m_pPlayer->Set_UseGravity(false);
 				}
 
-
-				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+				if(m_bMove == true)
+					m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+				else
+					m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
 
 				m_bInteract = true;
 			}
@@ -771,14 +774,12 @@ void CEnvironment_Interact::Interact()
 					m_pPlayer->Set_UseGravity(false);
 				}
 
-				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
-
-
-				
+				if (m_bMove == true)
+					m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+				else
+					m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
 			
 				m_bInteract = true;
-			
-
 			}
 
 			
@@ -803,6 +804,14 @@ void CEnvironment_Interact::Move_For_PlayerRootMotion()
 	if (bMove == true)
 	{
 		_float3 vPlayerRootMotion = m_pPlayer->Get_AddRootMotion();
+
+
+		_float3 vTest = {};
+
+		if (XMVector3Equal(XMLoadFloat3(&vPlayerRootMotion), XMLoadFloat3(&vTest)))
+		{
+			vPlayerRootMotion = { 0.f, 0.f ,1.f * m_pGameInstance->Get_TimeDelta() };
+		}
 		m_pTransformCom->Add_RootBone_ForTarget(vPlayerRootMotion, m_pNavigationCom, m_pPlayer->Get_Transform());
 	}
 	
@@ -820,6 +829,24 @@ void CEnvironment_Interact::Move_For_Offset()
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCalcPosition);
 
 
+}
+
+void CEnvironment_Interact::Move_For_PlayerOffset()
+{
+
+	if (m_pPlayer == nullptr || m_bInteract == false)
+		return;
+
+	_bool bMove = Check_MoveCollider();
+
+	if (bMove == true)
+	{
+		_float4 vOwnerPosition = m_pPlayer->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+
+		_vector vCalcPosition = XMLoadFloat4(&vOwnerPosition) + XMLoadFloat4(&m_tEnvironmentDesc.vOffset);
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCalcPosition);
+	}
 }
 
 HRESULT CEnvironment_Interact::Find_InteractGroupObject()
@@ -893,9 +920,15 @@ _bool CEnvironment_Interact::Check_MoveCollider()
 		return false;
 
 	if (true == m_pColliderCom->Is_Collision(m_pMoveRangeColliderCom))
+	{
+		m_bMove = true;
 		return true;
+	}
 	else
+	{
+		m_bMove = false;
 		return false;
+	}
 	
 }
 
@@ -1753,15 +1786,15 @@ HRESULT CEnvironment_Interact::Ready_Components()
 	}
 	
 
-	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
-	{
-		/* For.Com_Model */
-		if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Navigation"),
-			TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom))))
-			return E_FAIL;
-
-		
-	}
+	//if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
+	//{
+	//	/* For.Com_Model */
+	//	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Navigation"),
+	//		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom))))
+	//		return E_FAIL;
+	//
+	//	
+	//}
 
 
 	

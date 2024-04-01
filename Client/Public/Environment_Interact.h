@@ -165,6 +165,7 @@ public:	//! For Public
 
 	void								Move_For_PlayerRootMotion(); //! 플레이어의 애니메이션 움직임에 맞춰서 이동
 	void								Move_For_Offset(); //! 특저 오브젝트의 위치(오프셋)기준으로 같이 이동
+	void								Move_For_PlayerOffset();
 
 	HRESULT								Find_InteractGroupObject(); //! 상호작용 활성화시 상호작용시켜야 할 오브젝트 찾기
 	void								Set_OwnerObject(CEnvironment_Interact* pOwnerObject) { m_pOwnerInteract = pOwnerObject; }
@@ -282,6 +283,7 @@ private:
 
 	_int								m_iCalcCount = 0;
 	_bool								m_bArrival = false;
+	_bool								m_bMove = true;
 	
 	vector<_int>						m_vecUpdateCellIndexs; //! 업데이트 시켜야할 셀들이 있다면.
 
@@ -289,6 +291,8 @@ private:
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;
 	vector<string>						m_vecInteractGroupTag; //! 툴 또는 디버깅용
 	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
+
+	
 
 	vector<_float4>						m_vecEnablePosition;
 private:

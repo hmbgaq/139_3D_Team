@@ -159,7 +159,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 	
-	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 80), ImGuiChildFlags_Border, WindowFlag);
+	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 120), ImGuiChildFlags_Border, WindowFlag);
 	
 	ImGui::SeparatorText(u8"세이브 / 로드");
 	{
@@ -171,7 +171,7 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 
 	ImGui::SameLine();
 
-	ImGui::BeginChild("Create_RightChild", ImVec2(0, 80), ImGuiChildFlags_Border, WindowFlag);
+	ImGui::BeginChild("Create_RightChild", ImVec2(0, 120), ImGuiChildFlags_Border, WindowFlag);
 	
 	FieldWindowMenu(); //! 필드 창 보이기 감추기
 
