@@ -24,6 +24,7 @@ public:
 	virtual	void Set_matScale(_matrix matrix) PURE;
 	virtual	void Set_Test(_vector _vTest) PURE;
 	virtual void Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ) PURE;
+	virtual void Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ) PURE;
 
 #ifdef _DEBUG
 public:

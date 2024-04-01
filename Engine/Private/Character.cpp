@@ -592,7 +592,6 @@ _float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
 	_float fRotationDirection = XMVectorGetY(vJudge) < 0 ? -1.0f : 1.0f;
 
 	return fAngle * fRotationDirection;
-
 }
 
 _bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)

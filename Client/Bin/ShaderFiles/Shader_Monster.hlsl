@@ -17,7 +17,9 @@ float       g_fCamFar;
 float       g_fLightFar;
 float       g_TimeDelta;
 
-float4      g_CheckColor = { 1.f, 0.f, 0.f, 1.f };
+float4 g_CheckColor = { 1.f, 0.f, 0.f, 1.f };
+bool g_bORM_Available;
+bool g_bEmissive_Available;
 /* =========== Texture =========== */
 Texture2D   g_DiffuseTexture;       /* Noblend */
 Texture2D   g_NormalTexture;        /* Noblend */
@@ -174,9 +176,15 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     return Out;
 }
 
@@ -206,8 +214,11 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
     float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
@@ -239,8 +250,11 @@ PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
     float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }

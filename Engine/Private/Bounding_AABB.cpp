@@ -14,6 +14,11 @@ void CBounding_AABB::Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ)
 	m_pAABB->Extents = _float3(_sizeX, _sizeY, _sizeZ);
 }
 
+void CBounding_AABB::Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ)
+{
+	m_pAABB->Center = _float3(_sizeX, _sizeY, _sizeZ);
+}
+
 HRESULT CBounding_AABB::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_AABB_DESC* pDesc = (BOUNDING_AABB_DESC*)pBoundingDesc;

@@ -22,6 +22,7 @@ public:
 	virtual void Set_matScale(_matrix _matScale) override { m_matScale = _matScale; }
 	virtual void Set_Test(_vector _vTest) override { m_vTest = _vTest ; }
 	virtual void Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ);
+	virtual void Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ);
 
 public:
 	HRESULT Initialize(BOUNDING_DESC* pBoundingDesc);
