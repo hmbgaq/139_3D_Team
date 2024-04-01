@@ -62,6 +62,8 @@ public:
 
 	void	Update_EffectList_Window();		// 이펙트 리스트박스 창
 
+	void	Update_EffectTransform_Window();		// 이펙트 트랜스폼 창
+
 	void	Update_Timeline_Window();		// 타임라인 창
 	void	Update_NeoSequencer_Window();	// 시퀀서 창
 
@@ -411,11 +413,12 @@ private:
 	_int	m_iKinetic_Mesh			= { 0 };
 	_int	m_iUseGravity_Mesh		= { 0 };
 
-	_float	m_fGravity_Mesh			= { -9.8f };	// 중력 가속도
-	_float	m_fFriction_Mesh		= { 0.1f };		// 마찰 계수
+	_float	m_fGravity_Mesh				= { -9.8f };	// 중력 가속도
+	_float	m_fMinMaxFriction_Mesh[2]	= { 0.1f, 0.1f };		// 마찰 계수
 	_float	m_fSleepThreshold_Mesh	= { 0.05f };	// 슬립 한계점(1이하로)
 
 	_float	m_vMinMaxPower_Mesh[2]	= { 0.1f, 250.f };
+	_float	m_vMinMaxMass_Mesh[2] = { 10.f, 10.f };
 	/* RigidBody ============================================== */
 
 

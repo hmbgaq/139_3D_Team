@@ -46,8 +46,8 @@ public:
 
 
 		/* Morph */
-		_bool		bMorph					= { FALSE };
-		_float		fMorphTimeTerm = { 0.05f };
+		_bool		bMorph			= { FALSE };
+		_float		fMorphTimeTerm  = { 0.05f };
 
 
 		/* RigidBody */
@@ -57,11 +57,14 @@ public:
 		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 		_float		fGravity		= { -9.8f };	// 중력 가속도
-		_float		fFriction		= { 0.1f };		// 마찰 계수
-		_float		fSleepThreshold = { 0.05f };	// 슬립 한계점
-		_byte		byFreezeAxis	= { 0 };		// 축 고정 확인용 바이트
+
+		_float2		vMinMaxFriction = { 0.1f, 0.1f };		// 마찰 계수 범위
+
+		_float		fSleepThreshold = { 0.05f };			// 슬립 한계점
+		_byte		byFreezeAxis	= { 0 };				// 축 고정 확인용 바이트
 
 		_float2		vMinMaxPower = { 0.1f, 250.f };
+		_float2		vMinMaxMass = { 10.f, 10.f };
 
 		EASING_TYPE	eType_SpeedLerp		= { EASING_TYPE::LINEAR };
 		_float2		vMinMaxSpeed		= { 1.f, 1.f };
@@ -214,7 +217,8 @@ public:
 		_float3			vAccel = { 0.f, 0.f, 0.f };		// 가속도
 		_float3			vVelocity = { 0.f, 0.f, 0.f };	// 속도
 
-		_float			fMass = { 10.f };				// 질량
+		_float			fMass	  = { 10.f };				// 질량
+		_float			fFriction = { 0.1f };				// 마찰 계수
 
 	} PARTICLE_RIGIDBODY_DESC;
 
@@ -237,6 +241,10 @@ public:
 
 	void				Init_Instance(_int iNumInstance) override;
 	virtual	HRESULT		Render(_int iMeshIndex) override;
+
+
+public:
+	HRESULT			Change_Model(CModel* pChangeModel);	// 툴용
 
 public:
 	void ReSet();
@@ -265,7 +273,7 @@ public:
 	void	Clear_Power(_uint iNum);
 
 
-	const _bool	Check_Sleep(_uint iNum);
+	const _bool	Check_Sleep(_uint iNum, const FORCE_MODE& eMode);
 	void		Sleep(_uint iNum) { Clear_Power(iNum); m_vecParticleRigidbodyDesc[iNum].bSleep = TRUE; }
 	void		Wake(_uint iNum) { m_vecParticleRigidbodyDesc[iNum].bSleep = FALSE; }
 

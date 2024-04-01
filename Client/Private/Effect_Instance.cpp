@@ -327,6 +327,30 @@ HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
 	return S_OK;
 }
 
+HRESULT CEffect_Instance::Change_ModelCom(wstring strProtoModelTag)
+{
+	if (TEXT("") == strProtoModelTag)
+		return S_OK;
+
+	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
+
+	if (nullptr != m_pModelCom[0])
+	{
+		Remove_Component(TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0]));
+	}
+
+	FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoModelTag, TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0])));
+
+
+	if (nullptr != m_pModelCom[0])
+	{
+		m_pVIBufferCom->Change_Model(m_pModelCom[0]);
+	}
+
+
+	return S_OK;
+}
+
 _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);

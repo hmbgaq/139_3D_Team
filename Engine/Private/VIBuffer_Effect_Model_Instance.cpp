@@ -172,6 +172,44 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 
 }
 
+HRESULT CVIBuffer_Effect_Model_Instance::Change_Model(CModel* pChangeModel)
+{
+
+	if (nullptr != m_tBufferDesc.pModel[0])
+	{
+		Safe_Release(m_tBufferDesc.pModel[0]);
+
+		m_tBufferDesc.pModel[0] = pChangeModel;
+		Safe_AddRef(m_tBufferDesc.pModel[0]);
+	}
+
+	if (nullptr != m_tBufferDesc.pModel[0])
+	{
+		if (!m_vecInstanceMesh.empty())
+		{
+			for (_int i = 0; i < m_iNumMeshes; ++i)
+			{
+				Safe_AddRef(m_vecInstanceMesh[i]);
+			}
+			m_vecInstanceMesh.clear();
+		}
+
+		vector<CMesh*> Meshes = m_tBufferDesc.pModel[0]->Get_Meshes();
+		m_iNumMeshes = (_int)Meshes.size();
+
+		for (_int i = 0; i < m_iNumMeshes; ++i)
+		{
+			m_vecInstanceMesh.push_back(Meshes[i]);
+			Safe_AddRef(Meshes[i]);
+		}
+
+		m_iNumMaterials = m_tBufferDesc.pModel[0]->Get_NumMaterials();
+	}
+
+
+	return S_OK;
+}
+
 void CVIBuffer_Effect_Model_Instance::ReSet()
 {
 	// 시간 초기화
@@ -319,8 +357,11 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	if (m_tBufferDesc.bUseRigidBody)
 	{
 		m_vecParticleRigidbodyDesc[iNum].bForced = FALSE; // 힘 안준걸로 초기화
+		m_vecParticleRigidbodyDesc[iNum].fMass = SMath::fRandom(m_tBufferDesc.vMinMaxMass.x, m_tBufferDesc.vMinMaxMass.y);						// 질량 리셋
+		m_vecParticleRigidbodyDesc[iNum].fFriction = SMath::fRandom(m_tBufferDesc.vMinMaxFriction.x, m_tBufferDesc.vMinMaxFriction.y);			// 마찰계수 리셋
 
 		Clear_Power(iNum);	// 파워 리셋
+
 	}
 #pragma endregion 리지드바디 끝
 
@@ -405,9 +446,9 @@ _float4 CVIBuffer_Effect_Model_Instance::Make_Dir(_uint iNum)
 void CVIBuffer_Effect_Model_Instance::Rotation_Instance(_uint iNum)
 {
 
-	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_vecParticleInfoDesc[iNum].vCurScales.x;
-	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f)	* m_vecParticleInfoDesc[iNum].vCurScales.y;
-	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_vecParticleInfoDesc[iNum].vCurScales.z;
+	_vector		vRight	= m_vecParticleShaderInfoDesc[iNum].vRight	* m_vecParticleInfoDesc[iNum].vCurScales.x;
+	_vector		vUp		= m_vecParticleShaderInfoDesc[iNum].vUp		* m_vecParticleInfoDesc[iNum].vCurScales.y;
+	_vector		vLook	= m_vecParticleShaderInfoDesc[iNum].vLook	* m_vecParticleInfoDesc[iNum].vCurScales.z;
 
 
 	_vector		vRotation = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_tBufferDesc.vRadian.x)
@@ -787,12 +828,23 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 							else
 							{
 
-								if (!Check_Sleep(i))	// 슬립이 아니면 리지드바디 업데이트
+								if (!Check_Sleep(i, m_tBufferDesc.eForce_Mode))	// 슬립이 아니면 리지드바디 업데이트
 								{
 									if (m_tBufferDesc.bKinetic)
 									{
 										// 스피드 러프
 										m_vecParticleInfoDesc[i].fCurSpeed = abs(Easing::LerpToType(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y, m_vecParticleInfoDesc[i].fTimeAccs, m_vecParticleInfoDesc[i].fLifeTime, m_tBufferDesc.eType_SpeedLerp));
+
+
+										/* 중력 사용 시 아래로 떨어짐 */
+										if (m_tBufferDesc.bUseGravity)
+										{
+											// 최저 높이보다 클 때만 중력을 받아 아래로 떨어짐
+											if (pModelInstance[i].vTranslation.y >= m_vecParticleInfoDesc[i].fMaxPosY)
+											{
+												m_vecParticleRigidbodyDesc[i].vVelocity.y += m_tBufferDesc.fGravity * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
+											}									
+										}
 
 										Update_Kinetic(i, fTimeDelta);	// 이동 속력 계산 업데이트
 
@@ -811,14 +863,26 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 									}
 								}
 
-								// 죽음 조건		
-								_vector vCurPos = XMLoadFloat4(&pModelInstance[i].vTranslation);
-								_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
 
-								if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
+								if (LIFE == m_tBufferDesc.eType_Fade_Takes)
 								{
-									m_vecParticleInfoDesc[i].bDie = TRUE;
+									if (m_vecParticleInfoDesc[i].fLifeTime <= m_vecParticleInfoDesc[i].fTimeAccs)
+									{
+										m_vecParticleInfoDesc[i].bDie = TRUE;
+									}
 								}
+								else if (DIST == m_tBufferDesc.eType_Fade_Takes)
+								{
+									// 죽음 조건		
+									_vector vCurPos = XMLoadFloat4(&pModelInstance[i].vTranslation);
+									_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
+
+									if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
+									{
+										m_vecParticleInfoDesc[i].bDie = TRUE;
+									}
+								}
+
 
 							}
 
@@ -940,96 +1004,96 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 #pragma region 알파 업데이트 시작
 
-					if (LIFE == m_tBufferDesc.eType_Fade_Takes)
-					{
-						// 라이프타임에 따라 알파 업데이트
+					//if (LIFE == m_tBufferDesc.eType_Fade_Takes)
+					//{
+					//	// 라이프타임에 따라 알파 업데이트
 
-						_float	fAlpha = 1.f;
+					//	_float	fAlpha = 1.f;
 
-						if (FADE_NONE == m_tBufferDesc.eType_Fade)
-						{
-							fAlpha = 1.f;
-						}
-						else if (FADE_OUT == m_tBufferDesc.eType_Fade)
-						{
-							fAlpha = max(m_vecParticleInfoDesc[i].fLifeTime - m_vecParticleInfoDesc[i].fTimeAccs, 0.f);
-						}
-						else if (FADE_IN == m_tBufferDesc.eType_Fade)
-						{
-							fAlpha = min(m_vecParticleInfoDesc[i].fLifeTime + m_vecParticleInfoDesc[i].fTimeAccs, 1.f);
-						}
+					//	if (FADE_NONE == m_tBufferDesc.eType_Fade)
+					//	{
+					//		fAlpha = 1.f;
+					//	}
+					//	else if (FADE_OUT == m_tBufferDesc.eType_Fade)
+					//	{
+					//		fAlpha = max(m_vecParticleInfoDesc[i].fLifeTime - m_vecParticleInfoDesc[i].fTimeAccs, 0.f);
+					//	}
+					//	else if (FADE_IN == m_tBufferDesc.eType_Fade)
+					//	{
+					//		fAlpha = min(m_vecParticleInfoDesc[i].fLifeTime + m_vecParticleInfoDesc[i].fTimeAccs, 1.f);
+					//	}
 
-						m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
-						m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
+					//	m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
+					//	m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
 
-					}
-					else if (DIST == m_tBufferDesc.eType_Fade_Takes)
-					{
-						// 거리에 따라 알파 업데이트
+					//}
+					//else if (DIST == m_tBufferDesc.eType_Fade_Takes)
+					//{
+					//	// 거리에 따라 알파 업데이트
 
-						_float	fAlpha = 1.f;
+					//	_float	fAlpha = 1.f;
 
-						_vector vCurPos = XMLoadFloat4(&pModelInstance[i].vTranslation);
-						_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
+					//	_vector vCurPos = XMLoadFloat4(&pModelInstance[i].vTranslation);
+					//	_float	fLength = XMVectorGetX(XMVector3Length(vCurPos - XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions)));	// 센터에서 현재 위치까지의 거리
 
-						if (FADE_NONE == m_tBufferDesc.eType_Fade)
-						{
-							fAlpha = 1.f;
-						}
-						else if (FADE_OUT == m_tBufferDesc.eType_Fade)
-						{
-							_float fValue = m_vecParticleInfoDesc[i].fMaxRange - fLength;
+					//	if (FADE_NONE == m_tBufferDesc.eType_Fade)
+					//	{
+					//		fAlpha = 1.f;
+					//	}
+					//	else if (FADE_OUT == m_tBufferDesc.eType_Fade)
+					//	{
+					//		_float fValue = m_vecParticleInfoDesc[i].fMaxRange - fLength;
 
-							if (0.f != m_vecParticleInfoDesc[i].fMaxRange && 0.f != fValue)
-								fAlpha = max(min(fValue / m_vecParticleInfoDesc[i].fMaxRange, 1.f), 0.f);
+					//		if (0.f != m_vecParticleInfoDesc[i].fMaxRange && 0.f != fValue)
+					//			fAlpha = max(min(fValue / m_vecParticleInfoDesc[i].fMaxRange, 1.f), 0.f);
 		
-						}
-						else if (FADE_IN == m_tBufferDesc.eType_Fade)
-						{
-							//fAlpha = min(fLength, 1.f);
+					//	}
+					//	else if (FADE_IN == m_tBufferDesc.eType_Fade)
+					//	{
+					//		//fAlpha = min(fLength, 1.f);
 
-							if (0.f != m_vecParticleInfoDesc[i].fMaxRange && 0.f != fLength)
-								fAlpha = max(min(fLength / m_vecParticleInfoDesc[i].fMaxRange, 1.f), 0.f);
+					//		if (0.f != m_vecParticleInfoDesc[i].fMaxRange && 0.f != fLength)
+					//			fAlpha = max(min(fLength / m_vecParticleInfoDesc[i].fMaxRange, 1.f), 0.f);
 	
-						}
+					//	}
 
-						m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
-						m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
+					//	m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
+					//	m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
 
-					}
-					else if (HEIGHT == m_tBufferDesc.eType_Fade_Takes)
-					{
-						// 높이에 따라 알파 업데이트
+					//}
+					//else if (HEIGHT == m_tBufferDesc.eType_Fade_Takes)
+					//{
+					//	// 높이에 따라 알파 업데이트
 
-						_float		fAlpha = 1.f;
+					//	_float		fAlpha = 1.f;
 
-						if (FADE_NONE == m_tBufferDesc.eType_Fade)
-						{
-							fAlpha = 1.f;
-						}
-						else if (FADE_OUT == m_tBufferDesc.eType_Fade)
-						{
-							_float fValue = m_vecParticleInfoDesc[i].fMaxPosY - pModelInstance[i].vTranslation.y;
+					//	if (FADE_NONE == m_tBufferDesc.eType_Fade)
+					//	{
+					//		fAlpha = 1.f;
+					//	}
+					//	else if (FADE_OUT == m_tBufferDesc.eType_Fade)
+					//	{
+					//		_float fValue = m_vecParticleInfoDesc[i].fMaxPosY - pModelInstance[i].vTranslation.y;
 
-							if (0.f != m_vecParticleInfoDesc[i].fMaxPosY && 0.f != fValue)
-								fAlpha = max(min(fValue / m_vecParticleInfoDesc[i].fMaxPosY, 1.f), 0.f);
+					//		if (0.f != m_vecParticleInfoDesc[i].fMaxPosY && 0.f != fValue)
+					//			fAlpha = max(min(fValue / m_vecParticleInfoDesc[i].fMaxPosY, 1.f), 0.f);
 
-						}
-						else if (FADE_IN == m_tBufferDesc.eType_Fade)
-						{					
-							if (0.f != m_vecParticleInfoDesc[i].fMaxPosY && 0.f != pModelInstance[i].vTranslation.y)
-								fAlpha = max(min((pModelInstance[i].vTranslation.y / m_vecParticleInfoDesc[i].fMaxPosY), 1.f), 0.f);
-						}
+					//	}
+					//	else if (FADE_IN == m_tBufferDesc.eType_Fade)
+					//	{					
+					//		if (0.f != m_vecParticleInfoDesc[i].fMaxPosY && 0.f != pModelInstance[i].vTranslation.y)
+					//			fAlpha = max(min((pModelInstance[i].vTranslation.y / m_vecParticleInfoDesc[i].fMaxPosY), 1.f), 0.f);
+					//	}
 
-						m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
-						m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
+					//	m_vecParticleShaderInfoDesc[i].vCurrentColors.w = fAlpha;
+					//	m_vecParticleShaderInfoDesc[i].fCurAddAlpha = m_vecParticleInfoDesc[i].fAddAlpha * fAlpha;
 
-					}
-					else if (TYPE_FADE_TAKES_END == m_tBufferDesc.eType_Fade_Takes)
-					{
-						// 알파 업데이트 안함
+					//}
+					//else if (TYPE_FADE_TAKES_END == m_tBufferDesc.eType_Fade_Takes)
+					//{
+					//	// 알파 업데이트 안함
 
-					}
+					//}
 
 
 #pragma region 알파 업데이트 끝
@@ -1110,11 +1174,13 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eForce_Mode"] = m_tBufferDesc.eForce_Mode;
 
 	Out_Json["Com_VIBuffer"]["fGravity"] = m_tBufferDesc.fGravity;
-	Out_Json["Com_VIBuffer"]["fFriction"] = m_tBufferDesc.fFriction;
+
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxFriction"], m_tBufferDesc.vMinMaxFriction);
 	Out_Json["Com_VIBuffer"]["fSleepThreshold"] = m_tBufferDesc.fSleepThreshold;
 	Out_Json["Com_VIBuffer"]["byFreezeAxis"] = m_tBufferDesc.byFreezeAxis;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxPower"], m_tBufferDesc.vMinMaxPower);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxMass"], m_tBufferDesc.vMinMaxMass);
 
 
 	/* For.Position */
@@ -1205,11 +1271,17 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 	m_tBufferDesc.eForce_Mode = In_Json["Com_VIBuffer"]["eForce_Mode"];
 
 	m_tBufferDesc.fGravity = In_Json["Com_VIBuffer"]["fGravity"];
-	m_tBufferDesc.fFriction = In_Json["Com_VIBuffer"]["fFriction"];
+
+	if (In_Json["Com_VIBuffer"].contains("vMinMaxFriction"))	// 다시 저장 후 삭제
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxFriction"], m_tBufferDesc.vMinMaxFriction);
+
 	m_tBufferDesc.fSleepThreshold = In_Json["Com_VIBuffer"]["fSleepThreshold"];
 	m_tBufferDesc.byFreezeAxis = In_Json["Com_VIBuffer"]["byFreezeAxis"];
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxPower"], m_tBufferDesc.vMinMaxPower);
+
+	if (In_Json["Com_VIBuffer"].contains("vMinMaxMass"))	// 다시 저장 후 삭제
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxMass"], m_tBufferDesc.vMinMaxMass);
 
 
 	/* For.Position */
@@ -1278,9 +1350,15 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 
 _float3 CVIBuffer_Effect_Model_Instance::Update_Kinetic(_uint iNum, _float fTimeDelta)
 {
-	/* 중력 사용 시 아래로 떨어짐 */
-	if (m_tBufferDesc.bUseGravity)
-		m_vecParticleRigidbodyDesc[iNum].vVelocity.y += m_tBufferDesc.fGravity * fTimeDelta;
+	///* 중력 사용 시 아래로 떨어짐 */
+	//if (m_tBufferDesc.bUseGravity)
+	//{
+	//	// 최저 높이까지 안왔을 때만 아래로 떨어짐
+
+	//	m_vecParticleRigidbodyDesc[iNum].vVelocity.y += m_tBufferDesc.fGravity * (m_vecParticleInfoDesc[iNum].fCurSpeed * fTimeDelta);
+	//}
+		
+
 
 	/* V += A * TD */
 	/* m_vVelocity += m_vAccel * fTimeDelta; */
@@ -1288,10 +1366,10 @@ _float3 CVIBuffer_Effect_Model_Instance::Update_Kinetic(_uint iNum, _float fTime
 
 
 	/* 마찰력에 의한 반대방향으로의 가속도(감속) */
-	if (1.f > m_tBufferDesc.fFriction)
+	if (1.f > m_vecParticleRigidbodyDesc[iNum].fFriction)
 	{
 		/* (m_vVelocity * (1.f - m_fFriction)) */
-		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity) * (1.f - m_tBufferDesc.fFriction));
+		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity) * (1.f - m_vecParticleRigidbodyDesc[iNum].fFriction));
 	}
 	else
 	{
@@ -1381,7 +1459,7 @@ void CVIBuffer_Effect_Model_Instance::Clear_Power(_uint iNum)
 }
 
 
-const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum)
+const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE_MODE& eMode)
 {
 	if (m_vecParticleRigidbodyDesc[iNum].bSleep)
 		return TRUE;
@@ -1403,13 +1481,30 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum)
 	//}
 	//else
 	{
-		_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity)));
 
-		if (m_tBufferDesc.fSleepThreshold > fLength)
+		if (FORCE_MODE::IMPULSE == eMode || FORCE_MODE::VELOCITY_CHANGE == eMode)
 		{
-			Sleep(iNum);
-			return TRUE;
+			_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity)));
+
+			if (m_tBufferDesc.fSleepThreshold > fLength)
+			{
+				Sleep(iNum);
+				return TRUE;
+			}
 		}
+
+
+		if (FORCE_MODE::FORCE == eMode || FORCE_MODE::ACCELERATION == eMode)
+		{
+			_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel)));
+
+			if (m_tBufferDesc.fSleepThreshold > fLength)
+			{
+				Sleep(iNum);
+				return TRUE;
+			}
+		}
+
 	}
 
 
