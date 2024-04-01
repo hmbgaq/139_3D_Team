@@ -73,8 +73,8 @@ public:
 	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
-	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f));
-	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f)) {};
+	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter* pTarget = nullptr);
+	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter*pTarget = nullptr) {};
 
 public:
 	void Set_Follow(_bool _bIsFollow) { m_bIsFollow = _bIsFollow; };

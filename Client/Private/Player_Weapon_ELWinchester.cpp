@@ -60,9 +60,9 @@ HRESULT CPlayer_Weapon_ELWinchester::Render()
 	return S_OK;
 }
 
-void CPlayer_Weapon_ELWinchester::Fire(_float3 vTargetPos)
+void CPlayer_Weapon_ELWinchester::Fire(_float3 vTargetPos, CCharacter* pTarget)
 {
-	__super::Fire(L"Prototype_GameObject_Bullet_Winchester", LAYER_PLAYER_BULLET, vTargetPos);
+	__super::Fire(L"Prototype_GameObject_Bullet_Winchester", LAYER_PLAYER_BULLET, vTargetPos, pTarget);
 }
 
 //void CPlayer_Weapon_ELWinchester::Fire(_float3 vTargetPos)

@@ -33,7 +33,7 @@ HRESULT CBullet_Revolver::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 90.f;
+	GameObjectDesc.fSpeedPerSec = 60.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -57,6 +57,8 @@ void CBullet_Revolver::Priority_Tick(_float fTimeDelta)
 void CBullet_Revolver::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	m_pTransformCom->Go_Straight(fTimeDelta);
 }
 
 void CBullet_Revolver::Late_Tick(_float fTimeDelta)
@@ -65,10 +67,10 @@ void CBullet_Revolver::Late_Tick(_float fTimeDelta)
 
 
 	////! 유정: 트레일 테스트
-	if (nullptr != m_pTrail)
-	{
-		m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());	//! 제대로 된 위치에 생성되는게 아닌 것 같다. 나중에 물어보기
-	}
+	//if (nullptr != m_pTrail)
+	//{
+	//	m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());	//! 제대로 된 위치에 생성되는게 아닌 것 같다. 나중에 물어보기
+	//}
 
 }
 
