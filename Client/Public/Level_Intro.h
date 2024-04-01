@@ -23,6 +23,7 @@ private:
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
+	HRESULT Ready_Shader_Json();
 	HRESULT Ready_Shader();
 
 

@@ -25,8 +25,6 @@ HRESULT CBody_Infected_D::Initialize(void* pArg)
 
 	FAILED_CHECK(OptionSetting());
 
-	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
-
 	return S_OK;
 }
 
@@ -50,7 +48,21 @@ HRESULT CBody_Infected_D::Render()
 	if (m_bAlive == false)
 		return S_OK;
 
-	FAILED_CHECK(__super::Render());
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+		
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+		m_pModelCom->Render((_uint)i);
+	}
 
 	return S_OK;
 }
@@ -60,20 +72,14 @@ HRESULT CBody_Infected_D::Render_Shadow()
 	if (m_bAlive == false)
 		return S_OK;
 
-	FAILED_CHECK(__super::Render_Shadow());
+	//FAILED_CHECK(__super::Render_Shadow());
 
 	return S_OK;
 }
 
-void CBody_Infected_D::Update_DiscardMesh()
-{
-}
-
 HRESULT CBody_Infected_D::OptionSetting()
 {
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = {  }; // ÇÇ¶± 
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 1, 11 }; // ¹«±â 
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 0, 1, 2, 3, 5, 6, 7, 8, 11 }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
 
 	return S_OK;
 }
@@ -82,10 +88,8 @@ HRESULT CBody_Infected_D::Ready_Components()
 {
 	FAILED_CHECK(__super::Ready_Components());
 
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
-
 	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Infected_D"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Infected_D"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	return S_OK;
 }
@@ -94,21 +98,8 @@ HRESULT CBody_Infected_D::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
-
-	if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
-	{
-		m_vCamPos = m_pGameInstance->Get_CamPosition();
-		m_vRimColor = { 1.0f, 0.3f, 0.2f, 1.f };
-		m_vBloomPower = _float3(1.0f, 1.0f, 1.0f);
-		m_fRimPower = 5.f;
-
-		m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
-		m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
-		m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
-		m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
-	}
+	m_gCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float)));
 
 	return S_OK;
 }

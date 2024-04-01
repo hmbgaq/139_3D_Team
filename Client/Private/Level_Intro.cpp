@@ -52,22 +52,16 @@ HRESULT CLevel_Intro::Initialize()
     m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
     m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
 
-
-    
-
     FAILED_CHECK(Ready_LightDesc());
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-
-    if(m_bMonsterTest == true)
-       FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+    if (m_bMonsterTest == true)
+        FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
+
     FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
-
     FAILED_CHECK(Ready_Shader());
-
 
     return S_OK;
 }
@@ -163,7 +157,6 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 
     pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
     NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_Position(_float3(50.0f, 0.f, 35.f));
     pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
     
     //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
@@ -198,6 +191,79 @@ HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
+
+    return S_OK;
+}
+
+HRESULT CLevel_Intro::Ready_Shader_Json()
+{
+    //json Shader_Json;
+    //
+    //FAILED_CHECK(CJson_Utility::Load_Json(m_strShader_FilepPath.c_str(), Shader_Json));
+    //
+    //HBAO_PLUS_DESC Desc_Hbao = {};
+    //Desc_Hbao.bHBAO_Active      = Shader_Json["HBAO"]["bHBAO_Active"];
+    //Desc_Hbao.fRadius           = Shader_Json["HBAO"]["fBias"];
+    //Desc_Hbao.fBias             = Shader_Json["HBAO"]["fBlur_Sharpness"];
+    //Desc_Hbao.fBlur_Sharpness   = Shader_Json["HBAO"]["fPowerExponent"];
+    //Desc_Hbao.fPowerExponent    = Shader_Json["HBAO"]["fRadius"];
+    //
+    //DEFERRED_DESC Desc_Deferred = {};
+    //Desc_Deferred.bRimBloom_Blur_Active     = Shader_Json["Deferred"]["bRimBloom_Blur_Active"];
+    //Desc_Deferred.bShadow_Active            = Shader_Json["Deferred"]["bShadow_Active"];
+    //
+    //FOG_DESC Desc_Fog = {};
+    //Desc_Fog.bFog_Active            = Shader_Json["Fog"]["bFog_Active"];
+    //Desc_Fog.fFogStartDepth         = Shader_Json["Fog"]["fFogStartDepth"];
+    //Desc_Fog.fFogStartDistance      = Shader_Json["Fog"]["fFogStartDistance"];
+    //Desc_Fog.fFogDistanceValue      = Shader_Json["Fog"]["fFogDistanceValue"];
+    //Desc_Fog.fFogHeightValue        = Shader_Json["Fog"]["fFogHeightValue"];
+    //Desc_Fog.fFogDistanceDensity    = Shader_Json["Fog"]["fFogDistanceDensity"];
+    //Desc_Fog.fFogHeightDensity      = Shader_Json["Fog"]["fFogHeightDensity"];
+    //Desc_Fog.vFogColor.x            = Shader_Json["Fog"]["vFogColor_x"];
+    //Desc_Fog.vFogColor.y            = Shader_Json["Fog"]["vFogColor_y"];
+    //Desc_Fog.vFogColor.z            = Shader_Json["Fog"]["vFogColor_z"];
+    //Desc_Fog.vFogColor.w            = Shader_Json["Fog"]["vFogColor_w"];
+    //
+    //HDR_DESC Desc_HDR = {};
+    //Desc_HDR.bHDR_Active            = Shader_Json["HDR"]["bHDR_Active"];
+    //Desc_HDR.fmax_white             = Shader_Json["HDR"]["fmax_white"];
+    //
+    //ANTI_DESC Desc_Anti = {};
+    //Desc_Anti.bFXAA_Active          = Shader_Json["Anti"]["bFXAA_Active"];
+    //
+    //HSV_DESC Desc_HSV = {};
+    //Desc_HSV.bScreen_Active         = Shader_Json["HSV"]["bScreen_Active"];
+    //Desc_HSV.fFinal_Brightness      = Shader_Json["HSV"]["fFinal_Saturation"];
+    //Desc_HSV.fFinal_Saturation      = Shader_Json["HSV"]["fFinal_Brightness"];
+    //
+    //RADIAL_DESC Desc_Radial = {};
+    //Desc_Radial.bRadial_Active      = Shader_Json["Radial"]["bRadial_Active"];
+    //Desc_Radial.fRadial_Quality     = Shader_Json["Radial"]["fRadial_Quality"];
+    //Desc_Radial.fRadial_Power       = Shader_Json["Radial"]["fRadial_Power"];
+    //
+    //DOF_DESC Desc_Dof = {};
+    //Desc_Dof.bDOF_Active            = Shader_Json["DOF"]["bDOF_Active"];
+    //Desc_Dof.DOF_Distance           = Shader_Json["DOF"]["fDOF_Distance"];
+    //
+    //m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+    //m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
+    //m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
+    //m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
+    //m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
+    //m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+    //m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
+    //m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
+
+    
+    //m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+    //m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
+    //m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
+    //m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
+    //m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
+    //m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+    //m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
+    //m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
 
     return S_OK;
 }
@@ -925,64 +991,91 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 
 HRESULT CLevel_Intro::Ready_Shader()
 {
-    json Shader_Json;
+    PBR_DESC Desc_PBR = {};
+    Desc_PBR.bPBR_ACTIVE = true;
 
-    FAILED_CHECK(CJson_Utility::Load_Json(m_strShader_FilepPath.c_str(), Shader_Json));
-
-    HBAO_PLUS_DESC Desc_Hbao = {};
-    Desc_Hbao.bHBAO_Active      = Shader_Json["HBAO"]["bHBAO_Active"];
-    Desc_Hbao.fRadius           = Shader_Json["HBAO"]["fBias"];
-    Desc_Hbao.fBias             = Shader_Json["HBAO"]["fBlur_Sharpness"];
-    Desc_Hbao.fBlur_Sharpness   = Shader_Json["HBAO"]["fPowerExponent"];
-    Desc_Hbao.fPowerExponent    = Shader_Json["HBAO"]["fRadius"];
-    
     DEFERRED_DESC Desc_Deferred = {};
-    Desc_Deferred.bRimBloom_Blur_Active     = Shader_Json["Deferred"]["bRimBloom_Blur_Active"];
-    Desc_Deferred.bShadow_Active            = Shader_Json["Deferred"]["bShadow_Active"];
-
+    Desc_Deferred.bRimBloom_Blur_Active = true;
+    Desc_Deferred.bShadow_Active        = false;
+    
+    HBAO_PLUS_DESC Desc_Hbao = {};
+    Desc_Hbao.bHBAO_Active          = true;
+    Desc_Hbao.fRadius               = 2.f;
+    Desc_Hbao.fBias                 = 0.3f;
+    Desc_Hbao.fBlur_Sharpness       = 2.222f;
+    Desc_Hbao.fPowerExponent        = 16.f;
+    
     FOG_DESC Desc_Fog = {};
-    Desc_Fog.bFog_Active            = Shader_Json["Fog"]["bFog_Active"];
-    Desc_Fog.fFogStartDepth         = Shader_Json["Fog"]["fFogStartDepth"];
-    Desc_Fog.fFogStartDistance      = Shader_Json["Fog"]["fFogStartDistance"];
-    Desc_Fog.fFogDistanceValue      = Shader_Json["Fog"]["fFogDistanceValue"];
-    Desc_Fog.fFogHeightValue        = Shader_Json["Fog"]["fFogHeightValue"];
-    Desc_Fog.fFogDistanceDensity    = Shader_Json["Fog"]["fFogDistanceDensity"];
-    Desc_Fog.fFogHeightDensity      = Shader_Json["Fog"]["fFogHeightDensity"];
-    Desc_Fog.vFogColor.x            = Shader_Json["Fog"]["vFogColor_x"];
-    Desc_Fog.vFogColor.y            = Shader_Json["Fog"]["vFogColor_y"];
-    Desc_Fog.vFogColor.z            = Shader_Json["Fog"]["vFogColor_z"];
-    Desc_Fog.vFogColor.w            = Shader_Json["Fog"]["vFogColor_w"];
-
+    Desc_Fog.bFog_Active            = false;
+    Desc_Fog.fFogStartDepth         = {};
+    Desc_Fog.fFogStartDistance      = {};
+    Desc_Fog.fFogDistanceValue      = {};
+    Desc_Fog.fFogHeightValue        = {};
+    Desc_Fog.fFogDistanceDensity    = {};
+    Desc_Fog.fFogHeightDensity      = {};
+    Desc_Fog.vFogColor.x            = {};
+    Desc_Fog.vFogColor.y            = {};
+    Desc_Fog.vFogColor.z            = {};
+    Desc_Fog.vFogColor.w            = {};
+    
+    RADIAL_DESC Desc_Radial = {};
+    Desc_Radial.bRadial_Active      = false;
+    Desc_Radial.fRadial_Quality     = {};
+    Desc_Radial.fRadial_Power       = {};
+    
+    DOF_DESC Desc_Dof = {};
+    Desc_Dof.bDOF_Active            = false;
+    Desc_Dof.DOF_Distance           = {};
+    
     HDR_DESC Desc_HDR = {};
-    Desc_HDR.bHDR_Active            = Shader_Json["HDR"]["bHDR_Active"];
-    Desc_HDR.fmax_white             = Shader_Json["HDR"]["fmax_white"];
+    Desc_HDR.bHDR_Active            = true;
+    Desc_HDR.fmax_white             = 0.5f;
 
     ANTI_DESC Desc_Anti = {};
-    Desc_Anti.bFXAA_Active          = Shader_Json["Anti"]["bFXAA_Active"];
+    Desc_Anti.bFXAA_Active          = true;
 
     HSV_DESC Desc_HSV = {};
-    Desc_HSV.bScreen_Active         = Shader_Json["HSV"]["bScreen_Active"];
-    Desc_HSV.fFinal_Brightness      = Shader_Json["HSV"]["fFinal_Saturation"];
-    Desc_HSV.fFinal_Saturation      = Shader_Json["HSV"]["fFinal_Brightness"];
+    Desc_HSV.bScreen_Active         = true;
+    Desc_HSV.fFinal_Brightness      = 1.156f;
+    Desc_HSV.fFinal_Saturation      = 1.312f;
 
-    RADIAL_DESC Desc_Radial = {};
-    Desc_Radial.bRadial_Active      = Shader_Json["Radial"]["bRadial_Active"];
-    Desc_Radial.fRadial_Quality     = Shader_Json["Radial"]["fRadial_Quality"];
-    Desc_Radial.fRadial_Power       = Shader_Json["Radial"]["fRadial_Power"];
+    VIGNETTE_DESC Desc_Vignette     = {};
+    Desc_Vignette.bVignette_Active  = false;
+    Desc_Vignette.fVignetteAmount   = {};
+    Desc_Vignette.fVignetteCenter_X = {};
+    Desc_Vignette.fVignetteCenter_Y = {};
+    Desc_Vignette.fVignetteRadius   = {};
+    Desc_Vignette.fVignetteRatio    = {};
+    Desc_Vignette.fVignetteSlope    = {};
+    
+    SSR_DESC Desc_SSR = {};
+    Desc_SSR.bSSR_Active = false;
+    Desc_SSR.fRayStep = {};
+    Desc_SSR.fStepCnt = {};
+    
+    CHROMA_DESC	Desc_Chroma = {};
+    Desc_Chroma.bChroma_Active = false;
+    Desc_Chroma.fChromaticIntensity = false;
+    
+    SCREENEFFECT_DESC Desc_ScreenEffect = {};
+    Desc_ScreenEffect.bGrayScale_Active = false;
+    Desc_ScreenEffect.bSephia_Active = false;
+    Desc_ScreenEffect.GreyPower = {};
+    Desc_ScreenEffect.SepiaPower = {};
 
-    DOF_DESC Desc_Dof = {};
-    Desc_Dof.bDOF_Active            = Shader_Json["DOF"]["bDOF_Active"];
-    //Desc_Dof.fFocusDistance         = Shader_Json["DOF"]["fFocusDistance"];
-    //Desc_Dof.fFocusRange            = Shader_Json["DOF"]["fFocusRange"];
-
-    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+    m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
     m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
+    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
     m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
+    m_pGameInstance->Get_Renderer()->Set_SSR_Option(Desc_SSR);
+    m_pGameInstance->Get_Renderer()->Set_Chroma_Option(Desc_Chroma);
+    m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
+    m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
     m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
     m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
     m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
-    m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
-    m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
+    m_pGameInstance->Get_Renderer()->Set_Vignette_Option(Desc_Vignette);
+    m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(Desc_ScreenEffect);
 
     return S_OK;
 }

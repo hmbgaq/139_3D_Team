@@ -66,7 +66,6 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (true == m_bDebugCom)
 		FAILED_CHECK(Render_DebugCom()) /* Debug Component -> MRT 타겟에 저장해서 Finaml 에서 추가연산한다. */
 #endif // _DEBUG
-
 	
 	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
@@ -83,13 +82,13 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_Ice()); /* MRT_Ice - Target_Ice */
 
-	if (m_tHBAO_Option.bHBAO_Active)
+	if (true == m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS()); /* Target_HBAO */
 
 	if ((true == m_tPBR_Option.bPBR_ACTIVE) && (true == m_tHBAO_Option.bHBAO_Active))
 	{
 		//FAILED_CHECK(Render_PBR());
-		FAILED_CHECK(Render_MyPBR());
+		FAILED_CHECK(Render_MyPBR()); /*  MRT_Deferred -> Target_Deferred에 저장  */
 	}
 	else
 	{
@@ -339,14 +338,14 @@ HRESULT CRenderer::Render_HBAO_PLUS()
 	pView = m_pGameInstance->Find_RenderTarget(TEXT("Target_HBAO"))->Get_RTV();
 	NULL_CHECK_RETURN(pView, E_FAIL);
 
-	GFSDK_SSAO_Output_D3D11 Output;
+	GFSDK_SSAO_Output_D3D11 Output = {};
 	Output.pRenderTargetView = pView;
 
 	Output.Blend.Mode = GFSDK_SSAO_OVERWRITE_RGB;
 
-	GFSDK_SSAO_Status status;
+	GFSDK_SSAO_Status status = {};
 	status = m_pGameInstance->Get_AOContext()->RenderAO(m_pContext, Input, Params, Output);
-	assert(status == GFSDK_SSAO_OK);
+	//assert(status == GFSDK_SSAO_OK);
 
 	return S_OK;
 }
@@ -549,12 +548,21 @@ HRESULT CRenderer::Render_MyPBR()
 	/* Texture */
 	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDF_Texture"));
 
+	//LEVEL_STATIC (0), LEVEL_LOGO (1), LEVEL_INTRO(2), LEVEL_INTRO_BOSS(3),LEVEL_SNOWMOUNTAIN(4),LEVEL_SNOWMOUNTAINBOSS(5),
+	// LEVEL_LAVA(6), LEVEL_TOOL(7),LEVEL_LOADING(8),LEVEL_GAMEPLAY(9),LEVEL_END
+	
 	switch (m_pGameInstance->Get_NextLevel())
 	{
+	case 2: // Level_Intro = 테스트맵 
+		FAILED_CHECK(m_pTool_IrradianceTextureCom[4]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
+		FAILED_CHECK(m_pTool_PreFilteredTextureCom[4]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
+		break;
+
 	case 9: // LEVEL_GamePlay
 		FAILED_CHECK(m_pIrradianceTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
 		FAILED_CHECK(m_pPreFilteredTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
 		break;
+
 	case 3: // LEVEL_INTRO_BOSS
 		FAILED_CHECK(m_pIrradianceTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
 		FAILED_CHECK(m_pPreFilteredTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
@@ -567,7 +575,7 @@ HRESULT CRenderer::Render_MyPBR()
 		//FAILED_CHECK(m_pIrradianceTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
 		//FAILED_CHECK(m_pPreFilteredTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
 		break;
-
+		
 	case 7:
 		m_bToolLevel = true;
 		break;
@@ -1386,8 +1394,6 @@ HRESULT CRenderer::Create_Texture()
 	m_pTool_PreFilteredTextureCom[3] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/SnowMountain_PreFilteredTexture.dds"));
 	m_pTool_PreFilteredTextureCom[4] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Test1_PreFilteredTexture.dds"));
 	m_pTool_PreFilteredTextureCom[5] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Test2_PreFilteredTexture.dds"));
-
-
 
 	return S_OK;
 }

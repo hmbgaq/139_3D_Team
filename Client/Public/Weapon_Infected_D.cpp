@@ -65,8 +65,6 @@ void CWeapon_Infected_D::Late_Tick(_float fTimeDelta)
 
 HRESULT CWeapon_Infected_D::Render()
 {
-	FAILED_CHECK(__super::Render());
-
 	return S_OK;
 }
 

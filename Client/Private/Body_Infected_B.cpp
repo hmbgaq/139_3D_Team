@@ -25,8 +25,6 @@ HRESULT CBody_Infected_B::Initialize(void* pArg)
 
 	FAILED_CHECK(OptionSetting());
 
-	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
-
 	return S_OK;
 }
 
@@ -59,11 +57,6 @@ HRESULT CBody_Infected_B::Render_Shadow()
 	return S_OK;
 }
 
-void CBody_Infected_B::Update_DiscardMesh()
-{
-}
-
-
 HRESULT CBody_Infected_B::OptionSetting()
 {
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 9, 10, 11, 12, 13, 14, 15 }; // ÇÇ¶± 
@@ -79,10 +72,8 @@ HRESULT CBody_Infected_B::Ready_Components()
 {
 	FAILED_CHECK(__super::Ready_Components());
 
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
-
 	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Infected_B"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Infected_B"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	return S_OK;
 }
@@ -91,9 +82,8 @@ HRESULT CBody_Infected_B::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
-
+	m_gCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float)));
 	return S_OK;
 }
 

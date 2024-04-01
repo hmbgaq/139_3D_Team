@@ -148,8 +148,6 @@ private:
 
 	PBR_DESC					m_tPBR_Option				= {};
 	DEFERRED_DESC				m_tDeferred_Option			= {};
-	SSR_DESC					m_tSSR_Option				= {};
-	CHROMA_DESC					m_tChroma_Option			= {};
 	HBAO_PLUS_DESC				m_tHBAO_Option				= {};
 	FOG_DESC					m_tFog_Option				= {};
 	RADIAL_DESC					m_tRadial_Option			= {};
@@ -158,6 +156,8 @@ private:
 	ANTI_DESC					m_tAnti_Option				= {};
 	HSV_DESC					m_tHSV_Option				= {};
 	VIGNETTE_DESC				m_tVignette_Option			= {};
+	SSR_DESC					m_tSSR_Option = {};
+	CHROMA_DESC					m_tChroma_Option = {};
 	SCREENEFFECT_DESC			m_eScreenDEffect_Desc		= {};
 
 private:

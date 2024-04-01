@@ -596,7 +596,7 @@ void CWindow_ShaderTool::Compress_DOF_Setting()
 {
 	static float Params[4] = { 0.10f, 0.20f, 0.30f, 0.4f };
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
-	ImGui::SliderFloat4("Distance", reinterpret_cast<float*>(&m_eDOF_Desc.DOF_Distance), -1.0f, 10.0f, "Distance %0.3f");
+	ImGui::SliderFloat("Distance", &m_eDOF_Desc.DOF_Distance, -1.0f, 20.0f, "Distance = %.3f");
 
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
