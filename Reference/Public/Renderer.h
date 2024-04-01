@@ -19,7 +19,8 @@ public:
 		/* RenderGroup*/
 		RENDER_OUTLINE, RENDER_BLEND, RENDER_END
 	};
-	enum class POST_TYPE { DEFERRED, SSR, RADIAL_BLUR, HDR, DOF, FXAA, HSV, VIGNETTE, CHROMA, FINAL, TYPE_END};
+	enum class POST_TYPE { DEFERRED, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
+						   MOTIONBLUR, LUMASHARPEN, FINAL, TYPE_END};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -55,6 +56,7 @@ private:
 	HRESULT Render_MyPBR();
 	HRESULT Render_SSR();
 	HRESULT Render_Chroma();
+	HRESULT Render_LumaSharpen();
 
 	HRESULT Deferred_Effect();
 	HRESULT Render_Effect_BloomBlur();
@@ -71,6 +73,7 @@ private:
 	HRESULT Render_Vignette(); 
 	HRESULT Render_Final();
 	HRESULT Render_Blend();
+	HRESULT Render_MotionBlur();
 
 	HRESULT Deferred_UI();
 
@@ -98,7 +101,6 @@ public:
 	/* 렌더옵션 초기화 */
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
 
-	//void Set_PBR_Active(_bool bPBR) { return m_bPBPBR; }
 	/* 활성화 */
 	void Set_PBR_Active(_bool _Pbr_active) { m_tPBR_Option.bPBR_ACTIVE = _Pbr_active; }
 	void Set_BloomBlur_Active(_bool _bloom_active) { m_tDeferred_Option.bRimBloom_Blur_Active = _bloom_active; }
@@ -109,6 +111,7 @@ public:
 	_bool Get_HBAO_Active() { return m_tHBAO_Option.bHBAO_Active; }
 	void Set_Fog_Active(_bool _Fog) { m_tFog_Option.bFog_Active = _Fog; }
 	void Set_SSR_Active(_bool _SSR) { m_tSSR_Option.bSSR_Active = _SSR; }
+	void Set_MotionBlur_Active(_bool _SSR) { m_tMotionBlur_Desc.bMotionBLur_Active = _SSR; }
 
 	void Set_Radial_Blur_Active(_bool _Radial) { m_tRadial_Option.bRadial_Active = _Radial; }
 	void Set_Chroma_Active(_bool _Chroma) { m_tChroma_Option.bChroma_Active = _Chroma; }
@@ -120,9 +123,12 @@ public:
 	_bool Get_FXAA_Active() { return m_tAnti_Option.bFXAA_Active; }
 	void Set_HSV_Active(_bool _HSV_active) { m_tHSV_Option.bScreen_Active = _HSV_active; }
 	void Set_Vignette_Active(_bool _Vignette_active) { m_tVignette_Option.bVignette_Active = _Vignette_active; }
-	void Set_Gray_Active(_bool _Gray_active) { m_eScreenDEffect_Desc.bGrayScale_Active = _Gray_active; }
-	void Set_Sephia_Active(_bool _Sephia_active) { m_eScreenDEffect_Desc.bSephia_Active = _Sephia_active; }
+	void Set_Gray_Active(_bool _Gray_active) { m_tScreenDEffect_Desc.bGrayScale_Active = _Gray_active; }
+	void Set_Sephia_Active(_bool _Sephia_active) { m_tScreenDEffect_Desc.bSephia_Active = _Sephia_active; }
 
+	//Temp
+	_float Get_MotionBlur_float() { return m_tMotionBlur_Desc.fMotionBlur_Intensity; }
+	void   Set_MotionBLur_float(_float fValue) {m_tMotionBlur_Desc.fMotionBlur_Intensity = fValue; }
 	/* 옵션조절 */
 	void Set_PBR_Option(PBR_DESC desc) { m_tPBR_Option = desc; }
 	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }
@@ -137,7 +143,9 @@ public:
 	void Set_FXAA_Option(ANTI_DESC desc) { m_tAnti_Option = desc; }
 	void Set_HSV_Option(HSV_DESC desc) { m_tHSV_Option = desc; }
 	void Set_Vignette_Option(VIGNETTE_DESC desc) { m_tVignette_Option = desc; }
-	void Set_ScreenEffect_Option(SCREENEFFECT_DESC desc) { m_eScreenDEffect_Desc = desc; }
+	void Set_ScreenEffect_Option(SCREENEFFECT_DESC desc) { m_tScreenDEffect_Desc = desc; }
+	void Set_MotionBlur_Option(MOTIONBLUR_DESC desc) { m_tMotionBlur_Desc = desc; }
+	void Set_LumaSharpen_Option(LUMASHARPEN_DESC desc) { m_tLumaSharpen_Desc = desc; }
 
 private: // Debug
 	ID3DBlob* CompileShader(const std::wstring& filename, const string& entrypoint, const string& target);
@@ -145,6 +153,7 @@ private: // Debug
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
 	_bool						bTest = { true };
+	_float4x4					m_matPreCameraView = {};
 
 	PBR_DESC					m_tPBR_Option				= {};
 	DEFERRED_DESC				m_tDeferred_Option			= {};
@@ -156,9 +165,11 @@ private:
 	ANTI_DESC					m_tAnti_Option				= {};
 	HSV_DESC					m_tHSV_Option				= {};
 	VIGNETTE_DESC				m_tVignette_Option			= {};
-	SSR_DESC					m_tSSR_Option = {};
-	CHROMA_DESC					m_tChroma_Option = {};
-	SCREENEFFECT_DESC			m_eScreenDEffect_Desc		= {};
+	SSR_DESC					m_tSSR_Option				= {};
+	CHROMA_DESC					m_tChroma_Option			= {};
+	SCREENEFFECT_DESC			m_tScreenDEffect_Desc		= {};
+	MOTIONBLUR_DESC				m_tMotionBlur_Desc			= {};
+	LUMASHARPEN_DESC			m_tLumaSharpen_Desc			= {};
 
 private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
@@ -212,7 +223,7 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { false };
+	_bool			m_bDebugRenderTarget	= { true };
 	_bool			m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

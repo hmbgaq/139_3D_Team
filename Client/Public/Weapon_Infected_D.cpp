@@ -40,7 +40,7 @@ void CWeapon_Infected_D::Tick(_float fTimeDelta)
 	{
 		m_fTimeAcc += fTimeDelta;
 
-		if (m_fTimeAcc > 1.f)
+		if (m_fTimeAcc > 0.7f)
 		{
 			m_fTimeAcc = 0.f;
 			m_bBombActive = false;

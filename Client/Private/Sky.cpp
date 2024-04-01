@@ -84,7 +84,6 @@ HRESULT CSky::Render()
 #endif // _DEBUG
 
 		FAILED_CHECK(Bind_ShaderResources());
-
 		m_pShaderCom->Begin(0);
 		m_pVIBufferCom->Bind_VIBuffers();
 		m_pVIBufferCom->Render();

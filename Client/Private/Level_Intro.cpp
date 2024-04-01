@@ -993,10 +993,12 @@ HRESULT CLevel_Intro::Ready_Shader()
 {
     PBR_DESC Desc_PBR = {};
     Desc_PBR.bPBR_ACTIVE = true;
+    m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
 
     DEFERRED_DESC Desc_Deferred = {};
     Desc_Deferred.bRimBloom_Blur_Active = true;
     Desc_Deferred.bShadow_Active        = false;
+    m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
     
     HBAO_PLUS_DESC Desc_Hbao = {};
     Desc_Hbao.bHBAO_Active          = true;
@@ -1004,6 +1006,7 @@ HRESULT CLevel_Intro::Ready_Shader()
     Desc_Hbao.fBias                 = 0.3f;
     Desc_Hbao.fBlur_Sharpness       = 2.222f;
     Desc_Hbao.fPowerExponent        = 16.f;
+    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
     
     FOG_DESC Desc_Fog = {};
     Desc_Fog.bFog_Active            = false;
@@ -1017,65 +1020,68 @@ HRESULT CLevel_Intro::Ready_Shader()
     Desc_Fog.vFogColor.y            = {};
     Desc_Fog.vFogColor.z            = {};
     Desc_Fog.vFogColor.w            = {};
+    m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
     
     RADIAL_DESC Desc_Radial = {};
     Desc_Radial.bRadial_Active      = false;
-    Desc_Radial.fRadial_Quality     = {};
-    Desc_Radial.fRadial_Power       = {};
+    Desc_Radial.fRadial_Quality     = 8.f;
+    Desc_Radial.fRadial_Power       = 0.1f;
+    m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
     
     DOF_DESC Desc_Dof = {};
     Desc_Dof.bDOF_Active            = false;
-    Desc_Dof.DOF_Distance           = {};
+    Desc_Dof.DOF_Distance           = 3.f;
+    m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
     
     HDR_DESC Desc_HDR = {};
     Desc_HDR.bHDR_Active            = true;
     Desc_HDR.fmax_white             = 0.5f;
+    m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
 
     ANTI_DESC Desc_Anti = {};
     Desc_Anti.bFXAA_Active          = true;
+    m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
 
     HSV_DESC Desc_HSV = {};
     Desc_HSV.bScreen_Active         = true;
     Desc_HSV.fFinal_Brightness      = 1.156f;
     Desc_HSV.fFinal_Saturation      = 1.312f;
+    m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
 
     VIGNETTE_DESC Desc_Vignette     = {};
     Desc_Vignette.bVignette_Active  = false;
-    Desc_Vignette.fVignetteAmount   = {};
-    Desc_Vignette.fVignetteCenter_X = {};
-    Desc_Vignette.fVignetteCenter_Y = {};
-    Desc_Vignette.fVignetteRadius   = {};
-    Desc_Vignette.fVignetteRatio    = {};
-    Desc_Vignette.fVignetteSlope    = {};
+    Desc_Vignette.fVignetteAmount   = -1.f;
+    Desc_Vignette.fVignetteCenter_X = 0.5f;
+    Desc_Vignette.fVignetteCenter_Y = 0.5f;
+    Desc_Vignette.fVignetteRadius   = 1.f;
+    Desc_Vignette.fVignetteRatio    = 1.f;
+    Desc_Vignette.fVignetteSlope    = 8.f;
+    m_pGameInstance->Get_Renderer()->Set_Vignette_Option(Desc_Vignette);
     
     SSR_DESC Desc_SSR = {};
     Desc_SSR.bSSR_Active = false;
-    Desc_SSR.fRayStep = {};
-    Desc_SSR.fStepCnt = {};
+    Desc_SSR.fRayStep = 0.005f;
+    Desc_SSR.fStepCnt = 75.f;
+    m_pGameInstance->Get_Renderer()->Set_SSR_Option(Desc_SSR);
     
     CHROMA_DESC	Desc_Chroma = {};
     Desc_Chroma.bChroma_Active = false;
     Desc_Chroma.fChromaticIntensity = false;
+    m_pGameInstance->Get_Renderer()->Set_Chroma_Option(Desc_Chroma);
     
     SCREENEFFECT_DESC Desc_ScreenEffect = {};
     Desc_ScreenEffect.bGrayScale_Active = false;
     Desc_ScreenEffect.bSephia_Active = false;
-    Desc_ScreenEffect.GreyPower = {};
-    Desc_ScreenEffect.SepiaPower = {};
-
-    m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
-    m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
-    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-    m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
-    m_pGameInstance->Get_Renderer()->Set_SSR_Option(Desc_SSR);
-    m_pGameInstance->Get_Renderer()->Set_Chroma_Option(Desc_Chroma);
-    m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
-    m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
-    m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
-    m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
-    m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
-    m_pGameInstance->Get_Renderer()->Set_Vignette_Option(Desc_Vignette);
+    Desc_ScreenEffect.GreyPower = 0.11f;
+    Desc_ScreenEffect.SepiaPower = 0.58f;
     m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(Desc_ScreenEffect);
+
+    LUMASHARPEN_DESC Desc_Luma = {};
+    Desc_Luma.bLumaSharpen_Active = true;
+    Desc_Luma.foffset_bias = 0.883f;
+    Desc_Luma.fsharp_clamp = 0.1f;
+    Desc_Luma.fsharp_strength = 0.5f;
+    m_pGameInstance->Get_Renderer()->Set_LumaSharpen_Option(Desc_Luma);
 
     return S_OK;
 }

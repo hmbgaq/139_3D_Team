@@ -5,6 +5,9 @@
                              Global  
                                 
 ==============================================================*/
+
+#define CoefLuma float3(0.2126, 0.7152, 0.0722) 
+
 /*=============================================================
  
                              Struct 
@@ -12,39 +15,53 @@
 ==============================================================*/
 struct radial
 {
-    bool    bRadial_Active;
     float   fRadial_Quality;
     float   fRadial_Power;
+    bool    bRadial_Active;
 };
 
 struct DOF
 {
-    bool    bDOF_Active;
     float   DOF_Distance;
+    bool    bDOF_Active;
 };
 
 struct VIGNETTE_DESC
 {
-    bool    bVignette_Active;
     float   fVignetteRatio; //[0.15 to 6.00]  Sets a width to height ratio. 1.00 (1/1) is perfectly round, while 1.60 (16/10) is 60 % wider than it's high.
     float   fVignetteRadius; //[-1.00 to 3.00] lower values = stronger radial effect from center
     float   fVignetteAmount; //[-2.00 to 1.00] Strength of black. -2.00 = Max Black, 1.00 = Max White.
     float   fVignetteSlope; //[2 to 16] How far away from the center the change should start to really grow strong (odd numbers cause a larger fps drop than even numbers)
     float   fVignetteCenter_X;
     float   fVignetteCenter_Y;
+    bool    bVignette_Active;
 };
 
 struct SSR_DESC
 {
-    bool bSSR_Active;
     float fRayStep; // 0.005
     float fStepCnt; // 75
+    bool bSSR_Active;
 };
 
 struct CHROMA_DESC
 {
-    bool bChroma_Active;
     float fcaAmount;
+    bool bChroma_Active;
+};
+
+struct MOTIONBLUR_DESC
+{
+    bool bMotionblur_Active;
+    float fIntensity;
+};
+
+struct LUMA_DESC
+{
+    float fsharp_strength;
+    float fsharp_clamp;
+    float foffset_bias;
+    bool bLumaSharpen_Active;
 };
 /*=============================================================
  
@@ -57,6 +74,9 @@ float4x4    g_ViewMatrix;
 float4x4    g_ProjMatrix;
 float4x4    g_ViewMatrixInv;
 float4x4    g_ProjMatrixInv;
+float4x4    g_PreCamViewMatrix;
+float4x4    g_CamViewMatrix;
+float4x4    g_CamProjMatrix;
 float4      g_vCamPosition;
 float       g_fCamFar;
 float       g_fCamNear;
@@ -102,6 +122,11 @@ CHROMA_DESC g_Chroma_Desc;
 // Ice
 Texture2D g_Ice_Target;
 
+// MotionBLur
+MOTIONBLUR_DESC g_MotionBlur;
+
+// LumaSharpen
+LUMA_DESC g_Luma_Desc;
 /*=============================================================
  
                              Function 
@@ -324,6 +349,48 @@ float3 DistanceDOF(float3 colorFocus, float3 colorBlurred, float depth)
     return lerp(colorFocus, colorBlurred, blurFactor);
 }
 
+float4 LumaSharpenPass(float4 inputcolor, float2 texcoord)
+{
+    // -- Get the original pixel --
+    float3 ori = g_ProcessingTarget.Sample(LinearSampler, texcoord).rgb;
+   
+    // -- Combining the strength and luma multipliers --
+    float3 sharp_strength_luma = (CoefLuma * g_Luma_Desc.fsharp_strength); //I'll be combining even more multipliers with it later on
+    
+    float px = 1.f / 1280.f;
+    float py = 1.f / 720.f;
+    
+    float3 blur_ori = g_ProcessingTarget.Sample(LinearSampler, texcoord + float2(px, -py) * 0.5 * g_Luma_Desc.foffset_bias).rgb; // South East
+    blur_ori += g_ProcessingTarget.Sample(LinearSampler, texcoord + float2(-px, -py) * 0.5 * g_Luma_Desc.foffset_bias).rgb; // South West
+    blur_ori += g_ProcessingTarget.Sample(LinearSampler, texcoord + float2(px, py) * 0.5 * g_Luma_Desc.foffset_bias).rgb; // North East
+    blur_ori += g_ProcessingTarget.Sample(LinearSampler, texcoord + float2(-px, py) * 0.5 * g_Luma_Desc.foffset_bias).rgb; // North West
+
+    blur_ori *= 0.25; // ( /= 4) Divide by the number of texture fetches
+    
+    /*-----------------------------------------------------------/
+    /                            Sharpen                         /
+    /-----------------------------------------------------------*/
+
+    // -- Calculate the sharpening --
+    float3 sharp = ori - blur_ori; //Subtracting the blurred image from the original image
+    float4 sharp_strength_luma_clamp = float4(sharp_strength_luma * (0.5 / g_Luma_Desc.fsharp_clamp), 0.5); //Roll part of the clamp into the dot
+
+    //sharp_luma = saturate((0.5 / sharp_clamp) * sharp_luma + 0.5); //scale up and clamp
+    float sharp_luma = saturate(dot(float4(sharp, 1.0), sharp_strength_luma_clamp)); //Calculate the luma, adjust the strength, scale up and clamp
+    sharp_luma = (g_Luma_Desc.fsharp_clamp * 2.0) * sharp_luma - g_Luma_Desc.fsharp_clamp; //scale down
+
+    // -- Combining the values to get the final sharpened pixel	--
+    //float4 done = ori + sharp_luma;    // Add the sharpening to the original.
+    inputcolor.rgb = inputcolor.rgb + sharp_luma; // Add the sharpening to the input color.
+
+    /*-----------------------------------------------------------/
+    /                     Returning the output                   /
+    /-----------------------------------------------------------*/
+    
+    //inputcolor.rgb = saturate(0.5 + (sharp_luma * 4)).rrr;
+
+    return saturate(inputcolor);
+}
 /*=============================================================
  
                              IN/OUT  
@@ -446,8 +513,8 @@ PS_OUT PS_MAIN_RADIAL(PS_IN In)
     colour.a = 1.f;
     
     Out.vColor = colour;
-    return Out;
     
+    return Out;
 }
 
 /* ------------------- 3 -DOF Shader -------------------*/
@@ -491,21 +558,22 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
-    vector Ice = g_Ice_Target.Sample(LinearSampler, In.vTexcoord);
+   // vector Ice = g_Ice_Target.Sample(LinearSampler, In.vTexcoord);
+    
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
-    vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
     
     Out.vColor = Effect_Solid;
     
     if (Out.vColor.a == 0) 
-        Out.vColor = Effect_Distortion;
+        Out.vColor += Effect_Distortion;
     
     if (Out.vColor.a == 0) 
-        Out.vColor += Deferred + Effect + Effect_Blur + Ice;
-       // Out.vColor += Deferred + Effect + Effect_Blur;
+        Out.vColor += Deferred + Effect + Effect_Blur;
+       // Out.vColor += Deferred + Effect + Effect_Blur + Ice;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
@@ -664,7 +732,6 @@ PS_OUT PS_MAIN_SSR(PS_IN In)
    
 //    return Out;
 //} 
-
 /* ------------------- 8 - Chroma-------------------*/
 PS_OUT PS_MAIN_CHROMA(PS_IN In)
 {
@@ -716,6 +783,71 @@ PS_OUT PS_MAIN_CHROMA(PS_IN In)
     return Out;
 }
 
+/* ------------------- 9 - Motion Blur -------------------*/
+PS_OUT PS_MAIN_MOTIONBLUR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    float4 vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vNormal = g_NormalTarget.Sample(LinearSampler, In.vTexcoord);
+		   
+    float fViewZ = vDepth.w * g_fCamFar;
+		    
+    float4 vPixelWorldPos, vPixelPos;
+
+    vPixelWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vPixelWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vPixelWorldPos.z = vNormal.w;
+    vPixelWorldPos.w = 1.0f;
+
+    vPixelPos = vPixelWorldPos;
+    vPixelWorldPos *= fViewZ;
+
+    vPixelWorldPos = mul(vPixelWorldPos, g_ProjMatrixInv);
+    vPixelWorldPos = mul(vPixelWorldPos, g_ViewMatrixInv);
+    //vPixelWorldPos = mul(vPixelWorldPos, g_ProjViewMatrixInv);
+    
+    matrix matVP = mul(g_PreCamViewMatrix, g_CamProjMatrix);
+
+    float4 vPrePixelPos = mul(vPixelWorldPos, matVP);
+    vPrePixelPos /= vPrePixelPos.w;
+
+    float2 vPixelVelocity = ((vPixelPos - vPrePixelPos) * 0.5f).xy;
+    float2 texCoord = In.vTexcoord;
+
+    float4 vColor = vector(0.f, 0.f, 0.f, 0.f);
+
+    for (int i = -10; i < 10; ++i)
+    {
+        texCoord += vPixelVelocity * g_MotionBlur.fIntensity * i;
+        float4 currentColor = g_ProcessingTarget.Sample(ClampSampler, texCoord);
+        vColor += currentColor;
+    }
+
+    Out.vColor = vColor * 0.05f /*/ 20.f*/;
+    
+    return Out;
+}
+/* ------------------- 10 - Luma Sharpen -------------------*/
+//  _____________________
+//
+//     LumaSharpen 1.4.1
+//   _____________________
+//
+//  by Christian Cann Schuldt Jensen ~ CeeJay.dk
+//  It blurs the original pixel with the surrounding pixels and then subtracts this blur to sharpen the image.
+//  It does this in luma to avoid color artifacts and allows limiting the maximum sharpning to avoid or lessen halo artifacts.
+//  This is similar to using Unsharp Mask in Photoshop.
+//  Compiles with 3.0
+PS_OUT PS_MAIN_LUMA(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 c0 = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    c0 = LumaSharpenPass(c0, In.vTexcoord);
+    
+    Out.vColor = c0;
+    return Out;
+}
 /*=============================================================
  
                          Technique 
@@ -835,5 +967,29 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_CHROMA();
+    }
+
+    pass MotionBlur //9
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_MOTIONBLUR();
+    }
+
+    pass LumaSharpen // 10
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_LUMA();
     }
 }
