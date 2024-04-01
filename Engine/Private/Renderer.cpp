@@ -707,7 +707,6 @@ HRESULT CRenderer::Render_HDR()
 	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_max_white", &m_tHDR_Option.fmax_white, sizeof(_float)));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::HDR), m_pShader_PostProcess, "g_ProcessingTarget"));
 
-	cout << m_tHDR_Option.fmax_white << endl;
 
 	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_HDR)));
 	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
