@@ -9,15 +9,15 @@ class CRenderer final : public CBase
 public:
 	enum RENDERGROUP
 	{	/* Priority */
-		RENDER_PRIORITY, RENDER_NONLIGHT,
+		RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_ICE,
 		/* Post Processing  */
-		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL, RENDER_OUTLINE,
+		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL, 
 		/* EFFECT */
 		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH,
 		/* UI */
 		RENDER_UI_BACK, RENDER_UI, RENDER_UI_FRONT, RENDER_CURSOR,
 		/* RenderGroup*/
-		RENDER_BLEND, RENDER_END
+		RENDER_OUTLINE, RENDER_BLEND, RENDER_END
 	};
 	enum class POST_TYPE { DEFERRED, SSR, RADIAL_BLUR, HDR, DOF, FXAA, HSV, VIGNETTE, CHROMA, FINAL, TYPE_END};
 
@@ -41,9 +41,12 @@ public:
 private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonLight();
+	HRESULT Render_Fog();
+	HRESULT Render_Ice();
 
 	HRESULT Render_NonBlend();
 	HRESULT Render_Shadow();
+	HRESULT Render_Cascade();
 	HRESULT Render_LightAcc();
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
@@ -209,8 +212,8 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { false };
-	_bool			m_bDebugCom				= { false };
+	_bool			m_bDebugRenderTarget	= { true };
+	_bool			m_bDebugCom				= { true };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

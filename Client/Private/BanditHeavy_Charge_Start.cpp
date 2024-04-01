@@ -1,10 +1,15 @@
 #include "..\Public\BanditHeavy_Charge_Start.h"
+#include "BanditHeavy_Charge_Attack_Full.h"
 
 void CBanditHeavy_Charge_Start::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
 
+	pActor->Reset_AttackCount();
+
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Look_At_Target();
 
 	//CWeapon* pWeapon = pActor->Set_Weapon_Enable(BANDIT_HEAVY_WEAPON, true);
 	//pWeapon
@@ -19,7 +24,25 @@ void CBanditHeavy_Charge_Start::Initialize(CBandit_Heavy* pActor)
 
 CState<CBandit_Heavy>* CBanditHeavy_Charge_Start::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
-	pActor->Look_At_Target_Lerp(fTimeDelta);
+	__super::Update(pActor, fTimeDelta);
+
+	pActor->Look_At_Target();
+	_float fDistance = pActor->Calc_Distance();
+	if (5.f >= fDistance)
+	{
+		return new CBanditHeavy_Charge_Attack_Full();
+	}
+
+	if (pActor->Is_Animation_End())
+	{
+		return new CBanditHeavy_Charge_Attack_Full();
+	}
+
+	return nullptr;
+
+
+
+	//pActor->Look_At_Target_Lerp(fTimeDelta);
 
 	//if (false == m_bFlags[0])
 	//{
@@ -38,7 +61,7 @@ CState<CBandit_Heavy>* CBanditHeavy_Charge_Start::Update(CBandit_Heavy* pActor, 
 	//	}
 	//}
 
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
 void CBanditHeavy_Charge_Start::Release(CBandit_Heavy* pActor)

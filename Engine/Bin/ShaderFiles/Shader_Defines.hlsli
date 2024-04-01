@@ -2,7 +2,12 @@
 #pragma warning(disable : 31) /* HLSL - Texture method 'Sample(sampler, float2)' 경고 */
 #pragma warning(disable: 6146) /* PS에서 RTV에 바인딩안했을때 뜨는 경고 무시 */
 /* ---------------- Sampler ---------------- */
-#define FLT_MAX 3.402823466e+38F
+#define FLT_MAX         3.402823466e+38F
+#define F_ZERO          float3(0.04f, 0.04f, 0.04f)
+#define PI              3.14159265359f
+#define TWO_PI          6.28318530718f
+#define PI_OVER_TWO     1.5707963268f
+#define EPSILON         0.000001f
 
 sampler LinearSampler = sampler_state
 {

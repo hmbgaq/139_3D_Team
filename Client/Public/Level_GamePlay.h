@@ -47,8 +47,6 @@ private:
 
 private:
 	_int			TempLightNumber = 0;
-
-	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 
 public:

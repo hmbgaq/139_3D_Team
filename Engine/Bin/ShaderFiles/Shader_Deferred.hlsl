@@ -1,4 +1,4 @@
-#include "Shader_PBR.hlsl"
+//#include "Shader_PBR.hlsl"
 #include "Shader_MyPBR.hlsl"
 #include "DitherUtil.hlsli"
 //#include "Shader_Defines.hlsli"
@@ -12,22 +12,22 @@
 ==============================================================*/
 struct FOG_DESC
 {
-    bool bFog_Active;
-    float fFogStartDepth;
-    float fFogStartDistance;
-    float fFogDistanceValue;
-    float fFogHeightValue;
-    float fFogDistanceDensity;
-    float fFogHeightDensity;
-    float padding; // 4 
-    float4 vFogColor;
+    bool    bFog_Active;
+    float   fFogStartDepth;
+    float   fFogStartDistance;
+    float   fFogDistanceValue;
+    float   fFogHeightValue;
+    float   fFogDistanceDensity;
+    float   fFogHeightDensity;
+    float   padding;              // 4 
+    float4  vFogColor;
 };
 
 struct BLOOMRIM_DESC
 {
     // 패딩을 추가하지않아도 메모리가 정렬됨 
-    bool bBloomBlur_Active;
-    bool bRimBlur_Active;
+    bool    bBloomBlur_Active;
+    bool    bRimBlur_Active;
 };
 /*=============================================================
  
@@ -241,6 +241,23 @@ VS_OUT VS_MAIN(VS_IN In)
     
     return Out;
 
+}
+
+inline bool IsSaturated(float value)
+{
+    return value == saturate(value);
+}
+inline bool IsSaturated(float2 value)
+{
+    return IsSaturated(value.x) && IsSaturated(value.y);
+}
+inline bool IsSaturated(float3 value)
+{
+    return IsSaturated(value.x) && IsSaturated(value.y) && IsSaturated(value.z);
+}
+inline bool IsSaturated(float4 value)
+{
+    return IsSaturated(value.x) && IsSaturated(value.y) && IsSaturated(value.z) && IsSaturated(value.w);
 }
 
 /*=============================================================
@@ -462,16 +479,17 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
         Out.vColor = vPriority;
     }
     else
-    { // MRT_LightAcc : Shade 
+    { 
+        // MRT_LightAcc : Shade 
         vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
         vShade = saturate(vShade);
 	
-    // MRT_GameObject : Specular 
+        // MRT_GameObject : Specular 
         vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
         vSpecular = saturate(vSpecular);
 	
     
-    // Target_HBAO
+        // Target_HBAO
         vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
         if (g_bSSAO_Active)
             vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
@@ -546,20 +564,35 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     // 추가사항 : g_vLightDir, g_fBias, g_vLightDir
     PS_OUT Out = (PS_OUT) 0;
 	
+    // 감마보정 -> Linear space로 변형후 빛계산을 하고 다시 감마보정을 통해서 그린다.
+    float gamma = 2.2f;
     // Diffuse -> Albedo, Properties-> Specular, ORM : Occulusion, Roughness Metallic, 
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vAlbedo.a == 0.f)
+    {
+        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        if (vPriority.a == 0.f)
+            discard;
+        
+        Out.vColor = vPriority;
+        
+        return Out;
+    }
+    vAlbedo = pow(vAlbedo, gamma);
     
-    vAlbedo = pow(vAlbedo, 2.2f);
     vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     float3 N = vNormal.xyz * 2.f - 1.f;
     vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
     /* (R)Occlusion ,(G)Roughness , (B)Metalic */
     
-    float fAmbient_Occlusion = vORMDesc.r;
+    //float fAmbient_Occlusion = vORMDesc.r;
     float fRoughness = vORMDesc.g;
     float fMetallic = vORMDesc.b;
     
     vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
+    
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vSpecular = saturate(vSpecular);
     
     float fAO = 1.f; 
     fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
@@ -575,49 +608,12 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
     
-    float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
-    float3 F0 = float3(0.04f, 0.04f, 0.04f);
-    F0 = lerp(F0, vAlbedo.xyz, fMetallic); // 반사율 F0
-
-	// calculate per-light radiance
-    float3 L = normalize(-g_vLightDir);
-    float3 H = normalize(V + L);
-
-    // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
-    Out.vColor.rgb = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
-   
-    if (vAlbedo.a == 0.f)
-    {
-        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
-        if (vPriority.a == 0.f)
-            discard;
-        
-        Out.vColor = vPriority;
-    }
-    
-    // Shadow 
+    // = Shadow ====================
+       
     float ShadowColor = 1.f;
-    
-    //if (true == g_bFog_Active)
-    //{
-    //    float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
-    //    vTexCoord.x += g_vFogUVAcc.x;
-    //    vTexCoord.y += g_vFogUVAcc.y;
-    //
-    //    float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
-    //
-    //    float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
-    //
-    //    Out.vColor = vector(vFinalColor.rgb, 1.f);
-    //}
     
     if (true == g_bShadow_Active)
     {
-        //float fDot = saturate(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal.xyz));
-        //
-        //float fNormalOffset = g_fBias;
-        //float fBias = max((fNormalOffset * 5.0f) * (1.0f - (fDot * -1.0f)), fNormalOffset);
-   
         vector vPosition = mul(vWorldPos, g_LightViewMatrix);
         vPosition = mul(vPosition, g_LightProjMatrix);
    
@@ -629,8 +625,26 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
         float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
    
         if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-            Out.vColor = Out.vColor * 0.8f;
+            ShadowColor = 0.8f;
     }
+    
+    // =====================
+    float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
+    float3 F0 = float3(0.04f, 0.04f, 0.04f);
+    F0 = lerp(F0, vAlbedo.xyz, fMetallic); // 반사율 F0
+
+	// calculate per-light radiance
+    float3 L = normalize(-g_vLightDir);
+    float3 H = normalize(V + L);
+
+    float3 vBRDF = { 0.f, 0.f, 0.f };
+    // BRDF를 통해 물체의 표면 속성을 모델링하고 이를 통해 자연스러운 조명과 반사를 구현한다. 
+    //vBRDF = New_BRDF(fRoughness, fMetallic, vAlbedo.xyz, F0, N, V, L, H, fAO); 
+   
+    float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
+    vEmissive = pow(vEmissive, gamma);
+    
+    Out.vColor.rgb = vBRDF * ShadowColor + vEmissive + vSpecular;
     
     Out.vColor.a = 1.f;
 	
@@ -641,29 +655,39 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
 PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-    	
+
     // 감마보정 -> Linear space로 변형후 빛계산을 하고 다시 감마보정을 통해서 그린다.
     float gamma = 2.2f;
-    
+
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     vAlbedo = pow(vAlbedo, gamma);
+    if (vAlbedo.a == 0.f)
+    {
+        float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
+        if (vPriority.a == 0.f)
+            discard;
+        
+        Out.vColor = vPriority;
+        
+        return Out;
+    }
     
     // ORM : (R)Occlusion ,(G)Roughness , (B)Metalic */ 에 저장 
-    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord); 
+    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
     float fAmbient_Occlusion = vORMDesc.r;
     float fRoughness = vORMDesc.g;
     float fMetallic = vORMDesc.b;
     float fAO;
     fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
-    
+
     // N
     vector vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     float3 N = vNormal.xyz * 2.f - 1.f;
-    
+
     // F0
     float3 F0 = 0.04f; //  F0 : reflectance ratio - 0.04 looks visually correct for non-metallic sufaces
-    F0 = lerp(F0, vAlbedo.rgb, fMetallic);
-    
+    F0 = lerp(F0, vAlbedo.rgb, fMetallic); // 슈레넬에서 쓸 R0 반사율 
+
     // N(위에), V, L, H
     vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
     vector vWorldPos;
@@ -671,28 +695,50 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
     vWorldPos.z = vNormal.w;
     vWorldPos.w = 1.f;
-    
+
     float fViewZ = vDepthDesc.w * g_CamFar;
     vWorldPos = vWorldPos * fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-    
+
     float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
     float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
+        
+    float ShadowColor = 1.f;
+    if (true == g_bShadow_Active)
+    {
+        vector vPosition = mul(vWorldPos, g_LightViewMatrix);
+        vPosition = mul(vPosition, g_LightProjMatrix);
+   
+        float2 vUV = (float2) 0.0f;
+   
+        vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
+        vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
+   
+        float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
+   
+        if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
+            ShadowColor = 0.8f;
+    }
     
-    //// Li(p, wi)
-    //float distance = length(g_vLightPos - In.vPosition);
-    //float attenuation = 1.0f / (distance * distance); //  inverse-square law
-    //float3 radiance = g_vLightColor * attenuation;
+    // BRDF : Cook-Torrance Specular BRDF / Radiance 계산은 여기 함수 내부에서 처리할예정 
+    float3 CT_BRDF = MY_BRDF_Irradiance(fRoughness, fMetallic, vAlbedo.rgb, F0, fAO, N, V, L, H);
     
-    // BRDF
-    float3 DFG_4WW = MY_BRDF(fRoughness, fMetallic, vAlbedo.rgb, F0, N, V, L, H);
+    float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
+    vEmissive = pow(vEmissive, gamma);
     
-
+    Out.vColor.rgb = CT_BRDF * ShadowColor + vEmissive ;
+    //Out.vColor.rgb = CT_BRDF * ShadowColor;
+    Out.vColor.a = 1.f;
+	
     return Out;
 }
-/* ------------------ Technique ------------------ */
+/*=============================================================
+ 
+                         Technique 
+                                
+==============================================================*/
 
 technique11 DefaultTechnique
 {

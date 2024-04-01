@@ -21,7 +21,6 @@ CMainApp::CMainApp()
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pUIManager);
-
 }
 
 HRESULT CMainApp::Initialize()
@@ -262,8 +261,6 @@ HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 	//
 	/* For.Prototype_Component_Shader_UI */ // + SH_Add
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
-
-
 
 	// UI텍스처 로드(주석 풀고 병합하기)
 	/* For.Ready_UITexture */ // + SH_Add

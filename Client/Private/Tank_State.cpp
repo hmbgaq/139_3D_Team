@@ -99,28 +99,38 @@ CState<CTank>* CTank_State::Normal(CTank* pActor, _float fTimeDelta, _uint _iAni
 	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
-	//pState = Run(pActor, fTimeDelta, _iAnimIndex);
-	//if (pState)	return pState;
+	pState = Idle(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
+
+	pState = Run(pActor, fTimeDelta, _iAnimIndex);
+	if (pState)	return pState;
 
 
-	if (pActor->Is_Animation_End())
-	{
-		return Idle(pActor, fTimeDelta, _iAnimIndex);
-	}
+	//if (pActor->Is_Animation_End())
+	//{
+	//	return Idle(pActor, fTimeDelta, _iAnimIndex);
+	//}
 
 	return nullptr;
 }
 
 CState<CTank>* CTank_State::Idle(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CState<CTank>* pState = new CTank_Idle();
+	//CState<CTank>* pState = new CTank_Idle();
 
-	return pState;
+	//return pState;
+
+	if (pActor->Is_Animation_End())
+	{
+		return new CTank_Idle();
+	}
+
+	return nullptr;
 }
 
 CState<CTank>* CTank_State::Run(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (CTank_Run_F::g_iAnimIndex != _iAnimIndex)
+	if (pActor->Get_Target() && CTank_Run_F::g_iAnimIndex != _iAnimIndex)
 		return new CTank_Run_F();
 
 	return nullptr;
@@ -168,7 +178,7 @@ CState<CTank>* CTank_State::Attack(CTank* pActor, _float fTimeDelta, _uint _iAni
 			}
 			
 		}
-		else //if (12.f > fDistance)
+		else if (12.f > fDistance)
 		{
 			if (true == Is_ShieldBroken)
 			{

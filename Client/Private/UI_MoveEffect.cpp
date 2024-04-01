@@ -87,8 +87,8 @@ void CUI_MoveEffect::Tick(_float fTimeDelta)
 
 		if (m_bStart == true)
 		{
-			m_rcUI.top = m_fOriginPoint;
-			m_rcUI.bottom = m_fOriginPoint;
+			m_rcUI.top = (LONG)m_fOriginPoint;
+			m_rcUI.bottom = (LONG)m_fOriginPoint;
 			m_bStart = false;
 		}
 

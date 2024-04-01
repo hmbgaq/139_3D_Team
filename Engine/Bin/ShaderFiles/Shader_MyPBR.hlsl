@@ -1,13 +1,13 @@
-//#include "Shader_Defines.hlsli"
+#ifndef SHADER_DEFINES_HLSLI
+#include "Shader_Defines.hlsli"
+#define SHADER_DEFINES_HLSLI
+#endif
 
-#define F_ZERO          float3(0.04f, 0.04f, 0.04f)
-#define PI              3.14159265359f
-#define TWO_PI          6.28318530718f
-#define PI_OVER_TWO     1.5707963268f
-#define EPSILON         0.000001f
 /* ----------------- Variable ----------------- */
-float4      g_SunColor = { 1.f, 1.f, 1.f, 1.f };
-
+float4      g_SunColor = { 1.f, 1.f, 1.f, 0.f };
+TextureCube g_Irradiance;
+TextureCube g_PreFiltered;
+Texture2D   g_BRDF_Texture;
 /*=============================================================
  
                             D, G, F
@@ -59,8 +59,8 @@ float My_GeometrySmith(float3 n, float3 v, float3 l, float k)
     
     //float k = (roughness * roughness) / 2.0f; // IBL 
 
-    float ggx1 = My_GeometrySchlickGGX(NdotV, k);
-    float ggx2 = My_GeometrySchlickGGX(NdotL, k);
+    float ggx2 = My_GeometrySchlickGGX(NdotV, k);
+    float ggx1 = My_GeometrySchlickGGX(NdotL, k);
 
     return ggx1 * ggx2;
 }
@@ -76,7 +76,17 @@ float3 My_fresnelSchlick(float cosTheta, float3 F0)
     // 직접 계산하기에는 매우 복잡해서 PBR에서는 근사화한 버전을 사용한다 = 슐릭의 근사식
    
     // costheta는 (half way 벡터 * view벡터)로 쓰이는값이다. 
-    return F0 + (1.0f - F0) * pow(1.0 - cosTheta, 5.0f);
+    return (F0 + (1.0f - F0) * pow(1.0 - cosTheta, 5.0f));
+}
+
+/*=============================================================
+ 
+                             IBL 
+                                
+==============================================================*/
+float3 FresnelSchlickRoughness(float cosTheta, float3 F0, float roughness)
+{
+    return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 /*=============================================================
@@ -90,14 +100,16 @@ float3 My_fresnelSchlick(float cosTheta, float3 F0)
 // Mtrl의 반사와 굴절 속성의 근사치를 micofacet이론을 바타응로 구한다. 
 // 대부분 실시간 렌더링파이프라인에서는 Cook-Torrance BRDF를 사용한다. 
 
-float3 MY_BRDF(in float fRoughness, in float fMetallic, in float3 vDiffuseColor, in float3 F0, in float3 N, in float3 V, in float3 L, in float3 H)
+float3 MY_BRDF(in float fRoughness, in float fMetallic, in float3 vAlbedo, in float3 F0, in float3 N, in float3 V, in float3 L, in float3 H)
 {
     //Result 
     float3 vColor = { 1.f, 1.f, 1.f };
     
     //  calculate light radiance
-    float3 radiance = g_SunColor;
-    
+    //float3 lightDir = -LightDirection;                    // Deferred에서 L구할때 이미 계산함
+    //float3 halfwayVec = normalize(viewDir + lightDir);    // Deferred에서 H 구할떄 이미 계산함
+    float3 radiance = g_SunColor.rgb;
+
     //const float NdotL = saturate(dot(N, L));
     //const float NdotV = saturate(dot(N, V));
     //const float NdotH = saturate(dot(N, H));
@@ -120,7 +132,7 @@ float3 MY_BRDF(in float fRoughness, in float fMetallic, in float3 vDiffuseColor,
 
     // 0.001f just in case product is 0
     //float3 specular_factor = nominator / (denominator + 0.001f);
-    float3 specular_factor = nominator / max(denominator, 0.001);
+    float3 specular_factor = nominator / (denominator + 0.001f); //max(denominator, 0.001);
 
     //  Energy Conservation
     float3 kS = F; //  reflection energy
@@ -128,10 +140,84 @@ float3 MY_BRDF(in float fRoughness, in float fMetallic, in float3 vDiffuseColor,
     kD *= 1.0 - fMetallic; //  if metallic nullify kD
 
     //  Calculate Cook-Torrance Reflectance Equation 
-    vColor = (((kD * vDiffuseColor / PI) + specular_factor) * radiance * WiDotN);
+    vColor = (((kD * vAlbedo / PI) + specular_factor) * radiance * WiDotN);
     // (kD * vDiffuseColor / PI) = Cook-Torrance Diffuse
     // specular_factor = BRDF수행하고 추가연산한 결과 
     // radiance = 카메라에 SOLID ANGLE을 가진 형태로 들어오는 빛의 양 -> 법선벡터와 빛의 반대방향의 dot
     // WiDotN
+    
+    return vColor;
+}
+
+
+float3 MY_BRDF_Irradiance(in float fRoughness, in float fMetallic, in float3 vAlbedo,
+in float3 F0, in float fAO,
+in float3 N, in float3 V, in float3 L, in float3 H)
+{
+    //Result 
+    float3 vColor = { 1.f, 1.f, 1.f };
+    
+    //  calculate light radiance
+    //float3 lightDir = -LightDirection;                    // Deferred에서 L구할때 이미 계산함
+    //float3 halfwayVec = normalize(viewDir + lightDir);    // Deferred에서 H 구할떄 이미 계산함
+    float3 radiance = g_SunColor.rgb;
+
+    //const float NdotL = saturate(dot(N, L));
+    //const float NdotV = saturate(dot(N, V));
+    //const float NdotH = saturate(dot(N, H));
+    const float HdotV = saturate(dot(H, V));
+    
+    //  Cook-Torrance specular BRDF
+    // EpicGame's Unreal Engine4 가 채용중인 PBR : Trowbridge-Reitz GGX(D), Fresnel-Schlick(F), 그리고 Smith's Schlick-GGX(G)
+    // pbr에서 사용되는 D, F, G 는 여러가지 버전이 있을 수 있다. 계산속도를 중시한다던가 물리적으로 사실적인가 등을 고려하기 떄문이다. 
+    float D = My_NormalDistributionGGXTR(N, H, fRoughness); // roughness값에 의한 반사분포
+    float G = My_GeometrySmith(N, V, L, fRoughness); // 미세면 그림자
+    float3 F = My_fresnelSchlick(HdotV, F0); // 다른 각도로 봤을 떄 달라지는 반사정도 - 금석성과 관련이 크다.  costheta는 (half way 벡터 * view벡터)로 쓰이는값이다. 
+    
+    float3 nominator = D * G * F;
+
+    //  Wo : View Direction
+    //  Wi : Light Direction
+    float WoDotN = saturate(dot(V, N));
+    float WiDotN = saturate(dot(L, N));
+    float denominator = (4 * WoDotN * WiDotN);
+
+    // 0.001f just in case product is 0
+    //float3 specular_factor = nominator / (denominator + 0.001f);
+    float3 specular_factor = nominator / (denominator + 0.001f); //max(denominator, 0.001);
+
+    //  Energy Conservation
+    float3 kS = F; //  reflection energy
+    float3 kD = 1.0f - kS; //  refraction energy
+    kD *= 1.0 - fMetallic; //  if metallic nullify kD
+
+    //  Calculate Cook-Torrance Reflectance Equation 
+    float3 Lo = (((kD * vAlbedo / PI) + specular_factor) * radiance * WiDotN);
+    // (kD * vDiffuseColor / PI) = Cook-Torrance Diffuse
+    // specular_factor = BRDF수행하고 추가연산한 결과 
+    // radiance = 카메라에 SOLID ANGLE을 가진 형태로 들어오는 빛의 양 -> 법선벡터와 빛의 반대방향의 dot
+    // WiDotN
+    
+    /* ---- MY_BRDF_Irradiance Map 을 PBR에 적용 ---- */
+    kS = FresnelSchlickRoughness(max(dot(N, V), 0.8f), F0, fRoughness);
+    kD = float3(1.f, 1.f, 1.f) -kS;
+    kD *= 1.0 - fMetallic;
+    
+    float3 Irradiance = g_Irradiance.Sample(ClampSampler, N).rgb;
+    
+    float3 Diffuse = vAlbedo * Irradiance;
+    //float3 ambient = (kD * Diffuse) * fAO;
+    
+    const float MAX_REF_LOD = 4.0f;
+    
+    float3 R = reflect(-V, N);
+    
+    float3 prefiltered = g_PreFiltered.SampleLevel(ClampSampler, R, fRoughness * MAX_REF_LOD).rgb;
+    float2 brdf = g_BRDF_Texture.Sample(ClampSampler, float2(max(dot(N, V), 0.0f), fRoughness)).rg;
+    float3 specular = prefiltered * (kS * brdf.x + brdf.y);
+
+    float3 ambient = (kD * Diffuse + specular) * fAO;
+    vColor = ambient + Lo;
+    
     return vColor;
 }

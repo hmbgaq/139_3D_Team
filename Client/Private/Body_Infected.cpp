@@ -34,8 +34,6 @@ void CBody_Infected::Priority_Tick(_float fTimeDelta)
 void CBody_Infected::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-
 }
 
 void CBody_Infected::Late_Tick(_float fTimeDelta)
@@ -60,7 +58,9 @@ HRESULT CBody_Infected::Render()
 				if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
 				{
 					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+					m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+					m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
 					m_pModelCom->Render((_uint)i);
 				}
@@ -70,7 +70,9 @@ HRESULT CBody_Infected::Render()
 			else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
 			{
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
 				m_pModelCom->Render((_uint)i);
 			}
@@ -134,12 +136,12 @@ HRESULT CBody_Infected::Ready_Components()
 	
 	/* For.Com_Collider */
 	{
-		CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+		CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
 		BoundingDesc.vExtents = _float3(0.22f, 0.8f, 0.22f);
 		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
-		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}
 
 	return S_OK;

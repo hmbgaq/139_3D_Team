@@ -380,9 +380,9 @@ void CSpringCamera::Shake_Camera(_float fTimeDelta)
 	_float3 Temp = {};
 	if (m_bShake)
 	{
-		_float fRandomX = SMath::fRandom(-0.3f, 0.3f);
-		_float fRandomY = SMath::fRandom(-0.3f, 0.3f);
-		_float fRandomZ = SMath::fRandom(-0.3f, 0.3f);
+		_float fRandomX = SMath::fRandom(-m_fShakeMinMax.x, m_fShakeMinMax.y);
+		_float fRandomY = SMath::fRandom(-m_fShakeMinMax.x, m_fShakeMinMax.y);
+		_float fRandomZ = SMath::fRandom(-m_fShakeMinMax.x, m_fShakeMinMax.y);
 		
 		m_fShakeTime -= fTimeDelta;
 		Temp = m_bShake ? _float3(fRandomX, fRandomY, fRandomZ): _float3(0.0f, 0.0f, 0.0f);

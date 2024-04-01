@@ -273,6 +273,8 @@ public:
 	{ 
 		if (m_pUI != nullptr)
 			return m_pUI;
+		else
+			return nullptr;
 	}
 
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);

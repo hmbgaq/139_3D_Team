@@ -121,7 +121,9 @@ HRESULT CScreamer::Render()
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 		
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
 		//m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));

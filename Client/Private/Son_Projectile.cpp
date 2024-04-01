@@ -31,7 +31,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 12.f;
+	GameObjectDesc.fSpeedPerSec = 20.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -148,8 +148,8 @@ HRESULT CSon_Projectile::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 5.f };
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
+	BoundingDesc.fRadius = { 50.f };
+	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pCollider), &BoundingDesc)))

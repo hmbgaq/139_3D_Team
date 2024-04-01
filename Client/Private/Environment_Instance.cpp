@@ -100,21 +100,22 @@ HRESULT CEnvironment_Instance::Render()
 
 	wstring strTemp = Get_ModelTag();
 
-	if (strTemp == TEXT("Prototype_Component_Model_OakTreeDry1") ||
-		strTemp == TEXT("Prototype_Component_Model_OakTreeDry2") ||
-		strTemp == TEXT("Prototype_Component_Model_OakTreeDry3") ||
-		strTemp == TEXT("Prototype_Component_Model_OakTreeDry4") ||
-		strTemp == TEXT("Prototype_Component_Model_OakTreeDry5") ||
-		strTemp == TEXT("Prototype_Component_Model_OakTreeDry6"))
-			int a = 0;
+	//if (strTemp == TEXT("Prototype_Component_Model_OakTreeDry1") ||
+	//	strTemp == TEXT("Prototype_Component_Model_OakTreeDry2") ||
+	//	strTemp == TEXT("Prototype_Component_Model_OakTreeDry3") ||
+	//	strTemp == TEXT("Prototype_Component_Model_OakTreeDry4") ||
+	//	strTemp == TEXT("Prototype_Component_Model_OakTreeDry5") ||
+	//	strTemp == TEXT("Prototype_Component_Model_OakTreeDry6"))
+	//		int a = 0;
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 		m_pShaderCom->Begin(m_tInstanceDesc.iShaderPassIndex);
 		m_pInstanceModelCom->Render((_uint)i);
 	}
-
 
 	return S_OK;
 }
@@ -153,9 +154,6 @@ _bool CEnvironment_Instance::Picking_Instance(RAY* pRay, _float3* vOutPoint)
 			{
 
 				_matrix matLocal = XMMatrixInverse(nullptr, m_tInstanceDesc.vecInstanceInfoDesc[i].Get_Matrix());
-
-
-
 
 				*vOutPoint = vOrigin + fDist * vDir;
 				//_float3 CenterToHitPoint = vOrigin + fDist * vDir;

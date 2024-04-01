@@ -68,7 +68,6 @@ HRESULT CBody_Infected_A::Render_Shadow()
 
 void CBody_Infected_A::Update_DiscardMesh()
 {
-
 }
 
 HRESULT CBody_Infected_A::OptionSetting()

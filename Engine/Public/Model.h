@@ -93,7 +93,7 @@ public:
 
 public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
-	HRESULT					Bind_MaterialResource(class CShader* pShader, _uint iMeshIndex);
+	HRESULT					Bind_MaterialResource(class CShader* pShader, _uint iMeshIndex, _bool* bORM, _bool* bEmissive);
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
 	HRESULT					Bind_ShaderCascade(CShader* pShader);
 
