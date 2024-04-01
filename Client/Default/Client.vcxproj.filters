@@ -3610,6 +3610,51 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt">
       <UniqueIdentifier>{c4337cc6-d727-4928-8527-cd3860e02f3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar">
+      <UniqueIdentifier>{881107ca-af35-42db-b8e9-a1954b73ee5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\2. Parts">
+      <UniqueIdentifier>{332967d4-99df-4335-adc2-be6da86d667a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State">
+      <UniqueIdentifier>{80ecfe6a-959f-4d29-8d63-c309bfb67bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Weapon">
+      <UniqueIdentifier>{fbf11929-7ac1-47e4-8b5e-a88ca013333b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Body">
+      <UniqueIdentifier>{1e64ac10-8eff-4931-ac17-67d4eb27e9c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\1. Class">
+      <UniqueIdentifier>{0a0d87a8-88b7-40ba-a667-2b9659fa75ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin">
+      <UniqueIdentifier>{8fe1cbf2-1a4b-4330-be45-442c71fcff95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC">
+      <UniqueIdentifier>{9a434afe-ef35-4890-8215-5de66fe554c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit">
+      <UniqueIdentifier>{4afcc21a-b3f5-466d-b267-31a870d5365f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\1. Idle">
+      <UniqueIdentifier>{2fd02401-2e98-49a7-bb98-53a838ac7e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk">
+      <UniqueIdentifier>{0536401c-524a-42d6-b3de-c0619ab84d8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run">
+      <UniqueIdentifier>{6a15084b-ccb3-457c-bbd4-172eb1851e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover">
+      <UniqueIdentifier>{024eebd5-d85b-42c6-aec5-ead72d90dce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch">
+      <UniqueIdentifier>{889d04fb-dc1c-4fc1-8794-557801b8edf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin\1. Normal">
+      <UniqueIdentifier>{c12873ec-ddff-41a4-8c89-d2f42180be13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7164,6 +7209,21 @@
     <ClInclude Include="..\Public\Weapon_Infected_D.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Edgar.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\1. Class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Edgar.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Edgar.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin\1. Normal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10164,6 +10224,21 @@
     </ClCompile>
     <ClCompile Include="..\Public\Weapon_Infected_D.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\1. Class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Edgar.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Edgar.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin\1. Normal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

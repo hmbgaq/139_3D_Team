@@ -76,6 +76,7 @@ public:
 public:
 	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
 	_bool					Is_UpperAnimEnd() { return m_bIsUpperAnimEnd; };
+	_bool					Is_Upper_Inputable_Front(_uint _iIndexFront);
 
 public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
@@ -117,6 +118,12 @@ public:
 	_float					Get_TrackPosition();
 	void					Set_TrackPosition(_int iNewTrackPosition);
 	void					Write_Names(const string& strModelFilePath);
+
+	_uint					Get_EndKeyFrameIndex(_uint iIndex);
+	_float					Calc_Cooltime_Percent(_uint iAnimIndex);
+	_float					Calc_Cooltime_Percent();
+	_float					Calc_Upper_Cooltime_Percent();
+
 
 	void					Set_Speed(_int iSpeed);
 

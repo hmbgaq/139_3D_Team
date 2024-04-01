@@ -320,6 +320,21 @@ _bool CCharacter::Is_Inputable_Front(_uint _iIndexFront)
 	return m_pBody->Is_Inputable_Front(_iIndexFront);
 }
 
+_bool CCharacter::Is_Upper_Inputable_Front(_uint _iIndexFront)
+{
+	return m_pBody->Is_Upper_Inputable_Front(_iIndexFront);
+}
+
+_float CCharacter::Calc_Cooltime_Percent()
+{
+	return m_pBody->Calc_Cooltime_Percent();
+}
+
+_float CCharacter::Calc_Upper_Cooltime_Percent()
+{
+	return m_pBody->Calc_Upper_Cooltime_Percent();
+}
+
 _float CCharacter::Get_TrackPosition()
 {
 	return m_pBody->Get_TrackPosition();

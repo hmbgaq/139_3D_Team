@@ -100,6 +100,11 @@ public:
 	_bool	Is_UpperAnimation_End();
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_bool	Is_Upper_Inputable_Front(_uint _iIndexFront);
+
+	_float	Calc_Cooltime_Percent();
+	_float	Calc_Upper_Cooltime_Percent();
+
 	_float	Get_TrackPosition();
 	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
 

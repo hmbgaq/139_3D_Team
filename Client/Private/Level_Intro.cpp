@@ -165,6 +165,11 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     //pMonster->Set_Position(_float3(50.0f, 0.f, 35.f));
     pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
+
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Edgar"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(10.f, 0.f, 35.f));
+
     
     //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
     //NULL_CHECK_RETURN(pMonster, E_FAIL);

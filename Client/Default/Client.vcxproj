@@ -321,6 +321,7 @@
     <ClInclude Include="..\Public\Body_Bandit.h" />
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
     <ClInclude Include="..\Public\Body_Infected.h" />
     <ClInclude Include="..\Public\Body_Infected_A.h" />
@@ -345,6 +346,9 @@
     <ClInclude Include="..\Public\CustomDialogFont.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
     <ClInclude Include="..\Public\DevConsole.h" />
+    <ClInclude Include="..\Public\Edgar.h" />
+    <ClInclude Include="..\Public\Edgar_State.h" />
+    <ClInclude Include="..\Public\Edgar_State_Normal.h" />
     <ClInclude Include="..\public\Environment_SpecialObject.h" />
     <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h" />
@@ -1253,6 +1257,7 @@
     <ClInclude Include="..\Public\UI_Option_SelectBox.h" />
     <ClInclude Include="..\Public\UI_Option_Window.h" />
     <ClInclude Include="..\Public\VampireTank_KnockFrontLight_F_01.h" />
+    <ClInclude Include="..\Public\Weapon_Edgar.h" />
     <ClInclude Include="..\Public\Weapon_Bandit.h" />
     <ClInclude Include="..\Public\Weapon_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Weapon_Bandit_Sniper.h" />
@@ -1434,6 +1439,7 @@
     <ClCompile Include="..\Private\Body_Bandit.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Body_Edgar.cpp" />
     <ClCompile Include="..\Private\Body_Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
     <ClCompile Include="..\Private\Body_Infected_A.cpp" />
@@ -1455,6 +1461,9 @@
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
     <ClCompile Include="..\Private\DevConsole.cpp" />
+    <ClCompile Include="..\Private\Edgar.cpp" />
+    <ClCompile Include="..\Private\Edgar_State.cpp" />
+    <ClCompile Include="..\Private\Edgar_State_Normal.cpp" />
     <ClCompile Include="..\Private\Environment_LightObject.cpp" />
     <ClCompile Include="..\Private\Environment_SpecialObject.cpp" />
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
@@ -2189,6 +2198,7 @@
     <ClCompile Include="..\Private\Weapon_Bandit.cpp" />
     <ClCompile Include="..\Private\Weapon_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Weapon_Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Weapon_Edgar.cpp" />
     <ClCompile Include="..\Private\Weapon_Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Weapon_Infected.cpp" />
     <ClCompile Include="..\Private\Weapon_Infected_A.cpp" />
