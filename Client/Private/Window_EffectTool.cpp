@@ -106,6 +106,9 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 	ImGui::EndTabBar();
 
 
+	Update_EffectTransform_Window(); // 이펙트 트랜스폼 업데이트
+
+
 	// ImGui창 사이즈
 	Show_ImGui_WindowSize();
 
@@ -165,24 +168,22 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 #pragma endregion
 
 
-#pragma region 이펙트 트랜스폼 창
-	SetUp_ImGuiDESC(u8"트랜스폼", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 1.f));
-
-	__super::Begin();
-
-	//if (EDIT_EFFECT == m_eEdit)
-	{
-		Update_EffectTransform_Window(); // 이펙트 트랜스폼 창 업데이트
-	}
-
-
-
-	// ImGui창 사이즈
-	Show_ImGui_WindowSize();
-
-
-	__super::End();
-#pragma endregion
+//#pragma region 이펙트 트랜스폼 창
+//	SetUp_ImGuiDESC(u8"트랜스폼", ImVec2{ 1000.f, 400.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 1.f));
+//
+//	__super::Begin();
+//
+//	//if (EDIT_EFFECT == m_eEdit)
+//	{
+//		Update_EffectTransform_Window(); // 이펙트 트랜스폼 창 업데이트
+//	}
+//
+//
+//	// ImGui창 사이즈
+//	Show_ImGui_WindowSize();
+//
+//	__super::End();
+//#pragma endregion
 
 
 
@@ -2116,88 +2117,56 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::TreeNode(" Mesh_Static "))
 					{
 						if (ImGui::Button("Aoe_Lens"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
-						}
 
 						if (ImGui::Button("Billboard_Circle_00"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
-						}
 
 						if (ImGui::Button("Ring"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Ring"));
-
-						}ImGui::SameLine();
+						
+						ImGui::SameLine();		
 						if (ImGui::Button("Sphere"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Sphere"));
-						}
 
 						if (ImGui::Button("Projectile"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Projectile"));
-						}
 
 						if (ImGui::Button("Corn"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Corn"));
-
-						}ImGui::SameLine();
+						
+						ImGui::SameLine();
 						if (ImGui::Button("ShieldDome"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_ShieldDome"));
-						}
 
 						if (ImGui::Button("Tornado"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Tornado"));
 
-						}ImGui::SameLine();
+						ImGui::SameLine();
 						if (ImGui::Button("Tornado_Cream"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Tornado_cream"));
 
-						}
-
 						if (ImGui::Button("Tornado_splineMesh"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Tornado_splineMesh"));
-						}
 
 						if (ImGui::Button("WinchesterElectric"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_WinchesterElectric"));
 
-						}
-
 						if (ImGui::Button("LightningFast"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_LightningFast"));
-
-						}
+						
 						ImGui::SameLine();
 						if (ImGui::Button("LightningsPack"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_LightningsPack"));
-						}
 
 						if (ImGui::Button("HemiSphere"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_HemiSphere"));
 
-						}
-
 						if (ImGui::Button("Coil"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Coil"));
-
-						}
 
 
 						ImGui::SeparatorText("");
-
 						ImGui::TreePop();
 					}
 
@@ -2205,35 +2174,22 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::TreeNode(" Mesh_Static_Attack "))
 					{
 						if (ImGui::Button("Slash_00"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Slash_00"));
-						}
+						
 						ImGui::SameLine();
 						if (ImGui::Button("Slash_01"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Slash_01"));
 
-						}
-
 						if (ImGui::Button("Bioball_00"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Bioball_00"));
 
-						}
-
 						if (ImGui::Button("Bioball_01"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Bioball_01"));
-						}
 
 						if (ImGui::Button("Bioball_02"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Bioball_02"));
 
-						}
-
 						ImGui::SeparatorText("");
-
 						ImGui::TreePop();
 					}
 
@@ -2242,43 +2198,29 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::TreeNode(" Mesh_Particle "))
 					{
 						if (ImGui::Button("Rock_00"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Rock_00"));
-						}
+
 						ImGui::SameLine();
 						if (ImGui::Button("Rock_01"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Rock_01"));
-						}
 
 						if (ImGui::Button("Rock_02"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Rock_02"));
-						}
+						
 						ImGui::SameLine();
 						if (ImGui::Button("Rock_03"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Rock_03"));
-						}
 
 						if (ImGui::Button("LightningParticle_00"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_LightningParticle_00"));
-						}
 
 						if (ImGui::Button("LightningParticle_01"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_LightningParticle_01"));
-						}
-
 
 						if (ImGui::Button("LeafPlane"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_LeafPlane"));
-						}
 
 						ImGui::SeparatorText("");
-
 						ImGui::TreePop();
 					}
 
@@ -2288,27 +2230,20 @@ void CWindow_EffectTool::Update_MeshTab()
 					{
 						//ImGui::SeparatorText("VampireCommander");
 						if (ImGui::Button("Demo_BeastSkull"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_BeastSkull"));
 
-						}ImGui::SameLine();
+						ImGui::SameLine();
 						if (ImGui::Button("Demo_Impact"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Impact"));
 
-						}
 						//if (ImGui::Button(" Add Bat Test "))
-						//{
 						//	Add_Part_Mesh_Morph(TEXT("Prototype_Component_Model_Effect_BatStorm_01"), TEXT("Prototype_Component_Model_Effect_BatStorm_02"));
-						//}
+
 						ImGui::SameLine();
 						if (ImGui::Button(" Add Torch Test "))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Torch"));
-						}
 
 						ImGui::SeparatorText("");
-
 						ImGui::TreePop();
 					}
 
@@ -2316,19 +2251,12 @@ void CWindow_EffectTool::Update_MeshTab()
 					if (ImGui::TreeNode(" Mesh_Parasiter "))
 					{
 						if (ImGui::Button("Egg"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Egg"));
 
-						}
-
 						if (ImGui::Button("Egg_Mother"))
-						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
 
-						}
-
 						ImGui::SeparatorText("");
-
 						ImGui::TreePop();
 					}
 
@@ -2339,7 +2267,7 @@ void CWindow_EffectTool::Update_MeshTab()
 
 				/* 텍스처 변경 */
 				ImGui::SeparatorText("");
-				if (ImGui::CollapsingHeader(" Texture_MESH "))
+				if (ImGui::CollapsingHeader(" Texture_Mesh "))
 				{
 					/* 모델 텍스처를 쓸건지, 내가 텍스처를 정해줄건지 */
 					if (ImGui::Button(" Use CustomTex "))
@@ -2353,7 +2281,7 @@ void CWindow_EffectTool::Update_MeshTab()
 					ImGui::SeparatorText("");
 
 					// 디퓨즈_메쉬 텍스처 =====================================================================================================
-					if (ImGui::TreeNode(" Diffuse_Texture_MESH "))
+					if (ImGui::TreeNode(" Diffuse_Texture_Mesh "))
 					{
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
@@ -2394,7 +2322,7 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 					// 노말_메쉬 텍스처 =====================================================================================================
-					if (ImGui::TreeNode(" Normal_Texture_MESH "))
+					if (ImGui::TreeNode(" Normal_Texture_Mesh "))
 					{
 						if (ImGui::Button("Normal_Base_Mesh"))	// 베이스 노말로 변경
 						{
@@ -2425,7 +2353,7 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 					// 마스크_메쉬 텍스처 =====================================================================================================
-					if (ImGui::TreeNode(" Mask_Texture_MESH "))
+					if (ImGui::TreeNode(" Mask_Texture_Mesh "))
 					{
 						if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 						{
@@ -2465,7 +2393,7 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 					// 노이즈_메쉬 텍스처 =====================================================================================================			
-					if (ImGui::TreeNode(" Noise_Texture_MESH "))
+					if (ImGui::TreeNode(" Noise_Texture_Mesh "))
 					{
 						if (ImGui::Button("Noise_Base_Mesh"))	// 베이스 노이즈로 변경
 						{
@@ -5346,80 +5274,56 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			if (ImGui::TreeNode(" Mesh_Static "))
 			{
 				if (ImGui::Button("Aoe_Lens"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
-				}
 
 				if (ImGui::Button("Billboard_Circle_00"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
-				}
 
 				if (ImGui::Button("Ring"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring"));
-				}ImGui::SameLine();
+				
+				ImGui::SameLine();
 				if (ImGui::Button("Sphere"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Sphere"));
-				}
 
 				if (ImGui::Button("Projectile"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Projectile"));
-				}
 
 				if (ImGui::Button("Corn"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Corn"));
-				}ImGui::SameLine();
+				
+				ImGui::SameLine();
 				if (ImGui::Button("ShieldDome"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_ShieldDome"));
-				}
-
+	
 				if (ImGui::Button("Tornado"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado"));
-				}ImGui::SameLine();
+				
+				ImGui::SameLine();
 				if (ImGui::Button("Tornado_Cream"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_cream"));
-				}
 
 				if (ImGui::Button("Tornado_splineMesh"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Tornado_splineMesh"));
-				}
 
 				if (ImGui::Button("WinchesterElectric"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_WinchesterElectric"));
-				}
 
 				if (ImGui::Button("LightningFast"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningFast"));
-				}
+
 				ImGui::SameLine();
 				if (ImGui::Button("LightningsPack"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningsPack"));
-				}
 
 				if (ImGui::Button("HemiSphere"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_HemiSphere"));
-				}
 
 				if (ImGui::Button("Coil"))
-				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Coil"));
-				}
 
 
 				ImGui::SeparatorText("");
-
 				ImGui::TreePop();
 			}
 
@@ -5481,7 +5385,6 @@ void CWindow_EffectTool::Update_EffectList_Window()
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Rock_03"));
 				}
 
-
 				if (ImGui::Button("LightningParticle_00"))
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningParticle_00"));
@@ -5491,7 +5394,6 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LightningParticle_01"));
 				}
-
 
 				if (ImGui::Button("LeafPlane"))
 				{
@@ -5511,6 +5413,7 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				if (ImGui::Button("Demo_BeastSkull"))
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_BeastSkull"));
+
 				}ImGui::SameLine();
 				if (ImGui::Button("Demo_Impact"))
 				{
@@ -5593,6 +5496,18 @@ void CWindow_EffectTool::Update_EffectList_Window()
 			ImGui::Text("Selected Part : %s ", m_szPartNames[m_iCurPartIndex]);
 
 			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
+
+			if (CEffect_Void::PARTICLE == eType_Effect)
+			{
+				ImGui::SameLine();
+				ImGui::Text(u8"  /  파티클");
+			}
+			else if (CEffect_Void::MESH == eType_Effect)
+			{
+				ImGui::SameLine();
+				ImGui::Text(u8"  /  메쉬 ");
+			}
+
 
 			/* 선택 파티클 활성화 */
 			if (ImGui::Button("  Active Part  "))
@@ -5945,86 +5860,96 @@ void CWindow_EffectTool::Update_EffectTransform_Window()
 {
 	if (nullptr != m_pCurEffect)
 	{
-		/* 이펙트 위치 표시 & 트랜스폼 */
-		_float4 vPos = m_pCurEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
-		ImGui::Text("Effect Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
-
-		CTransform* pTransform = m_pCurEffect->Get_Transform();
-		if (ImGui::DragFloat3("Effect_Pos", m_vWorldPosition_Effect, 0.5f))
+		ImGui::SeparatorText("");
+		ImGui::PushID(6);
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+		ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.3f, 0.7f, 0.7f));
+		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.3f, 0.4f, 0.9f, 0.9f));
+		if (ImGui::CollapsingHeader("Effect Transform"))
 		{
-			m_pCurEffect->Set_Position(_float3(m_vWorldPosition_Effect[0], m_vWorldPosition_Effect[1], m_vWorldPosition_Effect[2]));
-		}
+			/* 이펙트 위치 표시 & 트랜스폼 */
+			_float4 vPos = m_pCurEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+			ImGui::Text("Effect Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
 
-		_float3 vScaled = pTransform->Get_Scaled();
-		ImGui::Text("Effect Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
-		if (ImGui::DragFloat3("Effect_Scale", m_vScale_Effect, 0.5f))
-		{
-			if (0.f == m_vScale_Effect[0])
-				m_vScale_Effect[0] = 1.f;
-
-			if (0.f == m_vScale_Effect[1])
-				m_vScale_Effect[1] = 1.f;
-
-			if (0.f == m_vScale_Effect[2])
-				m_vScale_Effect[2] = 1.f;
-
-			pTransform->Set_Scaling(m_vScale_Effect[0], m_vScale_Effect[1], m_vScale_Effect[2]);
-		}
-
-		_float3 vRotated = pTransform->Get_Rotated();
-		ImGui::Text("Effect Rotated  : %.2f %.2f %.2f", XMConvertToDegrees(vRotated.x), XMConvertToDegrees(vRotated.y), XMConvertToDegrees(vRotated.z));
-		//Rotation_Quaternion
-		if (ImGui::DragFloat3("Effect_Rotate", m_vRotate_Effect, 0.1f, 0.f, 360.f))
-		{
-			pTransform->Rotation_Quaternion(_float3(m_vRotate_Effect[0], m_vRotate_Effect[1], m_vRotate_Effect[2]));
-		}
-
-		
-
-		if (nullptr != m_pCurPartEffect)
-		{
-			ImGui::SeparatorText("");
-
-			/* 파트 위치 표시 & 트랜스폼 */
-			if (ImGui::TreeNode("Part_Transform"))
+			CTransform* pTransform = m_pCurEffect->Get_Transform();
+			if (ImGui::DragFloat3("Effect_Pos", m_vWorldPosition_Effect, 0.5f))
 			{
-				CTransform* pPartTransform = m_pCurPartEffect->Get_Transform();
+				m_pCurEffect->Set_Position(_float3(m_vWorldPosition_Effect[0], m_vWorldPosition_Effect[1], m_vWorldPosition_Effect[2]));
+			}
 
-				_float4 vPos = m_pCurPartEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
-				ImGui::Text("Part Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
+			_float3 vScaled = pTransform->Get_Scaled();
+			ImGui::Text("Effect Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
+			if (ImGui::DragFloat3("Effect_Scale", m_vScale_Effect, 0.5f))
+			{
+				if (0.f == m_vScale_Effect[0])
+					m_vScale_Effect[0] = 1.f;
 
-				if (ImGui::DragFloat3("Part_Pos", m_vWorldPosition_Part, 0.5f))
+				if (0.f == m_vScale_Effect[1])
+					m_vScale_Effect[1] = 1.f;
+
+				if (0.f == m_vScale_Effect[2])
+					m_vScale_Effect[2] = 1.f;
+
+				pTransform->Set_Scaling(m_vScale_Effect[0], m_vScale_Effect[1], m_vScale_Effect[2]);
+			}
+
+			_float3 vRotated = pTransform->Get_Rotated();
+			ImGui::Text("Effect Rotated  : %.2f %.2f %.2f", XMConvertToDegrees(vRotated.x), XMConvertToDegrees(vRotated.y), XMConvertToDegrees(vRotated.z));
+			//Rotation_Quaternion
+			if (ImGui::DragFloat3("Effect_Rotate", m_vRotate_Effect, 0.1f, 0.f, 360.f))
+			{
+				pTransform->Rotation_Quaternion(_float3(m_vRotate_Effect[0], m_vRotate_Effect[1], m_vRotate_Effect[2]));
+			}
+
+
+
+			if (nullptr != m_pCurPartEffect)
+			{
+				ImGui::SeparatorText("");
+
+				/* 파트 위치 표시 & 트랜스폼 */
+				if (ImGui::TreeNode("Part_Transform"))
 				{
-					m_pCurPartEffect->Set_Position(_float3(m_vWorldPosition_Part[0], m_vWorldPosition_Part[1], m_vWorldPosition_Part[2]));
+					CTransform* pPartTransform = m_pCurPartEffect->Get_Transform();
+
+					_float4 vPos = m_pCurPartEffect->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+					ImGui::Text("Part Pos  : %.2f %.2f %.2f", vPos.x, vPos.y, vPos.z);
+
+					if (ImGui::DragFloat3("Part_Pos", m_vWorldPosition_Part, 0.5f))
+					{
+						m_pCurPartEffect->Set_Position(_float3(m_vWorldPosition_Part[0], m_vWorldPosition_Part[1], m_vWorldPosition_Part[2]));
+					}
+					_float3 vScaled = pPartTransform->Get_Scaled();
+					ImGui::Text("Part Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
+					if (ImGui::DragFloat3("Part_Scale", m_vScale_Part, 0.1f, 0.1f))
+					{
+						if (0.f == m_vScale_Part[0])
+							m_vScale_Part[0] = 1.f;
+
+						if (0.f == m_vScale_Part[1])
+							m_vScale_Part[1] = 1.f;
+
+						if (0.f == m_vScale_Part[2])
+							m_vScale_Part[2] = 1.f;
+
+						m_pCurPartEffect->Get_Transform()->Set_Scaling(m_vScale_Part[0], m_vScale_Part[1], m_vScale_Part[2]);
+					}
+
+					_float3 vRotated = pPartTransform->Get_Rotated();
+					ImGui::Text("Part Rotated  : %.2f %.2f %.2f", XMConvertToDegrees(vRotated.x), XMConvertToDegrees(vRotated.y), XMConvertToDegrees(vRotated.z));
+					//Rotation_Quaternion
+					if (ImGui::DragFloat3("Part_Rotate", m_vRotate_Part, 0.1f, 0.f, 360.f))
+					{
+						pPartTransform->Rotation_Quaternion(_float3(m_vRotate_Part[0], m_vRotate_Part[1], m_vRotate_Part[2]));
+					}
+
+					ImGui::TreePop();
+
 				}
-				_float3 vScaled = pPartTransform->Get_Scaled();
-				ImGui::Text("Part Scaled  : %.2f %.2f %.2f", vScaled.x, vScaled.y, vScaled.z);
-				if (ImGui::DragFloat3("Part_Scale", m_vScale_Part, 0.1f, 0.1f))
-				{
-					if (0.f == m_vScale_Part[0])
-						m_vScale_Part[0] = 1.f;
-
-					if (0.f == m_vScale_Part[1])
-						m_vScale_Part[1] = 1.f;
-
-					if (0.f == m_vScale_Part[2])
-						m_vScale_Part[2] = 1.f;
-
-					m_pCurPartEffect->Get_Transform()->Set_Scaling(m_vScale_Part[0], m_vScale_Part[1], m_vScale_Part[2]);
-				}
-
-				_float3 vRotated = pPartTransform->Get_Rotated();
-				ImGui::Text("Part Rotated  : %.2f %.2f %.2f", XMConvertToDegrees(vRotated.x), XMConvertToDegrees(vRotated.y), XMConvertToDegrees(vRotated.z));
-				//Rotation_Quaternion
-				if (ImGui::DragFloat3("Part_Rotate", m_vRotate_Part, 0.1f, 0.f, 360.f))
-				{
-					pPartTransform->Rotation_Quaternion(_float3(m_vRotate_Part[0], m_vRotate_Part[1], m_vRotate_Part[2]));
-				}
-
-				ImGui::TreePop();
-
 			}
 		}
+		ImGui::PopStyleColor(3);
+		ImGui::PopID();
 	}
 
 }
@@ -6182,51 +6107,141 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 		tVoidDesc.iCurNumInstance = { 1000 };
 
 
-#pragma region 리스트 문자열 관련 시작
-		wstring strName = TEXT("");
-		wstring strFrontName = TEXT("Part_Particle");
+#pragma region 리스트 문자열 관련
 
-		_int iMaxNum = -1;
+
+#pragma region 태그 만들기 시작
+
+		// 파트 태그 만들기 시작 ========================================================================================================
+		wstring strName = TEXT("");
+		wstring strFrontName = TEXT("Part");
+
 		wstring strPin = TEXT("");
+		_int iMaxNum = -1;
+
+		vector<_int> vecNumbers;
 
 		for (auto& iter : m_CurPartObjects)
 		{
 			if (nullptr == iter.second)
 				continue;
 
-			if (strFrontName == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
+			wstring strTemp = dynamic_cast<CEffect_Void*>(iter.second)->Get_Desc()->strPartTag;
+
+			// "Part"로 시작하는 이름이며, 마지막 3자리가 숫자인 경우
+			if (strFrontName == m_pGameInstance->Remove_LastNumChar(strTemp, 4))		//  "Part"  ("Part_000") 
 			{
-				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
+				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(strTemp, 3));		//  "000"  ("Part_000") 
+
+				vecNumbers.push_back(iPinNum);
 
 				if (iMaxNum < iPinNum)
 					iMaxNum = iPinNum;
 			}
 		}
-		/* 최댓값이 -1이라는 것은 해당 이름과 같은게 없으므로 고유번호를 000으로 세팅한다. */
-		if (-1 == iMaxNum)
-			strName = strFrontName + L"_000";
-		else /* 아니라면 최댓값에 + 1을 하여 고유 번호로 세팅한다. */
+
+		// 번호들을 정렬
+		sort(vecNumbers.begin(), vecNumbers.end());
+
+		// 중간에 빠진 번호를 찾아서 처리
+		_int iMissingNumber = -1;
+		for (_int i = 0; i < vecNumbers.size(); ++i)
 		{
-			_int iPinNum = iMaxNum + 1;
-
-			if (0 == iPinNum / 10)
-				strPin = L"_00" + to_wstring(iPinNum);
-			else if (0 == iPinNum / 100)
-				strPin = L"_0" + to_wstring(iPinNum);
-			else
-				strPin = L"_" + to_wstring(iPinNum);
-
-			strName = strFrontName + strPin;
+			if (vecNumbers[i] != i)
+			{
+				iMissingNumber = i;
+				break;
+			}
 		}
 
-		tVoidDesc.strPartTag = strName;
+		// 중간에 빠진 번호가 있다면 그 번호를 사용
+		if (iMissingNumber != -1)
+		{
+			// 빠진 번호를 3자리로 맞추어 문자열로 변환
+			wstring strPin = L"";
+			if (iMissingNumber < 10)
+				strPin = L"00" + to_wstring(iMissingNumber);
+			else if (iMissingNumber < 100)
+				strPin = L"0" + to_wstring(iMissingNumber);
+			else
+				strPin = to_wstring(iMissingNumber);
+
+			strName = strFrontName + L"_" + strPin;
+		}
+		else
+		{
+			// 빠진 번호가 없으면 가장 큰 번호에 1을 더하여 새로운 번호를 설정
+			int iPinNum = iMaxNum + 1;
+
+			// 새로운 번호를 3자리로 맞추어 문자열로 변환
+			wstring strPin = L"";
+			if (iPinNum < 10)
+				strPin = L"00" + to_wstring(iPinNum);
+			else if (iPinNum < 100)
+				strPin = L"0" + to_wstring(iPinNum);
+			else
+				strPin = to_wstring(iPinNum);
+
+			strName = strFrontName + L"_" + strPin;
+		}
+		// 파트 태그 만들기 끝   ========================================================================================================
+
+
+		// 이펙트의 맵 키 만들기 시작 =====================================================================================================
+		wstring strName_Map = TEXT("");
+		wstring strFrontName_Map = TEXT("Part");
+
+		wstring strPin_Map = TEXT("");
+		_int iMaxNum_Map = -1;
+
+		for (auto& iter : m_CurPartObjects)
+		{
+			if (nullptr == iter.second)
+				continue;
+
+			if (strFrontName_Map == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
+			{
+				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
+
+				if (iMaxNum_Map < iPinNum)
+					iMaxNum_Map = iPinNum;
+			}
+		}
+		/* 최댓값이 -1이라는 것은 해당 이름과 같은게 없으므로 고유번호를 000으로 세팅한다. */
+		if (-1 == iMaxNum_Map)
+			strName_Map = strFrontName_Map + L"_000";
+		else /* 아니라면 최댓값에 + 1을 하여 고유 번호로 세팅한다. */
+		{
+			_int iPinNum = iMaxNum_Map + 1;
+
+			if (0 == iPinNum / 10)
+				strPin_Map = L"_00" + to_wstring(iPinNum);
+			else if (0 == iPinNum / 100)
+				strPin_Map = L"_0" + to_wstring(iPinNum);
+			else
+				strPin_Map = L"_" + to_wstring(iPinNum);
+
+			strName_Map = strFrontName_Map + strPin_Map;
+		}
+		// 이펙트의 맵 키 만들기 끝 =======================================================================================================
+
+#pragma endregion 태그 만들기 끝
+
+
+		// 이펙트의 맵 키 설정
+		tVoidDesc.strPartTag = strName_Map;
 		tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Particle");
-		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Particle"), strName, &tVoidDesc));
+		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Particle"), strName_Map, &tVoidDesc));
 
+
+		// 현재 파트 오브젝트 설정
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
-		m_pCurPartEffect = dynamic_cast<CEffect_Particle*>(m_pCurEffect->Find_PartObject(strName));
+		m_pCurPartEffect = dynamic_cast<CEffect_Particle*>(m_pCurEffect->Find_PartObject(strName_Map));
 
+
+		// 순서 정렬된 파트 태그 바꿔주기
 		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+		m_pCurVoidDesc->strPartTag = strName; // 파트 태그 설정
 
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
@@ -6251,7 +6266,20 @@ HRESULT CWindow_EffectTool::Add_Part_Particle()
 
 			iCount++;
 		}
-		m_iCurPartIndex -= 1;
+		
+
+		for (_int i = 0; i <= m_iCurPartIndex; ++i)
+		{
+			wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			wstring wsPartName = converter.from_bytes(m_szPartNames[i]);
+
+			if (wsPartName == strName)
+			{
+				m_iCurPartIndex = i;
+				break; // 해당 이름을 찾았으므로 더 이상 반복할 필요가 없음
+			}
+		}
+
 #pragma endregion 리스트 문자열 관련 끝
 
 		Update_CurParameters_Parts();
@@ -6295,7 +6323,7 @@ HRESULT CWindow_EffectTool::Add_Part_Rect()
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
-		wstring strFrontName = TEXT("Part_Rect");
+		wstring strFrontName = TEXT("Part");
 
 		_int iMaxNum = -1;
 		wstring strPin = TEXT("");
@@ -6410,50 +6438,141 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		//tInstanceDesc.fRimPower = { 950.f };
 
 #pragma region 리스트 문자열 관련
-		wstring strName = TEXT("");
-		wstring strFrontName = TEXT("Part_Mesh");
 
-		_int iMaxNum = -1;
+
+#pragma region 태그 만들기 시작
+
+		// 파트 태그 만들기 시작 ========================================================================================================
+		wstring strName = TEXT("");
+		wstring strFrontName = TEXT("Part");
+
 		wstring strPin = TEXT("");
+		_int iMaxNum = -1;
+
+		vector<_int> vecNumbers;
 
 		for (auto& iter : m_CurPartObjects)
 		{
 			if (nullptr == iter.second)
 				continue;
 
-			if (strFrontName == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
+			wstring strTemp = dynamic_cast<CEffect_Void*>(iter.second)->Get_Desc()->strPartTag;
+
+			// "Part"로 시작하는 이름이며, 마지막 3자리가 숫자인 경우
+			if (strFrontName == m_pGameInstance->Remove_LastNumChar(strTemp, 4))		//  "Part"  ("Part_000") 
 			{
-				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
+				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(strTemp, 3));		//  "000"  ("Part_000") 
+				
+				vecNumbers.push_back(iPinNum);
 
 				if (iMaxNum < iPinNum)
 					iMaxNum = iPinNum;
 			}
 		}
-		/* 최댓값이 -1이라는 것은 해당 이름과 같은게 없으므로 고유번호를 000으로 세팅한다. */
-		if (-1 == iMaxNum)
-			strName = strFrontName + L"_000";
-		else /* 아니라면 최댓값에 + 1을 하여 고유 번호로 세팅한다. */
+
+		// 번호들을 정렬
+		sort(vecNumbers.begin(), vecNumbers.end());
+
+		// 중간에 빠진 번호를 찾아서 처리
+		_int iMissingNumber = -1;
+		for (_int i = 0; i < vecNumbers.size(); ++i)
 		{
-			_int iPinNum = iMaxNum + 1;
-
-			if (0 == iPinNum / 10)
-				strPin = L"_00" + to_wstring(iPinNum);
-			else if (0 == iPinNum / 100)
-				strPin = L"_0" + to_wstring(iPinNum);
-			else
-				strPin = L"_" + to_wstring(iPinNum);
-
-			strName = strFrontName + strPin;
+			if (vecNumbers[i] != i)
+			{
+				iMissingNumber = i;
+				break;
+			}
 		}
 
-		tVoidDesc.strPartTag = strName;
+		// 중간에 빠진 번호가 있다면 그 번호를 사용
+		if (iMissingNumber != -1)
+		{
+			// 빠진 번호를 3자리로 맞추어 문자열로 변환
+			wstring strPin = L"";
+			if (iMissingNumber < 10)
+				strPin = L"00" + to_wstring(iMissingNumber);
+			else if (iMissingNumber < 100)
+				strPin = L"0" + to_wstring(iMissingNumber);
+			else
+				strPin = to_wstring(iMissingNumber);
+
+			strName = strFrontName + L"_" + strPin;
+		}
+		else
+		{
+			// 빠진 번호가 없으면 가장 큰 번호에 1을 더하여 새로운 번호를 설정
+			int iPinNum = iMaxNum + 1;
+
+			// 새로운 번호를 3자리로 맞추어 문자열로 변환
+			wstring strPin = L"";
+			if (iPinNum < 10)
+				strPin = L"00" + to_wstring(iPinNum);
+			else if (iPinNum < 100)
+				strPin = L"0" + to_wstring(iPinNum);
+			else
+				strPin = to_wstring(iPinNum);
+
+			strName = strFrontName + L"_" + strPin;
+		}
+		// 파트 태그 만들기 끝   ========================================================================================================
+
+
+		// 이펙트의 맵 키 만들기 시작 =====================================================================================================
+		wstring strName_Map = TEXT("");
+		wstring strFrontName_Map = TEXT("Part");
+
+		wstring strPin_Map = TEXT("");
+		_int iMaxNum_Map = -1;
+
+		for (auto& iter : m_CurPartObjects)
+		{
+			if (nullptr == iter.second)
+				continue;
+
+			if (strFrontName_Map == m_pGameInstance->Remove_LastNumChar(iter.first, 4))
+			{
+				_int iPinNum = stoi(m_pGameInstance->Get_LastNumChar(iter.first, 3));
+
+				if (iMaxNum_Map < iPinNum)
+					iMaxNum_Map = iPinNum;
+			}
+		}
+		/* 최댓값이 -1이라는 것은 해당 이름과 같은게 없으므로 고유번호를 000으로 세팅한다. */
+		if (-1 == iMaxNum_Map)
+			strName_Map = strFrontName_Map + L"_000";
+		else /* 아니라면 최댓값에 + 1을 하여 고유 번호로 세팅한다. */
+		{
+			_int iPinNum = iMaxNum_Map + 1;
+
+			if (0 == iPinNum / 10)
+				strPin_Map = L"_00" + to_wstring(iPinNum);
+			else if (0 == iPinNum / 100)
+				strPin_Map = L"_0" + to_wstring(iPinNum);
+			else
+				strPin_Map = L"_" + to_wstring(iPinNum);
+
+			strName_Map = strFrontName_Map + strPin_Map;
+		}
+		// 이펙트의 맵 키 만들기 끝 =======================================================================================================
+
+#pragma endregion 태그 만들기 끝
+
+
+		// 이펙트의 맵 키 설정
+		tVoidDesc.strPartTag = strName_Map;
 		tVoidDesc.strProtoTag = TEXT("Prototype_GameObject_Effect_Instance");
-		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Instance"), strName, &tVoidDesc));
+		FAILED_CHECK(m_pCurEffect->Add_PartObject(TEXT("Prototype_GameObject_Effect_Instance"), strName_Map, &tVoidDesc));
 
+
+		// 현재 파트 오브젝트 설정
 		m_CurPartObjects = *m_pCurEffect->Get_PartObjects();
-		m_pCurPartEffect = dynamic_cast<CEffect_Instance*>(m_pCurEffect->Find_PartObject(strName));
+		m_pCurPartEffect = dynamic_cast<CEffect_Instance*>(m_pCurEffect->Find_PartObject(strName_Map));
 
+
+		// 순서 정렬된 파트 태그 바꿔주기
 		m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();
+		m_pCurVoidDesc->strPartTag = strName; // 파트 태그 설정
+
 
 		m_iCurPartIndex = (_int)m_CurPartObjects.size();
 		/* 문자열 초기화 */
@@ -6477,7 +6596,19 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 
 			iCount++;
 		}
-		m_iCurPartIndex -= 1;
+
+
+		for (_int i = 0; i <= m_iCurPartIndex; ++i)
+		{
+			wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			wstring wsPartName = converter.from_bytes(m_szPartNames[i]);
+
+			if (wsPartName == strName_Map)
+			{
+				m_iCurPartIndex = i;
+				break; // 해당 이름을 찾았으므로 더 이상 반복할 필요가 없음
+			}
+		}
 
 
 		Update_CurParameters_Parts();
@@ -6524,7 +6655,7 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 
 #pragma region 리스트 문자열 관련
 		wstring strName = TEXT("");
-		wstring strFrontName = TEXT("Part_Mesh");
+		wstring strFrontName = TEXT("Part");
 
 		_int iMaxNum = -1;
 		wstring strPin = TEXT("");
@@ -6592,7 +6723,21 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 		}
 		m_iCurPartIndex -= 1;
 
+		
+		for (_int i = 0; i <= m_iCurPartIndex; ++i)
+		{
+			wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			wstring wsPartName = converter.from_bytes(m_szPartNames[i]);
 
+			if (wsPartName == strName)
+			{
+				m_iCurPartIndex = i;
+				break; // 해당 이름을 찾았으므로 더 이상 반복할 필요가 없음
+			}
+
+		}
+
+		
 		Update_CurParameters_Parts();
 #pragma endregion
 	}
@@ -7005,9 +7150,9 @@ void CWindow_EffectTool::Update_SaveLoad_Part_Menu()
 
 HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 {
-
 	json Out_Json;
 
+	/* 이펙트 저장 */
 	if (FILE_EFFECT == m_eFile)
 	{
 		if (nullptr != m_pCurEffect)
@@ -7020,12 +7165,27 @@ HRESULT CWindow_EffectTool::Save_Function(string strPath, string strFileName)
 	}
 
 
-	if (FILE_PART_PARTICLE == m_eFile || FILE_PART_MESH == m_eFile)
+	/* 파트 - 파티클 저장 */
+	if (FILE_PART_PARTICLE == m_eFile)
 	{
 		m_pCurPartEffect->Write_Json(Out_Json);
+
+		string strFrontName = "Part_000";
+		Out_Json["strPartTag"] = strFrontName;
 	}
 
 
+	/* 파트 - 메쉬 저장 */
+	if (FILE_PART_MESH == m_eFile)
+	{
+		m_pCurPartEffect->Write_Json(Out_Json);
+
+		string strFrontName = "Part_000";
+		Out_Json["strPartTag"] = strFrontName;
+	}
+
+
+	/* 트레일 저장 */
 	if (FILE_TRAIL == m_eFile)
 	{
 		if (nullptr != m_pTrail)

@@ -1,5 +1,5 @@
 {
-  
+
   "Component": {
     "Com_VIBuffer": {
       "bDynamic_Color": true,
@@ -84,7 +84,7 @@
   "iShaderPassIndex": 0,
   "iTextureIndex": [ 0, 0, 5, 0, 0 ],
   "strModelTag": [ "", "" ],
-  "strPartTag": "Part_Particle_004",
+  "strPartTag": "Part_000",
   "strProtoTag": "Prototype_GameObject_Effect_Particle",
   "strTextureTag": [ "Prototype_Component_Texture_Effect_Diffuse", "", "Prototype_Component_Texture_Effect_Mask", "Prototype_Component_Texture_Effect_Noise", "" ],
   "vBloomPower": [ 0.6988416910171509, 0.02158583700656891, 0.02158583700656891, 0.0 ],

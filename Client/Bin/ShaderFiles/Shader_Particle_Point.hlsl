@@ -603,7 +603,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
     Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
 		
- 
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
@@ -612,7 +612,7 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
     
     
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+
     
 	
     if (bSolid)
