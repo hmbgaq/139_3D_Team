@@ -78,6 +78,8 @@ public:
 	_bool					Is_UpperAnimEnd() { return m_bIsUpperAnimEnd; };
 	_bool					Is_Upper_Inputable_Front(_uint _iIndexFront);
 
+	void					Set_AnimEnd(_bool _bIsAnimEnd) { m_bIsAnimEnd = _bIsAnimEnd; };
+
 public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
 	virtual HRESULT			Initialize(void* pArg);

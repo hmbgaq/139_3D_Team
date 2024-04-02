@@ -95,6 +95,7 @@ public:
 		, _uint iTargetKeyFrameIndex = 0);
 
 	void	Set_AnimState(CModel::ANIM_STATE _eAnimState);
+	void	Set_Animation_End(_bool _bIsAnimEnd);
 
 	_bool	Is_Animation_End();
 	_bool	Is_UpperAnimation_End();
@@ -161,7 +162,8 @@ public:
 	void	 Add_Force(_vector In_vDir, _float In_fPower);
 
 public:
-	_float3& Get_AddRootMotion() { return m_vAddRootPosition; }
+	_float3& Get_AddRootMotion() { return m_vAddRootPosition; };
+	void	 Set_AddRootMotion(_float3 _vAddRootPosition) { m_pBody->Set_MovePos(_vAddRootPosition); };
 
 
 public:

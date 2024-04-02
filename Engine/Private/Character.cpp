@@ -305,6 +305,11 @@ void CCharacter::Set_AnimState(CModel::ANIM_STATE _eAnimState)
 	m_pBody->Set_AnimState(_eAnimState);
 }
 
+void CCharacter::Set_Animation_End(_bool _bIsAnimEnd)
+{
+	m_pBody->Set_Animation_End(_bIsAnimEnd);
+}
+
 _bool CCharacter::Is_Animation_End()
 {
 	return m_pBody->Is_Animation_End();
