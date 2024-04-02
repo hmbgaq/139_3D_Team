@@ -269,7 +269,8 @@ PS_OUT PS_MAIN_FINAL_SEPHIA(PS_IN In)
     float4 MainObject = vFinal + vDebug + vRimBloom + vOutLine;
     
     MainObject = Sepia(MainObject);
-  
+    vIndep = Sepia(vIndep);
+    
     Out.vColor = vUI;
    
     if (Out.vColor.a == 0)
@@ -298,9 +299,10 @@ PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
     float4 MainObject = vFinal + vDebug + vRimBloom + vOutLine;
     
     MainObject = MonochromePass(MainObject);
+    vIndep = MonochromePass(vIndep);
     
     Out.vColor = vUI;
-   
+    
     if (Out.vColor.a == 0)
         Out.vColor = vIndep;
     

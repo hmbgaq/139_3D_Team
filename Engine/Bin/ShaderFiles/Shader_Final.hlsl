@@ -302,7 +302,7 @@ PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
     vIndep = MonochromePass(vIndep);
     
     Out.vColor = vUI;
-   
+    
     if (Out.vColor.a == 0)
         Out.vColor = vIndep;
     
