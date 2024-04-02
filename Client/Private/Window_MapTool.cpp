@@ -4507,7 +4507,10 @@ void CWindow_MapTool::Interact_MoveColiderFunction()
 			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveRangeColliderCenter(_float3(m_fMoveColliderCenterArray[0], m_fMoveColliderCenterArray[1], m_fMoveColliderCenterArray[2]));
 		}
 		
-
+		if (ImGui::Button(u8"선택한 오브젝트 기준 센터로 이동"))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveRangeColliderCenter(m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_Position());
+		}
 		
 	}
 }

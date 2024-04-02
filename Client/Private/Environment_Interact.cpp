@@ -350,7 +350,7 @@ _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 
 void CEnvironment_Interact::Interact()
 {
-	if(m_bFindPlayer == false)
+	if(m_bFindPlayer == false /* && m_pPlayer->Is_Interection() == true*/)
 		return;
 
 		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP)
@@ -796,7 +796,7 @@ void CEnvironment_Interact::Interact()
 
 void CEnvironment_Interact::Move_For_PlayerRootMotion()
 {
-	if(m_pPlayer == nullptr || m_bInteract == false)
+	if(m_pPlayer == nullptr || m_bInteract == false || m_pPlayer->Is_Interection() == false)
 		return;
 
 	_bool bMove = Check_MoveCollider();
@@ -834,7 +834,7 @@ void CEnvironment_Interact::Move_For_Offset()
 void CEnvironment_Interact::Move_For_PlayerOffset()
 {
 
-	if (m_pPlayer == nullptr || m_bInteract == false)
+	if (m_pPlayer == nullptr || m_bInteract == false || m_pPlayer->Is_Interection() == false)
 		return;
 
 	_bool bMove = Check_MoveCollider();
