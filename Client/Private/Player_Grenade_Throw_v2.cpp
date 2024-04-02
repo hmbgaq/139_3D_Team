@@ -28,6 +28,17 @@ CState<CPlayer>* CPlayer_Grenade_Throw_v2::Update(CPlayer* pActor, _float fTimeD
 
 	//return nullptr;
 
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(5);
+		if (true == m_bFlags[0])
+		{
+			pActor->Throw_Dynamite();
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_DYNAMITE);
+			pWeapon->Set_Enable(false);
+		}
+	}
+
 
 	if (pActor->Is_Animation_End())
 	{

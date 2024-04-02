@@ -42,6 +42,7 @@ HRESULT CBullet_Dynamite::Initialize(void* pArg)
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
 	m_fDamage = 0.f;
+	m_fLifeTime = 3.f;
 
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
@@ -89,7 +90,8 @@ void CBullet_Dynamite::OnCollisionEnter(CCollider* other)
 
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
-
+		CGameObject* pDynamite = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Explosion_Dynamite");
+		pDynamite->Set_Position(Get_Position());
 
 
 
@@ -126,7 +128,7 @@ HRESULT CBullet_Dynamite::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.6f };
+	BoundingDesc.fRadius = { 1.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),

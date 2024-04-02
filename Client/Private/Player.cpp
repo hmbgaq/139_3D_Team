@@ -667,13 +667,24 @@ void CPlayer::Update_ChargingTime(_float fTimeDelta)
 	}
 }
 
-CGameObject* CPlayer::Slam()
+void CPlayer::Slam()
 {
 	CGameObject* pSlam = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Impact_Slam");
 	pSlam->Set_Position(Get_Position());
+}
+
+void CPlayer::Throw_Dynamite()
+{
+	CGameObject* pDynamite = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Dynamite");
 	
+	_float3 vSpawnPos = Get_Position();
+	vSpawnPos.y += 1.f;
 	
-	return nullptr;
+	_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 1.f, 1.f));
+	
+	pDynamite->Set_Position(vSpawnPos);
+	pDynamite->Get_Transform()->Look_At_OnLand(vTargetPos);
+
 }
 
 void CPlayer::Hitted_Left(Power ePower)

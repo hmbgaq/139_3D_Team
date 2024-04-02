@@ -46,16 +46,16 @@ void CPlayer_Weapon_Dynamite::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_F))
-	{
-		string path = "../Bin/DataFiles/Data_Weapon/Player/Dynamite/Dynamite.json";
-		{
-			json Out_Json;
-			m_pTransformCom->Write_Json(Out_Json);
-			CJson_Utility::Save_Json(path.c_str(), Out_Json);
-		}
+	//if (m_pGameInstance->Key_Down(DIK_F))
+	//{
+	//	string path = "../Bin/DataFiles/Data_Weapon/Player/Dynamite/Dynamite.json";
+	//	{
+	//		json Out_Json;
+	//		m_pTransformCom->Write_Json(Out_Json);
+	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
+	//	}
 
-	}
+	//}
 }
 
 void CPlayer_Weapon_Dynamite::Late_Tick(_float fTimeDelta)

@@ -127,7 +127,9 @@ public:
 	void Set_TeleportPunch_State(TeleportPunch_State _eTeleportPunch_State) { m_eTeleportPunch_State = _eTeleportPunch_State; };
 
 public:
-	CGameObject* Slam();
+	void Slam();
+	void Throw_Dynamite();
+	
 
 public:
 	_bool Is_Exist_Ladder_Count() { return m_iLadderCount > 0; }

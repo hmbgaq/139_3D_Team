@@ -33,7 +33,7 @@ HRESULT CExplosion_Dynamite::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 30.f;
+	GameObjectDesc.fSpeedPerSec = 0.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -41,7 +41,9 @@ HRESULT CExplosion_Dynamite::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 0.f;
+	m_fDamage = 50.f;
+
+	m_fLifeTime = 2.f;
 
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
@@ -87,11 +89,10 @@ void CExplosion_Dynamite::OnCollisionEnter(CCollider* other)
 
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
-
 	{
 
 		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Medium;
+		m_eHitPower = Power::Heavy;
 		m_fForce = 0.f;
 		if (nullptr != pTarget_Character)
 		{
@@ -105,7 +106,7 @@ void CExplosion_Dynamite::OnCollisionEnter(CCollider* other)
 
 	}
 
-	Set_Dead(true);
+	//Set_Dead(true);
 
 
 	//m_pEffect->Set_Dead(true);
@@ -131,7 +132,7 @@ HRESULT CExplosion_Dynamite::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.6f };
+	BoundingDesc.fRadius = { 5.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),

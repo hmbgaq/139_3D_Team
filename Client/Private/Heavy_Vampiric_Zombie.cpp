@@ -25,7 +25,7 @@ HRESULT CHeavy_Vampiric_Zombie::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
-
+	m_fHp = 100.f;
 
 	return S_OK;
 }
@@ -38,8 +38,6 @@ void CHeavy_Vampiric_Zombie::Priority_Tick(_float fTimeDelta)
 void CHeavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	m_fHp = 100;
 }
 
 void CHeavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
