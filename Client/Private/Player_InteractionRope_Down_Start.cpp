@@ -8,7 +8,10 @@ void CPlayer_InteractionRope_Down_Start::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
+	pActor->Set_Interection(true);
+
 	pActor->Set_Ladder_Count(6);
+
 }
 
 CState<CPlayer>* CPlayer_InteractionRope_Down_Start::Update(CPlayer* pActor, _float fTimeDelta)
