@@ -28,7 +28,7 @@ HRESULT CSky::Initialize(void* pArg)
 	{
 		case LEVEL::LEVEL_INTRO: // 사실상 여기가 테스트맵 
 		{
-			m_eSkyType = CSky::SKYTYPE::SKY_STAGE1;
+			m_eSkyType = CSky::SKYTYPE::SKY_STAGE2;
 			break;
 		}
 		case  LEVEL::LEVEL_GAMEPLAY: // 시작 사막맵 
@@ -84,7 +84,6 @@ HRESULT CSky::Render()
 #endif // _DEBUG
 
 		FAILED_CHECK(Bind_ShaderResources());
-
 		m_pShaderCom->Begin(0);
 		m_pVIBufferCom->Bind_VIBuffers();
 		m_pVIBufferCom->Render();

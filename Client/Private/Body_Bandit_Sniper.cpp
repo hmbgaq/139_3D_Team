@@ -121,10 +121,7 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		//m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
 		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_SHADOW));
-
 		m_pModelCom->Render((_uint)i);
 	}
 

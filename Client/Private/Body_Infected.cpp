@@ -70,9 +70,11 @@ HRESULT CBody_Infected::Render()
 			else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
 			{
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+				
 				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+				
 				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
 				m_pModelCom->Render((_uint)i);
 			}
@@ -94,12 +96,7 @@ HRESULT CBody_Infected::Render_Shadow()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-
-		m_pShaderCom->Begin(2);
-
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -122,16 +119,14 @@ HRESULT CBody_Infected::Set_StateHit()
 
 HRESULT CBody_Infected::Set_StateDead()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT CBody_Infected::Ready_Components()
 {
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
-
 	/* For.Com_Shader */
 	{
-		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Monster"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Shader_Monster"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	
 	/* For.Com_Collider */
@@ -151,9 +146,6 @@ HRESULT CBody_Infected::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
-
 	return S_OK;
 }
 
@@ -165,10 +157,8 @@ void CBody_Infected::Free()
 	//	{
 	//		
 	//	}
-	//	// 벡터의 자원을 모두 해제한 후에는 clear() 함수를 호출하여 벡터를 비워줍니다.
 	//	pair.second.clear();
 	//}
-	//// 맵의 자원도 해제합니다.
 	//m_vDiscardMesh.clear();
 
 	__super::Free();

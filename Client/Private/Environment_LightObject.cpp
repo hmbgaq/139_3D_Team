@@ -462,8 +462,6 @@ void CEnvironment_LightObject::Free()
 {
 	__super::Free();
 
-
-	
 	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
 	
 	if (pLight != nullptr)
