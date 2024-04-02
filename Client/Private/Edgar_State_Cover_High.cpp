@@ -19,5 +19,5 @@ void CEdgar_State_Cover_High::Release(CEdgar* pActor)
 
 CState<CEdgar>* CEdgar_State_Cover_High::Update_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	return Cover_State(pActor, fTimeDelta, _iAnimIndex);
+	return Cover_High_State(pActor, fTimeDelta, _iAnimIndex);
 }

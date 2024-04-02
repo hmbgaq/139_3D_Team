@@ -1,10 +1,9 @@
 #pragma once
-#include "Edgar_State_CutScene.h"
-
+#include "Edgar_State_Cover_Low.h"
 
 BEGIN(Client)
 
-class CEdgar_Cargo_01 : public CEdgar_State_CutScene
+class CEdgar_State_Cover_Low_Right : public CEdgar_State_Cover_Low
 {
 public:
 	virtual void Initialize(CEdgar* pActor) override;
@@ -12,7 +11,8 @@ public:
 	virtual void Release(CEdgar* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CEdgar::Edgar_State::Edgar_Cargo_01;
+	virtual CState<CEdgar>* Update_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
+
 
 };
 

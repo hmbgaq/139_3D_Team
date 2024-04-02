@@ -25,9 +25,21 @@ public:		//상태 그룹 별 업데이트
 	CState<CEdgar>* Walk_Aim_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CEdgar>* Run_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CEdgar>* Cover_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Cover_High_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Cover_High_Left_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Cover_High_Right_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	CState<CEdgar>* Cover_Low_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Cover_Low_Over_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Cover_Low_Left_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Cover_Low_Right_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
 	CState<CEdgar>* Crouch_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 	CState<CEdgar>* Hit_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* CutScene_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	
 
 
 public:		//개별 동작 상태 집합
