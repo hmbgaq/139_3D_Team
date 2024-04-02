@@ -78,6 +78,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow - Target_ShadowDepth  */
 
+	FAILED_CHECK(Render_Cascade());
+
 	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc - Target_Shade, Target_Specular */
 
 	if (true == m_tHBAO_Option.bHBAO_Active)
@@ -259,7 +261,9 @@ HRESULT CRenderer::Render_Shadow()
 
 HRESULT CRenderer::Render_Cascade()
 {
+
 	return S_OK;
+
 }
 
 HRESULT CRenderer::Render_LightAcc()

@@ -767,4 +767,8 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_CLIP();
     }
 
+    //pass Cascade
+    //{
+    //
+    //}
 }

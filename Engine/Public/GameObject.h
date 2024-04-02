@@ -41,6 +41,7 @@ public:
 
 public: /* For. Additional Render */
 	virtual HRESULT Render_Shadow() { return S_OK; }
+	virtual HRESULT Render_CSM() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
 	virtual HRESULT Render_Ice() { return S_OK; }
 

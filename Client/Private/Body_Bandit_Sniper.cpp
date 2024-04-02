@@ -74,6 +74,7 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_CASCADE, this), );
 }
 
 HRESULT CBody_Bandit_Sniper::Render()
@@ -125,6 +126,11 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 		m_pModelCom->Render((_uint)i);
 	}
 
+	return S_OK;
+}
+
+HRESULT CBody_Bandit_Sniper::Render_CSM()
+{
 	return S_OK;
 }
 

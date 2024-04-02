@@ -96,6 +96,13 @@ struct VS_OUT
     float2 vTexcoord    : TEXCOORD0;
     float4 vWorldPos    : TEXCOORD1;
     float4 vProjPos     : TEXCOORD2;
+}; 
+
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexUV : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
 };
 
 struct PS_IN
@@ -156,6 +163,12 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
+VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+    
+    return Out;
+}
 /*=============================================================
  
                         Pixel Shader
@@ -268,7 +281,15 @@ PS_OUT PS_MAIN_CHECK(PS_IN In)
     return Out;
 }
 
+/* ------------------- Pixel Shader(5) : MeshCheck -------------------*/
+PS_OUT_SHADOW PS_CASCADE_SHADOW(VS_OUT_SHADOW In) : SV_Target0
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
+    Out.vLightDepth = (In.vProjPos.z, 0.f, 0.f, 0.f);
+	
+    return Out;
+}
 /*=============================================================
  
                           Technique
@@ -347,5 +368,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_CHECK();
+    }
+
+    pass Cascade
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CASCADE_SHADOW();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_CASCADE_SHADOW();
+
     }
 }

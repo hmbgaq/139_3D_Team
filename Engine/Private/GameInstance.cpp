@@ -545,6 +545,22 @@ _float4x4 CGameInstance::Get_Shadow_Proj()
 	return m_pPipeLine->Get_Shadow_Proj();
 }
 
+void CGameInstance::Set_ShadowProj(_float4x4* pMatrix)
+{
+	if (nullptr == m_pPipeLine)
+		return;
+
+	return m_pPipeLine->Set_ShadowProj(pMatrix);
+}
+
+void CGameInstance::Set_CascadeBoxes(BoundingOrientedBox* pBoxes)
+{
+	if (nullptr == m_pPipeLine)
+		return;
+
+	return m_pPipeLine->Set_CascadeBoxes(pBoxes);
+}
+
 
 RAY CGameInstance::Get_MouseRayWorld(HWND g_hWnd, const unsigned int g_iWinSizeX, const unsigned int g_iWinSizeY)
 {

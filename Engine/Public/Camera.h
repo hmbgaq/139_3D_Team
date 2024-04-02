@@ -45,6 +45,8 @@ protected:
 
 public:
 	/* Cascade */
+	HRESULT Ready_CSM();
+
 	const _float3* GetEyePt() const;
 	const _float3* GetWorldAhead() const;
 	const _float3* GetWorldUp() const;
@@ -62,6 +64,10 @@ public:
 	_float m_arrCascadeBoundRadius[m_iTotalCascades];
 	_float3 m_arrCascadeBoundCenter[m_iTotalCascades];
 	_float4x4 m_arrWorldToCascadeProj[m_iTotalCascades];
+
+	_float				m_fCascadeEnd[4]; // cascade 절두체 끝부분
+	_float4x4			m_shadowOrthoProj[3];
+	BoundingOrientedBox	m_tCascadeShadowBox[3];
 
 protected:
 	CCollider* m_pColliderCom = { nullptr };

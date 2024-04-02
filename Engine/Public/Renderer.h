@@ -17,7 +17,7 @@ public:
 		/* UI */
 		RENDER_UI_BACK, RENDER_UI, RENDER_UI_FRONT, RENDER_CURSOR,
 		/* RenderGroup*/
-		RENDER_BLEND, RENDER_END
+		RENDER_BLEND, RENDER_CASCADE, RENDER_END
 	};
 	enum class POST_TYPE { DEFERRED, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
 						   MOTIONBLUR, LUMASHARPEN, FINAL, TYPE_END};
@@ -43,7 +43,6 @@ private:
 	HRESULT Render_Priority();
 	HRESULT Render_NonLight();
 	HRESULT Render_Fog();
-	HRESULT Render_Ice();
 
 	HRESULT Render_NonBlend();
 	HRESULT Render_Shadow();

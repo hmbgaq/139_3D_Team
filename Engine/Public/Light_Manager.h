@@ -33,6 +33,7 @@ public:
 	_float4x4		Get_ShadowLightProjMatrix(_uint iLevelIndex);
 	_float			Get_ShadowLightFar(_uint iLevelIndex);
 	_float4			Get_ShadowLightPos(_uint iLevelIndex);
+	_float4			Get_ShadowLightDir(_uint iLevelIndex);
 
 private:
 	_float4x4					Identity_Matrix;
@@ -42,6 +43,7 @@ private:
 	map<_uint, _float4x4>		m_ShadowLight_ProjMatrix;
 	map<_uint, _float>			m_ShadowLight_Far;
 	map<_uint, _float4>			m_ShadowLight_Pos;
+	map<_uint, _float4>			m_ShadowLight_Dir;
 	
 
 public:
