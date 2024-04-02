@@ -3856,6 +3856,21 @@
     <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Explosion">
       <UniqueIdentifier>{0977e705-a864-4b2b-b8a5-422e05332e30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder">
+      <UniqueIdentifier>{06703e87-442e-42c6-8300-0ea826ff773d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\1. Start">
+      <UniqueIdentifier>{94841946-4b02-4adc-92a3-5389a1954ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\2. Loop">
+      <UniqueIdentifier>{a3e4dff6-73bd-429c-90f6-e607a3981300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\3. End">
+      <UniqueIdentifier>{fd4b9c1e-815b-4759-80fc-b0345ae5ea1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\4. Gate">
+      <UniqueIdentifier>{bcb013c2-5899-4058-81af-e5e456a1826d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5368,18 +5383,6 @@
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Cargo_LedgeStrafe_R_Custom_01.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_CrouchUnder_End.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_CrouchUnder_Gate.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_CrouchUnder_Loop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_CrouchUnder_Start.h">
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_CrouchUseCables.h">
@@ -7601,6 +7604,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\Explosion_Dynamite.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\2. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_End.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\3. End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_CrouchUnder_Gate.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\4. Gate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10806,6 +10821,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Explosion_Dynamite.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_CrouchUnder_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_CrouchUnder_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\2. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_CrouchUnder_End.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\3. End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_CrouchUnder_Gate.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\19. CrouchUnder\4. Gate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

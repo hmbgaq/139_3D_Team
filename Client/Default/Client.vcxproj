@@ -1761,6 +1761,10 @@
     <ClCompile Include="..\Private\Player_Crossbow_Ironsights_Reload.cpp" />
     <ClCompile Include="..\Private\Player_Crossbow_LowerHolster.cpp" />
     <ClCompile Include="..\Private\Player_Crossbow_WeaponUnholster_Fast.cpp" />
+    <ClCompile Include="..\Private\Player_CrouchUnder_End.cpp" />
+    <ClCompile Include="..\Private\Player_CrouchUnder_Gate.cpp" />
+    <ClCompile Include="..\Private\Player_CrouchUnder_Loop.cpp" />
+    <ClCompile Include="..\Private\Player_CrouchUnder_Start.cpp" />
     <ClCompile Include="..\Private\Player_DeathLight_F_01.cpp" />
     <ClCompile Include="..\Private\Player_DeathLight_F_02.cpp" />
     <ClCompile Include="..\Private\Player_DeathNormal_F_01.cpp" />
