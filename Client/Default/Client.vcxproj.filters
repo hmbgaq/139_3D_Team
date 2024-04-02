@@ -7431,12 +7431,6 @@
     <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_F_01.h">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_FL_01.h">
-      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_FR_01.h">
-      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Edgar_Cargo_01.h">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
     </ClInclude>
@@ -7565,6 +7559,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Edgar_State_Cover_High.h">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_FL_01.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_FR_01.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10726,12 +10726,6 @@
     <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_F_01.cpp">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_FL_01.cpp">
-      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_FR_01.cpp">
-      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Edgar_Cargo_01.cpp">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
     </ClCompile>
@@ -10749,6 +10743,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Edgar_State_Cover_High.cpp">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_FL_01.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_FR_01.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
