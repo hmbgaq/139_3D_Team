@@ -135,7 +135,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Tick(_float fTimeDelta)
 {
-	m_pGameInstance->Set_Player(this);
+	//m_pGameInstance->Set_Player(this);
 
 	__super::Priority_Tick(fTimeDelta);
 }
@@ -158,8 +158,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
-		if (m_pGameInstance->Key_Down(DIK_C))
-			m_fHp = 100;
+		//if (m_pGameInstance->Key_Down(DIK_C))
+		//	m_fHp = 100;
 	}
 
 

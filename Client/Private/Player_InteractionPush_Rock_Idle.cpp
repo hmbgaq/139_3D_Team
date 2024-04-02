@@ -11,11 +11,13 @@ void CPlayer_InteractionPush_Rock_Idle::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Set_Rotate_In_CameraDir(false);
 }
 
 CState<CPlayer>* CPlayer_InteractionPush_Rock_Idle::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	return new CPlayer_InteractionPush_Rock_Start();
 

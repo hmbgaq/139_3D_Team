@@ -128,6 +128,7 @@
 #include "Player_SlamTwoHand_TEMP.h"
 #include "Player_MeleeKick.h"
 #include "Player_CartRide_Loop.h"
+#include "Player_InteractionGlamour_Activate.h"
 
 #pragma endregion
 
@@ -408,6 +409,9 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 		//	return new CPlayer_CartRide_Loop();
 		//}
 
+
+		pState = Heal(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
 
 		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
@@ -1004,6 +1008,17 @@ CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _
 	{
 		if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_MeleeKick();
+	}
+
+	return nullptr;
+}
+
+CState<CPlayer>* CPlayer_State::Heal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	if (m_pGameInstance->Key_Down(DIK_C))
+	{
+		if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
+			return new CPlayer_InteractionGlamour_Activate();
 	}
 
 	return nullptr;

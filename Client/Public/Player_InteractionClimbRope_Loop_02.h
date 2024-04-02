@@ -1,10 +1,10 @@
 #pragma once
-#include "Player_State_Interaction.h"
+#include "Player_State_Normal.h"
 
 
 BEGIN(Client)
 
-class CPlayer_InteractionClimbRope_Loop_02 : public CPlayer_State_Interaction
+class CPlayer_InteractionClimbRope_Loop_02 : public CPlayer_State_Normal
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;

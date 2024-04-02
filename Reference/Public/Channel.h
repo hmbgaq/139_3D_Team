@@ -29,6 +29,7 @@ public:
 			return m_KeyFrames.back();
 		return m_KeyFrames[_iKeyFrameIndex];
 	};
+	_uint		Get_EndKeyFrameIndex() { return m_iNumKeyFrames - 1; }
 
 
 	_bool		Is_Inputable(_float fCurrentTrackPosition, _uint _iIndex);

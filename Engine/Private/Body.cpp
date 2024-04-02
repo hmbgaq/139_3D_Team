@@ -164,6 +164,18 @@ _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
 }
+_bool CBody::Is_Upper_Inputable_Front(_uint _iIndexFront)
+{
+	return m_pModelCom->Is_Upper_Inputable_Front(_iIndexFront);
+}
+_float CBody::Calc_Cooltime_Percent()
+{
+	return m_pModelCom->Calc_Cooltime_Percent();
+}
+_float CBody::Calc_Upper_Cooltime_Percent()
+{
+	return m_pModelCom->Calc_Upper_Cooltime_Percent();
+}
 _float CBody::Get_TrackPosition()
 {
 	return m_pModelCom->Get_TrackPosition();

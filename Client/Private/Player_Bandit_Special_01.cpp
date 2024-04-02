@@ -28,7 +28,6 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 	{
 		return new CPlayer_IdleLoop();
 	}
-
 	
 
 	if (m_pGameInstance->Key_Down(DIK_E) || m_pGameInstance->Key_Pressing(DIK_E))
@@ -43,7 +42,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[0] = pActor->Is_Inputable_Front(22);
 		if (true == m_bFlags[0])
 		{
-			Create_Bullet(pActor);
+			Fire(pActor);
+			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -52,7 +52,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[1] = pActor->Is_Inputable_Front(28);
 		if (true == m_bFlags[1])
 		{
-			Create_Bullet(pActor);
+			Fire(pActor);
+			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -61,7 +62,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[2] = pActor->Is_Inputable_Front(34);
 		if (true == m_bFlags[2])
 		{
-			Create_Bullet(pActor);
+			Fire(pActor);
+			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -70,7 +72,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[3] = pActor->Is_Inputable_Front(39);
 		if (true == m_bFlags[3])
 		{
-			Create_Bullet(pActor);
+			Fire(pActor);
+			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -79,7 +82,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[4] = pActor->Is_Inputable_Front(39);
 		if (true == m_bFlags[4])
 		{
-			Create_Bullet(pActor);
+			Fire(pActor);
+			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -88,7 +92,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[5] = pActor->Is_Inputable_Front(45);
 		if (true == m_bFlags[5])
 		{
-			Create_Bullet(pActor);
+			Fire(pActor);
+			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 			
 		}
@@ -140,4 +145,16 @@ void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 	}
 	pActor->Set_Target(nullptr);
 
+}
+
+void CPlayer_Bandit_Special_01::Fire(CPlayer* pActor)
+{
+	pActor->Search_Target(15.f);
+	CCharacter* pTarget = pActor->Get_Target();
+	if (pTarget)
+	{
+		CWeapon* pRevolver = pActor->Get_Weapon(PLAYER_WEAPON_REVOLVER);
+		pRevolver->Fire(_float3(0.f, 0.f, 1.f), pActor->Get_Target());
+	}
+	pActor->Set_Target(nullptr);
 }

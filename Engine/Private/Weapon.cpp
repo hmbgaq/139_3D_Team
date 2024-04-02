@@ -262,7 +262,7 @@ _float3 CWeapon::Calc_Front_Pos(_float3 vDiff)
 	return vResult;
 }
 
-void CWeapon::Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos)
+void CWeapon::Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos, CCharacter* pTarget)
 {
 	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, strLayerTag, strBulletTag);
 	//_float3 vSpawnPos = Get_WorldPosition();
@@ -271,6 +271,12 @@ void CWeapon::Fire(const wstring& strBulletTag, const wstring& strLayerTag, _flo
 
 	pBullet->Set_Position(vSpawnPos);
 	pBullet->Get_Transform()->Look_At(vTargetVector);
+
+	if (nullptr != pTarget)
+	{
+		_vector vTargetVector = XMLoadFloat3(&pTarget->Get_WeaknessPos());
+		pBullet->Get_Transform()->Look_At(vTargetVector);
+	}
 }
 
 void CWeapon::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Data_Manager.h"
 #include "Transform.h"
+#include "GameInstance.h"
 
 CMonster_Character::CMonster_Character(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
@@ -103,6 +104,11 @@ CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 	m_pTransformCom->Look_At(pPlayer->Get_Transform()->Get_State(CTransform::STATE::STATE_POSITION));
 
 	return pPlayer;
+}
+
+void CMonster_Character::Check_Frustum()
+{
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
 void CMonster_Character::Free()

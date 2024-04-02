@@ -112,8 +112,14 @@
 #include "Weapon_Tank.h"
 #include "Weapon_Punch_Tank.h"
 #include "Projectile_GroundWave.h"
-
 #pragma endregion
+
+#pragma region EDGAR
+#include "Edgar.h"
+#include "Body_Edgar.h"
+#include "Weapon_Edgar.h"
+#pragma endregion
+
 
 
 #pragma region UI
@@ -897,9 +903,11 @@ HRESULT CLoader::Loading_Player(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_ELShotgun"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELShotgun/ELShotgun", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_ELWinchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/ELWinchester/ELWinchester", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_FlameBelcher"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/FlameBelcher/FlameBelcher", PivotMatrix)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Whip"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Whip/Whip", PivotMatrix)));
+
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Edgar"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/NPC/Edgar/Edgar", PivotMatrix)));
 
 
 	return S_OK;
@@ -1006,11 +1014,8 @@ HRESULT CLoader::Ready_Origin()
 	//! Heavy_Vampiric_Zombie
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Heavy_Vampiric_Zombie"), CBody_Heavy_Vampiric_Zombie::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Heavy_Vampiric_Zombie"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Heavy_Vampiric_Zombie"), CWeapon_Heavy_Vampiric_Zombie::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Heavy_Vampiric_Zombie"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Punch_Tank"), CWeapon_Punch_Tank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Punch_Tank"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"), CHeavy_Vampiric_Zombie::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Projectile_GroundWave"), CProjectile_GroundWave::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Projectile_GroundWave"))));
-
-
+	
 
 	//! Bandit_Sniper
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bandit_Sniper"), CBandit_Sniper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bandit_Sniper"))));
@@ -1023,6 +1028,12 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Punch_Tank"), CWeapon_Punch_Tank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Punch_Tank"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Tank"), CTank::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Tank"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Projectile_GroundWave"), CProjectile_GroundWave::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Projectile_GroundWave"))));
+
+
+	//! NPC_Edgar
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Edgar"), CBody_Edgar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Edgar"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Edgar"), CWeapon_Edgar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Weapon_Edgar"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Edgar"), CEdgar::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Edgar"))));
 
 
 

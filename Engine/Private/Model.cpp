@@ -261,6 +261,11 @@ _matrix CModel::Get_CombinedMatrix(_uint iBoneIndex)
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
 }
 
+_bool CModel::Is_Upper_Inputable_Front(_uint _iIndexFront)
+{
+	return m_Animations[m_iUpperAnimIndex]->Is_Inputable_Front(_iIndexFront);
+}
+
 HRESULT CModel::Initialize_Prototype(TYPE eType, const string & strModelFilePath, _fmatrix PivotMatrix)
 {
 	m_eModelType = eType;
@@ -671,6 +676,30 @@ void CModel::Write_Names(const string& strModelFilePath)
 	osTxt.close();
 }
 
+_uint CModel::Get_EndKeyFrameIndex(_uint iIndex)
+{
+	return (*m_Animations[iIndex]->Get_Channels())[0]->Get_EndKeyFrameIndex();
+}
+
+_float CModel::Calc_Cooltime_Percent(_uint iAnimIndex)
+{
+	_int iCurrent = Get_CurrentKeyFrames(iAnimIndex);
+	_int iEnd = Get_EndKeyFrameIndex(iAnimIndex);
+
+	_float fResult = ((_float)iCurrent * 100.f) / (_float)iEnd;
+	return fResult;
+}
+
+_float CModel::Calc_Cooltime_Percent()
+{
+	return Calc_Cooltime_Percent(m_iCurrentAnimIndex);
+}
+
+_float CModel::Calc_Upper_Cooltime_Percent()
+{
+	return Calc_Cooltime_Percent(m_iUpperAnimIndex);
+}
+
 void CModel::Set_Speed(_int iSpeed)
 {
 	//return m_Animations
@@ -698,7 +727,7 @@ _uint CModel::Get_BoneNum(const _char* _szName)
 
 _uint CModel::Get_CurrentKeyFrames(_uint iIndex)
 {
-	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentKeyFrames(iIndex);
+	return m_Animations[iIndex]->Get_CurrentKeyFrames(0);
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)

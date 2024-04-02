@@ -57,6 +57,11 @@ HRESULT CPlayer_Weapon_Revolver::Render()
 	return S_OK;
 }
 
+void CPlayer_Weapon_Revolver::Fire(_float3 vTargetPos, CCharacter* pTarget)
+{
+	__super::Fire(L"Prototype_GameObject_Bullet_Revolver", LAYER_PLAYER_BULLET, vTargetPos, pTarget);
+}
+
 HRESULT CPlayer_Weapon_Revolver::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
