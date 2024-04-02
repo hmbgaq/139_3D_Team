@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CBody_VampireCommander::CBody_VampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	: CBody(pDevice, pContext, strPrototypeTag)
+	: CBody_Monster(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CBody_VampireCommander::CBody_VampireCommander(const CBody_VampireCommander& rhs)
-	: CBody(rhs)
+	: CBody_Monster(rhs)
 {
 }
 
@@ -91,31 +91,22 @@ HRESULT CBody_VampireCommander::Render()
 				if (m_eRender_State == CBody_VampireCommander::RENDER_STATE::ATTACK)
 				{
 					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-					//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-					//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-					//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+					m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+					m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
 					m_pShaderCom->Begin(3);
-
 					m_pModelCom->Render((_uint)i);
 				}
-				
 			}
 			else
 			{
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-				//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-				//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-				//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
 				m_pShaderCom->Begin(0);
-
 				m_pModelCom->Render((_uint)i);
 			}
 		}

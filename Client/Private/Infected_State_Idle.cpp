@@ -21,3 +21,8 @@ CState<CInfected>* CInfected_State_Idle::Update_State(CInfected* pActor, _float 
 {
 	return Normal_State(pActor, fTimeDelta, _iAnimIndex);
 }
+//
+//CState<CInfected>* CInfected_State_Idle::Boom_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+//{
+//	return nullptr;
+//}

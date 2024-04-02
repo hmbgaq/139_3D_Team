@@ -30,6 +30,7 @@ void CPlayer_OpenStateCombo_8hit::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	//pActor->Set_Invincible(true);
 
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget)
@@ -90,14 +91,21 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 	{
 		if (pActor->Is_Inputable_Front(62 - iTiming))
 		{
-			
+			//_float fDamage = 50.f;
+			//_float fForce = 0.7f;
+			//Direction eDir = Direction::Front;
+			//Power ePower = Power::Heavy;
+			//_bool bIsMelee = true;
+
+			//pActor->Hit_Direct(pTarget, fDamage, fForce, eDir, ePower, bIsMelee);
+
 			pActor->Create_Hitting_Effect(pTarget->Get_Position(), Power::Heavy);
 			m_pGameInstance->Set_RadialBlurTime(0.7f);
-
 			pTarget->Look_At_And_Knockback(pActor->Get_Position(), 0.7f);
-
 			pTarget->Hitted_Dead(Power::Heavy);
 			pTarget->Set_Invincible(true);
+
+			
 			m_bFlags[HIT_EIGHTH] = true;
 		}
 	}
@@ -114,6 +122,7 @@ void CPlayer_OpenStateCombo_8hit::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 	pActor->Set_Target(nullptr);
+	//pActor->Set_Invincible(false);
 
 }
 

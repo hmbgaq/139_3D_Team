@@ -12,6 +12,10 @@ void CMother_Hit::Initialize(CMother* pActor)
 CState<CMother>* CMother_Hit::Update(CMother* pActor, _float fTimeDelta)
 {
 	//int나 뭔가 확인할수 있는 수단 2개를 둬서 그값이 1개라면 StunLoop로 2개라면 StunEnd로 
+	if (pActor->Is_Animation_End())
+	{
+		return new CMother_StunLoop;
+	}
 
 	return nullptr;
 }

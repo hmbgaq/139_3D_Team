@@ -130,7 +130,7 @@ public:
 	void	Rotation(_fvector vAxis, _float fRadian);
 	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);
 	void	Rotation_Quaternion(_float3 vRotation);
-	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 0.5f);
+	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 1.0f);
 
 	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
 
@@ -171,6 +171,9 @@ public:
 public:
 	void		Add_RootBone_Position(const _float3& vPos, class CNavigation* pNavigation = nullptr);
 	void		Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
+
+public:
+	_bool		Calc_FrontCheck(const _float3& vTargetPos);
 
 public:
 	_float3		Calculate_SlidingVector(const _fvector& velocity, const _fvector& normal);

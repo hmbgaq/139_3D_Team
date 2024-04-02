@@ -46,6 +46,7 @@ public:
 	virtual void		Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT		Render() override;
 	virtual HRESULT		Render_Shadow() override;
+	virtual HRESULT		Render_Ice() override;
 
 public:
 	virtual _bool		Write_Json(json& Out_Json) override;
@@ -94,12 +95,16 @@ private:
 	_int		iCheckMeshNum = 0;
 	_int		m_iIceMeshNumber = 0;
 	_float4		m_vCamPosition = {};
+	_float		m_fCamFar = {};
 
 	_bool		bRenderIce = { false };
 	_bool		bIcarusTexture = { false };
 	CTexture*	m_pIceNoise = { nullptr };
 	CTexture*	m_pIceDiffuse = { nullptr };
 	CTexture*	m_pRADTexture = { nullptr };
+
+	/* 렌더링용 */
+private:
 
 public:
 	/* 원형객체를 생성한다. */

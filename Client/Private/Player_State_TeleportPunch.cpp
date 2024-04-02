@@ -28,18 +28,30 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 	}
 	else if (false == m_bFlags[2] && 1.5f >= pActor->Calc_Distance())
 	{
-		//pTarget->Set_Position(pActor->Calc_Front_Pos(_float3(0.f, 0.f, 3.f)));
+		
 
-		//pActor->Apply_Shake_And_Blur(Power::Heavy);
-		pActor->Create_Hitting_Effect(pTarget->Get_Position(), Power::Heavy);
+		//_vector vPlayerPos = pActor->Get_Position_Vector();
+		//_vector vDir = pTarget->Calc_Look_Dir_XZ(vPlayerPos);
+		
+		_float fDamage = 30.f;
+		_float fForce = 1.f;
+		Direction eDir = Direction::Front;
+		Power ePower = Power::Heavy;
+		_bool bIsMelee = true;
 
-		//pTarget->Add_Force(pActor->Calc_Look_Dir_XZ(pTarget->Get_Position_Vector()) * -1, 0.3f);
-		//pTarget->Look_At_OnLand(pActor->Get_Position_Vector());
-		pTarget->Look_At_And_Knockback(pActor->Get_Position(), 1.0f);
-		pTarget->Hitted_Dead(Power::Heavy);
-		pTarget->Set_Invincible(true);
+		//pTarget->Set_Hitted(fDamage, vDir, fForce, 1.f, eDir, ePower, bIsMelee);
+		//pActor->Create_Hitting_Effect(pTarget->Get_Position(), ePower);
+
+		pActor->Hit_Direct(pTarget, fDamage, fForce, eDir, ePower, bIsMelee);
+
+		//pTarget->Look_At_And_Knockback(pActor->Get_Position(), 1.0f);
+		//pTarget->Hitted_Dead(Power::Heavy);
+		//pTarget->Set_Invincible(true);
 		m_bFlags[2] = true;
 	}
+
+
+
 
 	return nullptr;
 }

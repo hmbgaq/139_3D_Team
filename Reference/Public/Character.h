@@ -69,7 +69,10 @@ public:
 	CCollider*		Get_Collider();
 	CNavigation*	Get_Navigation();
 
+#ifdef _DEBUG
 	virtual _bool Picking(_Out_ _float3 * vPickedPos) override;
+#endif
+
 public:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Ready_PartObjects() PURE;
@@ -92,11 +95,17 @@ public:
 		, _uint iTargetKeyFrameIndex = 0);
 
 	void	Set_AnimState(CModel::ANIM_STATE _eAnimState);
+	void	Set_Animation_End(_bool _bIsAnimEnd);
 
 	_bool	Is_Animation_End();
 	_bool	Is_UpperAnimation_End();
 
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_bool	Is_Upper_Inputable_Front(_uint _iIndexFront);
+
+	_float	Calc_Cooltime_Percent();
+	_float	Calc_Upper_Cooltime_Percent();
+
 	_float	Get_TrackPosition();
 	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
 
@@ -150,17 +159,22 @@ public:
 
 	
 public:
-	void Add_Force(_vector In_vDir, _float In_fPower);
+	void	 Add_Force(_vector In_vDir, _float In_fPower);
 
 public:
-	_float Get_Hp() { return m_iHp; };
-	void Set_Hp(_float _iHp) { m_iHp = _iHp; };
+	_float3& Get_AddRootMotion() { return m_vAddRootPosition; };
+	void	 Set_AddRootMotion(_float3 _vAddRootPosition) { m_pBody->Set_MovePos(_vAddRootPosition); };
+
+
+public:
+	_float Get_Hp() { return m_fHp; };
+	void Set_Hp(_float _iHp) { m_fHp = _iHp; };
 
 public:
 	CCharacter* Get_Target() { return m_pTarget; };
 	void Set_Target(CCharacter* pTarget) { m_pTarget = pTarget; };
 
-	void Get_Damaged(_float iDamage) {m_iHp -= iDamage;}
+	void Get_Damaged(_float iDamage) {m_fHp -= iDamage;}
 public:
 	void Look_At_OnLand(_fvector vTargetPos);
 
@@ -195,7 +209,7 @@ public:	//!For Animation Split
 	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _uint iTargetKeyFrameIndex = 0);
 	_bool Is_Splitted() { return m_pBody->Is_Splitted(); }
 	void Set_Splitted(_bool _bIsSplitted) { m_pBody->Set_Splitted(_bIsSplitted); };
-	void Reset_UpperAngle();
+	//void Reset_UpperAngle();
 
 
 public:
@@ -226,10 +240,10 @@ public:
 	//_float	Get_CurHP() { return m_fCurHP; }
 	//void	Set_MaxHP(_float fMaxHP) { m_fMaxHP = fMaxHP; }
 	//_float	Get_MaxHP() { return m_fMaxHP; }
-	void	Set_CurHP(_float fCurHP) { m_iHp = fCurHP; }
-	_float	Get_CurHP() { return m_iHp; }
-	void	Set_MaxHP(_float fMaxHP) { m_iMaxHp = fMaxHP; }
-	_float	Get_MaxHP() { return m_iMaxHp; }
+	void	Set_CurHP(_float fCurHP) { m_fHp = fCurHP; }
+	_float	Get_CurHP() { return m_fHp; }
+	void	Set_MaxHP(_float fMaxHP) { m_fMaxHp = fMaxHP; }
+	_float	Get_MaxHP() { return m_fMaxHp; }
 
 
 public:
@@ -263,12 +277,15 @@ public:
 	_bool Is_KnockUp() { return m_bIsKnockUp; };
 	void Set_KnockUp(_bool _bIsKnockUp) { m_bIsKnockUp = _bIsKnockUp; };
 
+public:
+	virtual void Check_Frustum();
+
 protected:
 	CHARCTER_DESC CharAnimDesc = {};
 
 protected:
-	_float m_iHp = { 1.f };
-	_float m_iMaxHp = { 1.f };
+	_float m_fHp = { 1.f };
+	_float m_fMaxHp = { 1.f };
 	
 	/* _float 타입의 HP를 사용해주세요. */
 	//_float m_fMaxHP = { 40.f };
@@ -279,7 +296,7 @@ protected:
 	_bool m_bIsInvincible = { false };
 	_bool m_bIsStun = { false };
 	_float m_fElectrocuteTime = { 0.f };
-
+	_float3	m_vAddRootPosition = {};
 
 
 protected:
@@ -296,6 +313,7 @@ protected:
 protected:
 	CCharacter* m_pTarget = { nullptr };
 	_bool m_bIsInFrustum = { false };
+
 
 protected:
 	_float3		m_vWeaknessPos = { 0.f, 0.f, 0.f };

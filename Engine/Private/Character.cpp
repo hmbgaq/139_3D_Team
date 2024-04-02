@@ -97,11 +97,10 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	for (auto& Pair : m_PartObjects)
 	{
 		if (nullptr != Pair.second)
-			Pair.second->Late_Tick(fTimeDelta);
+			Pair.second->Late_Tick(fTimeDelta);	
 	}
 
-	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
-
+	Check_Frustum();
 	if (true == m_bIsInFrustum)
 	{		
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), ); //m_bIsInFrustum
@@ -112,15 +111,24 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 
 		if (0.0001f < fDiff)
 		{
-			_float3 vResult = vBodyMovePos;
-			vResult.x *= m_vRootMoveRate.x;
-			vResult.y *= m_vRootMoveRate.y;
-			vResult.z *= m_vRootMoveRate.z;
+			m_vAddRootPosition = vBodyMovePos;
 
+			//_float3 vResult = vBodyMovePos;
+			m_vAddRootPosition.x *= m_vRootMoveRate.x;
+			m_vAddRootPosition.y *= m_vRootMoveRate.y;
+			m_vAddRootPosition.z *= m_vRootMoveRate.z;
 			//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-			m_pTransformCom->Add_RootBone_Position(vResult, fTimeDelta, m_pNavigationCom);
+			m_pTransformCom->Add_RootBone_Position(m_vAddRootPosition, fTimeDelta, m_pNavigationCom);
+		}
+		else
+		{
+			m_vAddRootPosition = {};
 		}
 		
+	}
+	else 
+	{
+		_uint i = 0;
 	}
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
@@ -297,6 +305,11 @@ void CCharacter::Set_AnimState(CModel::ANIM_STATE _eAnimState)
 	m_pBody->Set_AnimState(_eAnimState);
 }
 
+void CCharacter::Set_Animation_End(_bool _bIsAnimEnd)
+{
+	m_pBody->Set_Animation_End(_bIsAnimEnd);
+}
+
 _bool CCharacter::Is_Animation_End()
 {
 	return m_pBody->Is_Animation_End();
@@ -310,6 +323,21 @@ _bool CCharacter::Is_UpperAnimation_End()
 _bool CCharacter::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pBody->Is_Inputable_Front(_iIndexFront);
+}
+
+_bool CCharacter::Is_Upper_Inputable_Front(_uint _iIndexFront)
+{
+	return m_pBody->Is_Upper_Inputable_Front(_iIndexFront);
+}
+
+_float CCharacter::Calc_Cooltime_Percent()
+{
+	return m_pBody->Calc_Cooltime_Percent();
+}
+
+_float CCharacter::Calc_Upper_Cooltime_Percent()
+{
+	return m_pBody->Calc_Upper_Cooltime_Percent();
 }
 
 _float CCharacter::Get_TrackPosition()
@@ -453,7 +481,7 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	}
 	
 
-	if (m_iHp <= 0)
+	if (m_fHp <= 0)
 	{
 		if (bIsMelee)
 		{
@@ -584,7 +612,6 @@ _float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
 	_float fRotationDirection = XMVectorGetY(vJudge) < 0 ? -1.0f : 1.0f;
 
 	return fAngle * fRotationDirection;
-
 }
 
 _bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)
@@ -732,10 +759,11 @@ void CCharacter::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE 
 	m_pBody->Set_Animation_Upper(_iAnimationIndex, _eAnimState, iTargetKeyFrameIndex);
 }
 
-void CCharacter::Reset_UpperAngle()
-{
-	m_pBody->Reset_UpperAngle();
-}
+//void CCharacter::Reset_UpperAngle()
+//{
+//	m_pBody->Reset_UpperAngle();
+//	
+//}
 
 void CCharacter::Set_StiffnessRate(_float fStiffnessRate)
 {
@@ -791,11 +819,19 @@ void CCharacter::Set_UseMouseMove(_bool _bIsUseMouseMove)
 	m_pBody->Set_UseMouseMove(_bIsUseMouseMove);
 }
 
+void CCharacter::Check_Frustum()
+{
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+}
 
+
+#ifdef _DEBUG
 _bool CCharacter::Picking(_Out_ _float3* vPickedPos)
 {
 	return m_pBody->Picking(vPickedPos);
 }
+#endif 
+
 
 void CCharacter::Free()
 {

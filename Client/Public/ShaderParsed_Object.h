@@ -16,8 +16,12 @@ BEGIN(Client)
 class CShaderParsed_Object final : public CGameObject
 {
 public:
+	enum class RENDER_TYPE {NORMAL, MESH_CHECK, RENDER_TEST, RENDER_END };
+
 	typedef struct tagDummyDesc
 	{
+		CModel::TYPE eType = CModel::TYPE::TYPE_END;
+
 		string	strModelProtoTag = {};
 		string	strShaderProtoTag = {};
 
@@ -50,20 +54,26 @@ private:
 	HRESULT			Bind_ShaderResources();
 
 public:
-	/* Tool 에서 조정할 값들 */
+	void Set_RenderType(RENDER_TYPE eRenderType) { m_eRenderType = eRenderType; }
+	void Set_RenderPass(_int iRenderPass) { m_iRenderPass = iRenderPass; }
+	void Set_DiscardMeshNumber(_int iMeshNumber) { m_iDiscardMeshNumber = iMeshNumber; }
 
+private:
+	/* Tool 에서 조정할 값들 */
+	RENDER_TYPE		m_eRenderType = RENDER_TYPE::NORMAL;
+	_int			m_iRenderPass = {};
+	_int			m_iDiscardMeshNumber;
 
 
 private:
-	_int			m_iRenderPass = {};
-
-	_int			m_iDiscardMeshNumber;
 	_int			m_iTotalMeshNumber;
 
 	_float4			m_vCamPos = {};
 	_float			m_fRimPower = {};
 	_float4			m_vRimColor = { 1.0f, 1.f, 1.f, 0.3f };
 	_float3			m_vBloomPower = _float3(0.1f, 0.1f, 0.1f);
+
+	CModel::TYPE	m_eType = CModel::TYPE::TYPE_END;
 
 public:
 	/* Tool에서 셋팅하기위한 모든 Get, Set 함수 모음 */

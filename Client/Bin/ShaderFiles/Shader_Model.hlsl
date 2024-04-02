@@ -11,7 +11,8 @@ float           g_fCamFar;
 float           g_fLightFar;
 float           g_fTimeDelta;
 float4          g_vDiffuseColor = { 1.f, 1.f, 1.f, 1.f };
-
+bool            g_bORM_Available;
+bool            g_bEmissive_Available;
 
 /* =========== Texture =========== */
 Texture2D		g_DiffuseTexture;
@@ -162,6 +163,12 @@ struct PS_OUT
     float4      vEmissive       : SV_Target5;
 };
 
+struct PS_ICEGROUP
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal  : SV_TARGET1;
+};
+
 struct PS_OUT_SHADOW
 {
     vector vLightDepth : SV_TARGET0;
@@ -257,8 +264,14 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     //vector vO = g_AmbientOcclusionTexture.Sample(LinearSampler, In.vTexcoord); //AO 는 HBAO+ 가 할거라 필요없음. 
     //vector vR = g_RoughnessTexture.Sample(LinearSampler, In.vTexcoord);
@@ -308,8 +321,14 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     return Out;
 }
 
@@ -331,8 +350,14 @@ PS_OUT PS_MAIN_OUTLINE(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     
     return Out;
@@ -367,8 +392,14 @@ PS_OUT PS_BloodPool(PS_IN In)
     
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -390,8 +421,14 @@ PS_OUT PS_MAIN_NORMAL(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -417,8 +454,14 @@ PS_OUT PS_MAIN_NORMALCOLOR(PS_IN In)
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     /* ---------------- New ---------------- */
     //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     //Out.vDiffuse += vRimColor;
@@ -476,8 +519,14 @@ PS_OUT PS_MAIN_ALPHACOLOR(PS_IN In)
     //Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     /* ---------------- New ---------------- */
     //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     //Out.vDiffuse += vRimColor;
@@ -524,8 +573,14 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
     Out.vNormal = (vector(vNormal * 0.5f + 0.5f, 0.f)) * 0.2;
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
@@ -546,13 +601,23 @@ PS_OUT PS_MAIN_CLIP(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     return Out;
 }
 
-/* ------------------- Technique -------------------*/ 
+/*=============================================================
+ 
+                          Technique
+                                
+==============================================================*/
 
 technique11 DefaultTechnique
 {	
@@ -679,6 +744,7 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHACOLOR();
     }
+    
     pass Icicle // 10
     {
         SetRasterizerState(RS_Cull_None);
@@ -690,7 +756,7 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ICICLE();
     }
-    
+
     pass FoliageClip // 11
     {
         SetRasterizerState(RS_Cull_None);
@@ -703,5 +769,4 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_CLIP();
     }
 
-    
 }

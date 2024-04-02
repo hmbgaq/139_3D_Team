@@ -30,6 +30,7 @@ CState<CTank>* CTank_Charge_Hit_L::Update(CTank* pActor, _float fTimeDelta)
 		}
 	}
 
+
 	if (pActor->Is_Animation_End())
 	{
 		return Idle(pActor, fTimeDelta, g_iAnimIndex);

@@ -2176,12 +2176,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\2. Vessel_C">
       <UniqueIdentifier>{e72a5052-eaeb-40b1-bd8f-832d14139dc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Proteus">
-      <UniqueIdentifier>{0cd381d9-63f0-4246-86cf-fac36ffd3924}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\4. Waster">
-      <UniqueIdentifier>{a468a97f-999c-452d-9f16-8c922afadcfc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\1. Vessel_B\Body">
       <UniqueIdentifier>{929df66a-7a17-496d-8fa1-9552f8acfece}</UniqueIdentifier>
     </Filter>
@@ -3579,6 +3573,261 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody">
       <UniqueIdentifier>{4c03b81c-d85e-4d2a-9a83-5854ee665961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\1. Parts">
+      <UniqueIdentifier>{f7dc8737-b5b3-45ac-9bf1-1a3d9f086c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge">
+      <UniqueIdentifier>{6c5de3e6-f67d-4181-8e2b-f739b89340e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\1. Start">
+      <UniqueIdentifier>{89ef28b5-f4c4-42d7-b573-8e45fe5d329d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack">
+      <UniqueIdentifier>{6c5d24df-1ce3-4e13-b2fa-0da2920798aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect">
+      <UniqueIdentifier>{54375d57-5543-47e2-826c-f6fded4774a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect\00. MoveEffect">
+      <UniqueIdentifier>{ae8bc895-8152-47b0-bce5-1815257b4484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Whip">
+      <UniqueIdentifier>{80654d8a-bcc0-48ef-8f52-a31ef40a1cde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster">
+      <UniqueIdentifier>{a468a97f-999c-452d-9f16-8c922afadcfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body">
+      <UniqueIdentifier>{28a42e21-1b79-46e4-8c29-164207bcbd60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon">
+      <UniqueIdentifier>{2c751499-b200-4b82-b1e7-112ee4e429de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint">
+      <UniqueIdentifier>{c6191a3e-e66d-48c9-b99c-6b925703ed51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt">
+      <UniqueIdentifier>{c4337cc6-d727-4928-8527-cd3860e02f3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar">
+      <UniqueIdentifier>{881107ca-af35-42db-b8e9-a1954b73ee5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\2. Parts">
+      <UniqueIdentifier>{332967d4-99df-4335-adc2-be6da86d667a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State">
+      <UniqueIdentifier>{80ecfe6a-959f-4d29-8d63-c309bfb67bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Weapon">
+      <UniqueIdentifier>{fbf11929-7ac1-47e4-8b5e-a88ca013333b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Body">
+      <UniqueIdentifier>{1e64ac10-8eff-4931-ac17-67d4eb27e9c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\1. Class">
+      <UniqueIdentifier>{0a0d87a8-88b7-40ba-a667-2b9659fa75ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin">
+      <UniqueIdentifier>{8fe1cbf2-1a4b-4330-be45-442c71fcff95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC">
+      <UniqueIdentifier>{9a434afe-ef35-4890-8215-5de66fe554c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit">
+      <UniqueIdentifier>{4afcc21a-b3f5-466d-b267-31a870d5365f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\1. Idle">
+      <UniqueIdentifier>{2fd02401-2e98-49a7-bb98-53a838ac7e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk">
+      <UniqueIdentifier>{0536401c-524a-42d6-b3de-c0619ab84d8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run">
+      <UniqueIdentifier>{6a15084b-ccb3-457c-bbd4-172eb1851e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover">
+      <UniqueIdentifier>{024eebd5-d85b-42c6-aec5-ead72d90dce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch">
+      <UniqueIdentifier>{889d04fb-dc1c-4fc1-8794-557801b8edf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin\1. Normal">
+      <UniqueIdentifier>{c12873ec-ddff-41a4-8c89-d2f42180be13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\0. Parent">
+      <UniqueIdentifier>{c105d148-52c4-4bba-963c-fd74ba5b6cff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\0. Parent">
+      <UniqueIdentifier>{2908eac9-65d3-43ea-8959-2c0e537ec91a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\0. Parent">
+      <UniqueIdentifier>{06ed73a8-d938-445e-802b-3626a81ae6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\0. Parent">
+      <UniqueIdentifier>{ab20f7b3-1278-47e0-be97-b61f6a00b270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\0. Parent">
+      <UniqueIdentifier>{bbc32d5f-e08f-4a69-868e-4558274a7fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal">
+      <UniqueIdentifier>{9523a4f2-ce10-468f-8ca1-0eb98d4cd768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back">
+      <UniqueIdentifier>{f6c5e574-995e-4eff-8801-9f54f5a57201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front">
+      <UniqueIdentifier>{e7e999f8-8b64-4d20-be31-5a06a34a6060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim">
+      <UniqueIdentifier>{9ed1bc79-d8ce-4bb8-bbbe-3e5e71937632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back\Left">
+      <UniqueIdentifier>{52b5c6ab-c67b-4344-86ce-7969f183fd3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back\Right">
+      <UniqueIdentifier>{cf889426-20ea-42ef-b09a-619d0ead5a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front\Left">
+      <UniqueIdentifier>{ead55ee4-0b5e-491f-8204-38e11594cf46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front\Right">
+      <UniqueIdentifier>{d7415fdc-f594-4083-8381-d524c5b57e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back">
+      <UniqueIdentifier>{82b42f5c-2267-4dea-a23a-5df4d4b09779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front">
+      <UniqueIdentifier>{9c8aee27-a438-4db8-af7e-7b82b119c63c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back\Left">
+      <UniqueIdentifier>{a197c03a-1d61-47fc-abce-c7c6c66d4876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back\Right">
+      <UniqueIdentifier>{19513f12-33fe-443e-824a-e9cd6e7da30a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front\Left">
+      <UniqueIdentifier>{4bc1437a-8292-46c2-90a7-69c5ec16a604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front\Right">
+      <UniqueIdentifier>{bf2db195-655f-407b-9106-23761c9f5d6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\0. Parent">
+      <UniqueIdentifier>{443c386e-e562-4d65-9cca-b76a87b76bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front">
+      <UniqueIdentifier>{5712ee21-622a-433d-be2d-82bd2b00a821}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front\Left">
+      <UniqueIdentifier>{b0c80af2-bc31-4147-92f6-1b004cb4f0c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front\Right">
+      <UniqueIdentifier>{53aa44ed-01b1-4151-ad3b-c968f4376a73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back">
+      <UniqueIdentifier>{6324e9d6-b27f-4c45-89dd-c2f50ae42027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back\Left">
+      <UniqueIdentifier>{e4d693a2-eb37-451b-b592-dcd7c77a37e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back\Right">
+      <UniqueIdentifier>{10bebbef-3894-481b-803a-a4fb857da070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High">
+      <UniqueIdentifier>{8728bbfb-bddd-4192-8960-f9709d4a1c88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low">
+      <UniqueIdentifier>{ecb66eb6-19f5-43e2-92a1-b0443f47faca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right">
+      <UniqueIdentifier>{75fdd984-649e-403d-a1ce-a1f3abaf0457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\1. Idle">
+      <UniqueIdentifier>{3ccba204-a347-4d00-bbad-dcbd5b8adae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\2. Reload">
+      <UniqueIdentifier>{ae62e5ac-963c-4eee-b4fb-25c929a99771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over">
+      <UniqueIdentifier>{31b7e66a-995f-4763-b971-ac3054e1dc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left">
+      <UniqueIdentifier>{7590fc80-c81a-4543-a87d-7299554ba574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\1. Start">
+      <UniqueIdentifier>{0c880322-e117-406e-b851-5b5f1aac5b21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\2. AimPose">
+      <UniqueIdentifier>{d562fb30-4b8c-4c23-8e23-f8382cd6bde3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\3. Stop">
+      <UniqueIdentifier>{3212e405-ba30-4fb5-9ad7-690939f81ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\1. Start">
+      <UniqueIdentifier>{e88fbc34-3cc4-4ca8-bf8f-fc3d70edc0f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\2. AimPose">
+      <UniqueIdentifier>{a2932989-7646-4f3f-98be-b9d04fd8f906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\3. Stop">
+      <UniqueIdentifier>{64dd7a65-ee8c-4526-81d1-dd1c42870a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\1. Start">
+      <UniqueIdentifier>{3f07ccab-082f-4fb0-9211-8cc1edaaebde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\2. AimPose">
+      <UniqueIdentifier>{13cbc2ff-2082-4e4d-a6c0-42af44712b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\3. Stop">
+      <UniqueIdentifier>{8724e0b7-ad5f-4621-a613-ee686ef88a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\1. Idle">
+      <UniqueIdentifier>{94fae297-93fa-4a4b-850d-8777a932b77e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\2. Start">
+      <UniqueIdentifier>{fedd3c36-8cdc-46fa-b128-5b92956163ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\3. Stop">
+      <UniqueIdentifier>{282a7b1f-8499-42bb-ae67-98bf868f412f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\0. Parent">
+      <UniqueIdentifier>{d906d593-46b5-4d0c-8771-f97337624984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right">
+      <UniqueIdentifier>{2ed617d1-7e15-47f4-b954-4c2f30de96c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\1. Start">
+      <UniqueIdentifier>{8eef0114-da52-43bf-a8d7-657fa270ef5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\2. AimPose">
+      <UniqueIdentifier>{a33999d2-c177-4fbf-8e2a-14f4e2b1f793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\3. Stop">
+      <UniqueIdentifier>{251533d7-e274-4dcf-9faa-f89a58133391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\1. Idle">
+      <UniqueIdentifier>{f037a47a-3e00-4178-bac6-f9d583ab8d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\2. Reload">
+      <UniqueIdentifier>{03958db9-9d53-4644-b5ef-9ef7f5ad914d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left">
+      <UniqueIdentifier>{56d10976-414b-455f-a90e-9b3830de32d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\3. Stop">
+      <UniqueIdentifier>{ec457e82-0f68-453b-9838-8888d81684db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\1. Start">
+      <UniqueIdentifier>{6ab0084a-db83-4abf-bb8e-a7881f5bec74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\2. AimPose">
+      <UniqueIdentifier>{f844c8a1-5895-4661-96ee-6238871e805e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Left">
+      <UniqueIdentifier>{2e1caaa2-1956-4150-8b43-2c4ee98d9708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right">
+      <UniqueIdentifier>{5b7742a7-b2f3-41fe-99f6-8053aa24929b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -6117,9 +6366,6 @@
     <ClInclude Include="..\Public\BanditHeavy_DeathLight_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Light\Front</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
-      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\Heavy\Back</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\BanditHeavy_HitHeavy_F_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Front</Filter>
     </ClInclude>
@@ -7106,6 +7352,219 @@
     </ClInclude>
     <ClInclude Include="..\Public\BanditHeavy_HitHeavy_B_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\5. Hit\2. Heavy\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Monster.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\1. Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Charge_Start.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Charge_Attack_Full.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MoveEffect.h">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Whip.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Whip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_Sprint_F_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Infected_Taunt_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\1. Class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Edgar.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Weapon_Edgar.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin\1. Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Idle.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\1. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Walk.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Run.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Cover.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Crouch.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Hit.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Walk_B.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Walk_F.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_WalkAim_B.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_WalkAim_F.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_F_01.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Cargo_01.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Cargo_02.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Cargo_Dynamite.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Cargo_DLG.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_cargo_OL.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Walk_BL.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Walk_BR.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Walk_FL.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Walk_FR.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_WalkAim_BL.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_WalkAim_BR.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_WalkAim_FL.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_WalkAim_FR.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Run_B.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Run_F.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Run_BL.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Run_BR.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Run_FL.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Run_FR.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Walk_Aim.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Idle.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\1. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Reload.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\2. Reload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Side_L_AimPose.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\2. AimPose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Side_L_Start.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Side_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Side_R_Start.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Side_R_AimPose.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\2. AimPose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Side_R_Stop.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Idle.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\1. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Reload.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\2. Reload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Over_Start.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Over_AimPose.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\2. AimPose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Over_Stop.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Side_L_Start.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Side_L_AimPose.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\2. AimPose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Side_L_Stop.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Side_R_Start.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Side_R_AimPose.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\2. AimPose</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_CoverLow_Side_R_Stop.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Crouch_Idle.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\1. Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Crouch_Start.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\2. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_Crouch_Stop.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\3. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Cover_High.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_FL_01.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Left</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_FR_01.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10078,6 +10537,219 @@
     <ClCompile Include="..\Private\Son_ColliderBody.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Parts\ColliderBody</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Body_Monster.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\1. Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_Charge_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_Charge_Attack_Full.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\4. Attack\4. Charge\2. Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MoveEffect.cpp">
+      <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Whip.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Whip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_Sprint_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\3. Run\Sprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Infected_Taunt_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\1. Idle\Taunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\Weapon_Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\1. Class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Edgar.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon_Edgar.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\2. Parts\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\0. Origin\1. Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\1. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Walk.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Run.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Cover.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Crouch.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Hit.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Walk_B.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Walk_BL.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Walk_BR.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\1. Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Walk_F.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Walk_FL.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Walk_FR.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\1. Normal\2. Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_WalkAim_B.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_WalkAim_BL.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_WalkAim_BR.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\1. Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_WalkAim_F.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_WalkAim_FL.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_WalkAim_FR.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\2. Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Run_B.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Run_F.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Run_BL.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Run_BR.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\1. Back\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Run_FL.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Run_FR.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\3. Run\2. Front\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Walk_Aim.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\2. Walk\2. Aim\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\1. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Reload.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\2. Reload</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Side_L_AimPose.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\2. AimPose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Side_L_Start.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Side_L_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\3. Left\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Side_R_Start.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Side_R_AimPose.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\2. AimPose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Side_R_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\4. Right\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\1. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Reload.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\2. Reload</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Over_Start.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Over_AimPose.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\2. AimPose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Over_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\3. Over\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Side_L_Start.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Side_L_AimPose.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\2. AimPose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Side_L_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\4. Left\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Side_R_Start.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Side_R_AimPose.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\2. AimPose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_CoverLow_Side_R_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\2. Low\5. Right\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Crouch_Idle.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\1. Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Crouch_Start.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\2. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_Crouch_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\5. Crouch\3. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_F_01.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Cargo_01.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Cargo_02.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Cargo_DLG.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Cargo_Dynamite.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_cargo_OL.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. ETC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Cover_High.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\4. Cover\1. High\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_FL_01.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Left</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_FR_01.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -10092,9 +10764,6 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
-      <Filter>97.ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_AnimModel.hlsl">
@@ -10122,6 +10791,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Monster.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Model.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -91,13 +91,6 @@ HRESULT CWeapon_Player::Ready_Components()
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	///* For.Com_Model */
-	//if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_ForkLift"),
-	//	TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-	//	return E_FAIL;
-
-
-
 
 	return S_OK;
 }

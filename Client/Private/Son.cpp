@@ -6,17 +6,7 @@
 // #include "Son_Idle.h"
 #include "Son_Spawn.h"
 #include "Son_Hit.h"
-// #include "Son_HitLeft.h"
-// #include "Son_HitRight.h"
-// #include "Son_CutScene.h"
-// #include "Son_TurnL90.h"
-// #include "Son_TurnL180.h"
-// #include "Son_TurnR90.h"
-// #include "Son_TurnR180.h"
-// #include "Son_Stun_Start.h"
-// #include "Son_CutScene.h"
-// #include "Son_BloodRange_Stun_Start.h"
-// #include "Player_Finisher_Son_VS.h"
+#include "Son_Dead.h"
 
 #include "UI_Manager.h"
 
@@ -48,13 +38,18 @@ HRESULT CSon::Initialize_Prototype()
 
 HRESULT CSon::Initialize(void* pArg)
 {
-	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
+	if (pArg == nullptr)
+	{
+		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 10.f;
-	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-
-	if (FAILED(__super::Initialize(&GameObjectDesc)))
-		return E_FAIL;
+		GameObjectDesc.fSpeedPerSec = 10.f;
+		GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+		FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+	}
+	else
+	{
+		FAILED_CHECK(__super::Initialize(pArg));
+	}
 
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
@@ -62,14 +57,14 @@ HRESULT CSon::Initialize(void* pArg)
 		m_pActor->Set_State(new CSon_Spawn);
 	}
 	//HP
-	m_iMaxHp = 150;
-	m_iHp = m_iMaxHp;
+	m_fMaxHp = 150;
+	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;
 	//m_fCurHP = m_fMaxHP;
 	m_pMother = CData_Manager::GetInstance()->Get_Mother();
 	// Ready BossHUDBar
-	//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_BossHUD_Bar(LEVEL_STATIC, this));
+	//FAILED_CHECK(m_pUIManager->Ready_BossHUD_Bar(LEVEL_STATIC, this));
 	
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	CData_Manager::GetInstance()->Set_Son(this);
@@ -85,51 +80,56 @@ void CSon::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	Search_Target(200.f);
 
-	if (m_pActor)
+	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
 	{
-		m_pActor->Update_State(fTimeDelta);
+		Search_Target(200.f);
+
+		if (m_pActor)
+		{
+			m_pActor->Update_State(fTimeDelta);
+		}
+		m_fTimeDelta += fTimeDelta;
+
+		if (m_fTimeDelta >= 1.f)
+		{
+			cout << "SonHP:" << m_fHp << endl;
+			m_fTimeDelta = 0.f;
+		}
+		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
+
+		//cout << "Son : " << fAngle << endl;
+	// 	if (m_bLookAt == true)
+	// 	{
+	// 	
+	// 		if (0 <= fAngle && fAngle <= 180)
+	// 			Look_At_Target_Lerp(fTimeDelta);
+	// 		else if (-180 <= fAngle && fAngle < 0)
+	// 			Look_At_Target_Lerp(fTimeDelta);
+	// 	
+	// 		/*m_bLookAt = false;*/
+	// 	
+	// 	}
+		if (m_bLookAt == true)
+		{
+
+			if (0 <= fAngle && fAngle <= 180)
+				Look_At_Target();
+			else if (-180 <= fAngle && fAngle < 0)
+				Look_At_Target();
+
+			/*m_bLookAt = false;*/
+
+		}
+		if (m_fHp <= 0.f)
+		{
+			m_fHp = m_fMaxHp;
+			++m_pMother->m_iSonDead;
+			//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
+			m_pActor->Set_State(new CSon_Dead);
+		}
 	}
-	m_fTimeDelta += fTimeDelta;
-
-	if (m_fTimeDelta >= 1.f)
-	{
-		cout << "SonHP:" << m_iHp << endl;
-		m_fTimeDelta = 0.f;
-	}
-	_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
-
-	//cout << "Son : " << fAngle << endl;
-// 	if (m_bLookAt == true)
-// 	{
-// 	
-// 		if (0 <= fAngle && fAngle <= 180)
-// 			Look_At_Target_Lerp(fTimeDelta);
-// 		else if (-180 <= fAngle && fAngle < 0)
-// 			Look_At_Target_Lerp(fTimeDelta);
-// 	
-// 		/*m_bLookAt = false;*/
-// 	
-// 	}
-	if (m_bLookAt == true)
-	{
-
-		if (0 <= fAngle && fAngle <= 180)
-			Look_At_Target();
-		else if (-180 <= fAngle && fAngle < 0)
-			Look_At_Target();
-
-		/*m_bLookAt = false;*/
-
-	}
-	if (m_iHp <= 0.f)
-	{
-		m_iHp = m_iMaxHp;
-		++m_pMother->m_iSonDead;
-		//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
-		this->Set_Enable(false);
-	}
+	
 
 }
 

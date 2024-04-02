@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CTank::Tank_State::Tank_Idle;
 
+private:
+	_float m_fDelay = { 0.f };
+
 };
 
 END

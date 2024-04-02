@@ -54,11 +54,29 @@ public:
 	_bool	Is_Animation_End();
 	_bool	Is_UpperAnimation_End();
 
+	void	Set_Animation_End(_bool _bIsAnimEnd);
+
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_bool	Is_Upper_Inputable_Front(_uint _iIndexFront);
+
+	_float	Calc_Cooltime_Percent();
+	_float	Calc_Upper_Cooltime_Percent();
+
 	_float	Get_TrackPosition();
 	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
 
-	_float3 Get_MovePos() { return m_vMovePos; }
+	_float3 Get_MovePos() {
+		if (true == m_bIsNotUseMovePos)
+		{
+			return _float3(0.f, 0.f, 0.f);
+		}
+
+		return m_vMovePos;
+	};
+	void Set_MovePos(_float3 _vMovePos)
+	{
+		m_vMovePos = _vMovePos;
+	};
 	void Set_TrackPosition(_int iNewTrackPosition);
 	void Set_StiffnessRate(_float fStiffnessRate) { m_pModelCom->Set_StiffnessRate(fStiffnessRate); }
 	_float Get_StiffnessRate() { return m_pModelCom->Get_StiffnessRate(); }
@@ -100,7 +118,7 @@ public:	//!For Animation Split
 	void Activate_ShootingReaction(_float fHeight = 20.f);
 	void Update_ShootingReaction(_float fTimeDelta);
 
-	void Reset_UpperAngle();
+	void Reset_UpperAngle(_float fPitch = 0.f);
 	void Set_UseMouseMove(_bool _bIsUseMouseMove) { m_bIsUseMouseMove = _bIsUseMouseMove; };
 
 public:
@@ -130,12 +148,13 @@ protected:
 protected:
 	_bool	m_bIsUseMouseMove = { false };
 
+protected:
+	_bool	m_bIsNotUseMovePos = { false };
+
 
 //protected:
 //	_float x = { 1.f };
 //	_float y = { 4.8f };
-
-
 
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };

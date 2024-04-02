@@ -75,7 +75,6 @@ void CBody::Late_Tick(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
 
-
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
@@ -161,9 +160,26 @@ _bool CBody::Is_UpperAnimation_End()
 	return m_pModelCom->Is_UpperAnimEnd();
 }
 
+void CBody::Set_Animation_End(_bool _bIsAnimEnd)
+{
+	m_pModelCom->Set_AnimEnd(_bIsAnimEnd);
+}
+
 _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
+}
+_bool CBody::Is_Upper_Inputable_Front(_uint _iIndexFront)
+{
+	return m_pModelCom->Is_Upper_Inputable_Front(_iIndexFront);
+}
+_float CBody::Calc_Cooltime_Percent()
+{
+	return m_pModelCom->Calc_Cooltime_Percent();
+}
+_float CBody::Calc_Upper_Cooltime_Percent()
+{
+	return m_pModelCom->Calc_Upper_Cooltime_Percent();
 }
 _float CBody::Get_TrackPosition()
 {
@@ -318,13 +334,13 @@ void CBody::Update_ShootingReaction(_float fTimeDelta)
 	m_fShootingReaction = max((1 - fTimeDelta * max(m_fShootingReaction / 2, 2)) * m_fShootingReaction, 0);
 }
 
-void CBody::Reset_UpperAngle()
+void CBody::Reset_UpperAngle(_float fPitch)
 {
 	m_fRotateUpperX = { 0.f };
-	m_fRotateUpperY = { 2.6f };
+	m_fRotateUpperY = { 2.6f + fPitch };
 
-	m_fShootingReaction = { 0.f };
-	m_fShootingReactionTarget = { 0.f };
+	//m_fShootingReaction = { 0.f };
+	//m_fShootingReactionTarget = { 0.f };
 }
 
 _uint CBody::Get_CurrentKeyFrames(_uint iIndex)

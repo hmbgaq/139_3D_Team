@@ -1,4 +1,5 @@
 #include "Infected_State_Electrocute.h"
+#include "Weapon_Infected_D.h"
 #include "Body_Infected.h"
 
 void CInfected_State_Electrocute::Initialize(CInfected* pActor)
@@ -26,4 +27,14 @@ void CInfected_State_Electrocute::Release(CInfected* pActor)
 CState<CInfected>* CInfected_State_Electrocute::Update_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return Electrocute_State(pActor, fTimeDelta, _iAnimIndex);
+}
+
+CState<CInfected>* CInfected_State_Electrocute::Dead_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return __super::Release_Summoning(pActor, fTimeDelta, _iAnimIndex);
+}
+
+CState<CInfected>* CInfected_State_Electrocute::Bomb_State(CInfected* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return __super::Release_Summoning(pActor, fTimeDelta, _iAnimIndex);
 }

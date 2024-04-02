@@ -275,11 +275,11 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 	m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
 
 	_float vLocalPos;
-
-	
-
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
+	
+
+	_float fDiff = max(abs(fTargetAngle - fAngle) / 20.f, 1.f);
 
 	if (fMinRadian > abs(fTargetAngle - fAngle))
 	{
@@ -287,13 +287,14 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 		return true;
 	}
 
-	_int iDir = fTargetAngle > fAngle ? 1 : -1;
+	_int iDir =  abs(fTargetAngle - fAngle < 180) ? 1 : -1;
+	iDir *= (fTargetAngle > fAngle) ? 1 : -1;
 
 	_vector		vRight = Get_State(STATE_RIGHT);
 	_vector		vUp = Get_State(STATE_UP);
 	_vector		vLook = Get_State(STATE_LOOK);
 
-	_float fAdditionalRadian = m_fRotationPerSec * fTimeDelta * iDir;
+	_float fAdditionalRadian = m_fRotationPerSec * fTimeDelta * iDir * fDiff;
 	m_fRadian += fAdditionalRadian;
 
 	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
@@ -351,7 +352,7 @@ _bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta,
 
 	if (fDistance >= fSpare)
 	{
-		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * fTimeDelta;
+		vPosition += XMVector3Normalize(vDir) * m_fSpeedPerSec * (_float)fTimeDelta;
 
 		Set_State(STATE_POSITION, vPosition);
 		
@@ -504,6 +505,30 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDe
 
 	Move_On_Navigation(vResult, pNavigation);
 	//Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+}
+
+_bool CTransform::Calc_FrontCheck(const _float3& vTargetPos)
+{
+	_float3 vMyPos = Get_Pos();
+	_float3 vMyLook = Get_Look(); 
+
+	_float3 vTargetDir = vTargetPos - vMyPos;
+	
+	//! 내가 바라보는 방향 벡터와 타겟까지의 방향 벡터의 내적 계산
+	_float3 vTargetDirDot;
+	XMStoreFloat3(&vTargetDirDot, XMVector3Dot(XMLoadFloat3(&vMyLook), XMVector3Normalize(XMLoadFloat3(&vTargetDir))));
+	
+	//!타겟이 앞에 있는경우
+	//! 
+	if (vTargetDirDot.x >= 0)
+	{
+		return true;
+	}
+	//!타겟이 뒤에 있는 경우
+	else
+	{
+		return false;
+	}
 }
 
 

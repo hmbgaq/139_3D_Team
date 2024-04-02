@@ -103,70 +103,70 @@ void CUI_SelectList::UI_Exit(_float fTimeDelta)
 
 void CUI_SelectList::Check_Picking(_float fTimeDelta)
 {
-	if (m_pUI_Manager->Get_Select() || m_pUI_Manager->Get_SelectPressing())
+	if (m_pUIManager->Get_Select() || m_pUIManager->Get_SelectPressing())
 	{
-		if (m_pUI_Manager->Get_strSelectUI() == "HBAO")
+		if (m_pUIManager->Get_strSelectUI() == "HBAO")
 		{
 			/* Position */
 			if (m_tUIInfo.strUIName == "SELECT_HBAO")
 			{
 				m_bHBAO_Active = !m_bHBAO_Active;
-				m_pTransformCom->Set_Position(m_pUI_Manager->Get_CurrentUI()->Get_Position());
+				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
 			}
 		}
-		else if (m_pUI_Manager->Get_strSelectUI() == "FOG")
+		else if (m_pUIManager->Get_strSelectUI() == "FOG")
 		{
 			/* Position */
 			if (m_tUIInfo.strUIName == "SELECT_FOG")
 			{
 				m_bFOG_Active = !m_bFOG_Active;
-				m_pTransformCom->Set_Position(m_pUI_Manager->Get_CurrentUI()->Get_Position());
+				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
 			}
 		}
-		else if (m_pUI_Manager->Get_strSelectUI() == "RADIAL_BLUR")
+		else if (m_pUIManager->Get_strSelectUI() == "RADIAL_BLUR")
 		{
 			/* Position */
 			if (m_tUIInfo.strUIName == "SELECT_RADIAL_BLUR")
 			{
 				m_bRadial_Blur_Active = !m_bRadial_Blur_Active;
-				m_pTransformCom->Set_Position(m_pUI_Manager->Get_CurrentUI()->Get_Position());
+				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
 			}
 		}
-		else if (m_pUI_Manager->Get_strSelectUI() == "DOF")
+		else if (m_pUIManager->Get_strSelectUI() == "DOF")
 		{
 			/* Position */
 			if (m_tUIInfo.strUIName == "SELECT_DOF")
 			{
 				m_bDof_Active = !m_bDof_Active;
-				m_pTransformCom->Set_Position(m_pUI_Manager->Get_CurrentUI()->Get_Position());
+				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
 			}
 		}
-		else if (m_pUI_Manager->Get_strSelectUI() == "HDR")
+		else if (m_pUIManager->Get_strSelectUI() == "HDR")
 		{
 			/* Position */
 			if (m_tUIInfo.strUIName == "SELECT_HDR")
 			{
 				m_bHDR_Active = !m_bHDR_Active;
-				m_pTransformCom->Set_Position(m_pUI_Manager->Get_CurrentUI()->Get_Position());
+				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
 			}
 		}
-		else if (m_pUI_Manager->Get_strSelectUI() == "SHADOW")
+		else if (m_pUIManager->Get_strSelectUI() == "SHADOW")
 		{
 			/* Position */
 			if (m_tUIInfo.strUIName == "SELECT_SHADOW")
 			{
 				m_bShadow_Active = !m_bShadow_Active;
-				m_pTransformCom->Set_Position(m_pUI_Manager->Get_CurrentUI()->Get_Position());
+				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
 			}
 		}
-		else if (m_pUI_Manager->Get_strSelectUI() == "PBR")
+		else if (m_pUIManager->Get_strSelectUI() == "PBR")
 		{
 			
 			/* Position */
 			if (m_tUIInfo.strUIName == "SELECT_PBR")
 			{
 				m_bPBR_Active = !m_bPBR_Active;
-				m_pTransformCom->Set_Position(m_pUI_Manager->Get_CurrentUI()->Get_Position());
+				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
 			}
 		}
 

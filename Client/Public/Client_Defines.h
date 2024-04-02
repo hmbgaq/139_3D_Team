@@ -12,6 +12,10 @@ namespace Client
 	//static const unsigned int	g_iWinSizeX = 1920;
 	//static const unsigned int	g_iWinSizeY = 1080;
 
+	// ! Close Window
+	_bool g_CloseWindow = false;
+	_bool g_UIMouseDownLB = false;
+
 	enum LEVEL { 
 		LEVEL_STATIC, 
 		LEVEL_LOGO, 
@@ -70,8 +74,11 @@ namespace Client
 	#define TANK_WEAPON_PUNCH_L				TEXT("Weapon_Punch_L")
 	#define TANK_WEAPON_PUNCH_R				TEXT("Weapon_Punch_R")
 
+	#define BANDIT_HEAVY_WEAPON				TEXT("Weapon_Axe")
 
+	#define NPC_WEAPON_EDGAR				TEXT("Weapon_Edgar")
 
+	
 
 
 
@@ -124,6 +131,18 @@ namespace Client
 		LAYER_END
 	};
 
+	enum class GAME_STATE 
+	{
+		GAMEPLAY,
+		UI,
+		MAINMENU,
+		OPTION,
+		SKILLWINDOW,
+		CUTSCENE,
+		DEAD,
+		TALK,
+		GAME_STATE_END
+	};
 
 /* Yoojeong_Add */
 #define EFFECT_MANAGER CEffect_Manager::GetInstance()

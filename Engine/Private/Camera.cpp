@@ -95,7 +95,6 @@ void CCamera::Update_Cascade(const float3& vDirectionalDir)
 	_float4x4 mShadowView;
 	mShadowView = XMMatrixLookAtLH(XMLoadFloat3(&vPos), XMLoadFloat3(&vLookAt), XMLoadFloat3(&vUp));
 
-
 	// Get the bounds for the shadow space
 }
 
@@ -138,7 +137,6 @@ void CCamera::ExtractFrustumBoundSphere(_float fNear, _float fFar, _float3& vBou
 	const _float3 vBoundSpan = camPos + (-camRight * fTanFOVX + camUp * fTanFOVY + camForward) * fFar - vBoundCenter;
 	//fBoundRadius = D3DXVec3Length(&vBoundSpan);
 }
-
 
 void CCamera::Free()
 {

@@ -31,7 +31,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 12.f;
+	GameObjectDesc.fSpeedPerSec = 20.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -120,7 +120,7 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
-	m_pEffect->Set_Dead(true);	// ¿Ã∆Â∆Æ ¡◊¿Ã±‚
+	//m_pEffect->Set_Dead(true);	// ¿Ã∆Â∆Æ ¡◊¿Ã±‚ (EffectOut : ¥Á¿Â æ»æ≤¥¬ ¿Ã∆Â∆Æ∂Û∞Ì «ÿº≠ ¿œ¥‹ ª©µ◊Ω¿¥œ¥Ÿ. [º∫»Ò])
 }
 
 void CSon_Projectile::OnCollisionStay(CCollider* other)
@@ -148,8 +148,8 @@ HRESULT CSon_Projectile::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 5.f };
-	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.fRadius, 0.f);
+	BoundingDesc.fRadius = { 50.f };
+	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pCollider), &BoundingDesc)))

@@ -30,7 +30,7 @@ HRESULT CMother_Egg::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 12.f;
+	GameObjectDesc.fSpeedPerSec = 15.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -50,6 +50,7 @@ HRESULT CMother_Egg::Initialize(void* pArg)
 
 	m_fDamage = 10.f;
 
+	
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
 
@@ -113,6 +114,7 @@ void CMother_Egg::OnCollisionEnter(CCollider* other)
 
 void CMother_Egg::OnCollisionStay(CCollider* other)
 {
+
 }
 
 void CMother_Egg::OnCollisionExit(CCollider* other)
@@ -135,8 +137,8 @@ HRESULT CMother_Egg::Ready_Components()
 
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 1.f };
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
+	BoundingDesc.fRadius = { 100.f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),

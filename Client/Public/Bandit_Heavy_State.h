@@ -34,6 +34,7 @@ public:		//상태 그룹 별 업데이트
 public:		//개별 동작 상태 집합
 	CState<CBandit_Heavy>* Normal(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Heavy>* Idle(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CBandit_Heavy>* Run(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CBandit_Heavy>* Attack(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 

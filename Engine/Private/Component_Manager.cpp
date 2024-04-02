@@ -22,7 +22,7 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring & str
 
 	m_pPrototypes[iLevelIndex].emplace(strPrototypeTag, pPrototype);
 
-	if (iLevelIndex == 6)
+	if (iLevelIndex == 7) /* LEVEL_TOOL */
 	{
 		if (StartsWith(strPrototypeTag, L"Prototype_Component_Model_"))
 		{

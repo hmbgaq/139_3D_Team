@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Renderer.h"
+#include "Data_Manager.h"
+#include "UI_Manager.h"
 
 CUI_MainMenuList::CUI_MainMenuList(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -37,6 +39,30 @@ HRESULT CUI_MainMenuList::Initialize(void* pArg)
 
 	m_bButtonUI = true;
 
+	if (m_tUIInfo.strUIName == "GAMEPLAY")
+	{
+		m_bActive = true;
+		m_bPlayAnim = true;
+	}
+	else if (m_tUIInfo.strUIName == "INTRO")
+		m_bActive = false;
+	else if (m_tUIInfo.strUIName == "INTROBOSS")
+		m_bActive = false;
+	else if (m_tUIInfo.strUIName == "SNOWMOUNTAIN")
+		m_bActive = false;
+	else if (m_tUIInfo.strUIName == "SNOWMOUNTAINBOSS")
+		m_bActive = false;
+	else if (m_tUIInfo.strUIName == "TOOL")
+	{
+		m_bActive = true;
+		m_bPlayAnim = true;
+	}
+	else if (m_tUIInfo.strUIName == "EXIT")
+	{
+		m_bActive = true;
+		m_bPlayAnim = true;
+	}
+
 	return S_OK;
 }
 
@@ -47,7 +73,12 @@ void CUI_MainMenuList::Priority_Tick(_float fTimeDelta)
 
 void CUI_MainMenuList::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 
+	if (m_bActive == true)
+	{
+		Check_Picking(fTimeDelta);
+	}
 }
 
 void CUI_MainMenuList::Late_Tick(_float fTimeDelta)
@@ -55,11 +86,7 @@ void CUI_MainMenuList::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
-
-	Check_Picking(fTimeDelta);
-
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
@@ -104,43 +131,42 @@ void CUI_MainMenuList::UI_Exit(_float fTimeDelta)
 
 void CUI_MainMenuList::Check_Picking(_float fTimeDelta)
 {
-
-	if (m_bSelect || m_bSelectPressing)
+	if (m_bPick == true)
 	{
-		if (m_tUIInfo.strUIName == "GAMEPLAY")
+		if (m_bSelect == true || m_bSelectPressing == true)
 		{
-			m_bHABO_Active = !m_bHABO_Active;
-			m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_bHABO_Active);
-		}
-		else if (m_tUIInfo.strUIName == "INTRO")
-		{
-			m_bFOG_Active = !m_bFOG_Active;
-			m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_bFOG_Active);
-		}
-		else if (m_tUIInfo.strUIName == "INTROBOSS")
-		{
-			m_bRadial_Blur_Active = !m_bRadial_Blur_Active;
-			m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_bRadial_Blur_Active);
-		}
-		else if (m_tUIInfo.strUIName == "SNOWMOUNTAIN")
-		{
-			m_bDof_Active = !m_bDof_Active;
-			m_pGameInstance->Get_Renderer()->Set_DOF_Active(m_bDof_Active);
-		}
-		else if (m_tUIInfo.strUIName == "SNOWMOUNTAINBOSS")
-		{
-			m_bHDR_Active = !m_bHDR_Active;
-			m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bHDR_Active);
-		}
-		else if (m_tUIInfo.strUIName == "TOOL")
-		{
-			m_bShadow_Active = !m_bShadow_Active;
-			m_pGameInstance->Get_Renderer()->Set_Shadow_Active(m_bShadow_Active);
-		}
-		else if (m_tUIInfo.strUIName == "EXIT")
-		{
-			m_bHSV_Active = !m_bHSV_Active;
-			m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bHSV_Active);
+			if (m_tUIInfo.strUIName == "GAMEPLAY")
+			{
+				m_pUIManager->Active_LevelList();
+				m_pUIManager->NonActive_MainList();
+				m_bPick = false;
+				m_bSelect = false;
+				m_bSelectPressing = false;
+			}
+			else if (m_tUIInfo.strUIName == "INTRO")
+			{
+				m_pData_Manager->Set_SelectLevel(LEVEL_GAMEPLAY);
+			}
+			else if (m_tUIInfo.strUIName == "INTROBOSS")
+			{
+				m_pData_Manager->Set_SelectLevel(LEVEL_INTRO_BOSS);
+			}
+			else if (m_tUIInfo.strUIName == "SNOWMOUNTAIN")
+			{
+				m_pData_Manager->Set_SelectLevel(LEVEL_SNOWMOUNTAIN);
+			}
+			else if (m_tUIInfo.strUIName == "SNOWMOUNTAINBOSS")
+			{
+				m_pData_Manager->Set_SelectLevel(LEVEL_SNOWMOUNTAINBOSS);
+			}
+			else if (m_tUIInfo.strUIName == "TOOL")
+			{
+				m_pData_Manager->Set_SelectLevel(LEVEL_TOOL);
+			}
+			else if (m_tUIInfo.strUIName == "EXIT")
+			{
+				//g_CloseWindow = true; // Close Window
+			}
 		}
 	}
 }
@@ -148,9 +174,10 @@ void CUI_MainMenuList::Check_Picking(_float fTimeDelta)
 HRESULT CUI_MainMenuList::Ready_Components()
 {
 	_uint iLevel = 0;
-	if (m_bTool == true)
+
+	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
 		iLevel = (_uint)LEVEL_TOOL;
-	else
+	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_LOGO)
 		iLevel = (_uint)LEVEL_LOGO;
 
 	//! For.Com_Shader

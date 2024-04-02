@@ -76,6 +76,9 @@ public:
 public:
 	_bool					Is_AnimEnd() { return m_bIsAnimEnd; };
 	_bool					Is_UpperAnimEnd() { return m_bIsUpperAnimEnd; };
+	_bool					Is_Upper_Inputable_Front(_uint _iIndexFront);
+
+	void					Set_AnimEnd(_bool _bIsAnimEnd) { m_bIsAnimEnd = _bIsAnimEnd; };
 
 public:
 	virtual HRESULT			Initialize_Prototype(TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);
@@ -93,7 +96,7 @@ public:
 
 public:
 	HRESULT					Bind_BoneMatrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, _float4x4* BoneMatrices = nullptr);
-	HRESULT					Bind_MaterialResource(class CShader* pShader, _uint iMeshIndex);
+	HRESULT					Bind_MaterialResource(class CShader* pShader, _uint iMeshIndex, _bool* bORM, _bool* bEmissive);
 	HRESULT					Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eTextureType);
 	HRESULT					Bind_ShaderCascade(CShader* pShader);
 
@@ -117,6 +120,12 @@ public:
 	_float					Get_TrackPosition();
 	void					Set_TrackPosition(_int iNewTrackPosition);
 	void					Write_Names(const string& strModelFilePath);
+
+	_uint					Get_EndKeyFrameIndex(_uint iIndex);
+	_float					Calc_Cooltime_Percent(_uint iAnimIndex);
+	_float					Calc_Cooltime_Percent();
+	_float					Calc_Upper_Cooltime_Percent();
+
 
 	void					Set_Speed(_int iSpeed);
 

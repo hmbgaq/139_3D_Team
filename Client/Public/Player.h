@@ -1,4 +1,4 @@
-	#pragma once
+#pragma once
 
 #include "Character_Client.h"
 #include "Actor.h"
@@ -62,7 +62,7 @@ public:
 	void Activate_ShootingReaction(_float fHeight = 20.f);
 
 public://!For. Interact
-	void SetState_InteractJumpDown100(); 
+	void SetState_InteractJumpDown100();
 	void SetState_InteractJumpDown200();
 	void SetState_InteractJumpDown300();
 	void SetState_InteractVault100();
@@ -70,7 +70,32 @@ public://!For. Interact
 	void SetState_InteractCartRideStart();
 	void SetState_InteractCartRideLoop();
 	void SetState_InteractCartRideWagonJump();
-	
+
+	void SetState_InteractionPush_Rock_Idle();
+	void SetState_InteractionPull_Rock_Idle();
+
+
+	void SetState_InteractClimb100();
+	void SetState_InteractClimb200();
+	void SetState_InteractClimb300();
+	void SetState_InteractClimb450();
+	void SetState_InteractSlide();
+	void SetState_InteractSmallLever();
+	void SetState_InteractPlankStart();
+
+	void SetState_InteractRopeDown();
+	void SetState_InteractClimbRope();
+
+	void SetState_InteractDoorOpen();
+	void SetState_InteractDoorPush();
+
+	void SetState_InteractLadderUpStart();
+
+	void SetState_InteractWhipSwing();
+	void SetState_InteractWhipPull();
+
+	void SetState_InteractRotationValve();
+
 
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
@@ -89,6 +114,8 @@ public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
 	void Set_Actor(CActor<CPlayer>* _pActor) { m_pActor = _pActor; }
 
+public:
+	virtual void Check_Frustum() override;
 
 public:
 	_float Get_ChargingTime() { return m_fChargingTime; };
@@ -101,6 +128,15 @@ public:
 
 public:
 	CGameObject* Slam();
+
+public:
+	_bool Is_Exist_Ladder_Count() { return m_iLadderCount > 0; }
+	void Remove_Ladder_Count() { m_iLadderCount = m_iLadderCount - 1 > 0 ? m_iLadderCount - 1 : 0; };
+	void Set_Ladder_Count(_uint _iLadderCount) { m_iLadderCount = _iLadderCount; }
+
+public:
+	_bool Is_Interection() { return m_bIsInterection; }
+	void Set_Interection(_bool _bIsInterection) { m_bIsInterection = _bIsInterection; }
 
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
@@ -122,6 +158,12 @@ private:
 private:
 	_bool m_bIsActivated_TeleportPunch = { false };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
+
+private:
+	_uint m_iLadderCount = { 0 };
+
+private:
+	_bool m_bIsInterection = { false };
 
 public:
 	_bool	m_bPlayerCheck = true;

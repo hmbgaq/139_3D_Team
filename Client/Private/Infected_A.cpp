@@ -40,8 +40,9 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	m_pTarget = m_pGameInstance->Get_Player();
 
+	
 	/* !ADD : UI_HUD */
-	CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
+	//CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
 
 	return S_OK;
 }
@@ -53,16 +54,11 @@ void CInfected_A::Priority_Tick(_float fTimeDelta)
 
 void CInfected_A::Tick(_float fTimeDelta)
 {
+	/* 상위 CInfected 에서 Actor 돌리는중 */
 	__super::Tick(fTimeDelta);
-
-	//if (m_pActor)
-	//{
-	//	m_pActor->Update_State(fTimeDelta);
-	//}
-
+	
 	/* !ADD : UI_HUD */
-	CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
-
+	//CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
 }	
 
 void CInfected_A::Late_Tick(_float fTimeDelta)
@@ -72,8 +68,6 @@ void CInfected_A::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected_A::Render()
 {
-	//FAILED_CHECK(__super::Render());
-
 	return S_OK;
 }
 
@@ -108,8 +102,8 @@ HRESULT CInfected_A::Ready_Option()
 	m_eInfo.fAttack_Distance = 3.5f;
 	m_eInfo.fWalk_Distance = 10.f;
 
-	m_iHp = 30;
-	m_iMaxHp = 30;
+	m_fHp = 30;
+	m_fMaxHp = 30;
 
 	m_pTarget = m_pGameInstance->Get_Player();
 	
@@ -207,6 +201,10 @@ CGameObject* CInfected_A::Pool()
 
 void CInfected_A::Free()
 {
+
+
+	
+
 	__super::Free();
 }
 

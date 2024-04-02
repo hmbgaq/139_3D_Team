@@ -74,6 +74,7 @@ public:		//개별 동작 상태 집합
 	CState<CPlayer>* Slam(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CPlayer>* Kick(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
+	CState<CPlayer>* Heal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex);
 
 
 	

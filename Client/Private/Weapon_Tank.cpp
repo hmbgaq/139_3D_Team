@@ -54,7 +54,7 @@ HRESULT CWeapon_Tank::Ready_Components()
 	
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_SHIELD);
-	BoundingDesc.fRadius = { 1.0f };
+	BoundingDesc.fRadius = { 1.2f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -65,20 +65,20 @@ HRESULT CWeapon_Tank::Ready_Components()
 	return S_OK;
 }
 
-void CWeapon_Tank::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
-{
-	m_pModelCom->Set_Animation(_iNextAnimation, _eAnimState, false, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
-}
-
-_bool CWeapon_Tank::Is_Animation_End()
-{
-	return m_pModelCom->Is_AnimEnd();
-}
-
-CModel::ANIM_STATE CWeapon_Tank::Get_AnimState()
-{
-	return m_pModelCom->Get_AnimState();
-}
+//void CWeapon_Tank::Set_Animation(_uint _iNextAnimation, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
+//{
+//	m_pModelCom->Set_Animation(_iNextAnimation, _eAnimState, false, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
+//}
+//
+//_bool CWeapon_Tank::Is_Animation_End()
+//{
+//	return m_pModelCom->Is_AnimEnd();
+//}
+//
+//CModel::ANIM_STATE CWeapon_Tank::Get_AnimState()
+//{
+//	return m_pModelCom->Get_AnimState();
+//}
 
 void CWeapon_Tank::Set_Enable(_bool _Enable)
 {

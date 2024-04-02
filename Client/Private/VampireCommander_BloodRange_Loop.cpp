@@ -136,7 +136,6 @@ void CVampireCommander_BloodRange_Loop::Release(CVampireCommander* pActor)
 	for (int i = 0; i < pActor->m_pWeakneesUIs.size();++i)
 	{
 		pActor->m_pWeakneesUIs[i]->Set_Dead(true);
-		//Safe_Release(pActor->m_pWeakneesUIs[i]);
 	}
 	pActor->m_pWeakneesUIs.clear();
 }

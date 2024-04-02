@@ -17,6 +17,10 @@ CState<CTank>* CTank_GroundSlam_AoE_Stomp_01::Update(CTank* pActor, _float fTime
 			pActor->Create_GroundWave();
 		}
 	}
+	else
+	{
+		pActor->Look_At_Target_Lerp(fTimeDelta);
+	}
 
 	if (pActor->Is_Animation_End())
 	{
