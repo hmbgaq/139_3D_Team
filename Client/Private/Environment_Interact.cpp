@@ -350,7 +350,9 @@ _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 
 void CEnvironment_Interact::Interact()
 {
-	if(m_bFindPlayer == false /* && m_pPlayer->Is_Interection() == true*/)
+	if(m_bFindPlayer == false)
+		return;
+	else if(m_pPlayer->Is_Interection() == true)
 		return;
 
 		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP)

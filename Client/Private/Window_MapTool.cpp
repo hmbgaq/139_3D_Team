@@ -4494,9 +4494,6 @@ void CWindow_MapTool::Interact_MoveColiderFunction()
 {
 	ImGui::SeparatorText(u8"무브 콜라이더 셋팅");
 	{
-		
-		
-
 		if (ImGui::InputFloat3(u8"무브 콜라이더 사이즈", m_fMoveColliderSizeArray))
 		{
 			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveRangeColliderSize(_float3(m_fMoveColliderSizeArray[0], m_fMoveColliderSizeArray[1], m_fMoveColliderSizeArray[2]));
@@ -4509,7 +4506,13 @@ void CWindow_MapTool::Interact_MoveColiderFunction()
 		
 		if (ImGui::Button(u8"선택한 오브젝트 기준 센터로 이동"))
 		{
-			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveRangeColliderCenter(m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_Position());
+			_float3 vPosition = m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_Position();
+			vPosition.y = vPosition.y + 1.f;
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveRangeColliderCenter(vPosition);
+
+			m_fMoveColliderCenterArray[0] = vPosition.x;
+			m_fMoveColliderCenterArray[1] = vPosition.y;
+			m_fMoveColliderCenterArray[2] = vPosition.z;
 		}
 		
 	}
