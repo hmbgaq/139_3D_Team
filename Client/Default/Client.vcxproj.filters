@@ -3829,6 +3829,33 @@
     <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right">
       <UniqueIdentifier>{5b7742a7-b2f3-41fe-99f6-8053aa24929b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine">
+      <UniqueIdentifier>{de52563c-6216-4db8-b4c6-11071555461d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\1. Start">
+      <UniqueIdentifier>{00a6ffb6-82cc-40a3-9d99-ea8ddde3877e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\2. Start_To_Loop">
+      <UniqueIdentifier>{aab6527d-cc75-4105-9992-b7fffe3be434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\3. Loop">
+      <UniqueIdentifier>{2de21456-8606-45ac-8790-fd1f4e6188e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\4. Stop">
+      <UniqueIdentifier>{c52fd6d3-5cb7-497c-ab88-9640f46913e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite">
+      <UniqueIdentifier>{b01a4ea3-248f-4ccd-aebe-59c1a8ca403e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile">
+      <UniqueIdentifier>{6817911f-1dd5-4086-bbeb-ced7c606cfa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Bullet">
+      <UniqueIdentifier>{1988629f-6f53-4512-8a6b-bdb017178a30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Explosion">
+      <UniqueIdentifier>{0977e705-a864-4b2b-b8a5-422e05332e30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -5391,18 +5418,6 @@
     <ClInclude Include="..\Public\Player_Workbench_WeaponUpgrade_01.h">
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_Loop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_Start.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_Start_to_Loop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_Stop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_BeamWalk_BJ_01.h">
       <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\2. Unused</Filter>
     </ClInclude>
@@ -5851,18 +5866,6 @@
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Tesla_LedgeStrafe_L_02.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Loop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Start.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Start_to_Loop.h">
-      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Stop.h">
       <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_CrowdThrough_L_Loop.h">
@@ -7565,6 +7568,39 @@
     </ClInclude>
     <ClInclude Include="..\Public\Edgar_Sniper_HitHeavy_FR_01.h">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Start_to_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_OF_01_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\99. ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Start.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\1. Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Start_to_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\2. Start_To_Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Loop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\3. Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_ZipLine_Stop.h">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\4. Stop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Dynamite.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Dynamite.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Explosion_Dynamite.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Explosion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10749,6 +10785,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Edgar_Sniper_HitHeavy_FR_01.cpp">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\6. Hit\Right</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_ZipLine_Start.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\1. Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_ZipLine_Start_to_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\2. Start_To_Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_ZipLine_Loop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\3. Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_ZipLine_Stop.cpp">
+      <Filter>02.GameObjects\00. Character\Player\State\11. Interaction\1. Use\18. ZipLine\4. Stop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Dynamite.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Dynamite.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion_Dynamite.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Dynamite\Projectile\Explosion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

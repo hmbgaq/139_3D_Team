@@ -334,6 +334,7 @@
     <ClInclude Include="..\Public\Body_Son.h" />
     <ClInclude Include="..\Public\Body_Tank.h" />
     <ClInclude Include="..\Public\Body_VampireCommander.h" />
+    <ClInclude Include="..\Public\Bullet_Dynamite.h" />
     <ClInclude Include="..\Public\Bullet_ELShotgun.h" />
     <ClInclude Include="..\Public\Bullet_Revolver.h" />
     <ClInclude Include="..\Public\Bullet_Winchester.h" />
@@ -409,6 +410,7 @@
     <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h" />
     <ClInclude Include="..\Public\Event_Trigger.h" />
+    <ClInclude Include="..\Public\Explosion_Dynamite.h" />
     <ClInclude Include="..\Public\Finisher_Tank.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
@@ -1026,6 +1028,7 @@
     <ClInclude Include="..\Public\Player_Walk_FL45.h" />
     <ClInclude Include="..\Public\Player_Walk_FR.h" />
     <ClInclude Include="..\Public\Player_Walk_FR45.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Dynamite.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h" />
     <ClInclude Include="..\Public\Player_Weapon_FlameBelcher.h" />
@@ -1508,6 +1511,7 @@
     <ClCompile Include="..\Private\Body_Son.cpp" />
     <ClCompile Include="..\Private\Body_Tank.cpp" />
     <ClCompile Include="..\Private\Body_VampireCommander.cpp" />
+    <ClCompile Include="..\Private\Bullet_Dynamite.cpp" />
     <ClCompile Include="..\Private\Bullet_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Bullet_Revolver.cpp" />
     <ClCompile Include="..\Private\Bullet_Winchester.cpp" />
@@ -1581,6 +1585,7 @@
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
+    <ClCompile Include="..\Private\Explosion_Dynamite.cpp" />
     <ClCompile Include="..\Private\Finisher_Tank.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Heavy_Vampiric_Zombie.cpp" />
@@ -2040,6 +2045,7 @@
     <ClCompile Include="..\Private\Player_Walk_FL45.cpp" />
     <ClCompile Include="..\Private\Player_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Player_Walk_FR45.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Dynamite.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_FlameBelcher.cpp" />
@@ -2065,6 +2071,10 @@
     <ClCompile Include="..\Private\Player_Winchester_LowerHolster.cpp" />
     <ClCompile Include="..\Private\Player_Winchester_MeleeDynamic.cpp" />
     <ClCompile Include="..\Private\Player_Winchester_WeaponUnholster.cpp" />
+    <ClCompile Include="..\Private\Player_ZipLine_Loop.cpp" />
+    <ClCompile Include="..\Private\Player_ZipLine_Start.cpp" />
+    <ClCompile Include="..\Private\Player_ZipLine_Start_to_Loop.cpp" />
+    <ClCompile Include="..\Private\Player_ZipLine_Stop.cpp" />
     <ClCompile Include="..\Private\Preset_PhysXColliderDesc.cpp" />
     <ClCompile Include="..\Private\Preset_PhysXControllerDesc.cpp" />
     <ClCompile Include="..\Private\PreviewAnimationModel.cpp" />

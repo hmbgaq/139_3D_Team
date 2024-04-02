@@ -615,6 +615,7 @@ HRESULT CPlayer::Ready_PartObjects()
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc,		PLAYER_WEAPON_WINCHESTER));
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_REVOLVER));
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELShotgun"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_SHOTGUN));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Dynamite"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_DYNAMITE));
 
 
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Kick"), "RightFoot", WeaponDesc,			PLAYER_WEAPON_KICK));

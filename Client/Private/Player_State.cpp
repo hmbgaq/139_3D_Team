@@ -335,7 +335,7 @@ CState<CPlayer>* CPlayer_State::FlameBelcher_State(CPlayer* pActor, _float fTime
 
 CState<CPlayer>* CPlayer_State::Grenade_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Up(DIM_RB))
+	if (m_pGameInstance->Key_Down(DIK_G))
 	{
 		if (CPlayer_Grenade_WeaponHolster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Grenade_WeaponHolster();
@@ -434,8 +434,8 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 		//pState = FlameBelcher(pActor, fTimeDelta, _iAnimIndex);
 		//if (pState)	return pState;
 
-		//pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
-		//if (pState)	return pState;
+		pState = Grenade(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
 
 		pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
@@ -879,7 +879,7 @@ CState<CPlayer>* CPlayer_State::FlameBelcher(CPlayer* pActor, _float fTimeDelta,
 
 CState<CPlayer>* CPlayer_State::Grenade(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	if (m_pGameInstance->Key_Down(DIK_G))
 	{
 		if (CPlayer_Grenade_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Grenade_WeaponUnholster();

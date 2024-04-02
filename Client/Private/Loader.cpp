@@ -41,10 +41,15 @@
 #include "Player_Weapon_Kick.h"
 #include "Player_Weapon_Zapper.h"
 #include "Player_Weapon_Whip.h"
+#include "Player_Weapon_Dynamite.h"
+
 
 #include "Bullet_Winchester.h"
 #include "Bullet_Revolver.h"
 #include "Bullet_ELShotgun.h"
+#include "Bullet_Dynamite.h"
+#include "Explosion_Dynamite.h"
+
 #include "Impact_Slam.h"
 #pragma endregion
 
@@ -906,6 +911,8 @@ HRESULT CLoader::Loading_Player(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Winchester"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Winchester/Winchester", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Whip"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Whip/Whip", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Dynamite"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Dynamite/Dynamite", PivotMatrix)));
+
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Edgar"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/NPC/Edgar/Edgar", PivotMatrix)));
 
@@ -957,12 +964,16 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Kick"), CPlayer_Weapon_Kick::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Kick"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Zapper"), CPlayer_Weapon_Zapper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Zapper"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Whip"), CPlayer_Weapon_Whip::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Whip"))));
-
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Dynamite"), CPlayer_Weapon_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Dynamite"))));
+	
 	
 	//! PlayerBullet
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Winchester"), CBullet_Winchester::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Winchester"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Revolver"), CBullet_Revolver::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Revolver"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_ELShotgun"), CBullet_ELShotgun::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_ELShotgun"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Dynamite"), CBullet_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Dynamite"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_Dynamite"), CExplosion_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_Dynamite"))));
+	
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Impact_Slam"), CImpact_Slam::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Impact_Slam"))));
 
