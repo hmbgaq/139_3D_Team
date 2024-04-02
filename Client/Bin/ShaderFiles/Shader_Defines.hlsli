@@ -209,7 +209,7 @@ BlendState BS_Blend_Max
 	SrcBlend = one;
 	DestBlend = one;
 	BlendOp = max; 
-	/* 렌더타겟 블렌딩 동작중에 색상 및 알파 블렌딩중에 각각 두개의 값중 큰값ㅇ르 사용하여 렌더링한다. */ 
+	/* 렌더타겟 블렌딩 동작중에 색상 및 알파 블렌딩중에 각각 두개의 값중 큰값을 사용하여 렌더링한다. */ 
 };
 
 BlendState AdditiveBlendState
