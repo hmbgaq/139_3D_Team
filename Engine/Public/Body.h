@@ -97,16 +97,13 @@ public:
 public:
 	CCharacter* Get_Target_Character(CCollider* other);
 
-
 public:
 	CModel* Get_Model() { return m_pModelCom; }
 	
-
 #ifdef _DEBUG
 public: //!For.Tool
 	virtual _bool Picking(_Out_ _float3* vPickedPos) override;
 #endif 
-
 
 public:	//!For Animation Split
 	void Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_END, _uint iTargetKeyFrameIndex = 0);
@@ -124,11 +121,9 @@ public:	//!For Animation Split
 public:
 	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
 
-
-
 protected:
-	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
 
 protected:
@@ -136,25 +131,19 @@ protected:
 	_float4x4	m_WorldMatrix = {};
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
 
-
 	_float		m_fRotateUpperX = { 0.0f };
 	_float		m_fRotateUpperY = { 2.6f };
 
 	_float		m_fShootingReaction = { 0.f };
 	_float		m_fShootingReactionTarget = { 0.f };
 
+	
+protected: /* For. Shader*/
 	_uint		m_iShaderPass = 0;
 
 protected:
 	_bool	m_bIsUseMouseMove = { false };
-
-protected:
 	_bool	m_bIsNotUseMovePos = { false };
-
-
-//protected:
-//	_float x = { 1.f };
-//	_float y = { 4.8f };
 
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };
@@ -162,7 +151,6 @@ protected:
 protected:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Bind_ShaderResources();
-
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

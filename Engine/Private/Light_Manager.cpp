@@ -219,7 +219,7 @@ _float4 CLight_Manager::Get_ShadowLightDir(_uint iLevelIndex)
 {
 	auto iter = m_ShadowLight_Dir.find(iLevelIndex);
 
-	if (iter == m_ShadowLight_Pos.end())
+	if (iter == m_ShadowLight_Dir.end())
 		return _float4();
 	else
 		return iter->second;

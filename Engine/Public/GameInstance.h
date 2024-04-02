@@ -102,7 +102,7 @@ public: /* For.PipeLine */
 	_float4		Get_CamDirection();
 	_float4		Get_CamSetting();
 	_float		Get_CamFar();
-	_float4x4	Get_Shadow_Proj();
+	_float4x4*	Get_Shadow_Proj();
 	void		Set_ShadowProj(_float4x4 * pMatrix);
 	void		Set_CascadeBoxes(BoundingOrientedBox * pBoxes);
 

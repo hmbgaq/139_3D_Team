@@ -61,13 +61,15 @@ private:
 
 	/* For. Cascade */
 public:
-	_float4x4	m_matShadowProj = {};
-	BoundingOrientedBox	m_tCascadeShadowBox;
+	BoundingOrientedBox*	Get_CascadeBoxes() { return m_tCascadeShadowBox; }
+	_float4x4*				Get_ShadowProj() { return m_matShadowProj; }
+	
+	void					Set_ShadowProj(_float4x4* pMatrix) { memcpy(&m_matShadowProj, &pMatrix, sizeof(float4x4)); }
+	void					Set_CascadeBoxes(BoundingOrientedBox* pBoxes) {memcpy(&m_tCascadeShadowBox, pBoxes, sizeof(BoundingOrientedBox));}
 
-	_float4x4	Get_Shadow_Proj() { return m_matShadowProj; }	
-	void		Set_ShadowProj(_float4x4* pMatrix) { memcpy(&m_matShadowProj, &pMatrix, sizeof(float4x4)); }
-	void		Set_CascadeBoxes(BoundingOrientedBox* pBoxes) {memcpy(&m_tCascadeShadowBox, pBoxes, sizeof(BoundingOrientedBox));}
-	BoundingOrientedBox* Get_CascadeBoxes() { return &m_tCascadeShadowBox; }
+private:
+	_float4x4				m_matShadowProj[3];
+	BoundingOrientedBox		m_tCascadeShadowBox[3];
 
 public:
 	static CPipeLine* Create();

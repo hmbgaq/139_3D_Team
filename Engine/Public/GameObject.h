@@ -41,7 +41,7 @@ public:
 
 public: /* For. Additional Render */
 	virtual HRESULT Render_Shadow() { return S_OK; }
-	virtual HRESULT Render_CSM() { return S_OK; }
+	virtual HRESULT Render_CSM(_uint i) { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
 	virtual HRESULT Render_Ice() { return S_OK; }
 
@@ -72,11 +72,12 @@ public: /* For. Model */
 	_float				Get_ModelWidth() { return m_fModelWidth; }
 	_float 				Get_ModelHeight() { return m_fModelHeight; }
 
-public: /*For. RenderPass */
+public: /*For. Render */
 	void Set_RenderPass(_int iPass) { m_iRenderPass = iPass; }
 	_int Get_Rednerpass() { return m_iRenderPass; }
 	_bool				m_bORM_Available		= false;
 	_bool				m_bEmissive_Available	= false;
+	_float				m_fCamFar = {};
 
 public: /* For. Base Setting */
 	const wstring&		Get_ProtoTypeTag() { return m_strPrototypeTag; };

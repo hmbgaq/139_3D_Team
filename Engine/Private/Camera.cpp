@@ -58,7 +58,7 @@ void CCamera::Tick(_float fTimeDelta)
 	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 	m_arrCameraWorld = m_pTransformCom->Get_WorldFloat4x4();
 
-	//Update_Cascade();
+	Update_Cascade();
 }
 
 void CCamera::Late_Tick(_float fTimeDelta)
@@ -70,7 +70,7 @@ void CCamera::Set_Pos(float4x4 vPos)
 	m_arrCameraWorld = vPos;
 }
 
-void CCamera::Update_Cascade(const float3& vDirectionalDir)
+void CCamera::Update_Cascade()
 {
 	//_float3 vWorldCenter = *GetEyePt() + *GetWorldAhead() * m_fCascadeTotalRange* 0.5f;
 	//_float3 vPos = vWorldCenter; // worldCenter 기준으로 뷰매트릭스 생성 : Directional Light의 위치를 특정하기 어려워서 

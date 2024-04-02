@@ -93,7 +93,7 @@ private:
 	HRESULT Deferred_Shadow();
 	HRESULT Render_ShadowBlur();
 	HRESULT Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring& Blend_Target_Tag);
-
+	HRESULT Ready_CascadeShadow();
 	wstring Current_Target(POST_TYPE eType);
 	
 public:
@@ -201,6 +201,9 @@ private:
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();
+
+	vector<class CGameObject*>	m_CascadeObjects[3]			= {};
+	ID3D11DepthStencilView*		m_pCascadeShadowDSV[3]		= {};
 
 	/* For. Tool */
 	class CTexture* m_pTool_IrradianceTextureCom[10] = { nullptr };

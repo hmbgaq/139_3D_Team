@@ -46,6 +46,7 @@ float3      g_vBloomPower = { 0.f, 0.f, 0.f };      /* Bloom */
 float4      g_vRimColor   = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
 float       g_fRimPower   = 5.f;                    /* RimLight */
 
+matrix      g_CascadeProj; /* Cascade */
 /*=============================================================
  
                              Function 
@@ -166,7 +167,28 @@ VS_OUT VS_MAIN(VS_IN In)
 VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
-    
+
+    matrix matWVP;
+
+    matWVP = mul(g_WorldMatrix, g_CascadeProj);
+
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    float4x4 vMatX = g_BoneMatrices[In.vBlendIndices.x];
+    float4x4 vMatY = g_BoneMatrices[In.vBlendIndices.y];
+    float4x4 vMatZ = g_BoneMatrices[In.vBlendIndices.z];
+    float4x4 vMatW = g_BoneMatrices[In.vBlendIndices.w];
+
+    float4x4 BoneMatrix = vMatX * In.vBlendWeights.x +
+                          vMatY * In.vBlendWeights.y +
+                          vMatZ * In.vBlendWeights.z +
+                          vMatW * fWeightW;
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+
+    Out.vPosition = mul(vPosition, matWVP);
+
     return Out;
 }
 /*=============================================================

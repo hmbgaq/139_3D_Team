@@ -537,12 +537,12 @@ _float CGameInstance::Get_CamFar()
 	return m_pPipeLine->Get_CamFar();
 }
 
-_float4x4 CGameInstance::Get_Shadow_Proj()
+_float4x4* CGameInstance::Get_Shadow_Proj()
 {
 	if (nullptr == m_pPipeLine)
-		return _float4x4();
+		return nullptr;
 
-	return m_pPipeLine->Get_Shadow_Proj();
+	return m_pPipeLine->Get_ShadowProj();
 }
 
 void CGameInstance::Set_ShadowProj(_float4x4* pMatrix)

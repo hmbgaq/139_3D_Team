@@ -129,8 +129,26 @@ HRESULT CBody_Bandit_Sniper::Render_Shadow()
 	return S_OK;
 }
 
-HRESULT CBody_Bandit_Sniper::Render_CSM()
+HRESULT CBody_Bandit_Sniper::Render_CSM(_uint i)
 {
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()[i]);
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_CASCADE));
+		
+		m_pModelCom->Render((_uint)i);
+	}
+
 	return S_OK;
 }
 
@@ -139,9 +157,8 @@ HRESULT CBody_Bandit_Sniper::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+	m_fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float)));
 
 	return S_OK;
 }

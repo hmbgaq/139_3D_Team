@@ -35,6 +35,7 @@ float3  g_vBloomPower   = { 0.f, 0.f, 0.f };        /* Bloom */
 float4  g_vRimColor     = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
 float   g_fRimPower     = 5.f;                      /* RimLight */
 
+
 /* ------------------- function ------------------- */ 
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {

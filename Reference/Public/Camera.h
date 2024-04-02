@@ -29,7 +29,7 @@ public:
 
 public:
 	void	Set_Pos(float4x4 vPos);
-	void	Update_Cascade(const float3 & vDirectionalDir);
+	void	Update_Cascade();
 
 public:
 	void	Set_Enable(_bool _bEnable) { m_bEnable = _bEnable; }

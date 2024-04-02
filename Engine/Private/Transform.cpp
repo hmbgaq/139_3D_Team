@@ -348,7 +348,7 @@ _bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta,
 
 	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
 	//Look_At(vTargetPos);
-	Look_At_Lerp(vTargetPos, fTimeDelta, 0.2f);
+	Look_At_Lerp(vTargetPos, (_float)fTimeDelta, 0.2f);
 
 	if (fDistance >= fSpare)
 	{
