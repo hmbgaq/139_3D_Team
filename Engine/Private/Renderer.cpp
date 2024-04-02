@@ -675,25 +675,6 @@ HRESULT CRenderer::Render_Effect_Distortion_Blur()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_OutLine()
-{
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine")));
-
-	for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE])
-	{
-		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
-			pGameObject->Render_OutLine();
-
-		Safe_Release(pGameObject);
-	}
-
-	m_RenderObjects[RENDER_OUTLINE].clear();
-
-	FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	return S_OK;
-}
-
 HRESULT CRenderer::Render_HDR()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_HDR"))); /* Target_FXAA*/
@@ -1041,6 +1022,7 @@ HRESULT CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[RENDER_UI_FRONT].clear();
+
 	return S_OK;
 }
 
@@ -1057,6 +1039,25 @@ HRESULT CRenderer::Render_UI_Tool()
 	}
 
 	m_RenderObjects[RENDER_UI].clear();
+
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_OutLine()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine")));
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render_OutLine();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_OUTLINE].clear();
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
 

@@ -65,15 +65,7 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 	{
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
-
-		//if (m_pGameInstance->Key_Pressing(DIK_8))
-		//{
-		//	/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
-		//	m_bInteractActive = true;
-			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		//}
-		//else
-		//	m_bInteractActive = false;
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 	}
 
 }
@@ -122,8 +114,12 @@ HRESULT CInteract_Chain::Render()
 
 HRESULT CInteract_Chain::Render_OutLine()
 {
-	m_bInteractActive = true;
-	FAILED_CHECK(Bind_ShaderResources());
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
+	m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -132,9 +128,8 @@ HRESULT CInteract_Chain::Render_OutLine()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
-		m_pShaderCom->Begin(4);
-
-		m_pModelCom->Render(0);
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE));
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;

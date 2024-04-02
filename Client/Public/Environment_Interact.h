@@ -267,9 +267,16 @@ public:
 
 private:
 	HRESULT		Classification_Model(); 
-	_bool		m_bRenderOutLine = { false };
 	vector<_int>	m_vChainMesh = {};
 
+	_bool		m_bIncrease = true;
+	_bool		m_bRenderOutLine = { false };
+
+
+	/* Origin Shader */
+	_float		m_gCamFar = 0.f;
+
+	/* OutLine Shader */
 	_float4		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
 	_float		m_fLineThick = 0.f;
 	_float		m_fTimeAcc = 0.f;
