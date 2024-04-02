@@ -40,7 +40,7 @@ void CWeapon_Infected_D::Tick(_float fTimeDelta)
 	{
 		m_fTimeAcc += fTimeDelta;
 
-		if (m_fTimeAcc > 1.f)
+		if (m_fTimeAcc > 0.7f)
 		{
 			m_fTimeAcc = 0.f;
 			m_bBombActive = false;
@@ -65,8 +65,6 @@ void CWeapon_Infected_D::Late_Tick(_float fTimeDelta)
 
 HRESULT CWeapon_Infected_D::Render()
 {
-	FAILED_CHECK(__super::Render());
-
 	return S_OK;
 }
 

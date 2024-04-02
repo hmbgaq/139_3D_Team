@@ -31,8 +31,6 @@ public: /* For. RenderState */
 	void	Set_RenderState(RENDER_STATE _state) { m_eRender_State = _state; }
 	HRESULT Set_StateHit();
 	HRESULT Set_StateDead();
-	
-	
 
 protected:
 	HRESULT Ready_Components();

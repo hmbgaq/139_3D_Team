@@ -460,6 +460,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_Chroma_Setting();
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("Luma Setting"))
+	{
+		Compress_Luma_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Screen Effect"))
 	{
 		Compress_ScreenEffect_Setting();
@@ -596,7 +601,7 @@ void CWindow_ShaderTool::Compress_DOF_Setting()
 {
 	static float Params[4] = { 0.10f, 0.20f, 0.30f, 0.4f };
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
-	ImGui::SliderFloat4("Distance", reinterpret_cast<float*>(&m_eDOF_Desc.DOF_Distance), -1.0f, 10.0f, "Distance %0.3f");
+	ImGui::SliderFloat("Distance", &m_eDOF_Desc.DOF_Distance, -1.0f, 20.0f, "Distance = %.3f");
 
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
@@ -680,6 +685,16 @@ void CWindow_ShaderTool::Compress_Chroma_Setting()
 	m_pGameInstance->Get_Renderer()->Set_Chroma_Option(m_eChroma_Desc);
 }
 
+void CWindow_ShaderTool::Compress_Luma_Setting()
+{	
+	ImGui::Checkbox("Luma Active", &m_eLuma_Desc.bLumaSharpen_Active);
+	ImGui::SliderFloat("Bias", &m_eLuma_Desc.foffset_bias, 0.0f, 6.0f, "Bias = %.3f");
+	ImGui::SliderFloat("Sharp Clamp", &m_eLuma_Desc.fsharp_clamp, 0.0f, 1.0f, "Sharp Clamp = %.3f");
+	ImGui::SliderFloat("Sharp Strength", &m_eLuma_Desc.fsharp_strength, 0.1f, 3.0f, "Sharp Strength = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_LumaSharpen_Option(m_eLuma_Desc);
+}
+
 void CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
@@ -724,6 +739,7 @@ void CWindow_ShaderTool::Save_Shader()
 	Out_Json["Radial"]["fRadial_Power"] = m_eRadial_Desc.fRadial_Power;
 
 	Out_Json["DOF"]["bDOF_Active"] = m_eDOF_Desc.bDOF_Active;
+	Out_Json["DOF"]["fDOF_Distance"] = m_eDOF_Desc.DOF_Distance;
 	//Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
 	//Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
 
@@ -779,7 +795,7 @@ void CWindow_ShaderTool::Select_Level()
 					m_eCurrLevel_String = "LEVEL_INTRO_BOSS";
 					break;
 				case 4: // snowmountain
-					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainTrackSignal_MapData_MapData_MapData.json";
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMounTainFoliage_Instancejson_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
 					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;

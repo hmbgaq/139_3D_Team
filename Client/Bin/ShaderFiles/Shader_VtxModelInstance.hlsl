@@ -253,7 +253,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
-    Out.vLightDepth.r = In.vProjPos.w / 300.f;
+    Out.vLightDepth.r = In.vProjPos.w / g_fLightFar;
 
     Out.vLightDepth.a = 1.f;
 

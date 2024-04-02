@@ -65,15 +65,7 @@ void CInteract_Chain::Late_Tick(_float fTimeDelta)
 	if (true == m_pGameInstance->isIn_LocalPlanes(XMVector3TransformCoord(m_pTransformCom->Get_State(CTransform::STATE_POSITION), m_pTransformCom->Get_WorldMatrixInverse()), 0.f))
 	{
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
-
-		//if (m_pGameInstance->Key_Pressing(DIK_8))
-		//{
-		//	/* 밖으로 빼도 LineThick이 0이라서 안그려지는것처럼 보임 */
-		//	m_bInteractActive = true;
-		//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		//}
-		//else
-		//	m_bInteractActive = false;
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 	}
 
 }
@@ -88,10 +80,6 @@ HRESULT CInteract_Chain::Render()
 	{
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE); // 1
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS); // 6
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_MetallicTexture", (_uint)i, aiTextureType_METALNESS);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_RougnessTexture", (_uint)i, aiTextureType_DIFFUSE_ROUGHNESS);
-		//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_OcclusionTexture", (_uint)i, aiTextureType_AMBIENT_OCCLUSION);
-
 		/* 체인부분만 하얗게 변하고 나무부분은 원래 Diffuse로 그리도록함 */
 
 		if (iNumMeshes >= 2)
@@ -99,7 +87,7 @@ HRESULT CInteract_Chain::Render()
 			if (0 == i) /* 체인 */
 			{
 				if (m_bInteractActive)
-					iRenderPass = ECast(MODEL_SHADER::MODEL_WHITEBLINK);
+					iRenderPass = ECast(MODEL_SHADER::MODEL_WHITEBLINK); // 3
 				else
 					iRenderPass = ECast(MODEL_SHADER::MODEL_ORIGIN);
 
@@ -126,8 +114,12 @@ HRESULT CInteract_Chain::Render()
 
 HRESULT CInteract_Chain::Render_OutLine()
 {
-	m_bInteractActive = true;
-	FAILED_CHECK(Bind_ShaderResources());
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
+	m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -136,9 +128,8 @@ HRESULT CInteract_Chain::Render_OutLine()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 
-		m_pShaderCom->Begin(4);
-
-		m_pModelCom->Render(0);
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE));
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;
@@ -160,7 +151,7 @@ HRESULT CInteract_Chain::Ready_Components()
 
 	/* For.Com_Model */
 	{
-		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Chain"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_ChainBeam4"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 	}
 
 	return S_OK;

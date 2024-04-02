@@ -93,12 +93,11 @@ public:
 	virtual void		Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT		Render() override;
 	virtual HRESULT		Render_Shadow() override;
+	virtual HRESULT		Render_OutLine() override;
 
 public:
 	virtual _bool		Write_Json(json& Out_Json) override;
 	virtual void		Load_FromJson(const json& In_Json) override;
-
-
 
 public:
 	
@@ -148,8 +147,6 @@ public:
 
 
 public:	//! For Public
-
-
 	void								Move_For_PlayerRootMotion(); //! 플레이어의 애니메이션 움직임에 맞춰서 이동
 	void								Move_For_Offset(); //! 특저 오브젝트의 위치(오프셋)기준으로 같이 이동
 
@@ -161,8 +158,6 @@ public:	//! For Public
 
 	_bool								ArrivalCheck(); //! 위치벡터에 도달했는지
 	_bool								RotationCheck(const _float fTimeDelta); //! 회전해야할 각도에 도달했는지.
-	
-
 
 	//!_int			iInteractGroupIndex = -1; //! 특정 상호작용 오브젝트가 활성화될시 다른 상호작용 오브젝트도 활성시키기 위한 그룹핑인덱스
 	//!_float4			vEnablePosition = {}; //!  특정 상호작용 오브젝트가 다른 상호작용 오브젝트를 활성화시키기 위한 위치 조건을 위한 위치벡터
@@ -255,10 +250,10 @@ private:
 	_int								m_iCalcCount = 0;
 	_bool								m_bArrival = false;
 
-
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;
 	vector<string>						m_vecInteractGroupTag; //! 툴 또는 디버깅용
 	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
+
 private:
 	CPlayer*						    m_pPlayer = { nullptr };
 
@@ -267,6 +262,24 @@ private:
 	HRESULT						Ready_InteractCollider(INTERACT_TYPE eInteractType);
 	HRESULT						Bind_ShaderResources();
 
+	/* 소영추가 - 렌더용 */
+public:
+
+private:
+	HRESULT		Classification_Model(); 
+	vector<_int>	m_vChainMesh = {};
+
+	_bool		m_bIncrease = true;
+	_bool		m_bRenderOutLine = { false };
+
+
+	/* Origin Shader */
+	_float		m_gCamFar = 0.f;
+
+	/* OutLine Shader */
+	_float4		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
+	_float		m_fLineThick = 0.f;
+	_float		m_fTimeAcc = 0.f;
 
 public:
 	/* 원형객체를 생성한다. */
