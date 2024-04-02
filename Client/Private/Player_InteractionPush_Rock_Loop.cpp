@@ -17,10 +17,10 @@ CState<CPlayer>* CPlayer_InteractionPush_Rock_Loop::Update(CPlayer* pActor, _flo
 {
 	//__super::Update(pActor, fTimeDelta);
 
-	pActor->Go_Straight(fTimeDelta * 0.25f);
 
 	if (false == m_bFlags[0])
 	{
+		pActor->Go_Straight(fTimeDelta * 0.25f);
 		m_bFlags[0] = pActor->Is_Animation_End();
 	}
 	else
