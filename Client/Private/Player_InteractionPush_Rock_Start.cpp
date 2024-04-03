@@ -25,7 +25,7 @@ CState<CPlayer>* CPlayer_InteractionPush_Rock_Start::Update(CPlayer* pActor, _fl
 	}
 	else
 	{
-		if (m_pGameInstance->Key_Down(DIK_W))
+		if (m_pGameInstance->Key_Pressing(DIK_W))
 		{
 			return new CPlayer_InteractionPush_Rock_Loop();
 		}

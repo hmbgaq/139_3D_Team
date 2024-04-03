@@ -132,7 +132,7 @@ void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string
 	}
 
 	//CEffect* pEffect = m_pEffectManager->Create_Effect(strEffectFileName + ".json", pOwner);
-	CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", vPos, TRUE, m_pGameInstance->Get_Player()->Get_Position());
+	CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", vPos);
 
 	if (pEffect)
 		pEffect->Set_Position(vPos);

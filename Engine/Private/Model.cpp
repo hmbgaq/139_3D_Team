@@ -428,6 +428,9 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex, _bool*
 
 	MATERIAL_DESC& material = m_Materials[iMaterialIndex];
 
+	*bORM = false;
+	*bEmissive = false;
+
 	for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
 	{
 		if (nullptr == material.pMtrlTextures[i])
@@ -510,6 +513,11 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 	{
 		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
 		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
+		if (0 == iTargetKeyFrameIndex)
+		{
+			m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, false);
+			m_bIsAnimEnd = false;
+		}
 	}
 	//else 
 	//{

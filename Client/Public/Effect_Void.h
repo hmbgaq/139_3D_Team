@@ -12,7 +12,7 @@ class CEffect_Void abstract : public CAlphaObject
 public:
 	enum TYPE_EFFECT { PARTICLE, RECT, MESH, TRAIL, TYPE_EFFECT_END };
 	enum TEXTURE	 { TEXTURE_DIFFUSE, TEXTURE_NORAML, TEXTURE_MASK, TEXTURE_NOISE, TEXTURE_SPRITE, TEXTURE_END };
-	enum TYPE_SCROLL { SCROLL_ROW, SCROLL_COL, SCROLL_BOTH, SCROLL_ROTAT, TYPE_SCROLL_END };
+	enum TYPE_SCROLL { SCROLL_ROW, SCROLL_COL, SCROLL_BOTH, SCROLL_ROTATE, TYPE_SCROLL_END };
 
 
 	typedef struct tagEffectVoidDesc : public CGameObject::GAMEOBJECT_DESC
@@ -54,9 +54,9 @@ public:
 		MODE_COLOR	eMode_Color		= { MODE_COLOR::MUL };
 
 		// Rim & Bloom
-		_float3		vBloomPower = { 1.f, 1.f, 1.f };		// 블룸 파워(rgb 색상값)
+		_float3		vBloomPower = { 0.f, 0.f, 0.f };		// 블룸 파워(rgb 색상값)
 		_float4		vRimColor	= { 1.f, 1.f, 1.f, 1.f };	// 림 컬러
-		_float		fRimPower = { 5.f };
+		_float		fRimPower = { 0.f };
 
 		// States
 		_bool		bPlay			= { TRUE };

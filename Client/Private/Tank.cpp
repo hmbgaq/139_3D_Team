@@ -147,14 +147,10 @@ void CTank::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-
-
 }
 
 HRESULT CTank::Render()
 {
-	FAILED_CHECK(__super::Render());
-
 	return S_OK;
 }
 

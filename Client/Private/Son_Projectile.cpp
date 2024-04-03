@@ -52,10 +52,10 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
 	m_fDamage = 20.f;
-	// 이펙트 생성
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_SNOWMOUNTAINBOSS, LAYER_EFFECT, "Projectile_Range1_04.json", this);
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Yellow_Blood_Test.json"); // (EffectOut : 당장 안쓰는 이펙트라고 해서 일단 빼뒀습니다. [성희])
 
+
+	// 이펙트 생성
+	m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
 
 	return S_OK;
 }
@@ -113,10 +113,10 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 	{
 		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
 
+		// 이펙트 생성
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
@@ -192,6 +192,9 @@ CGameObject* CSon_Projectile::Pool()
 void CSon_Projectile::Free()
 {
 	__super::Free();
+
+	if (nullptr != m_pEffect)
+		m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 
 	//if(nullptr != m_pEffect)
 	//	Safe_Release(m_pEffect);

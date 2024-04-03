@@ -6,6 +6,7 @@ void CPlayer_InteractionRope_Down_Loop::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	//pActor->Set_Animation_End(false);
 }
 
 CState<CPlayer>* CPlayer_InteractionRope_Down_Loop::Update(CPlayer* pActor, _float fTimeDelta)
