@@ -4,6 +4,8 @@
 #include "Character_Client.h"
 #include "Actor.h"
 
+class CUI_EnemyHUD_Shard;
+
 BEGIN(Client)
 
 class CPlayer;
@@ -58,7 +60,17 @@ public:
 	void Add_AttackCount() { m_iAttackCount += 1; };
 	void Reset_AttackCount() { m_iAttackCount = 0; };
 
+protected: // !성희 추가
+	// 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
+	void Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner);
 
+	// 몬스터 HUD의 위치를 잡아줍니다. (매 틱마다 불러주세요. | 몬스터의 World매트릭스를 넣어주세요. | Offset만큼 위치를 움직일 수 있습니다. [Defualt (오프셋 안줬을 경우) : 0, 2, 0]
+	void Check_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 2.f, 0.f });
+	
+	// EnemyHUD Dead
+	void Set_EnemyHUD_Dead();
+
+	CUI_EnemyHUD_Shard* m_pEnemyHUD = nullptr;
 
 protected:
 	MONSTER_DESC			m_tMonsterDesc = {};

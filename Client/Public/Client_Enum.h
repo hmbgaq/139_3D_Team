@@ -121,6 +121,14 @@ namespace Client
 		PUNCH,					//				스킬 1번
 		TUTORIALTEXT_END		//				End
 	};
+
+	enum class SKILLSTATE // 스킬 상태
+	{
+		LOCK,					//				
+		COOLDOWN,				//
+		ACTIVE,					//				
+		SKILL_END				//				
+	};
 #pragma endregion End
 
 

@@ -2,6 +2,7 @@
 #include "UI_Player_Skill_Guige.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "UI_Manager.h"
 
 CUI_Player_Skill_Guige::CUI_Player_Skill_Guige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -48,7 +49,7 @@ HRESULT CUI_Player_Skill_Guige::Initialize(void* pArg)
 	m_bActive = true;
 
 	m_iMaskNum = 128;
-	m_fCoolTime = m_fMaxCoolTime;
+	//m_fCoolTime = m_fMaxCoolTime;
 
 	return S_OK;
 }
@@ -62,9 +63,6 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_X))
-		m_bActive = true;
-
 	if (m_bActive == true)
 	{
 		m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
@@ -72,10 +70,14 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 
 		if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
 		{
-			//m_bClicked = false;
-
-			//m_iShaderNum = 0;
-			//m_fCoolTime = m_fMaxCoolTime; // 초기화 (게이지 없애기) => 스킬 사용시 CoolTime에 MaxCoolTime을 줘서 스킬 쿨이 돌게하면 될듯하다.
+			// 활성화
+			Check_SkillActive(fTimeDelta, SKILLSTATE::ACTIVE);
+			m_fCoolTime = 0.f;
+		}
+		else
+		{
+			// 비활성화
+			Check_SkillActive(fTimeDelta, SKILLSTATE::COOLDOWN);
 		}
 	}
 
@@ -199,6 +201,36 @@ HRESULT CUI_Player_Skill_Guige::Bind_ShaderResources()
 	//	return E_FAIL;
 
 	return S_OK;
+}
+
+void CUI_Player_Skill_Guige::Check_SkillActive(_float fTimeDelta, SKILLSTATE eState)
+{
+	/* Left */
+	if (m_tUIInfo.strUIName == "LeftHUD_Top")
+		m_pUIManager->LeftSkillState("LeftHUD_Top", eState);
+
+	if (m_tUIInfo.strUIName == "LeftHUD_Right")
+		m_pUIManager->LeftSkillState("LeftHUD_Right", eState);
+
+	if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
+		m_pUIManager->LeftSkillState("LeftHUD_Bottom", eState);
+
+	if (m_tUIInfo.strUIName == "LeftHUD_Left")
+		m_pUIManager->LeftSkillState("LeftHUD_Left", eState);
+
+	/* Right */
+	if (m_tUIInfo.strUIName == "RightHUD_Top")
+		m_pUIManager->LeftSkillState("RightHUD_Top", eState);
+
+	if (m_tUIInfo.strUIName == "RightHUD_Right")
+		m_pUIManager->LeftSkillState("RightHUD_Right", eState);
+
+	if (m_tUIInfo.strUIName == "RightHUD_Bottom")
+		m_pUIManager->LeftSkillState("RightHUD_Bottom", eState);
+
+	if (m_tUIInfo.strUIName == "RightHUD_Left")
+		m_pUIManager->LeftSkillState("RightHUD_Left", eState);
+
 }
 
 

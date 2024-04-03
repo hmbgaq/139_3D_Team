@@ -2,6 +2,7 @@
 #include "UI_Player_Skill_Icon.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "UI_Manager.h"
 
 CUI_Player_Skill_Icon::CUI_Player_Skill_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -37,6 +38,44 @@ HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	/* Left */
+	if (m_tUIInfo.strUIName == "LeftHUD_Top")
+	{
+		m_bUnlock = false;
+	}
+	else if (m_tUIInfo.strUIName == "LeftHUD_Right")
+	{
+		// Test
+		m_bUnlock = /*false*/true;
+	}
+	else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
+	{
+		m_bUnlock = false;
+	}
+	else if (m_tUIInfo.strUIName == "LeftHUD_Left")
+	{
+		m_bUnlock = false;
+	}
+
+	/* Right */
+	if (m_tUIInfo.strUIName == "RightHUD_Top")
+	{
+		m_bUnlock = false;
+	}
+	else if (m_tUIInfo.strUIName == "RightHUD_Right")
+	{
+		m_bUnlock = false;
+	}
+	else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
+	{
+		m_bUnlock = false;
+	}
+	else if (m_tUIInfo.strUIName == "RightHUD_Left")
+	{
+		m_bUnlock = false;
+	}
+
+
 	return S_OK;
 }
 
@@ -47,6 +86,134 @@ void CUI_Player_Skill_Icon::Priority_Tick(_float fTimeDelta)
 
 void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
+
+	if (m_bActive == true)
+	{
+		/* Left */
+		if (m_tUIInfo.strUIName == "LeftHUD_Top")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Top") > m_pUIManager->Get_LeftHUD_CurrentCoolTime("LeftHUD_Top"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Top", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Top"));
+			}
+		}
+		else if (m_tUIInfo.strUIName == "LeftHUD_Right")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Right") > m_pUIManager->Get_LeftHUD_CurrentCoolTime("LeftHUD_Right"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Right", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Right"));
+			}
+		}
+		else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Bottom") > m_pUIManager->Get_LeftHUD_CurrentCoolTime("LeftHUD_Bottom"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Bottom", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Bottom"));
+			}
+		}
+		else if (m_tUIInfo.strUIName == "LeftHUD_Left")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Left") > m_pUIManager->Get_LeftHUD_CurrentCoolTime("LeftHUD_Left"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Left", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Left"));
+			}
+		}
+
+		/* Right */
+		if (m_tUIInfo.strUIName == "RightHUD_Top")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Top") > m_pUIManager->Get_RightHUD_CurrentCoolTime("RightHUD_Top"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Top", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Top"));
+			}
+		}
+		else if (m_tUIInfo.strUIName == "RightHUD_Right")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Right") > m_pUIManager->Get_RightHUD_CurrentCoolTime("RightHUD_Right"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Right", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Right") + 3.f);
+			}
+		}
+		else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Bottom") > m_pUIManager->Get_RightHUD_CurrentCoolTime("RightHUD_Bottom"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Bottom", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Bottom"));
+			}
+		}
+		else if (m_tUIInfo.strUIName == "RightHUD_Left")
+		{
+			if (m_bUnlock == true) // 스킬이 해금 됐을 경우
+			{
+				if (m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Left") > m_pUIManager->Get_RightHUD_CurrentCoolTime("RightHUD_Left"))
+					m_eSkillState = SKILLSTATE::COOLDOWN;
+				else
+					m_eSkillState = SKILLSTATE::ACTIVE;
+			}
+			else // 해금 안됐을 경우
+			{
+				// 현재 쿨타임 0으로 만들기
+				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Left", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Left"));
+			}
+		}
+	}
 
 }
 
@@ -55,8 +222,7 @@ void CUI_Player_Skill_Icon::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
@@ -65,7 +231,7 @@ void CUI_Player_Skill_Icon::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_Player_Skill_Icon::Render()
 {
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(Bind_ShaderResources()))
 			return E_FAIL;
@@ -135,7 +301,7 @@ HRESULT CUI_Player_Skill_Icon::Ready_Components()
 			TEXT("Com_Texture_Cooldown"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_COOLDOWN]))))
 			return E_FAIL;
 	}
-	else //발견되지 않은 경우
+	else // 발견되지 않은 경우
 	{
 
 	}
@@ -161,35 +327,28 @@ HRESULT CUI_Player_Skill_Icon::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	string TestName = m_tUIInfo.strObjectName;
-	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
-	{
-		switch (i)
-		{
-		case CUI_Player_Skill_Icon::ICON_LOCK:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
-			break;
-		}
-		case CUI_Player_Skill_Icon::ICON_COOLDOWN:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Second")))
-				return E_FAIL;
+	/* 해금을 안했을 경우 상태를 Lock으로 고정한다. */
+	if (m_bUnlock == false)
+		m_eSkillState = SKILLSTATE::LOCK;
 
-			break;
-		}
-		case CUI_Player_Skill_Icon::ICON_ACTIVE:
-		{
-			//if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Third")))
-			//	return E_FAIL;
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+	switch (m_eSkillState)
+	{
+		case Client::SKILLSTATE::LOCK:
+			if (FAILED(m_pTextureCom[ICON_LOCK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 			break;
-		}
+		case Client::SKILLSTATE::COOLDOWN:
+			if (FAILED(m_pTextureCom[ICON_COOLDOWN]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+			break;
+		case Client::SKILLSTATE::ACTIVE:
+			if (FAILED(m_pTextureCom[ICON_ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+			break;
+		case Client::SKILLSTATE::SKILL_END:
+			break;
 		default:
 			break;
-		}
 	}
 
 	return S_OK;

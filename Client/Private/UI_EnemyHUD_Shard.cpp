@@ -29,21 +29,8 @@ HRESULT CUI_EnemyHUD_Shard::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
-	//m_tUIInfo.bWorld = true;
-
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
-
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
-
-	m_bActive = false;
-	m_tUIInfo.bWorld = true;
-	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
-	m_fAlpha = 1.f;
-	m_fAlphaSpeed = 2.f;
-
-
 
 	return S_OK;
 }
@@ -55,60 +42,25 @@ void CUI_EnemyHUD_Shard::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyHUD_Shard::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_V))
-		m_fOffsetY -= 0.1f;
-	if (m_pGameInstance->Key_Down(DIK_B))
-		m_fOffsetY += 0.1f;
-	if (m_pGameInstance->Key_Down(DIK_J))
-		m_bActive = !m_bActive;
-
 	__super::Tick(fTimeDelta);
 
-	if (m_bActive == true)
+	if (m_bDeadOwner == true)
 	{
-
+		DeadEnemyHUD();
+		Set_Dead(true);
 	}
-	//if (m_bActive == true)
-	//{
-	//	if (m_bAppear == false) // 안보이는 상태니까
-	//	{
-	//		m_bAppear = Alpha_Minus(fTimeDelta); // 보이게 알파가 생기게 해준다.
-	//	}
-	//	else // 보이는 상태니까
-	//	{
-	//		m_bAppear = Alpha_Plus(fTimeDelta); // 안보이게 알파가 지워지게 해준다.
-	//	}
-	//}
+
 }
 
 void CUI_EnemyHUD_Shard::Late_Tick(_float fTimeDelta)
 {
-	//if (m_tUIInfo.bWorldUI == true)
-	//	Compute_OwnerCamDistance();
 
-	if (m_bActive == true)
-	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-			return;
-	}
 }
 
 HRESULT CUI_EnemyHUD_Shard::Render()
 {
-	if (m_bActive == true)
-	{
-		if (FAILED(Bind_ShaderResources()))
-			return E_FAIL;
-
-		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
-
-		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-		m_pVIBufferCom->Bind_VIBuffers();
-
-		//! 바인딩된 정점, 인덱스를 그려
-		m_pVIBufferCom->Render();
-	}
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -131,87 +83,165 @@ void CUI_EnemyHUD_Shard::UI_Exit(_float fTimeDelta)
 
 void CUI_EnemyHUD_Shard::UI_Setting()
 {
-	///* Child Setting */
-	//m_pUIManager->Ready_EnemyHUD_Shard(LEVEL_STATIC, );
 
 }
 
-void CUI_EnemyHUD_Shard::Set_TargetPosition(_vector vTargetPosition)
+HRESULT CUI_EnemyHUD_Shard::Ready_ChildHUD()
 {
-	m_vTargetPosition = vTargetPosition;
-}
+	json json_in;
 
-void CUI_EnemyHUD_Shard::Check_TargetWorld()
-{
-	if (m_tUIInfo.bWorld == true)
+	//char filePath[MAX_PATH];
+
+	if (m_pOwner == nullptr) // MessageBox No Name
+		MessageBox(g_hWnd, L"받아온 pOwner가 nullptr입니다.", L"몬스터 HUD 생성 실패", MB_OK);
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/EnemyHUD/EnemyHUDShard.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
 	{
-		if (m_bActive == false)
-			return;
+		json object = item.value();
 
-		// 체력바를 띄운다.
-		_float4 vCamPos = m_pGameInstance->Get_CamPosition();
-		_vector vTempForDistance = m_pTransformCom->Get_Position() = XMLoadFloat4(&vCamPos);
-		_float fDistance = XMVectorGetX(XMVector3Length(vTempForDistance));
+		CUI::UI_DESC tUI_Info;
 
-		// Distance가 0.1f보다 클경우만 띄움.
-		if (fDistance > 0.1f)
-		{
-			_float3 vTemp = m_pTransformCom->Get_Scaled();
-			_vector vScale = XMVectorSet(vTemp.x, vTemp.y, vTemp.z, 0.f);
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
 
-			_vector vTargetPos = m_vTargetPosition;
-			_float4 vTargetTemp;
-			XMStoreFloat4(&vTargetTemp, vTargetPos);
-			vCamPos.y = vTargetTemp.y;
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
 
-			_vector vLook = XMVector3Normalize(m_pTransformCom->Get_Position() - XMLoadFloat4(&vCamPos));
-			_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook));
-			_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-			//_vector vUp = XMVector3Normalize(XMVector3Cross(vLook, vRight)); // Y빌보드를 막기 위해 Up을 0, 1, 0으로 설정함
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
 
-			m_World.r[CTransform::STATE_RIGHT] = XMVectorScale(vRight, vTemp.x);
-			m_World.r[CTransform::STATE_UP] = XMVectorScale(vUp, vTemp.y);
-			m_World.r[CTransform::STATE_LOOK] = XMVectorScale(vLook, vTemp.z);
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
 
-			//vTargetTemp.y += m_fOffset;
-			m_World.r[CTransform::STATE_POSITION] = XMLoadFloat4(&vTargetTemp);
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(m_pGameInstance->Get_NextLevel(), TEXT("Layer_EnemyHUDShard"), wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
 
-			m_pTransformCom->Set_WorldMatrix(m_World);
-			//m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_UI, this);
-		}
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		pUI_Object->Set_Object_Owner(m_pOwner);
+		pUI_Object->Setting_Owner();
+
+		m_vecEnemyHUD.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_EnemyHUD_Shard::Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos)
+{
+	if (m_vecEnemyHUD.empty())
+		return;
+
+	for (auto& iter : m_vecEnemyHUD)
+	{
+		iter->SetUp_WorldToScreen(matWorld, vOffsetPos);
 	}
 }
 
-void CUI_EnemyHUD_Shard::Ready_ChildHUD()
+void CUI_EnemyHUD_Shard::ActiveEnemyHUD()
 {
-	//m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), )
+	if (m_vecEnemyHUD.empty())
+		return;
+
+	for (auto& iter : m_vecEnemyHUD)
+	{
+		iter->Set_Alpha(!0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_Disappear(false);	// UI 사라짐 Off
+	}
+}
+
+void CUI_EnemyHUD_Shard::NonActiveEnemyHUD()
+{
+	if (m_vecEnemyHUD.empty())
+		return;
+
+	for (auto& iter : m_vecEnemyHUD)
+	{
+		iter->Set_Alpha(1.f);			// UI 알파값 초기화
+		iter->Set_Active(false);		// UI 활성화
+		iter->Set_AnimPlay(false);		// UI Animation 재생
+		iter->Set_Disappear(true);		// UI 사라짐 Off
+	}
+}
+
+void CUI_EnemyHUD_Shard::DeadEnemyHUD()
+{
+	if (m_vecEnemyHUD.empty())
+		return;
+
+	for (auto& iter : m_vecEnemyHUD)
+	{
+		iter->Set_Dead(true);			// 삭제
+	}
+
+	m_vecEnemyHUD.clear(); // 비우기
 }
 
 HRESULT CUI_EnemyHUD_Shard::Ready_Components()
 {
-	//! For.Com_Shader
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
-
-	//! For.Com_VIBuffer
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CUI_EnemyHUD_Shard::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+	/* 공통 */
+	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
 	return S_OK;

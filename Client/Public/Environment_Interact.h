@@ -9,7 +9,11 @@ class CModel;
 class CCollider;
 END
 
+// !Add Interaction UI
+class CUI_Interaction;
+
 BEGIN(Client)
+class CUI_Manager;
 
 class CEnvironment_Interact final : public CGameObject
 {
@@ -148,7 +152,7 @@ public:
 
 
 public:	//! For Public
-
+	HRESULT								Find_UI_For_InteractType();
 
 	void								Move_For_PlayerRootMotion(); //! 플레이어의 애니메이션 움직임에 맞춰서 이동
 	void								Move_For_Offset(); //! 특저 오브젝트의 위치(오프셋)기준으로 같이 이동
@@ -261,6 +265,10 @@ private:
 	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
 private:
 	CPlayer*						    m_pPlayer = { nullptr };
+
+	// !성희 추가
+	CUI_Manager*						m_pUIManager = { nullptr };
+	CUI_Interaction*					m_pUI_Interaction = { nullptr };
 
 private:
 	HRESULT						Ready_Components();

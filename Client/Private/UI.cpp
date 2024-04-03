@@ -110,8 +110,8 @@ void CUI::Priority_Tick(_float fTimeDelta)
 
 void CUI::Tick(_float fTimeDelta)
 {
-	//if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
-	//	m_bActive = m_bTool;
+	//if (m_bTool == true && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
+	//	return;
 	
 	/* World or Orthogonal */
 	//Check_Change_WorldUI(fTimeDelta);
@@ -557,6 +557,16 @@ void CUI::Parts_Delete()
 	}
 }
 
+_float CUI::Check_CamToTarget_Distance(_vector vTargetPos)
+{
+	_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+	_float		fDistance = 0.0f;
+
+	fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vCamPosition));
+
+	return fDistance;
+}
+
 void CUI::LifeOff(_float fTimeDelta)
 {
 	/* LifeTime이 있는 UI일 경우 */
@@ -789,19 +799,29 @@ void CUI::SetUp_PositionToScreen(_fvector vWorldPos)
 }
 
 //				TargetWorld => Screen
-void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
+void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 {
 	_vector vTargetPos = {};
 	_float4 vViewPort = {};
 
-	
-	matTargetWorld = matWorld;
+	matTargetWorld = matWorldPos;
 
 	vTargetPos = XMVectorSet(
-							 matTargetWorld.r[3].m128_f32[0] + vOffsetPos.x,
-							 matTargetWorld.r[3].m128_f32[1] + vOffsetPos.y,
-							 matTargetWorld.r[3].m128_f32[2] + vOffsetPos.z,
-							 1.0f);
+		matTargetWorld.r[3].m128_f32[0] + vOffsetPos.x,
+		matTargetWorld.r[3].m128_f32[1] + vOffsetPos.y,
+		matTargetWorld.r[3].m128_f32[2] + vOffsetPos.z,
+		1.0f);
+
+	/* Distance Check */
+	m_fTarget_Distance = Check_CamToTarget_Distance(vTargetPos);
+	if (m_fTarget_Distance >= m_fActive_Distance)
+	{
+		m_bActive = false;
+		return;
+	}
+	else
+		m_bActive = true;
+
 
 	//// z 값 계산
 	//float zDistance = matTargetWorld.r[3].m128_f32[2];
@@ -824,7 +844,7 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
 	_int iWinHalfX = (g_iWinSizeX >> 1);
 	_int iWinHalfY = (g_iWinSizeY >> 1);
 
-	m_bActive = m_pGameInstance->isIn_WorldPlanes(vTargetPos, 5.f);
+	//m_bActive = m_pGameInstance->isIn_WorldPlanes(vTargetPos, 5.f);
 
 	//_vector vRight = XMVector3Cross(m_pGameInstance->Get_CamDirection(), XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
@@ -838,49 +858,67 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
 	//	m_bActive = true;
 	//}
 
-	//if (m_fWorldToScreenX < -(_float)iWinHalfX)
-	//{
-	//	if (m_fWorldToScreenX < -((_float)iWinHalfX + m_fScreenOffsetX))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
+	if (m_fWorldToScreenX < -(_float)iWinHalfX)
+		//&& m_fWorldToScreenX > -(_float)2000.f)
+	{
+		if (m_fWorldToScreenX < -((_float)iWinHalfX + m_fScreenOffsetX))
+			m_bActive = false;
+		else
+			m_bActive = true;
 
-	//	m_fWorldToScreenX = -(_float)iWinHalfX;
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
-	//}
-	//if (m_fWorldToScreenX > (_float)iWinHalfX)
-	//{
-	//	if (m_fWorldToScreenX > ((_float)iWinHalfX + m_fScreenOffsetX))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
+		m_fWorldToScreenX = -(_float)iWinHalfX;
+		m_fWorldToScreenY = m_fPreScreenY;
 
-	//	m_fWorldToScreenX = (_float)iWinHalfX;
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
-	//}
-	//if (m_fWorldToScreenY < -(_float)iWinHalfY)
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	//else
 	//{
-	//	if (m_fWorldToScreenY < -((_float)iWinHalfY + m_fScreenOffsetY))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
-	//	m_fWorldToScreenY = -((_float)iWinHalfY);
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
+	//	m_fPreScreenY = m_fWorldToScreenY;
 	//}
-	//if (m_fWorldToScreenY > (_float)iWinHalfY)
-	//{
-	//	if (m_fWorldToScreenY > ((_float)iWinHalfY + m_fScreenOffsetY))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
 
-	//	m_fWorldToScreenY = (_float)iWinHalfY;
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
+	if (m_fWorldToScreenX > (_float)iWinHalfX)
+		//&& m_fWorldToScreenX < (_float)2000.f)
+	{
+		if (m_fWorldToScreenX > ((_float)iWinHalfX + m_fScreenOffsetX))
+			m_bActive = false;
+		else
+			m_bActive = true;
+
+		m_fWorldToScreenX = (_float)iWinHalfX;
+		m_fWorldToScreenY = m_fPreScreenY;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	//else
+	//{
+	//	m_fPreScreenY = m_fWorldToScreenY;
 	//}
+
+	if (m_fWorldToScreenY < -(_float)iWinHalfY)
+	{
+		if (m_fWorldToScreenY < -((_float)iWinHalfY + m_fScreenOffsetY))
+			m_bActive = false;
+		else
+			m_bActive = true;
+		m_fWorldToScreenY = -((_float)iWinHalfY);
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+
+	if (m_fWorldToScreenY > (_float)iWinHalfY)
+	{
+		if (m_fWorldToScreenY > ((_float)iWinHalfY + m_fScreenOffsetY))
+			m_bActive = false;
+		else
+			m_bActive = true;
+
+		m_fWorldToScreenY = (_float)iWinHalfY;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+
+	m_bActive = m_pTransformCom->Calc_FrontCheck(vTargetPos);
 
 	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
 

@@ -50,11 +50,6 @@ void CUI_EnemyFrame_Shard::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyFrame_Shard::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_V))
-		m_fOffsetY -= 0.1f;
-	if (m_pGameInstance->Key_Down(DIK_B))
-		m_fOffsetY += 0.1f;
-
 	__super::Tick(fTimeDelta);
 
 	//if (m_pOwner != nullptr)

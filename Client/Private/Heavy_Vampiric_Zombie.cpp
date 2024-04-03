@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Heavy_Vampiric_Zombie.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
+#include "UI_EnemyHP_Shard.h"
 //#include "Body_Heavy_Vampiric_Zombie.h"
 //#include "BanditHeavy_Idle.h"
 
@@ -25,7 +27,8 @@ HRESULT CHeavy_Vampiric_Zombie::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
-
+	/* !성희 추가 : 몬스터 HUD 생성 */ // 생성함수 호출시 CMonster_Character에게 상속받은 m_pEnemyHUD 멤버변수 사용가능.
+	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
 	return S_OK;
 }
@@ -36,8 +39,14 @@ void CHeavy_Vampiric_Zombie::Priority_Tick(_float fTimeDelta)
 }
 
 void CHeavy_Vampiric_Zombie::Tick(_float fTimeDelta)
-{
+{ 
 	__super::Tick(fTimeDelta);
+
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+
+	/* !UI Dead시키는 함수(몬스터 죽었을 때) */
+	// Set_EnemyHUD_Dead();
 
 	m_fHp = 100;
 }

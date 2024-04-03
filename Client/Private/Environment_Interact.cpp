@@ -6,15 +6,22 @@
 #include "Player.h"
 #include "Level_Loading.h"
 
+// !Add UI
+#include "UI_Manager.h"
+#include "UI_Interaction.h"
+
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
-	
+		Safe_AddRef(m_pUIManager);
 }
 
 CEnvironment_Interact::CEnvironment_Interact(const CEnvironment_Interact & rhs)
 	: CGameObject(rhs)
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
+	Safe_AddRef(m_pUIManager);
 }
 
 HRESULT CEnvironment_Interact::Initialize_Prototype()
@@ -64,6 +71,9 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 		
 	}
 
+	// !UI Add UI_Interaction
+	Find_UI_For_InteractType();
+
 	return S_OK;
 }
 
@@ -90,10 +100,8 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 			m_vecPointChecks[3] = true;
 		if (m_pGameInstance->Key_Down(DIK_NUMPAD5))
 			Reset_TestEvent();
-		
 
 	}
-
 
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL && m_bFindPlayer == false)
@@ -117,6 +125,18 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 
 	if(m_bEnable == true)
 		Interact();
+
+	// !UI Add UI_Interaction
+	if (m_bEnable == true)
+	{
+		if (m_pUI_Interaction != nullptr)
+		{
+			// 각 상호작용 객체에 맞게 vOffset 조절해줘야함.
+			m_pUI_Interaction->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix()/*, vOffset*/); // 위치 갱신
+			m_pUI_Interaction->Set_OnInteraction(m_bInteract);	// 상호작용을 했는지
+		}
+	}
+		
 
 	if (m_bSpline == true)
 	{
@@ -311,6 +331,10 @@ void CEnvironment_Interact::Interact()
 		{
 			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()) )
 			{
+				// !UI Add
+				if (m_pUI_Interaction != nullptr)
+					m_pUI_Interaction->Set_OnCollision(true);	// 상호작용을 할 수 있는 범위에 들어왔는지 (Collision)
+
 				switch (m_tEnvironmentDesc.eInteractType)
 				{
 					case CEnvironment_Interact::INTERACT_JUMP100:
@@ -518,8 +542,15 @@ void CEnvironment_Interact::Interact()
 
 				m_bInteract = true;
 			}
-			else 
+			else
+			{
 				m_bInteract = false;
+
+				// !UI Add
+				if (m_pUI_Interaction != nullptr)
+					m_pUI_Interaction->Set_OnCollision(false);	// 상호작용을 할 수 있는 범위에서 나갔는지 (Collision)
+					m_pUI_Interaction->Reset_Interaction_UI();	// 나가면서 UI 리셋
+			}
 			
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
@@ -530,6 +561,7 @@ void CEnvironment_Interact::Interact()
 				{
 					case CEnvironment_Interact::INTERACT_JUMP100:
 					{
+
 
 						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 						{
@@ -753,6 +785,72 @@ void CEnvironment_Interact::Interact()
 				}
 			}
 		}	
+}
+
+HRESULT CEnvironment_Interact::Find_UI_For_InteractType()
+{
+	// !Add UI
+	switch (m_tEnvironmentDesc.eInteractType)
+	{
+	case Client::CEnvironment_Interact::INTERACT_VAULT100:
+	case Client::CEnvironment_Interact::INTERACT_VAULT200:
+	case Client::CEnvironment_Interact::INTERACT_WAGONJUMP:
+		// Interaction_Icon_vault
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Vault", "Interaction_Icon_vault");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_WAGONEVENT: // 수레 타고가는거
+		break; // NO
+	case Client::CEnvironment_Interact::INTEARCT_WAGONROPEJUMP: // 수레 액션
+		break; // No
+	case Client::CEnvironment_Interact::INTERACT_CLIMB100:
+	case Client::CEnvironment_Interact::INTERACT_CLIMB200:
+	case Client::CEnvironment_Interact::INTERACT_CLIMB300:
+	case Client::CEnvironment_Interact::INTERACT_CLIMB450:
+		// Interaction_Icon_sqeese
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Sqeese", "Interaction_Icon_sqeese");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_WAGONPUSH:
+	case Client::CEnvironment_Interact::INTERACT_LEVER:
+		// Interaction_Icon_Generic
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Generic", "Interaction_Icon_Generic");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_JUMP100:
+	case Client::CEnvironment_Interact::INTERACT_JUMP200:
+	case Client::CEnvironment_Interact::INTERACT_JUMP300:
+	case Client::CEnvironment_Interact::INTERACT_PLANK: // 사다리 : 올라가기만함 점프 UI로 통일
+	case Client::CEnvironment_Interact::INTERACT_ROPECLIMB:
+		// Interaction_Icon_jupm_up
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Jump_Up", "Interaction_Icon_jupm_up");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_SLIDE:
+	case Client::CEnvironment_Interact::INTERACT_ROPEDOWN:
+		// Interaction_Icon_jupm_down
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Jump_Down", "Interaction_Icon_jupm_down");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_DOOROPEN:
+		// interaction_icon_end-level
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "End_Level", "interaction_icon_end-level");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_LADDERUP:
+		// Interaction_Icon_ladder
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Ladder", "Interaction_Icon_ladder");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_WHIPSWING:
+	case Client::CEnvironment_Interact::INTERACT_WHIPPULL:
+		// Interaction_Icon_Whip
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Whip", "Interaction_Icon_Whip");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_ROTATIONVALVE:
+		// Interaction_Icon_parts
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Parts", "Interaction_Icon_parts");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_END:
+		break;
+	default:
+		break;
+	}
+
+	return S_OK;
 }
 
 void CEnvironment_Interact::Move_For_PlayerRootMotion()
@@ -1702,6 +1800,9 @@ void CEnvironment_Interact::Free()
 	
 	if(m_pPlayer != nullptr)
 		Safe_Release(m_pPlayer);
+
+	if (m_pUIManager != nullptr)
+		Safe_Release(m_pUIManager);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);

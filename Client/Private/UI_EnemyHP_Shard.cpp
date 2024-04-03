@@ -51,31 +51,6 @@ void CUI_EnemyHP_Shard::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 {
-	//if (m_pGameInstance->Key_Down(DIK_V))
-	//	m_fCurHP -= 10.f;
-	//if (m_pGameInstance->Key_Down(DIK_B))
-	//	m_fCurHP += 10.f;
-
-	//if (m_pGameInstance->Key_Down(DIK_5))
-	//{
-	//	m_vStartPoint = { 0.0f, 1.0f };
-	//	m_vEndPoint = { 1.0f, 0.0f };
-	//}
-	//if (m_pGameInstance->Key_Down(DIK_6))
-	//{
-	//	m_vStartPoint = { 1.0f, 0.0f };
-	//	m_vEndPoint = { 0.0f, 1.0f };
-	//}
-	//if (m_pGameInstance->Key_Down(DIK_7))
-	//{
-	//	m_vStartPoint = { 1.0f, 1.0f };
-	//	m_vEndPoint = { 0.0f, 0.0f };
-	//}
-	//if (m_pGameInstance->Key_Down(DIK_8))
-	//{
-	//	m_vStartPoint = { 0.0f, 0.0f };
-	//	m_vEndPoint = { 1.0f, 1.0f };
-	//}
 
 	__super::Tick(fTimeDelta);
 
@@ -227,6 +202,10 @@ HRESULT CUI_EnemyHP_Shard::Ready_Components()
 
 HRESULT CUI_EnemyHP_Shard::Bind_ShaderResources()
 {
+	/* °øÅë */
+	if (FAILED(__super::Bind_ShaderResources()))
+		return E_FAIL;
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))

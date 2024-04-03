@@ -39,6 +39,9 @@ private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
 
+private:
+	void					Check_SkillActive(_float fTimeDelta, SKILLSTATE eState);
+
 public:
 	json					Save_Desc(json& out_json);
 	void					Load_Desc();
