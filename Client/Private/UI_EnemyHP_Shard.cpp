@@ -41,6 +41,14 @@ HRESULT CUI_EnemyHP_Shard::Initialize(void* pArg)
 	m_bActive = false;
 	m_tUIInfo.bWorld = true;
 
+	//m_fMaxHP = 100.f;
+	//m_fCurHP = m_fMaxHP;
+	//m_fCurHP = 0.f;
+
+	m_fVariationSpeed = 4.5;
+
+	//m_tUIInfo.iRenderGroup = 10;
+
 	return S_OK;
 }
 
@@ -52,19 +60,48 @@ void CUI_EnemyHP_Shard::Priority_Tick(_float fTimeDelta)
 void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 {
 
+	if (m_pCharacterOwner == nullptr)
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	//if (m_pOwner != nullptr)
 	//	Set_WorldMatrix(m_pOwner->Get_Transform()->Get_WorldMatrix());
 
+		/* Owner HP */
+	if (m_pCharacterOwner != nullptr)
+		m_fCurHP = m_pCharacterOwner->Get_CurHP();
+
 		// 회복
 	if (m_fPreHP < m_fCurHP)
 		m_fPreHP = m_fCurHP;
+
+	if (m_pGameInstance->Key_Down(DIK_J))
+		m_fCurHP -= 10.f;
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		m_fCurHP += 10.f;
+		//m_fPreHP = m_fCurHP;
+	}
 
 	//m_pData_Manager->Limit_HP();
 
 	if (m_bActive == true)
 	{
+		//m_fCurHP -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
+		//m_iShaderNum = 5; // 원형 게이지 pass
+
+		//if (m_fCurHP <= 0.f) // 전부 찼을 때 (0)
+		//{
+		//	// 활성화
+		//	m_fCurHP = 0.f;
+		//}
+		//else
+		//{
+		//	// 비활성화
+		//}
+
+
 		m_fTimeAcc += fTimeDelta * 0.1f;
 
 		if (m_fCurHP < m_fPreHP)
@@ -72,7 +109,7 @@ void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 
 		if (!m_bLerp && m_fPreHP > m_fCurHP)
 		{
-			m_fPreHP -= fTimeDelta * m_fVariationSpeed * (m_fMaxHP / 4.f);
+			m_fPreHP -= fTimeDelta * m_fVariationSpeed/* * (m_fMaxHP / 6.f)*/;
 
 			if (m_fPreHP <= m_fCurHP)
 			{
@@ -80,6 +117,38 @@ void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 				m_bLerp = true;
 			}
 		}
+
+		//m_fTimeAcc += fTimeDelta * 0.1f;
+
+		//if (m_fCurHP > m_fPreHP)
+		//	m_bLerp = false;
+
+		//if (!m_bLerp && m_fPreHP < m_fCurHP)
+		//{
+		//	m_fPreHP += fTimeDelta * m_fVariationSpeed/* * (m_fMaxHP / 6.f)*/;
+
+		//	if (m_fPreHP >= m_fCurHP)
+		//	{
+		//		m_fPreHP = m_fCurHP;
+		//		m_bLerp = true;
+		//	}
+		//}
+
+		//m_fTimeAcc += fTimeDelta * 0.1f;
+
+		//if (m_fCurHP < m_fPreHP)
+		//	m_bLerp = false;
+
+		//if (!m_bLerp && m_fPreHP > m_fCurHP)
+		//{
+		//	m_fPreHP -= fTimeDelta * m_fVariationSpeed * (m_fMaxHP / 4.f);
+
+		//	if (m_fPreHP <= m_fCurHP)
+		//	{
+		//		m_fPreHP = m_fCurHP;
+		//		m_bLerp = true;
+		//	}
+		//}
 	}
 }
 
@@ -102,7 +171,7 @@ HRESULT CUI_EnemyHP_Shard::Render()
 			return E_FAIL;
 
 		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(5); //!
+		m_pShaderCom->Begin(9); //!
 
 		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
 		m_pVIBufferCom->Bind_VIBuffers();
@@ -193,8 +262,13 @@ HRESULT CUI_EnemyHP_Shard::Ready_Components()
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
 
 	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("EnemyHUD_Shard_Hp"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+
+	//! For.Com_Texture
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("EnemyHUD_Shard_Hp_Pre"),
+		TEXT("Com_Texture_Pre"), reinterpret_cast<CComponent**>(&m_pTexturePreCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -222,12 +296,25 @@ HRESULT CUI_EnemyHP_Shard::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_MaxHP", &m_fMaxHP, sizeof(_float))))
 		return E_FAIL;
 
+
+	// 현재 체력을 계산해서 던져준다.
+	_float fRatio = (m_fMaxHP - m_fPreHP) / m_fMaxHP;
+	_float fCurRatio = (m_fMaxHP - m_fCurHP) / m_fMaxHP;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Ratio", &fRatio, sizeof(_float))))
+		return E_FAIL;	
+	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_CurRatio", &fCurRatio, sizeof(_float))))
+		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_StartPoint", &m_vStartPoint, sizeof(_float2))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_EndPoint", &m_vEndPoint, sizeof(_float2))))
 		return E_FAIL;
 
 
+	if (FAILED(m_pTexturePreCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexturePreShard")))
+		return E_FAIL;
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;
 

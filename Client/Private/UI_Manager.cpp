@@ -2604,10 +2604,16 @@ CUI_EnemyHUD_Shard* CUI_Manager::Add_EnemyHUD_Shard(_uint iLevelIndex, const wst
 		return nullptr;
 
 	pUI_Object->Set_Object_Owner(pOwner);
-	pUI_Object->Setting_Owner();
 
+	///* HP Bar */
+	//string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Shard";
+	//if (pUI_Object->Get_UIDesc().strCloneTag == strCloneTag_HPBar)
+	//{
+	//	dynamic_cast<CUI_EnemyHP_Shard*>(pUI_Object)->Setting_Owner();
+	//}
 
 	CUI_EnemyHUD_Shard* pEnemyHUD = dynamic_cast<CUI_EnemyHUD_Shard*>(pUI_Object);
+
 	/* 何前甸 积己 */
 	pEnemyHUD->Ready_ChildHUD();
 

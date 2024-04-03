@@ -867,7 +867,7 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 			m_bActive = true;
 
 		m_fWorldToScreenX = -(_float)iWinHalfX;
-		m_fWorldToScreenY = m_fPreScreenY;
+		//m_fWorldToScreenY = m_fPreScreenY;
 
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
@@ -886,7 +886,7 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 			m_bActive = true;
 
 		m_fWorldToScreenX = (_float)iWinHalfX;
-		m_fWorldToScreenY = m_fPreScreenY;
+		//m_fWorldToScreenY = m_fPreScreenY;
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
 	}
