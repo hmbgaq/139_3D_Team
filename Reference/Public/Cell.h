@@ -40,6 +40,9 @@ public:
 	//!For. SlidingVector
 	_bool			Is_Out(_fvector vWorldPos, _fvector vLook, _fmatrix WorldMatrix, _Inout_ _int* pNeighborIndex, _Inout_ _float4* pSliding);
 
+	_bool			Get_MoveEnable() { return m_bMoveEnable; }
+	void			Set_MoveEnable(_bool bMoveEnable) { m_bMoveEnable = bMoveEnable;}
+
 public:
 	HRESULT Initialize(const _float3* pPoints, _uint iIndex);
 	_bool Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);
@@ -68,6 +71,7 @@ private:
 	_uint					m_iIndex = { 0 };
 
 	_bool					m_bPicking = false;
+	_bool					m_bMoveEnable = true;
 
 #ifdef _DEBUG
 private:	

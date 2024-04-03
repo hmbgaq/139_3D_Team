@@ -95,6 +95,9 @@ _float3 CCell::Get_Compare_Point(const _float3* pPoint)
 
 _bool CCell::Is_Out(_fvector vWorldPos, _fvector vLook, _fmatrix WorldMatrix, _int* pNeighborIndex, _float4* pSliding)
 {
+	if(m_bMoveEnable == false)
+		return false;
+
 	/* 현재셀의 밖으로 나가는 함수 */
 	for (size_t i = 0; i < LINE_END; i++)
 	{
@@ -201,6 +204,9 @@ _bool CCell::Compare_Points(const _float3 * pSourPoint, const _float3 * pDestPoi
 
 _bool CCell::isIn(_fvector vPosition, _fmatrix WorldMatrix, _int* pNeighborIndex)
 {
+	if(m_bMoveEnable == false)
+		return false;
+
 	for (size_t i = 0; i < LINE_END; i++)
 	{
 		_vector	vStartPoint = XMVector3TransformCoord(XMLoadFloat3(&m_vPoints[i]), WorldMatrix);

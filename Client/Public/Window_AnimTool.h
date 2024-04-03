@@ -79,6 +79,9 @@ public://문자열 변환
 	char*			ConvertWCtoC(const wchar_t* str);
 	wchar_t*		ConvertCtoWC(const char* str);
 
+public:
+	void			Call_SeungYongButton();
+
 private:
 	CPreviewAnimationModel*	m_pPreViewModel = { nullptr };
 	CBounding_Sphere*		m_pBounding = { nullptr };

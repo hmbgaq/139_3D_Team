@@ -536,11 +536,25 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNaviga
 
 void CTransform::Add_RootBone_ForTarget(const _float3& vPos, CNavigation* pNavigation, CTransform* pTargetTransform)
 {
+	
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
+	
 	_vector vResult = vRootMove;
 	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
 
 	Move_On_Navigation(vResult, pNavigation);
+}
+
+_float3 CTransform::Get_RootBone_ForTarget(const _float3& vPos, CTransform* pTargetTransform)
+{
+	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
+
+	_vector vResult = vRootMove;
+
+	_float3 vReturnFloat3;
+	XMStoreFloat3(&vReturnFloat3, vRootMove);
+
+	return vReturnFloat3;
 }
 
 void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, CNavigation* pNavigation)

@@ -192,7 +192,7 @@ HRESULT CField::Bind_ShaderResources()
 		return E_FAIL;
 
 
-	_float4 vColor = { 0.f, 1.f, 0.f, 1.f };
+	_float4 vColor = { 0.f, 0.f, 1.f, 1.f };
 
 	//// ¸¶½ºÅ©
 	//if (FAILED(m_pTextureCom[TYPE_MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", 0)))

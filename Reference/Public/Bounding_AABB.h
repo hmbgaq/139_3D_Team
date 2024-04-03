@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-class CBounding_AABB final : public CBounding
+class ENGINE_DLL CBounding_AABB final : public CBounding
 {
 public:
 	typedef struct tagAABB: public BOUNDING_DESC
@@ -24,6 +24,8 @@ public:
 		return m_pOriginalAABB;
 	}
 
+	_float3		Get_MinCorner();
+	_float3		Get_MaxCorner();
 
 	virtual void Set_matScale(_matrix _matScale) override { m_matScale = _matScale; }
 	virtual void Set_Test(_vector _vTest) override { m_vTest = _vTest; }
@@ -46,6 +48,9 @@ private:
 
 	/* 월드로 갱신된 상태를 가지는 데이터 */
 	BoundingBox*			m_pAABB = { nullptr };
+
+	/* 월드로 갱신된 상태를 가지는 데이터 */
+	BoundingBox*			m_pFutureAABB = { nullptr };
 
 public:
 	static CBounding_AABB* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, BOUNDING_DESC* pBoundingDesc);

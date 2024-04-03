@@ -75,7 +75,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		CCharacter* pPlayer = dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player")));
 		m_pGameInstance->Set_Player(pPlayer);
 		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
-		
 	}
 	//disPlay
 	ShowDialog();
@@ -1459,6 +1458,15 @@ wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
 
 
 	return pStr;
+}
+
+void CWindow_AnimTool::Call_SeungYongButton()
+{
+	//TODO 승용 전용 함수
+
+	CCharacter* pPlayer = dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player")));
+	m_pGameInstance->Set_Player(pPlayer);
+	m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
 }
 
 CWindow_AnimTool* CWindow_AnimTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
