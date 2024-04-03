@@ -28,6 +28,37 @@ HRESULT CBody_Infected_C::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CBody_Infected_C::OptionSetting()
+{
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 6 }; // ÇÇ¶± 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 0, 1, 10 }; // ¹«±â 
+	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 2, 3, 5, }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
+
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
+	return S_OK;
+}
+
+HRESULT CBody_Infected_C::Ready_Components()
+{
+	FAILED_CHECK(__super::Ready_Components());
+
+	/* For.Com_Model */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Infected_C"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+
+	return S_OK;
+}
+
+HRESULT CBody_Infected_C::Bind_ShaderResources()
+{
+	FAILED_CHECK(__super::Bind_ShaderResources());
+
+	m_gCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float)));
+
+	return S_OK;
+}
+
 void CBody_Infected_C::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
@@ -57,33 +88,9 @@ HRESULT CBody_Infected_C::Render_Shadow()
 	return S_OK;
 }
 
-HRESULT CBody_Infected_C::OptionSetting()
+HRESULT CBody_Infected_C::Render_CSM(_uint i)
 {
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 6 }; // ÇÇ¶± 
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 0, 1, 10 }; // ¹«±â 
-	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 2, 3, 5, }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
-
-	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
-
-	return S_OK;
-}
-
-HRESULT CBody_Infected_C::Ready_Components()
-{
-	FAILED_CHECK(__super::Ready_Components());
-
-	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Infected_C"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-
-	return S_OK;
-}
-
-HRESULT CBody_Infected_C::Bind_ShaderResources()
-{
-	FAILED_CHECK(__super::Bind_ShaderResources());
-
-	m_gCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float)));
+	FAILED_CHECK(__super::Render_CSM(i));
 
 	return S_OK;
 }

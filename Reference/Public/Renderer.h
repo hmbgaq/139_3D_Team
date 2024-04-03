@@ -46,7 +46,7 @@ private:
 	HRESULT Render_Fog();
 
 	HRESULT Render_NonBlend();
-	HRESULT Render_Shadow();
+	HRESULT Render_ShadowDepth();
 	HRESULT Render_Cascade();
 	HRESULT Render_LightAcc();
 	HRESULT Render_HBAO_PLUS();
@@ -91,7 +91,6 @@ private:
 	HRESULT	Render_Blur_Vertical(_int eVerticalPass);
 	HRESULT	Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
 
-	HRESULT Deferred_Shadow();
 	HRESULT Render_ShadowBlur();
 	HRESULT Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring& Blend_Target_Tag);
 	HRESULT Ready_CascadeShadow();

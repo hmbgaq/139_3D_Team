@@ -57,6 +57,13 @@ HRESULT CBody_Infected_B::Render_Shadow()
 	return S_OK;
 }
 
+HRESULT CBody_Infected_B::Render_CSM(_uint i)
+{
+	FAILED_CHECK(__super::Render_CSM(i));
+
+	return S_OK;
+}
+
 HRESULT CBody_Infected_B::OptionSetting()
 {
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 9, 10, 11, 12, 13, 14, 15 }; // ÇÇ¶± 

@@ -89,8 +89,16 @@ namespace Engine
 	//static float					g_iWinsizeY = 1080.f;
 
 	static float					g_fLightNear = 0.1f;
-	static float					g_fLightFar = 3000.f;
-	static DirectX::XMFLOAT4		g_vLightPos = { 0.f, 120.f, -105.f, 1.f };
+	static float					g_fLightFar = 300.f;
+	static DirectX::XMFLOAT4		g_vLightEye = { -20.f, 20.f, -20.f, 1.f };
+	static DirectX::XMFLOAT4		g_vLightAt = { 0.f, 0.f, 0.f, 1.f };
+	static DirectX::XMFLOAT4		g_vLightUp = { 0.f, 1.f, 0.f, 0.f };
+
+	/* 수업 코드 */
+	// XMVectorSet(-20.f, 20.f, -20.f, 1.f), 
+	// XMVectorSet(0.f, 0.f, 0.f, 1.f),
+	// XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	// 
 }
 
 using namespace Engine;

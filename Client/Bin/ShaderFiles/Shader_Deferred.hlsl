@@ -100,8 +100,10 @@ float g_fBias;
 float3 g_vLightColor;
 
 /* ========== Cascade Shadow ============= */
-float g_fStaticBias;
+float g_fStaticBias = 6.2;
+float g_fShadowSizeRatio = 6.2;
 matrix g_CascadeProj[3];
+matrix g_StaticLightViewMatrix;
 
 Texture2D g_CascadeTarget1;
 Texture2D g_CascadeTarget2;
@@ -230,6 +232,140 @@ float4 DoSpecular(float4 lightColor, float shininess, float3 L, float3 N, float3
     return lightColor * pow(RdotV, shininess);
 }
 
+//PCF
+float PCF_StaticShadowCalculation_Cascade(float4 vWorldPos, float fBias, float fViewZ)
+{
+    float4 vProjCoords;
+
+    float fShadow = 1.0f;
+
+    fBias = g_fStaticBias;
+    
+    float2 texelSize = float2(1.f / 1280.0f, 1.f / 720.0f);
+
+    if (fViewZ <= 10.0f) // 각각의 Cascade Target별로의 Shadow를 구하기 
+    {
+        vProjCoords = mul(vWorldPos, g_CascadeProj[0]);
+
+        vProjCoords.x = vProjCoords.x * 0.5f + 0.5f;
+        vProjCoords.y = vProjCoords.y * -0.5f + 0.5f;
+        
+        float currentDepth = vProjCoords.z;
+        if (currentDepth > 1.0)
+            return 1.0;
+
+        currentDepth -= fBias;
+
+        for (int x = -1; x <= 1; ++x)
+        {
+            for (int y = -1; y <= 1; ++y)
+            {
+                float pcfDepth = g_CascadeTarget1.Sample(PointClampSampler, vProjCoords.xy + float2(x, y) * texelSize).x;
+                fShadow += currentDepth > pcfDepth ? 0.5f : 1.0f;
+            }
+        }
+        fShadow /= 9.0f;
+
+    }
+    else if (fViewZ > 10.0f && fViewZ <= 20.0f)
+    {
+        vProjCoords = mul(vWorldPos, g_CascadeProj[1]);
+
+        vProjCoords.x = vProjCoords.x * 0.5f + 0.5f;
+        vProjCoords.y = vProjCoords.y * -0.5f + 0.5f;
+        
+        float currentDepth = vProjCoords.z;
+        if (currentDepth > 1.0)
+            return 1.0;
+
+        currentDepth -= fBias;
+        
+        for (int x = -1; x <= 1; ++x)
+        {
+            for (int y = -1; y <= 1; ++y)
+            {
+                float pcfDepth = g_CascadeTarget2.Sample(PointClampSampler, vProjCoords.xy + float2(x, y) * texelSize).x;
+                fShadow += currentDepth > pcfDepth ? 0.5f : 1.0f;
+            }
+        }
+        fShadow /= 9.0f;
+    }
+    else if (fViewZ > 20.0f)
+    {
+        vProjCoords = mul(vWorldPos, g_CascadeProj[2]);
+
+        vProjCoords.x = vProjCoords.x * 0.5f + 0.5f;
+        vProjCoords.y = vProjCoords.y * -0.5f + 0.5f;
+
+        float2 vTexCoords = saturate(vProjCoords.xy);
+
+        if (vTexCoords.x != vProjCoords.x || vTexCoords.y != vProjCoords.y)
+            return 1.0f;
+
+        float currentDepth = vProjCoords.z;
+        if (currentDepth > 1.0)
+            return 1.0;
+
+        currentDepth -= fBias;
+
+        for (int x = -1; x <= 1; ++x)
+        {
+            for (int y = -1; y <= 1; ++y)
+            {
+                float pcfDepth = g_CascadeTarget3.Sample(PointClampSampler, vProjCoords.xy + float2(x, y) * texelSize).x;
+                fShadow += currentDepth > pcfDepth ? 0.5f : 1.0f;
+            }
+        }
+        fShadow /= 9.0f;
+    }
+    else
+    {
+        return 1.0f;
+    }
+
+    return fShadow;
+}
+
+
+//PCF
+float PCF_ShadowCalculation(float4 fragPosLightSpace, float fBias)
+{
+	// perform perspective divide
+    float3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+	// Transform to [0,1] range
+    projCoords.x = projCoords.x * 0.5f + 0.5f;
+    projCoords.y = projCoords.y * -0.5f + 0.5f;
+
+    float2 vTexCoords = saturate(projCoords.xy);
+
+    if (vTexCoords.x != projCoords.x || vTexCoords.y != projCoords.y)
+        return 1.0f;
+
+    float currentDepth = projCoords.z;
+    if (currentDepth > 1.0)
+        return 1.0;
+	
+	//fragPosLightSpace.w -= fBias;
+
+    currentDepth -= fBias;
+
+	// PCF
+    float shadow = 0.0;
+    float2 texelSize = float2(1.f / 1280.f, 1.f / 720.f);
+    texelSize /= g_fShadowSizeRatio;
+
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = g_ShadowDepthTexture.Sample(ShadowSampler, projCoords.xy + float2(x, y) * texelSize).x;
+            shadow += currentDepth > pcfDepth ? 0.5f : 1.0f;
+        }
+    }
+    shadow /= 9.0f;
+    return shadow;
+}
 
 /*=============================================================
  
@@ -654,7 +790,7 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
     vEmissive = pow(vEmissive, gamma);
     
-    Out.vColor.rgb = vBRDF * ShadowColor + vEmissive + vSpecular;
+    Out.vColor.rgb = vBRDF * ShadowColor + vEmissive + vSpecular.rgb;
     
     Out.vColor.a = 1.f;
 	
@@ -715,31 +851,61 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     float3 L = normalize(-g_vLightDir);
     float3 H = normalize(V + L);
         
-    float ShadowColor = 1.f;
-    if (true == g_bShadow_Active)
-    {
-        vector vPosition = mul(vWorldPos, g_LightViewMatrix);
-        vPosition = mul(vPosition, g_LightProjMatrix);
-   
-        float2 vUV = (float2) 0.0f;
-   
-        vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
-        vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
-   
-        float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
-   
-        if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-            ShadowColor = 0.8f;
-    }
-    
     // BRDF : Cook-Torrance Specular BRDF / Radiance 계산은 여기 함수 내부에서 처리할예정 
     float3 CT_BRDF = MY_BRDF_Irradiance(fRoughness, fMetallic, vAlbedo.rgb, F0, fAO, N, V, L, H);
     
+    // - 1. Shadow ---------------- 
+    float fResultShadow = 1.0f;
+    float ShadowColor = 1.f;
+    
+    if (true == g_bShadow_Active)
+    {
+        //vector vPosition = mul(vWorldPos, g_LightViewMatrix);
+        //vPosition = mul(vPosition, g_LightProjMatrix);
+        //
+        //float2 vUV = (float2) 0.0f;
+        //
+        //vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
+        //vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
+        //
+        //float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
+        //
+        //if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
+        //    fResultShadow = 0.8f;
+        
+       float fDot = saturate(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal.xyz));
+       
+       float fNormalOffset = g_fBias;
+       
+       float fBias = max((fNormalOffset * 5.0f) * (1.0f - (fDot * -1.0f)), fNormalOffset);
+       vector vStaticPosition = mul(vWorldPos, g_StaticLightViewMatrix);
+       vStaticPosition = mul(vStaticPosition, g_LightProjMatrix);
+       
+       ShadowColor = PCF_StaticShadowCalculation_Cascade(vWorldPos, fBias, fViewZ);
+       
+       if (ShadowColor > 0.51f)
+       {
+       vector vDynamicPosition = mul(vWorldPos, g_LightViewMatrix);
+       vDynamicPosition = mul(vDynamicPosition, g_LightProjMatrix);
+       
+       float fShadow = PCF_ShadowCalculation(vDynamicPosition, fBias);
+       
+           fResultShadow = min(ShadowColor, fShadow);
+       }
+       else
+           fResultShadow = ShadowColor;
+       
+    }
+    else
+        fResultShadow = 1.f;
+    
+    // - 1. Fog ----------------
+    
+    // - 3. Emissive ----------------
     float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
     vEmissive = pow(vEmissive, gamma);
     
-    Out.vColor.rgb = CT_BRDF * ShadowColor + vEmissive ;
-    //Out.vColor.rgb = CT_BRDF * ShadowColor;
+    Out.vColor.rgb = CT_BRDF * fResultShadow + vEmissive;
     Out.vColor.a = 1.f;
 	
     return Out;

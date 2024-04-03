@@ -17,9 +17,10 @@ float       g_fCamFar;
 float       g_fLightFar;
 float       g_TimeDelta;
 
-float4 g_CheckColor = { 1.f, 0.f, 0.f, 1.f };
-bool g_bORM_Available;
-bool g_bEmissive_Available;
+float4      g_CheckColor = { 1.f, 0.f, 0.f, 1.f };
+bool        g_bORM_Available;
+bool        g_bEmissive_Available;
+
 /* =========== Texture =========== */
 Texture2D   g_DiffuseTexture;       /* Noblend */
 Texture2D   g_NormalTexture;        /* Noblend */
@@ -34,22 +35,23 @@ Texture2D   g_MaskingTexture;
 Texture2D   g_NoiseTexture;
 
 /* =========== Value =========== */
-float       g_Dissolve_Weight = 0.f;        /* Dissolve - 디졸브 가중치  */
-float       g_Dissolve_feather = 0.1;       /* Dissolve - 마스크의 테두리를 부드럽게 만드는 데 사용*/
-float3      g_Dissolve_Color = { 0.f, 0.f, 0.f }; /* Dissolve - 디졸브 사라지기 직전에 보이는 색상 */
-float       g_Dissolve_ColorRange = 0.1f;   /* 위의 직전 보이는 색상이 어디까지 보일것인지 */ 
+float       g_Dissolve_Weight = 0.f;                /* Dissolve - 디졸브 가중치  */
+float       g_Dissolve_feather = 0.1;               /* Dissolve - 마스크의 테두리를 부드럽게 만드는 데 사용*/
+float3      g_Dissolve_Color = { 0.f, 0.f, 0.f };   /* Dissolve - 디졸브 사라지기 직전에 보이는 색상 */
+float       g_Dissolve_ColorRange = 0.1f;           /* 위의 직전 보이는 색상이 어디까지 보일것인지 */ 
 
-float4      g_vLineColor;           /* OutLine */
-float       g_LineThick;            /* OutLine */
+float4      g_vLineColor;                           /* OutLine */
+float       g_LineThick;                            /* OutLine */
 
 float3      g_vBloomPower = { 0.f, 0.f, 0.f };      /* Bloom */
 float4      g_vRimColor   = { 0.f, 0.f, 0.f, 0.f }; /* RimLight */
 float       g_fRimPower   = 5.f;                    /* RimLight */
 
-matrix      g_CascadeProj; /* Cascade */
+matrix      g_CascadeProj;                          /* Cascade */
+
 /*=============================================================
  
-                             Function 
+                           Function 
                                 
 ==============================================================*/
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
@@ -107,6 +109,12 @@ struct VS_OUT_SHADOW
 };
 
 struct VS_OUT_OUTLINE
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct VS_OUT_CASCADE_SHADOW
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
@@ -181,6 +189,31 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
+VS_OUT_SHADOW VS_SHADOW_DEPTH(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+    
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(vPosition, matWVP);
+    Out.vProjPos = Out.vPosition;
+	
+    return Out;
+}
+
 VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
@@ -200,8 +233,6 @@ VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
 
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vTexcoord = In.vTexcoord;
-    Out.vProjPos = Out.vPosition;
     
     return Out;
 }
@@ -240,6 +271,7 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
                                 
 ==============================================================*/
 
+/* ------------------- Pixel Shader(0) : 노말셰이더  -------------------*/
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -266,41 +298,30 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
-/* ------------------- Shadow Pixel Shader(2) -------------------*/
+/* ------------------- Pixel Shader(1) : 후면추리기x, 블랜드상태 등 -> 추가할거 추가할수있음   -------------------*/
 
-PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
+/* ------------------- Pixel Shader(2) : 가상의 빛의 위치에서 그림자 깊이 기록  -------------------*/
+
+PS_OUT_SHADOW PS_MAIN_SHADOW(VS_OUT_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
+    //Out.vLightDepth = float4(In.vProjPos.z / In.vProjPos.w, 0.0f, 0.0f, 0.0f);
+    
     Out.vLightDepth = In.vProjPos.w / g_fLightFar;
-	
+    
     return Out;
 }
 
-/* ------------------- Pixel Shader(3) : Infected -------------------*/
-PS_OUT PS_INFECTED_WEAPON(PS_IN In)
+/* ------------------- Pixel Shader(3) : Cascade Shadow -------------------*/
+PS_OUT_SHADOW PS_CASCADE_SHADOW(VS_OUT_SHADOW In)
 {
-    PS_OUT Out = (PS_OUT) 0;
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
-
-    Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    if (true == g_bORM_Available)
-        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    //Out.vLightDepth = (In.vProjPos.z, 0.f, 0.f, 0.f);
+	
+    Out.vLightDepth = In.vProjPos.z;
     
-    if (true == g_bEmissive_Available)
-        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
- 
-    /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
-    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     return Out;
 }
 
@@ -346,17 +367,7 @@ PS_OUT PS_MAIN_CHECK(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(6) : Cascade Shadow -------------------*/
-PS_OUT_SHADOW PS_CASCADE_SHADOW(VS_OUT_SHADOW In) 
-{
-    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
-
-    Out.vLightDepth = (In.vProjPos.z, 0.f, 0.f, 0.f);
-	
-    return Out;
-}
-
-/* ------------------- Pixel Shader(7) : OutLine  -------------------*/
+/* ------------------- Pixel Shader(7) : OutLine Blink  -------------------*/
 PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
@@ -370,7 +381,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     
     return Out;
 }
-/* ------------------- Pixel Shader(8) : OutLine  -------------------*/
+/* ------------------- Pixel Shader(8) : OutLine : Keep Color  -------------------*/
 PS_OUT_OUTLINE PS_MAIN_OUTLINE_Keep(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
@@ -378,6 +389,34 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_Keep(PS_IN_OUTLINE In)
     vector vColor = g_vLineColor;
     
     Out.vColor = vColor;
+    
+    return Out;
+}
+
+/* ------------------- Pixel Shader() : Infected -------------------*/
+PS_OUT PS_INFECTED_WEAPON(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+ 
+    /* ---------------- New ---------------- */
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     
     return Out;
 }
@@ -419,23 +458,24 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_SHADOW_DEPTH();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 
-    pass Infected_Weapon // 3
+    pass Cascade // 3
     {
-        SetRasterizerState(RS_Cull_None);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CASCADE_SHADOW();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_INFECTED_WEAPON();
+        PixelShader = compile ps_5_0 PS_CASCADE_SHADOW();
+
     }
 
     pass Dissolve // 4
@@ -462,20 +502,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_CHECK();
     }
 
-    pass Cascade // 6
-    {
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_CASCADE_SHADOW();
-        GeometryShader = NULL;
-        HullShader = NULL;
-        DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_CASCADE_SHADOW();
-
-    }
-
-    pass OutLine // 7
+    pass OutLine_Blink // 6
     {
         SetRasterizerState(RS_Cull_CW);
         SetDepthStencilState(DSS_Default, 0);
@@ -498,4 +525,17 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_Keep();
     }
+
+    pass Infected_Weapon // 8
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_INFECTED_WEAPON();
+    }
+
 }

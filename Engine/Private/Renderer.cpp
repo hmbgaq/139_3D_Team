@@ -77,9 +77,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	/* --- Pre-Post Processing --- */
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects - Diffuse, Normal, Depth, Bloom */
-
-	FAILED_CHECK(Render_Shadow());		/* MRT_Shadow - Target_ShadowDepth  */
-
+	
+	if(true == m_tDeferred_Option.bShadow_Active)
+		FAILED_CHECK(Render_ShadowDepth());		/* MRT_Shadow - Target_ShadowDepth // -> Blur -> Target_Shadow_Blur 저장   */
+	
 	FAILED_CHECK(Render_Cascade());
 
 	FAILED_CHECK(Render_OutLine()); /* MRT_OutLine -> Target_OutLine 에 저장 */
@@ -220,7 +221,7 @@ HRESULT CRenderer::Render_NonBlend()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Shadow()
+HRESULT CRenderer::Render_ShadowDepth()
 {
 	/* 그림자의 깊이를 만들었음 - Light 기준으로 */
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow"), m_pLightDepthDSV));
@@ -258,6 +259,8 @@ HRESULT CRenderer::Render_Shadow()
 	ViewPortDesc.MaxDepth = 1.f;
 	
 	m_pContext->RSSetViewports(1, &ViewPortDesc);
+
+	//Render_ShadowBlur();
 
 	return S_OK;
 }
@@ -432,89 +435,6 @@ HRESULT CRenderer::Render_Deferred()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_PBR()
-{
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Deferred")));
-
-	/* VS_MAIN */
-	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
-	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
-
-	/* PS_MAIN */
-	_float			CamFar = m_pGameInstance->Get_CamFar();
-	_float4			CamPos = m_pGameInstance->Get_CamPosition();
-	_float			LightFar = m_pGameInstance->Get_ShadowLightFar(m_iCurrentLevel);
-	_float4			LightDiffuse = m_pGameInstance->Get_DirectionLight()->Get_LightDesc().vDiffuse;
-	_float4			LightDir = m_pGameInstance->Get_DirectionLight()->Get_LightDir();
-
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vLightDir", &LightDir, sizeof(_float)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightFar", &LightFar, sizeof(_float)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vCamPosition", &CamPos, sizeof(_float4)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_LightViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_iCurrentLevel)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_LightProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_iCurrentLevel)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ViewMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_VIEW)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_Matrix("g_ProjMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ)));
-	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightDiffuse", &LightDiffuse, sizeof(_float4)));
-
-	/* 타겟에 값올리기 */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Priority"), m_pShader_Deferred, "g_PriorityTarget"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Diffuse"), m_pShader_Deferred, "g_DiffuseTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ORM"), m_pShader_Deferred, "g_ORMTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_HBAO"), m_pShader_Deferred, "g_SSAOTexture")); /* ssao 추가 */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Normal"), m_pShader_Deferred, "g_NormalTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_Deferred, "g_DepthTarget"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ShadowDepth"), m_pShader_Deferred, "g_ShadowDepthTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
-
-	/* Texture */
-	switch (m_pGameInstance->Get_NextLevel())
-	{
-	case 9: // LEVEL_GamePlay
-		FAILED_CHECK(m_pIrradianceTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-		FAILED_CHECK(m_pPreFilteredTextureCom[0]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
-		break;
-	case 3: // LEVEL_INTRO_BOSS
-		FAILED_CHECK(m_pIrradianceTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-		FAILED_CHECK(m_pPreFilteredTextureCom[1]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
-		break;
-	case 4: // LEVEL_SNOWMOUNTAIN
-		FAILED_CHECK(m_pIrradianceTextureCom[2]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-		FAILED_CHECK(m_pPreFilteredTextureCom[2]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
-		break;
-	case 5: // LEVEL_SNOWMOUNTAINBOSS
-		//FAILED_CHECK(m_pIrradianceTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-		//FAILED_CHECK(m_pPreFilteredTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
-		break;
-
-	case 7:
-		m_bToolLevel = true;
-		break;
-	}
-
-	if (m_bToolLevel)
-	{
-		FAILED_CHECK(m_pTool_IrradianceTextureCom[m_iPBRTexture_InsteadLevel]->Bind_ShaderResource(m_pShader_Deferred, "g_IrradianceTexture"));
-		FAILED_CHECK(m_pTool_PreFilteredTextureCom[m_iPBRTexture_InsteadLevel]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFilteredTexture"));
-	}
-
-	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDFTexture"));
-
-	if (true == m_tFog_Option.bFog_Active)
-	{
-		FAILED_CHECK(m_pShader_Deferred->Bind_Struct("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
-		FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_PerlinNoiseTexture"));
-	}
-	
-	FAILED_CHECK(m_pShader_Deferred->Begin(ECast(DEFERRED_SHADER::PBR)));
-	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
-	FAILED_CHECK(m_pVIBuffer->Render());
-	FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	return S_OK;
-}
-
 HRESULT CRenderer::Render_MyPBR()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Deferred")));
@@ -532,6 +452,10 @@ HRESULT CRenderer::Render_MyPBR()
 	_float4			vLightColor = DirectionalLight_Desc.vDiffuse;
 	_float4			vLightDir = DirectionalLight_Desc.vDirection;
 
+
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bSSAO_Active", &m_tHBAO_Option.bHBAO_Active, sizeof(_bool)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bFog_Active", &m_tFog_Option.bFog_Active, sizeof(_bool)));
+	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_bShadow_Active", &m_tDeferred_Option.bShadow_Active, sizeof(_bool)));
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_CamFar", &CamFar, sizeof(_float))); //
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float))); //
 	FAILED_CHECK(m_pShader_Deferred->Bind_RawValue("g_LightFar", &LightFar, sizeof(_float)));
@@ -552,7 +476,12 @@ HRESULT CRenderer::Render_MyPBR()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ShadowDepth"), m_pShader_Deferred, "g_ShadowDepthTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Emissive"), m_pShader_Deferred, "g_EmissiveTarget"))
-    
+	
+	/* Cascade Shadow*/
+	//FAILED_CHECK(m_pShader_Deferred->Bind_Matrices("g_CascadeProj", m_pGameInstance->Get_Shadow_Proj(), 3)); //
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Cascade1"), m_pShader_Deferred, "g_CascadeTarget1"))
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Cascade2"), m_pShader_Deferred, "g_CascadeTarget2"))
+	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Cascade3"), m_pShader_Deferred, "g_CascadeTarget3"))
 
 	/* Texture */
 	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDF_Texture"));
@@ -1185,30 +1114,9 @@ HRESULT CRenderer::Render_MotionBlur()
 	return S_OK;
 }
 
-HRESULT CRenderer::Deferred_Shadow()
-{
-	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow"), m_pLightDepthDSV));
-
-	for (auto& pGameObject : m_RenderObjects[RENDER_SHADOW])
-	{
-		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
-			pGameObject->Render_Shadow();
-
-		Safe_Release(pGameObject);
-	}
-
-	m_RenderObjects[RENDER_SHADOW].clear();
-
-	FAILED_CHECK(m_pGameInstance->End_MRT());
-
-	FAILED_CHECK(Render_ShadowBlur());
-
-	return S_OK;
-}
-
 HRESULT CRenderer::Render_ShadowBlur()
 {
-	FAILED_CHECK(Render_Blur(TEXT("Target_ShadowDepth"), TEXT("MRT_ShadowBlur"),
+	FAILED_CHECK(Render_Blur(TEXT("Target_ShadowDepth"), TEXT("MRT_Shadow_Blur"),
 				 ECast(BLUR_SHADER::BLUR_HORIZON_QUARTER),
 				 ECast(BLUR_SHADER::BLUR_VERTICAL_QUARTER),
 				 ECast(BLUR_SHADER::BLUR_UP_ADD), true));
@@ -1250,8 +1158,8 @@ HRESULT CRenderer::Ready_CascadeShadow()
 		D3D11_TEXTURE2D_DESC	TextureDesc;
 		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-		TextureDesc.Width = 1280.0f;
-		TextureDesc.Height = 720.0f;
+		TextureDesc.Width = 1280;
+		TextureDesc.Height = 720;
 		TextureDesc.MipLevels = 1;
 		TextureDesc.ArraySize = 1;
 		TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -1542,10 +1450,10 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")));
 
 	/* MRT_Deferred_Shadow - 보류*/
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Blur"), TEXT("Target_Shadow_Blur")));
 	//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Deferred"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 0.f)));
 	//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Deferred"), TEXT("Target_Shadow_Deferred")));
-	//FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f)));
-	//FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Blur"), TEXT("Target_Shadow_Blur")));
 
 	/* MRT_Shadow -> Render_Shadow 로 받아온값 */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_ShadowDepth"), g_iSizeX, g_iSizeY, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)));
@@ -1759,14 +1667,15 @@ HRESULT CRenderer::Ready_DebugRender()
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimBloom"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Independent"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Emissive"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade1"), ((fBigX / 2.f * 1)), (fBigY / 2.f * 1.f), fBigX, fBigY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade2"), ((fBigX / 2.f * 1)), (fBigY / 2.f * 3.f), fBigX, fBigY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade3"), ((fBigX / 2.f * 1)), (fBigY / 2.f * 5.f), fBigX, fBigY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"),  ((fBigX / 2.f * 3)), (fBigY / 2.f * 1.f), fBigX, fBigY));
+	
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"),  ((fSizeY / 2.f * 3)), (fSizeY / 2.f * 1.f), fSizeY, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade1"), ((fSizeX / 2.f * 3)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade2"), ((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade3"), ((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
 
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"), (fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
 	
 	{	
 		/* !유정 : Effect관련 RenderTarget */

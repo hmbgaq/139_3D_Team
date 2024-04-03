@@ -31,17 +31,18 @@ Texture2D       g_ColorDiffuse;
 Texture2D       g_RADTexture;
 
 /* =========== Shader Value =========== */
-float   g_fDissolveWeight;                          /* Dissolve */
-                                                    
-float4  g_vLineColor = { 1.f, 1.f, 1.f, 1.f }; /* OutLine */
-float   g_LineThick = 1.f;                                /* OutLine */
-                                                    
-float3  g_vBloomPower = { 0.f, 0.f, 0.f };          /* Bloom */
-float4  g_vRimColor = { 0.f, 0.f, 0.f, 0.f };       /* RimLight */
-float   g_fRimPower = 5.f;
+float           g_fDissolveWeight;                          /* Dissolve */
+                                                            
+float4          g_vLineColor = { 1.f, 1.f, 1.f, 1.f };      /* OutLine */
+float           g_LineThick = 1.f;                          /* OutLine */
+                                                            
+float3          g_vBloomPower = { 0.f, 0.f, 0.f };          /* Bloom */
+float4          g_vRimColor = { 0.f, 0.f, 0.f, 0.f };       /* RimLight */
+float           g_fRimPower = 5.f;
 
-float   g_fReflectionScale = 0.05f;                 /* Icicle */ 
+float           g_fReflectionScale = 0.05f;                 /* Icicle */ 
 
+matrix          g_CascadeProj;                              /* Cascade */
 /*=============================================================
  
                              Function 
@@ -116,6 +117,13 @@ struct VS_OUT
 	float4		vProjPos        : TEXCOORD2;
 	float4		vTangent        : TANGENT;
 	float4		vBinormal       : BINORMAL;
+};
+
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
 };
 
 struct VS_OUT_OUTLINE
@@ -219,6 +227,23 @@ VS_OUT VS_MAIN(VS_IN In)
 	return Out;
 }
 
+
+VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vProjPos = Out.vPosition;
+    
+    return Out;
+}
+
 VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
 {
     VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
@@ -313,7 +338,7 @@ PS_OUT PS_SKYBOX_MAIN(PS_IN In)
 }
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
-PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
+PS_OUT_SHADOW PS_MAIN_SHADOW(VS_OUT_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
@@ -659,11 +684,23 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+    }
+
+    pass Cascade // 3
+    {
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_KEEP();
     }
 
     pass White_Blink // 3 - Interact Chain전용 
@@ -677,19 +714,6 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_WHITE_BLINK();
-    }
-
-    pass OutLine_Blink // 4
-    {
-        SetRasterizerState(RS_Cull_CW);
-        SetDepthStencilState(DSS_Default, 0);
-        //SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
-        GeometryShader = NULL;
-        HullShader = NULL;
-        DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 
     pass Model_NoneCull_NoneDSS //5번 패스
@@ -786,6 +810,19 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_KEEP();
+    }
+
+    pass OutLine_Blink // 4
+    {
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_Default, 0);
+        //SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 
 

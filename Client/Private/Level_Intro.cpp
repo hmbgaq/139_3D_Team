@@ -867,10 +867,6 @@ HRESULT CLevel_Intro::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 
 HRESULT CLevel_Intro::Ready_LightDesc()
 {
-    /* For. Shadow */
-    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
-
    //LIGHT_DESC         LightDesc{};
    //{
    //    LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
@@ -914,6 +910,9 @@ HRESULT CLevel_Intro::Ready_LightDesc()
         if (LightDesc.eType == tagLightDesc::TYPE_DIRECTIONAL)
         {
             CLight* pDirectionLight = m_pGameInstance->Get_DirectionLight();
+
+            //
+           // m_pGameInstance->Ready_StaticLightMatrix()
 
             if (pDirectionLight != nullptr)
             {
@@ -995,13 +994,27 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 
 HRESULT CLevel_Intro::Ready_Shader()
 {
+    /* For. Shadow */
+    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+    
+    //
+    _float3 Dir = m_pGameInstance->Get_DirectionLight()->Get_LightDesc().vDirection;
+    _float3 vDir;
+    XMStoreFloat3(&vDir, XMVector3Normalize(XMLoadFloat3(&Dir)));
+
+    _float3 vOffset = { 0.f, 30.f, 0.f };
+
+    m_pGameInstance->Ready_StaticLightMatrix(vOffset, vDir);
+
+
     PBR_DESC Desc_PBR = {};
     Desc_PBR.bPBR_ACTIVE = true;
     m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
 
     DEFERRED_DESC Desc_Deferred = {};
     Desc_Deferred.bRimBloom_Blur_Active = true;
-    Desc_Deferred.bShadow_Active        = false;
+    Desc_Deferred.bShadow_Active        = true;
     m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
     
     HBAO_PLUS_DESC Desc_Hbao = {};

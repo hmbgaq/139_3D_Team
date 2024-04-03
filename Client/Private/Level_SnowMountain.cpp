@@ -73,10 +73,6 @@ HRESULT CLevel_SnowMountain::Render()
 
 HRESULT CLevel_SnowMountain::Ready_LightDesc()
 {
-	/* For. Shadow */
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
-
 	/* For. Light */
 	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
@@ -628,6 +624,10 @@ HRESULT CLevel_SnowMountain::Ready_Event()
 
 HRESULT CLevel_SnowMountain::Ready_Shader()
 {
+	/* For. Shadow */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+
 	/* 1. 셰이더 초기화 */
 	m_pGameInstance->Off_Shader();
 

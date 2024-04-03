@@ -409,6 +409,13 @@ namespace Engine
 		_float2 padding = {};
 	}DEFERRED_DESC;
 
+	typedef struct ENGINE_DLL tagCSMDesc
+	{
+		_float fBias = 0.0000022f;
+		_float fStaticBias = 0.0012f;
+
+	}CSM_DESC;
+
 	typedef struct ENGINE_DLL tagFogDesc
 	{
 		_bool	bFog_Active				= false;

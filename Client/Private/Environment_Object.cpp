@@ -58,9 +58,6 @@ void CEnvironment_Object::Tick(_float fTimeDelta)
 	//
 	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
 	//
-	wstring strTemp = Get_ModelTag();
-	int a = 0;
-
 }
 
 void CEnvironment_Object::Late_Tick(_float fTimeDelta)

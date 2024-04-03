@@ -89,6 +89,12 @@ sampler CubeSampler = sampler_state
     AddressW = CLAMP;
     ComparisonFunc = NEVER;
 };
+
+sampler ShadowSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+};
+
 /* ---------------- Rasterizer ---------------- */
 
 RasterizerState RS_Default

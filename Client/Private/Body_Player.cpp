@@ -117,6 +117,11 @@ HRESULT CBody_Player::Render_Shadow()
 	return S_OK;
 }
 
+HRESULT CBody_Player::Render_CSM(_uint i)
+{
+	return S_OK;
+}
+
 void CBody_Player::OnCollisionEnter(CCollider* other)
 {
 	__super::OnCollisionEnter(other);

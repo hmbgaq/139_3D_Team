@@ -145,6 +145,8 @@ public: /* For.Light_Manager */
 	class CLight*	Get_DirectionLight();
 	class CLight_Manager* Get_LightManager();
 	void			Get_AllLight(list<class CLight*>* pTemp);
+	_float4x4		Get_StaticLight();
+	HRESULT			Ready_StaticLightMatrix(_float3 vPos, _float3 vLook);
 
 
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);

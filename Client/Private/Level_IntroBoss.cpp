@@ -61,7 +61,7 @@ HRESULT CLevel_IntroBoss::Initialize()
     if (FAILED(Ready_UI()))
         return E_FAIL;
 
-   //FAILED_CHECK(Ready_Shader());
+   FAILED_CHECK(Ready_Shader());
 
     return S_OK;
 }
@@ -83,8 +83,6 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
     /* For. Shadow */
     //XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
     //XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
-    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
     CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
@@ -207,6 +205,10 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
 
 HRESULT CLevel_IntroBoss::Ready_Shader()
 {
+    /* For. Shadow */
+    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+
     /* 1. 셰이더 초기화 */
     m_pGameInstance->Off_Shader();
 

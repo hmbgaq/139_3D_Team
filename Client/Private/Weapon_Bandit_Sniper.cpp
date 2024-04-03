@@ -120,6 +120,23 @@ HRESULT CWeapon_Bandit_Sniper::Render()
 	return S_OK;
 }
 
+HRESULT CWeapon_Bandit_Sniper::Render_Shadow()
+{
+	__super::Render_Shadow();
+
+	return S_OK;
+}
+
+HRESULT CWeapon_Bandit_Sniper::Render_CSM(_uint i)
+{
+	return S_OK;
+}
+
+HRESULT CWeapon_Bandit_Sniper::Render_OutLine()
+{
+	return S_OK;
+}
+
 void CWeapon_Bandit_Sniper::Sniping(_float4 vTargetPos, _float3 StartfPos)
 {
 	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_MONSTER_BULLET, L"Prototype_GameObject_Bullet_Bandit_Sniper");

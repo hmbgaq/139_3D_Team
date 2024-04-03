@@ -837,6 +837,20 @@ void CGameInstance::Get_AllLight(list<class CLight*>* pTemp)
 	return m_pLight_Manager->Get_AllLight(pTemp);
 }
 
+_float4x4 CGameInstance::Get_StaticLight()
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float4x4());
+
+	return m_pLight_Manager->Get_StaticLight();
+}
+
+HRESULT CGameInstance::Ready_StaticLightMatrix(_float3 vPos, _float3 vLook)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+
+	return m_pLight_Manager->Ready_StaticLightMatrix(vPos, vLook);
+}
+
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
 	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
