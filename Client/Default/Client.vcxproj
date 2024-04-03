@@ -334,6 +334,7 @@
     <ClInclude Include="..\Public\Body_Son.h" />
     <ClInclude Include="..\Public\Body_Tank.h" />
     <ClInclude Include="..\Public\Body_VampireCommander.h" />
+    <ClInclude Include="..\Public\Bullet_Arrow_Electric.h" />
     <ClInclude Include="..\Public\Bullet_Dynamite.h" />
     <ClInclude Include="..\Public\Bullet_ELShotgun.h" />
     <ClInclude Include="..\Public\Bullet_Revolver.h" />
@@ -1039,6 +1040,8 @@
     <ClInclude Include="..\Public\Player_Walk_FL45.h" />
     <ClInclude Include="..\Public\Player_Walk_FR.h" />
     <ClInclude Include="..\Public\Player_Walk_FR45.h" />
+    <ClInclude Include="..\Public\Player_Weapon_CripplingRod.h" />
+    <ClInclude Include="..\Public\Player_Weapon_Crossbow.h" />
     <ClInclude Include="..\Public\Player_Weapon_Dynamite.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELShotgun.h" />
     <ClInclude Include="..\Public\Player_Weapon_ELWinchester.h" />
@@ -1522,6 +1525,7 @@
     <ClCompile Include="..\Private\Body_Son.cpp" />
     <ClCompile Include="..\Private\Body_Tank.cpp" />
     <ClCompile Include="..\Private\Body_VampireCommander.cpp" />
+    <ClCompile Include="..\Private\Bullet_Arrow_Electric.cpp" />
     <ClCompile Include="..\Private\Bullet_Dynamite.cpp" />
     <ClCompile Include="..\Private\Bullet_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Bullet_Revolver.cpp" />
@@ -2071,6 +2075,8 @@
     <ClCompile Include="..\Private\Player_Walk_FL45.cpp" />
     <ClCompile Include="..\Private\Player_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Player_Walk_FR45.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_CripplingRod.cpp" />
+    <ClCompile Include="..\Private\Player_Weapon_Crossbow.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_Dynamite.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Player_Weapon_ELWinchester.cpp" />

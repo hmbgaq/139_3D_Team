@@ -42,6 +42,9 @@
 #include "Player_Weapon_Zapper.h"
 #include "Player_Weapon_Whip.h"
 #include "Player_Weapon_Dynamite.h"
+#include "Player_Weapon_Crossbow.h"
+#include "Player_Weapon_CripplingRod.h"
+
 
 
 #include "Bullet_Winchester.h"
@@ -913,6 +916,10 @@ HRESULT CLoader::Loading_Player(LEVEL eLEVEL)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Revolver"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Revolver/PlayerRevolver", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Whip"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/PlayerWeapon/Whip/Whip", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Dynamite"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Dynamite/Dynamite", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_Crossbow"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Crossbow/Crossbow", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Player_Weapon_CripplingRod"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/CripplingRod/CripplingRod", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bullet_Arrow"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Crossbow/Arrow/Arrow", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Bullet_Arrow_Electric"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/PlayerWeapon/Crossbow/Arrow_Electric/Arrow_Electric", PivotMatrix)));
 
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Edgar"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/NPC/Edgar/Edgar", PivotMatrix)));
@@ -966,7 +973,9 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Zapper"), CPlayer_Weapon_Zapper::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Zapper"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Whip"), CPlayer_Weapon_Whip::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Whip"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Dynamite"), CPlayer_Weapon_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Dynamite"))));
-	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_Crossbow"), CPlayer_Weapon_Crossbow::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_Crossbow"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Player_Weapon_CripplingRod"), CPlayer_Weapon_CripplingRod::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Player_Weapon_CripplingRod"))));
+
 	
 	//! PlayerBullet
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Winchester"), CBullet_Winchester::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Winchester"))));

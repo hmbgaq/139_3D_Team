@@ -3925,6 +3925,21 @@
     <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Teleport">
       <UniqueIdentifier>{8cafac6a-bcee-4613-82a0-b2a55f90961a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\CripplingRod">
+      <UniqueIdentifier>{fe11505d-8453-4aff-8513-54142e9d4bbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow">
+      <UniqueIdentifier>{13d2a1fa-b476-4f93-8aac-834063936b9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow\Projectile">
+      <UniqueIdentifier>{33adac3d-929d-41a8-aca4-825d245053cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow\Projectile\Arrow">
+      <UniqueIdentifier>{5d093597-c57d-4ba5-9a55-e72dce85a58a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow\Projectile\Arrow_Electric">
+      <UniqueIdentifier>{e1c45dd9-84be-44fd-95d0-00eecc999214}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7704,6 +7719,15 @@
     <ClInclude Include="..\Public\Bullet_Teleport.h">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Teleport</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_Crossbow.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Weapon_CripplingRod.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\CripplingRod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Arrow_Electric.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow\Projectile\Arrow_Electric</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10953,6 +10977,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bullet_Teleport.cpp">
       <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Teleport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_Crossbow.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_Weapon_CripplingRod.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\CripplingRod</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Arrow_Electric.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Crossbow\Projectile\Arrow_Electric</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
