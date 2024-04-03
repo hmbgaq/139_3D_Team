@@ -28,6 +28,7 @@ public:
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	virtual void Check_Frustum() override;
 
 
 

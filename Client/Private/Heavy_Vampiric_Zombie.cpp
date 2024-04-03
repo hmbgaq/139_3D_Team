@@ -47,7 +47,7 @@ void CHeavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 
 	/* !UI Dead시키는 함수(몬스터 죽었을 때) */
 	// Set_EnemyHUD_Dead();
-
+	
 	m_fHp = 100;
 }
 
@@ -82,6 +82,11 @@ HRESULT CHeavy_Vampiric_Zombie::Ready_PartObjects()
 	Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
 
 	return S_OK;
+}
+
+void CHeavy_Vampiric_Zombie::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 CHeavy_Vampiric_Zombie* CHeavy_Vampiric_Zombie::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
