@@ -32,7 +32,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 20.f;
+	GameObjectDesc.fSpeedPerSec = 25.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -102,7 +102,7 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 	//충돌 했을떄 카메라 쉐이킹 해줘야 함 ! 
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 	pSpringCam->Set_ShakeCameraTime(0.2f);
-	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
+	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
@@ -115,6 +115,7 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 		pEffect->Set_Position(vPos);
 
 	}
+	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
