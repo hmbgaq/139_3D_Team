@@ -75,10 +75,7 @@ void CEnvironment_Object::Late_Tick(_float fTimeDelta)
 		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 	}
 
-	if (true == bRenderIce && false == bIcarusTexture)
-		FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_ICE, this));
-	else
-		FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_NONBLEND, this));
+	FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP::RENDER_NONBLEND, this));
 
 	//if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
 	//{
@@ -110,6 +107,28 @@ HRESULT CEnvironment_Object::Render()
 			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 			m_pRADTexture->Bind_ShaderResource(m_pShaderCom, "g_RADTexture");
 			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
+			m_pModelCom->Render((_uint)i);
+		}
+	}
+	else if (true == bRenderIce && false == bIcarusTexture)	// Ice 
+	{
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			if (m_tEnvironmentDesc.bAnimModel == true)
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			}
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+			m_pIceNoise->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture");
+			m_pIceDiffuse->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse");
+
+			if (i == m_iIceMeshNumber)
+				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ICICLE));
+			else
+				m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
+
 			m_pModelCom->Render((_uint)i);
 		}
 	}
@@ -150,39 +169,6 @@ HRESULT CEnvironment_Object::Render_Shadow()
 		m_pModelCom->Render((_uint)i);
 	}
 
-	return S_OK;
-}
-
-HRESULT CEnvironment_Object::Render_Ice()
-{
-	FAILED_CHECK(Bind_ShaderResources());
-
-	if (false == bRenderIce)	// Icicle Render
-		return S_OK;
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (size_t i = 0; i < iNumMeshes; i++)
-	{
-		if (m_tEnvironmentDesc.bAnimModel == true)
-		{
-			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		}
-
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
-		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
-		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
-		m_pIceNoise->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture");
-		m_pIceDiffuse->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse");
-
-		if (i == m_iIceMeshNumber)
-			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ICICLE));
-		else
-			m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
-
-		m_pModelCom->Render((_uint)i);
-	}
-	
 	return S_OK;
 }
 

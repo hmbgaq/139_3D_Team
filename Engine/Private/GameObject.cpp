@@ -179,6 +179,11 @@ _float3 CGameObject::Get_Position()
 	return m_pTransformCom->Get_Position();
 }
 
+_float3 CGameObject::Get_Look()
+{
+	return m_pTransformCom->Get_Look();
+}
+
 _vector CGameObject::Calc_Look_Dir(_vector vTargetPos)
 {
 	return m_pTransformCom->Calc_Look_Dir(vTargetPos);

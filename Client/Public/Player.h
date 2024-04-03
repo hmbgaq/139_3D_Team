@@ -1,4 +1,4 @@
-	#pragma once
+#pragma once
 
 #include "Character_Client.h"
 #include "Actor.h"
@@ -134,6 +134,10 @@ public:
 	void Remove_Ladder_Count() { m_iLadderCount = m_iLadderCount - 1 > 0 ? m_iLadderCount - 1 : 0; };
 	void Set_Ladder_Count(_uint _iLadderCount) { m_iLadderCount = _iLadderCount; }
 
+public:
+	_bool Is_Interection() { return m_bIsInterection; }
+	void Set_Interection(_bool _bIsInterection) { m_bIsInterection = _bIsInterection; }
+
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -157,6 +161,9 @@ private:
 
 private:
 	_uint m_iLadderCount = { 0 };
+
+private:
+	_bool m_bIsInterection = { false };
 
 public:
 	_bool	m_bPlayerCheck = true;

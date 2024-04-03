@@ -95,35 +95,99 @@ float2 RotateTexture(float2 texCoord, float angle)
 float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int iColorMode)
 {
     float4 vResault = vDiffuse;
-	
     if (0 == iColorMode)
     {
-		// 곱하기
+      // 곱하기
         vResault = vResault * vBlendColor;
     }
     else if (1 == iColorMode)
     {
-		// 스크린
+      // 스크린
         vResault = 1.f - ((1.f - vResault) * (1.f - vBlendColor));
     }
     else if (2 == iColorMode)
     {
-		// 오버레이
+      // 오버레이
         vResault = max(vResault, vBlendColor);
     }
     else if (3 == iColorMode)
     {
-		// 더하기
+      // 더하기
         vResault = vResault + vBlendColor;
     }
     else if (4 == iColorMode)
     {
-		// 번(Burn)
+      // 번(Burn)
         vResault = vResault + vBlendColor - 1.f;
     }
-	
+    else if (5 == iColorMode)
+    {
+        // 비비드 라이트
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] < 0.5f) ? (1.f - (1.f - vDiffuse[i]) / (2.f * vBlendColor[i]))
+            : (vDiffuse[i] / (2.f * (1.f - vBlendColor[i])));
+
+        }
+        
+        vResault.a = vDiffuse.a;
+    }
+    else if (6 == iColorMode)
+    {
+        // 소프트 라이트
+        for (int i = 0; i < 3; ++i)
+        {
+            if (vBlendColor[i] < 0.5f)
+            {
+                vResault[i] = 2.f * vDiffuse[i] * vBlendColor[i] +
+                    vDiffuse[i] * vDiffuse[i] * (1.f - 2.f * vBlendColor[i]);
+            }
+            else
+            {
+                vResault[i] = 2.f * vDiffuse[i] * (1.f - vBlendColor[i]) +
+                    sqrt(vDiffuse[i]) * (2.f * vBlendColor[i] - 1.f);
+            }
+        }
+        
+        vResault.a = vDiffuse.a;
+    }
+    else if (7 == iColorMode)
+    {
+        // 하드 라이트
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] < 0.5f) ? (2.f * vDiffuse[i] * vBlendColor[i]) :
+                (1.f - 2.f * (1.f - vDiffuse[i]) * (1.f - vBlendColor[i]));
+        }
+        
+        vResault.a = vDiffuse.a;
+    }
+    else if (8 == iColorMode)
+    {
+        // 컬러 닷지
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] == 1.f) ? vBlendColor[i] :
+                min(vDiffuse[i] / (1.f - vBlendColor[i]), 1.f);
+
+        }
+        vResault.a = vDiffuse.a;
+    }
+    else if (9 == iColorMode)
+    {
+        // 혼합 번
+        for (int i = 0; i < 3; ++i)
+        {
+            vResault[i] = (vBlendColor[i] == 1.f) ? vBlendColor[i] :
+                max(1.f - ((1.f - vDiffuse[i]) / vBlendColor[i]), 0.f);
+
+        }
+        vResault.a = vDiffuse.a;
+    }
+   
  
     return vResault;
+
 }
 
 
@@ -437,14 +501,16 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
         discard;
 	
      // 색상 혼합
-    Out.vColor = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
+    Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode).rgb;
+    Out.vColor.a = vFinalDiffuse.a * g_vColor_Mul.a;
+    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
 
 		
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
     //Out.vColor += vRimColor;
     Out.vRimBloom = float4(g_vBloomPower, 1.0f); //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     
 	
     if (bSolid)

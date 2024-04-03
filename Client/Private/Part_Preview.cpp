@@ -66,11 +66,10 @@ void CPart_Preview::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//if (nullptr != m_pTrail)
-	//{
-	//	//m_pTrail->Set_Play(m_bTrailPlay);
-	//	m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
-	//}
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+	}
 
 }
 

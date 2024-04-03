@@ -54,8 +54,14 @@ HRESULT CModel_Preview::Initialize(void* pArg)
 	}
 
 
-
 	m_pTransformCom->Set_State(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+
+
+	if (TEXT("Prototype_Component_Model_EffectTool_IntroBoss_Floor") == m_tDesc.strModelTag)
+	{
+		Set_Position(_float3(-15.f, 0.f, 0.f));
+		m_pTransformCom->Set_Scaling(15.f, 1.f, 15.f);
+	}
 
 
 	return S_OK;
@@ -108,7 +114,7 @@ void CModel_Preview::Late_Tick(_float fTimeDelta)
 				Pair.second->Late_Tick(fTimeDelta);
 		}
 
-		if (TRUE == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_Position(), 2.f))
+		//if (TRUE == m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_Position(), 2.f))
 		{
 			if (CModel::TYPE_ANIM == m_tDesc.eType)
 			{
@@ -117,8 +123,7 @@ void CModel_Preview::Late_Tick(_float fTimeDelta)
 					m_pModelCom->Play_Animation(fTimeDelta, TRUE);
 				}
 			}
-
-			
+		
 
 			if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDERGROUP(m_tDesc.iRenderGroup), this)))
 				return;

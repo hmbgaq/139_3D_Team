@@ -10,6 +10,7 @@
 #include "Bone.h"
 #include "Effect.h"
 #include "Clone_Manager.h"
+#include "Mother.h"
 
 #include "Effect_Manager.h"
 #include "Effect_Trail.h"
@@ -37,6 +38,8 @@ HRESULT CSon_ColliderBody::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	m_pMother = CData_Manager::GetInstance()->Get_Mother();
 
 	return S_OK;
 }
@@ -101,11 +104,29 @@ HRESULT CSon_ColliderBody::Ready_Components()
 
 void CSon_ColliderBody::OnCollisionEnter(CCollider* other)
 {
+	CAttackObject* pAttackObject = Get_Target_AttackObject(other);
 
+	if (pAttackObject != nullptr)
+	{
+		if (other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER_ATTACK))
+		{
+			m_pMother->Get_Damaged(pAttackObject->Get_Damage());
+		}
+	}
 }
 
 void CSon_ColliderBody::OnCollisionStay(CCollider* other)
 {
+	CAttackObject* pAttackObject = Get_Target_AttackObject(other);
+
+	if (pAttackObject != nullptr)
+	{
+		if (other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER_ATTACK))
+		{
+			m_pMother->Get_Damaged(pAttackObject->Get_Damage());
+		}
+	}
+
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
 	{

@@ -3,6 +3,7 @@
 void CPlayer_State_Interaction::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
+	pActor->Set_Interection(true);
 }
 
 CState<CPlayer>* CPlayer_State_Interaction::Update(CPlayer* pActor, _float fTimeDelta)
@@ -17,6 +18,7 @@ void CPlayer_State_Interaction::Release(CPlayer* pActor)
 	__super::Release(pActor);
 	pActor->Set_UseGravity(true);
 	pActor->Reset_RootMoveRate();
+	pActor->Set_Interection(false);
 }
 
 CState<CPlayer>* CPlayer_State_Interaction::Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)

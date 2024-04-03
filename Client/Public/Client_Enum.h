@@ -139,8 +139,16 @@ namespace Client
 		OVERLAY,	// 오버레이		2
 		ADD,		// 더하기		3 
 		BURN,		// 번(Burn)		4
+
+		VIVID_RIGHT,	// 비비드 라이트 5
+		SOFT_RIGHT,		// 소프트 라이트 6
+		HARD_RIGHT,		// 하드 라이트 7
+
+		COLOR_DODGE,	// 컬러 닷지 8
+		MIX_BURN,		// 혼합 번 9
+
 		
-		MODE_COLOR_END	//			5
+		MODE_COLOR_END	//			10
 	};
 
 

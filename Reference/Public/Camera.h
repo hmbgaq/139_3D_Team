@@ -33,7 +33,10 @@ public:
 
 public:
 	void	Set_Enable(_bool _bEnable) { m_bEnable = _bEnable; }
-
+	
+public:
+	void	Set_Fovy(_float _fFovy) { m_fFovy = _fFovy; }
+	_float  Get_Fovy() { return m_fFovy; }
 public:
 	virtual HRESULT Ready_Components() PURE;
 

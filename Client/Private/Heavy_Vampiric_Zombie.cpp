@@ -73,7 +73,6 @@ HRESULT CHeavy_Vampiric_Zombie::Ready_PartObjects()
 	CBody::BODY_DESC		BodyDesc = {};
 	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Heavy_Vampiric_Zombie"), BodyDesc));
 
-
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
@@ -81,7 +80,6 @@ HRESULT CHeavy_Vampiric_Zombie::Ready_PartObjects()
 	}
 
 	Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
-
 
 	return S_OK;
 }

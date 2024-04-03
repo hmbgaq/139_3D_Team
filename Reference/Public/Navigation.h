@@ -37,6 +37,7 @@ public:
 	_int					Get_CellSize() { return (_int)m_Cells.size(); };
 	void					Set_CurrentIndex(_int iIndex) { m_iCurrentIndex = iIndex; }
 	_int					Get_CurrentCellIndex() { return m_iCurrentIndex;}
+	class CCell*			Get_CellForIndex(_int iIndex) { return m_Cells[iIndex]; }
 	void					SpawnCell_Setting(_float3 vPos);
 
 	void					AddCell(class CCell* pCell);

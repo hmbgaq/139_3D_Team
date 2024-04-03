@@ -4,13 +4,7 @@
 #include "GameInstance.h"
 
 /* Spawn */
-#include "Infected_SpawnClimb_01.h"
-#include "Infected_SpawnClimb_02.h"
-#include "Infected_SpawnCrawl_01.h"
-#include "Infected_SpawnCrawl_02.h"
-#include "Infected_SpawnFromCoffin0.h"
-#include "Infected_SpawnGround.h"
-#include "Infected_SpawnFromEgg_02.h"
+#include "Infected_IdleAct_01.h"
 
 CInfected_D::CInfected_D(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CInfected(pDevice, pContext, strPrototypeTag)
@@ -35,8 +29,6 @@ HRESULT CInfected_D::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 
-	m_pTarget = m_pGameInstance->Get_Player();
-
 	return S_OK;
 }
 
@@ -53,6 +45,8 @@ void CInfected_D::Tick(_float fTimeDelta)
 void CInfected_D::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), ); //m_bIsInFrustum
 }
 
 HRESULT CInfected_D::Render()
@@ -62,8 +56,11 @@ HRESULT CInfected_D::Render()
 
 HRESULT CInfected_D::Render_Shadow()
 {
-	FAILED_CHECK(__super::Render_Shadow());
+	return S_OK;
+}
 
+HRESULT CInfected_D::Render_OutLine()
+{
 	return S_OK;
 }
 
@@ -100,34 +97,7 @@ HRESULT CInfected_D::Ready_Option()
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CInfected>(this);
-
-		switch (m_eInfo.RandomNumber >> 1)
-		{
-		case 1:
-			//m_pActor->Set_State(new CInfected_SpawnClimb_01());
-			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
-			break;
-		case 2:
-			//m_pActor->Set_State(new CInfected_SpawnClimb_02());
-			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
-			break;
-		case 3:
-			//m_pActor->Set_State(new CInfected_SpawnCrawl_01());
-			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
-			break;
-		case 4:
-			//m_pActor->Set_State(new CInfected_SpawnCrawl_02());
-			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
-			break;
-		case 5:
-			//m_pActor->Set_State(new CInfected_SpawnFromCoffin0());
-			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
-			break;
-		default:
-			//m_pActor->Set_State(new CInfected_SpawnGround());
-			m_pActor->Set_State(new CInfected_SpawnFromEgg_02());
-			break;
-		}
+		m_pActor->Set_State(new CInfected_IdleAct_01());
 	}
 
 	return S_OK;

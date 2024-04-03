@@ -213,6 +213,9 @@ HRESULT CMainApp::Ready_UITexture()
 	/* Tutorial Text */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TutorialText"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Tutorial/Text/TutorialText (%d).dds"), 2)));
 
+	/* EnemyHUD_Shard_Hp */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("EnemyHUD_Shard_Hp"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/EnemyHUD_Shard_Hp.dds"))));
+	
 	return S_OK;
 }
 

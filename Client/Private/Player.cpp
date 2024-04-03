@@ -67,6 +67,8 @@
 #include "Preset_PhysXColliderDesc.h"
 
 
+#include "Effect.h"
+#include "Effect_Manager.h"
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -130,12 +132,13 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
+
 	return S_OK;
 }
 
 void CPlayer::Priority_Tick(_float fTimeDelta)
 {
-	m_pGameInstance->Set_Player(this);
+	//m_pGameInstance->Set_Player(this);
 
 	__super::Priority_Tick(fTimeDelta);
 }
@@ -159,8 +162,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
-		if (m_pGameInstance->Key_Down(DIK_C))
-			m_fHp = 100;
+		//if (m_pGameInstance->Key_Down(DIK_C))
+		//	m_fHp = 100;
 	}
 
 

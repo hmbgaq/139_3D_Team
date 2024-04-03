@@ -60,6 +60,8 @@ public:
 	void Add_AttackCount() { m_iAttackCount += 1; };
 	void Reset_AttackCount() { m_iAttackCount = 0; };
 
+public:
+	virtual void Check_Frustum() override;
 protected: // !성희 추가
 	// 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
 	void Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner);

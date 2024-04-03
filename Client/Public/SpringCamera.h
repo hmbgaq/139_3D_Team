@@ -69,7 +69,8 @@ public:
 	_float3 Get_TargetPosition() { return m_TargetPosition; }
 
 	void Lerp_CameraPosition(_float fTimeDelta);
-
+	//스프링카메라 탄력 조정 
+	void Set_SpringConstant(_float _SpringConstant) { SpringConstant = _SpringConstant; }
 public:
 	void Shake_Camera(_float fTimeDelta);
 	void Set_ShakeCamera(_bool _bShake) { m_bShake = _bShake; }

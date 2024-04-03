@@ -13,6 +13,7 @@ public:
 
 public:
 	void Create_Bullet(CPlayer* pActor);
+	void Fire(CPlayer* pActor);
 
 public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_Bandit_Special_01;

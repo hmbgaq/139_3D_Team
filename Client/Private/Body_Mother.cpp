@@ -240,6 +240,11 @@ HRESULT CBody_Mother::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CBody_Mother::Check_Frustum()
+{
+	m_bIsInFrustum = true;
+}
+
 CBody_Mother* CBody_Mother::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
 	CBody_Mother* pInstance = new CBody_Mother(pDevice, pContext, strPrototypeTag);

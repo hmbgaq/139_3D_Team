@@ -11,7 +11,7 @@ CState<CMother>* CMother_Dead::Update(CMother* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
 	{	//죽여 버리기 여기서 
-
+		pActor->Set_Dead(true);
 	}
 
 	return nullptr;

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Data_Manager.h"
 #include "Transform.h"
+#include "GameInstance.h"
 #include "UI_Manager.h"
 #include "UI_EnemyHUD_Shard.h"
 
@@ -105,6 +106,11 @@ CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 	m_pTransformCom->Look_At(pPlayer->Get_Transform()->Get_State(CTransform::STATE::STATE_POSITION));
 
 	return pPlayer;
+}
+
+void CMonster_Character::Check_Frustum()
+{
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
 // 몬스터 HUD를 준비합니다. (생성 : Level, Owner)

@@ -132,7 +132,6 @@ void CBody_Player::OnCollisionExit(CCollider* other)
 	__super::OnCollisionExit(other);
 }
 
-
 HRESULT CBody_Player::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
@@ -180,6 +179,11 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
 	return S_OK;
+}
+
+void CBody_Player::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

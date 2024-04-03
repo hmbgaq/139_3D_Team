@@ -9,11 +9,15 @@ void CPlayer_InteractionPush_Rock_Start::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Set_Rotate_In_CameraDir(false);
+
+	pActor->Set_Interection(true);
 }
 
 CState<CPlayer>* CPlayer_InteractionPush_Rock_Start::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	if (false == m_bFlags[0])
 	{
@@ -21,7 +25,7 @@ CState<CPlayer>* CPlayer_InteractionPush_Rock_Start::Update(CPlayer* pActor, _fl
 	}
 	else
 	{
-		if (m_pGameInstance->Key_Down(DIK_W))
+		if (m_pGameInstance->Key_Pressing(DIK_W))
 		{
 			return new CPlayer_InteractionPush_Rock_Loop();
 		}

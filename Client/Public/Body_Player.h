@@ -33,7 +33,7 @@ public:
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
+	virtual void Check_Frustum() override;
 	_int iTemp = 0;
 
 public:
