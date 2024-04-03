@@ -35,6 +35,7 @@ protected:
 protected:
 	CActor<CBandit_Heavy>* m_pActor = { nullptr };
 
+
 public:
 	//static CBandit_Heavy* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	//virtual CGameObject* Clone(void* pArg) override;
@@ -152,6 +153,17 @@ public:
 		ManHeavy_OpenStatePull_F_02							  ,
 		VampireTank_KnockFrontLight_F_01					  ,
 	};
+
+
+public:
+	Bandit_Heavy_State Get_PrevState() { return m_ePrevState; };
+	void Set_PrevState(Bandit_Heavy_State _ePrevState) { m_ePrevState = _ePrevState; };
+	void Set_PrevState(_uint _iPrevState) { m_ePrevState = (Bandit_Heavy_State)_iPrevState; };
+
+	_bool Compare_PrevState(_uint _ePrevState) { return ECast(m_ePrevState) == _ePrevState; };
+
+public:
+	Bandit_Heavy_State m_ePrevState = { BanditHeavy_Idle };
 };
 
 END

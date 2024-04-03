@@ -129,6 +129,8 @@ public:
 public:
 	void Slam();
 	void Throw_Dynamite();
+	void Teleport();
+
 	
 
 public:

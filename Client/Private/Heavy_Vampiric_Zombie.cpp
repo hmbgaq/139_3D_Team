@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Heavy_Vampiric_Zombie.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
+#include "Player.h"
 //#include "Body_Heavy_Vampiric_Zombie.h"
 //#include "BanditHeavy_Idle.h"
 
@@ -25,6 +27,8 @@ HRESULT CHeavy_Vampiric_Zombie::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	
 	m_fHp = 100.f;
 
 	return S_OK;

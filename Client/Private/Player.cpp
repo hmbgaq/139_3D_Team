@@ -156,10 +156,17 @@ void CPlayer::Tick(_float fTimeDelta)
 		
 		Update_ChargingTime(fTimeDelta);
 
-	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
+		CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
 		//if (m_pGameInstance->Key_Down(DIK_C))
 		//	m_fHp = 100;
+
+
+		if (m_pGameInstance->Key_Down(DIK_T))
+		{
+			Teleport();
+		}
+
 	}
 
 
@@ -685,6 +692,19 @@ void CPlayer::Throw_Dynamite()
 	pDynamite->Set_Position(vSpawnPos);
 	pDynamite->Get_Transform()->Look_At_OnLand(vTargetPos);
 
+}
+
+void CPlayer::Teleport()
+{
+	CGameObject* pTeleport = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Teleport");
+
+	_float3 vSpawnPos = Get_Position();
+	vSpawnPos.y += 1.f;
+
+	_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 1.f, 1.f));
+
+	pTeleport->Set_InitPosition(vSpawnPos);
+	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
 }
 
 void CPlayer::Hitted_Left(Power ePower)

@@ -337,6 +337,7 @@
     <ClInclude Include="..\Public\Bullet_Dynamite.h" />
     <ClInclude Include="..\Public\Bullet_ELShotgun.h" />
     <ClInclude Include="..\Public\Bullet_Revolver.h" />
+    <ClInclude Include="..\Public\Bullet_Teleport.h" />
     <ClInclude Include="..\Public\Bullet_Winchester.h" />
     <ClInclude Include="..\public\Camera_Dynamic.h" />
     <ClInclude Include="..\Public\Character_Client.h" />
@@ -1524,6 +1525,7 @@
     <ClCompile Include="..\Private\Bullet_Dynamite.cpp" />
     <ClCompile Include="..\Private\Bullet_ELShotgun.cpp" />
     <ClCompile Include="..\Private\Bullet_Revolver.cpp" />
+    <ClCompile Include="..\Private\Bullet_Teleport.cpp" />
     <ClCompile Include="..\Private\Bullet_Winchester.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
     <ClCompile Include="..\Private\Character_Client.cpp" />

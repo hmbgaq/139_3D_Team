@@ -49,6 +49,7 @@
 #include "Bullet_ELShotgun.h"
 #include "Bullet_Dynamite.h"
 #include "Explosion_Dynamite.h"
+#include "Bullet_Teleport.h"
 
 #include "Impact_Slam.h"
 #pragma endregion
@@ -973,7 +974,7 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_ELShotgun"), CBullet_ELShotgun::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_ELShotgun"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Dynamite"), CBullet_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Dynamite"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_Dynamite"), CExplosion_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_Dynamite"))));
-	
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Teleport"), CBullet_Teleport::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Teleport"))));
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Impact_Slam"), CImpact_Slam::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Impact_Slam"))));
 

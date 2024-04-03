@@ -3922,6 +3922,9 @@
     <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\2. Grenade_Throw">
       <UniqueIdentifier>{0a3cca20-90c1-4d6f-908f-3beb7894f035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Player\Parts\Weapon\Teleport">
+      <UniqueIdentifier>{8cafac6a-bcee-4613-82a0-b2a55f90961a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7698,6 +7701,9 @@
     <ClInclude Include="..\Public\Edgar_Grenade_Throw_v2.h">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\2. Grenade_Throw</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bullet_Teleport.h">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Teleport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10944,6 +10950,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Edgar_Grenade_Throw_v2.cpp">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\2. Grenade_Throw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bullet_Teleport.cpp">
+      <Filter>02.GameObjects\00. Character\Player\Parts\Weapon\Teleport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -98,13 +98,13 @@ HRESULT CBody_Bandit_Heavy::Ready_Components()
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Bandit_Heavy"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For.Com_Collider */
-	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+	CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.vExtents = _float3(0.5f, 0.5f, 0.5f);
+	BoundingDesc.vExtents = _float3(0.7f, 1.0f, 0.7f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 
-	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 
 	return S_OK;
 }
