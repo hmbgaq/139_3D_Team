@@ -13,7 +13,7 @@ public:
 		/* Post Processing  */
 		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL, 
 		/* EFFECT */
-		RENDER_EFFECT, RENDER_EFFECT_PARTICLE, RENDER_EFFECT_MESH,
+		RENDER_EFFECT, RENDER_EFFECT_PRIORITY, RENDER_EFFECT_MESH,
 		/* UI */
 		RENDER_UI_BACK, RENDER_UI, RENDER_UI_FRONT, RENDER_CURSOR,
 		/* RenderGroup*/
@@ -59,6 +59,7 @@ private:
 	HRESULT Render_LumaSharpen();
 
 	HRESULT Deferred_Effect();
+	HRESULT Render_Effect_Priority();
 	HRESULT Render_Effect_BloomBlur();
 	HRESULT Render_Effect_Distortion();
 	HRESULT Render_Effect_Distortion_Blur();

@@ -380,10 +380,11 @@ struct PS_OUT
 {	
 	float4 vDiffuse			: SV_TARGET0;
     float4 vSolid			: SV_TARGET1;
-	float4 vNormal			: SV_TARGET2;
-	float4 vDepth			: SV_TARGET3;
-	float4 vRimBloom		: SV_TARGET4;
-    float4 vDistortion		: SV_TARGET5;
+	//float4 vNormal		: SV_TARGET2;
+	//float4 vDepth			: SV_TARGET3;
+	float4 vRimBloom		: SV_TARGET2;
+    float4 vDistortion		: SV_TARGET3;
+    
 };
 
 
@@ -409,8 +410,8 @@ PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
     // »ö»ó È¥ÇÕ
     Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
 	
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    
 
     /* ---------------- New ---------------- */
@@ -545,8 +546,8 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
 
     vPixelNormal = mul(vPixelNormal, WorldMatrix);
 
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+    //Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 
     
 	
@@ -708,8 +709,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 	vPixelNormal = mul(vPixelNormal, WorldMatrix);
 
-	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+	//Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	
 	/* RimBloom ================================================================ */
@@ -747,7 +748,7 @@ PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
     
     
 	/* Depth ================================================================ */
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	
 	/* RimBloom ============================================================== */
