@@ -43,6 +43,7 @@ private:
 
 private:
 	CNavigation* m_pNavigationCom = { nullptr };
+	_float3 m_vLastPotision = {0.f, 0.f, 0.f};
 
 
 public:

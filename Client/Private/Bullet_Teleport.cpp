@@ -61,14 +61,25 @@ void CBullet_Teleport::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	m_pTransformCom->Go_Straight(fTimeDelta, m_pNavigationCom);
+	_int iCheckIndex = m_pNavigationCom->Get_SelectRangeCellIndex(this);
+	m_pNavigationCom->Set_CurrentIndex(iCheckIndex);
+
+	_bool IsMove = m_pNavigationCom->isMove(Get_Position_Vector());
+	if (true == IsMove)
+	{
+		m_vLastPotision = Get_Position();
+		m_vLastPotision.y -= 1.f;
+	}
+
 
 	if (m_pGameInstance->Key_Up(DIK_T))
 	{
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-		pPlayer->Set_InitPosition(Get_Position());
+		pPlayer->Set_InitPosition(m_vLastPotision);
 		Set_Dead(true);
 	}
+
+	m_pTransformCom->Go_Straight(fTimeDelta);
 
 }
 
