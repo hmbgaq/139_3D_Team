@@ -25,6 +25,7 @@ private:
 	HRESULT Ready_Layer_NPC(const wstring& strLayerTag);
 
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
+	HRESULT Ready_Shader_Json();
 	HRESULT Ready_Shader();
 
 
@@ -44,14 +45,13 @@ private: /* UI */
 
 private:
 	_int			TempLightNumber = 0;
-	//_bool			m_bPlayerStartRotate = false;
 
 	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/IntroTest_MapData.json";
 	string			m_strShader_FilepPath = "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Shader.json";
-	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData_MapData.json";
 
 	_bool			m_bMonsterTest = true;
 	_bool			m_bInteractTest = true;
+
 public:
 	static CLevel_Intro* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

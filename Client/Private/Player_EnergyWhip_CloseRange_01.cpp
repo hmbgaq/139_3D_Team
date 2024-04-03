@@ -26,8 +26,7 @@ void CPlayer_EnergyWhip_CloseRange_01::Initialize(CPlayer* pActor)
 	pWeapon->Set_Enable_Collisions(false);
 
 	
-	// 이펙트 생성 테스트
-	EFFECT_MANAGER->Create_Effect("Player/Zapper_Shield/", "Zapper_Shield_15_distortionTest.json", pActor);
+
 }
 
 CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _float fTimeDelta)
@@ -41,6 +40,10 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_ZAPPER, true);
+
+			// 이펙트 생성 테스트
+			EFFECT_MANAGER->Create_Effect("Player/Zapper_Shield/", "Zapper_Shield_19_distortionTest.json", pActor);
+
 			//pActor->Get_Body()->Collider_Off();
 		}
 	}

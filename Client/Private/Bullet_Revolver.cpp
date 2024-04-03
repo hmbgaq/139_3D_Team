@@ -5,10 +5,9 @@
 #include "Effect.h"
 #include "Effect_Manager.h"
 #include "Player.h"
-
 #include "Effect_Manager.h"
 #include "Effect_Trail.h"
-
+#include "Mother.h"
 
 CBullet_Revolver::CBullet_Revolver(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
@@ -105,10 +104,13 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 		pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
-
+	if (CData_Manager::GetInstance()->Get_Mother() != nullptr)
+	{
+		CData_Manager::GetInstance()->Get_Mother()->Get_Damaged(Get_Damage());
+	}
 	Set_Dead(true);
 
 

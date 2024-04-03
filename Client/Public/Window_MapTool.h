@@ -100,6 +100,10 @@ private:
 		void			Interact_RotationFunction();
 		void			Interact_ArrivalMissonFunction();
 		void			Interact_ShowInfoWindow();
+		void			Interact_EnableFunction();
+		void			Interact_MoveColiderFunction();
+		void			Interact_NavigationFunction();
+		
 
 	void			SpecialTab_Function();
 		void			Special_CreateTab();
@@ -159,6 +163,10 @@ void			MouseInfo_Window(_float fTimeDelta);
 	void			Create_Tab(TAP_TYPE eTabType);
 	void			Delete_Tab(TAP_TYPE eTabType);
 	
+	void			Add_PickingCollider(vector<_float4>* vPickingVector);
+	void			Clear_PickingCollider();
+
+
 private: //! For. Preveiw_Function
 	void			Preview_Function();
 	void			Change_PreViewObject(TAP_TYPE eTabType);
@@ -193,6 +201,7 @@ private: //! ForCreateFunction
 		void			Boss_CreateFunction();
 		void			NPC_CreateFunction();
 	
+
 public:
 	void			Add_Monster_ForTrigger(CMonster_Character* pMonster);
 
@@ -257,7 +266,6 @@ private:   //!For Navigation
 
 	_int						m_iNaviListBoxIndex = 0;
 	_int						m_iCurrentPickingIndex = 0;
-	_int						m_iNaviIndex = 0;
 	_int						m_iCellIndex = 0;
 	_int						m_iPointIndex = 0;
 	_int						m_iNaviPickingIndex = 0;
@@ -292,7 +300,6 @@ private:
 	PrimitiveBatch<DirectX::VertexPositionColor>* m_pBatch = { nullptr };
 	BasicEffect* m_pEffect = { nullptr };
 	ID3D11InputLayout* m_pInputLayOut = { nullptr };
-	CBounding_Sphere* m_pBoundingSphere = { nullptr };
 
 private: //! For.Picking
 	class	CField* m_pField = { nullptr };
@@ -309,6 +316,8 @@ private: //! For.Picking
 	_uint			m_iSelectMeshObjectIndex = 0;
 	CGameObject*	m_pPickingObject = { nullptr };
 	INSTANCE_INFO_DESC* m_pPickingInstanceInfo = { nullptr };
+
+	vector<BoundingSphere*> m_vecPickingPoints;
 
 private: //! For PriviewObject //미리보기용 오브젝트
 	CEnvironment_Object*			m_pPreviewObject = {}; //! 미리보기를 위해 클론시킨 오브젝트.
@@ -327,6 +336,9 @@ private: //!For.Interact //! 상호작용
 	_float							m_fColliderSizeArray[3] = { 1.f, 1.f, 1.f};
 	_float							m_fColliderCenterArray[3] = { 0.f, 1.f, 0.f};
 
+	_float							m_fMoveColliderSizeArray[3] = { 1.f, 1.f, 1.f };
+	_float							m_fMoveColliderCenterArray[3] = { 0.f, 1.f, 0.f };
+
 	_float							m_fSelectColliderSizeArray[3] = { 1.f, 1.f, 1.f}; //! 콜라이더 사이즈변경용
 	_float							m_fSelectColliderCenterArray[3] = { 0.f, 1.f, 0.f }; //! 콜라이더 센터변경용
 	_int							m_iInteractPlayAnimIndex = 0;
@@ -334,12 +346,16 @@ private: //!For.Interact //! 상호작용
 	_bool							m_bInteractUseGravity = false;
 	_bool							m_bInteractUseSpline = false;
 	_bool							m_bInteractUseGroup = false;
-	_bool							m_bInteractUseRotate = false;
-	_bool							m_bInteractUseRootTranslate = false;
-	_bool							m_bInteractUseArrivalMissionSetting = false;
-	_bool							m_bInteractUseOffsetSetting = false;
+	_bool							m_bShowAddInteract = false;
+	_int							m_iAddInteractSelectIndex = 0;
+	
+	vector<_float4>					m_vecEnablePoints;
+	vector<string>					m_vecEnableListBox;
+	_int							m_iEnablePickingIndex = 0;
+	_int							m_iEnableListIndex = 0;
 
 	_bool							m_bInteractColliderSetting = false;
+	CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC m_tSelectInteractDesc = {};
 
 	_float4							m_vArrivalPosition = {};
 	_float4							m_vEnablePosition = {};

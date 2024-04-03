@@ -66,6 +66,7 @@ public:
 	HRESULT			Change_TextureCom(wstring strProtoTextureTag);	
 	HRESULT			Remove_TextureCom(TEXTURE eTexture);
 
+	HRESULT			Change_ModelCom(wstring strProtoModelTag);
 
 private:
 	CShader*							m_pShaderCom				= { nullptr };	

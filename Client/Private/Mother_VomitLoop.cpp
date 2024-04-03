@@ -1,5 +1,6 @@
 #include "Mother_VomitLoop.h"
 #include "Mother_VomitEnd.h"
+#include "GameInstance.h"
 
 void CMother_VomitLoop::Initialize(CMother* pActor)
 {
@@ -11,7 +12,16 @@ void CMother_VomitLoop::Initialize(CMother* pActor)
 CState<CMother>* CMother_VomitLoop::Update(CMother* pActor, _float fTimeDelta)
 {
 	//일정 시간이 지나가면 End로 전환 
+	m_fCloneTime += fTimeDelta;
 	m_fTimeDelta += fTimeDelta;
+
+	if (m_fCloneTime >= 0.1f)
+	{
+		m_fCloneTime = 0.f;
+		m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", L"Prototype_GameObject_MotherVomit");
+
+	}
+
 	if (m_fTimeDelta >= 7.f)
 	{
 		//m_fTimeDelta = 0.0f;

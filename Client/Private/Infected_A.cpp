@@ -41,8 +41,8 @@ HRESULT CInfected_A::Initialize(void* pArg)
 	m_pTarget = m_pGameInstance->Get_Player();
 
 	
-	/* !ADD : UI_HUD */
-	//CUI_Manager::GetInstance()->Add_EnemyHUD_Shard(LEVEL_STATIC, TEXT("Layer_EnemyHUD"), this);
+	/* !성희 추가 : 몬스터 HUD 생성 */
+	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
 	return S_OK;
 }
@@ -57,9 +57,9 @@ void CInfected_A::Tick(_float fTimeDelta)
 	/* 상위 CInfected 에서 Actor 돌리는중 */
 	__super::Tick(fTimeDelta);
 	
-	/* !ADD : UI_HUD */
-	//CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
-}	
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+}
 
 void CInfected_A::Late_Tick(_float fTimeDelta)
 {

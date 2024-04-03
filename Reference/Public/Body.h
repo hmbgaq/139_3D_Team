@@ -124,6 +124,8 @@ public:	//!For Animation Split
 public:
 	_uint Get_CurrentKeyFrames(_uint iIndex = 0);
 
+public:
+	virtual void Check_Frustum();
 
 
 protected:
@@ -147,7 +149,7 @@ protected:
 
 protected:
 	_bool	m_bIsUseMouseMove = { false };
-
+	_bool	m_bIsInFrustum = { false };
 protected:
 	_bool	m_bIsNotUseMovePos = { false };
 

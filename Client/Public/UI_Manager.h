@@ -10,6 +10,8 @@ BEGIN(Engine)
 class CGameObject;
 END
 
+class CUI_Interaction;
+class CUI_EnemyHUD_Shard;
 
 BEGIN(Client)
 //class CUI;
@@ -56,30 +58,82 @@ public: /* Ready_Preset */
 	HRESULT Ready_Loading_ToolLevel(_uint iLevelIndex);
 	HRESULT Ready_Loading_TestLevel(_uint iLevelIndex);
 	HRESULT Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner = nullptr, const string& strBossName = "");
-	HRESULT Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 	HRESULT Ready_DiedScreen(_uint iLevelIndex);
 	HRESULT Ready_Option(_uint iLevelIndex);
 	HRESULT Ready_MainMenu(_uint iLevelIndex);
 	HRESULT Ready_MouseCursor(_uint iLevelIndex);
 	HRESULT Ready_HitUI(_uint iLevelIndex);
 
+	/* EnemyShard */
+	CUI_EnemyHUD_Shard* Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
+
 public:
 	/* PlayerHUD */
-	void	Active_PlayerHUD();
+	void			Active_PlayerHUD();
+	void			NonActive_PlayerHUD();
+
 	/* LeftHUD */
-	HRESULT Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
-	void	Active_LeftHUD();
-	void	NonActive_LeftHUD();
+	HRESULT			Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_LeftHUD();
+	void			NonActive_LeftHUD();
+	void			LeftSkillState(const string& strUIName, SKILLSTATE eState);
+	void			LeftSkillUnlock(const string& strUIName, _bool bUnlock);
 	vector<CUI*>	m_vecLeftHUD;
+
 	/* RightHUD */
-	HRESULT Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag);
-	void	Active_RightHUD();
-	void	NonActive_RightHUD();
+	HRESULT			Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_RightHUD();
+	void			NonActive_RightHUD();
+	void			RightSkillState(const string& strUIName, SKILLSTATE eState);
+	void			RightSkillUnlock(const string& strUIName, _bool bUnlock);
 	vector<CUI*>	m_vecRightHUD;
+
+	/* LeftSkill */
+	HRESULT			Add_LeftSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_LeftSkill();
+	void			NonActive_LeftSkill();
+	CUI*			Get_LeftHUD(const string& strUIName);
+
+#pragma region =========================== LeftCoolTime_Function ===========================
+	// 현재 쿨타임 변경
+	void			Change_LeftHUD_CurrentCoolTime(const string& strUIName, _float fCoolTime);
+	// 현재 쿨타임 가져오기
+	_float			Get_LeftHUD_CurrentCoolTime(const string& strUIName);
+	// 최대 쿨타임 변경
+	void			Change_LeftHUD_MaxCoolTime(const string& strUIName, _float fCoolTime);
+	// 최대 쿨타임 가져오기
+	_float			Get_LeftHUD_MaxCoolTime(const string& strUIName);
+	// 스킬 해금
+	void			Change_LeftHUD_SkillUnlock(const string& strUIName, _bool bUnlock);
+
+	vector<CUI*>	m_vecLeftSkill;
+
+	/* RightSkill */
+	HRESULT			Add_RightSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_RightSkill();
+	void			NonActive_RightSkill();
+	CUI*			Get_RightHUD(const string& strUIName);
+
+#pragma region =========================== RightCoolTime_Function ===========================
+	// 현재 쿨타임 변경
+	void			Change_RightHUD_CurrentCoolTime(const string& strUIName, _float fCoolTime);
+	// 현재 쿨타임 가져오기
+	_float			Get_RightHUD_CurrentCoolTime(const string& strUIName);
+	// 최대 쿨타임 변경
+	void			Change_RightHUD_MaxCoolTime(const string& strUIName, _float fCoolTime);
+	// 최대 쿨타임 가져오기
+	_float			Get_RightHUD_MaxCoolTime(const string& strUIName);
+	// 스킬 해금
+	void			Change_RightHUD_SkillUnlock(const string& strUIName, _bool bUnlock);
+
+	vector<CUI*>	m_vecRightSkill;
+
 	/* TutorialBox */
 	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_TutorialBox();
 	void	NonActive_TutorialBox();
+	void	Change_TutorialText(TUTORIAL_TEXT eChangeText);
+
 	vector<CUI*>	m_vecTutorialBox;
 	/* LevelUp */
 	HRESULT Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag);
@@ -158,15 +212,16 @@ public:
 	HRESULT			Add_BossHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_BossHUD_Shard(_bool bActive);
 	void			NonActive_BossHUD_Shard();
+	void			Dead_BossHUD_Shard(_bool bDeadOwner);
 	vector<CUI*>	m_vecBossHUD_Shard;
 
 	/* EnemyHUD(Shard) */
-	HRESULT			Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
-	void			Active_EnemyHUD_Shard(_bool bActive);
-	void			NonActive_EnemyHUD_Shard();
-	void			Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
-	void			Set_Offset(_float fOffsetX, _float fOffsetY);
-	vector<CUI*>	m_vecEnemyHUD_Shard;
+	CUI_EnemyHUD_Shard*		Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void					Active_EnemyHUD_Shard(_bool bActive);
+	void					NonActive_EnemyHUD_Shard();
+	void					Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
+	void					Set_Offset(_float fOffsetX, _float fOffsetY);
+	vector<CUI*>			m_vecEnemyHUD_Shard;
 
 	/* DiedScreen */
 	HRESULT			Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
@@ -210,25 +265,33 @@ public:
 	void			NonActive_HitUI();
 	CUI*			m_pHitUI = nullptr;
 
-	CUI*			m_pMainLogo = nullptr;
-	vector<CUI*>	m_vecMainMenu;
-	vector<CUI*>	m_vecMainList;
-	vector<CUI*>	m_vecLevelList;
+	/* Interaction */
+	CUI_Interaction*	Add_Interaction(_uint iLevelIndex, const string& strUIName, const string& strProtoTag);
+
 
 	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
 	void			Active_UI();
 	void			NonActive_UI();
 
+private:
+	CUI*			m_pMainLogo = nullptr;
+	vector<CUI*>	m_vecMainMenu;
+	vector<CUI*>	m_vecMainList;
+	vector<CUI*>	m_vecLevelList;
+
+
 public:
 	void			Check_UIPicking(_float fTimeDelta);
 
 private:
-	_bool			m_bMouseOver = false;
-	_bool			m_bSelect = false;
-	_bool			m_bSelectPressing = false;
-	string			m_strSelectUI = "";
-	string			m_strMouseOverUI = "";
-	CUI*			m_pUI = nullptr;
+	_bool				m_bMouseOver = false;
+	_bool				m_bSelect = false;
+	_bool				m_bSelectPressing = false;
+	string				m_strSelectUI = "";
+	string				m_strMouseOverUI = "";
+	CUI*				m_pUI = nullptr;
+	//CUI_Interaction*	m_pInteraction = nullptr;
+	vector<CUI_Interaction*> m_vecInterraction;
 
 public:
 	void			Set_MouseOver(_bool bMouseOver) { m_bMouseOver = bMouseOver; }

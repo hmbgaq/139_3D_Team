@@ -163,7 +163,7 @@ HRESULT CEffect_Instance::Render()
 			if (FALSE == m_tInstanceDesc.bUseCustomTex)
 			{
 				m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
-				//m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+				//m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)0, aiTextureType_NORMALS);
 			}
 
 			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
@@ -327,6 +327,30 @@ HRESULT CEffect_Instance::Remove_TextureCom(TEXTURE eTexture)
 	return S_OK;
 }
 
+HRESULT CEffect_Instance::Change_ModelCom(wstring strProtoModelTag)
+{
+	if (TEXT("") == strProtoModelTag)
+		return S_OK;
+
+	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
+
+	if (nullptr != m_pModelCom[0])
+	{
+		Remove_Component(TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0]));
+	}
+
+	FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoModelTag, TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0])));
+
+
+	if (nullptr != m_pModelCom[0])
+	{
+		m_pVIBufferCom->Change_Model(m_pModelCom[0]);
+	}
+
+
+	return S_OK;
+}
+
 _bool CEffect_Instance::Write_Json(json& Out_Json)
 {
 	__super::Write_Json(Out_Json);
@@ -440,9 +464,9 @@ HRESULT CEffect_Instance::Ready_Components()
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NOISE])
 			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NOISE], TEXT("Com_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NOISE])));
 
-		// Sprite
-		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		//// Sprite
+		//if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_SPRITE])
+		//	FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_SPRITE], TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 
@@ -480,7 +504,6 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])	// 노이즈 텍스처 있으면 바인드
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
-
 	}
 
 	/* UV ============================================================================================ */

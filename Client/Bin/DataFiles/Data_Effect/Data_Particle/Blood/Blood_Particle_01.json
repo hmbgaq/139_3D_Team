@@ -83,7 +83,7 @@
   "iShaderPassIndex": 1,
   "iTextureIndex": [ 22, 0, 0, 0, 0 ],
   "strModelTag": [ "", "" ],
-  "strPartTag": "Part_Particle_002",
+  "strPartTag": "Part_Particle_000",
   "strProtoTag": "Prototype_GameObject_Effect_Particle",
   "strTextureTag": [ "Prototype_Component_Texture_Effect_Diffuse_Sprite", "", "Prototype_Component_Texture_Effect_Mask", "Prototype_Component_Texture_Effect_Noise", "" ],
   "vBloomPower": [ 0.3320463299751282, 0.0, 0.0, 0.0 ],

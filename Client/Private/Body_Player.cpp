@@ -181,6 +181,11 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CBody_Player::Check_Frustum()
+{
+	m_bIsInFrustum = true;
+}
+
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
 	CBody_Player* pInstance = new CBody_Player(pDevice, pContext, strPrototypeTag);

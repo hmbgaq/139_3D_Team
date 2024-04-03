@@ -48,20 +48,20 @@ void CPlayer_Weapon_Whip::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_C))
-	{
-		string path = "../Bin/DataFiles/Data_Weapon/Player/Whip/Whip.json";
-		{
-			json Out_Json;
-			m_pTransformCom->Write_Json(Out_Json);
-			CJson_Utility::Save_Json(path.c_str(), Out_Json);
-		}
-	}
+	//if (m_pGameInstance->Key_Down(DIK_C))
+	//{
+	//	string path = "../Bin/DataFiles/Data_Weapon/Player/Whip/Whip.json";
+	//	{
+	//		json Out_Json;
+	//		m_pTransformCom->Write_Json(Out_Json);
+	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
+	//	}
+	//}
 
-	if (m_pGameInstance->Key_Down(DIK_E))
-	{
-		Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_LOOP, 0);
-	}
+	//if (m_pGameInstance->Key_Down(DIK_E))
+	//{
+	//	Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_LOOP, 0);
+	//}
 }
 
 void CPlayer_Weapon_Whip::Late_Tick(_float fTimeDelta)

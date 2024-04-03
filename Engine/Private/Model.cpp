@@ -428,6 +428,9 @@ HRESULT CModel::Bind_MaterialResource(CShader* pShader, _uint iMeshIndex, _bool*
 
 	MATERIAL_DESC& material = m_Materials[iMaterialIndex];
 
+	*bORM = false;
+	*bEmissive = false;
+
 	for (_int i = 0; i < (_int)AI_TEXTURE_TYPE_MAX; ++i)
 	{
 		if (nullptr == material.pMtrlTextures[i])

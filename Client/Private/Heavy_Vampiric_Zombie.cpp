@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Data_Manager.h"
 #include "Player.h"
+#include "UI_Manager.h"
+#include "UI_EnemyHP_Shard.h"
 //#include "Body_Heavy_Vampiric_Zombie.h"
 //#include "BanditHeavy_Idle.h"
 
@@ -30,6 +32,8 @@ HRESULT CHeavy_Vampiric_Zombie::Initialize(void* pArg)
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	
 	m_fHp = 100.f;
+	/* !성희 추가 : 몬스터 HUD 생성 */ // 생성함수 호출시 CMonster_Character에게 상속받은 m_pEnemyHUD 멤버변수 사용가능.
+	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
 	return S_OK;
 }
@@ -40,8 +44,16 @@ void CHeavy_Vampiric_Zombie::Priority_Tick(_float fTimeDelta)
 }
 
 void CHeavy_Vampiric_Zombie::Tick(_float fTimeDelta)
-{
+{ 
 	__super::Tick(fTimeDelta);
+
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+
+	/* !UI Dead시키는 함수(몬스터 죽었을 때) */
+	// Set_EnemyHUD_Dead();
+	
+	m_fHp = 100;
 }
 
 void CHeavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
@@ -66,7 +78,6 @@ HRESULT CHeavy_Vampiric_Zombie::Ready_PartObjects()
 	CBody::BODY_DESC		BodyDesc = {};
 	FAILED_CHECK(Add_Body(TEXT("Prototype_GameObject_Body_Heavy_Vampiric_Zombie"), BodyDesc));
 
-
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
@@ -75,8 +86,12 @@ HRESULT CHeavy_Vampiric_Zombie::Ready_PartObjects()
 
 	Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
 
-
 	return S_OK;
+}
+
+void CHeavy_Vampiric_Zombie::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 CHeavy_Vampiric_Zombie* CHeavy_Vampiric_Zombie::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

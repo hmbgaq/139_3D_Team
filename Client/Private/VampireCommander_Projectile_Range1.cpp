@@ -107,7 +107,7 @@ void CVampireCommander_Projectile_Range1::OnCollisionEnter(CCollider* other)
 		
 		// Å¸°İ ÀÌÆåÆ®
 		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
-
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	//m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
