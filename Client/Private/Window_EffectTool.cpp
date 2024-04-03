@@ -609,7 +609,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 170;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 173;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 						}ImGui::SameLine();
@@ -819,7 +819,40 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				if (ImGui::CollapsingHeader(" Shader & RenderGroup _Particle"))
 				{
+
 					/* 쉐이더 패스 인덱스 변경_파티클 */
+					ImGui::SeparatorText("Shader Pass_Particle");
+
+					wstring strCurPassTag = TEXT("");
+					if (0 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle(중점 중앙 위)");
+					else if (1 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Solid(중점 중앙 위)");
+					else if (2 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Distortion_Post");
+					else if (3 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Center");
+					else if (4 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Center_Solid");
+					else if (5 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor(중점 중앙 위)");
+					else if (6 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor_Solid(중점 중앙 위)");
+					else if (7 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Distortion_Post_Floor");
+					else if (8 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor_Center");
+					else if (9 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor_Center_Solid");
+					else if (10 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Priority");
+					else if (11 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Priority_Solid");
+					else if (12 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Wireframe");
+
+					ImGui::Text(u8"현재 패스 : %s", m_pGameInstance->ConverWStringtoC(strCurPassTag));
+
 					if (ImGui::InputInt("Shader Pass_Particle", &m_iShaderPassIndex_Particle, 1))
 					{
 						if (m_iMaxShaderPassIndex_Particle < m_iShaderPassIndex_Particle)
@@ -843,16 +876,51 @@ void CWindow_EffectTool::Update_ParticleTab()
 					}
 
 
-					/* 렌더그룹 변경_파티클(현재는 Effect그룹으로 고정(9번) */
-					//ImGui::SeparatorText(" Render Group_Particle ");
-					//if (ImGui::InputInt(" Render Group_Particle ", &m_iRenderGroup_Particle, 1))
-					//{
-					//	if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Particle)
-					//	{
-					//		m_iRenderGroup_Particle = (_int)CRenderer::RENDER_END - 1;
-					//	}
-					//	m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Particle;
-					//}
+					/* 렌더그룹 변경_파티클 */
+					ImGui::SeparatorText("Render Group_Particle");
+
+					wstring strRenderGroupTag = TEXT("");
+					if (0 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_PRIORITY");
+					else if (1 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_NONLIGHT");
+					else if (2 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_OUTLINE");
+					else if (3 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_NONBLEND");
+					else if (4 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_SHADOW");
+					else if (5 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_DECAL");
+					else if (6 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_EFFECT");
+					else if (7 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_PRIORITY");
+					else if (8 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_MESH");
+					else if (9 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_UI_BACK");
+					else if (10 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_UI");
+					else if (9 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_UI_FRONT");
+					else if (10 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_CURSOR");
+					else if (11 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_BLEND");
+					else if (12 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_END");
+
+					ImGui::Text(u8"현재 렌더그룹 : %s", m_pGameInstance->ConverWStringtoC(strRenderGroupTag));
+
+					if (ImGui::InputInt(" Render Group_Particle ", &m_iRenderGroup_Particle, 1))
+					{
+						if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Particle)
+						{
+							m_iRenderGroup_Particle = (_int)CRenderer::RENDER_END - 1;
+						}
+						m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Particle;
+					}
 
 					ImGui::SeparatorText("");
 				}
@@ -1732,7 +1800,7 @@ void CWindow_EffectTool::Update_RectTab()
 				if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 				{
 					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 170;
+					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 173;
 					m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 0;
 
 				}ImGui::SameLine();
@@ -2119,23 +2187,50 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Aoe_Lens"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
 
+						if (ImGui::Button("BendedCylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_BendedCylinder"));
+
 						if (ImGui::Button("Billboard_Circle_00"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
+
+						if (ImGui::Button("BoxCylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_BoxCylinder"));
 
 						if (ImGui::Button("Ring"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Ring"));
 						
-						ImGui::SameLine();		
+						ImGui::SameLine();
+						if (ImGui::Button("Ring_02"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Ring_02"));
+
 						if (ImGui::Button("Sphere"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Sphere"));
 
-						if (ImGui::Button("Projectile"))
-							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Projectile"));
-
 						if (ImGui::Button("Corn"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Corn"));
-						
+
+
+						if (ImGui::Button("Cylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Cylinder"));
+
 						ImGui::SameLine();
+						if (ImGui::Button("VFX_Cylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_VFX_Cylinder"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("InvertedCylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_InvertedCylinder"));
+
+						if (ImGui::Button("Projectile"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Projectile"));
+	
+						if (ImGui::Button("Meteor"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Meteor"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Meteor_With_Rock"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Meteor_With_Rock"));
+
 						if (ImGui::Button("ShieldDome"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_ShieldDome"));
 
@@ -2164,6 +2259,17 @@ void CWindow_EffectTool::Update_MeshTab()
 
 						if (ImGui::Button("Coil"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Coil"));
+
+						if (ImGui::Button("Spiral"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Spiral"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Spring_Bullet"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Spring_Bullet"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Twist"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Twist"));
 
 
 						ImGui::SeparatorText("");
@@ -2358,7 +2464,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 170;
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 173;
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
 						}ImGui::SameLine();
@@ -2507,6 +2613,24 @@ void CWindow_EffectTool::Update_MeshTab()
 				/* 쉐이더 패스 인덱스 변경 */
 				if (ImGui::CollapsingHeader(" Shader & Render _MESH "))
 				{
+					ImGui::SeparatorText("Shader Pass_Mesh");
+
+					wstring strCurPassTag = TEXT("");
+					if (0 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("WireFrame");
+					else if(1 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Effect");
+					else if (2 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Effect_Solid");
+					else if (3 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion");
+					else if (4 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion_Solid");
+					else if (5 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion_Post");
+					
+					ImGui::Text(u8"현재 패스 : %s", m_pGameInstance->ConverWStringtoC(strCurPassTag));
+
 					if (ImGui::InputInt("Shader Pass_Mesh", &m_iShaderPassIndex_Mesh, 1))
 					{
 						if (m_iMaxShaderPassIndex_Mesh < m_iShaderPassIndex_Mesh)
@@ -2528,16 +2652,52 @@ void CWindow_EffectTool::Update_MeshTab()
 					}
 
 
-					///* 렌더그룹 변경 */
-					//ImGui::SeparatorText("Render Group_MESH");
-					//if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
-					//{
-					//	if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
-					//	{
-					//		m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
-					//	}
-					//	m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Mesh;
-					//}
+					/* 렌더그룹 변경 */
+					ImGui::SeparatorText("Render Group_Mesh");
+
+					wstring strRenderGroupTag = TEXT("");
+					if (0 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_PRIORITY");
+					else if (1 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_NONLIGHT");
+					else if (2 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_OUTLINE");
+					else if (3 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_NONBLEND");
+					else if (4 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_SHADOW");
+					else if (5 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_DECAL");
+					else if (6 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_EFFECT");
+					else if (7 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_PRIORITY");
+					else if (8 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_MESH");
+					else if (9 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_UI_BACK");
+					else if (10 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_UI");
+					else if (9 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_UI_FRONT");
+					else if (10 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_CURSOR");
+					else if (11 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_BLEND");
+					else if (12 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_END");
+
+
+					ImGui::Text(u8"현재 렌더그룹 : %s", m_pGameInstance->ConverWStringtoC(strRenderGroupTag));
+
+					if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
+					{
+						if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
+						{
+							m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
+						}
+						m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Mesh;
+					}
 
 					ImGui::SeparatorText("");
 				}
@@ -3447,6 +3607,27 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 		if (ImGui::CollapsingHeader("Shader & RenderGroup_Trail"))
 		{
 			/* 쉐이더 패스 인덱스 변경 */
+
+			ImGui::SeparatorText("Shader Pass_Trail");
+
+			wstring strCurPassTag = TEXT("");
+			if (0 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Effect");
+			else if (1 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Effect_Solid");
+			else if (2 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Distortion");
+			else if (3 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Distortion_Solid");
+			else if (4 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Distortion_Post");
+			else if (5 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Effect_Wireframe");
+			else if (6 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("SY");
+
+			ImGui::Text(u8"현재 패스 : %s", m_pGameInstance->ConverWStringtoC(strCurPassTag));
+
 			if (ImGui::InputInt("Shader Pass_Trail", &m_iShaderPassIndex_Trail, 1))
 			{
 				if (m_iMaxShaderPassIndex_Trail < m_iShaderPassIndex_Trail)
@@ -3469,16 +3650,51 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 				m_pVoidTrailDesc->vColor_Clip.w = m_vColor_Clip_Trail[3];
 			}
 
-			///* 렌더그룹 변경 */
-			//ImGui::SeparatorText("");
-			//if (ImGui::InputInt("Render Group_Trail", &m_iRenderGroup_Trail, 1))
-			//{
-			//	if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Trail)
-			//	{
-			//		m_iRenderGroup_Trail = (_int)CRenderer::RENDER_END - 1;
-			//	}
-			//	m_pVoidTrailDesc->iRenderGroup = m_iRenderGroup_Trail;
-			//}
+			/* 렌더그룹 변경 */
+			ImGui::SeparatorText("Render Group_Trail");
+
+			wstring strRenderGroupTag = TEXT("");
+			if (0 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_PRIORITY");
+			else if (1 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_NONLIGHT");
+			else if (2 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_OUTLINE");
+			else if (3 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_NONBLEND");
+			else if (4 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_SHADOW");
+			else if (5 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_DECAL");
+			else if (6 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_EFFECT");
+			else if (7 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_EFFECT_PRIORITY");
+			else if (8 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_EFFECT_MESH");
+			else if (9 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_UI_BACK");
+			else if (10 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_UI");
+			else if (9 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_UI_FRONT");
+			else if (10 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_CURSOR");
+			else if (11 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_BLEND");
+			else if (12 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_END");
+
+			ImGui::Text(u8"현재 렌더그룹 : %s", m_pGameInstance->ConverWStringtoC(strRenderGroupTag));
+
+			if (ImGui::InputInt("Render Group_Trail", &m_iRenderGroup_Trail, 1))
+			{
+				if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Trail)
+				{
+					m_iRenderGroup_Trail = (_int)CRenderer::RENDER_END - 1;
+				}
+				m_pVoidTrailDesc->iRenderGroup = m_iRenderGroup_Trail;
+			}
 
 
 			ImGui::SeparatorText("");
@@ -5365,23 +5581,49 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				if (ImGui::Button("Aoe_Lens"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
 
+				if (ImGui::Button("BendedCylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_BendedCylinder"));
+
 				if (ImGui::Button("Billboard_Circle_00"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
+
+				if (ImGui::Button("BoxCylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_BoxCylinder"));
 
 				if (ImGui::Button("Ring"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring"));
 				
 				ImGui::SameLine();
+				if (ImGui::Button("Ring_02"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring_02"));
+
 				if (ImGui::Button("Sphere"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Sphere"));
 
-				if (ImGui::Button("Projectile"))
-					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Projectile"));
-
 				if (ImGui::Button("Corn"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Corn"));
-				
+
+				if (ImGui::Button("Cylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Cylinder"));
+
 				ImGui::SameLine();
+				if (ImGui::Button("VFX_Cylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_VFX_Cylinder"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("InvertedCylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_InvertedCylinder"));
+
+				if (ImGui::Button("Projectile"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Projectile"));
+				
+				if (ImGui::Button("Meteor"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Meteor"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("Meteor_With_Rock"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Meteor_With_Rock"));
+
 				if (ImGui::Button("ShieldDome"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_ShieldDome"));
 	
@@ -5410,6 +5652,19 @@ void CWindow_EffectTool::Update_EffectList_Window()
 
 				if (ImGui::Button("Coil"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Coil"));
+
+				if (ImGui::Button("Spiral"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Spiral"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("Spring_Bullet"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Spring_Bullet"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("Twist"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Twist"));
+
+
 
 
 				ImGui::SeparatorText("");

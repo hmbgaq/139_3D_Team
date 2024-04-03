@@ -17,8 +17,8 @@ void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 
 
 
-	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_07_Light.json", pActor, TRUE, "RightHandIK");
-	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_07.json", pActor);
+	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_07_Light_03.json", pActor, TRUE, "RightHandIK");
+	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_08.json", pActor);
 	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_Particle_07_Reverse.json", pActor);
 	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_Particle_07.json", pActor);
 }

@@ -561,6 +561,18 @@ struct PS_OUT
 
 
 
+struct PS_OUT_PRIORITY
+{
+    float4 vColor           : SV_TARGET0;
+    float4 vSolid           : SV_TARGET1;
+	//float4 vNormal		: SV_TARGET2;
+	//float4 vDepth			: SV_TARGET3;
+    float4 vRimBloom        : SV_TARGET2;
+    float4 vDistortion      : SV_TARGET3;
+};
+
+
+
 PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -604,7 +616,8 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
     Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
 		
-    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    
     
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
@@ -612,10 +625,8 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     //Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * Out.vColor.a; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
     Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
     
+      
     
-
-    
-	
     if (bSolid)
         Out.vSolid = Out.vColor;
     
@@ -623,6 +634,72 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     return Out;
    
 }
+
+
+
+
+
+PS_OUT_PRIORITY PS_MAIN_PARTICLE_PRIORITY(PS_IN In, uniform bool bSolid)
+{
+    PS_OUT_PRIORITY Out = (PS_OUT_PRIORITY) 0;
+    
+    float4 vFinalDiffuse;
+    float4 vAlphaColor;
+
+    float4 vDistortion;
+    float fPerturb;
+    float2 vDistortedCoord;
+    
+    
+    // 텍스쿠드
+    In.vTexcoord = In.vTexcoord * g_UVScale + g_UVOffset;
+    In.vTexcoord = Rotate_Texcoord(In.vTexcoord, g_fDegree);
+    
+    /* Distortion ============================================================ */	
+    vDistortion = Calculation_Distortion(In.vTexcoord, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
+    
+    // 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다. 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
+    fPerturb = ((1.0f - In.vTexcoord.y) * g_fDistortionScale) + g_fDistortionBias;
+    
+    // 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
+    vDistortedCoord = (vDistortion.xy * fPerturb) + In.vTexcoord.xy;
+
+
+	// 디퓨즈 텍스처 (clamp 샘플러 사용?)
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, vDistortedCoord.xy);
+
+
+	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용?)
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
+    vFinalDiffuse.a *= vAlphaColor.r;
+
+	/* Discard & Color Mul ==================================================== */
+    if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
+        discard;
+	
+    
+	// 컬러 혼합
+    Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
+    Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
+		
+    
+    /* RimBloom ================================================================ */
+    //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
+    //Out.vColor += vRimColor;
+    //Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * Out.vColor.a; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+    Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
+    
+   
+    
+    if (bSolid)
+        Out.vSolid = Out.vColor;
+    
+	
+    return Out;
+   
+}
+
+
 
 
 
@@ -651,6 +728,10 @@ PS_OUT PS_MAIN_DISTORTION_POST(PS_IN In)
     return Out;
 }
 //  DISTORTION_POST =============================================================================================================
+
+
+
+
 
 
 
@@ -799,7 +880,38 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_PARTICLE(true);
     }
 
-    pass Particle_Wireframe // 10
+
+    pass Particle_Priority // 10
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(0);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE_PRIORITY(false);
+    }
+
+
+    pass Particle_Priority_Solid // 11
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* 렌더스테이츠 */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(0);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE_PRIORITY(true);
+    }
+
+
+    pass Particle_Wireframe // 12
     {
         SetRasterizerState(RS_NoneCull_Wireframe);
         SetDepthStencilState(DSS_Default, 0);

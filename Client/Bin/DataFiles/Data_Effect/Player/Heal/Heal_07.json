@@ -103,7 +103,7 @@
       "fSequenceTime": 1.5,
       "fUV_RotDegree": 0.0,
       "fWaitingTime": 0.0,
-      "iCurNumInstance": 2,
+      "iCurNumInstance": 1,
       "iRenderGroup": 7,
       "iShaderPassIndex": 3,
       "iTextureIndex": [ 3, 0, 149, 0, 0 ],

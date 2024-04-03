@@ -104,7 +104,6 @@ CEffect* CEffect_Manager::Create_Effect(string strAddPath, string strFileName, C
 	}
 		
 
-
 	return	pEffect;
 }
 
