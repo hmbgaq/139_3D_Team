@@ -212,6 +212,9 @@ public: //! For ToolTest
 	void								Set_EnableJsonPath(string strJsonPath) { m_tEnvironmentDesc.strEnableJsonPath = strJsonPath;}
 	void								Set_EnableForPoint(_bool bEnable) { m_tEnvironmentDesc.bEnable = bEnable; }
 
+	void								Add_UpdateCellIndex(_int iCellIndex);
+	vector<_int>&						Get_UpdateCellIndexs() { return m_vecUpdateCellIndexs;}
+	void								Erase_UpdateCellForIndex(_int iCellIndex) { m_vecUpdateCellIndexs.erase(m_vecUpdateCellIndexs.begin() + iCellIndex);}
 
 public: //! For RollerCoster Wagon && Spline
 	void								Start_SplineEvent() { m_bSpline = true; }

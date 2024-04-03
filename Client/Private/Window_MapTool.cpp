@@ -4518,6 +4518,194 @@ void CWindow_MapTool::Interact_MoveColiderFunction()
 	}
 }
 
+void CWindow_MapTool::Interact_NavigationFunction()
+{
+	ImGui::Begin(u8"상호작용 네비게이션");
+
+	if (nullptr == m_pNavigation)
+		return;
+
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	CEnvironment_Interact* pInteract = m_vecCreateInteractObject[m_iSelectObjectIndex];
+	vector<_int> vecUpdateCellIndex = pInteract->Get_UpdateCellIndexs();
+
+	_int iUpdateCellSize = vecUpdateCellIndex.size();
+	static _int iSelectUpdateCellIndex = 0;
+
+	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	if (ImGui::BeginListBox(u8"업데이트 시킬 셀 인덱스 목록"))
+	{
+		for (_int i = 0; i < iUpdateCellSize; ++i)
+		{
+			const _bool isSelected = (iSelectUpdateCellIndex == i);
+
+			if (ImGui::Selectable(to_string(vecUpdateCellIndex[i]).c_str(), isSelected))
+			{
+				iSelectUpdateCellIndex = i;
+
+				if(isSelected)
+					ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	if (ImGui::Button(u8"선택한 셀 인덱스 삭제"))
+	{
+		pInteract->Erase_UpdateCellForIndex(iSelectUpdateCellIndex);
+	}
+
+	ImGui::EndChild();
+
+	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	_int iPickedSize = (_int)m_vecPickingListBox.size();
+
+	if (false == m_vecPickedPoints.empty())
+	{
+		if (ImGui::BeginListBox(u8"픽킹 정보"))
+		{
+			for (_int i = 0; i < iPickedSize; ++i)
+			{
+				const _bool isSelected = (m_iNaviListBoxIndex == i);
+
+				if (ImGui::Selectable(m_vecPickingListBox[i].c_str(), isSelected))
+				{
+					m_iNaviListBoxIndex = i;
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+			}
+
+			ImGui::EndListBox();
+		}
+
+		if (m_iNaviListBoxIndex != -1)
+		{
+			ImGui::Text(u8"픽킹 X : %f", m_vecPickedPoints[m_iNaviListBoxIndex].x);
+			ImGui::Text(u8"픽킹 Y : %f", m_vecPickedPoints[m_iNaviListBoxIndex].y);
+			ImGui::Text(u8"픽킹 Z : %f", m_vecPickedPoints[m_iNaviListBoxIndex].z);
+
+			_float vPoints[3] = { m_vecPickedPoints[m_iNaviListBoxIndex].x, m_vecPickedPoints[m_iNaviListBoxIndex].y, m_vecPickedPoints[m_iNaviListBoxIndex].z };
+
+			if (ImGui::InputFloat3(u8"포인트값변경", vPoints))
+			{
+				m_vecPickedPoints[m_iNaviListBoxIndex].x = vPoints[0];
+				m_vecPickedPoints[m_iNaviListBoxIndex].y = vPoints[1];
+				m_vecPickedPoints[m_iNaviListBoxIndex].z = vPoints[2];
+			}
+
+
+
+		}
+
+		if (ImGui::Button(u8"픽킹인덱스 삭제"))
+		{
+			if (m_iNaviListBoxIndex < m_vecPickedPoints.size()) {
+				m_vecPickedPoints.erase(m_vecPickedPoints.begin() + m_iNaviListBoxIndex);
+				m_vecPickingListBox.erase(m_vecPickingListBox.begin() + m_iNaviListBoxIndex);
+
+				if (m_vecPickingListBox.size() == 0)
+					m_iNaviListBoxIndex = -1;
+				else
+					m_iNaviListBoxIndex = (_int)m_vecPickingListBox.size() - 1;
+
+			}
+		}
+	}
+
+	ImGui::EndChild();
+
+
+	ImGui::NewLine();
+
+	if (ImGui::Button(u8"상호작용 네비게이션 생성") || m_pGameInstance->Key_Down(DIK_K))
+	{
+		if (3 > m_iCurrentPickingIndex)
+			return;
+
+
+
+		vector<double> fPoints;
+		//fPoints.reserve(iPickedSize * 2);
+
+		for (_int i = 0; i < iPickedSize; ++i)
+		{
+			fPoints.push_back(m_vecPickedPoints[i].x);
+
+			fPoints.push_back(m_vecPickedPoints[i].z);
+		}
+
+
+		delaunator::Delaunator d(fPoints);
+
+
+		for (size_t i = 0; i < d.triangles.size(); i += 3)
+		{
+			//"Triangle points: [[%f, %f], [%f, %f], [%f, %f]]\n",
+			//	d.coords[2 * d.triangles[i]],        //tx0            
+			//	d.coords[2 * d.triangles[i] + 1],    //ty0
+			//	d.coords[2 * d.triangles[i + 1]],    //tx1
+			//	d.coords[2 * d.triangles[i + 1] + 1],//ty1
+			//	d.coords[2 * d.triangles[i + 2]],    //tx2
+			//	d.coords[2 * d.triangles[i + 2] + 1] //ty2
+			_float3 points[3] = { m_vecPickedPoints[d.triangles[i]], m_vecPickedPoints[d.triangles[i + 1]], m_vecPickedPoints[d.triangles[i + 2]] };
+
+			Set_CCW(points);
+
+			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_pNavigation->Get_CellSize());
+			
+
+			m_pNavigation->AddCell(pCell);
+			pInteract->Add_UpdateCellIndex(pCell->Get_Index());
+
+		}
+
+		Reset_NaviPicking();
+	}
+
+	ImGui::Checkbox(u8"픽킹모드", &m_bPickingNaviMode);
+
+	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck() && true == m_bPickingNaviMode)
+	{
+
+		_float3 fPickedPos = { 0.f, 0.f, 0.f };
+
+		if (true == pInteract->Picking(&fPickedPos))
+		{
+			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), pInteract->Get_Transform()->Get_WorldMatrix());
+
+			Find_NearPointPos(&fPickedPos);
+			m_vecPickedPoints.push_back(fPickedPos);
+			m_vecPickingListBox.push_back(to_string(m_iNaviPickingIndex));
+			++m_iCurrentPickingIndex;
+			++m_iNaviPickingIndex;
+			m_fNaviPickingPos = fPickedPos;
+		}
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_H))
+	{
+
+		_float4 vCamPos = m_pGameInstance->Get_CamPosition();
+
+		_float3 vPointPos = { vCamPos.x, vCamPos.y, vCamPos.z };
+
+		Find_NearPointPos(&vPointPos);
+		m_vecPickedPoints.push_back(vPointPos);
+		m_vecPickingListBox.push_back(to_string(m_iNaviPickingIndex));
+		++m_iCurrentPickingIndex;
+		++m_iNaviPickingIndex;
+		m_fNaviPickingPos = vPointPos;
+
+	}
+
+	ImGui::End();
+}
+
 
 
 void CWindow_MapTool::SpecialTab_Function()
@@ -5728,7 +5916,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 			Set_CCW(points);
 
-			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_iNaviIndex++);
+			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_pNavigation->Get_CellSize());
 
 			m_pNavigation->AddCell(pCell);
 		}
@@ -7645,56 +7833,6 @@ void CWindow_MapTool::Preview_RayFollowForTabType(TAP_TYPE eTabType)
 
 	}
 
-	if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER && m_pPreviewCharacter != nullptr)
-	{
-		m_pPreviewCharacter->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
-	}
-	else
-	{
-		switch (eTabType)
-		{
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_SINGLE:
-			{
-				if (nullptr != m_pPreviewObject)
-					m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
-
-				break;
-			}
-
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_LIGHT:
-			{
-				if (nullptr != m_pPreviewLightObject)
-					m_pPreviewLightObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
-
-				break;
-			}
-
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_INSTANCE:
-			{
-				if (nullptr != m_pPreviewObject)
-					m_pPreviewObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
-
-				break;
-			}
-
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_SPECIAL:
-			{
-				if (nullptr != m_pPreviewSpecialObject)
-					m_pPreviewSpecialObject->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
-				
-				break;
-			}
-
-			case Client::CWindow_MapTool::TAP_TYPE::TAB_INTERACT:
-			{
-				if (nullptr != m_pPreviewInteract)
-					m_pPreviewInteract->Get_Transform()->Set_State(CTransform::STATE_POSITION, vPos);
-				
-				break;
-			}
-		}
-	}
-
 }
 
 
@@ -8903,7 +9041,17 @@ void CWindow_MapTool::Interact_SelectTab()
 
 			ImGui::Checkbox(u8"도착미션 셋팅", &m_tSelectInteractDesc.bArrival);
 
-			
+			ImGui::SameLine();
+
+			static _bool bNavigationMode = false;
+
+			ImGui::Checkbox(u8"상호작용 네비게이션 셀 추가", &bNavigationMode);
+
+			if (bNavigationMode == true)
+			{
+				Interact_NavigationFunction();
+			}
+
 			if (m_bInteractUseGroup == true)
 			{
 				Interact_GroupFunction();

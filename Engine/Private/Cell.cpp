@@ -248,7 +248,19 @@ void CCell::Reset_Line()
 
 void CCell::Update(_fmatrix WorldMatrix)
 {
+	for (_int i = 0; i < POINT_END; ++i)
+	{
+		_vector vTransformedPoint = XMVector3TransformCoord(XMLoadFloat3(&m_vPoints[i]), WorldMatrix);
 
+		XMStoreFloat3(&m_vPoints[i], vTransformedPoint);
+	}
+
+	//for (_uint i = 0; i < (_uint)POINT_END; ++i)
+	//	XMStoreFloat3(&m_vPointsInWorld[i], XMVector3TransformCoord(XMLoadFloat3(&m_vPoints[i]), WorldMatrix));
+	//
+	//XMStoreFloat3(&m_vNormals[(_uint)LINE_AB], XMLoadFloat3(&m_vPointsInWorld[(_uint)POINT_B]) - XMLoadFloat3(&m_vPointsInWorld[(_uint)POINT_A]));
+	//XMStoreFloat3(&m_vNormals[(_uint)LINE_BC], XMLoadFloat3(&m_vPointsInWorld[(_uint)POINT_C]) - XMLoadFloat3(&m_vPointsInWorld[(_uint)POINT_B]));
+	//XMStoreFloat3(&m_vNormals[(_uint)LINE_CA], XMLoadFloat3(&m_vPointsInWorld[(_uint)POINT_A]) - XMLoadFloat3(&m_vPointsInWorld[(_uint)POINT_C]));
 }
 
 #ifdef _DEBUG

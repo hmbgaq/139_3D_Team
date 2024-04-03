@@ -102,6 +102,8 @@ private:
 		void			Interact_ShowInfoWindow();
 		void			Interact_EnableFunction();
 		void			Interact_MoveColiderFunction();
+		void			Interact_NavigationFunction();
+		
 
 	void			SpecialTab_Function();
 		void			Special_CreateTab();
@@ -264,7 +266,6 @@ private:   //!For Navigation
 
 	_int						m_iNaviListBoxIndex = 0;
 	_int						m_iCurrentPickingIndex = 0;
-	_int						m_iNaviIndex = 0;
 	_int						m_iCellIndex = 0;
 	_int						m_iPointIndex = 0;
 	_int						m_iNaviPickingIndex = 0;

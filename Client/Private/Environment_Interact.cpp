@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Level_Loading.h"
 #include "SMath.h"
+#include "Navigation.h"
+#include "Cell.h"
 
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -164,6 +166,17 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 			m_bInteractEnable = false;
 	}
 
+	//if (m_pNavigationCom != nullptr)
+	//{
+	//	//m_pNavigationCom->Update(m_pTransformCom->Get_WorldMatrix());
+	//	//_int iUpdateCellSize = m_vecUpdateCellIndexs.size();
+	//
+	//	//for (_int i = 0; i < iUpdateCellSize; ++i)
+	//	//{
+	//	//	m_pNavigationCom->Get_CellForIndex(m_vecUpdateCellIndexs[i])->Update(m_pTransformCom->Get_WorldMatrix());
+	//	//
+	//	//}
+	//}
 
 }
 
@@ -1010,6 +1023,11 @@ void CEnvironment_Interact::Reset_EnablePosition()
 {
 	m_vecPointChecks.clear();
 	m_vecEnablePosition.clear();
+}
+
+void CEnvironment_Interact::Add_UpdateCellIndex(_int iCellIndex)
+{
+	m_vecUpdateCellIndexs.push_back(iCellIndex);
 }
 
 void CEnvironment_Interact::Reset_TestEvent()
