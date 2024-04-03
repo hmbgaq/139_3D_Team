@@ -58,7 +58,8 @@ public:
 	void Add_AttackCount() { m_iAttackCount += 1; };
 	void Reset_AttackCount() { m_iAttackCount = 0; };
 
-
+public:
+	virtual void Check_Frustum() override;
 
 protected:
 	MONSTER_DESC			m_tMonsterDesc = {};

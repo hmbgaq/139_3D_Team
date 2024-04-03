@@ -86,7 +86,7 @@ void CImpact_Slam::OnCollisionEnter(CCollider* other)
 
 
 		// Å¸°Ý ÀÌÆåÆ®
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 
 }

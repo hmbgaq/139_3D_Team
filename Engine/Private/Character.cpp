@@ -101,7 +101,6 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	}
 
 	Check_Frustum();
-
 	if (true == m_bIsInFrustum)
 	{		
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), ); //m_bIsInFrustum
@@ -126,6 +125,10 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			m_vAddRootPosition = {};
 		}
 		
+	}
+	else 
+	{
+		_uint i = 0;
 	}
 
 	m_pRigidBody->Late_Tick(fTimeDelta);
@@ -302,6 +305,11 @@ void CCharacter::Set_AnimState(CModel::ANIM_STATE _eAnimState)
 	m_pBody->Set_AnimState(_eAnimState);
 }
 
+void CCharacter::Set_Animation_End(_bool _bIsAnimEnd)
+{
+	m_pBody->Set_Animation_End(_bIsAnimEnd);
+}
+
 _bool CCharacter::Is_Animation_End()
 {
 	return m_pBody->Is_Animation_End();
@@ -315,6 +323,21 @@ _bool CCharacter::Is_UpperAnimation_End()
 _bool CCharacter::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pBody->Is_Inputable_Front(_iIndexFront);
+}
+
+_bool CCharacter::Is_Upper_Inputable_Front(_uint _iIndexFront)
+{
+	return m_pBody->Is_Upper_Inputable_Front(_iIndexFront);
+}
+
+_float CCharacter::Calc_Cooltime_Percent()
+{
+	return m_pBody->Calc_Cooltime_Percent();
+}
+
+_float CCharacter::Calc_Upper_Cooltime_Percent()
+{
+	return m_pBody->Calc_Upper_Cooltime_Percent();
 }
 
 _float CCharacter::Get_TrackPosition()
@@ -589,7 +612,6 @@ _float CCharacter::Target_Contained_Angle(_float4 vStandard, _float4 vTargetPos)
 	_float fRotationDirection = XMVectorGetY(vJudge) < 0 ? -1.0f : 1.0f;
 
 	return fAngle * fRotationDirection;
-
 }
 
 _bool CCharacter::Lerp_ToOrigin_Look(_float4 vOriginLook, _float fSpeed, _float fTimeDelta)

@@ -377,7 +377,7 @@ void CEffect::End_Effect()
 			{
 				ReSet_Effect();
 			}
-			
+
 		}
 
 	}

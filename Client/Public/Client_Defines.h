@@ -11,6 +11,8 @@ namespace Client
 	//static const unsigned int	g_iWinSizeY = 900;
 	//static const unsigned int	g_iWinSizeX = 1920;
 	//static const unsigned int	g_iWinSizeY = 1080;
+	//static const unsigned int	g_iWinSizeX = 2560;
+	//static const unsigned int	g_iWinSizeY = 1440;
 
 	// ! Close Window
 	_bool g_CloseWindow = false;
@@ -75,6 +77,9 @@ namespace Client
 	#define TANK_WEAPON_PUNCH_R				TEXT("Weapon_Punch_R")
 
 	#define BANDIT_HEAVY_WEAPON				TEXT("Weapon_Axe")
+
+	#define NPC_WEAPON_EDGAR				TEXT("Weapon_Edgar")
+
 	
 
 

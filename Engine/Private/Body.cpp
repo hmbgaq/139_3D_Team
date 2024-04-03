@@ -162,9 +162,26 @@ _bool CBody::Is_UpperAnimation_End()
 	return m_pModelCom->Is_UpperAnimEnd();
 }
 
+void CBody::Set_Animation_End(_bool _bIsAnimEnd)
+{
+	m_pModelCom->Set_AnimEnd(_bIsAnimEnd);
+}
+
 _bool CBody::Is_Inputable_Front(_uint _iIndexFront)
 {
 	return m_pModelCom->Is_Inputable_Front(_iIndexFront);
+}
+_bool CBody::Is_Upper_Inputable_Front(_uint _iIndexFront)
+{
+	return m_pModelCom->Is_Upper_Inputable_Front(_iIndexFront);
+}
+_float CBody::Calc_Cooltime_Percent()
+{
+	return m_pModelCom->Calc_Cooltime_Percent();
+}
+_float CBody::Calc_Upper_Cooltime_Percent()
+{
+	return m_pModelCom->Calc_Upper_Cooltime_Percent();
 }
 _float CBody::Get_TrackPosition()
 {

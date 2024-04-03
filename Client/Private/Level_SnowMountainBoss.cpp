@@ -54,7 +54,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	//FAILED_CHECK(Ready_Shader());
+	FAILED_CHECK(Ready_Shader());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
@@ -210,11 +210,14 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-	pPlayer->Set_Position(_float3(100.6f, -0.732f, 65.2f));
-	CNavigation* pNavigation = pPlayer->Get_Navigation();
-
-	pNavigation->Set_CurrentIndex(490);
-	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+	pPlayer->Set_InitPosition(_float3(100.6f, 0.f, 65.2f));
+// 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
+// 
+// 	pPlayer->Set_Position(_float3(100.6f, 0.f, 65.2f));
+// 	CNavigation* pNavigation = pPlayer->Get_Navigation();
+// 
+// 	//pNavigation->Set_CurrentIndex(490);
+// 	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
 //	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
@@ -494,8 +497,6 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_UI_Monster(const wstring& strLayerT
 
 		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
 	}
-
-
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
 	//	return E_FAIL;
 
@@ -519,13 +520,14 @@ HRESULT CLevel_SnowMountainBoss::Ready_Shader()
 
 	/* 2. 셰이더 옵션 조절 */
 	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_Shadow_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
 	m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
 	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
 	m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_HDR_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
 	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_HSV_Active(true);
+	m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
 
 	HBAO_PLUS_DESC Desc_Hbao = {};
 	Desc_Hbao.bHBAO_Active = true;
@@ -539,14 +541,14 @@ HRESULT CLevel_SnowMountainBoss::Ready_Shader()
 	Desc_Deferred.bShadow_Active = true;
 
 	HDR_DESC Desc_HDR = {};
-	Desc_HDR.bHDR_Active = true;
+	Desc_HDR.bHDR_Active = false;
 	Desc_HDR.fmax_white = 0.539f;
 
 	ANTI_DESC Desc_Anti = {};
 	Desc_Anti.bFXAA_Active = true;
 
 	HSV_DESC Desc_HSV = {};
-	Desc_HSV.bScreen_Active = true;
+	Desc_HSV.bScreen_Active = false;
 	Desc_HSV.fFinal_Brightness = 1.284f;
 	Desc_HSV.fFinal_Saturation = 0.850f;
 

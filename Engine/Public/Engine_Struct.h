@@ -363,11 +363,17 @@ namespace Engine
 	};
 
 
-
 #pragma endregion 구조체
 
 #pragma region Shader Control Struct - Screen 
 	/* 각자 구분용 */
+
+	typedef struct ENGINE_DLL tagGodRay_Desc
+	{
+		_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825f, 2.0f);
+		_float2 vScreenSunPosition = {};
+		_float2 Padding = {};
+	}LIGHTSHAFT_DESC;
 
 	typedef struct ENGINE_DLL tagPBR_Desc
 	{
@@ -381,20 +387,19 @@ namespace Engine
 		_float fBias				= 0.1f;
 		_float fPowerExponent		= 2.f;
 		_float fBlur_Sharpness		= 16.f;
-
 	}HBAO_PLUS_DESC;
 
 	typedef struct ENGINE_DLL tagSSR_Desc
 	{
-		_bool	bSSR_Active = { false };
-		_float  fRayStep = 0.005f;
-		_float  fStepCnt = 75.f;
+		_float  fRayStep			= 0.005f;
+		_float  fStepCnt			= 75.f;
+		_bool	bSSR_Active			= { false };
 	}SSR_DESC;
 
 	typedef struct ENGINE_DLL tagChroma_Desc
 	{
-		_bool bChroma_Active = { false };
-		_float fChromaticIntensity = 11.f; 
+		_float fChromaticIntensity	= 11.f; 
+		_bool bChroma_Active		= { false };
 	}CHROMA_DESC;
 
 	typedef struct ENGINE_DLL tagBloomRim_Desc
@@ -415,7 +420,6 @@ namespace Engine
 		_float	fFogHeightDensity		= 0.05f;
 		_float	padding					= 0.f; //4 
 		_float4 vFogColor				= { 0.5f, 0.5f, 0.5f, 0.2f };
-
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc
@@ -423,7 +427,7 @@ namespace Engine
 		_bool  bHDR_Active			= false;
 		_float fmax_white			= 0.4f;
 	}HDR_DESC;
-
+	
 	typedef struct ENGINE_DLL tagAnti_Aliasing
 	{
 		_bool  bFXAA_Active = false;
@@ -434,45 +438,45 @@ namespace Engine
 		_bool bScreen_Active = false;
 		_float fFinal_Saturation = 1.f;
 		_float fFinal_Brightness = 1.f;
-
 	}HSV_DESC;
 
 	typedef struct ENGINE_DLL tagRadialBlurDesc
 	{
-		_bool	bRadial_Active	= false;
-		_float	fRadial_Quality = 16.f;
+		_float	fRadial_Quality = 8.f;
 		_float	fRadial_Power	= 0.1f;
+		_bool	bRadial_Active	= false;
 	}RADIAL_DESC;
 
 	typedef struct ENGINE_DLL tagDOF
 	{
+		_float DOF_Distance		= 0.f;
 		_bool  bDOF_Active		= false;
-		_float4  DOFParams = { 0.f, 0.f, 0.f, 0.f };
-		//float  fFocusDistance = 10.f;
-		//float  fFocusRange = 3.f;
-
 	}DOF_DESC;
+
+	typedef struct ENGINE_DLL tagMotionBlur
+	{
+		_bool  bMotionBLur_Active		= false;
+		_float fMotionBlur_Intensity	= 0.f;
+	}MOTIONBLUR_DESC;
 
 	typedef struct ENGINE_DLL tagVignette
 	{
-		_bool   bVignette_Active = false;
 		_float  fVignetteRatio = 1.f;			//[0.15 to 6.00]  Sets a width to height ratio. 1.00 (1/1) is perfectly round, while 1.60 (16/10) is 60 % wider than it's high.
 		_float  fVignetteRadius = 1.f;		//[-1.00 to 3.00] lower values = stronger radial effect from center
 		_float  fVignetteAmount = -1.f;		//[-2.00 to 1.00] Strength of black. -2.00 = Max Black, 1.00 = Max White.
 		_float  fVignetteSlope = 8.f;			//[2 to 16] How far away from the center the change should start to really grow strong (odd numbers cause a larger fps drop than even numbers)
 		_float fVignetteCenter_X = 0.5f;  //[0.000 to 1.000, 0.000 to 1.000] Center of effect for VignetteType 1. 2 and 3 do not obey this setting.
 		_float fVignetteCenter_Y = 0.5f;  //[0.000 to 1.000, 0.000 to 1.000] Center of effect for VignetteType 1. 2 and 3 do not obey this setting.
+		_bool   bVignette_Active = false;
 	}VIGNETTE_DESC;
 
 	typedef struct ENGINE_DLL tagLumaSharpen
 	{
-		_bool  bLumaSharpen_Active = false;
 		_float fsharp_strength	= 1.25f;	//[0.10 to 3.00] Strength of the sharpening
 		_float fsharp_clamp		= 0.035f;	//[0.000 to 1.000] Limits maximum amount of sharpening a pixel recieves - Default is 0.035
-		_float fpattern			= 2.f;      //[1|2|3|4] Choose a sample pattern. 1 = Fast, 2 = Normal, 3 = Wider, 4 = Pyramid shaped.
 		_float foffset_bias		= 1.f;		//[0.0 to 6.0] Offset bias adjusts the radius of the sampling pattern.
+		_bool  bLumaSharpen_Active = false;
 											//I designed the pattern for offset_bias 1.0, but feel free to experiment.
-		_float fshow_sharpen	= 0.f;		//[0 or 1] Visualize the strength of the sharpen (multiplied by 4 to see it better)
 	}LUMASHARPEN_DESC;
 
 	typedef struct ENGINE_DLL tagScreenTone

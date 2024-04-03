@@ -2,24 +2,29 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
-#include "UI_Weakness.h"
+
 
 BEGIN(Engine)
 class CShader;
 class CModel;
 class CTexture;
+class CNavigation;
+class CCell;
 END
 
 BEGIN(Client)
 class CEnvironment_LightObject;
 class CEnvironment_Interact;
-//class CUI_Weakness;
+class CUI;
 
 class CEnvironment_SpecialObject final : public CGameObject
 {
 
 public:
-enum SPECIALTYPE { SPECIAL_SIGNAL, SPECIAL_TRACKLEVER, SPECIAL_END };
+enum SPECIALTYPE { SPECIAL_SIGNAL, SPECIAL_TRACKLEVER, SPECIAL_ELEVATOR, SPECIAL, SPECIAL_END };
+
+enum ELEVATORTYPE { ELEVATOR_UP, ELEVATOR_DOWN, ELEVATOR_TARGET, ELEVATOR_TYPEEND };
+
 
 public:
 	typedef struct tagEnvironmentSpecialObjectDesc : public CGameObject::GAMEOBJECT_DESC
@@ -47,6 +52,9 @@ public:
 		//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO_BOSS, TEXT("Prototype_Component_Texture_RaidPoolLight3"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Map/RaidPool/T_RaidBloodlight_03_BC.dds"))));
 		_int		iSpecialGroupIndex = -1;
 		_int		iBloomMeshIndex = 0;
+
+
+		ELEVATORTYPE eElevatorType = ELEVATOR_TYPEEND;
 	}ENVIRONMENT_SPECIALOBJECT_DESC;
 
 
@@ -111,16 +119,23 @@ public:
 	HRESULT				TrackLeverInit();
 	HRESULT				Find_SignalBox_AndLightObject();
 	void				TrackLeverFunction();
-	CUI_Weakness*		Get_LeverWeakUI() { return m_pLeverWeaknessUI; }
+	CUI*				Get_LeverWeakUI() { return m_pLeverWeaknessUI; }
+
+public:
+	HRESULT				ElevatorInit();
+	void				ElevatorFunction(const _float fTimeDelta);
+	void				UpdateCell();
 
 	
 
+public:
 	
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pPickingCollider = nullptr;
+	CNavigation*		m_pNavigationCom = { nullptr};
 	 
 	CTexture*			m_pDiffuseTexture = { nullptr };
 	CTexture*			m_pMaskTexture = { nullptr };
@@ -144,11 +159,22 @@ private: //!For. Signal
 
 private: //! For. TrackLever
 	CEnvironment_SpecialObject*		m_pSignalObject = { nullptr }; 
-	CUI_Weakness*					m_pLeverWeaknessUI = { nullptr }; 
+	CUI*							m_pLeverWeaknessUI = { nullptr }; 
 	CEnvironment_LightObject*		m_pLightObject = { nullptr };
 	_bool							m_bLeverOn = false;
 
 	CEnvironment_Interact*			m_pSnowMountainWagon = { nullptr };
+	
+private: //!For. Elevator 
+	_float4							m_vArrivalPosition = {};
+	vector<_uint>					m_vecUpdateCellIndexs;
+	vector<CCell*>					m_vecUpdateCells;
+
+	_float							m_fMinY = {};
+	_float							m_fMaxY = {};
+	
+	_bool							m_bElevatorOn = false;
+	
 	
 
 private:

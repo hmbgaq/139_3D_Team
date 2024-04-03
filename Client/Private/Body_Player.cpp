@@ -132,7 +132,6 @@ void CBody_Player::OnCollisionExit(CCollider* other)
 	__super::OnCollisionExit(other);
 }
 
-
 HRESULT CBody_Player::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();

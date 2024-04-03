@@ -25,8 +25,6 @@ HRESULT CBody_Infected_A::Initialize(void* pArg)
 
 	FAILED_CHECK(OptionSetting());
 
-	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
-
 	return S_OK;
 }
 
@@ -38,11 +36,6 @@ void CBody_Infected_A::Priority_Tick(_float fTimeDelta)
 void CBody_Infected_A::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
-
-	//if(m_pGameInstance->Key_Down(DIK_0))
-	//	m_eRender_State = CBody_Infected::RENDER_STATE::ATTACK;
-	//if (m_pGameInstance->Key_Down(DIK_9))
-	//	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
 
 }
 
@@ -65,17 +58,13 @@ HRESULT CBody_Infected_A::Render_Shadow()
 	return S_OK;
 }
 
-
-void CBody_Infected_A::Update_DiscardMesh()
-{
-
-}
-
 HRESULT CBody_Infected_A::OptionSetting()
 {
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = {  }; // ÇÇ¶± 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 1, 11 }; // ¹«±â 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = {0, 1, 2, 3, 5, 6, 7, 8, 11 }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 
+
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
 
 	return S_OK;
 }
@@ -84,10 +73,8 @@ HRESULT CBody_Infected_A::Ready_Components()
 {	
 	FAILED_CHECK(__super::Ready_Components());
 
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
-
 	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Infected_A"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Infected_A"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	return S_OK;
 }
@@ -96,8 +83,8 @@ HRESULT CBody_Infected_A::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+	m_gCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float)));
 
 	if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
 	{

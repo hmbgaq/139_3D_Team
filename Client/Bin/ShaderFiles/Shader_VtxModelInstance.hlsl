@@ -14,6 +14,8 @@ vector g_vCamLook;
 vector g_vPlayerPosition;
 float g_fDissolveRatio;
 float g_DiscardAlpha = 0.1f;
+bool g_bORM_Available;
+bool g_bEmissive_Available;
 
 /* =========== Texture =========== */
 Texture2D g_DiffuseTexture;
@@ -209,8 +211,14 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse    = vMtrlDiffuse;
     Out.vNormal     = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth      = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vORM        = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-    Out.vEmissive   = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
+    Out.vORM        = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive   = float4(0.f, 0.f, 0.f, 0.f);
+    
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
     
     return Out;
 }
@@ -230,8 +238,12 @@ PS_OUT PS_MAIN_NORMAL(PS_IN In)
 
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
+    
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
 	
     return Out;
 }
@@ -241,7 +253,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
-    Out.vLightDepth.r = In.vProjPos.w / 300.f;
+    Out.vLightDepth.r = In.vProjPos.w / g_fLightFar;
 
     Out.vLightDepth.a = 1.f;
 
@@ -277,8 +289,11 @@ PS_OUT PS_MAIN_Dissove(PS_IN In)
 	
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
 
     return Out;
 }
@@ -300,8 +315,11 @@ PS_OUT PS_MAIN_NORMALNONCLIP(PS_IN In)
 
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
-    Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
-    Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexUV);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexUV);
 	
     return Out;
 }

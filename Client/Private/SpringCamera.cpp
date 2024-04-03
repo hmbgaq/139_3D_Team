@@ -58,6 +58,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 	}
 	_float4x4 BoneMatrix = {};
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+	m_pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
 	_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
@@ -88,7 +89,7 @@ void CSpringCamera::Tick(_float fTimeDelta)
 	PreActualPosition = m_TargetPosition;
 
 	
-	if(true == m_pPlayer->m_bPlayerCheck)
+	if(true == m_pPlayer->m_bPlayerCheck && m_pPlayer != nullptr)
 	{// 뼈에 붙인 카메라 
 		_float4x4 BoneMatrix = {};
 		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();

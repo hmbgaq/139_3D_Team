@@ -54,16 +54,11 @@ void CInfected_A::Priority_Tick(_float fTimeDelta)
 
 void CInfected_A::Tick(_float fTimeDelta)
 {
+	/* 상위 CInfected 에서 Actor 돌리는중 */
 	__super::Tick(fTimeDelta);
-
-	//if (m_pActor)
-	//{
-	//	m_pActor->Update_State(fTimeDelta);
-	//}
-
+	
 	/* !ADD : UI_HUD */
 	//CUI_Manager::GetInstance()->Set_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix(), { 0.f, 2.f, 0.f });
-
 }	
 
 void CInfected_A::Late_Tick(_float fTimeDelta)
@@ -73,8 +68,6 @@ void CInfected_A::Late_Tick(_float fTimeDelta)
 
 HRESULT CInfected_A::Render()
 {
-	//FAILED_CHECK(__super::Render());
-
 	return S_OK;
 }
 

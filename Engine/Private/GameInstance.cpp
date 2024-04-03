@@ -1293,7 +1293,7 @@ const wstring CGameInstance::Get_LastNumChar(const wstring& str, const _uint& iN
 
 void CGameInstance::Get_ModelTag(vector<string>* pVector)
 {
-	NULL_CHECK_RETURN(pVector, );
+	NULL_CHECK_RETURN(m_pComponent_Manager, );
 
 	m_pComponent_Manager->Get_ModelTag(pVector);
 }
@@ -1334,19 +1334,19 @@ wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! ¸¶Áö¸· _ 
 
 void CGameInstance::Release_Manager()
 {
-	Safe_Release(m_pSoundManager);
+	//Safe_Release(m_pSoundManager);
 	Safe_Release(m_pRandom_Manager);
 	Safe_Release(m_pPhysX_Manager);
 	Safe_Release(m_pEvent_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pFrustum);
-	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pFont_Manager);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pLevel_Manager);
+	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pInput_Device);

@@ -147,6 +147,9 @@ void CWindow_ShaderTool::Show_N_Create_ObjectList()
 		ImGui::EndListBox();
 	}
 
+	ImGui::RadioButton("Anim", &iType, 0); ImGui::SameLine();
+	ImGui::RadioButton("NonAnim", &iType, 1);
+
 	/* 리스트에서 선택한 오브젝트 만들기 */
 	if (ImGui::Button("Show"))
 	{
@@ -155,21 +158,26 @@ void CWindow_ShaderTool::Show_N_Create_ObjectList()
 
 	if (m_bCreateObject_Button)
 	{
-		Create_DummyObject(m_strCurrentObjectTag);
+		Create_DummyObject(m_strCurrentObjectTag, iType);
+		m_bCreateObject_Button = false;
 	}
 	
 }
 
-void CWindow_ShaderTool::Create_DummyObject(string ObjectTag)
+void CWindow_ShaderTool::Create_DummyObject(string ObjectTag, _int iType)
 {
-	// m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	// 더미라 아무대나 넣음 
 	wstring Temp;
-	m_pGameInstance->String_To_WString(ObjectTag, Temp);
+	m_pGameInstance->String_To_WString(ObjectTag, Temp); //TEXT("Prototype_GameObject_Bandit_Sniper")
 
 	CShaderParsed_Object::CREATE_DESC desc = {};
 	desc.strModelProtoTag = ObjectTag;
-	//desc.strShaderProtoTag = Prototype_Component_Shader_Monster
+
+	if (0 == iType)
+		desc.eType = CModel::TYPE::TYPE_ANIM;
+	else if (0 == iType)
+		desc.eType = CModel::TYPE::TYPE_NONANIM;
+	desc.iRenderPass = 0;
+	
 	m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_MONSTER, TEXT("Prototype_GameObject_ShaderParsed_Object"), &desc);
 	
 }
@@ -452,6 +460,11 @@ void CWindow_ShaderTool::Layer_Level_Shader_Control()
 		Compress_Chroma_Setting();
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("Luma Setting"))
+	{
+		Compress_Luma_Setting();
+		ImGui::TreePop();
+	}
 	if (ImGui::TreeNode("Screen Effect"))
 	{
 		Compress_ScreenEffect_Setting();
@@ -588,12 +601,8 @@ void CWindow_ShaderTool::Compress_DOF_Setting()
 {
 	static float Params[4] = { 0.10f, 0.20f, 0.30f, 0.4f };
 	ImGui::Checkbox("DOF Active", &m_eDOF_Desc.bDOF_Active);
-	ImGui::SliderFloat4("DOF Parameters", reinterpret_cast<float*>(&m_eDOF_Desc.DOFParams), -1.0f, 5.0f, "Param %0.3f");
+	ImGui::SliderFloat("Distance", &m_eDOF_Desc.DOF_Distance, -1.0f, 20.0f, "Distance = %.3f");
 
-	//ImGui::SliderFloat4("DOFParams", &m_eDOF_Desc.DOFParams, -1.0f, 1.0f, "DOFParams = %.3f");
-	//ImGui::SliderFloat("Distance", &m_eDOF_Desc.fFocusDistance, 0.0f, 100.0f, "Distance = %.3f");
-	//ImGui::SliderFloat("Range", &m_eDOF_Desc.fFocusRange, 0.0f, 100.0f, "Range = %.3f");
-	
 	m_pGameInstance->Get_Renderer()->Set_DOF_Option(m_eDOF_Desc);
 }
 
@@ -676,6 +685,16 @@ void CWindow_ShaderTool::Compress_Chroma_Setting()
 	m_pGameInstance->Get_Renderer()->Set_Chroma_Option(m_eChroma_Desc);
 }
 
+void CWindow_ShaderTool::Compress_Luma_Setting()
+{	
+	ImGui::Checkbox("Luma Active", &m_eLuma_Desc.bLumaSharpen_Active);
+	ImGui::SliderFloat("Bias", &m_eLuma_Desc.foffset_bias, 0.0f, 6.0f, "Bias = %.3f");
+	ImGui::SliderFloat("Sharp Clamp", &m_eLuma_Desc.fsharp_clamp, 0.0f, 1.0f, "Sharp Clamp = %.3f");
+	ImGui::SliderFloat("Sharp Strength", &m_eLuma_Desc.fsharp_strength, 0.1f, 3.0f, "Sharp Strength = %.3f");
+
+	m_pGameInstance->Get_Renderer()->Set_LumaSharpen_Option(m_eLuma_Desc);
+}
+
 void CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
@@ -720,6 +739,7 @@ void CWindow_ShaderTool::Save_Shader()
 	Out_Json["Radial"]["fRadial_Power"] = m_eRadial_Desc.fRadial_Power;
 
 	Out_Json["DOF"]["bDOF_Active"] = m_eDOF_Desc.bDOF_Active;
+	Out_Json["DOF"]["fDOF_Distance"] = m_eDOF_Desc.DOF_Distance;
 	//Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
 	//Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
 
@@ -743,7 +763,7 @@ void CWindow_ShaderTool::Select_Level()
 {
 	ImGui::SeparatorText(" Select Level ");
 	/* 레벨셋팅 - 어떤레벨에 대한 셋팅을할것인지 지정 */
-	const char* items[] = { "None", "GamePlay", "Intro", "Intro Boss", "SnowMountain", "Lava" };
+	const char* items[] = { "None", "Test", "Intro", "Intro Boss", "SnowMountain", "SnowMountain Boss" };
 	static int item_current_idx = 0; // Here we store our selection data as an index.
 	const char* combo_preview_value = items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 	if (ImGui::BeginCombo(" ", combo_preview_value))
@@ -759,14 +779,14 @@ void CWindow_ShaderTool::Select_Level()
 				{
 				case 0: // None
 					break;
-				case 1: // GamePlay
-					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
-					m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
+				case 1: // Test
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/IntroTest_MapData.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO;
 					m_eCurrLevel_String = "LEVEL_GAMEPLAY";
 					break;
 				case 2: // Intro
 					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
-					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO;
+					m_eCurrLevel_Enum = LEVEL::LEVEL_GAMEPLAY;
 					m_eCurrLevel_String = "LEVEL_INTRO";
 					break;
 				case 3: //Intro Boss 
@@ -774,14 +794,14 @@ void CWindow_ShaderTool::Select_Level()
 					m_eCurrLevel_Enum = LEVEL::LEVEL_INTRO_BOSS;
 					m_eCurrLevel_String = "LEVEL_INTRO_BOSS";
 					break;
-				case 4:
-					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainNormalMapping_MapData.json";
+				case 4: // snowmountain
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/SnowMounTainFoliage_Instancejson_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAIN;
 					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;
-				case 5:
-					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap_MapData.json";
-					m_eCurrLevel_Enum = LEVEL::LEVEL_LAVA;
+				case 5: // SNOWMOUNTAINBOSS
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap.json";
+					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAINBOSS;
 					m_eCurrLevel_String = "LEVEL_LAVA";
 					break;
 				}

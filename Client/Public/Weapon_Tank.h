@@ -33,12 +33,12 @@ public:
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
 public:
-	void	Set_Animation(
-		_uint _iNextAnimation
-		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
-		, _uint iTargetKeyFrameIndex = 0);
-	_bool	Is_Animation_End();
-	CModel::ANIM_STATE Get_AnimState();
+	//void	Set_Animation(
+	//	_uint _iNextAnimation
+	//	, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
+	//	, _uint iTargetKeyFrameIndex = 0);
+	//_bool	Is_Animation_End();
+	//CModel::ANIM_STATE Get_AnimState();
 
 public:
 	virtual void	Set_Enable(_bool _Enable) override;

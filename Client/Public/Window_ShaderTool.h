@@ -66,6 +66,7 @@ private:
 	VIGNETTE_DESC		m_eVignette_Desc		= {};
 	SCREENEFFECT_DESC	m_eScreenDEffect_Desc	= {};
 	CHROMA_DESC			m_eChroma_Desc			= {};
+	LUMASHARPEN_DESC	m_eLuma_Desc			= {};
 
 	/* Shader */
 	_bool m_bShaderSave = {false} ; // Save / Load
@@ -78,6 +79,7 @@ private:
 	string			strFileName;
 	_bool			m_bSave = false;
 	_bool			m_bLoad = false;
+	_int			iType = 0;
 
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
@@ -100,7 +102,7 @@ private:
 	/* 오브젝트 불러오기 */
 	void Create_Object();
 	void Show_N_Create_ObjectList();
-	void Create_DummyObject(string ObjectTag);
+	void Create_DummyObject(string ObjectTag, _int iType);
 
 	/* Collapsing */
 	void Layer_Light_Control();
@@ -121,6 +123,7 @@ private:
 	void Compress_ScreenEffect_Setting();
 	void Compress_SSR_Setting();
 	void Compress_Chroma_Setting();
+	void Compress_Luma_Setting();
 	void Save_Shader();
 	
 	/* Level Light Control */

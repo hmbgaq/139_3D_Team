@@ -12,11 +12,17 @@ CState<CTank>* CTank_GroundWaveNoShield_01::Update(CTank* pActor, _float fTimeDe
 {
 	if (false == m_bFlags[0])
 	{
+		pActor->Look_At_Target_Lerp(fTimeDelta);
+
 		m_bFlags[0] = pActor->Is_Inputable_Front(45);
 		if (true == m_bFlags[0])
 		{
 			pActor->Create_GroundWave();
 		}
+	}
+	else
+	{
+		pActor->Look_At_Target_Lerp(fTimeDelta);
 	}
 
 	if (pActor->Is_Animation_End())

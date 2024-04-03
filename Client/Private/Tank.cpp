@@ -131,10 +131,15 @@ void CTank::Tick(_float fTimeDelta)
 		Update_ShieldBrokenTime(fTimeDelta);
 	}
 
-	if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
+	if (nullptr == m_pTarget)
 	{
-		m_pTarget = CData_Manager::GetInstance()->Get_Player();
+		Search_Target(10.f);
 	}
+
+	//if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
+	//{
+	//	m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	//}
 
 }
 
@@ -142,14 +147,10 @@ void CTank::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-
-
 }
 
 HRESULT CTank::Render()
 {
-	FAILED_CHECK(__super::Render());
-
 	return S_OK;
 }
 

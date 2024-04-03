@@ -54,7 +54,14 @@ public:
 	_bool	Is_Animation_End();
 	_bool	Is_UpperAnimation_End();
 
+	void	Set_Animation_End(_bool _bIsAnimEnd);
+
 	_bool	Is_Inputable_Front(_uint _iIndexFront);
+	_bool	Is_Upper_Inputable_Front(_uint _iIndexFront);
+
+	_float	Calc_Cooltime_Percent();
+	_float	Calc_Upper_Cooltime_Percent();
+
 	_float	Get_TrackPosition();
 	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
 
@@ -64,8 +71,12 @@ public:
 			return _float3(0.f, 0.f, 0.f);
 		}
 
-		return m_vMovePos; 
-	}
+		return m_vMovePos;
+	};
+	void Set_MovePos(_float3 _vMovePos)
+	{
+		m_vMovePos = _vMovePos;
+	};
 	void Set_TrackPosition(_int iNewTrackPosition);
 	void Set_StiffnessRate(_float fStiffnessRate) { m_pModelCom->Set_StiffnessRate(fStiffnessRate); }
 	_float Get_StiffnessRate() { return m_pModelCom->Get_StiffnessRate(); }
@@ -146,8 +157,6 @@ protected:
 //protected:
 //	_float x = { 1.f };
 //	_float y = { 4.8f };
-
-
 
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };

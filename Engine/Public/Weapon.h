@@ -73,12 +73,20 @@ public:
 	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
-	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f));
-	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f)) {};
+	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter* pTarget = nullptr);
+	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter*pTarget = nullptr) {};
 
 public:
 	void Set_Follow(_bool _bIsFollow) { m_bIsFollow = _bIsFollow; };
 	_bool Get_Follow() { return m_bIsFollow; }
+
+public:
+	void	Set_Animation(
+		_uint _iNextAnimation
+		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
+		, _uint iTargetKeyFrameIndex = 0);
+	_bool	Is_Animation_End();
+	CModel::ANIM_STATE Get_AnimState();
 
 
 protected:

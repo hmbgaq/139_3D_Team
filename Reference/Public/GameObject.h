@@ -42,6 +42,7 @@ public:
 public: /* For. Additional Render */
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
+	virtual HRESULT Render_Ice() { return S_OK; }
 
 public: /* For. Picking */
 	virtual _bool	Picking(_Out_ _float3 * vPickedPos);
@@ -57,6 +58,7 @@ public: /* For. Transform */
 	class CTransform*	Get_Transform();
 	_vector				Get_Position_Vector();
 	_float3				Get_Position();
+	_float3				Get_Look();
 	_vector				Calc_Look_Dir(_vector vTargetPos);
 	_vector				Calc_Look_Dir_XZ(_vector vTargetPos);
 
@@ -73,6 +75,8 @@ public: /* For. Model */
 public: /*For. RenderPass */
 	void Set_RenderPass(_int iPass) { m_iRenderPass = iPass; }
 	_int Get_Rednerpass() { return m_iRenderPass; }
+	_bool				m_bORM_Available		= false;
+	_bool				m_bEmissive_Available	= false;
 
 public: /* For. Base Setting */
 	const wstring&		Get_ProtoTypeTag() { return m_strPrototypeTag; };

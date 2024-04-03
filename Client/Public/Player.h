@@ -1,4 +1,4 @@
-	#pragma once
+#pragma once
 
 #include "Character_Client.h"
 #include "Actor.h"
@@ -62,7 +62,7 @@ public:
 	void Activate_ShootingReaction(_float fHeight = 20.f);
 
 public://!For. Interact
-	void SetState_InteractJumpDown100(); 
+	void SetState_InteractJumpDown100();
 	void SetState_InteractJumpDown200();
 	void SetState_InteractJumpDown300();
 	void SetState_InteractVault100();
@@ -93,9 +93,9 @@ public://!For. Interact
 
 	void SetState_InteractWhipSwing();
 	void SetState_InteractWhipPull();
-	
+
 	void SetState_InteractRotationValve();
-	
+
 
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
@@ -117,7 +117,6 @@ public:
 public:
 	virtual void Check_Frustum() override;
 
-
 public:
 	_float Get_ChargingTime() { return m_fChargingTime; };
 	void Set_ChargingTime(_float _fChargingTime) { m_fChargingTime = _fChargingTime; }
@@ -129,6 +128,15 @@ public:
 
 public:
 	CGameObject* Slam();
+
+public:
+	_bool Is_Exist_Ladder_Count() { return m_iLadderCount > 0; }
+	void Remove_Ladder_Count() { m_iLadderCount = m_iLadderCount - 1 > 0 ? m_iLadderCount - 1 : 0; };
+	void Set_Ladder_Count(_uint _iLadderCount) { m_iLadderCount = _iLadderCount; }
+
+public:
+	_bool Is_Interection() { return m_bIsInterection; }
+	void Set_Interection(_bool _bIsInterection) { m_bIsInterection = _bIsInterection; }
 
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
@@ -150,6 +158,12 @@ private:
 private:
 	_bool m_bIsActivated_TeleportPunch = { false };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
+
+private:
+	_uint m_iLadderCount = { 0 };
+
+private:
+	_bool m_bIsInterection = { false };
 
 public:
 	_bool	m_bPlayerCheck = true;

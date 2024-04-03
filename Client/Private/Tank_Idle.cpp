@@ -12,6 +12,8 @@ CState<CTank>* CTank_Idle::Update(CTank* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
+	pActor->Look_At_Target_Lerp(fTimeDelta);
+
 	m_fDelay += fTimeDelta;
 
 	if (1.f <= m_fDelay)

@@ -5,7 +5,10 @@
 #include "Environment_LightObject.h"
 #include "Environment_Interact.h"
 #include "Data_Manager.h"
-#include "UI_Weakness.h"
+#include "UI.h"
+#include "Cell.h"
+#include "SMath.h"
+///#include "UI_Weakness.h"
 
 CEnvironment_SpecialObject::CEnvironment_SpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -56,7 +59,13 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 	}
 	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
 	{
-		TrackLeverInit();
+		if(FAILED(TrackLeverInit()))
+			return E_FAIL;
+	}
+	else if (m_tEnvironmentDesc.eElevatorType != CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_TYPEEND)
+	{
+		if(FAILED(ElevatorInit()))
+			return E_FAIL;
 	}
 
 	
@@ -84,12 +93,11 @@ void CEnvironment_SpecialObject::Tick(_float fTimeDelta)
 	{
 		TrackLeverFunction();
 	}
+	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR && m_bElevatorOn == true)
+	{
+		ElevatorFunction(fTimeDelta);
+	}
 	
-
-	//f (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	//
-	//	m_pPickingCollider->Update(m_pTransformCom->Get_WorldMatrix());
-	//
 }
 
 void CEnvironment_SpecialObject::Late_Tick(_float fTimeDelta)
@@ -126,12 +134,9 @@ HRESULT CEnvironment_SpecialObject::Render()
 		{
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		}
-
-// 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-// 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-// 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
-
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
 		if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
 		{
@@ -149,7 +154,6 @@ HRESULT CEnvironment_SpecialObject::Render()
 			m_pShaderCom->Begin(m_iSignalMeshShaderPass);
 		}
 		
-
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -158,32 +162,17 @@ HRESULT CEnvironment_SpecialObject::Render()
 
 HRESULT CEnvironment_SpecialObject::Render_Shadow()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-		return E_FAIL;
-	//#몬스터모델렌더
-	_float4x4		ViewMatrix, ProjMatrix;
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 100.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
-
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
-
-	//TODO 클라에서 모델의 메시 개수를 받아와서 순회하면서 셰이더 바인딩해주자.
-
-	_uint	iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
-
-		m_pShaderCom->Begin(2); //TODO 추후 ENUM 으로 변경
-
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -298,7 +287,7 @@ void CEnvironment_SpecialObject::Set_SignalChange(_bool bChange)
 
 HRESULT CEnvironment_SpecialObject::TrackLeverInit()
 {
-	m_pLeverWeaknessUI = dynamic_cast<CUI_Weakness*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+	m_pLeverWeaknessUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
 	
 
 	m_pLeverWeaknessUI->Set_Active(true);
@@ -399,6 +388,63 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 		}
 	}
 	
+}
+
+HRESULT CEnvironment_SpecialObject::ElevatorInit()
+{
+	if(nullptr == m_pNavigationCom)
+		return E_FAIL;
+
+
+	_int iUpdateCellCount = m_vecUpdateCellIndexs.size();
+
+	for (_int i = 0; i < iUpdateCellCount; ++i)
+	{
+		m_vecUpdateCells.push_back(m_pNavigationCom->Get_CellForIndex(m_vecUpdateCellIndexs[i]));
+	}
+	
+
+	return S_OK;
+}
+
+void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
+{
+	_float4 vPosition = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
+
+	if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_UP)
+	{
+		if (m_fMaxY > vPosition.y)
+		{
+			m_pTransformCom->Go_Up(fTimeDelta, nullptr);
+		}
+	}
+	else if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_DOWN)
+	{
+		if (m_fMinY < vPosition.y)
+		{
+			m_pTransformCom->Go_Down(fTimeDelta, nullptr);
+		}
+	}
+	else if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_TARGET)
+	{
+		if (false == SMath::Is_InRange(m_vArrivalPosition, vPosition, 0.5f))
+		{
+			m_pTransformCom->Go_Target(m_vArrivalPosition, fTimeDelta, 0.5f);
+		}
+	}
+		
+	UpdateCell();
+
+}
+
+void CEnvironment_SpecialObject::UpdateCell()
+{
+	_int iUpdateCellCount = m_vecUpdateCells.size();
+
+	for (_int i = 0; i < iUpdateCellCount; ++i)
+	{
+		m_vecUpdateCells[i]->Update(m_pTransformCom->Get_WorldMatrix());
+	}
 }
 
 

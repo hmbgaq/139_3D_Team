@@ -124,15 +124,14 @@ public:
 	void	Go_Backward_R45(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
-
-	void Go_Down(_float fTimeDelta, CNavigation* pNavigation);
-
+	void	Go_Up(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
+	void	Go_Down(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 	void	Turn(_fvector vAxis, _float fTimeDelta);
 	void	Rotation(_fvector vAxis, _float fRadian);
 	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);
 	void	Rotation_Quaternion(_float3 vRotation);
-	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 0.5f);
+	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 1.0f);
 
 	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
 
@@ -172,10 +171,13 @@ public:
 
 public:
 	void		Add_RootBone_Position(const _float3& vPos, class CNavigation* pNavigation = nullptr);
+	void		Add_RootBone_ForTarget(const _float3& vPos, class CNavigation* pNavigation = nullptr, CTransform* pTargetTransform = nullptr);
 	void		Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 public:
-	_bool		Calc_FrontCheck(const _float3& vTargetPos);
+	_bool		Calc_FrontCheck(const _float3& vTargetPos); //! true일시 타겟이 앞에있다 ,  false일시 타겟이 뒤에있다
+	_bool		Calc_LeftCheck_ForCamLook(const _float3& vTargetPos); //!  true 일시 카메라 기준오른쪽 , false일시 카메라 기준 왼쪽
+	
 
 public:
 	_float3		Calculate_SlidingVector(const _fvector& velocity, const _fvector& normal);
