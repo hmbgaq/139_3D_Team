@@ -361,8 +361,21 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
-    vector vColor = g_vLineColor;
+    float4 vColor = lerp(g_vLineColor, mul(g_vLineColor, float4(0.f, 0.f, 0.f, 0.f)), g_TimeDelta);
+    
+    //vector vColor = g_vLineColor;
     //vColor.a = g_TimeDelta;
+    
+    Out.vColor = vColor;
+    
+    return Out;
+}
+/* ------------------- Pixel Shader(8) : OutLine  -------------------*/
+PS_OUT_OUTLINE PS_MAIN_OUTLINE_Keep(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    vector vColor = g_vLineColor;
     
     Out.vColor = vColor;
     
@@ -465,7 +478,6 @@ technique11 DefaultTechnique
     pass OutLine // 7
     {
         SetRasterizerState(RS_Cull_CW);
-        //SetDepthStencilState(DSS_None, 0);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
@@ -473,5 +485,17 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
+    }
+
+    pass OutLine_Keep // 7
+    {
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_Keep();
     }
 }

@@ -126,7 +126,7 @@ HRESULT CInteract_Chain::Render_OutLine()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE));
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE_BLINK));
 		m_pModelCom->Render((_uint)i);
 	}
 

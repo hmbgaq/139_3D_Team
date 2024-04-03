@@ -64,11 +64,11 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 
 	}
 
-	//m_fTimeAcc += fTimeDelta * 0.5f;
-	//
-	//if (m_fTimeAcc > 1.f)
-	//	m_fTimeAcc = 0.f;
-	m_fTimeAcc = 1.f;
+	// 소영 - 렌더 필요사항
+	m_fLineTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
+	m_bIncrease = (m_fLineTimeAcc >= 1.0f) ? false : (m_fLineTimeAcc <= 0.1f) ? true : m_bIncrease;
+	
+	cout << m_fLineTimeAcc << endl;
 
 	__super::Tick(fTimeDelta);
 
@@ -78,7 +78,7 @@ void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+	//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(2, this), );
 }
@@ -155,23 +155,25 @@ HRESULT CBody_Bandit_Sniper::Render_CSM(_uint i)
 
 HRESULT CBody_Bandit_Sniper::Render_OutLine()
 {
+	_float Dist = XMVectorGetX(XMVector4Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_Pos()));
+	m_fLineThick_Ratio = m_fLineThick / Dist;
+
 	FAILED_CHECK(Bind_ShaderResources());
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeAcc, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick_Ratio, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fLineTimeAcc, sizeof(_float)));
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_OUTLINE));
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_OUTLINE_BLINK));
 		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;
 }
-
 
 HRESULT CBody_Bandit_Sniper::Bind_ShaderResources()
 {
@@ -194,7 +196,8 @@ HRESULT CBody_Bandit_Sniper::Ready_ShadeValue()
 	/* OutLine */
 	m_vLineColor = { 1.f, 0.f, 0.f, 1.f };
 	m_fLineThick = 0.3f;
-	m_fTimeAcc = 0.f;
+	m_fLineTimeAcc = 0.f;
+	m_bIncrease = true;
 
 	return S_OK;
 }

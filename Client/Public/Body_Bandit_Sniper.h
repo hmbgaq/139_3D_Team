@@ -44,7 +44,9 @@ private:
 	/* OutLine */
 	_float4		m_vLineColor = {};
 	_float 		m_fLineThick = {};
-	_float		m_fTimeAcc = {};
+	_float		m_fLineThick_Ratio = {};
+	_float		m_fLineTimeAcc = {};
+	_bool		m_bIncrease = { true };
 
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

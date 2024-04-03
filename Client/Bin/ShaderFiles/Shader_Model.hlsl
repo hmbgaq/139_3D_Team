@@ -351,10 +351,9 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
-    float4 color = g_vLineColor;
-   // color.a = g_fTimeDelta;
+    float4 vColor = lerp(g_vLineColor, mul(g_vLineColor, float4(0.f, 0.f, 0.f, 0.f)), g_fTimeDelta);
     
-    Out.vColor = color;
+    Out.vColor = vColor;
    
     return Out;
 }
@@ -609,13 +608,12 @@ PS_OUT PS_MAIN_CLIP(PS_IN In)
 }
 
 
-/* ------------------- (10) Icicle -------------------*/
+/* ------------------- (12) Outline Kepp Color  -------------------*/
 PS_OUT_OUTLINE PS_MAIN_OUTLINE_KEEP(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
     float4 color = g_vLineColor;
-    color.a = g_fTimeDelta;
     
     Out.vColor = color;
    
@@ -778,7 +776,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_CLIP();
     }
 
-    pass OutLine_Keep // 4
+    pass OutLine_Keep // 12
     {
         SetRasterizerState(RS_Cull_CW);
         SetDepthStencilState(DSS_None, 0);

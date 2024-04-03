@@ -8,7 +8,7 @@ namespace Engine
 		MODEL_NODEOPTH,				// 1 - 깊이기록x -> SkyBox 같은것 용도 
 		MODEL_SHADOW,				// 2 - 그림자 그리기 
 		MODEL_WHITEBLINK,			// 3 - 흰색으로 깜빡거림 
-		MODEL_OUTLINE,				// 4
+		MODEL_OUTLINE_BLINK,		// 4 - OutLine 깜빡거림
 		MODEL_NONECULL_NONEDSS,		// 5
 		MODEL_INTROBOSS_BLOODPOOL,  // 6 - Intro보스맵 바닥렌더용
 		MODEL_NORMAL_MAPPING,		// 7 - 노말맵핑 한거 
@@ -16,6 +16,7 @@ namespace Engine
 		MODEL_ALPHA,				// 9 - AlphaTexture 바인딩 
 		MODEL_ICICLE,				// 10 - 고드름 얼음 모델들 렌더용
 		MODEL_FOLIAGECLIP,			// 11 - 
+		MODEL_OUTLINE_KEEP,			// 12 - OutLine 그대로 유지 
 		MODEL_SHADER_END
 	};
 
@@ -35,7 +36,8 @@ namespace Engine
 		COMMON_DISSOLVE,			// 4 - 공통 : 디졸브로 사라지는효과 
 		COMMON_MESHCHECK,			// 5 - 공통 : 던지는 컬러로 해당하는 메시의 색을 바꿔서 메시가 몇번인덱스인지 체크하는용도 
 		COMMON_CASCADE,				// 6 - Cascade Shadow
-		COMMON_OUTLINE,				// 7 - 외곽선 
+		COMMON_OUTLINE_BLINK,				// 7 - 외곽선 깜빡거림 
+		COMMON_OUTLINE_KEEP,		// 8 - 외곽선 계속 유지 
 		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};
