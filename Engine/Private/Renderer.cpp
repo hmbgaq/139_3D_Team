@@ -82,8 +82,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 
 	FAILED_CHECK(Render_Cascade());
 
-	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc - Target_Shade, Target_Specular */
+	FAILED_CHECK(Render_OutLine()); /* MRT_OutLine -> Target_OutLine 에 저장 */
 
+	FAILED_CHECK(Render_LightAcc());	/* MRT_LightAcc - Target_Shade, Target_Specular */
+	
 	if (true == m_tHBAO_Option.bHBAO_Active)
 		FAILED_CHECK(Render_HBAO_PLUS()); /* Target_HBAO */
 
@@ -138,13 +140,10 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (true == m_bUI_MRT)
 		FAILED_CHECK(Render_UI_Tool()); /* Tool에서 체크할 때  */
 
-	FAILED_CHECK(Render_OutLine()); /* MRT_OutLine -> Target_OutLine 에 저장 */
-
 	FAILED_CHECK(Render_Blend());
 
 	/* 최종 합성 */ 
 	FAILED_CHECK(Render_Final());
-
 
 	if (false == m_bUI_MRT)
 		FAILED_CHECK(Render_UI()); /* GamePlay에서 확인할때 여기활성화 */
@@ -552,7 +551,8 @@ HRESULT CRenderer::Render_MyPBR()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_Deferred, "g_DepthTarget"));//
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_ShadowDepth"), m_pShader_Deferred, "g_ShadowDepthTexture"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Specular"), m_pShader_Deferred, "g_SpecularTexture"));
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Emissive"), m_pShader_Deferred, "g_EmissiveTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Emissive"), m_pShader_Deferred, "g_EmissiveTarget"))
+    
 
 	/* Texture */
 	FAILED_CHECK(m_pBRDFTextureCom->Bind_ShaderResource(m_pShader_Deferred, "g_BRDF_Texture"));
@@ -866,14 +866,9 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_UI_Diffuse"), m_pShader_Final, "g_UI_Target")); /* ui그린거 */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Debug"), m_pShader_Final, "g_DebugTarget")); /* DebugCom 그린거 */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RB_BlurActive"), m_pShader_Final, "g_RimBlur_Target")); /* Deferred에서 그린 RimBloom */
-	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_OutLine"), m_pShader_Final, "g_OutLine_Target")); /* Deferred에서 그린 RimBloom */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Independent"), m_pShader_Final, "g_Independent_Target")); /* Deferred에서 그린 RimBloom */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_OutLine"), m_pShader_Final, "g_OutLine_Target"));
 	
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Diffuse"), m_pShader_PostProcess, "g_Effect_Target"));
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_Solid"), m_pShader_PostProcess, "g_Effect_Solid"));
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Effect_RR_Blur"), m_pShader_PostProcess, "g_EffectBlur_Target"));
-	//FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Distortion"), m_pShader_PostProcess, "g_Distortion_Target"));
-
 	/* 타겟만들기 아까워서 한가지만 사용가능한채로 여러가지 루트로 팜 */
 	if (true == m_tScreenDEffect_Desc.bGrayScale_Active && false == m_tScreenDEffect_Desc.bSephia_Active)
 	{

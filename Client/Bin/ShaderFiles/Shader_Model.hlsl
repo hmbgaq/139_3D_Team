@@ -230,21 +230,7 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
 
     float4 OutPos = vector(In.vPosition.xyz + In.vNormal.xyz * g_LineThick, 1);
     Out.vPosition = mul(OutPos, matWVP);
-    Out.vTexcoord = In.vTexcoord;
-    
-    return Out;
-}
-
-VS_OUT_OUTLINE VS_MAIN_NEW_OUTLINE(VS_IN In)
-{
-    VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
-
-    matrix matWV, matWVP;
-
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-
-    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vPosition.z -= 0.001f;
     Out.vTexcoord = In.vTexcoord;
     
     return Out;
@@ -355,7 +341,7 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vIndependence = vColor;
+    //Out.vIndependence = vColor;
     
     return Out;
 }
@@ -365,11 +351,10 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    float4 color = { 1.f, 1.f, 1.f, 1.f };
-    vector vColor = color + vMtrlDiffuse;
+    float4 color = g_vLineColor;
+   // color.a = g_fTimeDelta;
     
-    Out.vColor = vColor;
+    Out.vColor = color;
    
     return Out;
 }
@@ -545,7 +530,6 @@ PS_OUT PS_MAIN_ALPHACOLOR(PS_IN In)
  
     return Out;
 }
-
 /* ------------------- (10) Icicle -------------------*/
 PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
 {
@@ -624,7 +608,19 @@ PS_OUT PS_MAIN_CLIP(PS_IN In)
     return Out;
 }
 
-/* ------------------- (12) Icicle -------------------*/
+
+/* ------------------- (10) Icicle -------------------*/
+PS_OUT_OUTLINE PS_MAIN_OUTLINE_KEEP(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    float4 color = g_vLineColor;
+    color.a = g_fTimeDelta;
+    
+    Out.vColor = color;
+   
+    return Out;
+}
 
 /*=============================================================
  
@@ -685,14 +681,11 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_WHITE_BLINK();
     }
 
-    pass OutLine // 4
+    pass OutLine_Blink // 4
     {
-        //SetRasterizerState(RS_Cull_CW);
-        //SetDepthStencilState(DSS_Default, 0);
-        //SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.1f), 0xffffffff);
-
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_CW);
         SetDepthStencilState(DSS_Default, 0);
+        //SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
         GeometryShader = NULL;
@@ -784,5 +777,18 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_CLIP();
     }
+
+    pass OutLine_Keep // 4
+    {
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_KEEP();
+    }
+
 
 }

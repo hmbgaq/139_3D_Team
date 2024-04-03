@@ -151,7 +151,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	if (m_bRenderOutLine)
 	{
 		m_fTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
-		m_bIncrease = (m_fTimeAcc >= 0.8f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
+		m_bIncrease = (m_fTimeAcc >= 0.7f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
 	}
 }
 
@@ -166,8 +166,8 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	}
 
 	/* 소영 보류 */
-	//if(true == m_bRenderOutLine)
-	//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+	if(true == m_bRenderOutLine)
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 }
 
 HRESULT CEnvironment_Interact::Render()
@@ -250,9 +250,16 @@ HRESULT CEnvironment_Interact::Render_Shadow()
 
 HRESULT CEnvironment_Interact::Render_OutLine()
 {
-	FAILED_CHECK(Bind_ShaderResources());
+	if (false == m_bRenderOutLine)
+		return S_OK;
+
 	m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-	m_fLineThick = 3.f;
+	m_fLineThick = 0.6f;
+
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float)));
 
@@ -260,8 +267,12 @@ HRESULT CEnvironment_Interact::Render_OutLine()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE));
-		m_pModelCom->Render((_uint)i);
+		auto& iter = find(m_vChainMesh.begin(), m_vChainMesh.end(), i);
+		if (iter != m_vChainMesh.end())
+		{
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE));
+			m_pModelCom->Render((_uint)i);
+		}
 	}
 
 	return S_OK;
@@ -1730,7 +1741,7 @@ HRESULT CEnvironment_Interact::Classification_Model()
 		m_vChainMesh.push_back(1);
 		m_vChainMesh.push_back(2);
 		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-		m_fLineThick = 1.0f;
+		m_fLineThick = 0.1f;
 	}
 	else if (TEXT("Prototype_Component_Model_ChainBeam2") == strTemp ||
 			 TEXT("Prototype_Component_Model_ChainBeam3") == strTemp ||

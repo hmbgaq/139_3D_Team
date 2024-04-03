@@ -80,7 +80,9 @@ float4x4    g_CamProjMatrix;
 float4      g_vCamPosition;
 float       g_fCamFar;
 float       g_fCamNear;
+
 Texture2D   g_ProcessingTarget;
+Texture2D   g_OutLine_Target;
 
 // HDR 
 bool g_bHDR_Active;
@@ -572,7 +574,7 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     
     if (Out.vColor.a == 0) 
         Out.vColor += Effect + Effect_Blur + Deferred;
-   
+    
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)

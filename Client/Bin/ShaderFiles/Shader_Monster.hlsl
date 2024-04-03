@@ -210,15 +210,27 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
 {
     VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
     
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+
     matrix matWV, matWVP;
-    
+
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
-
-    float4 OutPos = vector(In.vPosition.xyz + In.vNormal.xyz * g_LineThick, 1);
-    Out.vPosition = mul(OutPos, matWVP);
-    Out.vTexcoord = In.vTexcoord;
     
+    float4 OutPos = vector(vPosition.xyz + vNormal.xyz * g_LineThick, 1);
+    Out.vPosition = mul(OutPos, matWVP);
+    Out.vPosition.z -= 0.001f;
+    Out.vTexcoord = In.vTexcoord;
+	
+    //Out.vPosition = vector(vPosition.xyz + vNormal.xyz * g_LineThick, 1);
     return Out;
 }
 
@@ -349,12 +361,11 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
-    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    //float4 color = { 1.f, 1.f, 1.f, 1.f };
     vector vColor = g_vLineColor;
+    //vColor.a = g_TimeDelta;
     
     Out.vColor = vColor;
-   
+    
     return Out;
 }
 
@@ -453,7 +464,8 @@ technique11 DefaultTechnique
 
     pass OutLine // 7
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Cull_CW);
+        //SetDepthStencilState(DSS_None, 0);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();

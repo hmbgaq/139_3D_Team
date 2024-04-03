@@ -230,7 +230,6 @@ CState<CInfected>* CInfected_State::Normal(CInfected* pActor, _float fTimeDelta,
 
 	// 그외일때 
 	_float fDist = pActor->Calc_Distance(m_pGameInstance->Get_Player());	// 현재 플레이어와의 거리 계산 
-	cout << fDist << endl;
 
 	// 0 ~ Attack ~ Walk  
 	if (fDist > WalkDistance)

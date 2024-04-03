@@ -29,6 +29,7 @@ public:
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	HRESULT Ready_ShadeValue();
 
 private:
 	CTexture*	m_pDissolveTexture = { nullptr };
@@ -43,6 +44,7 @@ private:
 	/* OutLine */
 	_float4		m_vLineColor = {};
 	_float 		m_fLineThick = {};
+	_float		m_fTimeAcc = {};
 
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

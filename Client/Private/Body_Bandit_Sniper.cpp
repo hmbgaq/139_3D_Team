@@ -23,6 +23,8 @@ HRESULT CBody_Bandit_Sniper::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	FAILED_CHECK(Ready_ShadeValue());
+
 	return S_OK;
 }
 
@@ -44,11 +46,6 @@ HRESULT CBody_Bandit_Sniper::Ready_Components()
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 
-	m_fDissolveWeight = 0.f;
-	m_fDissolve_feather = 0.1f;
-	m_vDissolve_Color = { 1.f, 0.f, 0.f };
-	m_fDissolve_Discard = 0.2f;
-
 	return S_OK;
 }
 void CBody_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
@@ -66,6 +63,12 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 			m_fDissolveWeight += fTimeDelta * 0.5f;
 
 	}
+
+	//m_fTimeAcc += fTimeDelta * 0.5f;
+	//
+	//if (m_fTimeAcc > 1.f)
+	//	m_fTimeAcc = 0.f;
+	m_fTimeAcc = 1.f;
 
 	__super::Tick(fTimeDelta);
 
@@ -153,15 +156,15 @@ HRESULT CBody_Bandit_Sniper::Render_CSM(_uint i)
 HRESULT CBody_Bandit_Sniper::Render_OutLine()
 {
 	FAILED_CHECK(Bind_ShaderResources());
-	m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-	m_fLineThick = 3.f;
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fTimeAcc, sizeof(_float)));
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_OUTLINE));
 		m_pModelCom->Render((_uint)i);
 	}
@@ -176,6 +179,22 @@ HRESULT CBody_Bandit_Sniper::Bind_ShaderResources()
 
 	m_fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float)));
+
+	return S_OK;
+}
+
+HRESULT CBody_Bandit_Sniper::Ready_ShadeValue()
+{
+	/* Dissolve */
+	m_fDissolveWeight = 0.f;
+	m_fDissolve_feather = 0.1f;
+	m_vDissolve_Color = { 1.f, 0.f, 0.f };
+	m_fDissolve_Discard = 0.2f;
+
+	/* OutLine */
+	m_vLineColor = { 1.f, 0.f, 0.f, 1.f };
+	m_fLineThick = 0.3f;
+	m_fTimeAcc = 0.f;
 
 	return S_OK;
 }

@@ -99,6 +99,15 @@ bool g_bShadow_Active;
 float g_fBias;
 float3 g_vLightColor;
 
+/* ========== Cascade Shadow ============= */
+float g_fStaticBias;
+matrix g_CascadeProj[3];
+
+Texture2D g_CascadeTarget1;
+Texture2D g_CascadeTarget2;
+Texture2D g_CascadeTarget3;
+
+
 /*=============================================================
  
                              IN/OUT  
@@ -220,6 +229,7 @@ float4 DoSpecular(float4 lightColor, float shininess, float3 L, float3 N, float3
     float RdotV = max(0.0001, dot(R, V));
     return lightColor * pow(RdotV, shininess);
 }
+
 
 /*=============================================================
  
@@ -658,7 +668,7 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
 
     // 감마보정 -> Linear space로 변형후 빛계산을 하고 다시 감마보정을 통해서 그린다.
     float gamma = 2.2f;
-
+    
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     vAlbedo = pow(vAlbedo, gamma);
     if (vAlbedo.a == 0.f)
@@ -667,7 +677,7 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
         if (vPriority.a == 0.f)
             discard;
         
-        Out.vColor = vPriority;
+        Out.vColor = vPriority ;
         
         return Out;
     }
