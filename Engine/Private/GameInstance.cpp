@@ -446,6 +446,13 @@ void CGameInstance::Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture)
 	return m_pRenderer->Set_ToolPBRTexture_InsteadLevel(iPBRTexture);
 }
 
+HRESULT CGameInstance::Add_CascadeObject(_uint iIndex, CGameObject* pObject)
+{
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
+
+	return m_pRenderer->Add_CascadeObject(iIndex, pObject);
+}
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {

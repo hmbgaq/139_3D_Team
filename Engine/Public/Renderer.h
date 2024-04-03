@@ -37,6 +37,7 @@ public:
 
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+	HRESULT Add_CascadeObject(_uint iIndex, CGameObject* pObject);
 	HRESULT Draw_RenderGroup();
 
 private:

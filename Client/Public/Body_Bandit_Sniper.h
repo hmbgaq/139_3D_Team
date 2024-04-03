@@ -24,6 +24,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 	virtual HRESULT Render_CSM(_uint i) override;
+	virtual HRESULT Render_OutLine() override;
 
 private:
 	HRESULT Ready_Components();
@@ -38,6 +39,10 @@ private:
 	_float		m_fDissolve_feather = 0.f;
 	_float3		m_vDissolve_Color = { 0.f, 0.f, 0.f };
 	_float		m_fDissolve_Discard = 0.f;
+
+	/* OutLine */
+	_float4		m_vLineColor = {};
+	_float 		m_fLineThick = {};
 
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -81,6 +81,14 @@ sampler LinearBorderSampler = sampler_state
     AddressW = Border;
 };
 
+sampler CubeSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
+    AddressW = CLAMP;
+    ComparisonFunc = NEVER;
+};
 /* ---------------- Rasterizer ---------------- */
 
 RasterizerState RS_Default
@@ -128,7 +136,6 @@ DepthStencilState DSS_Default
 	DepthWriteMask = all;
 	DepthFunc = less_equal;
 };
-
 
 DepthStencilState DSS_None
 {

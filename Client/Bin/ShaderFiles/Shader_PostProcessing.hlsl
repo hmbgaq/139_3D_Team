@@ -558,7 +558,6 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
-   // vector Ice = g_Ice_Target.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
@@ -572,8 +571,8 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
         Out.vColor += Effect_Distortion;
     
     if (Out.vColor.a == 0) 
-        Out.vColor += Deferred + Effect + Effect_Blur;
-       // Out.vColor += Deferred + Effect + Effect_Blur + Ice;
+        Out.vColor += Effect + Effect_Blur + Deferred;
+   
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)

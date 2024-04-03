@@ -235,6 +235,21 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     return Out;
 }
 
+VS_OUT_OUTLINE VS_MAIN_NEW_OUTLINE(VS_IN In)
+{
+    VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+
 VS_OUT_ICICLE VS_MAIN_ICICLE(VS_IN In)
 {
     VS_OUT_ICICLE Out = (VS_OUT_ICICLE) 0;
@@ -609,6 +624,8 @@ PS_OUT PS_MAIN_CLIP(PS_IN In)
     return Out;
 }
 
+/* ------------------- (12) Icicle -------------------*/
+
 /*=============================================================
  
                           Technique
@@ -768,8 +785,4 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_CLIP();
     }
 
-    //pass Cascade
-    //{
-    //
-    //}
 }

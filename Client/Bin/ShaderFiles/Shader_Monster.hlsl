@@ -102,8 +102,14 @@ struct VS_OUT
 struct VS_OUT_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float2 vTexUV : TEXCOORD0;
+    float2 vTexcoord : TEXCOORD0;
     float4 vProjPos : TEXCOORD1;
+};
+
+struct VS_OUT_OUTLINE
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
 };
 
 struct PS_IN
@@ -113,6 +119,12 @@ struct PS_IN
     float2 vTexcoord    : TEXCOORD0;
     float4 vWorldPos    : TEXCOORD1;
     float4 vProjPos     : TEXCOORD2;
+};
+
+struct PS_IN_OUTLINE
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
 };
 
 struct PS_OUT
@@ -128,6 +140,11 @@ struct PS_OUT
 struct PS_OUT_SHADOW
 {
     vector vLightDepth : SV_TARGET0;
+};
+
+struct PS_OUT_OUTLINE
+{
+    vector vColor : SV_TARGET0;
 };
 
 /*=============================================================
@@ -173,24 +190,38 @@ VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
     matWVP = mul(g_WorldMatrix, g_CascadeProj);
 
     float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
-
-    float4x4 vMatX = g_BoneMatrices[In.vBlendIndices.x];
-    float4x4 vMatY = g_BoneMatrices[In.vBlendIndices.y];
-    float4x4 vMatZ = g_BoneMatrices[In.vBlendIndices.z];
-    float4x4 vMatW = g_BoneMatrices[In.vBlendIndices.w];
-
-    float4x4 BoneMatrix = vMatX * In.vBlendWeights.x +
-                          vMatY * In.vBlendWeights.y +
-                          vMatZ * In.vBlendWeights.z +
-                          vMatW * fWeightW;
-
+    
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+    
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
 
     Out.vPosition = mul(vPosition, matWVP);
-
+    Out.vTexcoord = In.vTexcoord;
+    Out.vProjPos = Out.vPosition;
+    
     return Out;
 }
+
+VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
+{
+    VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    float4 OutPos = vector(In.vPosition.xyz + In.vNormal.xyz * g_LineThick, 1);
+    Out.vPosition = mul(OutPos, matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+
 /*=============================================================
  
                         Pixel Shader
@@ -303,8 +334,8 @@ PS_OUT PS_MAIN_CHECK(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(5) : MeshCheck -------------------*/
-PS_OUT_SHADOW PS_CASCADE_SHADOW(VS_OUT_SHADOW In) : SV_Target0
+/* ------------------- Pixel Shader(6) : Cascade Shadow -------------------*/
+PS_OUT_SHADOW PS_CASCADE_SHADOW(VS_OUT_SHADOW In) 
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
@@ -312,6 +343,21 @@ PS_OUT_SHADOW PS_CASCADE_SHADOW(VS_OUT_SHADOW In) : SV_Target0
 	
     return Out;
 }
+
+/* ------------------- Pixel Shader(7) : OutLine  -------------------*/
+PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    //float4 color = { 1.f, 1.f, 1.f, 1.f };
+    vector vColor = g_vLineColor;
+    
+    Out.vColor = vColor;
+   
+    return Out;
+}
+
 /*=============================================================
  
                           Technique
@@ -392,7 +438,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_CHECK();
     }
 
-    pass Cascade
+    pass Cascade // 6
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -403,5 +449,17 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_CASCADE_SHADOW();
 
+    }
+
+    pass OutLine // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 }

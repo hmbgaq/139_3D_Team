@@ -85,6 +85,7 @@ public: /* For.Renderer */
 	CRenderer*	Get_Renderer(); /* Åø¿ë */
 	HRESULT		Off_Shader();
 	void		Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture);
+	HRESULT		Add_CascadeObject(_uint iIndex, CGameObject* pObject);
 
 #ifdef _DEBUG
 	void		Set_RenderDebugCom(_bool _bRenderDebug);

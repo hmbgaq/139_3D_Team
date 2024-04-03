@@ -800,7 +800,7 @@ void CWindow_ShaderTool::Select_Level()
 					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;
 				case 5: // SNOWMOUNTAINBOSS
-					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap.json";
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAINBOSS;
 					m_eCurrLevel_String = "LEVEL_LAVA";
 					break;

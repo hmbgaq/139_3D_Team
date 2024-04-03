@@ -74,7 +74,10 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_CASCADE, this), );
+
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(2, this), );
 }
 
 HRESULT CBody_Bandit_Sniper::Render()
@@ -135,17 +138,31 @@ HRESULT CBody_Bandit_Sniper::Render_CSM(_uint i)
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-	m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()[i]);
+	m_pShaderCom->Bind_Matrix("g_CascadeProj", &m_pGameInstance->Get_Shadow_Proj()[i]);	
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
-		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
-		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
-
 		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_CASCADE));
-		
+		m_pModelCom->Render((_uint)i);
+	}
+
+	return S_OK;
+}
+
+HRESULT CBody_Bandit_Sniper::Render_OutLine()
+{
+	FAILED_CHECK(Bind_ShaderResources());
+	m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
+	m_fLineThick = 3.f;
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float)));
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_OUTLINE));
 		m_pModelCom->Render((_uint)i);
 	}
 
