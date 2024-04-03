@@ -1713,10 +1713,12 @@ HRESULT CRenderer::Ready_DebugRender()
 
 		FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Solid"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 3.f), fBigX, fBigY));
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Normal"),		((fBigX / 2.f * 1)), (fBigY / 2.f * 5.f), fBigX, fBigY));
-		FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Depth"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 7.f), fBigX, fBigY));
+		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Depth"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 5.f), fBigX, fBigY));
+		FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Final"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 5.f), fBigX, fBigY));
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_RR_Blur"),		((fBigX / 2.f * 3)), (fBigY / 2.f * 1.f), fBigX, fBigY));
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_RimBloom"),		((fBigX / 2.f * 3)), (fBigY / 2.f * 3.f), fBigX, fBigY));
 		//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Distortion"),	((fBigX / 2.f * 3)), (fBigY / 2.f * 5.f), fBigX, fBigY));
+
 
 	}
 	{
@@ -1780,10 +1782,10 @@ HRESULT CRenderer::Render_DebugTarget()
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Chroma"),		m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Final"),			m_pShader_Deferred, m_pVIBuffer);
 	
-	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect"),		m_pShader_Deferred, m_pVIBuffer);
-	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect_Blur"),	m_pShader_Deferred, m_pVIBuffer);
-	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect_Final"),m_pShader_Deferred, m_pVIBuffer);
-	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Distortion"),	m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect"),		m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect_Blur"),	m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Effect_Final"),m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Distortion"),	m_pShader_Deferred, m_pVIBuffer);
 	
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_UI"),			m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_UI_Tool"),		m_pShader_Deferred, m_pVIBuffer);

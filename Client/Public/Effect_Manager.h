@@ -29,7 +29,7 @@ public:
 	
 	// strAddPath, strFileName ( "Player/Zapper_Dash/", "Zapper_Dash_26.json" )
 	// 파일 경로, 파일이름, 주인설정(Pivot)
-	CEffect* Create_Effect(string strAddPath, string strFileName, CGameObject* pOwner = nullptr);
+	CEffect* Create_Effect(string strAddPath, string strFileName, CGameObject* pOwner = nullptr, _bool bUseSocket = FALSE, string strBoneTag = "");
 
 	// 파일경로, 파일이름, 생성시킬 위치, 바라볼 타겟이 있다면 TRUE, 바라볼 타겟의 위치
 	CEffect* Create_Effect(string strAddPath, string strFileName, _float3 vPos

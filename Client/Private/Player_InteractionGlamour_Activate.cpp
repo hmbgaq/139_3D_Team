@@ -1,5 +1,10 @@
 #include "..\Public\Player_InteractionGlamour_Activate.h"
 
+
+#include "Bone.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
+
 void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -9,6 +14,13 @@ void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 
 	
 	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+
+
+	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_07_Light.json", pActor, TRUE, "RightHandIK");
+	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_07.json", pActor);
+	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_Particle_07_Reverse.json", pActor);
+	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_Particle_07.json", pActor);
 }
 
 CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _float fTimeDelta)
@@ -21,7 +33,7 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 	{
 		m_bFlags[0] = pActor->Is_Upper_Inputable_Front(24);
 		if (true == m_bFlags[0])
-		{
+		{		
 			pActor->Set_Hp(100.f);
 		}
 	}

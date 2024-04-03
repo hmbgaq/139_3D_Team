@@ -78,7 +78,7 @@ CEffect* CEffect_Manager::Create_Effect(string strFileName, CGameObject* pOwner)
 }
 
 
-CEffect* CEffect_Manager::Create_Effect(string strAddPath, string strFileName, CGameObject* pOwner)
+CEffect* CEffect_Manager::Create_Effect(string strAddPath, string strFileName, CGameObject* pOwner, _bool bUseSocket, string strBoneTag)
 {
 
 	CEffect::EFFECT_DESC	tEffectDesc = {};
@@ -93,7 +93,17 @@ CEffect* CEffect_Manager::Create_Effect(string strAddPath, string strFileName, C
 	if (nullptr != pOwner)
 		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
 
+
 	pEffect->Load_FromJson(In_Json);
+
+
+	if (bUseSocket)
+	{
+		pEffect->Get_Desc()->bUseSocket = bUseSocket;
+		pEffect->Get_Desc()->strBoneTag = strBoneTag;
+	}
+		
+
 
 	return	pEffect;
 }

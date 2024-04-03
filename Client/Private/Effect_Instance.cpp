@@ -347,6 +347,7 @@ HRESULT CEffect_Instance::Change_ModelCom(wstring strProtoModelTag)
 		m_pVIBufferCom->Change_Model(m_pModelCom[0]);
 	}
 
+	m_tVoidDesc.strModelTag[0] = strProtoModelTag;
 
 	return S_OK;
 }
@@ -429,8 +430,15 @@ HRESULT CEffect_Instance::Ready_Components()
 	/* For.Com_VIBuffer */
 	{
 		CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC tBufferInfo = {};
-		tBufferInfo.iCurNumInstance = m_tVoidDesc.iCurNumInstance;
-		tBufferInfo.bUseRigidBody = m_tVoidDesc.bUseRigidBody;
+//#ifdef _DEBUG
+//		if (ECast(LEVEL_TOOL) != m_pGameInstance->Get_NextLevel())
+//		{
+//#endif // _DEBUG
+//			tBufferInfo.iCurNumInstance = m_tVoidDesc.iCurNumInstance;
+//			tBufferInfo.bUseRigidBody = m_tVoidDesc.bUseRigidBody;
+//#ifdef _DEBUG
+//		}
+//#endif // _DEBUG
 
 		for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
 		{
@@ -510,6 +518,13 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale", &m_tVoidDesc.vUV_Scale, sizeof(_float2)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
+
+
+	// 마스크 UV웨이브
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bUV_Wave", &m_tVoidDesc.bUV_Wave, sizeof(_bool)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UV_WaveSpeed", &m_tVoidDesc.vUV_WaveSpeed, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset_Mask", &m_tVoidDesc.vUV_Offset_Mask, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale_Mask", &m_tVoidDesc.vUV_Scale_Mask, sizeof(_float2)));
 
 
 	/* Color & Discard ===============================================================================*/

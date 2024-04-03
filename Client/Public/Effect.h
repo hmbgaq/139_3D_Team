@@ -52,6 +52,9 @@ public:
 		_float4x4	 matPivot		= {};	/* XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity()); */
 		_float4x4	 matCombined	= {};
 
+		_bool		bUseSocket		= { FALSE };
+		string		strBoneTag		= { "" };
+
 	}EFFECT_DESC;
 
 

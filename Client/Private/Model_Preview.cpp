@@ -59,7 +59,7 @@ HRESULT CModel_Preview::Initialize(void* pArg)
 
 	if (TEXT("Prototype_Component_Model_EffectTool_IntroBoss_Floor") == m_tDesc.strModelTag)
 	{
-		Set_Position(_float3(-15.f, 0.f, 0.f));
+		Set_Position(_float3(-15.f, -0.5f, 0.f));
 		m_pTransformCom->Set_Scaling(15.f, 1.f, 15.f);
 	}
 

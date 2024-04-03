@@ -599,11 +599,12 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     if (vFinalDiffuse.a <= g_fAlpha_Discard) // ¾ËÆÄ Àß¶ó³»±â
         discard;
 	
+    
 	// ÄÃ·¯ È¥ÇÕ
     Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
     Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
 		
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
@@ -703,7 +704,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
 
 		/* ·»´õ½ºÅ×ÀÌÃ÷ */
         VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();

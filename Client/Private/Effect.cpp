@@ -9,6 +9,8 @@
 #include "Effect_Instance.h"
 #include "Effect_Trail.h"
 
+#include "Bone.h"
+#include "Character.h"
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -31,6 +33,8 @@ HRESULT CEffect::Initialize(void* pArg)
 {	
 	XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_tEffectDesc.matCombined, XMMatrixIdentity());
+
+
 
 	m_tEffectDesc = *(EFFECT_DESC*)pArg;
 
@@ -307,10 +311,20 @@ void CEffect::Update_PivotMat()
 		}
 
 		if (m_tEffectDesc.bParentPivot)
-		{
-			// 주인의 매트릭스를 사용할거면 받아오기
-			m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
+		{	
+			if (m_tEffectDesc.bUseSocket)
+			{
+				// 소켓사용이 트루이면 밖에서 소켓에 대한 정보를 던져주고 이걸 사용함
+				m_tEffectDesc.matPivot = dynamic_cast<CCharacter*>(m_pOwner)->Get_Body()->Get_BonePtr(m_tEffectDesc.strBoneTag.c_str())->Get_CombinedTransformationMatrix();
+				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
+			}
+			else
+			{
+				// 주인의 매트릭스를 사용할거면 받아오기
+				m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
+			}
+
 		}
 	}
 

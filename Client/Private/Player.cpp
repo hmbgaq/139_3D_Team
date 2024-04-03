@@ -133,9 +133,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
 
-	// 이펙트 테스트
-	EFFECT_MANAGER->Create_Effect("Parasiter/", "Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));
-	EFFECT_MANAGER->Create_Effect("Parasiter/", "Circle_Floor_03_Solid.json", _float3(10.f, 0.f, 5.f));
 
 	return S_OK;
 }

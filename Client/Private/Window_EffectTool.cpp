@@ -2435,28 +2435,73 @@ void CWindow_EffectTool::Update_MeshTab()
 				/* UV 값 조절 */
 				if (ImGui::CollapsingHeader(" UV Option_Mesh "))
 				{
-					if (ImGui::DragFloat2(" UV_Offset ", m_fUV_Offset_Mesh, 1.f, 0.f, 100.f))
+					ImGui::SeparatorText(u8"UV 이동");
+					if (ImGui::DragFloat2("UV_Offset", m_fUV_Offset_Mesh, 1.f, 0.f, 100.f))
 					{
 						m_pCurVoidDesc->vUV_Offset.x = m_fUV_Offset_Mesh[0];
 						m_pCurVoidDesc->vUV_Offset.y = m_fUV_Offset_Mesh[1];
-					}ImGui::SameLine();
-					HelpMarker(u8"UV 이동");
+					}
 
-					if (ImGui::DragFloat2(" UV_Scale ", m_vUV_Scale_Mesh, 1.f, 0.f, 100.f))
+					ImGui::SeparatorText(u8"UV 크기(타일링)");
+					if (ImGui::DragFloat2("UV_Scale", m_vUV_Scale_Mesh, 1.f, 0.f, 100.f))
 					{
 						m_pCurVoidDesc->vUV_Scale.x = m_vUV_Scale_Mesh[0];
 						m_pCurVoidDesc->vUV_Scale.y = m_vUV_Scale_Mesh[1];
-					}ImGui::SameLine();
-					HelpMarker(u8"UV 크기(타일링)");
+					}
 
-					if (ImGui::DragFloat(" RotDegree_Mesh ", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
+					ImGui::SeparatorText(u8"UV 회전");
+					if (ImGui::DragFloat("RotDegree_Mesh", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
 					{
 						m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
-					}ImGui::SameLine();
-					HelpMarker(u8"회전");
+					}
 
 					ImGui::SeparatorText("");
 				}
+
+
+				/* 마스크 UV 값 조절 */
+				if (ImGui::CollapsingHeader(" UV Mask_Mesh "))
+				{
+					// 마스크 웨이브
+					ImGui::SeparatorText(u8"UV 스크롤_마스크");
+					ImGui::RadioButton(u8"UV 스크롤 사용", &m_iUV_Wave, 0);
+					ImGui::RadioButton(u8"UV 스크롤 사용 안함", &m_iUV_Wave, 1);
+
+					if (0 == m_iUV_Wave)
+						m_pCurVoidDesc->bUV_Wave = TRUE;
+					else if (1 == m_iUV_Wave)
+						m_pCurVoidDesc->bUV_Wave = FALSE;
+
+
+					if (0 == m_iUV_Wave)
+					{
+						ImGui::SeparatorText(u8"UV 스크롤 속도");
+						if (ImGui::DragFloat2("UV_WaveSpeed_Mesh", m_fUV_WaveSpeed, 0.1f, -100.f, 100.f))
+						{
+							m_pCurVoidDesc->vUV_WaveSpeed.x = m_fUV_WaveSpeed[0];
+							m_pCurVoidDesc->vUV_WaveSpeed.y = m_fUV_WaveSpeed[1];
+						}
+					}
+
+
+					ImGui::SeparatorText(u8"UV 이동_마스크");
+					if (ImGui::DragFloat2("UV_Offset_Mask_Mesh", m_fUV_Offset_Mask, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Offset_Mask.x = m_fUV_Offset_Mask[0];
+						m_pCurVoidDesc->vUV_Offset_Mask.y = m_fUV_Offset_Mask[1];
+					}
+
+					ImGui::SeparatorText(u8"UV 크기(타일링)_마스크");
+					if (ImGui::DragFloat2("UV_Scale_Mask_Mesh", m_fUV_Scale_Mask, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Scale_Mask.x = m_fUV_Scale_Mask[0];
+						m_pCurVoidDesc->vUV_Scale_Mask.y = m_fUV_Scale_Mask[1];
+					}
+
+
+					ImGui::SeparatorText("");
+				}
+
 
 
 				/* 쉐이더 패스 인덱스 변경 */
@@ -3573,6 +3618,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_iLoop_Part = 1;
 
 
+
 		if (CEffect_Void::PARTICLE == eType_Effect)
 		{
 #pragma region 파티클(+버퍼) 디스크립션 얻어오기 시작
@@ -4107,6 +4153,25 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			// UV 회전
 			m_fUV_RotDegree_Mesh = m_pCurVoidDesc->fUV_RotDegree;
+
+
+			/* UV 마스크 업데이트 */
+			if (TRUE == m_pCurVoidDesc->bUV_Wave)
+				m_iUV_Wave = 0;
+			else if (FALSE == m_pCurVoidDesc->bUV_Wave)
+				m_iUV_Wave = 1;
+
+			// UV 스크롤 스피드
+			m_fUV_WaveSpeed[0] = m_pCurVoidDesc->vUV_WaveSpeed.x;
+			m_fUV_WaveSpeed[1] = m_pCurVoidDesc->vUV_WaveSpeed.y;
+
+			// Offset 
+			m_fUV_Offset_Mask[0] = m_pCurVoidDesc->vUV_Offset_Mask.x;
+			m_fUV_Offset_Mask[1] = m_pCurVoidDesc->vUV_Offset_Mask.y;
+
+			// Scale
+			m_fUV_Scale_Mask[0] = m_pCurVoidDesc->vUV_Scale_Mask.x;
+			m_fUV_Scale_Mask[1] = m_pCurVoidDesc->vUV_Scale_Mask.y;
 
 
 
@@ -4969,7 +5034,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		if (CModel::TYPE_ANIM == m_pModel_Preview->Get_Desc()->eType)
 		{
 			ImGui::SeparatorText("Model Animation");
-			if (ImGui::Button("Idle_"))
+			if (ImGui::Button("Idle_0"))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
@@ -4983,20 +5048,44 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_Idle);
 				}
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Attack_"))
+			if (ImGui::Button("Attack_0"))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
 					// 플레이어 공격
 					//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
 
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);			
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
 				{
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_02);
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Attack_1"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_TeleportPunch_L01_Alt);
+				}
 
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
+				}
+			}
+
+			if (ImGui::Button("Heal_01"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_InteractionGlamour_Activate);
+				}
+
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
 				}
 			}

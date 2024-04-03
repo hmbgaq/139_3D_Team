@@ -190,9 +190,11 @@ HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
 
 HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 {
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
+
+	// 이펙트 테스트
+	EFFECT_MANAGER->Create_Effect("Parasiter/", "Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));
+	EFFECT_MANAGER->Create_Effect("Parasiter/", "Circle_Floor_03_Solid.json", _float3(12.f, 0.f, 5.f));
+    EFFECT_MANAGER->Create_Effect("Parasiter/", "Circle_Floor_04.json", _float3(19.f, 0.f, 5.f));
 
     return S_OK;
 }

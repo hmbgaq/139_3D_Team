@@ -451,7 +451,7 @@ HRESULT CEffect_Particle::Ready_Components()
 	{
 		CVIBuffer_Particle::PARTICLE_BUFFER_DESC tBufferDesc = {};
 #ifdef _DEBUG
-		if (ECast(LEVEL_TOOL) != m_pGameInstance->Get_CurrentLevel())
+		if (ECast(LEVEL_TOOL) != m_pGameInstance->Get_NextLevel())
 		{
 #endif // _DEBUG
 			tBufferDesc.iCurNumInstance = m_tVoidDesc.iCurNumInstance;

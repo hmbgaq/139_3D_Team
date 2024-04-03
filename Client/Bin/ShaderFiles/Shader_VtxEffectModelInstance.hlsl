@@ -21,6 +21,11 @@ float2      g_UVOffset;
 float2      g_UVScale;
 float		g_fDegree;
 
+bool        g_bUV_Wave;
+float2      g_UV_WaveSpeed;
+float2      g_UVOffset_Mask;
+float2      g_UVScale_Mask;
+
 
 /* Color */
 int			g_iColorMode;
@@ -489,12 +494,26 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
     float4 vFinalDiffuse;
     float4 vAlphaColor;
 	
+     
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
 	
+    float2 vMaskUV = In.vTexUV * g_UVScale_Mask + g_UVOffset_Mask;
+    if (false == g_bUV_Wave)
+    {
+        if ((vMaskUV.x > 1.f) || (vMaskUV.y > 1.f) || (vMaskUV.x < 0.f) || (vMaskUV.y < 0.f))
+            discard;
+    }
+    else
+    {
+        vMaskUV.x = vMaskUV.x + (g_fFrameTime * g_UV_WaveSpeed.x);
+        vMaskUV.y = vMaskUV.y + (g_fFrameTime * g_UV_WaveSpeed.y);
+    }
+     
+    
     vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vMaskUV);
 
     vFinalDiffuse.a *= vAlphaColor;
 	
@@ -503,7 +522,6 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
     if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
         discard;
 	
-  
 
    // 색상 혼합
     Out.vDiffuse.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
@@ -626,6 +644,22 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
+    
+
+    float2 vMaskUV = In.vTexUV * g_UVScale_Mask + g_UVOffset_Mask;
+    if (false == g_bUV_Wave)
+    {
+        if ((vMaskUV.x > 1.f) || (vMaskUV.y > 1.f) || (vMaskUV.x < 0.f) || (vMaskUV.y < 0.f))
+            discard;
+    }
+    else
+    {
+        vMaskUV.x = vMaskUV.x + (g_fFrameTime * g_UV_WaveSpeed.x);
+        vMaskUV.y = vMaskUV.y + (g_fFrameTime * g_UV_WaveSpeed.y);
+    }
+    
+    
+    
     /* Distortion ============================================================ */	
     
     vDistortion = Calculation_Distortion(In.vTexUV, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
@@ -644,7 +678,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 
 	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
-    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy + vMaskUV);
     vFinalDiffuse.a *= vAlphaColor.r;
 	
     

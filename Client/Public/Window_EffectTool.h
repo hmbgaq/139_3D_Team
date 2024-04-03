@@ -209,6 +209,12 @@ private:
 	_int	m_iLoop_Part = { 0 };
 
 
+	// 마스크 UV
+	_int	m_iUV_Wave = { 0 };	// 1이 FALSE
+	_float m_fUV_WaveSpeed[2] = { 0.f, 0.f };
+	_float m_fUV_Offset_Mask[2] = { 0.f, 0.f };
+	_float m_fUV_Scale_Mask[2]	= { 1.f, 1.f };
+
 
 #pragma region Particle 옵션 시작 =====================================================
 private:
