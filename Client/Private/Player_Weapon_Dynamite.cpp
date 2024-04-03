@@ -54,7 +54,6 @@ void CPlayer_Weapon_Dynamite::Tick(_float fTimeDelta)
 	//		m_pTransformCom->Write_Json(Out_Json);
 	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
 	//	}
-
 	//}
 }
 

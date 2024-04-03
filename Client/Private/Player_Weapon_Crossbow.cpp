@@ -45,11 +45,26 @@ void CPlayer_Weapon_Crossbow::Priority_Tick(_float fTimeDelta)
 void CPlayer_Weapon_Crossbow::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (m_pGameInstance->Key_Down(DIK_F))
+	{
+		string path = "../Bin/DataFiles/Data_Weapon/Player/Crossbow/Crossbow.json";
+		{
+			json Out_Json;
+			m_pTransformCom->Write_Json(Out_Json);
+			CJson_Utility::Save_Json(path.c_str(), Out_Json);
+		}
+	}
 }
 
 void CPlayer_Weapon_Crossbow::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+	//{
+	//	m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
+	//}
 }
 
 HRESULT CPlayer_Weapon_Crossbow::Render()
@@ -74,7 +89,8 @@ HRESULT CPlayer_Weapon_Crossbow::Ready_Components()
 	//	return E_FAIL;
 
 	/* For. Com_Shader */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 
 	/* For.Com_Model */

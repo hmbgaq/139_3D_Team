@@ -34,6 +34,8 @@ HRESULT CPlayer_Weapon_Whip::Initialize(void* pArg)
 	CJson_Utility::Load_Json(path.c_str(), In_Json);
 	m_pTransformCom->Load_FromJson(In_Json);
 
+	
+
 	return S_OK;
 }
 
@@ -46,11 +48,6 @@ void CPlayer_Weapon_Whip::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
-	{
-		m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
-	}
-
 	if (m_pGameInstance->Key_Down(DIK_C))
 	{
 		string path = "../Bin/DataFiles/Data_Weapon/Player/Whip/Whip.json";
@@ -60,17 +57,44 @@ void CPlayer_Weapon_Whip::Tick(_float fTimeDelta)
 			CJson_Utility::Save_Json(path.c_str(), Out_Json);
 		}
 	}
+
+	if (m_pGameInstance->Key_Down(DIK_E))
+	{
+		Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_LOOP, 0);
+	}
 }
 
 void CPlayer_Weapon_Whip::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	//Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_LOOP, 24);
+	
+
+	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+	{
+		m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
+	}
 }
 
 HRESULT CPlayer_Weapon_Whip::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+		m_pShaderCom->Begin(m_iRenderPass);
+
+		m_pModelCom->Render((_uint)i);
+	}
 
 	return S_OK;
 }
