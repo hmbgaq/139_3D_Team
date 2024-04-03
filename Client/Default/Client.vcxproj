@@ -473,6 +473,8 @@
     <ClInclude Include="..\Public\Model_Preview.h" />
     <ClInclude Include="..\Public\Monster_Character.h" />
     <ClInclude Include="..\Public\Mother.h" />
+    <ClInclude Include="..\Public\MotherShakeTreeProjectile.h" />
+    <ClInclude Include="..\Public\MotherVomit.h" />
     <ClInclude Include="..\Public\Mother_Dead.h" />
     <ClInclude Include="..\Public\Mother_Egg.h" />
     <ClInclude Include="..\Public\Mother_Hit.h" />
@@ -1577,6 +1579,8 @@
     <ClCompile Include="..\Private\Model_Preview.cpp" />
     <ClCompile Include="..\Private\Monster_Character.cpp" />
     <ClCompile Include="..\Private\Mother.cpp" />
+    <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp" />
+    <ClCompile Include="..\Private\MotherVomit.cpp" />
     <ClCompile Include="..\Private\Mother_Dead.cpp" />
     <ClCompile Include="..\Private\Mother_Egg.cpp" />
     <ClCompile Include="..\Private\Mother_Hit.cpp" />

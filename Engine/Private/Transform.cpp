@@ -229,7 +229,14 @@ void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 	//Move_On_Navigation(vResult, pNavigation);
 }
 
+void CTransform::Go_Down(_float fTimeDelta, CNavigation* pNavigation)
+{
+	_vector vDown = -Get_State(STATE_UP);
+	_vector vResult = XMVector3Normalize(vDown) * m_fSpeedPerSec * fTimeDelta;
 
+	Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
+	//Move_On_Navigation(vResult, pNavigation);
+}
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {

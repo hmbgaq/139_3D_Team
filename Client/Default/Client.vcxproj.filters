@@ -616,9 +616,6 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss">
       <UniqueIdentifier>{9478358a-bef3-4395-b56d-6d8fa9c36220}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\LastBoss">
-      <UniqueIdentifier>{38750173-374c-4aaf-a1ab-eab234e467d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander">
       <UniqueIdentifier>{832c2b76-6f3f-4fbd-9a6b-08ba3c2bccbe}</UniqueIdentifier>
     </Filter>
@@ -3597,6 +3594,12 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\04. UIEffect\00. MoveEffect">
       <UniqueIdentifier>{ae8bc895-8152-47b0-bce5-1815257b4484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherVomit">
+      <UniqueIdentifier>{0b35c5b9-6364-46f5-8108-ddba04cb3d27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile">
+      <UniqueIdentifier>{6109841c-8165-4a1d-a04b-5241426aa06d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7134,6 +7137,12 @@
     <ClInclude Include="..\Public\UI_MoveEffect.h">
       <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MotherVomit.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherVomit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MotherShakeTreeProjectile.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10116,6 +10125,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MoveEffect.cpp">
       <Filter>02.GameObjects\UI\04. UIEffect\00. MoveEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherVomit.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherVomit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

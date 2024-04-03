@@ -51,7 +51,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 20.f;
+	m_fDamage = 10.f;
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_SNOWMOUNTAINBOSS, LAYER_EFFECT, "Projectile_Range1_04.json", this);
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Yellow_Blood_Test.json"); // (EffectOut : 당장 안쓰는 이펙트라고 해서 일단 빼뒀습니다. [성희])
