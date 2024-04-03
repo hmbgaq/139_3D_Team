@@ -353,6 +353,7 @@
     <ClInclude Include="..\Public\Edgar_Cargo_DLG.h" />
     <ClInclude Include="..\Public\Edgar_Cargo_Dynamite.h" />
     <ClInclude Include="..\Public\Edgar_cargo_OL.h" />
+    <ClInclude Include="..\Public\Edgar_Grenade_Throw_v2.h" />
     <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Idle.h" />
     <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Reload.h" />
     <ClInclude Include="..\Public\Edgar_Sniper_CoverHigh_Side_L_AimPose.h" />
@@ -411,8 +412,10 @@
     <ClInclude Include="..\Public\Edgar_State_Hit.h" />
     <ClInclude Include="..\Public\Edgar_State_Normal.h" />
     <ClInclude Include="..\Public\Edgar_State_Run.h" />
+    <ClInclude Include="..\Public\Edgar_State_Throw.h" />
     <ClInclude Include="..\Public\Edgar_State_Walk.h" />
     <ClInclude Include="..\Public\Edgar_State_Walk_Aim.h" />
+    <ClInclude Include="..\Public\Edgar_ThrowDynamite.h" />
     <ClInclude Include="..\public\Environment_SpecialObject.h" />
     <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h" />
@@ -1534,6 +1537,7 @@
     <ClCompile Include="..\Private\Edgar_Cargo_DLG.cpp" />
     <ClCompile Include="..\Private\Edgar_Cargo_Dynamite.cpp" />
     <ClCompile Include="..\Private\Edgar_cargo_OL.cpp" />
+    <ClCompile Include="..\Private\Edgar_Grenade_Throw_v2.cpp" />
     <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Idle.cpp" />
     <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Reload.cpp" />
     <ClCompile Include="..\Private\Edgar_Sniper_CoverHigh_Side_L_AimPose.cpp" />
@@ -1592,8 +1596,10 @@
     <ClCompile Include="..\Private\Edgar_State_Hit.cpp" />
     <ClCompile Include="..\Private\Edgar_State_Normal.cpp" />
     <ClCompile Include="..\Private\Edgar_State_Run.cpp" />
+    <ClCompile Include="..\Private\Edgar_State_Throw.cpp" />
     <ClCompile Include="..\Private\Edgar_State_Walk.cpp" />
     <ClCompile Include="..\Private\Edgar_State_Walk_Aim.cpp" />
+    <ClCompile Include="..\Private\Edgar_ThrowDynamite.cpp" />
     <ClCompile Include="..\Private\Environment_LightObject.cpp" />
     <ClCompile Include="..\Private\Environment_SpecialObject.cpp" />
     <ClCompile Include="..\Private\Effect_Manager.cpp" />

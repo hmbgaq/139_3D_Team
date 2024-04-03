@@ -171,12 +171,12 @@ public:
 		Edgar_Sniper_Electrocute_Loop_TEMP									,
 		Edgar_SniperIntro													,
 		Edgar_Sniper_Introduction_03										,
+		Edgar_ThrowDynamite													,
+		Edgar_Grenade_Throw_v2												,
 
 	};
 
 };
 
 END
-
-
 

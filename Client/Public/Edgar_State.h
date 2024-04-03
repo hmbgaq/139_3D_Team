@@ -38,6 +38,9 @@ public:		//상태 그룹 별 업데이트
 
 	CState<CEdgar>* Hit_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
 	CState<CEdgar>* CutScene_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+	CState<CEdgar>* Throw_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex);
+
+	
 
 	
 

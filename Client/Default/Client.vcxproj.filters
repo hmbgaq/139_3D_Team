@@ -3910,6 +3910,18 @@
     <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. CutScene\1. Cargo\5. OL">
       <UniqueIdentifier>{fc300974-3826-48c5-9757-15c509f84493}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw">
+      <UniqueIdentifier>{1b478ff3-8a6a-4282-a6ea-9086d670c45c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\0. Parent">
+      <UniqueIdentifier>{2fa55add-d755-4fa6-a558-0fd01cb6cad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\1. ThrowDynamite">
+      <UniqueIdentifier>{198696aa-b83c-4ad2-8b3a-f93d85a62736}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\2. Grenade_Throw">
+      <UniqueIdentifier>{0a3cca20-90c1-4d6f-908f-3beb7894f035}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7677,6 +7689,15 @@
     <ClInclude Include="..\Public\Edgar_cargo_OL.h">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. CutScene\1. Cargo\5. OL</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Edgar_State_Throw.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\0. Parent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_ThrowDynamite.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\1. ThrowDynamite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Edgar_Grenade_Throw_v2.h">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\2. Grenade_Throw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10914,6 +10935,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Edgar_cargo_OL.cpp">
       <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\7. CutScene\1. Cargo\5. OL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_State_Throw.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\0. Parent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_ThrowDynamite.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\1. ThrowDynamite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Edgar_Grenade_Throw_v2.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\1. Edgar\3. State\8. Throw\2. Grenade_Throw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

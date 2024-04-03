@@ -94,6 +94,11 @@ CState<CEdgar>* CEdgar_State::CutScene_State(CEdgar* pActor, _float fTimeDelta, 
 	return nullptr;
 }
 
+CState<CEdgar>* CEdgar_State::Throw_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 CState<CEdgar>* CEdgar_State::Normal(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 
