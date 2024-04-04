@@ -37,8 +37,13 @@ public:
 
 	_float3			Get_Compare_Point(const _float3* pPoint);
 
+	_bool			Check_CurrentCell(_fvector vPosition);
+
 	//!For. SlidingVector
 	_bool			Is_Out(_fvector vWorldPos, _fvector vLook, _fmatrix WorldMatrix, _Inout_ _int* pNeighborIndex, _Inout_ _float4* pSliding);
+
+	_bool			Get_MoveEnable() { return m_bMoveEnable; }
+	void			Set_MoveEnable(_bool bMoveEnable) { m_bMoveEnable = bMoveEnable;}
 
 public:
 	HRESULT Initialize(const _float3* pPoints, _uint iIndex);
@@ -65,9 +70,11 @@ private:
 	_float3					m_vPointsInWorld[POINT_END] = {};
 	_int					m_iNeighbors[LINE_END] = { -1, -1, -1 };
 	_float3					m_vNormals[LINE_END] = {};
+	_float3					m_vLines[LINE_END];
 	_uint					m_iIndex = { 0 };
 
 	_bool					m_bPicking = false;
+	_bool					m_bMoveEnable = true;
 
 #ifdef _DEBUG
 private:	

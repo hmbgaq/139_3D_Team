@@ -20,13 +20,13 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		m_pSpringCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 		m_bFlags[5] = true;
 	}
-	if (m_pSpringCamera != nullptr)
-	{
-		m_fCameraFovy += fTimeDelta;
-		if (m_fCameraFovy >= 90.f)
-			m_fCameraFovy = 90.f;
-		m_pSpringCamera->Set_Fovy(m_fCameraFovy);
-	}
+	//if (m_pSpringCamera != nullptr)
+	//{
+	//	m_fCameraFovy += fTimeDelta;
+	//	if (m_fCameraFovy >= 90.f)
+	//		m_fCameraFovy = 90.f;
+	//	m_pSpringCamera->Set_Fovy(m_fCameraFovy);
+	//}
 
 
 	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(92))

@@ -40,6 +40,7 @@ public:
 	void Collision(CCollider* pTargetCollider);
 	void End_CollisionCheck();
 
+
 public:
 	virtual void			OnCollisionEnter(CCollider* other);
 	virtual void			OnCollisionStay(CCollider* other);
