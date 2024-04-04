@@ -37,8 +37,8 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	else if (LIGHT_DESC::TYPE_POINT == m_LightDesc.eType)
 	{
 		/* Frustum에 들어오지않은 빛은 Render안함 */
-		if (false == m_pGameInstance->isIn_WorldPlanes(XMLoadFloat4(&m_LightDesc.vPosition), m_LightDesc.fRange * 3.f))
-			return S_OK;
+		//if (false == m_pGameInstance->isIn_WorldPlanes(XMLoadFloat4(&m_LightDesc.vPosition), m_LightDesc.fRange * 3.f))
+		//	return S_OK;
 
 		FAILED_CHECK(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vPosition, sizeof(_float4)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)));

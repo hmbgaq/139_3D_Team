@@ -65,9 +65,13 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 	}
 
 	// 소영 - 렌더 필요사항
-	m_fLineTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
-	m_bIncrease = (m_fLineTimeAcc >= 1.0f) ? false : (m_fLineTimeAcc <= 0.1f) ? true : m_bIncrease;
-	
+	if (true == m_bOutLine)
+	{
+		m_fLineTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
+		m_bIncrease = (m_fLineTimeAcc >= 1.0f) ? false : (m_fLineTimeAcc <= 0.1f) ? true : m_bIncrease;
+		m_bOutLine = false;
+	}
+
 	__super::Tick(fTimeDelta);
 
 }
@@ -114,8 +118,7 @@ HRESULT CBody_Bandit_Sniper::Render()
 HRESULT CBody_Bandit_Sniper::Render_Shadow()
 {
 	FAILED_CHECK(__super::Render_Shadow());
-
-	cout << "Bandit Sniper Shadow " << endl;
+	
 	return S_OK;
 }
 
@@ -129,6 +132,8 @@ HRESULT CBody_Bandit_Sniper::Render_CSM(_uint i)
 
 HRESULT CBody_Bandit_Sniper::Render_OutLine()
 {
+	m_bOutLine = true;
+
 	_float Dist = XMVectorGetX(XMVector4Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_Pos()));
 	m_fLineThick_Ratio = m_fLineThick / Dist;
 

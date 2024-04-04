@@ -100,6 +100,7 @@ private:
 public:
 	/* 렌더옵션 초기화 */
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
+	HRESULT Clear_RenderTarget(const wstring& RenderTag);
 
 	/* 활성화 */
 	void Set_PBR_Active(_bool _Pbr_active) { m_tPBR_Option.bPBR_ACTIVE = _Pbr_active; }
@@ -129,6 +130,7 @@ public:
 	//Temp
 	_float Get_MotionBlur_float() { return m_tMotionBlur_Desc.fMotionBlur_Intensity; }
 	void   Set_MotionBLur_float(_float fValue) {m_tMotionBlur_Desc.fMotionBlur_Intensity = fValue; }
+
 	/* 옵션조절 */
 	void Set_PBR_Option(PBR_DESC desc) { m_tPBR_Option = desc; }
 	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }

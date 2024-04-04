@@ -26,6 +26,8 @@ public:
 	virtual HRESULT Render_CSM(_uint i) override;
 	virtual HRESULT Render_OutLine() override;
 
+public:
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
@@ -34,6 +36,7 @@ private:
 private:
 	CTexture*	m_pDissolveTexture = { nullptr };
 	_bool		m_bDissolve = { false };
+	_bool		m_bOutLine = { false };
 
 	/* Dissolve */
 	_float		m_fDissolveWeight = 0.f;

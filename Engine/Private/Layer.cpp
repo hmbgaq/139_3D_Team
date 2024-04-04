@@ -32,7 +32,7 @@ void CLayer::Priority_Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable() && false == pGameObject->Is_Dead())
 			pGameObject->Priority_Tick(fTimeDelta);
 	}	
 }
@@ -41,9 +41,8 @@ void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable() && false == pGameObject->Is_Dead())
 			pGameObject->Tick(fTimeDelta);
-		
 	}
 }
 
@@ -57,7 +56,7 @@ void CLayer::Late_Tick(_float fTimeDelta)
 
 	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
 	{
-		if (nullptr != (*iter) && true == (*iter)->Get_Enable())
+		if (nullptr != (*iter) && true == (*iter)->Get_Enable() && false == (*iter)->Is_Dead())
 			(*iter)->Late_Tick(fTimeDelta);
 		
 
