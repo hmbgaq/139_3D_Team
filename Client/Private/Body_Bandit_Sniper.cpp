@@ -75,9 +75,6 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(2, this), );
 }
 
 HRESULT CBody_Bandit_Sniper::Render()
@@ -114,11 +111,11 @@ HRESULT CBody_Bandit_Sniper::Render()
 }
 
 
-
 HRESULT CBody_Bandit_Sniper::Render_Shadow()
 {
-	__super::Render_Shadow();
+	FAILED_CHECK(__super::Render_Shadow());
 
+	cout << "Bandit Sniper Shadow " << endl;
 	return S_OK;
 }
 

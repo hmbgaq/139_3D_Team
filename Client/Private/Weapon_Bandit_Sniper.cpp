@@ -122,7 +122,7 @@ HRESULT CWeapon_Bandit_Sniper::Render()
 
 HRESULT CWeapon_Bandit_Sniper::Render_Shadow()
 {
-	__super::Render_Shadow();
+	FAILED_CHECK(__super::Render_Shadow());
 
 	return S_OK;
 }

@@ -721,19 +721,6 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 
 	//--------------
 
-	//pPlayer->Set_Position
-	LIGHT_DESC desc = {};
-	desc.bEnable = true;
-	desc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
-	desc.vPosition = _float4(60.5f, 0.f, 26.f, 0.f);
-	desc.fRange = 10.f;
-	desc.fCutOff = 0.5f;
-	desc.fOuterCutOff = 0.7f;
-	desc.vDiffuse = { 1.f, 1.f, 1.f, 1.f };
-	desc.vAmbient = { 1.f, 1.f, 1.f, 1.f };
-	desc.vSpecular = { 1.f, 1.f, 1.f, 1.f };
-	desc.fVolumetricStrength = 10.f;
-
 	return S_OK;
 }
 

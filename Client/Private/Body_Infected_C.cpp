@@ -90,7 +90,7 @@ HRESULT CBody_Infected_C::Render_Shadow()
 
 HRESULT CBody_Infected_C::Render_CSM(_uint i)
 {
-	FAILED_CHECK(__super::Render_CSM(i));
+	//FAILED_CHECK(__super::Render_CSM(i));
 
 	return S_OK;
 }

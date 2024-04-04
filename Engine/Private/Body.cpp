@@ -71,8 +71,6 @@ void CBody::Tick(_float fTimeDelta)
 
 void CBody::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
@@ -81,10 +79,7 @@ void CBody::Late_Tick(_float fTimeDelta)
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
 	}
-
 
 #ifdef _DEBUG
 	m_pGameInstance->Add_DebugRender(m_pColliderCom);
@@ -116,18 +111,18 @@ HRESULT CBody::Render()
 
 HRESULT CBody::Render_Shadow()
 {
-	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_iCurrnetLevel)));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_iCurrnetLevel)));
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_iCurrnetLevel)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_iCurrnetLevel)));
 
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		m_pShaderCom->Begin((_uint)2);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		m_pShaderCom->Begin(2);
 		m_pModelCom->Render((_uint)i);
 	}
 

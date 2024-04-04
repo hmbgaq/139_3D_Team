@@ -58,7 +58,7 @@ void CCamera::Tick(_float fTimeDelta)
 	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 	m_arrCameraWorld = m_pTransformCom->Get_WorldFloat4x4();
 
-	Update_Cascade();
+	//Update_Cascade();
 }
 
 void CCamera::Late_Tick(_float fTimeDelta)

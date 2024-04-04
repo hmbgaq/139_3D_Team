@@ -997,8 +997,39 @@ HRESULT CLevel_Intro::Ready_Shader()
     /* For. Shadow */
     m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
     m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
-    
-    //
+
+    _int iTemp = {};
+
+    /* For. Light */
+    LIGHT_DESC Desc = {};
+    Desc.eType = LIGHT_DESC::TYPE::TYPE_POINT;
+    Desc.bEnable = true;
+    Desc.vDiffuse = { 0.f, 1.f, 0.f, 1.f };
+    Desc.vAmbient = { 1.f, 1.f, 1.f, 0.f };
+    Desc.vSpecular = { 0.f, 1.f, 0.486f, 0.6f };
+    Desc.vLightFlag = { 1.f, 1.f, 1.f, 1.f };
+    Desc.fIntensity = 5.f;
+    Desc.vPosition = { 3.f, 1.f, 6.f };
+    Desc.fRange = 6.f;
+    m_pGameInstance->Add_Light(Desc, iTemp);
+
+    /* For. SpotLight */
+    Desc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+    Desc.bEnable = true;
+    Desc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
+    Desc.vAmbient = { 1.f, 1.f, 1.f, 0.f };
+    Desc.vSpecular = { 0.f, 1.f, 0.486f, 0.6f };
+    Desc.fIntensity = 10.f;
+    Desc.vDirection = { 1.f, -1.f, 0.f, 0.f };
+    Desc.vPosition = { 3.f, 1.f, 25.f };
+    Desc.fRange = 6.f;
+    Desc.fCutOff = cosf(XMConvertToRadians(20.f));
+    Desc.fOuterCutOff = cosf(XMConvertToRadians(30.f));
+
+    m_pGameInstance->Add_Light(Desc, iTemp);
+
+
+    /* Cascade */
     _float3 Dir = m_pGameInstance->Get_DirectionLight()->Get_LightDesc().vDirection;
     _float3 vDir;
     XMStoreFloat3(&vDir, XMVector3Normalize(XMLoadFloat3(&Dir)));

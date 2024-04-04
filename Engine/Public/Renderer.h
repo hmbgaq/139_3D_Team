@@ -49,12 +49,14 @@ private:
 	HRESULT Render_ShadowDepth();
 	HRESULT Render_Cascade();
 	HRESULT Render_LightAcc();
+	HRESULT Bake_ViewShadow();
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
 	HRESULT Render_MyPBR();
+	HRESULT Render_PBR();
 	HRESULT Render_SSR();
-	HRESULT Render_Chroma();
+	HRESULT Render_Chroma();			
 	HRESULT Render_LumaSharpen();
 
 	HRESULT Deferred_Effect();

@@ -57,7 +57,7 @@ HRESULT CBody_Heavy_Vampiric_Zombie::Render_Shadow()
 
 HRESULT CBody_Heavy_Vampiric_Zombie::Render_CSM(_uint i)
 {
-	FAILED_CHECK(__super::Render_CSM(i));
+//	FAILED_CHECK(__super::Render_CSM(i));
 
 	return S_OK;
 }

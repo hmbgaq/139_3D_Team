@@ -109,6 +109,7 @@ void CInfected::Tick(_float fTimeDelta)
 		fTimeAcc += fTimeDelta;
 		if (fTimeAcc >= m_fCntDead_Time)
 		{
+			cout << " ¡Ù¡Ú InfectedD Set_dead¼öÇà " << endl;
 			fTimeAcc = 0.f;
 			Set_Dead(true);
 		}
@@ -117,8 +118,8 @@ void CInfected::Tick(_float fTimeDelta)
 
 void CInfected::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-
+	if (false == m_bCntDead_Active)
+		__super::Late_Tick(fTimeDelta);
 }
 
 HRESULT CInfected::Render()

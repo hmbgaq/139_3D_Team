@@ -374,7 +374,6 @@ void CWindow_ShaderTool::Compress_SpotLight()
 		LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
 		LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
 		LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
-		LightDesc.fVolumetricStrength = 10.f;
 
 		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, Temp);
 	}
@@ -515,6 +514,9 @@ void CWindow_ShaderTool::Compress_PBR_Setting()
 		m_iPBRTextureNumber = 0;
 	if (m_iPBRTextureNumber >= 10)
 		m_iPBRTextureNumber = 10;
+
+	ImGui::SliderFloat("BrightnessOffset", &m_ePBR_Desc.fBrightnessOffset, 0.f, 5.0f, "BrightnessOffset = %.3f");
+	ImGui::SliderFloat("SaturationOffset", &m_ePBR_Desc.fSaturationOffset, 0.f, 5.0f, "SaturationOffset = %.3f");
 
 	m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTextureNumber);
 	m_pGameInstance->Get_Renderer()->Set_PBR_Option(m_ePBR_Desc);

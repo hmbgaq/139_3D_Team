@@ -379,6 +379,8 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagPBR_Desc
 	{
+		_float fSaturationOffset = 1.f;
+		_float fBrightnessOffset = 0.f;
 		_bool bPBR_ACTIVE = { false };
 	}PBR_DESC;
 

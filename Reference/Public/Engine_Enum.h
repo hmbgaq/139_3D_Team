@@ -16,13 +16,15 @@ namespace Engine
 
 	/* Shader */
 	enum class DEFERRED_SHADER { 
-		DEBUG, 
-		DIRECTIONAL_LIGHT, 
-		POINT_LIGHT, 
-		SPOT_LIGHT, 
-		DEFERRED, 
-		PBR, 
-		MYPBR,
+		DEBUG,				 // 0 - 
+		DIRECTIONAL_LIGHT,	 // 1 - 빛 : 방향성 
+		POINT_LIGHT,		 // 2 - 빛 : 점광원
+		SPOT_LIGHT, 		 // 3 - 빛 : 스포트라이트 
+		DEFERRED, 			 // 4 - 디퍼드 (기본) : 1스테이지용 
+		PBR, 				 // 5 - PBR (128 참고)
+		MYPBR,				 // 6 - PBR (외부 참고)
+		VIEW_SHADOW,		 // 7 - 
+		FOG,				 // 8 -
 		SHADER_END };
 
 	enum class SSAO_SHADER {

@@ -319,7 +319,7 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.0f)
+    if (vMtrlDiffuse.a == 0.0f)
         discard;
     
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
@@ -395,6 +395,8 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.0f)
+        discard;
     vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     vector vColor;
     
@@ -614,7 +616,7 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     RefractTexCoord = RefractTexCoord + (vNormal.xy * g_fReflectionScale);
     
     float4 RefractionColor = g_NoiseTexture.Sample(LinearSampler, RefractTexCoord);    
-    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
+    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord); /* Ice Diffuse Texture */ 
     
     Out.vDiffuse = lerp(RefractionColor, vMtrlDiffuse, 0.5f);
     
