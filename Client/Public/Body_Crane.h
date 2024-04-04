@@ -8,13 +8,13 @@ END
 
 BEGIN(Client)
 
-class CBody_Tank : public CBody_Monster
+class CBody_Crane : public CBody
 {
 
 protected:
-	CBody_Tank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CBody_Tank(const CBody_Tank& rhs);
-	virtual ~CBody_Tank() = default;
+	CBody_Crane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CBody_Crane(const CBody_Crane& rhs);
+	virtual ~CBody_Crane() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -25,10 +25,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
-public:
-	virtual void	OnCollisionEnter(CCollider* other)	override;
-	virtual void	OnCollisionStay(CCollider* other)	override;
-	virtual void	OnCollisionExit(CCollider* other)	override;
 
 protected:
 	HRESULT Ready_Components();
@@ -36,7 +32,7 @@ protected:
 	virtual void Check_Frustum() override;
 
 public:
-	static CBody_Tank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CBody_Crane* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;
 	virtual void Free() override;

@@ -46,8 +46,6 @@
 #include "Player_Weapon_Crossbow.h"
 #include "Player_Weapon_CripplingRod.h"
 
-
-
 #include "Bullet_Winchester.h"
 #include "Bullet_Revolver.h"
 #include "Bullet_ELShotgun.h"
@@ -55,8 +53,22 @@
 #include "Explosion_Dynamite.h"
 #include "Bullet_Teleport.h"
 
+
 #include "Impact_Slam.h"
 #pragma endregion
+
+#pragma region DESTRUCTABLE PROPS
+#include "TNTCrate.h"
+#include "TNTPack.h"
+#include "Explosion_TNTCrate.h"
+#include "Explosion_TNTPack.h"
+
+#include "Body_Crane.h"
+#include "Cargo_Crane.h"
+#include "HitPoint_Crane.h"
+#include "Crane.h"
+#pragma endregion
+
 
 #pragma region VampireCommander
 #include "VampireCommander.h"
@@ -77,6 +89,7 @@
 #include "Mother_Egg.h"
 #include "MotherVomit.h"
 #include "Son_Projectile.h"
+#include "MotherShakeTreeProjectile.h"
 #pragma endregion
 
 #pragma region INFECTED
@@ -932,6 +945,12 @@ HRESULT CLoader::Loading_Player(LEVEL eLEVEL)
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Edgar"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/NPC/Edgar/Edgar", PivotMatrix)));
 
+	//임시
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_TNTCrate"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Map/Stage1/NonAnim/Destructables/TNTCrate/TNTCrate", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_TNTPack"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Map/Stage1/NonAnim/Destructables/TNTPack/TNTPack", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Crane"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Map/Stage1/Anim/Interact/Crane/Crane", PivotMatrix)));
+
+
 	return S_OK;
 }
 
@@ -992,6 +1011,7 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_Dynamite"), CExplosion_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_Dynamite"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Teleport"), CBullet_Teleport::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Teleport"))));
 
+	
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Impact_Slam"), CImpact_Slam::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Impact_Slam"))));
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
@@ -1087,6 +1107,21 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_LightObject"), CEnvironment_LightObject::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Environment_LightObject"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_SpecialObject"), CEnvironment_SpecialObject::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Environment_SpecialObject"))));
 	
+
+	//! 파괴 가능한 환경
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DestructableProps_TNTCrate"), CTNTCrate::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DestructableProps_TNTPack"), CTNTPack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DestructableProps_TNTPack"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_TNTCrate"), CExplosion_TNTCrate::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_TNTCrate"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_TNTPack"), CExplosion_TNTPack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_TNTPack"))));
+	
+	//! 테스트
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Crane"), CBody_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cargo_Crane"), CCargo_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Cargo_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HitPoint_Crane"), CHitPoint_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_HitPoint_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Crane"), CCrane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Crane"))));
+
+
+
 	//!성희
 	Ready_UI_Origin();
 

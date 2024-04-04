@@ -65,6 +65,8 @@ public:
 	_float	Get_TrackPosition();
 	_bool	Compare_TrackPosition_Is_Over(_float fTrackPosition);
 
+	void Set_IsNotUseMovePos(_bool _bIsNotUseMovePos) { m_bIsNotUseMovePos = _bIsNotUseMovePos; };
+
 	_float3 Get_MovePos() {
 		if (true == m_bIsNotUseMovePos)
 		{

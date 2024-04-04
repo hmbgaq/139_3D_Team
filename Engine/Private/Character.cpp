@@ -544,6 +544,15 @@ void CCharacter::Add_Force(_vector In_vDir, _float In_fPower)
 	m_pRigidBody->Add_Force(In_vDir, In_fPower);
 }
 
+void CCharacter::Blocked(_vector In_vDir, _float In_fPower)
+{
+	_vector vPos = Get_Position_Vector();
+	_vector vForce = In_vDir * In_fPower;
+	_vector vResult = vPos + vForce;
+
+	m_pTransformCom->Set_State(CTransform::STATE::STATE_POSITION, vResult);
+}
+
 void CCharacter::Look_At_OnLand(_fvector vTargetPos)
 {
 	m_pTransformCom->Look_At_OnLand(vTargetPos);

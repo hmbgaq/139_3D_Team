@@ -216,6 +216,11 @@ HRESULT CBody_VampireCommander::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CBody_VampireCommander::Check_Frustum() 
+{
+	m_bIsInFrustum = true;
+}
+
 CBody_VampireCommander* CBody_VampireCommander::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
 	CBody_VampireCommander* pInstance = new CBody_VampireCommander(pDevice, pContext, strPrototypeTag);

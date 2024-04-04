@@ -5,14 +5,14 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	//static const unsigned int	g_iWinSizeY = 720;
-	//static const unsigned int	g_iWinSizeX = 1280;
+	static const unsigned int	g_iWinSizeY = 720;
+	static const unsigned int	g_iWinSizeX = 1280;
 	//static const unsigned int	g_iWinSizeX = 1600;
 	//static const unsigned int	g_iWinSizeY = 900;
 	//static const unsigned int	g_iWinSizeX = 1920;
 	//static const unsigned int	g_iWinSizeY = 1080;
-	static const unsigned int	g_iWinSizeX = 2560;
-	static const unsigned int	g_iWinSizeY = 1440;
+	//static const unsigned int	g_iWinSizeX = 2560;
+	//static const unsigned int	g_iWinSizeY = 1440;
 
 	// ! Close Window
 	_bool g_CloseWindow = false;
@@ -95,10 +95,13 @@ namespace Client
 		PLAYER_PARRYING,
 		MONSTER_SHIELD,
 		WEAKNESS,
+		EXPLOSION_ATTACK,
 		PLAYER_ATTACK,
 		MONSTER_ATTACK,
 		PLAYER,
 		MONSTER,
+		DESTRUCTABLE_PROPS,
+
 
 		INTERACT,
 		PICKING_INSTANCE,
