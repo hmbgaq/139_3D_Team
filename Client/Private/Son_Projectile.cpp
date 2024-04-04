@@ -56,7 +56,8 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test_02.json", this);
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test_02.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Son_Test_06.json", this);
 
 	return S_OK;
 }
@@ -91,8 +92,8 @@ void CSon_Projectile::Late_Tick(_float fTimeDelta)
 HRESULT CSon_Projectile::Render()
 {
 	/*auto start = chrono::high_resolution_clock::now();*/
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	//if (FAILED(__super::Render()))
+	//	return E_FAIL;
 // 	auto End = chrono::high_resolution_clock::now();
 // 	chrono::duration<double> duration0 = End - start;
 // 	cout << "Son Projectile Render 실행시간 : " << duration0.count() << endl;

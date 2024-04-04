@@ -86,6 +86,9 @@ public:
 		TYPE_DIRAXIS eType_Dir = { DIR_LOOK };
 
 		_float3		vRadian = { 0.f, 0.f, 0.f };
+		_float2		vMinMaxRadianSpeed_X = { 0.f, 0.f };
+		_float2		vMinMaxRadianSpeed_Y = { 0.f, 0.f };
+		_float2		vMinMaxRadianSpeed_Z = { 0.f, 0.f };
 
 		_float2		vMinMaxRotationOffsetX = { 0.0f, 360.f };
 		_float2		vMinMaxRotationOffsetY = { 0.0f, 360.f };
@@ -160,6 +163,7 @@ public:
 		//  방향 
 		_float3	vDir = { 1.f, 0.f, 0.f };
 
+
 		_float3  vOffsetTheta = { 0.f, 0.f, 0.f };
 
 		// 스피드
@@ -167,6 +171,9 @@ public:
 		_float  fCurTheta			= { 0.f };
 		_float	fCurTornadoSpeed	= { 1.f };
 
+		// 회전
+		_float3	vCurRadian			= { 0.f, 0.f, 0.f };
+		_float3	vAddRadianSpeed		= { 0.f, 0.f, 0.f };
 
 		// 크기
 		_float	fUpScaleTimeAccs = { 0.f };

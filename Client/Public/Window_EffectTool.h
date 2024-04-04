@@ -159,28 +159,28 @@ private:
 	_int m_iShaderPassIndex_Particle						= { 0 };
 	_int m_iMaxShaderPassIndex_Particle						= { 12 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
-	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 25, 9, 173, 243, 24 };
+	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 26, 9, 173, 243, 24 };
 
 
 	_int m_iRenderGroup_Rect								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Rect							= { 0 };
 	_int m_iMaxShaderPassIndex_Rect							= { 5 };
 	_int m_iTexIndex_Rect[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 25, 9, 173, 243, 24 };
+	_int m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_END]		= { 26, 9, 173, 243, 24 };
 
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
 	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 25, 9, 173, 243, 24 };
+	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 26, 9, 173, 243, 24 };
 
 
 	_int m_iRenderGroup_Trail								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Trail							= { 0 };
 	_int m_iMaxShaderPassIndex_Trail						= { 5 };
 	_int m_iTexIndex_Trail[CEffect_Void::TEXTURE_END]		= {};
-	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 25, 9, 173, 243, 24 };
+	_int m_iMaxTexIndex_Trail[CEffect_Void::TEXTURE_END]	= { 26, 9, 173, 243, 24 };
 
 
 private:
@@ -275,6 +275,11 @@ private:
 
 	/* For.Rotation */
 	_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
+
+	_float	m_vMinMaxRadianSpeed_X_Particle[2] = { 0.f, 0.f };
+	_float	m_vMinMaxRadianSpeed_Y_Particle[2] = { 0.f, 0.f };
+	_float	m_vMinMaxRadianSpeed_Z_Particle[2] = { 0.f, 0.f };
+
 	_float	m_vRotationOffsetX_Particle[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Particle[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetZ_Particle[2] = { 0.f, 0.f };
@@ -468,6 +473,10 @@ private:
 
 	/* Rotation_Mesh */
 	_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
+
+	_float	m_vMinMaxRadianSpeed_X_Mesh[2] = { 0.f, 0.f };
+	_float	m_vMinMaxRadianSpeed_Y_Mesh[2] = { 0.f, 0.f };
+	_float	m_vMinMaxRadianSpeed_Z_Mesh[2] = { 0.f, 0.f };
 
 	_float	m_vRotationOffsetX_Mesh[2] = { 0.f, 0.f };
 	_float	m_vRotationOffsetY_Mesh[2] = { 0.f, 0.f };

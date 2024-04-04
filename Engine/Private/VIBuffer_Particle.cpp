@@ -316,6 +316,15 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fCurSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
 	m_vecParticleInfoDesc[iNum].fCurTornadoSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxTornadoSpeed.x, m_tBufferDesc.vMinMaxTornadoSpeed.y);
 
+
+	m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+
+	// 자체회전 스피드
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_X.x, m_tBufferDesc.vMinMaxRadianSpeed_X.y);
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_Y.x, m_tBufferDesc.vMinMaxRadianSpeed_Y.y);
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_Z.x, m_tBufferDesc.vMinMaxRadianSpeed_Z.y);
+
+
 	// 원 회전(이동) 각도
 	m_vecParticleInfoDesc[iNum].fCurTheta = XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxTheta.x, m_tBufferDesc.vMinMaxTheta.y));
 
@@ -481,9 +490,13 @@ void CVIBuffer_Particle::Rotation_Instance(_uint iNum)
 	_vector		vLook		= m_vecParticleShaderInfoDesc[iNum].vLook * m_vecParticleInfoDesc[iNum].vCurScales.y;
 
 
-	_vector		vRotation = XMQuaternionRotationRollPitchYaw( XMConvertToRadians(m_tBufferDesc.vRadian.x)
-															, XMConvertToRadians(m_tBufferDesc.vRadian.y)
-															, XMConvertToRadians(m_tBufferDesc.vRadian.z));
+	m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_tBufferDesc.vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
+	m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_tBufferDesc.vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
+	m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_tBufferDesc.vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
+
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.x)
+		, XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.y)
+		, XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.z));
 
 	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 

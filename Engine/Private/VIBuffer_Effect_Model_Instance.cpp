@@ -302,6 +302,15 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fCurSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
 	m_vecParticleInfoDesc[iNum].fCurTornadoSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxTornadoSpeed.x, m_tBufferDesc.vMinMaxTornadoSpeed.y);
 
+
+	m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+
+	// 자체회전 스피드
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_X.x, m_tBufferDesc.vMinMaxRadianSpeed_X.y);
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_Y.x, m_tBufferDesc.vMinMaxRadianSpeed_Y.y);
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_Z.x, m_tBufferDesc.vMinMaxRadianSpeed_Z.y);
+
+
 	// 원 회전(이동) 각도
 	m_vecParticleInfoDesc[iNum].fCurTheta = XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxTheta.x, m_tBufferDesc.vMinMaxTheta.y));
 
@@ -451,9 +460,13 @@ void CVIBuffer_Effect_Model_Instance::Rotation_Instance(_uint iNum)
 	_vector		vLook	= m_vecParticleShaderInfoDesc[iNum].vLook	* m_vecParticleInfoDesc[iNum].vCurScales.z;
 
 
-	_vector		vRotation = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_tBufferDesc.vRadian.x)
-															, XMConvertToRadians(m_tBufferDesc.vRadian.y)
-															, XMConvertToRadians(m_tBufferDesc.vRadian.z));
+	m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_tBufferDesc.vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
+	m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_tBufferDesc.vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
+	m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_tBufferDesc.vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
+
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.x)
+															, XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.y)
+															, XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.z));
 
 	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
@@ -1196,6 +1209,10 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eType_Dir"] = m_tBufferDesc.eType_Dir;
 
 	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_X"], m_tBufferDesc.vMinMaxRadianSpeed_X);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Y"], m_tBufferDesc.vMinMaxRadianSpeed_Y);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Z"], m_tBufferDesc.vMinMaxRadianSpeed_Z);
+
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);
@@ -1302,6 +1319,14 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 
 	if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제
 		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
+
+	if (In_Json["Com_VIBuffer"].contains("vMinMaxRadianSpeed_X")) // 다시 저장 후 삭제
+	{
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_X"], m_tBufferDesc.vMinMaxRadianSpeed_X);
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Y"], m_tBufferDesc.vMinMaxRadianSpeed_Y);
+		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Z"], m_tBufferDesc.vMinMaxRadianSpeed_Z);
+	}
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);

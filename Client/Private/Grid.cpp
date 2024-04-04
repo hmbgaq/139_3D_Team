@@ -119,7 +119,7 @@ HRESULT CGrid::Ready_Components()
 
 	/* For.Com_VIBuffer */
 	CVIBuffer_Grid::GRID_BUFFER_DESC	tBufferDesc = {};
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_VIBuffer_Grid"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Grid"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom), &tBufferDesc)))
 		return E_FAIL;
 
@@ -128,7 +128,7 @@ HRESULT CGrid::Ready_Components()
 		if (TEXT("") != m_tDesc.strTextureTag[TEXTURE_DIFFUSE])
 		{
 			/* For.Com_Texture */
-			if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tDesc.strTextureTag[TEXTURE_DIFFUSE],
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tDesc.strTextureTag[TEXTURE_DIFFUSE],
 				TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 				return E_FAIL;
 		}
@@ -136,7 +136,7 @@ HRESULT CGrid::Ready_Components()
 		if (TEXT("") != m_tDesc.strTextureTag[TEXTURE_MASK])
 		{
 			/* For.Com_Mask */
-			if (FAILED(__super::Add_Component(LEVEL_TOOL, m_tDesc.strTextureTag[TEXTURE_MASK],
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tDesc.strTextureTag[TEXTURE_MASK],
 				TEXT("Com_Mask"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_MASK]))))
 				return E_FAIL;
 		}

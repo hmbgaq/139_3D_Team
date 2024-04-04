@@ -135,7 +135,7 @@ void CSon_Weapon_Head::OnCollisionEnter(CCollider* other)
 		//string Test = "Data_Animation/";
 		//parent->Set_EventNotify(Test, "Test2_AnimationData.json");
 
-		EFFECT_MANAGER->Play_Effect("Test_Effect.json", this->Get_WorldPosition());
+		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", this->Get_WorldPosition());
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
 		//_float3 vPos =this->Get_WorldPosition();
 		//pEffect->Set_Position(vPos);

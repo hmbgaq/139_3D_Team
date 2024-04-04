@@ -191,7 +191,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	_uint iLevel = LEVEL_STATIC;
 
-	// Test (1개만)
+	// 1개만 필요한 이펙트
 	{
 		/* Circle_Floor */
 		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
@@ -216,6 +216,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Hit/", "Hit_Normal.json"));
 	}
 
+
 	// 중간 필요한 이펙트 (100개)
 	for (_uint i = 0; i < iMaxManyEffect; ++i)
 	{
@@ -226,6 +227,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 		/* Boos 2 */
 		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
+		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
 	}
 
 
@@ -274,6 +276,11 @@ HRESULT CEffect_Manager::Clear_EffectPool()
 			iter.second.pop();
 		}
 	}
+
+	for (auto& Pair : m_EffectPool)
+		Safe_Release(Pair.second);
+
+	m_EffectPool.clear();
 
 	return S_OK;
 }

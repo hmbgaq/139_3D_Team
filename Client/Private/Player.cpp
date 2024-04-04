@@ -132,8 +132,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
-
-
 	return S_OK;
 }
 

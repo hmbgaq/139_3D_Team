@@ -511,7 +511,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 25;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 26;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 
@@ -1434,6 +1434,42 @@ void CWindow_EffectTool::Update_ParticleTab()
 						m_pParticleBufferDesc->vRadian.z = m_vRadian_Particle[2];
 
 
+
+					ImGui::SeparatorText(u8"인스턴스 회전 스피드");
+					if (ImGui::DragFloat2("vMinMaxRadianSpeed_X_Particle", m_vMinMaxRadianSpeed_X_Particle, 0.1f, -360.f, 360.f))
+					{
+						if (m_vMinMaxRadianSpeed_X_Particle[0] > m_vMinMaxRadianSpeed_X_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxRadianSpeed_X_Particle[1] = m_vMinMaxRadianSpeed_X_Particle[0];
+
+
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_X.x = m_vMinMaxRadianSpeed_X_Particle[0];
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_X.y = m_vMinMaxRadianSpeed_X_Particle[1];
+
+					}
+
+					if (ImGui::DragFloat2("vMinMaxRadianSpeed_Y_Particle", m_vMinMaxRadianSpeed_Y_Particle, 0.1f, -360.f, 360.f))
+					{
+						if (m_vMinMaxRadianSpeed_Y_Particle[0] > m_vMinMaxRadianSpeed_Y_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxRadianSpeed_Y_Particle[1] = m_vMinMaxRadianSpeed_Y_Particle[0];
+
+
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.x = m_vMinMaxRadianSpeed_Y_Particle[0];
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.y = m_vMinMaxRadianSpeed_Y_Particle[1];
+
+					}
+
+					if (ImGui::DragFloat2("vMinMaxRadianSpeed_Z_Particle", m_vMinMaxRadianSpeed_Z_Particle, 0.1f, -360.f, 360.f))
+					{
+						if (m_vMinMaxRadianSpeed_Z_Particle[0] > m_vMinMaxRadianSpeed_Z_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxRadianSpeed_Z_Particle[1] = m_vMinMaxRadianSpeed_Z_Particle[0];
+
+
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.x = m_vMinMaxRadianSpeed_Z_Particle[0];
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.y = m_vMinMaxRadianSpeed_Z_Particle[1];
+					}
+
+
+
 					ImGui::SeparatorText("");
 				}
 
@@ -1776,7 +1812,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 					{
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 24;
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 26;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 					}
 
@@ -2392,7 +2428,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 25;
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 26;
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
 
@@ -3240,6 +3276,42 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::DragFloat(" Radian_Z_Mesh ", &m_vRadian_Mesh[2], 1.f, 0.f, 360.f))
 							m_pMeshBufferDesc->vRadian.z = m_vRadian_Mesh[2];
 
+
+						ImGui::SeparatorText(u8"인스턴스 회전 스피드");
+						if (ImGui::DragFloat2("vMinMaxRadianSpeed_X_Mesh", m_vMinMaxRadianSpeed_X_Mesh, 0.1f, -360.f, 360.f))
+						{
+							if (m_vMinMaxRadianSpeed_X_Mesh[0] > m_vMinMaxRadianSpeed_X_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vMinMaxRadianSpeed_X_Mesh[1] = m_vMinMaxRadianSpeed_X_Mesh[0];
+
+
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_X.x = m_vMinMaxRadianSpeed_X_Mesh[0];
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_X.y = m_vMinMaxRadianSpeed_X_Mesh[1];
+
+						}
+
+						if (ImGui::DragFloat2("vMinMaxRadianSpeed_Y_Mesh", m_vMinMaxRadianSpeed_Y_Mesh, 0.1f, -360.f, 360.f))
+						{
+							if (m_vMinMaxRadianSpeed_Y_Mesh[0] > m_vMinMaxRadianSpeed_Y_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vMinMaxRadianSpeed_Y_Mesh[1] = m_vMinMaxRadianSpeed_Y_Mesh[0];
+
+
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.x = m_vMinMaxRadianSpeed_Y_Mesh[0];
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.y = m_vMinMaxRadianSpeed_Y_Mesh[1];
+
+						}
+
+						if (ImGui::DragFloat2("vMinMaxRadianSpeed_Z_Mesh", m_vMinMaxRadianSpeed_Z_Mesh, 0.1f, -360.f, 360.f))
+						{
+							if (m_vMinMaxRadianSpeed_Z_Mesh[0] > m_vMinMaxRadianSpeed_Z_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vMinMaxRadianSpeed_Z_Mesh[1] = m_vMinMaxRadianSpeed_Z_Mesh[0];
+
+
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.x = m_vMinMaxRadianSpeed_Z_Mesh[0];
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.y = m_vMinMaxRadianSpeed_Z_Mesh[1];
+						}
+
+
+
 						ImGui::SeparatorText("");
 					}
 #pragma endregion 회전_메쉬 파티클 끝
@@ -4077,6 +4149,18 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
 
 
+			// 추가 자체회전
+			m_vMinMaxRadianSpeed_X_Particle[0] = m_pParticleBufferDesc->vMinMaxRadianSpeed_X.x;
+			m_vMinMaxRadianSpeed_X_Particle[1] = m_pParticleBufferDesc->vMinMaxRadianSpeed_X.y;
+
+			m_vMinMaxRadianSpeed_Y_Particle[0] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.x;
+			m_vMinMaxRadianSpeed_Y_Particle[1] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.y;
+
+			m_vMinMaxRadianSpeed_Z_Particle[0] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.x;
+			m_vMinMaxRadianSpeed_Z_Particle[1] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.y;
+
+
+
 			/* 라업룩 어느 축을 진행방향으로 할건지 업데이트 */
 			if (CVIBuffer_Particle::DIR_RIGHT == m_pParticleBufferDesc->eType_Dir)
 				m_iType_Dir_Particle = 0;
@@ -4552,6 +4636,15 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vRotationOffsetZ_Mesh[0] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ_Mesh[1] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y;
 
+			// 추가 자체회전
+			m_vMinMaxRadianSpeed_X_Mesh[0] = m_pMeshBufferDesc->vMinMaxRadianSpeed_X.x;
+			m_vMinMaxRadianSpeed_X_Mesh[1] = m_pMeshBufferDesc->vMinMaxRadianSpeed_X.y;
+
+			m_vMinMaxRadianSpeed_Y_Mesh[0] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.x;
+			m_vMinMaxRadianSpeed_Y_Mesh[1] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.y;
+
+			m_vMinMaxRadianSpeed_Z_Mesh[0] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.x;
+			m_vMinMaxRadianSpeed_Z_Mesh[1] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.y;
 
 
 			/* 스케일 러프 */
