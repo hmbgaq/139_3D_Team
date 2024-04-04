@@ -1,4 +1,4 @@
-#include "Explosion_TNT.h"
+#include "Explosion_TNTCrate.h"
 #include "GameInstance.h"
 #include "Character.h"
 #include "Data_Manager.h"
@@ -10,17 +10,17 @@
 #include "Effect_Trail.h"
 
 
-CExplosion_TNT::CExplosion_TNT(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CExplosion_TNTCrate::CExplosion_TNTCrate(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
 {
 }
 
-CExplosion_TNT::CExplosion_TNT(const CExplosion_TNT& rhs)
+CExplosion_TNTCrate::CExplosion_TNTCrate(const CExplosion_TNTCrate& rhs)
 	: CProjectile(rhs)
 {
 }
 
-HRESULT CExplosion_TNT::Initialize_Prototype()
+HRESULT CExplosion_TNTCrate::Initialize_Prototype()
 {
 
 	if (FAILED(__super::Initialize_Prototype()))
@@ -29,7 +29,7 @@ HRESULT CExplosion_TNT::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CExplosion_TNT::Initialize(void* pArg)
+HRESULT CExplosion_TNTCrate::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
@@ -51,12 +51,12 @@ HRESULT CExplosion_TNT::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CExplosion_TNT::Priority_Tick(_float fTimeDelta)
+void CExplosion_TNTCrate::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 }
 
-void CExplosion_TNT::Tick(_float fTimeDelta)
+void CExplosion_TNTCrate::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
@@ -64,13 +64,13 @@ void CExplosion_TNT::Tick(_float fTimeDelta)
 
 }
 
-void CExplosion_TNT::Late_Tick(_float fTimeDelta)
+void CExplosion_TNTCrate::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
 }
 
-HRESULT CExplosion_TNT::Render()
+HRESULT CExplosion_TNTCrate::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -78,13 +78,13 @@ HRESULT CExplosion_TNT::Render()
 	return S_OK;
 }
 
-HRESULT CExplosion_TNT::Render_Shadow()
+HRESULT CExplosion_TNTCrate::Render_Shadow()
 {
 	
 	return S_OK;
 }
 
-void CExplosion_TNT::OnCollisionEnter(CCollider* other)
+void CExplosion_TNTCrate::OnCollisionEnter(CCollider* other)
 {
 
 
@@ -107,15 +107,15 @@ void CExplosion_TNT::OnCollisionEnter(CCollider* other)
 
 }
 
-void CExplosion_TNT::OnCollisionStay(CCollider* other)
+void CExplosion_TNTCrate::OnCollisionStay(CCollider* other)
 {
 }
 
-void CExplosion_TNT::OnCollisionExit(CCollider* other)
+void CExplosion_TNTCrate::OnCollisionExit(CCollider* other)
 {
 }
 
-HRESULT CExplosion_TNT::Ready_Components()
+HRESULT CExplosion_TNTCrate::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
@@ -142,38 +142,38 @@ HRESULT CExplosion_TNT::Ready_Components()
 	return S_OK;
 }
 
-CExplosion_TNT* CExplosion_TNT::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CExplosion_TNTCrate* CExplosion_TNTCrate::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CExplosion_TNT* pInstance = new CExplosion_TNT(pDevice, pContext, strPrototypeTag);
+	CExplosion_TNTCrate* pInstance = new CExplosion_TNTCrate(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CExplosion_TNT");
+		MSG_BOX("Failed to Created : CExplosion_TNTCrate");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CExplosion_TNT::Clone(void* pArg)
+CGameObject* CExplosion_TNTCrate::Clone(void* pArg)
 {
-	CExplosion_TNT* pInstance = new CExplosion_TNT(*this);
+	CExplosion_TNTCrate* pInstance = new CExplosion_TNTCrate(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CExplosion_TNT");
+		MSG_BOX("Failed to Cloned : CExplosion_TNTCrate");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CExplosion_TNT::Pool()
+CGameObject* CExplosion_TNTCrate::Pool()
 {
-	return new CExplosion_TNT(*this);
+	return new CExplosion_TNTCrate(*this);
 }
 
-void CExplosion_TNT::Free()
+void CExplosion_TNTCrate::Free()
 {
 	__super::Free();
 

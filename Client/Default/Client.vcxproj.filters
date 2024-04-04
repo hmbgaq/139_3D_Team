@@ -3940,6 +3940,12 @@
     <Filter Include="02.GameObjects\96. DestructableProps\1. TNTCrate\Projectile">
       <UniqueIdentifier>{f0c335d1-4928-4f2d-a73f-1947c0c5755e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\96. DestructableProps\2. TNTPack">
+      <UniqueIdentifier>{b9b88303-e8da-4664-a8bf-4fade84bd4d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. DestructableProps\2. TNTPack\Projectile">
+      <UniqueIdentifier>{437efaea-e026-4097-aa98-038f08ebcc19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7734,7 +7740,7 @@
     <ClInclude Include="..\Public\MotherShakeTreeProjectile.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Explosion_TNT.h">
+    <ClInclude Include="..\Public\Explosion_TNTCrate.h">
       <Filter>02.GameObjects\96. DestructableProps\1. TNTCrate\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DestructableProp.h">
@@ -7742,6 +7748,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\TNTCrate.h">
       <Filter>02.GameObjects\96. DestructableProps\1. TNTCrate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TNTPack.h">
+      <Filter>02.GameObjects\96. DestructableProps\2. TNTPack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Explosion_TNTPack.h">
+      <Filter>02.GameObjects\96. DestructableProps\2. TNTPack\Projectile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -11008,7 +11020,7 @@
     <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Explosion_TNT.cpp">
+    <ClCompile Include="..\Private\Explosion_TNTCrate.cpp">
       <Filter>02.GameObjects\96. DestructableProps\1. TNTCrate\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TNTCrate.cpp">
@@ -11016,6 +11028,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\DestructableProp.cpp">
       <Filter>02.GameObjects\96. DestructableProps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TNTPack.cpp">
+      <Filter>02.GameObjects\96. DestructableProps\2. TNTPack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion_TNTPack.cpp">
+      <Filter>02.GameObjects\96. DestructableProps\2. TNTPack\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

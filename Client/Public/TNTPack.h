@@ -8,12 +8,12 @@ END
 
 BEGIN(Client)
 
-class CTNTCrate final : public CDestructableProp
+class CTNTPack final : public CDestructableProp
 {
 private:
-	CTNTCrate(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CTNTCrate(const CTNTCrate& rhs);
-	virtual ~CTNTCrate() = default;
+	CTNTPack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CTNTPack(const CTNTPack& rhs);
+	virtual ~CTNTPack() = default;
 
 public:
 	virtual HRESULT		Initialize_Prototype() override;
@@ -28,7 +28,7 @@ public:
 	void Explode();
 	void OnCollision(CCollider* other);
 
-public: 
+public:
 	virtual void		OnCollisionEnter(CCollider* other)	override;
 	virtual void		OnCollisionStay(CCollider* other)	override;
 	virtual void		OnCollisionExit(CCollider* other)	override;
@@ -38,7 +38,7 @@ protected:
 
 
 public:
-	static CTNTCrate* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CTNTPack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;
 	virtual void Free() override;

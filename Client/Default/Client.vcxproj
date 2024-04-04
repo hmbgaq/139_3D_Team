@@ -424,7 +424,8 @@
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h" />
     <ClInclude Include="..\Public\Event_Trigger.h" />
     <ClInclude Include="..\Public\Explosion_Dynamite.h" />
-    <ClInclude Include="..\Public\Explosion_TNT.h" />
+    <ClInclude Include="..\Public\Explosion_TNTCrate.h" />
+    <ClInclude Include="..\Public\Explosion_TNTPack.h" />
     <ClInclude Include="..\Public\Finisher_Tank.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
@@ -1246,6 +1247,7 @@
     <ClInclude Include="..\Public\Tank_Walk_FR.h" />
     <ClInclude Include="..\Public\Tank_WhipHold.h" />
     <ClInclude Include="..\Public\TNTCrate.h" />
+    <ClInclude Include="..\Public\TNTPack.h" />
     <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Collection_Button.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
@@ -1618,7 +1620,8 @@
     <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
     <ClCompile Include="..\Private\Explosion_Dynamite.cpp" />
-    <ClCompile Include="..\Private\Explosion_TNT.cpp" />
+    <ClCompile Include="..\Private\Explosion_TNTCrate.cpp" />
+    <ClCompile Include="..\Private\Explosion_TNTPack.cpp" />
     <ClCompile Include="..\Private\Finisher_Tank.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Heavy_Vampiric_Zombie.cpp" />
@@ -2271,6 +2274,7 @@
     <ClCompile Include="..\Private\Tank_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Tank_WhipHold.cpp" />
     <ClCompile Include="..\Private\TNTCrate.cpp" />
+    <ClCompile Include="..\Private\TNTPack.cpp" />
     <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Collection_Button.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
