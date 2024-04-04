@@ -722,6 +722,7 @@ void CEnvironment_Interact::Interact()
 			}
 
 			Enable_UpdateCells();
+			m_pPlayer->Set_UseGravity(false);
 			m_bInteract = true;
 
 		
@@ -929,6 +930,8 @@ void CEnvironment_Interact::Interact()
 				}
 			}
 
+
+			m_pPlayer->Set_UseGravity(false);
 			//if (m_bMove == true)
 				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
 			//else
