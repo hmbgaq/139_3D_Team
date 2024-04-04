@@ -1,18 +1,14 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "DestructableProp.h"
 
 BEGIN(Engine)
-class CShader;
-class CModel;
-class CCollider;
-
 END
 
 BEGIN(Client)
 
-class CTNTCrate final : public CGameObject
+class CTNTCrate final : public CDestructableProp
 {
 private:
 	CTNTCrate(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -38,13 +34,8 @@ public:
 	virtual void		OnCollisionExit(CCollider* other)	override;
 
 protected:
-	HRESULT				Ready_Components();
-	HRESULT				Bind_ShaderResources();
-
-protected:
-	CShader*	m_pShaderCom	= { nullptr };
-	CModel*		m_pModelCom		= { nullptr };
-	CCollider*	m_pColliderCom	= { nullptr };
+	virtual HRESULT		Ready_Components() override;
+	//virtual HRESULT		Bind_ShaderResources();
 
 
 public:
