@@ -244,9 +244,10 @@ void CPlayer::Set_Navigation(CNavigation* pNavigation)
 		Safe_Release(m_pNavigationCom);
 
 	m_pNavigationCom = pNavigation;
-	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Find_CurrentCellIndex(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION)));
+	//Set_InitPosition(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
+	
 	Safe_AddRef(pNavigation);
-
 	
 }
 

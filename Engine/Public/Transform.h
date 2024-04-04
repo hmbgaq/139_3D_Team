@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 
 #include "Component.h"
 
@@ -172,6 +172,7 @@ public:
 public:
 	void		Add_RootBone_Position(const _float3& vPos, class CNavigation* pNavigation = nullptr);
 	void		Add_RootBone_ForTarget(const _float3& vPos, class CNavigation* pNavigation = nullptr, CTransform* pTargetTransform = nullptr);
+	_float3		Get_RootBone_ForTarget(const _float3& vPos, CTransform* pTargetTransform = nullptr);
 	void		Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 public:

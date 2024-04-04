@@ -8,6 +8,28 @@ CBounding_AABB::CBounding_AABB(ID3D11Device * pDevice, ID3D11DeviceContext * pCo
 
 }
 
+_float3 CBounding_AABB::Get_MinCorner()
+{
+	_float3 MinCorner = {};
+
+	MinCorner.x = m_pAABB->Center.x - m_pAABB->Extents.x;
+	MinCorner.y = m_pAABB->Center.y - m_pAABB->Extents.y;
+	MinCorner.z = m_pAABB->Center.z - m_pAABB->Extents.z;
+	
+	return MinCorner;
+}
+
+_float3 CBounding_AABB::Get_MaxCorner()
+{
+	_float3 MaxCorner = {};
+
+	MaxCorner.x = m_pAABB->Center.x + m_pAABB->Extents.x;
+	MaxCorner.y = m_pAABB->Center.y + m_pAABB->Extents.y;
+	MaxCorner.z = m_pAABB->Center.z + m_pAABB->Extents.z;
+
+	return MaxCorner;
+}
+
 void CBounding_AABB::Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ)
 {
 	/* 반지름 길이 */
@@ -38,8 +60,6 @@ void CBounding_AABB::Update(_fmatrix TransformMatrix)
 	Matrix.r[2] = XMVectorSet(0.f, 0.f, 1.f, 0.f) * XMVectorGetX(XMVector3Length(Matrix.r[2]));
 
 	m_pOriginalAABB->Transform(*m_pAABB, Matrix);
-
-
 }
 
 _bool CBounding_AABB::Collision(CCollider * pTargetCollider, _bool* pisCollision)

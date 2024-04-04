@@ -1,20 +1,22 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Body_Monster.h"
+#include "Weapon.h"
 
 BEGIN(Engine)
+
+class CModel;
+
 END
 
 BEGIN(Client)
 
-class CBody_Tank : public CBody_Monster
+class CCargo_Crane final : public CWeapon
 {
-
 protected:
-	CBody_Tank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CBody_Tank(const CBody_Tank& rhs);
-	virtual ~CBody_Tank() = default;
+	CCargo_Crane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CCargo_Crane(const CCargo_Crane& rhs);
+	virtual ~CCargo_Crane() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -23,7 +25,6 @@ public:
 	virtual void	Tick(_float fTimeDelta) override;
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual HRESULT Render_Shadow() override;
 
 public:
 	virtual void	OnCollisionEnter(CCollider* other)	override;
@@ -31,16 +32,13 @@ public:
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
 protected:
-	HRESULT Ready_Components();
-	HRESULT Bind_ShaderResources();
-	virtual void Check_Frustum() override;
+	virtual HRESULT Ready_Components();
 
 public:
-	static CBody_Tank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	static CCargo_Crane* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
-	virtual CGameObject* Pool() override;
+	virtual CGameObject* Pool();
 	virtual void Free() override;
-
 };
 
 END

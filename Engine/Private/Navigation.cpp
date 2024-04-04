@@ -122,7 +122,7 @@ HRESULT CNavigation::Render()
 
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
-	if (iCurrentLevel == 6)
+	if (iCurrentLevel == 7)
 	{
 
 		for (auto& pCell : m_Cells)
@@ -169,9 +169,9 @@ _bool CNavigation::isMove(_fvector vPosition)
 	if (m_iCurrentIndex == -1)
 		return false;
 
+
 	if (true == m_Cells[m_iCurrentIndex]->isIn(vPosition, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex))
 		return true;
-
 	else
 	{
 		if (-1 != iNeighborIndex)
@@ -180,11 +180,21 @@ _bool CNavigation::isMove(_fvector vPosition)
 			{
 				if (-1 == iNeighborIndex)
 					return false;
+
 				if (true == m_Cells[iNeighborIndex]->isIn(vPosition, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex))
 				{
-					m_iCurrentIndex = iNeighborIndex;
-					return true;
+					if (true == m_Cells[iNeighborIndex]->Get_MoveEnable())
+					{
+						m_iCurrentIndex = iNeighborIndex;
+					}
+					else
+						return false;
+					
+					break;
 				}
+				else
+					return true;
+				
 			}
 		}
 		else
@@ -196,7 +206,7 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 {
 	/* 일단 이웃이 없다는 의미로 디폴트 -1로 셋팅해둔다. */
 	_int      iNeighborIndex = { -1 };
-
+	
 	/* 이동한 지점의 결과가 현재 셀 내부에 있을경우 true반환
 	 * 이동한 지점의 결과가 외부에 있을경우 iNeighborIndex에 값으로 받아온다. */
 
@@ -209,6 +219,8 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 		return false;
 	}
 
+	if (m_Cells[m_iCurrentIndex]->Get_MoveEnable() == false)
+ 		return false;
 
 	if (true == m_Cells[m_iCurrentIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 	{
@@ -223,10 +235,10 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 
 				if (false == m_Cells[iNeighborIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 				{
-					//if (true == m_Cells[iNeighborIndex]->Get_Active())
+					if (true == m_Cells[iNeighborIndex]->Get_MoveEnable())
 					m_iCurrentIndex = iNeighborIndex;
-					//else
-					//	return false;
+					else
+						return false;
 
 					break;
 				}
@@ -444,6 +456,22 @@ _float CNavigation::Compute_CCW(_float3 vPointA, _float3 vPointB, _float3 vPoint
 	return vNormalY;
 }
 
+void CNavigation::Set_MoveEnableForCellIndex(_int iEnableCellIndex)
+{
+	if(true == m_Cells.empty() || m_Cells.size() <= iEnableCellIndex)
+		return;
+
+	m_Cells[iEnableCellIndex]->Set_MoveEnable(true);
+}
+
+void CNavigation::Set_MoveUnEnableForCellIndex(_int iUnEnableCellIndex)
+{
+	if (true == m_Cells.empty() || m_Cells.size() <= iUnEnableCellIndex)
+		return;
+
+	m_Cells[iUnEnableCellIndex]->Set_MoveEnable(false);
+}
+
 void CNavigation::InRangeCellChange(CCell* pCell, _int ePoint, _float3 vSearchPos)
 {
 	_float3 originPoint = *pCell->Get_Point(CCell::POINT(ePoint));
@@ -513,6 +541,17 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 		}
 	}
 
+	return -1;
+}
+
+_uint CNavigation::Find_CurrentCellIndex(const _vector& vPos)
+{
+	_uint iSize = (_uint)m_Cells.size();
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		if (m_Cells[i]->Check_CurrentCell(vPos))
+			return i;
+	}
 	return -1;
 }
 

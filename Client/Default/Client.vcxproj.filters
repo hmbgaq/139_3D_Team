@@ -3931,6 +3931,39 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile">
       <UniqueIdentifier>{6109841c-8165-4a1d-a04b-5241426aa06d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\05. DestructableProps">
+      <UniqueIdentifier>{7ab782d4-30e6-4bf9-b2d3-7f1e6cf54e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05. DestructableProps\1. TNTCrate">
+      <UniqueIdentifier>{01552647-fdf1-433e-aca1-ab93fa3a401d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05. DestructableProps\1. TNTCrate\Projectile">
+      <UniqueIdentifier>{f0c335d1-4928-4f2d-a73f-1947c0c5755e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05. DestructableProps\2. TNTPack">
+      <UniqueIdentifier>{b9b88303-e8da-4664-a8bf-4fade84bd4d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05. DestructableProps\2. TNTPack\Projectile">
+      <UniqueIdentifier>{437efaea-e026-4097-aa98-038f08ebcc19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test">
+      <UniqueIdentifier>{15ac04d5-eb01-420f-bca6-ee3ee75a9d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts">
+      <UniqueIdentifier>{8d88110b-9015-4b72-8895-420d991ffc62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Body">
+      <UniqueIdentifier>{ae085884-d382-4d38-a786-6f8b07e5917a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Weapon">
+      <UniqueIdentifier>{7ba9e593-aec6-45c0-9cd6-e3c5bfc6be59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Weapon\HitPoint">
+      <UniqueIdentifier>{6d013c84-03fb-41f6-9676-662b25b97c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Weapon\Cargo">
+      <UniqueIdentifier>{3f62b169-75d8-4d0f-b6f8-b0e3dacb23d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7725,6 +7758,33 @@
     <ClInclude Include="..\Public\MotherShakeTreeProjectile.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Explosion_TNTCrate.h">
+      <Filter>02.GameObjects\05. DestructableProps\1. TNTCrate\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DestructableProp.h">
+      <Filter>02.GameObjects\05. DestructableProps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TNTCrate.h">
+      <Filter>02.GameObjects\05. DestructableProps\1. TNTCrate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TNTPack.h">
+      <Filter>02.GameObjects\05. DestructableProps\2. TNTPack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Explosion_TNTPack.h">
+      <Filter>02.GameObjects\05. DestructableProps\2. TNTPack\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Crane.h">
+      <Filter>02.GameObjects\96. Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HitPoint_Crane.h">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\HitPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cargo_Crane.h">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\Cargo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Crane.h">
+      <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10989,6 +11049,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion_TNTCrate.cpp">
+      <Filter>02.GameObjects\05. DestructableProps\1. TNTCrate\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TNTCrate.cpp">
+      <Filter>02.GameObjects\05. DestructableProps\1. TNTCrate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DestructableProp.cpp">
+      <Filter>02.GameObjects\05. DestructableProps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TNTPack.cpp">
+      <Filter>02.GameObjects\05. DestructableProps\2. TNTPack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion_TNTPack.cpp">
+      <Filter>02.GameObjects\05. DestructableProps\2. TNTPack\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Crane.cpp">
+      <Filter>02.GameObjects\96. Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitPoint_Crane.cpp">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\HitPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cargo_Crane.cpp">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\Cargo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Crane.cpp">
+      <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

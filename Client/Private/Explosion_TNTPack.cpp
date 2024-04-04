@@ -1,4 +1,4 @@
-#include "Explosion_Dynamite.h"
+#include "Explosion_TNTPack.h"
 #include "GameInstance.h"
 #include "Character.h"
 #include "Data_Manager.h"
@@ -10,17 +10,17 @@
 #include "Effect_Trail.h"
 
 
-CExplosion_Dynamite::CExplosion_Dynamite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CExplosion_TNTPack::CExplosion_TNTPack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
 {
 }
 
-CExplosion_Dynamite::CExplosion_Dynamite(const CExplosion_Dynamite& rhs)
+CExplosion_TNTPack::CExplosion_TNTPack(const CExplosion_TNTPack& rhs)
 	: CProjectile(rhs)
 {
 }
 
-HRESULT CExplosion_Dynamite::Initialize_Prototype()
+HRESULT CExplosion_TNTPack::Initialize_Prototype()
 {
 
 	if (FAILED(__super::Initialize_Prototype()))
@@ -29,7 +29,7 @@ HRESULT CExplosion_Dynamite::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CExplosion_Dynamite::Initialize(void* pArg)
+HRESULT CExplosion_TNTPack::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
@@ -41,7 +41,7 @@ HRESULT CExplosion_Dynamite::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 50.f;
+	m_fDamage = 20.f;
 
 	m_fLifeTime = 2.f;
 
@@ -51,12 +51,12 @@ HRESULT CExplosion_Dynamite::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CExplosion_Dynamite::Priority_Tick(_float fTimeDelta)
+void CExplosion_TNTPack::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 }
 
-void CExplosion_Dynamite::Tick(_float fTimeDelta)
+void CExplosion_TNTPack::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
@@ -64,13 +64,13 @@ void CExplosion_Dynamite::Tick(_float fTimeDelta)
 
 }
 
-void CExplosion_Dynamite::Late_Tick(_float fTimeDelta)
+void CExplosion_TNTPack::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
 }
 
-HRESULT CExplosion_Dynamite::Render()
+HRESULT CExplosion_TNTPack::Render()
 {
 	if (FAILED(__super::Render()))
 		return E_FAIL;
@@ -78,13 +78,13 @@ HRESULT CExplosion_Dynamite::Render()
 	return S_OK;
 }
 
-HRESULT CExplosion_Dynamite::Render_Shadow()
+HRESULT CExplosion_TNTPack::Render_Shadow()
 {
-	
+
 	return S_OK;
 }
 
-void CExplosion_Dynamite::OnCollisionEnter(CCollider* other)
+void CExplosion_TNTPack::OnCollisionEnter(CCollider* other)
 {
 
 
@@ -96,31 +96,26 @@ void CExplosion_Dynamite::OnCollisionEnter(CCollider* other)
 		m_fForce = 0.f;
 		if (nullptr != pTarget_Character)
 		{
-			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
-			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
-			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
+			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(Get_Position_Vector());
 			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+
 		}
 
-
 		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+
 	}
 
-	//Set_Dead(true);
-
-
-	//m_pEffect->Set_Dead(true);
 }
 
-void CExplosion_Dynamite::OnCollisionStay(CCollider* other)
+void CExplosion_TNTPack::OnCollisionStay(CCollider* other)
 {
 }
 
-void CExplosion_Dynamite::OnCollisionExit(CCollider* other)
+void CExplosion_TNTPack::OnCollisionExit(CCollider* other)
 {
 }
 
-HRESULT CExplosion_Dynamite::Ready_Components()
+HRESULT CExplosion_TNTPack::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
@@ -131,8 +126,8 @@ HRESULT CExplosion_Dynamite::Ready_Components()
 
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 5.0f };
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::EXPLOSION_ATTACK);
+	BoundingDesc.fRadius = { 1.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -147,38 +142,38 @@ HRESULT CExplosion_Dynamite::Ready_Components()
 	return S_OK;
 }
 
-CExplosion_Dynamite* CExplosion_Dynamite::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CExplosion_TNTPack* CExplosion_TNTPack::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CExplosion_Dynamite* pInstance = new CExplosion_Dynamite(pDevice, pContext, strPrototypeTag);
+	CExplosion_TNTPack* pInstance = new CExplosion_TNTPack(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CExplosion_Dynamite");
+		MSG_BOX("Failed to Created : CExplosion_TNTPack");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CExplosion_Dynamite::Clone(void* pArg)
+CGameObject* CExplosion_TNTPack::Clone(void* pArg)
 {
-	CExplosion_Dynamite* pInstance = new CExplosion_Dynamite(*this);
+	CExplosion_TNTPack* pInstance = new CExplosion_TNTPack(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CExplosion_Dynamite");
+		MSG_BOX("Failed to Cloned : CExplosion_TNTPack");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CExplosion_Dynamite::Pool()
+CGameObject* CExplosion_TNTPack::Pool()
 {
-	return new CExplosion_Dynamite(*this);
+	return new CExplosion_TNTPack(*this);
 }
 
-void CExplosion_Dynamite::Free()
+void CExplosion_TNTPack::Free()
 {
 	__super::Free();
 

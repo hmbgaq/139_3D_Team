@@ -158,8 +158,12 @@ public:
 	};
 
 	
+
 public:
 	void	 Add_Force(_vector In_vDir, _float In_fPower);
+
+public:
+	void	 Blocked(_vector In_vDir, _float In_fPower);
 
 public:
 	_float3& Get_AddRootMotion() { return m_vAddRootPosition; };

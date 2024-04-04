@@ -321,6 +321,9 @@
     <ClInclude Include="..\Public\Body_Bandit.h" />
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\Body_Crane.h" />
+    <ClInclude Include="..\Public\Cargo_Crane.h" />
+    <ClInclude Include="..\Public\HitPoint_Crane.h" />
     <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
     <ClInclude Include="..\Public\Body_Infected.h" />
@@ -346,8 +349,10 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Preset.h" />
     <ClInclude Include="..\Public\Clone_Manager.h" />
+    <ClInclude Include="..\Public\Crane.h" />
     <ClInclude Include="..\Public\CustomDialogFont.h" />
     <ClInclude Include="..\Public\Data_Manager.h" />
+    <ClInclude Include="..\Public\DestructableProp.h" />
     <ClInclude Include="..\Public\DevConsole.h" />
     <ClInclude Include="..\Public\Edgar.h" />
     <ClInclude Include="..\Public\Edgar_Cargo_01.h" />
@@ -423,6 +428,8 @@
     <ClInclude Include="..\Public\Event_MonsterSpawnTrigger.h" />
     <ClInclude Include="..\Public\Event_Trigger.h" />
     <ClInclude Include="..\Public\Explosion_Dynamite.h" />
+    <ClInclude Include="..\Public\Explosion_TNTCrate.h" />
+    <ClInclude Include="..\Public\Explosion_TNTPack.h" />
     <ClInclude Include="..\Public\Finisher_Tank.h" />
     <ClInclude Include="..\Public\Grid.h" />
     <ClInclude Include="..\Public\Environment_LightObject.h" />
@@ -1243,6 +1250,8 @@
     <ClInclude Include="..\Public\Tank_Walk_FL.h" />
     <ClInclude Include="..\Public\Tank_Walk_FR.h" />
     <ClInclude Include="..\Public\Tank_WhipHold.h" />
+    <ClInclude Include="..\Public\TNTCrate.h" />
+    <ClInclude Include="..\Public\TNTPack.h" />
     <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Collection_Button.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
@@ -1514,6 +1523,7 @@
     <ClCompile Include="..\Private\Body_Bandit.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Body_Crane.cpp" />
     <ClCompile Include="..\Private\Body_Edgar.cpp" />
     <ClCompile Include="..\Private\Body_Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
@@ -1534,10 +1544,13 @@
     <ClCompile Include="..\Private\Bullet_Teleport.cpp" />
     <ClCompile Include="..\Private\Bullet_Winchester.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
+    <ClCompile Include="..\Private\Cargo_Crane.cpp" />
     <ClCompile Include="..\Private\Character_Client.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
+    <ClCompile Include="..\Private\Crane.cpp" />
     <ClCompile Include="..\Private\CustomDialogFont.cpp" />
     <ClCompile Include="..\Private\Data_Manager.cpp" />
+    <ClCompile Include="..\Private\DestructableProp.cpp" />
     <ClCompile Include="..\Private\DevConsole.cpp" />
     <ClCompile Include="..\Private\Edgar.cpp" />
     <ClCompile Include="..\Private\Edgar_Cargo_01.cpp" />
@@ -1614,9 +1627,12 @@
     <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
     <ClCompile Include="..\Private\Explosion_Dynamite.cpp" />
+    <ClCompile Include="..\Private\Explosion_TNTCrate.cpp" />
+    <ClCompile Include="..\Private\Explosion_TNTPack.cpp" />
     <ClCompile Include="..\Private\Finisher_Tank.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Heavy_Vampiric_Zombie.cpp" />
+    <ClCompile Include="..\Private\HitPoint_Crane.cpp" />
     <ClCompile Include="..\Private\Impact_Slam.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />
@@ -2265,6 +2281,8 @@
     <ClCompile Include="..\Private\Tank_Walk_FL.cpp" />
     <ClCompile Include="..\Private\Tank_Walk_FR.cpp" />
     <ClCompile Include="..\Private\Tank_WhipHold.cpp" />
+    <ClCompile Include="..\Private\TNTCrate.cpp" />
+    <ClCompile Include="..\Private\TNTPack.cpp" />
     <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Collection_Button.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />

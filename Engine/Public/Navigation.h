@@ -45,11 +45,16 @@ public:
 	void					AllSearchDelete_IsNan();
 	_float					Compute_CCW(_float3 vPointA, _float3 vPointB, _float3 vPointC);
 
+
+	void					Set_MoveEnableForCellIndex(_int iEnableCellIndex);
+	void					Set_MoveUnEnableForCellIndex(_int iUnEnableCellIndex);
+
 public:
 	void					InRangeCellChange(class CCell* pCell, _int ePoint, _float3 vSearchPos);
 	_float					Compute_Height(_float3 vPosition, _Out_ _bool * pGround);
 	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject); // 
 
+	_uint					Find_CurrentCellIndex(const _vector& vPos);
 
 private:
 	vector<class CCell*>			m_Cells;

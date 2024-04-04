@@ -42,6 +42,7 @@
 
 #include "DebugDraw.h"
 #include "../../Reference/Public/DebugDraw.cpp"
+#include "Window_AnimTool.h"
 
 
 //#include "../../Reference/Public/dEBUG"
@@ -175,6 +176,29 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	
 	FieldWindowMenu(); //! 필드 창 보이기 감추기
 
+	if (ImGui::Button(u8"테스트버튼"))
+	{
+		CWindow_AnimTool* pAnimTool = dynamic_cast<CWindow_AnimTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_ANIMATIONTOOL_WINDOW));
+		pAnimTool->Call_SeungYongButton();
+
+		
+
+		string strFilePath = "..\\Bin\\DataFiles\\Data_Map";
+		string strFileName = "SnowMountainInteractNavi_MapData.json";
+		Load_Function(strFilePath, strFileName);
+		LoadNavi("..\\Bin\\DataFiles\\Navigation\\SnowMountainNavigation5.dat");
+		
+		if (nullptr != m_pGameInstance->Get_Player())
+		{
+			m_bCreateCamera = true;
+			m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+			m_pPlayer->Set_Navigation(m_pNavigation);
+		}
+
+		
+		
+	}
+
 	ImGui::EndChild();
 
 	CameraWindow_Function();
@@ -246,8 +270,8 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	if(m_bCreateCamera == false)
 		IsCreatePlayer_ReadyCamara();
 	
-
-	
+	if(m_pNavigation != nullptr)
+		m_pGameInstance->Add_DebugRender(m_pNavigation);
 }
 
 void CWindow_MapTool::Render()
@@ -371,13 +395,16 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 		}
 
 		json InteractJson = {};
+	
 
 		if (false == m_vecCreateInteractObject.empty())
-		{
+		{	
 			_int iCreateInteractObjectSize = (_int)m_vecCreateInteractObject.size();
 
 			for (_int i = 0; i < iCreateInteractObjectSize; ++i)
 			{
+				json UpdateCellJson = {};
+
 				CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
 
 				Desc = *m_vecCreateInteractObject[i]->Get_EnvironmentDesc();
@@ -411,6 +438,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("Arrival", Desc.bArrival);
 				InteractJson[i].emplace("Enable", Desc.bEnable);
 
+				
+
 				CJson_Utility::Write_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
 				CJson_Utility::Write_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
 				CJson_Utility::Write_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
@@ -422,6 +451,16 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				CJson_Utility::Write_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 				CJson_Utility::Write_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
 				m_vecCreateInteractObject[i]->Write_Json(InteractJson[i]);
+
+				vector<_int> vecUpdateCellIndexs = m_vecCreateInteractObject[i]->Get_UpdateCellIndexs();
+				_int iUpdateCellSize = vecUpdateCellIndexs.size();
+
+				for (_int i = 0; i < iUpdateCellSize; ++i)
+				{
+					UpdateCellJson[i].emplace("UpdateCellIndex", vecUpdateCellIndexs[i]);
+				}
+
+				InteractJson[i].emplace("UpdateCellJson", UpdateCellJson);
 			}
 
 		}
@@ -753,6 +792,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 		for (_int i = 0; i < InteractJsonSize; ++i)
 		{
+			
 			string IndexTag = "@" + to_string(i);
 
 			string pushObjectTag = string(InteractJson[i]["ObjectTag"]) + IndexTag;
@@ -775,8 +815,18 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bLevelChange = InteractJson[i]["LevelChange"];
 			//Desc.bLevelChange = false;
 			Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
-			//Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 			
+			//Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+			Desc.bEnable = InteractJson[i]["Enable"];
+			Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
+			Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
+			Desc.bOffset = InteractJson[i]["Offset"];
+			Desc.bOwner = InteractJson[i]["Owner"];
+			Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
+			Desc.bRotate = InteractJson[i]["Rotate"];
+			Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
+			Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+			Desc.bArrival = InteractJson[i]["Arrival"];
 			
 
 			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
@@ -784,6 +834,13 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+
+			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+
+			CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
+			CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
+			CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
 				
 			const json& TransformJson = InteractJson[i]["Component"]["Transform"];
 			_float4x4 WorldMatrix;
@@ -799,6 +856,15 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 			Desc.WorldMatrix = WorldMatrix;
 
+			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+			_int iUpdateCellJsonSize = UpdateCellJson.size();
+
+			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+			{
+				Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+			}
+			
+			
 			CEnvironment_Interact* pObject = { nullptr };
 
 			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
@@ -806,6 +872,46 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			m_vecCreateInteractObject.push_back(pObject);
 			m_vecCreateInteractIndex++;
 		}
+		
+		_int iInteractObjectSize = (_int)m_vecCreateInteractObject.size();
+
+		CEnvironment_Interact* pOwnerObject = nullptr;
+
+		for (_int i = 0; i < iInteractObjectSize; ++i)
+		{
+			CEnvironment_Interact* pSearchObject = m_vecCreateInteractObject[i];
+			CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC FindInteractInfo = *pSearchObject->Get_EnvironmentDesc();
+
+			if (FindInteractInfo.bOwner == true)
+			{
+				pOwnerObject = pSearchObject;
+			}
+
+			if (pOwnerObject != nullptr)
+			{
+				CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC OwnerInteractInfo = *pOwnerObject->Get_EnvironmentDesc();
+
+				for (_int j = 0; j < iInteractObjectSize; ++j)
+				{
+					CEnvironment_Interact* pSearchObject = m_vecCreateInteractObject[j];
+					CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC FindInteractInfo = *pSearchObject->Get_EnvironmentDesc();
+
+					if (FindInteractInfo.bOwner == false && FindInteractInfo.iInteractGroupIndex == OwnerInteractInfo.iInteractGroupIndex)
+					{
+						pSearchObject->Set_OwnerObject(pOwnerObject);
+					}
+				}
+			}
+			
+		}
+
+
+
+
+		//if (pOwnerObject == nullptr)
+		//	MSG_BOX("오너를 찾지 못했습니다.");
+		//else
+		//	m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_OwnerObject(pOwnerObject);
 
 		json InstanceJson = LoadJson["Instance_Json"];
 		_int InstanceJsonSize = (_int)InstanceJson.size();
@@ -3956,6 +4062,11 @@ void CWindow_MapTool::Interact_RotationFunction()
 	{
 		pInteractObject->Set_RotationSpeed(m_tSelectInteractDesc.fRotationSpeed);
 	}
+
+	if (ImGui::Button(u8"로테이션 리셋"))
+	{
+		pInteractObject->Reset_Rotate();
+	}
 	
 }
 
@@ -4671,12 +4782,16 @@ void CWindow_MapTool::Interact_NavigationFunction()
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck() && true == m_bPickingNaviMode)
 	{
-
 		_float3 fPickedPos = { 0.f, 0.f, 0.f };
 
-		if (true == pInteract->Picking(&fPickedPos))
+		if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
 		{
-			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), pInteract->Get_Transform()->Get_WorldMatrix());
+			fPickedPos = m_fRayPos;
+		}
+		else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+		{
+			fPickedPos = m_fMeshPos;
+		}
 
 			Find_NearPointPos(&fPickedPos);
 			m_vecPickedPoints.push_back(fPickedPos);
@@ -4684,7 +4799,7 @@ void CWindow_MapTool::Interact_NavigationFunction()
 			++m_iCurrentPickingIndex;
 			++m_iNaviPickingIndex;
 			m_fNaviPickingPos = fPickedPos;
-		}
+		
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_H))
@@ -5796,7 +5911,14 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 
-	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+	{
+		
+	}
+	else
+	{
+		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 
 		_uint iEnvironmentSize = (_uint)m_vecCreateObject.size();
 
@@ -5817,7 +5939,9 @@ void CWindow_MapTool::Navigation_CreateTab()
 			ImGui::EndListBox();
 		}
 
-	ImGui::EndChild();
+		ImGui::EndChild();
+	}
+	
 
 	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
 
@@ -5895,7 +6019,6 @@ void CWindow_MapTool::Navigation_CreateTab()
 		for (_int i = 0; i < iPickedSize; ++i)
 		{
 			fPoints.push_back(m_vecPickedPoints[i].x);
-
 			fPoints.push_back(m_vecPickedPoints[i].z);
 		}
 
@@ -5919,6 +6042,8 @@ void CWindow_MapTool::Navigation_CreateTab()
 			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_pNavigation->Get_CellSize());
 
 			m_pNavigation->AddCell(pCell);
+			m_vecCells.push_back(pCell);
+			m_vecCellIndexs.push_back(to_string(m_pNavigation->Get_CellSize()));
 		}
 
 		Reset_NaviPicking();
@@ -5929,12 +6054,25 @@ void CWindow_MapTool::Navigation_CreateTab()
 	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck() && true == m_bPickingNaviMode)
 	{
 
-		_float3 fPickedPos = { 0.f, 0.f, 0.f };
-
-		if (true == m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
+		if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
 		{
-			fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
+			_float3 fPickedPos = { 0.f, 0.f, 0.f };
 
+			if (true == m_vecCreateObject[m_iNavigationTargetIndex]->Picking(&fPickedPos))
+			{
+				fPickedPos = XMVector3TransformCoord(XMLoadFloat3(&fPickedPos), m_vecCreateObject[m_iNavigationTargetIndex]->Get_Transform()->Get_WorldMatrix());
+
+				Find_NearPointPos(&fPickedPos);
+				m_vecPickedPoints.push_back(fPickedPos);
+				m_vecPickingListBox.push_back(to_string(m_iNaviPickingIndex));
+				++m_iCurrentPickingIndex;
+				++m_iNaviPickingIndex;
+				m_fNaviPickingPos = fPickedPos;
+			}
+		}
+		else if(m_pField != nullptr )
+		{
+			_float3 fPickedPos = m_fRayPos;
 			Find_NearPointPos(&fPickedPos);
 			m_vecPickedPoints.push_back(fPickedPos);
 			m_vecPickingListBox.push_back(to_string(m_iNaviPickingIndex));
@@ -5942,6 +6080,8 @@ void CWindow_MapTool::Navigation_CreateTab()
 			++m_iNaviPickingIndex;
 			m_fNaviPickingPos = fPickedPos;
 		}
+
+		
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_H))
@@ -5996,7 +6136,11 @@ void CWindow_MapTool::Navigation_SelectTab()
 	//}
 
 
+	
+	
 	_int iCellSize = (_int)m_vecCellIndexs.size();
+
+	
 
 	if (nullptr != m_pNavigation && false == m_vecCells.empty())
 	{
@@ -8933,6 +9077,7 @@ void CWindow_MapTool::Interact_SelectTab()
 				"INTERACT_WHIPSWING",
 				"INTERACT_WHIPPULL",
 				"INTERACT_ROTATIONVALVE",
+				"INTERACT_NONE",
 			};
 			const char* InteractPreviewType = InteractTypes[m_eInteractType];
 
@@ -9083,12 +9228,6 @@ void CWindow_MapTool::Interact_SelectTab()
 				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_Navigation(m_pNavigation);
 			}
 
-
-			
-
-			
-
-			
 			
 		}
 

@@ -46,8 +46,6 @@
 #include "Player_Weapon_Crossbow.h"
 #include "Player_Weapon_CripplingRod.h"
 
-
-
 #include "Bullet_Winchester.h"
 #include "Bullet_Revolver.h"
 #include "Bullet_ELShotgun.h"
@@ -55,8 +53,22 @@
 #include "Explosion_Dynamite.h"
 #include "Bullet_Teleport.h"
 
+
 #include "Impact_Slam.h"
 #pragma endregion
+
+#pragma region DESTRUCTABLE PROPS
+#include "TNTCrate.h"
+#include "TNTPack.h"
+#include "Explosion_TNTCrate.h"
+#include "Explosion_TNTPack.h"
+
+#include "Body_Crane.h"
+#include "Cargo_Crane.h"
+#include "HitPoint_Crane.h"
+#include "Crane.h"
+#pragma endregion
+
 
 #pragma region VampireCommander
 #include "VampireCommander.h"
@@ -77,6 +89,7 @@
 #include "Mother_Egg.h"
 #include "MotherVomit.h"
 #include "Son_Projectile.h"
+#include "MotherShakeTreeProjectile.h"
 #pragma endregion
 
 #pragma region INFECTED
@@ -621,7 +634,7 @@ HRESULT CLoader::Loading_For_SnowMountain_Level()
 	Ready_Environment_Model(LEVEL_SNOWMOUNTAIN);
 
 	lstrcpy(m_szLoadingText, TEXT("네비게이션를(을) 로드하는 중입니다."));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/IntroBossNaviFinal.dat"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/SnowMountainNavigation5.dat"))));
 
 	_matrix      PivotMatrix;
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
@@ -688,7 +701,7 @@ HRESULT CLoader::Loading_For_SnowMountainBoss_Level()
 	Ready_Environment_Model(LEVEL_SNOWMOUNTAINBOSS);
 
 	lstrcpy(m_szLoadingText, TEXT("네비게이션를(을) 로드하는 중입니다."));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/SnowMountainBossNavi25.dat"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Navigation"), CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Data_Map/Navigation/SnowMountainBossNavi.dat"))));
 
 	_matrix      PivotMatrix;
 
@@ -771,9 +784,9 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_VampireCommander"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/VampireCommander/VampireCommander", PivotMatrix)));
 	//TODO Parasiter
 	// 
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Mother/Mother", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_MotherMouth"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/MotherMouth/MotherMouth", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Mother/Mother", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_MotherMouth"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/MotherMouth/MotherMouth", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix))); 
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
@@ -890,6 +903,12 @@ HRESULT CLoader::Loading_Player(LEVEL eLEVEL)
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Edgar"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/NPC/Edgar/Edgar", PivotMatrix)));
 
+	//임시
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_TNTCrate"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Map/Stage1/NonAnim/Destructables/TNTCrate/TNTCrate", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_TNTPack"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Map/Stage1/NonAnim/Destructables/TNTPack/TNTPack", PivotMatrix)));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Crane"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Map/Stage1/Anim/Interact/Crane/Crane", PivotMatrix)));
+
+
 	return S_OK;
 }
 
@@ -899,8 +918,8 @@ HRESULT CLoader::Loading_For_Shader(LEVEL eLevel)
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Texture_Shader_Dissolve"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Dissolve/dissolve_tex.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Texture_Shader_IcarusRAD"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Icarus/RAD.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Texture_Shader_IceNoise"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Icicle/T_Ice_Noise.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Icicle/Temp2.dds"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Icicle/T_Ice_Diffuse.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Icicle/Temp2.dds"))));
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Texture_Shader_IceDiffuse"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/Icicle/T_Ice_Diffuse.dds"))));
 	
 	/* Shader */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, TEXT("Prototype_Component_Shader_Model"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Model.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements)));
@@ -947,6 +966,7 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_Dynamite"), CExplosion_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_Dynamite"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Teleport"), CBullet_Teleport::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Teleport"))));
 
+	
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Impact_Slam"), CImpact_Slam::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Impact_Slam"))));
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Weapon_Player"), CWeapon_Player::Create(m_pDevice, m_pContext)));
@@ -1042,6 +1062,21 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_LightObject"), CEnvironment_LightObject::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Environment_LightObject"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_SpecialObject"), CEnvironment_SpecialObject::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Environment_SpecialObject"))));
 	
+
+	//! 파괴 가능한 환경
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DestructableProps_TNTCrate"), CTNTCrate::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DestructableProps_TNTPack"), CTNTPack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DestructableProps_TNTPack"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_TNTCrate"), CExplosion_TNTCrate::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_TNTCrate"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_TNTPack"), CExplosion_TNTPack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_TNTPack"))));
+	
+	//! 테스트
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Crane"), CBody_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cargo_Crane"), CCargo_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Cargo_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HitPoint_Crane"), CHitPoint_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_HitPoint_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Crane"), CCrane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Crane"))));
+
+
+
 	//!성희
 	Ready_UI_Origin();
 
