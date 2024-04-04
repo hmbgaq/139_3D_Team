@@ -75,7 +75,9 @@ void CBody::Late_Tick(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
 
-	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
+	Check_Frustum();
+
+	if (true == m_bIsInFrustum)
 	{
 		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
 
@@ -346,6 +348,11 @@ void CBody::Reset_UpperAngle(_float fPitch)
 _uint CBody::Get_CurrentKeyFrames(_uint iIndex)
 {
 	return m_pModelCom->Get_CurrentKeyFrames(iIndex);
+}
+
+void CBody::Check_Frustum()
+{
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
 HRESULT CBody::Bind_ShaderResources()

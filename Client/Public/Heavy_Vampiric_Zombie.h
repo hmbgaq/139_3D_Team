@@ -25,7 +25,7 @@ public:
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
-
+	virtual void Check_Frustum() override;
 public:
 	static CHeavy_Vampiric_Zombie* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

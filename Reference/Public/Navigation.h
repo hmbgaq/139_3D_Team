@@ -54,6 +54,7 @@ public:
 	_float					Compute_Height(_float3 vPosition, _Out_ _bool * pGround);
 	_int					Get_SelectRangeCellIndex(class CGameObject* pTargetObject); // 
 
+	_uint					Find_CurrentCellIndex(const _vector& vPos);
 
 private:
 	vector<class CCell*>			m_Cells;

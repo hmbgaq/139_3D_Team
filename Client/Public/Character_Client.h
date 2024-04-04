@@ -63,8 +63,6 @@ protected:
 	CEffect_Manager* m_pEffectManager = { nullptr };
 	CData_Manager* m_pDataManager = { nullptr };
 	CUI_Manager* m_pUIManager = { nullptr };
-
-
 };
 
 END

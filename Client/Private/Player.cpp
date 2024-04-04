@@ -148,7 +148,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
-	KeyInput(fTimeDelta);
+	if(m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
+		KeyInput(fTimeDelta);
 	
 	if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
 	{
@@ -159,24 +160,32 @@ void CPlayer::Tick(_float fTimeDelta)
 		
 		Update_ChargingTime(fTimeDelta);
 
-	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
+		CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
 		//if (m_pGameInstance->Key_Down(DIK_C))
 		//	m_fHp = 100;
+
+
+		if (m_pGameInstance->Key_Down(DIK_T))
+		{
+			Teleport();
+		}
+
+		//if (m_pGameInstance->Key_Down(DIK_V)) 
+		//{
+		//	SetState_InteractWhipSwing();
+		//	//SetState_InteractCartRideWagonJump();
+		//}
+
 	}
 
 
 	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
 	m_pDataManager->Set_ShowInterface(bIsNotIdle);
 	
-	
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
-
-	
-
-
 
 
 	//_float3 vPos = Get_Position();
@@ -236,9 +245,10 @@ void CPlayer::Set_Navigation(CNavigation* pNavigation)
 		Safe_Release(m_pNavigationCom);
 
 	m_pNavigationCom = pNavigation;
-	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Find_CurrentCellIndex(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION)));
+	//Set_InitPosition(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
+	
 	Safe_AddRef(pNavigation);
-
 	
 }
 
@@ -570,21 +580,29 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
-	/* ! UI : DiedScreen / Key : I */
-	if (m_pGameInstance->Key_Down(DIK_B))
+	/* ! UI : TestText / Key : 7 */
+	if (m_pGameInstance->Key_Down(DIK_7))
 	{
-		m_bShowDiedScreen = !m_bShowDiedScreen;
+		/* 함수 이름 직관적이게 바꿨습니다. */
 
-		if (m_bShowDiedScreen == true)
-		{
-			m_pUIManager->Active_DiedScreen();
-			m_pDataManager->Set_GameState(GAME_STATE::UI);
-		}
-		else
-		{
-			m_pUIManager->NonActive_DiedScreen();
-			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
-		}
+		// !성희 추가 : =>특정 스킬의 쿨타임을 찾아서 CurrentCoolTime을 수정하는 방법 2가지<=
+		//CUI* pUI = m_pUIManager->Get_LeftHUD("LeftHUD_Right"); // 1. 첫번째 방법 : UI객체 받아오는 법 (받아서 수정가능)
+		m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Right", 5.f); // 2. 두번째 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
+		
+		// !성희 추가 : =>특정 스킬의 쿨타임을 찾아서 MaxCoolTime을 수정하는 방법<=
+		m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f); // 2. 두번째 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
+	}
+	/* ! UI : TestText / Key : 8 */
+	if (m_pGameInstance->Key_Down(DIK_8))
+	{
+		m_pUIManager->Active_TutorialBox();
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::START);
+	}
+	/* ! UI : TestText / Key : 9 */
+	if (m_pGameInstance->Key_Down(DIK_9))
+	{
+		m_pUIManager->Active_TutorialBox();
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::PUNCH);
 	}
 
 	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */
@@ -618,6 +636,8 @@ HRESULT CPlayer::Ready_PartObjects()
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc,		PLAYER_WEAPON_WINCHESTER));
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_REVOLVER));
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELShotgun"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_SHOTGUN));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Dynamite"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_DYNAMITE));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Whip"), "RightInHandIndex", WeaponDesc,		PLAYER_WEAPON_WHIP));
 
 
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Kick"), "RightFoot", WeaponDesc,			PLAYER_WEAPON_KICK));
@@ -669,13 +689,37 @@ void CPlayer::Update_ChargingTime(_float fTimeDelta)
 	}
 }
 
-CGameObject* CPlayer::Slam()
+void CPlayer::Slam()
 {
 	CGameObject* pSlam = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Impact_Slam");
 	pSlam->Set_Position(Get_Position());
+}
+
+void CPlayer::Throw_Dynamite()
+{
+	CGameObject* pDynamite = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Dynamite");
 	
+	_float3 vSpawnPos = Get_Position();
+	vSpawnPos.y += 1.f;
 	
-	return nullptr;
+	_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 1.f, 1.f));
+	
+	pDynamite->Set_Position(vSpawnPos);
+	pDynamite->Get_Transform()->Look_At_OnLand(vTargetPos);
+
+}
+
+void CPlayer::Teleport()
+{
+	CGameObject* pTeleport = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Teleport");
+
+	_float3 vSpawnPos = Get_Position();
+	vSpawnPos.y += 1.f;
+
+	_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 1.f, 1.f));
+
+	pTeleport->Set_InitPosition(vSpawnPos);
+	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
 }
 
 void CPlayer::Hitted_Left(Power ePower)

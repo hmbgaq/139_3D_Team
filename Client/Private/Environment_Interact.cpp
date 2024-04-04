@@ -10,15 +10,22 @@
 #include "Cell.h"
 #include "Bounding_AABB.h"
 
+// !Add UI
+#include "UI_Manager.h"
+#include "UI_Interaction.h"
+
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
-	
+		Safe_AddRef(m_pUIManager);
 }
 
 CEnvironment_Interact::CEnvironment_Interact(const CEnvironment_Interact & rhs)
 	: CGameObject(rhs)
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
+	Safe_AddRef(m_pUIManager);
 }
 
 HRESULT CEnvironment_Interact::Initialize_Prototype()
@@ -78,6 +85,9 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 
 	FAILED_CHECK(Classification_Model());
 
+	// !UI Add UI_Interaction
+	Find_UI_For_InteractType();
+
 	return S_OK;
 }
 
@@ -106,6 +116,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 			Reset_TestEvent();
 	}
 
+	
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL && m_bFindPlayer == false)
 	{
@@ -124,13 +135,34 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		m_pModelCom->Play_Animation(fTimeDelta, true);
 	}
 
-	if (m_pColliderCom != nullptr)
-	{
-		m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
-	}
+	
+
 
 	if(m_bInteractEnable == true)
 		Interact();
+
+	if(m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == true && m_bExit == false)
+	{
+		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
+		{
+			UnEnable_UpdateCells();
+			//m_bExit = true;
+		}
+
+	}
+
+	// !UI Add UI_Interaction
+	if (m_bEnable == true)
+	{
+		if (m_pUI_Interaction != nullptr)
+		{
+			// 각 상호작용 객체에 맞게 vOffset 조절해줘야함.
+			m_pUI_Interaction->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix(), m_tEnvironmentDesc.vColliderCenter/*, vOffset*/); // 위치 갱신
+			m_pUI_Interaction->Set_OnInteraction(m_bInteract);	// 상호작용을 했는지
+		}
+	}
+		
+
 
 	if (m_bSpline == true)
 	{
@@ -158,6 +190,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		Move_For_PlayerRootMotion();
 	}
 
+	
 	//if (m_tEnvironmentDesc.bOwner == false && m_pOwnerInteract != nullptr)
 	//{
 	//	if (true == Check_OwnerEnablePosition())
@@ -193,6 +226,8 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 5.f))
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
+
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
@@ -466,466 +501,543 @@ void CEnvironment_Interact::Interact()
 	if(m_bFindPlayer == false)
 		return;
 	
+	if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
+	{
+		if (m_tEnvironmentDesc.bUseGravity == false)
+		{
+			m_pPlayer->Set_UseGravity(false);
+		}
+
+		// !UI Add
+		if (m_pUI_Interaction != nullptr)
+			m_pUI_Interaction->Set_OnCollision(true);	// 상호작용을 할 수 있는 범위에 들어왔는지 (Collision)
 
 		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP)
 		{
-			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()) )
+			switch (m_tEnvironmentDesc.eInteractType)
 			{
-				switch (m_tEnvironmentDesc.eInteractType)
+				case CEnvironment_Interact::INTERACT_JUMP100:
 				{
-					case CEnvironment_Interact::INTERACT_JUMP100:
+					//CPlayer::Player_State::Player_InteractionJumpDown100;
+
+
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 					{
-						//CPlayer::Player_State::Player_InteractionJumpDown100;
-
-
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractJumpDown100();
-						}
-						
-						break;
+						m_pPlayer->SetState_InteractJumpDown100();
 					}
 
-					case CEnvironment_Interact::INTERACT_JUMP200:
-					{
-						
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractJumpDown200();
-						}
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_JUMP300:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractJumpDown300();
-						}
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_VAULT100:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractVault100();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_VAULT200:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractVault200();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_WAGONPUSH:
-					{
-						_int iCurrentAnimIndex = m_pPlayer->Get_CurrentAnimIndex();
-
-						if (iCurrentAnimIndex != (_int)CPlayer::Player_State::Player_InteractionPush_Rock_Idle)
-						{
-							if (iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Run_F || iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Walk_F)
-								m_pPlayer->SetState_InteractionPush_Rock_Idle();
-						}
-
-						Enable_UpdateCells();
-						
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_WAGONJUMP:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractCartRideStart();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTEARCT_WAGONROPEJUMP:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractCartRideWagonJump();
-
-						break;
-					}
-					
-					case CEnvironment_Interact::INTERACT_CLIMB100:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb100();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_CLIMB200:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb200();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_CLIMB300:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb300();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_CLIMB450:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb450();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_SLIDE:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractSlide();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_LEVER:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractSmallLever();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_PLANK:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractPlankStart();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_ROPECLIMB:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimbRope();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_ROPEDOWN:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractRopeDown();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_DOOROPEN:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractDoorOpen();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_LADDERUP:
-					{
-						//m_tEnvironmentDesc.strModelTag
-
-
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractLadderUpStart();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_WHIPSWING:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractWhipSwing();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_WHIPPULL:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractWhipPull();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_ROTATIONVALVE:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractRotationValve();
-
-						break;
-					}
+					break;
 				}
 
-				if (m_tEnvironmentDesc.bUseGravity == false)
+				case CEnvironment_Interact::INTERACT_JUMP200:
 				{
-					m_pPlayer->Set_UseGravity(false);
+
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						m_pPlayer->SetState_InteractJumpDown200();
+					}
+
+					break;
 				}
 
-				if (m_bMove == true)
+				case CEnvironment_Interact::INTERACT_JUMP300:
 				{
-					m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
-				}
-				else
-				{
-					m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						m_pPlayer->SetState_InteractJumpDown300();
+					}
+
+					break;
 				}
 
-				//m_pPlayer->Set_Interection(true);
-				m_bInteract = true;
+				case CEnvironment_Interact::INTERACT_VAULT100:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractVault100();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_VAULT200:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractVault200();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_WAGONPUSH:
+				{
+					_int iCurrentAnimIndex = m_pPlayer->Get_CurrentAnimIndex();
+
+					if (iCurrentAnimIndex != (_int)CPlayer::Player_State::Player_InteractionPush_Rock_Idle)
+					{
+						if (iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Run_F || iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractionPush_Rock_Idle();
+					}
+
+
+
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_WAGONJUMP:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractCartRideStart();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTEARCT_WAGONROPEJUMP:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractCartRideWagonJump();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB100:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb100();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB200:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb200();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB300:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb300();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB450:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb450();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_SLIDE:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractSlide();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_LEVER:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractSmallLever();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_PLANK:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractPlankStart();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_ROPECLIMB:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimbRope();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_ROPEDOWN:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractRopeDown();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_DOOROPEN:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractDoorOpen();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_LADDERUP:
+				{
+					//m_tEnvironmentDesc.strModelTag
+
+
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractLadderUpStart();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_WHIPSWING:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractWhipSwing();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_WHIPPULL:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractWhipPull();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_ROTATIONVALVE:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractRotationValve();
+
+					break;
+				}
+			}
+
+			if (m_bMove == true)
+			{
+				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
 			}
 			else
 			{
-				if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
-				{
-					UnEnable_UpdateCells();
-				}
-
-				m_bInteract = false;
+				m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
 			}
-			
+
+			Enable_UpdateCells();
+			m_bInteract = true;
+
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
 		{
-			if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
+			switch (m_tEnvironmentDesc.eInteractType)
 			{
-				switch (m_tEnvironmentDesc.eInteractType)
+				case CEnvironment_Interact::INTERACT_JUMP100:
 				{
-					case CEnvironment_Interact::INTERACT_JUMP100:
+
+
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 					{
-
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractJumpDown100();
-						}
-
-						break;
+						m_pPlayer->SetState_InteractJumpDown100();
 					}
 
-					case CEnvironment_Interact::INTERACT_JUMP200:
-					{
-
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractJumpDown200();
-						}
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_JUMP300:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractJumpDown300();
-						}
-							
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_VAULT100:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractVault100();
-						}
-
-						break;
-					}
-						
-
-
-					case CEnvironment_Interact::INTERACT_VAULT200:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-						{
-							m_pPlayer->SetState_InteractVault200();
-							
-						}
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_WAGONPUSH:
-					{
-						_int iCurrentAnimIndex = m_pPlayer->Get_CurrentAnimIndex();
-
-						if (iCurrentAnimIndex != (_int)CPlayer::Player_State::Player_InteractionPush_Rock_Idle)
-						{
-							if (iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Run_F || iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Walk_F)
-								m_pPlayer->SetState_InteractionPush_Rock_Idle();
-						}
-
-					}
-
-					case CEnvironment_Interact::INTERACT_WAGONJUMP:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractCartRideStart();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTEARCT_WAGONROPEJUMP:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractCartRideWagonJump();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_CLIMB100:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb100();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_CLIMB200:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb200();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_CLIMB300:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb300();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_CLIMB450:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimb450();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_SLIDE:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractSlide();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_LEVER:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractSmallLever();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_PLANK:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractPlankStart();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_ROPECLIMB:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractClimbRope();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_ROPEDOWN:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractRopeDown();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_DOOROPEN:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractDoorOpen();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_LADDERUP:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractLadderUpStart();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_WHIPSWING:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractWhipSwing();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_WHIPPULL:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractWhipPull();
-
-						break;
-					}
-
-					case CEnvironment_Interact::INTERACT_ROTATIONVALVE:
-					{
-						if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
-							m_pPlayer->SetState_InteractRotationValve();
-
-						break;
-					}
+					break;
 				}
 
-				if (m_tEnvironmentDesc.bUseGravity == false)
+				case CEnvironment_Interact::INTERACT_JUMP200:
 				{
-					m_pPlayer->Set_UseGravity(false);
+
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						m_pPlayer->SetState_InteractJumpDown200();
+					}
+
+					break;
 				}
 
-				if (m_bMove == true)
-					m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
-				else
-					m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
-			
-				//m_pPlayer->Set_Interection(true);
-				m_bInteract = true;
+				case CEnvironment_Interact::INTERACT_JUMP300:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						m_pPlayer->SetState_InteractJumpDown300();
+					}
+
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_VAULT100:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						m_pPlayer->SetState_InteractVault100();
+					}
+
+					break;
+				}
+
+
+
+				case CEnvironment_Interact::INTERACT_VAULT200:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						m_pPlayer->SetState_InteractVault200();
+
+					}
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_WAGONPUSH:
+				{
+					_int iCurrentAnimIndex = m_pPlayer->Get_CurrentAnimIndex();
+
+					if (iCurrentAnimIndex != (_int)CPlayer::Player_State::Player_InteractionPush_Rock_Idle)
+					{
+						if (iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Run_F || iCurrentAnimIndex == (_int)CPlayer::Player_State::Player_Walk_F)
+							m_pPlayer->SetState_InteractionPush_Rock_Idle();
+					}
+
+				}
+
+				case CEnvironment_Interact::INTERACT_WAGONJUMP:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractCartRideStart();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTEARCT_WAGONROPEJUMP:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractCartRideWagonJump();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB100:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb100();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB200:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb200();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB300:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb300();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_CLIMB450:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimb450();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_SLIDE:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractSlide();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_LEVER:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractSmallLever();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_PLANK:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractPlankStart();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_ROPECLIMB:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractClimbRope();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_ROPEDOWN:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractRopeDown();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_DOOROPEN:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractDoorOpen();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_LADDERUP:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractLadderUpStart();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_WHIPSWING:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractWhipSwing();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_WHIPPULL:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractWhipPull();
+
+					break;
+				}
+
+				case CEnvironment_Interact::INTERACT_ROTATIONVALVE:
+				{
+					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+						m_pPlayer->SetState_InteractRotationValve();
+
+					break;
+				}
 			}
 
+			if (m_bMove == true)
+				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+			else
+				m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
+
+			//m_pPlayer->Set_Interection(true);
+
 			
-			if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true)
+			m_bInteract = true;
+		}
+
+		if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true)
+		{
+			if (m_pPlayer->Is_Inputable_Front(32) && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
 			{
-				if (m_pPlayer->Is_Inputable_Front(32) && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
-				{
-					m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-					m_bInteract = false;
-				}
+				m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+				m_bInteract = false;
 			}
-		}	
+		}
+	}
+	else
+	{
+		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP)
+		{
+			UnEnable_UpdateCells();
+			m_bInteract = false;
+
+
+			// !UI Add
+			if (m_pUI_Interaction != nullptr)
+			{
+				m_pUI_Interaction->Set_OnCollision(false);	// 상호작용을 할 수 있는 범위에서 나갔는지 (Collision)
+				m_pUI_Interaction->Reset_Interaction_UI();	// 나가면서 UI 리셋
+			}
+		}
+		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false) 
+		{
+			Enable_UpdateCells();
+
+
+		}
+	}
+		
+}
+
+HRESULT CEnvironment_Interact::Find_UI_For_InteractType()
+{
+	// !Add UI
+	switch (m_tEnvironmentDesc.eInteractType)
+	{
+	case Client::CEnvironment_Interact::INTERACT_VAULT100:
+	case Client::CEnvironment_Interact::INTERACT_VAULT200:
+	case Client::CEnvironment_Interact::INTERACT_WAGONJUMP:
+		// Interaction_Icon_vault
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Vault", "Interaction_Icon_vault");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_WAGONEVENT: // 수레 타고가는거
+		break; // NO
+	case Client::CEnvironment_Interact::INTEARCT_WAGONROPEJUMP: // 수레 액션
+		break; // No
+	case Client::CEnvironment_Interact::INTERACT_CLIMB100:
+	case Client::CEnvironment_Interact::INTERACT_CLIMB200:
+	case Client::CEnvironment_Interact::INTERACT_CLIMB300:
+	case Client::CEnvironment_Interact::INTERACT_CLIMB450:
+		// Interaction_Icon_sqeese
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Sqeese", "Interaction_Icon_sqeese");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_WAGONPUSH:
+	case Client::CEnvironment_Interact::INTERACT_LEVER:
+		// Interaction_Icon_Generic
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Generic", "Interaction_Icon_Generic");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_JUMP100:
+	case Client::CEnvironment_Interact::INTERACT_JUMP200:
+	case Client::CEnvironment_Interact::INTERACT_JUMP300:
+	case Client::CEnvironment_Interact::INTERACT_PLANK: // 사다리 : 올라가기만함 점프 UI로 통일
+	case Client::CEnvironment_Interact::INTERACT_ROPECLIMB:
+		// Interaction_Icon_jupm_up
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Jump_Up", "Interaction_Icon_jupm_up");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_SLIDE:
+	case Client::CEnvironment_Interact::INTERACT_ROPEDOWN:
+		// Interaction_Icon_jupm_down
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Jump_Down", "Interaction_Icon_jupm_down");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_DOOROPEN:
+		// interaction_icon_end-level
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "End_Level", "interaction_icon_end-level");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_LADDERUP:
+		// Interaction_Icon_ladder
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Ladder", "Interaction_Icon_ladder");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_WHIPSWING:
+	case Client::CEnvironment_Interact::INTERACT_WHIPPULL:
+		// Interaction_Icon_Whip
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Whip", "Interaction_Icon_Whip");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_ROTATIONVALVE:
+		// Interaction_Icon_parts
+		m_pUI_Interaction = m_pUIManager->Add_Interaction(m_pGameInstance->Get_NextLevel(), "Parts", "Interaction_Icon_parts");
+		break;
+	case Client::CEnvironment_Interact::INTERACT_END:
+		break;
+	default:
+		break;
+	}
+
+	return S_OK;
 }
 
 void CEnvironment_Interact::Move_For_PlayerRootMotion()
@@ -2161,6 +2273,9 @@ void CEnvironment_Interact::Free()
 	
 	if(m_pPlayer != nullptr)
 		Safe_Release(m_pPlayer);
+
+	if (m_pUIManager != nullptr)
+		Safe_Release(m_pUIManager);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);

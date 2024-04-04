@@ -5,7 +5,7 @@
 void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
-
+	pActor->Set_UseGravity(false);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true);
 	pActor->m_bLookAt = true;
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));

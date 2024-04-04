@@ -53,6 +53,7 @@ namespace Client
 		LOOP,
 		EXIT,
 		PLAYER_HUD,
+		TUTORIAL_BOX,
 		STATE_END
 	};
 
@@ -112,6 +113,21 @@ namespace Client
 		// PLAYER_EQUIPMENT_END
 
 		BUTTON_END
+	};
+
+	enum class TUTORIAL_TEXT // 튜토리얼 텍스트 번호
+	{
+		START,					//				시작
+		PUNCH,					//				스킬 1번
+		TUTORIALTEXT_END		//				End
+	};
+
+	enum class SKILLSTATE // 스킬 상태
+	{
+		LOCK,					//				
+		COOLDOWN,				//
+		ACTIVE,					//				
+		SKILL_END				//				
 	};
 #pragma endregion End
 

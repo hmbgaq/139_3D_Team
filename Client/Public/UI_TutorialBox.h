@@ -20,16 +20,26 @@ public:
 	virtual HRESULT			Render() override;
 
 	/* State */
-	virtual void	UI_Ready(_float fTimeDelta);
-	virtual void	UI_Enter(_float fTimeDelta);
-	virtual void	UI_Loop(_float fTimeDelta);
-	virtual void	UI_Exit(_float fTimeDelta);
+	virtual void			UI_Ready(_float fTimeDelta);
+	virtual void			UI_Enter(_float fTimeDelta);
+	virtual void			UI_Loop(_float fTimeDelta);
+	virtual void			UI_Exit(_float fTimeDelta);
 
 public:
 	virtual void			Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation) override;
 	//virtual TEXTINFO*		Find_Text(const string& strTextTag) override;
 	virtual HRESULT			Find_Change(const string& strTextTag) override;
 	//virtual void			Change_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor) override;
+
+public:
+	void					Change_TutorialMassege(_int iTextNum) 
+	{ 
+		if (0 > iTextNum || m_iMaxTextNum <= iTextNum)
+			return;
+
+		m_iTextNum = iTextNum; 
+	}
+	_int					Get_TutorialMassege() { return m_iTextNum; }
 
 private:
 	virtual HRESULT			Ready_Components() override;
@@ -39,6 +49,8 @@ private:
 private:
 	void					Compute_OwnerCamDistance();
 	_bool					In_Frustum();
+	_int					m_iTextNum = 0;
+	_int					m_iMaxTextNum = (_int)TUTORIAL_TEXT::TUTORIALTEXT_END;
 
 public:
 	virtual json			Save_Desc(json& out_json);

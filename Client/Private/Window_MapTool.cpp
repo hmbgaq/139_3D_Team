@@ -6042,6 +6042,8 @@ void CWindow_MapTool::Navigation_CreateTab()
 			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_pNavigation->Get_CellSize());
 
 			m_pNavigation->AddCell(pCell);
+			m_vecCells.push_back(pCell);
+			m_vecCellIndexs.push_back(to_string(m_pNavigation->Get_CellSize()));
 		}
 
 		Reset_NaviPicking();
@@ -6134,7 +6136,11 @@ void CWindow_MapTool::Navigation_SelectTab()
 	//}
 
 
+	
+	
 	_int iCellSize = (_int)m_vecCellIndexs.size();
+
+	
 
 	if (nullptr != m_pNavigation && false == m_vecCells.empty())
 	{

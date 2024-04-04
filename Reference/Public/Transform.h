@@ -127,7 +127,6 @@ public:
 	void	Go_Up(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void	Go_Down(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
-
 	void	Turn(_fvector vAxis, _float fTimeDelta);
 	void	Rotation(_fvector vAxis, _float fRadian);
 	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);

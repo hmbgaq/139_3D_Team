@@ -1,5 +1,6 @@
 #include "Mother_StunEnd.h"
 #include "Mother_ShakeTreeStart.h"
+#include "Mother_Dead.h"
 
 void CMother_StunEnd::Initialize(CMother* pActor)
 {
@@ -10,6 +11,9 @@ void CMother_StunEnd::Initialize(CMother* pActor)
 
 CState<CMother>* CMother_StunEnd::Update(CMother* pActor, _float fTimeDelta)
 {
+	if (pActor->Get_CurHP() <= 0.f)
+		return new CMother_Dead;
+
 	if (pActor->Is_Animation_End())
 	{
 		return new CMother_ShakeTreeStart;

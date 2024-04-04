@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Mother.h"
 #include "GameInstance.h"
 #include "Body_Mother.h"
@@ -15,11 +16,11 @@
 // #include "Mother_BloodRange_Stun_Start.h"
 // #include "Player_Finisher_Mother_VS.h"
 
-#include "UI_Manager.h"
-
+#include "UI.h"
 #include "Data_Manager.h"
 #include "Player.h"
 
+#include "UI_Manager.h"
 #include "Effect_Manager.h"
 #include "Effect.h"
 
@@ -39,6 +40,8 @@ HRESULT CMother::Initialize_Prototype()
 {
 	if (FAILED(__super::Initialize_Prototype()))
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -79,6 +82,8 @@ HRESULT CMother::Initialize(void* pArg)
 	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
 	Search_Target(200.f);
 
+
+	
 	return S_OK;
 }
 
@@ -211,6 +216,11 @@ void CMother::Hitted_Finish()
 void CMother::Hitted_Weakness()
 {
 	//m_pActor->Set_State(new CMother_BloodRange_Stun_Start());
+}
+
+void CMother::Check_Frustum()
+{
+	m_bIsInFrustum =true;
 }
 
 CMother* CMother::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

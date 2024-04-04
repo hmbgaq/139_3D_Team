@@ -1,10 +1,10 @@
 #pragma once
-#include "Player_State_FlameBelcher.h"
+#include "Player_State_Grenade.h"
 
 
 BEGIN(Client)
 
-class CPlayer_Grenade_Throw_v2 : public CPlayer_State_FlameBelcher
+class CPlayer_Grenade_Throw_v2 : public CPlayer_State_Grenade
 {
 public:
 	virtual void Initialize(CPlayer* pActor) override;

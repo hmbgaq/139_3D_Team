@@ -192,9 +192,10 @@ _bool CNavigation::isMove(_fvector vPosition)
 					
 					break;
 				}
+				else
+					return true;
+				
 			}
-
-			return true;
 		}
 		else
 			return false;
@@ -219,7 +220,7 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 	}
 
 	if (m_Cells[m_iCurrentIndex]->Get_MoveEnable() == false)
-		return false;
+ 		return false;
 
 	if (true == m_Cells[m_iCurrentIndex]->Is_Out(vPosition, vLook, XMLoadFloat4x4(&m_WorldMatrix), &iNeighborIndex, vOutSlidingDir))
 	{
@@ -540,6 +541,17 @@ _int CNavigation::Get_SelectRangeCellIndex(CGameObject* pTargetObject)
 		}
 	}
 
+	return -1;
+}
+
+_uint CNavigation::Find_CurrentCellIndex(const _vector& vPos)
+{
+	_uint iSize = (_uint)m_Cells.size();
+	for (_uint i = 0; i < iSize; ++i)
+	{
+		if (m_Cells[i]->Check_CurrentCell(vPos))
+			return i;
+	}
 	return -1;
 }
 

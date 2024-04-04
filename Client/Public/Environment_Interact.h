@@ -10,7 +10,11 @@ class CCollider;
 class CNavigation;
 END
 
+// !Add Interaction UI
+class CUI_Interaction;
+
 BEGIN(Client)
+class CUI_Manager;
 
 class CEnvironment_Interact final : public CGameObject
 {
@@ -88,6 +92,7 @@ public:
 		_bool			bEnable = false; //! 활성화 시킬 위치가 있는 상호작용일 경우
 
 		vector<_int>	vecUpdateCellIndex; //! 활성화, 비활성화 시킬 셀들의 인덱스
+		
 
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
@@ -164,6 +169,8 @@ public:
 
 
 public:	//! For Public
+	HRESULT								Find_UI_For_InteractType();
+
 	void								Move_For_PlayerRootMotion(); //! 플레이어의 애니메이션 움직임에 맞춰서 이동
 	void								Move_For_Offset(); //! 특저 오브젝트의 위치(오프셋)기준으로 같이 이동
 	void								Move_For_PlayerOffset();
@@ -299,6 +306,8 @@ private:
 	_bool								m_bArrival = false;
 	_bool								m_bMove = true;
 	
+	
+	_bool								m_bExit = false; 
 
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;
 	vector<string>						m_vecInteractGroupTag; //! 툴 또는 디버깅용
@@ -310,6 +319,9 @@ private:
 private:
 	CPlayer*						    m_pPlayer = { nullptr };
 
+	// !성희 추가
+	CUI_Manager*						m_pUIManager = { nullptr };
+	CUI_Interaction*					m_pUI_Interaction = { nullptr };
 
 private:
 	HRESULT						Ready_Components();

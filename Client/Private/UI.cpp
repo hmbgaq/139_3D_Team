@@ -110,8 +110,8 @@ void CUI::Priority_Tick(_float fTimeDelta)
 
 void CUI::Tick(_float fTimeDelta)
 {
-	//if (m_bTool && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
-	//	m_bActive = m_bTool;
+	//if (m_bTool == true && m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL::LEVEL_TOOL)
+	//	return;
 	
 	/* World or Orthogonal */
 	//Check_Change_WorldUI(fTimeDelta);
@@ -146,6 +146,9 @@ void CUI::Tick(_float fTimeDelta)
 			break;
 		case Client::UISTATE::PLAYER_HUD:
 			Player_HUD(fTimeDelta);
+			break;
+		case Client::UISTATE::TUTORIAL_BOX:
+
 			break;
 		case Client::UISTATE::STATE_END:
 			break;
@@ -265,15 +268,16 @@ HRESULT CUI::Ready_Components()
 
 HRESULT CUI::Bind_ShaderResources()
 {
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &m_tUIInfo.vColor, sizeof(_float4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tUIInfo.eColorMode, sizeof(_int))))
-		return E_FAIL;
-
 	if (m_tUIInfo.bDistortionUI == false) // Distortion을 사용 안하는 UI일 경우
 		return S_OK;
+
+	_float4 vColor = m_tUIInfo.vColor;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor_Mul", &vColor, sizeof(_float4))))
+		return E_FAIL;
+
+	_int iColorMode = (_int)m_tUIInfo.eColorMode;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iColorMode", &iColorMode, sizeof(_int))))
+		return E_FAIL;
 
 	if (FAILED(m_pDistortionCom[MASK]->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture", m_iMaskNum)))
 		return E_FAIL;
@@ -553,7 +557,17 @@ void CUI::Parts_Delete()
 	}
 }
 
-void CUI::LifeTime(_float fTimeDelta)
+_float CUI::Check_CamToTarget_Distance(_vector vTargetPos)
+{
+	_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+	_float		fDistance = 0.0f;
+
+	fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vCamPosition));
+
+	return fDistance;
+}
+
+void CUI::LifeOff(_float fTimeDelta)
 {
 	/* LifeTime이 있는 UI일 경우 */
 	if (m_bLifeTimeUI == true)
@@ -565,6 +579,15 @@ void CUI::LifeTime(_float fTimeDelta)
 			//m_fTime = GetTickCount64();
 		}
 	}
+}
+
+void CUI::LifeOn(_float fTimeDelta)
+{
+	Set_Alpha(0.f);			// UI 알파값 초기화
+	Set_Active(true);		// UI 활성화
+	Set_AnimPlay(true);		// UI Animation 재생
+	Set_Disappear(false);	// UI 사라짐 Off
+	ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
 }
 
 void CUI::ResetTime()
@@ -776,19 +799,29 @@ void CUI::SetUp_PositionToScreen(_fvector vWorldPos)
 }
 
 //				TargetWorld => Screen
-void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
+void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 {
 	_vector vTargetPos = {};
 	_float4 vViewPort = {};
 
-	
-	matTargetWorld = matWorld;
+	matTargetWorld = matWorldPos;
 
 	vTargetPos = XMVectorSet(
-							 matTargetWorld.r[3].m128_f32[0] + vOffsetPos.x,
-							 matTargetWorld.r[3].m128_f32[1] + vOffsetPos.y,
-							 matTargetWorld.r[3].m128_f32[2] + vOffsetPos.z,
-							 1.0f);
+		matTargetWorld.r[3].m128_f32[0] + vOffsetPos.x,
+		matTargetWorld.r[3].m128_f32[1] + vOffsetPos.y,
+		matTargetWorld.r[3].m128_f32[2] + vOffsetPos.z,
+		1.0f);
+
+	/* Distance Check */
+	m_fTarget_Distance = Check_CamToTarget_Distance(vTargetPos);
+	if (m_fTarget_Distance >= m_fActive_Distance)
+	{
+		m_bActive = false;
+		return;
+	}
+	else
+		m_bActive = true;
+
 
 	//// z 값 계산
 	//float zDistance = matTargetWorld.r[3].m128_f32[2];
@@ -811,7 +844,7 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
 	_int iWinHalfX = (g_iWinSizeX >> 1);
 	_int iWinHalfY = (g_iWinSizeY >> 1);
 
-	m_bActive = m_pGameInstance->isIn_WorldPlanes(vTargetPos, 5.f);
+	//m_bActive = m_pGameInstance->isIn_WorldPlanes(vTargetPos, 5.f);
 
 	//_vector vRight = XMVector3Cross(m_pGameInstance->Get_CamDirection(), XMVectorSet(0.f, 1.f, 0.f, 0.f));
 
@@ -825,49 +858,67 @@ void CUI::SetUp_WorldToScreen(_matrix matWorld, _float3 vOffsetPos)
 	//	m_bActive = true;
 	//}
 
-	//if (m_fWorldToScreenX < -(_float)iWinHalfX)
-	//{
-	//	if (m_fWorldToScreenX < -((_float)iWinHalfX + m_fScreenOffsetX))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
+	if (m_fWorldToScreenX < -(_float)iWinHalfX)
+		//&& m_fWorldToScreenX > -(_float)2000.f)
+	{
+		if (m_fWorldToScreenX < -((_float)iWinHalfX + m_fScreenOffsetX))
+			m_bActive = false;
+		else
+			m_bActive = true;
 
-	//	m_fWorldToScreenX = -(_float)iWinHalfX;
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
-	//}
-	//if (m_fWorldToScreenX > (_float)iWinHalfX)
-	//{
-	//	if (m_fWorldToScreenX > ((_float)iWinHalfX + m_fScreenOffsetX))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
+		m_fWorldToScreenX = -(_float)iWinHalfX;
+		m_fWorldToScreenY = m_fPreScreenY;
 
-	//	m_fWorldToScreenX = (_float)iWinHalfX;
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
-	//}
-	//if (m_fWorldToScreenY < -(_float)iWinHalfY)
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	//else
 	//{
-	//	if (m_fWorldToScreenY < -((_float)iWinHalfY + m_fScreenOffsetY))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
-	//	m_fWorldToScreenY = -((_float)iWinHalfY);
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
+	//	m_fPreScreenY = m_fWorldToScreenY;
 	//}
-	//if (m_fWorldToScreenY > (_float)iWinHalfY)
-	//{
-	//	if (m_fWorldToScreenY > ((_float)iWinHalfY + m_fScreenOffsetY))
-	//		m_bActive = false;
-	//	else
-	//		m_bActive = true;
 
-	//	m_fWorldToScreenY = (_float)iWinHalfY;
-	//	//m_fWorldToScreenX = -300.f;
-	//	//m_fWorldToScreenY = -300.f;
+	if (m_fWorldToScreenX > (_float)iWinHalfX)
+		//&& m_fWorldToScreenX < (_float)2000.f)
+	{
+		if (m_fWorldToScreenX > ((_float)iWinHalfX + m_fScreenOffsetX))
+			m_bActive = false;
+		else
+			m_bActive = true;
+
+		m_fWorldToScreenX = (_float)iWinHalfX;
+		m_fWorldToScreenY = m_fPreScreenY;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+	//else
+	//{
+	//	m_fPreScreenY = m_fWorldToScreenY;
 	//}
+
+	if (m_fWorldToScreenY < -(_float)iWinHalfY)
+	{
+		if (m_fWorldToScreenY < -((_float)iWinHalfY + m_fScreenOffsetY))
+			m_bActive = false;
+		else
+			m_bActive = true;
+		m_fWorldToScreenY = -((_float)iWinHalfY);
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+
+	if (m_fWorldToScreenY > (_float)iWinHalfY)
+	{
+		if (m_fWorldToScreenY > ((_float)iWinHalfY + m_fScreenOffsetY))
+			m_bActive = false;
+		else
+			m_bActive = true;
+
+		m_fWorldToScreenY = (_float)iWinHalfY;
+		//m_fWorldToScreenX = -300.f;
+		//m_fWorldToScreenY = -300.f;
+	}
+
+	m_bActive = m_pTransformCom->Calc_FrontCheck(vTargetPos);
 
 	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
 
@@ -942,7 +993,20 @@ void CUI::Player_HUD(_float fTimeDelta)
 	}
 	else
 	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
-		LifeTime(fTimeDelta);
+		LifeOff(fTimeDelta);
+	}
+}
+
+void CUI::TutorialBox(_float fTimeDelta)
+{
+	/* LifeTime UI */
+	if (m_pData_Manager->Get_ShowInterface() == true)
+	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
+		LifeOn(fTimeDelta);
+	}
+	else
+	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
+		LifeOff(fTimeDelta);
 	}
 }
 
@@ -1043,6 +1107,7 @@ void CUI::Load_FromJson(const json& In_Json)
 
 		m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 	}
+
 	if (In_Json.contains("Distortion")) // 키가 있으면
 	{
 		if (In_Json["Distortion"].contains("TimeAcc")) // 키가 있으면
@@ -1104,6 +1169,8 @@ json CUI::Save_Desc(json& out_json)
 	//out_json["PositionZ"] = m_tUIInfo.fPositionZ;
 	//if (out_json.contains("Alpha")) // 키가 있으면
 		out_json["Alpha"] = m_tUIInfo.fAlpha;
+		out_json["AlphaTrue"] = m_tUIInfo.fAlphaTrue;
+
 	//if (out_json.contains("ObjectNum")) // 키가 있으면
 		out_json["ObjectNum"] = m_tUIInfo.iObjectNum;
 	//if (out_json.contains("ShaderNum")) // 키가 있으면
