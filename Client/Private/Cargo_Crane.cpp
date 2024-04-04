@@ -40,8 +40,8 @@ HRESULT CCargo_Crane::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.vExtents = _float3(1.0f, 1.0f, 1.0f);
-	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	BoundingDesc.vExtents = _float3(2.0f, 2.0f, 2.0f);
+	BoundingDesc.vCenter = _float3(0.f, -2.f, 0.f);
 
 	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc));
 

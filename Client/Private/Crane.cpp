@@ -6,12 +6,12 @@
 #include "Character.h"
 
 CCrane::CCrane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
-	:CCharacter(pDevice, pContext, strPrototypeTag)
+	:CCharacter_Client(pDevice, pContext, strPrototypeTag)
 {
 }
 
 CCrane::CCrane(const CCrane& rhs)
-	: CCharacter(rhs)
+	: CCharacter_Client(rhs)
 {
 }
 
@@ -24,9 +24,36 @@ HRESULT CCrane::Initialize_Prototype()
 
 HRESULT CCrane::Initialize(void* pArg)
 {
-	FAILED_CHECK(__super::Initialize(pArg));
+	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	//Ready_Components();
+	GameObjectDesc.fSpeedPerSec = 7.f;
+	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+
+	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
+
+	//m_bEnable = true;
+	//m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
+
+	//GAMEOBJECT_DESC		Desc = {};
+
+	//if (nullptr != pArg)
+	//	Desc = *(GAMEOBJECT_DESC*)pArg;
+
+	//m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, Desc.fSpeedPerSec, Desc.fRotationPerSec);
+	//NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
+
+	//if (nullptr != Find_Component(g_pTransformTag))
+	//	return E_FAIL;
+
+	//m_Components.emplace(g_pTransformTag, m_pTransformCom);
+
+	//Safe_AddRef(m_pTransformCom);
+
+
+	//FAILED_CHECK(Ready_Components());
+
+	//FAILED_CHECK(Ready_PartObjects());
+
 
 	return S_OK;
 }
@@ -126,8 +153,8 @@ HRESULT CCrane::Ready_PartObjects()
 	/* For. Weapon */
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Cargo_Crane"), "LeftHand", WeaponDesc, L"Cargo_Crane"));
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_HitPoint_Crane"), "RightHand", WeaponDesc, L"HitPoint_Crane"));
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Cargo_Crane"), "Cargo", WeaponDesc, L"Cargo_Crane"));
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_HitPoint_Crane"), "Wheel1", WeaponDesc, L"HitPoint_Crane"));
 	}
 
 	return S_OK;

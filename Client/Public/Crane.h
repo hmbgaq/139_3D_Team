@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "Character.h"
+#include "Character_Client.h"
 
 BEGIN(Engine)
 //class CShader;
@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-class CCrane : public CCharacter
+class CCrane : public CCharacter_Client
 {
 protected:
 	CCrane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

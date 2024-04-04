@@ -62,6 +62,10 @@
 #include "TNTPack.h"
 #include "Explosion_TNTCrate.h"
 #include "Explosion_TNTPack.h"
+
+#include "Body_Crane.h"
+#include "Cargo_Crane.h"
+#include "HitPoint_Crane.h"
 #include "Crane.h"
 #pragma endregion
 
@@ -1109,6 +1113,11 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DestructableProps_TNTPack"), CTNTPack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DestructableProps_TNTPack"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_TNTCrate"), CExplosion_TNTCrate::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_TNTCrate"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_TNTPack"), CExplosion_TNTPack::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_TNTPack"))));
+	
+	//! Å×½ºÆ®
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Crane"), CBody_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cargo_Crane"), CCargo_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Cargo_Crane"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HitPoint_Crane"), CHitPoint_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_HitPoint_Crane"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Crane"), CCrane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Crane"))));
 
 
