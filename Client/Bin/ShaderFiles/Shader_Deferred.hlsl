@@ -760,18 +760,18 @@ PS_OUT PS_MAIN_PBR_DEFERRED(PS_IN In)
     
     if (true == g_bShadow_Active)
     {
-        vector vPosition = mul(vWorldPos, g_LightViewMatrix);
-        vPosition = mul(vPosition, g_LightProjMatrix);
+        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
    
         float2 vUV = (float2) 0.0f;
    
-        vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
-        vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
+        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
    
         float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
    
-        if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-            ShadowColor = 0.8f;
+        if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
+            Out.vColor = Out.vColor * 0.8f;
     }
     
     // =====================
@@ -854,60 +854,56 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     // BRDF : Cook-Torrance Specular BRDF / Radiance 계산은 여기 함수 내부에서 처리할예정 
     float3 CT_BRDF = MY_BRDF_Irradiance(fRoughness, fMetallic, vAlbedo.rgb, F0, fAO, N, V, L, H);
     
-    // - 1. Shadow ---------------- 
-    float fResultShadow = 1.0f;
-    float ShadowColor = 1.f;
-    
-    if (true == g_bShadow_Active)
-    {
-        //vector vPosition = mul(vWorldPos, g_LightViewMatrix);
-        //vPosition = mul(vPosition, g_LightProjMatrix);
-        //
-        //float2 vUV = (float2) 0.0f;
-        //
-        //vUV.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
-        //vUV.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
-        //
-        //float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
-        //
-        //if (vPosition.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-        //    fResultShadow = 0.8f;
-        
-       float fDot = saturate(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal.xyz));
-       
-       float fNormalOffset = g_fBias;
-       
-       float fBias = max((fNormalOffset * 5.0f) * (1.0f - (fDot * -1.0f)), fNormalOffset);
-       vector vStaticPosition = mul(vWorldPos, g_StaticLightViewMatrix);
-       vStaticPosition = mul(vStaticPosition, g_LightProjMatrix);
-       
-       ShadowColor = PCF_StaticShadowCalculation_Cascade(vWorldPos, fBias, fViewZ);
-       
-       if (ShadowColor > 0.51f)
-       {
-       vector vDynamicPosition = mul(vWorldPos, g_LightViewMatrix);
-       vDynamicPosition = mul(vDynamicPosition, g_LightProjMatrix);
-       
-       float fShadow = PCF_ShadowCalculation(vDynamicPosition, fBias);
-       
-           fResultShadow = min(ShadowColor, fShadow);
-       }
-       else
-           fResultShadow = ShadowColor;
-       
-    }
-    else
-        fResultShadow = 1.f;
-    
-    // - 1. Fog ----------------
-    
     // - 3. Emissive ----------------
     float3 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord).rgb;
     vEmissive = pow(vEmissive, gamma);
     
-    Out.vColor.rgb = CT_BRDF * fResultShadow + vEmissive;
+    Out.vColor.rgb = CT_BRDF + vEmissive;
     Out.vColor.a = 1.f;
 	
+    // - 1. Shadow ---------------- 
+    float fResultShadow = 1.0f;
+    //float ShadowColor = 1.f;
+    
+   
+     vWorldPos = mul(vWorldPos, g_LightViewMatrix);
+     vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+   
+     float2 vUV = (float2) 0.0f;
+   
+     vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
+     vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
+   
+     float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
+   
+     if (vWorldPos.w - 0.3f > vLightDepth.x * g_LightFar) /* LightFar */ 
+         Out.vColor = Out.vColor * 0.8f;
+     
+    //float fDot = saturate(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal.xyz));
+    
+    //float fNormalOffset = g_fBias;
+    
+    //float fBias = max((fNormalOffset * 5.0f) * (1.0f - (fDot * -1.0f)), fNormalOffset);
+    //vector vStaticPosition = mul(vWorldPos, g_StaticLightViewMatrix);
+    //vStaticPosition = mul(vStaticPosition, g_LightProjMatrix);
+    
+    //ShadowColor = PCF_StaticShadowCalculation_Cascade(vWorldPos, fBias, fViewZ);
+    
+    //if (ShadowColor > 0.51f)
+    //{
+    //vector vDynamicPosition = mul(vWorldPos, g_LightViewMatrix);
+    //vDynamicPosition = mul(vDynamicPosition, g_LightProjMatrix);
+    
+    //float fShadow = PCF_ShadowCalculation(vDynamicPosition, fBias);
+    
+    //    fResultShadow = min(ShadowColor, fShadow);
+    //}
+    //else
+    //    fResultShadow = ShadowColor;
+
+    
+    // - 1. Fog ----------------
+    
     return Out;
 }
 /*=============================================================

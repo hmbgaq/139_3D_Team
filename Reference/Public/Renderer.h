@@ -52,7 +52,6 @@ private:
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
-	HRESULT Render_PBR();
 	HRESULT Render_MyPBR();
 	HRESULT Render_SSR();
 	HRESULT Render_Chroma();

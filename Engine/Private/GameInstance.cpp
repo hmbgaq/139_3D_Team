@@ -738,6 +738,7 @@ HRESULT CGameInstance::Add_MRT(const wstring & strMRTTag, const wstring & strTar
 HRESULT CGameInstance::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
 	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+
 	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, bClear);
 }
 

@@ -166,8 +166,13 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	}
 
 	/* 소영 보류 */
-	if(true == m_bRenderOutLine)
+	if (true == m_bRenderOutLine)
+	{
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
+	}
 }
 
 HRESULT CEnvironment_Interact::Render()
@@ -241,6 +246,7 @@ HRESULT CEnvironment_Interact::Render_Shadow()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
 		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
@@ -271,6 +277,22 @@ HRESULT CEnvironment_Interact::Render_OutLine()
 			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE_BLINK));
 			m_pModelCom->Render((_uint)i);
 		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CEnvironment_Interact::Render_CSM(_uint i)
+{
+	FAILED_CHECK(Bind_ShaderResources());	
+	
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		m_pShaderCom->Begin(3);
+		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;

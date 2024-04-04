@@ -34,17 +34,19 @@ namespace Engine
 
 		/* Point Light  */
 		_float4 vPosition = { 0.f, 0.f, 0.f, 0.f };
-		_float	 fRange = 0.f;
+		_float	fRange = 0.f;
+		_float  fIntensity = 0.f;
 
 		/* Spot Light  */
 		_float fCutOff = 0.f;
 		_float fOuterCutOff = 0.f;
-		_float fVolumetricStrength = 0.f;
 
 		/* Common */
 		_float4 vDiffuse = { 0.f, 0.f, 0.f, 0.f }; /* 반사될때 출력되는 주된 색 */
 		_float4 vAmbient = { 0.f, 0.f, 0.f, 0.f }; /* 광원의 확산위치와 무관하게 똑같은양으로 모든점에서 반사되는 색 */
 		_float4 vSpecular = { 0.f, 0.f, 0.f, 0.f }; /* 특정방향으로만 반사되는 색 */
+
+		_float4 vLightFlag = { 0.f, 0.f, 0.f, 0.f };
 
 	public:
 		unsigned int iLightIndex = unsigned int(-1);

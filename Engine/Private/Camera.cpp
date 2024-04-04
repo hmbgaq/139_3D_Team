@@ -85,8 +85,8 @@ void CCamera::Update_Cascade()
 	// Get the bounds for the shadow space
 
 	// 카메라의 역행렬과 시야각,화면비, 가까운 평면 Z,먼 평면 Z
-	_matrix matWorld = m_pTransformCom->Get_WorldMatrix();
-	_matrix matView = m_pTransformCom->Get_WorldMatrixInverse();
+	_float4x4 matWorld = m_pTransformCom->Get_WorldMatrix();
+	_float4x4 matView = m_pTransformCom->Get_WorldMatrixInverse();
 
 	//시야각을 이용하여 수직 시야각을 구함
 	_float tanHalfVFov = tanf(m_fFovy / 2.0f);
@@ -114,15 +114,15 @@ void CCamera::Update_Cascade()
 		_float4 frustumCorners[8] =
 		{
 			//near Face
-			{xn,yn,m_fCascadeEnd[i],1.0f},
-			{-xn,yn,m_fCascadeEnd[i],1.0f},
-			{xn,-yn,m_fCascadeEnd[i],1.0f},
-			{-xn,-yn,m_fCascadeEnd[i],1.0f},
+			{	 xn,	 yn,	m_fCascadeEnd[i],	1.0f},
+			{	-xn,	 yn,	m_fCascadeEnd[i],	1.0f},
+			{	 xn,	-yn,	m_fCascadeEnd[i],	1.0f},
+			{	-xn,	-yn,	m_fCascadeEnd[i],	1.0f},
 			//far Face
-			{xf,yf,m_fCascadeEnd[i + 1],1.0f},
-			{-xf,yf,m_fCascadeEnd[i + 1],1.0f},
-			{xf,-yf,m_fCascadeEnd[i + 1],1.0f},
-			{-xf,-yf,m_fCascadeEnd[i + 1],1.0f}
+			{	xf,		yf,		m_fCascadeEnd[i + 1],	1.0f},
+			{	-xf,	yf,		m_fCascadeEnd[i + 1],	1.0f},
+			{	xf,	   -yf,		m_fCascadeEnd[i + 1],	1.0f},
+			{	-xf,-	yf,		m_fCascadeEnd[i + 1],	1.0f}
 		};
 
 		_float4 centerPos;
@@ -137,7 +137,14 @@ void CCamera::Update_Cascade()
 
 		for (uint32_t j = 0; j < 8; ++j)
 		{
-			_float distance = XMVectorGetX(XMVector4Length(XMLoadFloat4(&(frustumCorners[j] - centerPos))));
+			//_float distance = XMVectorGetX(XMVector4Length(XMLoadFloat4(&(frustumCorners[j] - centerPos))));
+			// Compute distance between frustumCorner[j] and centerPos
+			_float dx = frustumCorners[j].x - centerPos.x;
+			_float dy = frustumCorners[j].y - centerPos.y;
+			_float dz = frustumCorners[j].z - centerPos.z;
+			_float distanceSquared = dx * dx + dy * dy + dz * dz;
+			_float distance = sqrt(distanceSquared);
+
 			radius = max(radius, distance);
 		}
 
@@ -147,11 +154,11 @@ void CCamera::Update_Cascade()
 		_float3 maxExtents(radius, radius, radius + 60.0f);
 		_float3 minExtents = -maxExtents;
 
-		_float4 vLightDir = m_pGameInstance->Get_LightManager()->Get_ShadowLightDir(m_pGameInstance->Get_NextLevel());
-		_float3 vLightDir3 = { vLightDir.x, vLightDir.y, vLightDir.z };
+		_float4 vLightDir4 = m_pGameInstance->Get_LightManager()->Get_ShadowLightDir(m_pGameInstance->Get_NextLevel());
+		_float3 vLightDir = { vLightDir4.x, vLightDir4.y, vLightDir4.z };
 		_float3 shadowCamPos = _float3(centerPos) + (vLightDir * minExtents.z);
 
-		XMVECTOR zaxis = XMVector3Normalize(XMVectorNegate(XMLoadFloat3(&vLightDir3)));
+		XMVECTOR zaxis = XMVector3Normalize(XMVectorNegate(XMLoadFloat3(&vLightDir)));
 		XMFLOAT3 UP = XMFLOAT3(0.0f, 1.0f, 0.0f);
 		XMVECTOR yaxis = XMLoadFloat3(&UP);
 		XMVECTOR xaxis = XMVector3Normalize(XMVector3Cross(yaxis, zaxis));

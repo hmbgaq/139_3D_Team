@@ -126,6 +126,12 @@ struct VS_OUT_SHADOW
     float4 vProjPos : TEXCOORD1;
 };
 
+struct VS_OUT_CASCADE_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+
+};
 struct VS_OUT_OUTLINE
 {
     float4 vPosition : SV_POSITION;
@@ -228,6 +234,7 @@ VS_OUT VS_MAIN(VS_IN In)
 }
 
 
+
 VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
@@ -241,6 +248,20 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vProjPos = Out.vPosition;
     
+    return Out;
+}
+
+VS_OUT_CASCADE_SHADOW VS_MAIN_CASCADE(VS_IN In)
+{
+    VS_OUT_CASCADE_SHADOW Out = (VS_OUT_CASCADE_SHADOW) 0;
+
+    float4 vPosition = float4(In.vPosition, 1.f);
+    vPosition = mul(vPosition, g_WorldMatrix);
+    vPosition = mul(vPosition, g_CascadeProj);
+
+    Out.vPosition = vPosition;
+    Out.vTexcoord = In.vTexcoord;
+
     return Out;
 }
 
@@ -341,6 +362,11 @@ PS_OUT PS_SKYBOX_MAIN(PS_IN In)
 PS_OUT_SHADOW PS_MAIN_SHADOW(VS_OUT_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+    
+    float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vColor.a == 0.0f)
+        discard;
 
     Out.vLightDepth = In.vProjPos.w / g_fLightFar;
 	
@@ -348,6 +374,22 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(VS_OUT_SHADOW In)
 }
 
 /* ------------------- Shadow Pixel Shader(3) -------------------*/
+
+PS_OUT_SHADOW PS_MAIN_CASCADE(VS_OUT_CASCADE_SHADOW In)
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+    
+    float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vColor.a == 0.0f)
+        discard;
+
+    Out.vLightDepth = float4(In.vPosition.z, 0.0f, 0.0f, 0.0f);
+    
+    return Out;
+}
+
+/* ------------------- Shadow Pixel Shader(4) -------------------*/
 PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -693,17 +735,18 @@ technique11 DefaultTechnique
 
     pass Cascade // 3
     {
-        SetRasterizerState(RS_Cull_CW);
-        SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_CASCADE();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_KEEP();
+        PixelShader = compile ps_5_0 PS_MAIN_CASCADE();
     }
 
-    pass White_Blink // 3 - Interact Chain전용 
+    pass White_Blink // 4 - Interact Chain전용 
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
