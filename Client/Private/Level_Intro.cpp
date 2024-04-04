@@ -92,9 +92,9 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     }
 
     _bool bSpawnSniper = false;
-    _bool bSpawnTanker = false;
+    _bool bSpawnTanker = true;
     _bool bSpawnInfected = false;
-    _bool bSpawnZenuGiant = true;
+    _bool bSpawnZenuGiant = false;
     
 
     json MonsterJson = Stage1MapJson["Monster_Json"];
@@ -159,6 +159,19 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
+
+
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_Position(_float3(0.0f, 0.f, 10.f));
+
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_Position(_float3(5.0f, 0.f, 10.f));
+
+
+    //pMonster->Set_InitPosition(_float3(0.0f, 0.f, 2.f));
+
 
 
 

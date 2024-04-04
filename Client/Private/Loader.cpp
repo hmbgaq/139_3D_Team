@@ -46,17 +46,21 @@
 #include "Player_Weapon_Crossbow.h"
 #include "Player_Weapon_CripplingRod.h"
 
-
-
 #include "Bullet_Winchester.h"
 #include "Bullet_Revolver.h"
 #include "Bullet_ELShotgun.h"
 #include "Bullet_Dynamite.h"
 #include "Explosion_Dynamite.h"
 #include "Bullet_Teleport.h"
+#include "Explosion_TNT.h"
 
 #include "Impact_Slam.h"
 #pragma endregion
+
+#pragma region DESTRUCTABLE PROPS
+#include "TNTCrate.h"
+#pragma endregion
+
 
 #pragma region VampireCommander
 #include "VampireCommander.h"
@@ -77,6 +81,7 @@
 #include "Mother_Egg.h"
 #include "MotherVomit.h"
 #include "Son_Projectile.h"
+#include "MotherShakeTreeProjectile.h"
 #pragma endregion
 
 #pragma region INFECTED
@@ -932,6 +937,10 @@ HRESULT CLoader::Loading_Player(LEVEL eLEVEL)
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Edgar"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/NPC/Edgar/Edgar", PivotMatrix)));
 
+
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_TNTCrate"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Map/Stage1/NonAnim/Destructables/TNTCrate/TNTCrate", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_TNTPack"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Map/Stage1/NonAnim/Destructables/TNTPack/TNTPack", PivotMatrix)));
+
 	return S_OK;
 }
 
@@ -991,6 +1000,9 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Dynamite"), CBullet_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Dynamite"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_Dynamite"), CExplosion_Dynamite::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_Dynamite"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bullet_Teleport"), CBullet_Teleport::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Bullet_Teleport"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Explosion_TNT"), CExplosion_TNT::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Explosion_TNT"))));
+
+	
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Impact_Slam"), CImpact_Slam::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Impact_Slam"))));
 
@@ -1087,6 +1099,11 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_LightObject"), CEnvironment_LightObject::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Environment_LightObject"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Environment_SpecialObject"), CEnvironment_SpecialObject::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Environment_SpecialObject"))));
 	
+
+	//! ÆÄ±« °¡´ÉÇÑ È¯°æ
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DestructableProps_TNTCrate"), CTNTCrate::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"))));
+
+
 	//!¼ºÈñ
 	Ready_UI_Origin();
 

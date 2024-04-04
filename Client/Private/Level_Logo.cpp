@@ -164,6 +164,19 @@ void CLevel_Logo::Set_Filter()
 
 
 
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DESTRUCTABLE_PROPS, (_uint)COLLISION_LAYER::MONSTER_ATTACK);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DESTRUCTABLE_PROPS, (_uint)COLLISION_LAYER::PLAYER_ATTACK);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DESTRUCTABLE_PROPS, (_uint)COLLISION_LAYER::EXPLOSION_ATTACK);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DESTRUCTABLE_PROPS, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::DESTRUCTABLE_PROPS, (_uint)COLLISION_LAYER::MONSTER);
+
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::EXPLOSION_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::EXPLOSION_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
+
+
+
+
+
 	//m_pGameInstance->Check_PhysXFilterGroup((_uint)PHYSX_COLLISION_LAYER::PLAYER, (_uint)PHYSX_COLLISION_LAYER::GROUND);
 }
 

@@ -33,6 +33,7 @@ public:
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	virtual void Check_Frustum() override;
 
 public:
 	static CBody_Tank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

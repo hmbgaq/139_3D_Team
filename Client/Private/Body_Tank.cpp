@@ -112,6 +112,11 @@ HRESULT CBody_Tank::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CBody_Tank::Check_Frustum()
+{
+	m_bIsInFrustum = true;
+}
+
 CBody_Tank* CBody_Tank::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
 	CBody_Tank* pInstance = new CBody_Tank(pDevice, pContext, strPrototypeTag);

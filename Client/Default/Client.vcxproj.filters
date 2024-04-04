@@ -3931,6 +3931,12 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile">
       <UniqueIdentifier>{6109841c-8165-4a1d-a04b-5241426aa06d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\96. DestructableProps">
+      <UniqueIdentifier>{7ab782d4-30e6-4bf9-b2d3-7f1e6cf54e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. DestructableProps\Projectile">
+      <UniqueIdentifier>{f0c335d1-4928-4f2d-a73f-1947c0c5755e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7725,6 +7731,12 @@
     <ClInclude Include="..\Public\MotherShakeTreeProjectile.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TNTCrate.h">
+      <Filter>02.GameObjects\96. DestructableProps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Explosion_TNT.h">
+      <Filter>02.GameObjects\96. DestructableProps\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10989,6 +11001,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TNTCrate.cpp">
+      <Filter>02.GameObjects\96. DestructableProps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion_TNT.cpp">
+      <Filter>02.GameObjects\96. DestructableProps\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
