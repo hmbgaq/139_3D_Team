@@ -10,9 +10,8 @@ void CPlayer_DodgeBlink_L_03::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 
-	// 이펙트 생성
-	EFFECT_MANAGER->Create_Effect("Player/DodgeBlink/", "DodgeBlink_L_18.json", pActor);
-	//EFFECT_MANAGER->Create_Effect("Player/DodgeBlink/", "DodgeBlink_L_19_Particle.json", pActor->Get_Position());
+	// 이펙트 플레이
+	EFFECT_MANAGER->Play_Effect("DodgeBlink_L_18.json", pActor);
 
 }
 

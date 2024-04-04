@@ -10,7 +10,7 @@
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = TRUE;
+	m_bIsPoolObject = FALSE;
 }
 
 CEffect_Instance::CEffect_Instance(const CEffect_Instance & rhs)
@@ -233,7 +233,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 	if (TEXT("") == strProtoTextureTag)
 		return S_OK;
 
-	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
+	//_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
 
 	wstring strDiffuse	= TEXT("Diffuse");
 	wstring strNormal	= TEXT("Normal");
@@ -252,7 +252,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 		}
 
 		eTexture = TEXTURE_DIFFUSE;
-		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoTextureTag, TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 	}
 	else if (strProtoTextureTag.find(strNormal) != string::npos)
 	{
@@ -262,7 +262,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 			Remove_TextureCom(TEXTURE_NORAML);
 		}
 		eTexture = TEXTURE_NORAML;
-		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoTextureTag, TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 	}
 	else if (strProtoTextureTag.find(strMask) != string::npos)
 	{
@@ -293,7 +293,7 @@ HRESULT CEffect_Instance::Change_TextureCom(wstring strProtoTextureTag)
 			Remove_TextureCom(TEXTURE_SPRITE);
 		}
 		eTexture = TEXTURE_SPRITE;
-		FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
+		FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoTextureTag, TEXT("Com_Sprite"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_SPRITE])));
 	}
 
 	m_tVoidDesc.strTextureTag[eTexture] = strProtoTextureTag;
@@ -332,14 +332,14 @@ HRESULT CEffect_Instance::Change_ModelCom(wstring strProtoModelTag)
 	if (TEXT("") == strProtoModelTag)
 		return S_OK;
 
-	_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
+	//_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
 
 	if (nullptr != m_pModelCom[0])
 	{
 		Remove_Component(TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0]));
 	}
 
-	FAILED_CHECK(__super::Add_Component(iCurLevel, strProtoModelTag, TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0])));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoModelTag, TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0])));
 
 
 	if (nullptr != m_pModelCom[0])
@@ -404,23 +404,23 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 
 HRESULT CEffect_Instance::Ready_Components()
 {
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+	//_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Effect_Model_Instance"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Effect_Model_Instance"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 
 	/* For.Com_Model */
 	{
-		if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01],
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01],
 			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_01]))))
 			return E_FAIL;
 
 		if (TEXT("") != m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02])
 		{
-			if (FAILED(__super::Add_Component(iNextLevel, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02],
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02],
 				TEXT("Com_Model_Morph"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_02]))))
 				return E_FAIL;
 		}
@@ -448,7 +448,7 @@ HRESULT CEffect_Instance::Ready_Components()
 			}		
 		}
 
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Effect_Model_Instance"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo)))
 			return E_FAIL;
 	}
 
@@ -457,12 +457,12 @@ HRESULT CEffect_Instance::Ready_Components()
 	{
 		// Diffuse
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_DIFFUSE], TEXT("Com_Diffuse"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE])));
 
 
 		// Normal
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_NORAML])
-			FAILED_CHECK(__super::Add_Component(iNextLevel, m_tVoidDesc.strTextureTag[TEXTURE_NORAML], TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
+			FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strTextureTag[TEXTURE_NORAML], TEXT("Com_Normal"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_NORAML])));
 
 		// Mask => ! LEVEL_STATIC 으로 변경 !
 		if (TEXT("") != m_tVoidDesc.strTextureTag[TEXTURE_MASK])

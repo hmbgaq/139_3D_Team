@@ -6,6 +6,9 @@
 #include "UI_Manager.h"
 #include "Data_Manager.h"
 
+
+#include "Effect_Manager.h"
+
 //#include <mfapi.h>
 //#include <mfreadwrite.h>
 
@@ -33,6 +36,9 @@ HRESULT CLevel_Logo::Initialize()
 	m_pUIManager->NonActive_MainLogo();
 	m_pDataManager->Set_GameState(GAME_STATE::UI);
 	ShowCursor(false);
+
+
+	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ¿Ã∆Â∆Æ «Æ
 
 	return S_OK;
 }

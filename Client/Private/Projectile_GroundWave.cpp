@@ -45,7 +45,9 @@ HRESULT CProjectile_GroundWave::Initialize(void* pArg)
 
 	// ÀÌÆåÆ® »ı¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Impact_03_Red_With_Rock_02.json", this);
-	m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
+	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Projectile_Range3_02.json", this);
+
 
 	return S_OK;
 }
@@ -187,5 +189,6 @@ void CProjectile_GroundWave::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+		//m_pEffect->Set_Dead(true);
 }

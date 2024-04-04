@@ -30,6 +30,8 @@
 #include "Environment_SpecialObject.h"
 #pragma endregion
 
+
+
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
@@ -57,6 +59,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_Shader());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
+
 
 	return S_OK;
 }
@@ -573,5 +576,6 @@ CLevel_SnowMountainBoss* CLevel_SnowMountainBoss::Create(ID3D11Device* pDevice, 
 void CLevel_SnowMountainBoss::Free()
 {
 	__super::Free();
+
 
 }

@@ -34,11 +34,6 @@
 #include "InstanceMonster.h"
 #pragma endregion
 
-#pragma region Effect_Test
-#include "Clone_Manager.h"
-#include "Effect.h"
-#include "Navigation.h"
-#pragma endregion
 
 #include "Level_Loading.h"
 
@@ -63,6 +58,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
+
 
 	return S_OK;
 }
@@ -1118,6 +1114,5 @@ void CLevel_GamePlay::Free()
 	__super::Free();
 
 	m_pGameInstance->Clear_Event();
-	
 
 }

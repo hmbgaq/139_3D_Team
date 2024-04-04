@@ -5404,15 +5404,18 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		if (ImGui::Button(" Test Create "))
 		{
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
-			m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+			//m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+			m_pTestEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test.json");
 		}
 	}
 	else
 	{
 		if (ImGui::Button(" Test Delete "))
 		{
-			m_pTestEffect->Set_Dead(TRUE);
+			EFFECT_MANAGER->Return_Effect_ToPool(m_pTestEffect);
 			m_pTestEffect = nullptr;
+
+			//m_pTestEffect->Set_Dead(TRUE);
 		}
 	}
 	
@@ -6300,7 +6303,7 @@ void CWindow_EffectTool::Update_EffectTransform_Window()
 
 HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner)
 {
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+	//_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	CEffect::EFFECT_DESC	tEffectDesc = {};
 	tEffectDesc.fSpeedPerSec = { 5.f };

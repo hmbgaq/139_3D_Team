@@ -15,7 +15,7 @@
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = TRUE;
+	m_bIsPoolObject = FALSE;
 }
 
 CEffect::CEffect(const CEffect & rhs)
@@ -33,7 +33,6 @@ HRESULT CEffect::Initialize(void* pArg)
 {	
 	XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_tEffectDesc.matCombined, XMMatrixIdentity());
-
 
 
 	m_tEffectDesc = *(EFFECT_DESC*)pArg;
@@ -173,14 +172,19 @@ HRESULT CEffect::Render()
 		if (m_tEffectDesc.bActive_Tool)
 		{
 #endif // _DEBUG
-			if (m_tEffectDesc.bRender)
+			if (m_tEffectDesc.bPlay)
 			{
-				for (auto& Pair : m_PartObjects)
+				if (m_tEffectDesc.bRender)
 				{
-					if (nullptr != Pair.second)
-						Pair.second->Render();
+					for (auto& Pair : m_PartObjects)
+					{
+						if (nullptr != Pair.second)
+							Pair.second->Render();
+					}
 				}
+
 			}
+
 #ifdef _DEBUG
 		}
 #endif // _DEBUG
@@ -298,15 +302,18 @@ void CEffect::Update_PivotMat()
 {
 	if (nullptr != m_pOwner)	// 주인이 존재하고,
 	{
+		// 이펙트의 주인이 죽었다.
 		if (m_pOwner->Is_Dead())
 		{
-			// 이펙트의 주인이 죽었으면 이펙트 삭제
+			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
 			if (nullptr != m_pTrail)
 			{
-				m_pTrail->Set_Dead(TRUE);
-				m_pTrail = nullptr;
-			}			
-			Set_Dead(TRUE);
+				if (nullptr != m_pTrail)
+					m_pTrail->Set_Play(FALSE);
+			}
+
+			EFFECT_MANAGER->Return_Effect_ToPool(this);
+
 			return;
 		}
 
@@ -342,7 +349,6 @@ void CEffect::ReSet_Effect()
 	m_tEffectDesc.fRemainAcc	 = 0.f;
 	m_tEffectDesc.fLifeTimeRatio = 0.f;
 
-
 }
 
 void CEffect::Init_ReSet_Effect()
@@ -370,7 +376,7 @@ void CEffect::End_Effect()
 				dynamic_cast<CEffect_Void*>(Pair.second)->End_Effect();
 			}				
 		}
-		ReSet_Effect();	// 루프면 리셋.
+		ReSet_Effect();	// 루프면 리셋. 루프면 누군가가 죽여주지 않는 이상 죽지않는다. (루프돌다가 죽이고 싶을때 이펙트매니저로 Return_Effect_ToPool()호출하면 될 듯.
 	}
 	else
 	{
@@ -385,7 +391,8 @@ void CEffect::End_Effect()
 		{		
 			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면(파티클 등) 라이프 타임이 끝났을 때 죽이기.
 			{
-				Set_Dead(TRUE);
+				EFFECT_MANAGER->Return_Effect_ToPool(this);
+				//Set_Dead(TRUE);
 			}
 			else if (DEAD_OWNER == m_tEffectDesc.eType_Dead)	// 루프가 아니라도 죽음이 외부에서 정해진다면 라이프 타임이 끝났을 때 리셋만.
 			{
@@ -398,10 +405,26 @@ void CEffect::End_Effect()
 
 }
 
-
-HRESULT CEffect::Ready_Trail(_uint iLevelIndex, string strFileName)
+void CEffect::End_Effect_ForPool()
 {
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iLevelIndex, LAYER_EFFECT, strFileName, this);
+	m_tEffectDesc.bFinished = TRUE;	// 이펙트 종료
+
+	m_tEffectDesc.bPlay = FALSE;	// 재생 정지
+	m_bEnable = FALSE;				// 사용 끔
+
+	Init_ReSet_Effect();			// 리셋
+
+	// 주인이 존재하면 지워줌
+	if (nullptr != m_pOwner)
+		Delete_Object_Owner();
+
+	m_tEffectDesc.Reset_Pivot();
+}
+
+
+HRESULT CEffect::Ready_Trail(string strFileName)
+{
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(LEVEL_STATIC, LAYER_EFFECT, strFileName, this);
 
 	return S_OK;
 }

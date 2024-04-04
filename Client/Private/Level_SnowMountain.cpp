@@ -30,10 +30,12 @@
 #include "Environment_Interact.h"
 #pragma endregion
 
+
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
 #include "Light.h"
+
 
 CLevel_SnowMountain::CLevel_SnowMountain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -55,6 +57,7 @@ HRESULT CLevel_SnowMountain::Initialize()
 	FAILED_CHECK(Ready_Shader());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
+
 
 	return S_OK;
 }
@@ -661,8 +664,8 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 
 	RADIAL_DESC Desc_Radial = {};
 	Desc_Radial.bRadial_Active = false;
-	Desc_Radial.fRadial_Quality = {};
-	Desc_Radial.fRadial_Power = {};
+	Desc_Radial.fRadial_Quality = {8.f};
+	Desc_Radial.fRadial_Power = {0.1f};
 
 	DOF_DESC Desc_Dof = {};
 	Desc_Dof.bDOF_Active = false;

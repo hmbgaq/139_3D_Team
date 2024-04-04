@@ -16,11 +16,10 @@ void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 
-
-	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_07_Light_03.json", pActor, TRUE, "RightHandIK");
-	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_08.json", pActor);
-	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_Particle_07_Reverse.json", pActor);
-	EFFECT_MANAGER->Create_Effect("Player/Heal/", "Heal_Particle_07.json", pActor);
+	EFFECT_MANAGER->Play_Effect("Heal_07_Light_03.json", pActor, TRUE, "RightHandIK");
+	EFFECT_MANAGER->Play_Effect("Heal_08.json", pActor);
+	EFFECT_MANAGER->Play_Effect("Heal_Particle_07_Reverse.json", pActor);
+	EFFECT_MANAGER->Play_Effect("Heal_Particle_07.json", pActor);
 }
 
 CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _float fTimeDelta)

@@ -52,6 +52,7 @@ HRESULT CMainApp::Initialize()
 	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	m_pUIManager->Initialize(m_pDevice, m_pContext);
+
 	CEffect_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	FAILED_CHECK(Ready_Font());
@@ -237,6 +238,8 @@ HRESULT CMainApp::UI_TargetTexture()
 
 	return S_OK;
 }
+
+
 
 HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 {

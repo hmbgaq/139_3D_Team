@@ -71,10 +71,11 @@ private:
 /* For.Effect */
 private:
 	HRESULT Ready_Effect_Origin();
-	HRESULT Ready_Effect_All(LEVEL eLevel);
-	HRESULT Ready_Effect_Texture(LEVEL eLevel);
-	HRESULT Ready_Effect_Model(LEVEL eLevel);
-	HRESULT Ready_Effect_Buffer(LEVEL eLevel);
+	HRESULT Ready_Effect_All();
+	HRESULT Ready_Effect_Texture();
+	HRESULT Ready_Effect_Model();
+	HRESULT Ready_Effect_Buffer();
+	HRESULT Ready_Effect_Shader();
 
 
 public:
