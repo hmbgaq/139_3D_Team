@@ -7563,6 +7563,9 @@
     <ClInclude Include="..\Public\MotherShakeTreeProjectile.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Son_RotationProjectile.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10752,6 +10755,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_RotationProjectile.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

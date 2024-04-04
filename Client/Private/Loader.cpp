@@ -68,6 +68,7 @@
 #include "Mother_Egg.h"
 #include "MotherVomit.h"
 #include "Son_Projectile.h"
+#include "Son_RotationProjectile.h"
 #pragma endregion
 
 #pragma region INFECTED
@@ -712,6 +713,7 @@ HRESULT CLoader::Loading_For_SnowMountainBoss_Level()
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Model_Infected_D"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/D/Infected_D", PivotMatrix)));
 
 
 #pragma region ÀÌÆåÆ® ·Îµå_SNOWMOUNTAINBOSS
@@ -727,6 +729,7 @@ HRESULT CLoader::Loading_For_SnowMountainBoss_Level()
 	PivotMatrix = XMMatrixScaling(1.f, 1.f, 1.f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Model_Mother_Egg"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Boss/Parasiter/Egg/Egg", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Model_MotherVomit"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Boss/Parasiter/Egg/Egg", PivotMatrix)));
+	PivotMatrix = XMMatrixScaling(0.03f, 0.03f, 0.03f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAINBOSS, TEXT("Prototype_Component_Model_MotherShakeTreeProjectile"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Boss/Parasiter/MotherShakeTreeProjectile/MotherShakeTreeProjectile", PivotMatrix)));
 
 	PivotMatrix = XMMatrixScaling(0.7f, 0.7f, 0.7f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
@@ -984,6 +987,7 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Son"), CSon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Son"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Mother_Egg"), CMother_Egg::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Mother_Egg"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Son_Projectile"), CSon_Projectile::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Son_Projectile"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Son_RotationProjectile"), CSon_RotationProjectile::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Son_RotationProjectile"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MotherVomit"), CMotherVomit::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_MotherVomit"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MotherShakeTreeProjectile"), CMotherShakeTreeProjectile::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_MotherShakeTreeProjectile"))));
 

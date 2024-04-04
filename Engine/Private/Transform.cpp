@@ -305,6 +305,23 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
 }
 
+void CTransform::RotationToProjectile(_fvector vAxis, _float fRadian)
+{
+	_float3		vScale = Get_Scaled();
+	m_fRadian = fRadian;
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, m_fRadian);
+
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+
+
+	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+}
+
 _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian)
 {
 	_fvector vAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);

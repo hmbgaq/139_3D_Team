@@ -29,6 +29,8 @@ public:
 public:
 	_vector				m_vPlayerPos = {};
 	_vector				m_vMonsterPos = {};
+public:
+	_float				m_fTimeDelta = 0.f;
 
 private:
 	CEffect* m_pEffect = { nullptr };

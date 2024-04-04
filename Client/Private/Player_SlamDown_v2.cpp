@@ -5,6 +5,9 @@
 #include "Effect.h"
 #include "Effect_Manager.h"
 
+#include "MasterCamera.h"
+#include "Data_Manager.h"
+
 void CPlayer_SlamDown_v2::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -36,6 +39,11 @@ CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)
 		{
 			// ÀÌÆåÆ® »ý¼º
 			EFFECT_MANAGER->Create_Effect("Player/SlamDown/", "SlamDown_v2_22_Rock.json", pActor->Get_Position());
+
+			//CameraSetting
+			CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+			pSpringCam->Set_ShakeCameraTime(0.1f);
+			pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 
 			pActor->Apply_Shake_And_Blur(Power::Medium);
 			pActor->Slam();

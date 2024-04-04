@@ -22,14 +22,16 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		m_bFlags[5] = true;
 	}
 
-	if (m_bFlags[1] == false && pActor->Is_Inputable_Front(10))
+	if (m_bFlags[1] == false && pActor->Is_Inputable_Front(20))
 	{
-		pSpringCam->Set_ShakeCameraTime(0.1f);
+		pSpringCam->Set_ShakeCameraTime(0.2f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 		pActor->Apply_Shake_And_Blur(Power::Medium);
 
 		m_bFlags[1] = true;
 	}
+
+
 
 	if (m_bFlags[2] == false && pActor->Is_Inputable_Front(100))
 	{

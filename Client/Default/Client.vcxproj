@@ -1126,6 +1126,7 @@
     <ClInclude Include="..\Public\Son_Projectile.h" />
     <ClInclude Include="..\Public\Son_RangeAttackFar.h" />
     <ClInclude Include="..\Public\Son_RangeAttackNear.h" />
+    <ClInclude Include="..\Public\Son_RotationProjectile.h" />
     <ClInclude Include="..\Public\Son_ShortAttack.h" />
     <ClInclude Include="..\Public\Son_Spawn.h" />
     <ClInclude Include="..\Public\Son_State.h" />
@@ -2133,6 +2134,7 @@
     <ClCompile Include="..\Private\Son_Projectile.cpp" />
     <ClCompile Include="..\Private\Son_RangeAttackFar.cpp" />
     <ClCompile Include="..\Private\Son_RangeAttackNear.cpp" />
+    <ClCompile Include="..\Private\Son_RotationProjectile.cpp" />
     <ClCompile Include="..\Private\Son_ShortAttack.cpp" />
     <ClCompile Include="..\Private\Son_Spawn.cpp" />
     <ClCompile Include="..\Private\Son_State.cpp" />

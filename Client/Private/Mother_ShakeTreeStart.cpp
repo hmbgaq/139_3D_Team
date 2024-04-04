@@ -2,6 +2,9 @@
 #include "Mother_ShakeTreeLoop.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "GameInstance.h"
+#include "Player.h"
+#include "SMath.h"
 
 void CMother_ShakeTreeStart::Initialize(CMother* pActor)
 {
@@ -18,6 +21,32 @@ CState<CMother>* CMother_ShakeTreeStart::Update(CMother* pActor, _float fTimeDel
 		pSpringCam->Set_ShakeCameraTime(0.3f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
 		pActor->Apply_Shake_And_Blur(Power::Medium);
+
+		CGameObject* pObjcet = { nullptr };
+		for (int i = 0; i <3; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				_float fRandom = SMath::Random(-5.f, 5.f);
+				_float fRandom2 = SMath::Random(-5.f, 5.f);
+
+				//++방향 1사분면
+				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3((j+1) * 8.f, (15.f + fRandom), (i+1) * 8.f));
+				//-+방향 2사분면
+				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3(-j * 8.f, (15.f + fRandom), i * 8.f));
+				//--방향 3사분면
+				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3((-j-1) * 8.f, (15.f + fRandom2), (-i-1) * 8.f));
+				//+-방향 4사분면
+				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3(j * 8.f, (15.f + fRandom), -i * 8.f));
+				
+			}
+			
+		}
+	
 		//이떄 카메라 쉐이킹 하면서 맵에 전체 공격 패턴 추가하면 될 거같음 
 		m_bFlags[0] = true;
 	}
