@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "UI_Weakness.h"
 #include "Bone.h"
+#include "Mother_Dead.h"
 
 void CMother_StunLoop::Initialize(CMother* pActor)
 {
@@ -16,6 +17,8 @@ void CMother_StunLoop::Initialize(CMother* pActor)
 CState<CMother>* CMother_StunLoop::Update(CMother* pActor, _float fTimeDelta)
 {
 	m_fPreHP = pActor->Get_CurHP();
+
+	
 	//구슬같은거 약점으로 다 파괴해야지만 다음으로 넘어감 
 
 	if (m_bFlags[0] == false &&pActor->m_bStunCheck1 == true)

@@ -82,8 +82,8 @@ CState<CMother>* CMother_State::Normal(CMother* pActor, _float fTimeDelta, _uint
 			return new CMother_StunStart;
 		}
 	}
-	if (pActor->Get_CurHP() <= 0.f)
-		return new CMother_Dead;
+// 	if (pActor->Get_CurHP() <= 0.f)
+// 		return new CMother_Dead;
 	
 
 	return nullptr;

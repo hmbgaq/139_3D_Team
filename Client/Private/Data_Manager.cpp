@@ -195,8 +195,8 @@ void CData_Manager::PlayerInfo_Setting()
 	m_fCurEXP = 0.0f;
 
 	/* SKILL_GUIGE */
-	m_fMaxSkillGuige = 100.0f;
-	m_fCurSkillGuige = /*0.0f*/m_fMaxSkillGuige;
+	m_fMaxEnergyGuige = 100.0f;
+	m_fCurEnergyGuige = /*0.0f*/m_fMaxEnergyGuige;
 }
 
 // Player_HP
@@ -237,8 +237,8 @@ _bool CData_Manager::Limit_EXP()
 	return false; // Not Event
 }
 
-// Player_SkillGuige
-void CData_Manager::Limit_SkillGuige()
+// Player_EnergyGuige
+void CData_Manager::Limit_EnergyGuige()
 {
 }
 
@@ -261,7 +261,7 @@ void CData_Manager::Limit_Manager()
 	//=>EXP
 						Limit_EXP();
 	//=>SkillGuige
-						Limit_SkillGuige();
+						Limit_EnergyGuige();
 	//=>Level
 						Limit_Level();
 }

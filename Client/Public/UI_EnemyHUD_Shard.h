@@ -21,27 +21,37 @@ public:
 	virtual HRESULT			Render() override;
 
 	/* State */
-	virtual void	UI_Ready(_float fTimeDelta);
-	virtual void	UI_Enter(_float fTimeDelta);
-	virtual void	UI_Loop(_float fTimeDelta);
-	virtual void	UI_Exit(_float fTimeDelta);
+	virtual void			UI_Ready(_float fTimeDelta);
+	virtual void			UI_Enter(_float fTimeDelta);
+	virtual void			UI_Loop(_float fTimeDelta);
+	virtual void			UI_Exit(_float fTimeDelta);
 
-	/* Child */
-	void			UI_Setting();
+	void					UI_Setting();
+	void					Set_Dead_Owner(_bool bDead) { m_bDeadOwner = bDead; }
+
 public:
-	void					Set_TargetPosition(_vector vTargetPosition);
-	void					Check_TargetWorld();
-	void					Ready_ChildHUD();
+	/* Child */
+	HRESULT					Ready_ChildHUD();
+	void					Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos);
+	void					ActiveEnemyHUD();
+	void					NonActiveEnemyHUD();
+	void					DeadEnemyHUD();
+
+protected:
+	_bool					m_bDeadOwner = false;
 
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
+
+private:
 	CGameObject*			m_pTarget = nullptr;
 	_vector					m_vTargetPosition = { 0.f, 0.f, 0.f, 0.f };
 	_matrix					m_World = XMMatrixIdentity();
 	_float					m_fChangeScale = 1.f;
 	_bool					m_bAppear = false;
 	TEXTUREKIND				m_eCurState = ATTACK;
+	vector<CUI*>			m_vecEnemyHUD;
 
 public:
 	json					Save_Desc(json& out_json);

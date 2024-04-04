@@ -2,6 +2,8 @@
 #include "Body_Son.h"
 #include "GameInstance.h"
 #include "Bone.h"
+#include "AttackObject.h"
+#include "Mother.h"
 
 CBody_Son::CBody_Son(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody(pDevice, pContext, strPrototypeTag)
@@ -38,7 +40,7 @@ void CBody_Son::Priority_Tick(_float fTimeDelta)
 
 void CBody_Son::Tick(_float fTimeDelta)
 {
-	auto start = chrono::high_resolution_clock::now();
+
 
 	__super::Tick(fTimeDelta);
 
@@ -52,9 +54,7 @@ void CBody_Son::Tick(_float fTimeDelta)
 	//	}
 	//	cout << iDiscardMeshNumber << endl;
 	//}
-	auto End = chrono::high_resolution_clock::now();
-	chrono::duration<double> duration0 = End - start;
-	cout << "Son Body Tick 실행시간 : " << duration0.count() << endl;
+
 }
 
 void CBody_Son::Late_Tick(_float fTimeDelta)
@@ -64,7 +64,7 @@ void CBody_Son::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Son::Render()
 {
-	auto start = chrono::high_resolution_clock::now();
+
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -86,15 +86,12 @@ HRESULT CBody_Son::Render()
 		m_pModelCom->Render((_uint)i);
 	}
 
-	auto End = chrono::high_resolution_clock::now();
-	chrono::duration<double> duration0 = End - start;
-	cout << "Son Body Render 실행시간 : " << duration0.count() << endl;
 	return S_OK;
 }
 
 HRESULT CBody_Son::Render_Shadow()
 {
-	auto start = chrono::high_resolution_clock::now();
+
 	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
@@ -114,15 +111,14 @@ HRESULT CBody_Son::Render_Shadow()
 		m_pModelCom->Render((_uint)i);
 	}
 
-	auto End = chrono::high_resolution_clock::now();
-	chrono::duration<double> duration0 = End - start;
-	cout << "Son Body Shadow 실행시간 : " << duration0.count() << endl;
+
 	return S_OK;
 }
 
 void CBody_Son::OnCollisionEnter(CCollider* other)
 {
 	__super::OnCollisionEnter(other);
+
 }
 
 void CBody_Son::OnCollisionStay(CCollider* other)
@@ -198,6 +194,11 @@ HRESULT CBody_Son::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CBody_Son::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 CBody_Son* CBody_Son::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

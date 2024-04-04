@@ -56,6 +56,7 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+    FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 
@@ -159,9 +160,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Edgar"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(10.f, 0.f, 35.f));
+
 
     
     
@@ -177,6 +176,17 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     //CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
     //NULL_CHECK_RETURN(pMonster, E_FAIL);
     //pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
+
+    return S_OK;
+}
+
+HRESULT CLevel_Intro::Ready_Layer_NPC(const wstring& strLayerTag)
+{
+    CGameObject* pNPC = nullptr;
+
+    pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Edgar"));
+    NULL_CHECK_RETURN(pNPC, E_FAIL);
+    pNPC->Set_InitPosition(_float3(10.f, 0.f, 35.f));
 
     return S_OK;
 }

@@ -78,8 +78,8 @@ private: /* _float */
 	_float	m_fMaxEXP = 1000000000.f;
 	_float	m_fCurEXP = 0.f;
 
-	_float	m_fMaxSkillGuige = 100.f;
-	_float	m_fCurSkillGuige = 0.f;
+	_float	m_fMaxEnergyGuige = 100.f;
+	_float	m_fCurEnergyGuige = 0.f;
 
 	GAME_STATE m_eGame_State = GAME_STATE::GAMEPLAY;
 
@@ -154,23 +154,23 @@ public: /* ========================== Player Info ========================== */
 	// =>현재 경험치 Add함수
 	void	Add_CurEXP(_float fAddCurEXP) { m_fCurEXP += fAddCurEXP; }
 
-#pragma region =========> MAX_SKILLGUIGE <=========
+#pragma region =========> MAX_ENERGYGUIGE <=========
 	// =>SkillGuige (Limit)
-	void	Limit_SkillGuige();
+	void	Limit_EnergyGuige();
 	// =>맥스 스킬게이지 Get함수
-	_float	Get_MaxSkillGuige() { return m_fMaxSkillGuige; }
+	_float	Get_MaxEnergyGuige() { return m_fMaxEnergyGuige; }
 	// =>맥스 스킬게이지 Set함수
-	void	Set_MaxSkillGuige(_float fMaxSkillGuige) { m_fMaxSkillGuige = fMaxSkillGuige; }
+	void	Set_MaxEnergyGuige(_float fMaxEnergyGuige) { m_fMaxEnergyGuige = fMaxEnergyGuige; }
 	// =>맥스 스킬게이지 Add함수
-	void	Add_MaxSkillGuige(_float fAddMaxSkillGuige) { m_fMaxSkillGuige += fAddMaxSkillGuige; }
+	void	Add_MaxEnergyGuige(_float fAddMaxEnergyGuige) { m_fMaxEnergyGuige += fAddMaxEnergyGuige; }
 
 #pragma region =========> CUR_SKILLGUIGE <=========
 	// =>현재 스킬게이지 Get함수
-	_float	Get_CurSkillGuige() { return m_fCurSkillGuige; }
+	_float	Get_CurSkillGuige() { return m_fCurEnergyGuige; }
 	// =>현재 스킬게이지 Set함수
-	void	Set_CurSkillGuige(_float fCurSkillGuige) { m_fCurSkillGuige = fCurSkillGuige; }
+	void	Set_CurSkillGuige(_float fCurEnergyGuige) { m_fCurEnergyGuige = fCurEnergyGuige; }
 	// =>현재 스킬게이지 Add함수
-	void	Add_CurSkillGuige(_float fAddCurSkillGuige) { m_fCurSkillGuige += fAddCurSkillGuige; }
+	void	Add_CurSkillGuige(_float fAddCurEnergyGuige) { m_fCurEnergyGuige += fAddCurEnergyGuige; }
 
 #pragma region =========> PLAYER_LEVEL <=========
 	// =>LevelUP (Limit)

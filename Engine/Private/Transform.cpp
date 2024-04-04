@@ -229,6 +229,43 @@ void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 	//Move_On_Navigation(vResult, pNavigation);
 }
 
+void CTransform::Go_Up(_float fTimeDelta, CNavigation* pNavigation)
+{
+	_vector vPosition = Get_State(STATE_POSITION);
+	_vector vUp = Get_State(CTransform::STATE_UP);
+
+	vPosition += XMVector3Normalize(vUp) * m_fSpeedPerSec * fTimeDelta;
+
+	if (nullptr != pNavigation)
+	{
+		if (false == pNavigation->isMove(vPosition))
+			return;
+
+	}
+
+	Set_State(STATE_POSITION, vPosition);
+}
+
+void CTransform::Go_Down(_float fTimeDelta, CNavigation* pNavigation)
+{
+	_vector vPosition = Get_State(STATE_POSITION);
+	_vector vUp = Get_State(CTransform::STATE_UP);
+
+
+	vPosition -= XMVector3Normalize(vUp) * m_fSpeedPerSec * fTimeDelta;
+
+	if (nullptr != pNavigation)
+	{
+		if (false == pNavigation->isMove(vPosition))
+			return;
+
+	}
+
+	Set_State(STATE_POSITION, vPosition);
+}
+
+
+
 
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
@@ -290,20 +327,21 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 	_int iDir =  abs(fTargetAngle - fAngle < 180) ? 1 : -1;
 	iDir *= (fTargetAngle > fAngle) ? 1 : -1;
 
-	_vector		vRight = Get_State(STATE_RIGHT);
-	_vector		vUp = Get_State(STATE_UP);
-	_vector		vLook = Get_State(STATE_LOOK);
+	_vector      vRight = Get_State(STATE_RIGHT);
+	_vector      vUp = Get_State(STATE_UP);
+	_vector      vLook = Get_State(STATE_LOOK);
 
 	_float fAdditionalRadian = m_fRotationPerSec * fTimeDelta * iDir * fDiff;
 	m_fRadian += fAdditionalRadian;
 
-	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
+	_matrix      RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
 
 	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
 	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
 	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
 
 	return false;
+
 }
 
 void CTransform::Rotation_Quaternion(_float3 vRotation)
@@ -496,6 +534,15 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNaviga
 	Move_On_Navigation(vResult, pNavigation);
 }
 
+void CTransform::Add_RootBone_ForTarget(const _float3& vPos, CNavigation* pNavigation, CTransform* pTargetTransform)
+{
+	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
+	_vector vResult = vRootMove;
+	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
+
+	Move_On_Navigation(vResult, pNavigation);
+}
+
 void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), m_WorldMatrix);
@@ -507,24 +554,47 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDe
 	//Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
 }
 
+// 타겟의 포지션을 넣으면, 카메라 기준으로 상대가 앞인지 뒤인지 구분해줍니다. (true : 앞, false : 뒤)
 _bool CTransform::Calc_FrontCheck(const _float3& vTargetPos)
 {
+	_float3 vMyLook = Get_Look();
 	_float3 vMyPos = Get_Pos();
-	_float3 vMyLook = Get_Look(); 
-
-	_float3 vTargetDir = vTargetPos - vMyPos;
+	_float3 vTargetDir = XMVector3Normalize(vTargetPos - vMyPos);
 	
 	//! 내가 바라보는 방향 벡터와 타겟까지의 방향 벡터의 내적 계산
 	_float3 vTargetDirDot;
 	XMStoreFloat3(&vTargetDirDot, XMVector3Dot(XMLoadFloat3(&vMyLook), XMVector3Normalize(XMLoadFloat3(&vTargetDir))));
-	
+
 	//!타겟이 앞에 있는경우
-	//! 
+	//!성희 수정 : 앞뒤가 반대로 나옴 (true가 앞인걸로 수정)
 	if (vTargetDirDot.x >= 0)
+	{ // 뒤
+		return false;
+		//return true;
+	}
+	else
+	{ // 앞
+		return true;
+		//return false;
+	}
+
+}
+
+_bool CTransform::Calc_LeftCheck_ForCamLook(const _float3& vTargetPos)
+{
+	
+	_vector vCamDir = XMLoadFloat4(&m_pGameInstance->Get_CamDirection());
+	_vector vCamUp = { 0.f, 1.f, 0.f};
+	_vector vTargetPos1 = { vTargetPos.x, vTargetPos.y, vTargetPos.z, 1.f};
+
+	_vector vTargetToCamDir = { vTargetPos1 - XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) };
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(vCamUp, vCamDir));
+	
+	if (XMVectorGetX(XMVector3Dot(vTargetToCamDir, vRight)) > 0)
 	{
 		return true;
 	}
-	//!타겟이 뒤에 있는 경우
 	else
 	{
 		return false;

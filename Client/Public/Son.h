@@ -5,7 +5,7 @@
 #include "Actor.h"
 
 BEGIN(Client)
-class CMother;
+
 
 class CSon final : public CMonster_Character
 {
@@ -33,7 +33,7 @@ protected:
 	virtual void Hitted_Finish() override;
 	virtual void Hitted_Weakness() override;
 
-
+	virtual void Check_Frustum() override;
 public:
 	CActor<CSon>* Get_Actor() { return m_pActor; }
 	void Set_Actor(CActor<CSon>* _pActor) { m_pActor = _pActor; }

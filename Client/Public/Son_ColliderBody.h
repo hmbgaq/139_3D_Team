@@ -28,6 +28,8 @@ public:
 	virtual void	OnCollisionEnter(CCollider* other)	override;
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
+private:
+	CMother* m_pMother = { nullptr };
 
 public:
 	static CSon_ColliderBody* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -336,7 +336,7 @@ protected:
 	PxControllerCollisionFlags m_LastCollisionFlags;
 
 protected:
-	map<const wstring, class CGameObject*>		m_PartObjects;
+	map<const wstring, CGameObject*>		m_PartObjects;
 
 public:
 	_bool		m_bLookAt = true;

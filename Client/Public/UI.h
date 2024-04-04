@@ -152,7 +152,8 @@ public:
 		*/
 
 		/* 알파 */
-		_float		fAlpha = 1.f;
+		_float		fAlpha = 0.f;
+		_float		fAlphaTrue = 0.f;
 
 		_int		iObjectNum = 0;			// 몇번째 녀석인지
 		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
@@ -311,8 +312,11 @@ public: /* ============================= Function ============================= 
 	virtual void	Check_RectPos();	// Moving
 	void			Moving_Picking_Point(POINT pt); // Picking Moving
 	virtual void	Parts_Delete();
-	void			LifeTime(_float fTimeDelta);
+	_float			Check_CamToTarget_Distance(_vector vTargetPos);
 
+public: /* ============================= LifeTime ============================= */
+	void			LifeOff(_float fTimeDelta);
+	void			LifeOn(_float fTimeDelta);
 
 public:
 	void			Set_LifeTimeUI(_bool bLifeTimeUI) { m_bLifeTimeUI = bLifeTimeUI; }
@@ -320,8 +324,9 @@ public:
 	void			ResetTime();
 	_bool			Get_LifeTimeUI() { return m_bLifeTimeUI; }
 
-private:
+protected:
 	_bool			m_bLifeTimeUI = false;
+	_float			m_fActive_Distance = 12.f;
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
@@ -334,7 +339,7 @@ public: /* ============================== SetUp ============================== *
 	void			SetUp_PositionToScreen(_fvector vWorldPos);
 
 	//				TargetWorld => Screen
-	void			SetUp_WorldToScreen(_matrix vWorldPos, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
+	void			SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	HRESULT			SetUp_BillBoarding();
 	_matrix			matTargetWorld = XMMatrixIdentity();
 	_bool			Calculation_Direcion(_vector vTargetPos, _float4 vCurrentDir);
@@ -342,7 +347,10 @@ public: /* ============================== SetUp ============================== *
 
 	// error : 새 코드 요소를 반환하지 못했습니다. 구문 오류일 수 있습니다. -> 해결방법 : 프로젝트 폴더 내에 vs폴더 삭제 후 실행
 	void			Tick_LevelUp(_float fTimeDelta);
+
+public:	// Tick
 	void			Player_HUD(_float fTimeDelta);
+	void			TutorialBox(_float fTimeDelta);
 
 public:
 	void			Check_Disappear(_float fTimeDelta);
@@ -357,6 +365,7 @@ public:
 	string			Get_ObjectNameTag() { return m_tUIInfo.strObjectName; }
 	_int			Get_ObjectNum() { return m_tUIInfo.iObjectNum; }
 	void			Set_UIName(string strName) { m_tUIInfo.strUIName = strName; }
+	void			Set_ProtoTag(string strProto) { m_tUIInfo.strProtoTag = strProto; }
 
 protected: /* =========================== Ready ============================= */
 	virtual HRESULT Ready_Components();
@@ -403,6 +412,7 @@ public: /* =========================== Animation ============================== 
 
 	void			Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 	_float			Get_Alpha() { return m_fAlpha; }
+	_float*			Get_PointAlpha() { return &m_tUIInfo.fAlpha; }
 
 	// dt 값
 	_float			fFrameTimeDelta, fCurFrameTimeDelta;
@@ -507,6 +517,9 @@ protected: /* =========================== Screen ============================ */
 	_float				m_fScreenOffsetX = 300.f;
 	_float				m_fScreenOffsetY = 150.f;
 
+	_float				m_fPreScreenX = 0.f;
+	_float				m_fPreScreenY = 0.f;
+
 protected: /* ============================= UI =============================== */
 	vector<CUI*>		m_vecUIParts;
 	UI_DESC				m_tUIInfo;
@@ -523,6 +536,7 @@ protected: /* ============================= UI =============================== *
 	_float				m_fScaleX = 0.f, m_fScaleY = 0.f, m_fScaleZ = 0.1f;
 	UI_KIND				m_eKind = NORMAL;
 	_float				m_fOffsetX = 0.f, m_fOffsetY = 0.f;
+	_float				m_fTarget_Distance = 0.f;
 
 	CTexture*			m_pDistortionCom[DISTORTION_END] = { nullptr };
 	_int				m_iMaskNum = 0;

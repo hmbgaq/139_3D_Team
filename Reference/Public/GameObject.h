@@ -58,12 +58,13 @@ public: /* For. Transform */
 	class CTransform*	Get_Transform();
 	_vector				Get_Position_Vector();
 	_float3				Get_Position();
+	_float3				Get_Look();
 	_vector				Calc_Look_Dir(_vector vTargetPos);
 	_vector				Calc_Look_Dir_XZ(_vector vTargetPos);
 
 	void				Set_Position(const _float3& vState);
 	void				Set_WorldMatrix(_float4x4 matrix);
-	HRESULT				Set_InitPosition(const _float3& vPos);
+	virtual HRESULT		Set_InitPosition(const _float3& vPos);
 
 public: /* For. Model */
 	void				Set_ModelWidth(_float fWidth) { m_fModelWidth = fWidth; }
@@ -99,7 +100,7 @@ public: /* For. Collision */
 	virtual void		OnPhysXCollisionExit(CPhysXCollider* pOtherCollider) {};
 
 protected: /* Base Setting Value */
-	map<const wstring, class CComponent*>		m_Components;
+	map<const wstring, CComponent*>		m_Components;
 
 	ID3D11Device*								m_pDevice			= { nullptr };
 	ID3D11DeviceContext*						m_pContext			= { nullptr };

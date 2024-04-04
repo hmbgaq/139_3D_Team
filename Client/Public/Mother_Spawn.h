@@ -11,6 +11,9 @@ public:
 	virtual void Release(CMother* pActor) override;
 
 public:
+	CSpringCamera* m_pSpringCamera = { nullptr };
+	_float m_fCameraFovy = 60.f;
+public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::GrandParasiter_Intro;
 
 };

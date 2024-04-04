@@ -135,6 +135,7 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 			case LEVEL_TOOL:
 				pNewLevel = CLevel_Tool::Create(m_pDevice, m_pContext);
 				m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY); // KeyInput -> GamePlay
+				ShowCursor(true);
 				break;
 			}
 

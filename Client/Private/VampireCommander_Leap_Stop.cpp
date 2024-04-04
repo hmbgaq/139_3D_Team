@@ -26,4 +26,6 @@ void CVampireCommander_Leap_Stop::Release(CVampireCommander* pActor)
 
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	pWeapon->Set_Enable(false);
+	pActor->Set_UseGravity(true);
+
 }

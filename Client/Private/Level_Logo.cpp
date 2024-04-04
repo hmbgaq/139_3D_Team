@@ -27,10 +27,13 @@ HRESULT CLevel_Logo::Initialize()
 	
 	m_pDataManager = CData_Manager::GetInstance();
 
-	FAILED_CHECK(Ready_Static_UI());
+	//FAILED_CHECK(Ready_Static_UI());
 
 	FAILED_CHECK(m_pUIManager->Ready_MainMenu(LEVEL_LOGO));
 	m_pUIManager->Active_MainMenu();
+	FAILED_CHECK(m_pUIManager->Ready_MouseCursor(LEVEL_STATIC));
+	m_pUIManager->Active_MouseCursor();
+
 	m_pUIManager->NonActive_MainList();
 	m_pUIManager->NonActive_LevelList();
 	m_pUIManager->NonActive_MainLogo();
@@ -61,6 +64,13 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		}
 	}
 
+	if (m_pDataManager->Get_SelectLevel() != LEVEL_LOGO &&
+		m_pDataManager->Get_SelectLevel() != LEVEL_END &&
+		m_pDataManager->Get_SelectLevel() != LEVEL_TOOL)
+	{
+		FAILED_CHECK_RETURN(Ready_Static_UI(), );
+	}
+
 	switch (m_pDataManager->Get_SelectLevel())
 	{
 		case Client::LEVEL_STATIC:
@@ -83,7 +93,6 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 			break;
 		case Client::LEVEL_TOOL:
 			FAILED_CHECK_RETURN(m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_TOOL)), );
-			ShowCursor(true);
 			break;
 		case Client::LEVEL_LOADING:
 			break;
@@ -115,7 +124,7 @@ HRESULT CLevel_Logo::Ready_Static_UI()
 		// Ready DiedScreen
 		FAILED_CHECK(m_pUIManager->Ready_DiedScreen(LEVEL_STATIC));
 		// Ready MouseCursor
-		FAILED_CHECK(m_pUIManager->Ready_MouseCursor(LEVEL_STATIC));
+		//FAILED_CHECK(m_pUIManager->Ready_MouseCursor(LEVEL_STATIC));
 		// Ready SkillWindow
 		//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_SkillWindow(LEVEL_STATIC));
 		// Ready OptionWindow
@@ -125,7 +134,7 @@ HRESULT CLevel_Logo::Ready_Static_UI()
 		m_pUIManager->NonActive_HitUI();
 
 		m_pUIManager->NonActive_UI();
-		m_pUIManager->Active_MouseCursor();
+		//m_pUIManager->Active_MouseCursor();
 		m_bUI_ReadyOK = true;
 	}
 

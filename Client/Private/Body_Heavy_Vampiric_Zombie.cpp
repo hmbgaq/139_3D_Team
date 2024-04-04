@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Body_Heavy_Vampiric_Zombie.h"
 #include "GameInstance.h"
+#include "..\Public\Body_Heavy_Vampiric_Zombie.h"
 
 CBody_Heavy_Vampiric_Zombie::CBody_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody_Bandit_Heavy(pDevice, pContext, strPrototypeTag)
@@ -95,6 +96,11 @@ HRESULT CBody_Heavy_Vampiric_Zombie::Bind_ShaderResources()
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 	return S_OK;
+}
+
+void CBody_Heavy_Vampiric_Zombie::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 CBody_Heavy_Vampiric_Zombie* CBody_Heavy_Vampiric_Zombie::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

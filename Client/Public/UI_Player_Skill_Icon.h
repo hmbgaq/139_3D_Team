@@ -21,21 +21,27 @@ public:
 	virtual HRESULT			Render() override;
 
 	/* State */
-	virtual void	UI_Ready(_float fTimeDelta);
-	virtual void	UI_Enter(_float fTimeDelta);
-	virtual void	UI_Loop(_float fTimeDelta);
-	virtual void	UI_Exit(_float fTimeDelta);
+	virtual void			UI_Ready(_float fTimeDelta);
+	virtual void			UI_Enter(_float fTimeDelta);
+	virtual void			UI_Loop(_float fTimeDelta);
+	virtual void			UI_Exit(_float fTimeDelta);
+
+public:
+	void					Set_SkillState(SKILLSTATE eState) { m_eSkillState = eState; }
+	void					Set_SkillUnlock(_bool bUnlock) { m_bUnlock = bUnlock; }
 
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
 
 public:
-	json				 Save_Desc(json& out_json);
-	void				 Load_Desc();
+	json					Save_Desc(json& out_json);
+	void					Load_Desc();
 
 private:
-	CTexture*			m_pTextureCom[TEXTURE_END] = { nullptr };
+	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
+	SKILLSTATE				m_eSkillState = SKILLSTATE::ACTIVE;
+	_bool					m_bUnlock = false/*true*/;
 
 public:
 	static CUI_Player_Skill_Icon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

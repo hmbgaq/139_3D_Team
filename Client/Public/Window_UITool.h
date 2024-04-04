@@ -199,6 +199,7 @@ public:
 	CUI*						m_pCurrText = nullptr;
 	struct CUI_Text::TEXTINFO	m_tTextInfo;
 	vector<CUI*>				m_vecTextObject;
+	_bool						m_bShowInterface = true;
 	vector<string>				m_vecTextList =
 	{
 		"Defaul"

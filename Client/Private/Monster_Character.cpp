@@ -5,6 +5,8 @@
 #include "Data_Manager.h"
 #include "Transform.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
+#include "UI_EnemyHUD_Shard.h"
 
 CMonster_Character::CMonster_Character(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
@@ -109,6 +111,26 @@ CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 void CMonster_Character::Check_Frustum()
 {
 	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+}
+
+// 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
+void CMonster_Character::Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner)
+{
+		m_pEnemyHUD = m_pUIManager->Ready_EnemyHUD_Shard(iLevelIndex, pOwner);
+}
+
+// 몬스터 HUD의 위치를 잡아줍니다. (매 틱마다 불러주세요. | 몬스터의 World매트릭스를 넣어주세요. | Offset만큼 위치를 움직일 수 있습니다. [Defualt (오프셋 안줬을 경우) : 0, 2, 0]
+void CMonster_Character::Check_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos)
+{
+	if (m_pEnemyHUD != nullptr)
+		m_pEnemyHUD->Set_EnemyHUD_World(matWorld, vOffsetPos);
+}
+
+// 몬스터 HUD의 위치를 잡아줍니다. (매 틱마다 불러주세요. | 몬스터의 World매트릭스를 넣어주세요. | Offset만큼 위치를 움직일 수 있습니다. [Defualt (오프셋 안줬을 경우) : 0, 2, 0]
+void CMonster_Character::Set_EnemyHUD_Dead()
+{
+	if(m_pEnemyHUD != nullptr)
+		m_pEnemyHUD->Set_Dead_Owner(true);
 }
 
 void CMonster_Character::Free()

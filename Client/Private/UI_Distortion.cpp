@@ -53,6 +53,7 @@ HRESULT CUI_Distortion::Initialize(void* pArg)
 	해당 객체에 원하는 함수나 변수 만들어서 불러오기.
 	*/
 
+	m_fAlpha = m_tUIInfo.fAlphaTrue;
 	m_iMaskNum = m_tUIInfo.iMaskNum;
 	m_iNoiseNum = m_tUIInfo.iNoiseNum;
 
@@ -71,7 +72,7 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 	m_iMaskNum = m_tUIInfo.iMaskNum;
 	m_iNoiseNum = m_tUIInfo.iNoiseNum;
 
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (!m_vecAnimation.empty())
 		{
@@ -80,6 +81,7 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 		else
 		{
 			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
+			m_fAlpha = m_tUIInfo.fAlphaTrue;
 		}
 	}
 }
@@ -170,6 +172,9 @@ HRESULT CUI_Distortion::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_fTimeAcc, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tUIInfo.vScrollSpeeds, sizeof(_float3))))

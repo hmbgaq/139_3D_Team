@@ -213,10 +213,14 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-	pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
-	CNavigation* pNavigation = pPlayer->Get_Navigation();
-
-	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+	pPlayer->Set_InitPosition(_float3(100.6f, 0.f, 65.2f));
+// 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
+// 
+// 	pPlayer->Set_Position(_float3(100.6f, 0.f, 65.2f));
+// 	CNavigation* pNavigation = pPlayer->Get_Navigation();
+// 
+// 	//pNavigation->Set_CurrentIndex(490);
+// 	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
 //	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
@@ -245,18 +249,18 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Monster(const wstring& strLayerTag)
 	//! Boss
 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Mother"));
 	if (nullptr == pMonster)   return E_FAIL;
-	pMonster->Set_Position(_float3(103.f, 0.f, 112.36f));
+	pMonster->Set_Position(_float3(103.f, -3.f, 112.36f));
 	pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
 
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
-	if (nullptr == pMonster)   return E_FAIL;
-	pMonster->Set_Position(_float3(86.f, 0.f, 80.36f));
-	pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
-
-	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
-	if (nullptr == pMonster)   return E_FAIL;
-	pMonster->Set_Position(_float3(120.f, 0.f, 80.36f));
-	pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+// 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+// 	if (nullptr == pMonster)   return E_FAIL;
+// 	pMonster->Set_Position(_float3(86.f, 0.f, 80.36f));
+// 	pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+// 
+// 	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+// 	if (nullptr == pMonster)   return E_FAIL;
+// 	pMonster->Set_Position(_float3(120.f, 0.f, 80.36f));
+// 	pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
 	return S_OK;
 
 
