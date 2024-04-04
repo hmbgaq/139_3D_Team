@@ -134,9 +134,13 @@ void CVampireCommander_BloodRange_Loop::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
 
-	EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
-	m_pEffect = nullptr;
-	//m_pEffect->Set_Dead(true);
+	if (m_pEffect != nullptr)
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		//Safe_Release(m_pEffect);
+		//m_pEffect->Set_Dead(true);
+	}
+
 
 	for (int i = 0; i < pActor->m_pWeakneesUIs.size();++i)
 	{

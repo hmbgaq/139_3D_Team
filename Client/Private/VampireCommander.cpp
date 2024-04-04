@@ -283,8 +283,9 @@ void CVampireCommander::Free()
 
 	if (nullptr != m_pMapEffect)
 	{
-		EFFECT_MANAGER->Return_Effect_ToPool(m_pMapEffect);
-		m_pMapEffect = nullptr;
+		EFFECT_MANAGER->Return_ToPool(m_pMapEffect);
+		Safe_Release(m_pMapEffect);
+		//m_pMapEffect = nullptr;
 		//m_pMapEffect->Set_Dead(TRUE);
 	}
 }

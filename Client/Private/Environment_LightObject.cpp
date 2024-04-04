@@ -296,7 +296,7 @@ void CEnvironment_LightObject::Change_LightEffect(LIGHT_EFFECT eLightEffectType)
 	if (m_pEffect != nullptr)
 	{
 		//m_pEffect->Set_Dead(true);
-		EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		m_pEffect = nullptr;
 	}
 
@@ -468,7 +468,7 @@ void CEnvironment_LightObject::Free()
 		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
 	
 	if (m_pEffect != nullptr)
-		EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);

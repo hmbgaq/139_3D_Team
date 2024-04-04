@@ -352,7 +352,8 @@ _uint CBody::Get_CurrentKeyFrames(_uint iIndex)
 
 void CBody::Check_Frustum()
 {
-	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f);
+	//m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
 HRESULT CBody::Bind_ShaderResources()

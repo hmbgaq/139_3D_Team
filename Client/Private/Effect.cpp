@@ -83,7 +83,12 @@ void CEffect::Tick(_float fTimeDelta)
 					m_tEffectDesc.fWaitingAcc += fTimeDelta;
 
 					if (m_tEffectDesc.fWaitingAcc >= m_tEffectDesc.fWaitingTime)
+					{
 						m_tEffectDesc.bRender = true;
+
+						if (nullptr != m_pTrail)	// 트레일이 존재하면 이때 플레이 시작
+							m_pTrail->Set_Play(TRUE);
+					}					
 					else
 						return;
 				}
@@ -305,14 +310,12 @@ void CEffect::Update_PivotMat()
 		// 이펙트의 주인이 죽었다.
 		if (m_pOwner->Is_Dead())
 		{
-			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
-			if (nullptr != m_pTrail)
-			{
-				if (nullptr != m_pTrail)
-					m_pTrail->Set_Play(FALSE);
-			}
+			if (nullptr != m_pTrail)	// 트레일을 갖고있던 이펙트면 트레일 멈춤
+				m_pTrail->Set_Play(FALSE);
+			
 
-			EFFECT_MANAGER->Return_Effect_ToPool(this);
+			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
+			EFFECT_MANAGER->Return_ToPool(this);
 
 			return;
 		}
@@ -359,6 +362,7 @@ void CEffect::Init_ReSet_Effect()
 		if (nullptr != Pair.second)
 			dynamic_cast<CEffect_Void*>(Pair.second)->Init_ReSet_Effect();
 	}
+
 }
 
 
@@ -376,7 +380,7 @@ void CEffect::End_Effect()
 				dynamic_cast<CEffect_Void*>(Pair.second)->End_Effect();
 			}				
 		}
-		ReSet_Effect();	// 루프면 리셋. 루프면 누군가가 죽여주지 않는 이상 죽지않는다. (루프돌다가 죽이고 싶을때 이펙트매니저로 Return_Effect_ToPool()호출하면 될 듯.
+		ReSet_Effect();	// 루프면 리셋. 루프면 누군가가 죽여주지 않는 이상 죽지않는다. (루프돌다가 죽이고 싶을때 이펙트매니저로 Return_ToPool()호출하면 될 듯.
 	}
 	else
 	{
@@ -391,7 +395,7 @@ void CEffect::End_Effect()
 		{		
 			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면(파티클 등) 라이프 타임이 끝났을 때 죽이기.
 			{
-				EFFECT_MANAGER->Return_Effect_ToPool(this);
+				EFFECT_MANAGER->Return_ToPool(this);
 				//Set_Dead(TRUE);
 			}
 			else if (DEAD_OWNER == m_tEffectDesc.eType_Dead)	// 루프가 아니라도 죽음이 외부에서 정해진다면 라이프 타임이 끝났을 때 리셋만.
@@ -407,6 +411,9 @@ void CEffect::End_Effect()
 
 void CEffect::End_Effect_ForPool()
 {
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Play(FALSE);
+
 	m_tEffectDesc.bFinished = TRUE;	// 이펙트 종료
 
 	m_tEffectDesc.bPlay = FALSE;	// 재생 정지
@@ -422,9 +429,9 @@ void CEffect::End_Effect_ForPool()
 }
 
 
-HRESULT CEffect::Ready_Trail(string strFileName)
+HRESULT CEffect::Ready_Trail(_uint iLevelIndex, string strFileName)
 {
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(LEVEL_STATIC, LAYER_EFFECT, strFileName, this);
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iLevelIndex, LAYER_EFFECT, strFileName, this);
 
 	return S_OK;
 }
@@ -549,8 +556,11 @@ void CEffect::Free()
 
 	m_PartObjects.clear();
 
+
 	if (nullptr != m_pTrail)
+	{
 		Safe_Release(m_pTrail);
+	}	
 
 }
 

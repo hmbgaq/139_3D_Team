@@ -1423,6 +1423,16 @@ void CWindow_EffectTool::Update_ParticleTab()
 					}
 
 
+					ImGui::SeparatorText(u8"회전누적");
+					ImGui::RadioButton(u8"회전 누적 사용_Particle", &m_iUseRotAcc_Particle, 0);
+					ImGui::RadioButton(u8"회전 누적 사용안함_Particle", &m_iUseRotAcc_Particle, 1);
+
+					if (0 == m_iUseRotAcc_Particle)
+						m_pParticleBufferDesc->bRotAcc = TRUE;
+					else if (1 == m_iUseRotAcc_Particle)
+						m_pParticleBufferDesc->bRotAcc = FALSE;
+
+
 					ImGui::SeparatorText(u8"인스턴스 회전");
 					if (ImGui::DragFloat(" Radian_X_Particle ", &m_vRadian_Particle[0], 1.f, 0.f, 360.f))
 						m_pParticleBufferDesc->vRadian.x = m_vRadian_Particle[0];
@@ -3266,6 +3276,16 @@ void CWindow_EffectTool::Update_MeshTab()
 						}
 
 
+						ImGui::SeparatorText(u8"회전누적");
+						ImGui::RadioButton(u8"회전 누적 사용_Mesh", &m_iUseRotAcc_Mesh, 0);
+						ImGui::RadioButton(u8"회전 누적 사용안함_Mesh", &m_iUseRotAcc_Mesh, 1);
+
+						if (0 == m_iUseRotAcc_Mesh)
+							m_pMeshBufferDesc->bRotAcc = TRUE;
+						else if (1 == m_iUseRotAcc_Mesh)
+							m_pMeshBufferDesc->bRotAcc = FALSE;
+
+
 						ImGui::SeparatorText(u8"인스턴스 회전");
 						if (ImGui::DragFloat(" Radian_X_Mesh ", &m_vRadian_Mesh[0], 1.f, 0.f, 360.f))
 							m_pMeshBufferDesc->vRadian.x = m_vRadian_Mesh[0];
@@ -4144,6 +4164,12 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 			/* 자체 회전 */
+			if (TRUE == m_pParticleBufferDesc->bRotAcc)
+				m_iUseRotAcc_Particle = 0;
+			else 
+				m_iUseRotAcc_Particle = 1;
+
+
 			m_vRadian_Particle[0] = m_pParticleBufferDesc->vRadian.x;
 			m_vRadian_Particle[1] = m_pParticleBufferDesc->vRadian.y;
 			m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
@@ -4612,6 +4638,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 			/* 자체 회전 */
+			if (TRUE == m_pMeshBufferDesc->bRotAcc)
+				m_iUseRotAcc_Mesh = 0;
+			else
+				m_iUseRotAcc_Mesh = 1;
+
 			m_vRadian_Mesh[0] = m_pMeshBufferDesc->vRadian.x;
 			m_vRadian_Mesh[1] = m_pMeshBufferDesc->vRadian.y;
 			m_vRadian_Mesh[2] = m_pMeshBufferDesc->vRadian.z;
@@ -5505,7 +5536,7 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	{
 		if (ImGui::Button(" Test Delete "))
 		{
-			EFFECT_MANAGER->Return_Effect_ToPool(m_pTestEffect);
+			EFFECT_MANAGER->Return_ToPool(m_pTestEffect);
 			m_pTestEffect = nullptr;
 
 			//m_pTestEffect->Set_Dead(TRUE);

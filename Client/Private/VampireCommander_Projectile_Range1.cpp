@@ -114,8 +114,8 @@ void CVampireCommander_Projectile_Range1::OnCollisionEnter(CCollider* other)
 	//m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
 
-	EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
-	m_pEffect = nullptr;
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
+
 	//m_pEffect->Set_Dead(true);	// ÀÌÆåÆ® Á×ÀÌ±â
 }
 
@@ -192,8 +192,7 @@ void CVampireCommander_Projectile_Range1::Free()
 
 	if (nullptr != m_pEffect)
 	{
-		EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
-		m_pEffect = nullptr;
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	}
 
 

@@ -80,8 +80,8 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
-	//EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "VampireCommander/Projectile_Range3/" ,"Projectile_Range3_Tick_03.json"
-	//									, Get_Position(), TRUE, m_vPlayerPos );
+	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "Projectile_Range3_Tick_03.json", Get_Position(), TRUE, m_vPlayerPos);
+
 }
 
 void CVampireCommander_Projectile_Range3::Late_Tick(_float fTimeDelta)
@@ -120,7 +120,7 @@ void CVampireCommander_Projectile_Range3::OnCollisionEnter(CCollider* other)
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
 
-	EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	m_pEffect = nullptr;
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 
@@ -198,7 +198,7 @@ void CVampireCommander_Projectile_Range3::Free()
 
 	if (nullptr != m_pEffect)
 	{
-		EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		m_pEffect = nullptr;
 		//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 	}

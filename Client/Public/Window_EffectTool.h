@@ -274,6 +274,8 @@ private:
 
 
 	/* For.Rotation */
+	_int	m_iUseRotAcc_Particle = { 1 };
+
 	_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vMinMaxRadianSpeed_X_Particle[2] = { 0.f, 0.f };
@@ -472,6 +474,8 @@ private:
 
 
 	/* Rotation_Mesh */
+	_int	m_iUseRotAcc_Mesh = { 1 }; // 1이 사용안함
+
 	_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vMinMaxRadianSpeed_X_Mesh[2] = { 0.f, 0.f };

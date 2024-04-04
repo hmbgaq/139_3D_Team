@@ -30,12 +30,13 @@ HRESULT CEffect_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* 
 	return S_OK;
 }
 
+// 주인 컴바인 이펙트
 CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _bool bUseSocket, string strBoneTag)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
-	CEffect* pEffect = static_cast<CEffect*>(EffectPool->front());
+	CEffect* pEffect = EffectPool->front();
 
-	//Safe_AddRef(pEffect);
+	Safe_AddRef(pEffect);
 
 	if (nullptr != pOwner)
 		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
@@ -56,12 +57,13 @@ CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _
 
 }
 
+// 주인 없이 위치 생성 이펙트
 CEffect* CEffect_Manager::Play_Effect(string strFileName, _float3 vPos, _bool bLookTarget, _float3 vTargetPos)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
-	CEffect* pEffect = static_cast<CEffect*>(EffectPool->front());
+	CEffect* pEffect = EffectPool->front();
 
-	//Safe_AddRef(pEffect);
+	Safe_AddRef(pEffect);
 
 	// 위치 설정
 	pEffect->Set_Position(vPos);
@@ -81,8 +83,26 @@ CEffect* CEffect_Manager::Play_Effect(string strFileName, _float3 vPos, _bool bL
 	return pEffect;
 }
 
+// Tick 돌면서 두두두 생성되는 이펙트
+HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeTerm, _float fTimeDelta, string strFileName
+	, _float3 vPos
+	, _bool bLookTarget, _float3 vTargetPos)
+{
+	*fTimeAcc += fTimeDelta; // 시간 누적
 
-CEffect* CEffect_Manager::Load_Effect(_uint iLevelIndex, string strAddPath, string strFileName)
+	if (*fTimeAcc >= fGenerateTimeTerm) // 누적 시간이 생성 시간 텀보다 커지면 이펙트 생성 & 누적 시간 초기화
+	{
+		*fTimeAcc = 0.f;
+
+		// 현재 레벨에 생성
+		CEffect* pEffect = Play_Effect(strFileName, vPos, bLookTarget, vTargetPos);
+	}
+
+	return S_OK;
+}
+
+
+CEffect* CEffect_Manager::Load_Effect(_uint iLevelIndex, string strAddPath, string strFileName, _bool bHasTrail, string strTrailFileName)
 {
 	CEffect::EFFECT_DESC	tEffectDesc = {};
 	CEffect* pEffect = dynamic_cast<CEffect*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, LAYER_EFFECT, TEXT("Prototype_GameObject_Effect"), &tEffectDesc));
@@ -97,51 +117,19 @@ CEffect* CEffect_Manager::Load_Effect(_uint iLevelIndex, string strAddPath, stri
 
 	pEffect->Get_Desc()->strFileName = strFileName;	// 파일 이름 갖고있게 설정
 
+
+	if (bHasTrail)
+	{
+		// 트레일을 갖고있는 이펙트를 만들거면 트레일 준비
+		pEffect->Ready_Trail(iLevelIndex, strTrailFileName);
+	}
+	else
+	{
+		pEffect->Set_Nullptr_Trail();
+	}
+
 	return	pEffect;
 }
-
-
-
-//HRESULT CEffect_Manager::Tick_Create_Effect(_float* fTimeAcc, _float fCreateTime, _float fTimeDelta, string strAddPath, string strEffectFileName
-//	, _float3 vPos
-//	, _bool bLookTarget, _float4 vTargetPos )
-//{
-//
-//	*fTimeAcc += fTimeDelta; // 시간 누적
-//
-//	if (*fTimeAcc >= fCreateTime) // 누적 시간이 생성 시간보다 커지면 이펙트 생성 & 누적 시간 초기화
-//	{
-//		*fTimeAcc = 0.f;
-//
-//		// 현재 레벨에 생성
-//		CEffect* pEffect = Create_Effect(m_pGameInstance->Get_CurrentLevel(), strAddPath, strEffectFileName);
-//
-//		CTransform* pTransform = pEffect->Get_Transform();
-//
-//		pEffect->Set_Position(vPos); // 위치 세팅
-//
-//		if (TRUE == bLookTarget)
-//		{
-//			// 타겟을 바라볼거면 look_At 해주기
-//			pTransform->Look_At(vTargetPos);
-//		}
-//
-//	}
-//
-//	return S_OK;
-//}
-//
-//
-//CEffect* CEffect_Manager::Create_Effect_With_Trail(string strEffectFileName, string strTrailFileName, CGameObject* pOwner)
-//{
-//	_uint iCurLevel = m_pGameInstance->Get_NextLevel();
-//
-//	CEffect* pEffect = Create_Effect(iCurLevel, LAYER_EFFECT, strEffectFileName, pOwner);
-//
-//	pEffect->Ready_Trail(strTrailFileName);
-//
-//	return pEffect;
-//}
 
 
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
@@ -160,6 +148,8 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 	tVoidDesc.iTextureIndex[CEffect_Void::TEXTURE_NOISE] = { 0 };
 
 	CEffect_Trail* pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_Effect_Trail"), &tVoidDesc));
+
+	Safe_AddRef(pTrail);
 
 	string strPath = "../Bin/DataFiles/Data_Effect/Data_Trail";
 	string strLoadPath = strPath + "/" + strFileName;
@@ -185,49 +175,50 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(string strFileName, CGameObject* pOw
 	return Ready_Trail(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, strFileName, pOwner);
 }
 
+
 HRESULT CEffect_Manager::Ready_EffectPool()
 {
-	//_uint iCurLevel = m_pGameInstance->Get_NextLevel();
+	// Json로드까지 끝난 이펙트를 이펙트 풀에 등록한다. 
+	// Level_Logo 이니셜라이즈에서 호출하고 있다.(전체 게임 중 한번만 호출되어야 함)
 
-	_uint iLevel = LEVEL_STATIC;
+	_uint iLevel = LEVEL_STATIC;	//_uint iCurLevel = m_pGameInstance->Get_NextLevel();
 
-	// 1개만 필요한 이펙트
+	// 1개만 있어도 되는 이펙트
 	{
 		/* Circle_Floor */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
-
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
 
 		/* Boos 1 */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
 	}
 
 
 	// 대량으로 필요한 이펙트 (300개)
-	for (_uint i = 0; i < iMaxEnvironmentEffect; ++i)
+	for (_uint i = 0; i < iMaxManyEffect; ++i)
 	{
 		/* Light */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Fire/", "Fire_Torch_05.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json"));
 
 		/* Hit */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Hit/", "Hit_Distortion.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Hit/", "Hit_Normal.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json"));
 	}
 
 
 	// 중간 필요한 이펙트 (100개)
-	for (_uint i = 0; i < iMaxManyEffect; ++i)
+	for (_uint i = 0; i < iMaxEffect; ++i)
 	{
 		/* Boos 1 */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json"));
-
+		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json"));
 
 		/* Boos 2 */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
 	}
 
 
@@ -237,25 +228,26 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma region 플레이어 이펙트
 
 		/* Heal */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Heal/", "Heal_08.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json"));
 
 		/* EnergyWhip */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_20_distortionTest.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_29.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_21_distortionTest.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_30.json"));
 
 		/* SlamDown */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_22_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_22_Rock.json"));
 
 		/* DodgeBlink */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json"));
 
 		/* Roll */
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
-		FAILED_CHECK(Add_Effect_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
+
 #pragma endregion
 
 
@@ -264,40 +256,11 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	return S_OK;
 }
 
-HRESULT CEffect_Manager::Clear_EffectPool()
+
+
+HRESULT CEffect_Manager::Add_ToPool(_uint iLevelIndex, string strAddPath, string strFileName, _bool bHasTrail, string strTrailFileName)
 {
-
-	for (auto iter : m_EffectPool)
-	{
-		while (!iter.second.empty())
-		{
-			iter.second.front()->Set_Dead(TRUE);
-			//Safe_Release(iter.second.front());
-			iter.second.pop();
-		}
-	}
-
-	for (auto& Pair : m_EffectPool)
-		Safe_Release(Pair.second);
-
-	m_EffectPool.clear();
-
-	return S_OK;
-}
-
-queue<CEffect*>* CEffect_Manager::Get_EffectPool(string strFileName)
-{
-	if (0 != m_EffectPool.count(strFileName))
-	{
-		return &m_EffectPool[strFileName];
-	}
-
-	return nullptr;
-}
-
-HRESULT CEffect_Manager::Add_Effect_ToPool(_uint iLevelIndex, string strAddPath, string strFileName)
-{
-	CEffect* pEffect = Load_Effect(iLevelIndex, strAddPath, strFileName);
+	CEffect* pEffect = Load_Effect(iLevelIndex, strAddPath, strFileName, bHasTrail, strTrailFileName);
 
 	pEffect->End_Effect_ForPool();		// 리셋 & 정지 상태로 만들기
 
@@ -313,20 +276,48 @@ HRESULT CEffect_Manager::Add_Effect_ToPool(_uint iLevelIndex, string strAddPath,
 	return S_OK;
 }
 
-void CEffect_Manager::Return_Effect_ToPool(CEffect* pEffect)
+void CEffect_Manager::Return_ToPool(CEffect* pEffect)
 {
 	pEffect->End_Effect_ForPool();
 
 	m_EffectPool[pEffect->Get_Desc()->strFileName].push(pEffect);
 
-	//Safe_Release(pEffect);
+	Safe_Release(pEffect);
 }
+
+
+queue<CEffect*>* CEffect_Manager::Get_EffectPool(string strFileName)
+{
+	if (0 != m_EffectPool.count(strFileName))
+	{
+		return &m_EffectPool[strFileName];
+	}
+
+	return nullptr;
+}
+
+
+HRESULT CEffect_Manager::Clear_EffectPool()
+{
+	for (auto iter : m_EffectPool)
+	{
+		while (!iter.second.empty())
+		{
+			iter.second.front()->Set_Dead(TRUE);
+			//Safe_Release(iter.second.front());
+			iter.second.pop();
+		}
+	}
+
+	m_EffectPool.clear();
+
+	return S_OK;
+}
+
 
 void CEffect_Manager::Free()
 {
-
 	Clear_EffectPool();
-
 
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);

@@ -70,6 +70,7 @@ public:
 		/* For.Rotation */
 		TYPE_DIRAXIS eType_Dir = { DIR_UP };
 
+		_bool		bRotAcc = { FALSE };
 		_float3		vRadian = { 0.f, 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_X = { 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_Y = { 0.f, 0.f };

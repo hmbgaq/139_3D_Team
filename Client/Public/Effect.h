@@ -103,7 +103,8 @@ public:
 
 
 public:
-	HRESULT			Ready_Trail(string strFileName);				
+	HRESULT			Ready_Trail(_uint iLevelIndex, string strFileName);
+	void			Set_Nullptr_Trail() { m_pTrail = nullptr; }
 	void			Set_Trail(CEffect_Trail* pTrail) { m_pTrail = pTrail; };	// 툴 용
 	CEffect_Trail*	Get_Trail() { return m_pTrail; }							// 툴 용
 

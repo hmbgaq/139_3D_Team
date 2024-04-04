@@ -433,5 +433,6 @@ void CMainApp::Free()
 	CEffect_Manager::DestroyInstance();
 
 	CGameInstance::Release_Engine();
+
 }
 

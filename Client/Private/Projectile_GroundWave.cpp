@@ -189,6 +189,6 @@ void CProjectile_GroundWave::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		//m_pEffect->Set_Dead(true);
 }

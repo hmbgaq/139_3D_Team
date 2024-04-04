@@ -57,7 +57,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
 	//m_pEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test_02.json", this);
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Son_Test_06.json", this);
+
 
 	return S_OK;
 }
@@ -68,6 +68,7 @@ void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 	if (m_bFirst == true)
 	{
 		m_pTransformCom->Look_At(m_vPlayerPos);
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Son_Test_06.json", this);
 		m_bFirst = false;
 	}
 }
@@ -124,7 +125,7 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
 
-	EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	m_pEffect = nullptr;
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기 (EffectOut : 당장 안쓰는 이펙트라고 해서 일단 빼뒀습니다. [성희])
 }
@@ -201,7 +202,7 @@ void CSon_Projectile::Free()
 
 	if (nullptr != m_pEffect)
 	{
-		EFFECT_MANAGER->Return_Effect_ToPool(m_pEffect);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		m_pEffect = nullptr;
 		//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 	}
