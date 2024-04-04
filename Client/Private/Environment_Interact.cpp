@@ -147,7 +147,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
 		{
 			UnEnable_UpdateCells();
-			//m_bExit = true;
+			m_bExit = true;
 		}
 
 	}
@@ -499,15 +499,12 @@ _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 
 void CEnvironment_Interact::Interact()
 {
+	
 	if(m_bFindPlayer == false)
 		return;
 	
 	if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
 	{
-		if (m_tEnvironmentDesc.bUseGravity == false)
-		{
-			m_pPlayer->Set_UseGravity(false);
-		}
 
 		// !UI Add
 		if (m_pUI_Interaction != nullptr)
@@ -727,6 +724,8 @@ void CEnvironment_Interact::Interact()
 			Enable_UpdateCells();
 			m_bInteract = true;
 
+		
+
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
 		{
@@ -783,7 +782,7 @@ void CEnvironment_Interact::Interact()
 					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 					{
 						m_pPlayer->SetState_InteractVault200();
-
+						
 					}
 
 					break;
@@ -936,7 +935,7 @@ void CEnvironment_Interact::Interact()
 			//	m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
 
 			//m_pPlayer->Set_Interection(true);
-
+			
 			
 			m_bInteract = true;
 		}
@@ -968,7 +967,6 @@ void CEnvironment_Interact::Interact()
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false) 
 		{
 			//Enable_UpdateCells();
-
 
 		}
 	}
