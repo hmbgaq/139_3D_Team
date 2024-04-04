@@ -63,20 +63,34 @@ struct LUMA_DESC
     float foffset_bias;
     bool bLumaSharpen_Active;
 };
+
+struct FOG_DESC
+{
+    bool bFog_Active;       // 4취급 한다고 보면됨 struct 
+    float fFogStartDepth;
+    float fFogStartDistance;
+    float fFogDistanceValue;
+    float fFogHeightValue;
+    float fFogDistanceDensity;
+    float fFogHeightDensity;
+    float padding; // 4 
+    float4 vFogColor;
+};
+
 /*=============================================================
  
                              Variable 
                                 
 ==============================================================*/
 // Origin
-float4x4    g_WorldMatrix;
-float4x4    g_ViewMatrix;
-float4x4    g_ProjMatrix;
-float4x4    g_ViewMatrixInv;
-float4x4    g_ProjMatrixInv;
-float4x4    g_PreCamViewMatrix;
-float4x4    g_CamViewMatrix;
-float4x4    g_CamProjMatrix;
+matrix    g_WorldMatrix;
+matrix    g_ViewMatrix;
+matrix    g_ProjMatrix;
+matrix    g_ViewMatrixInv;
+matrix    g_ProjMatrixInv;
+matrix    g_PreCamViewMatrix;
+matrix    g_CamViewMatrix;
+matrix    g_CamProjMatrix;
 float4      g_vCamPosition;
 float       g_fCamFar;
 float       g_fCamNear;
@@ -127,8 +141,14 @@ Texture2D g_Ice_Target;
 // MotionBLur
 MOTIONBLUR_DESC g_MotionBlur;
 
-// LumaSharpen
+/* ========== LumaSharpen ==========*/
 LUMA_DESC g_Luma_Desc;
+
+/* ========== Fog ==========*/
+Texture2D g_PerlinNoiseTexture;
+float2 g_vFogUVAcc = { 0.f, 0.f };
+FOG_DESC g_Fogdesc;
+
 /*=============================================================
  
                              Function 
@@ -393,6 +413,38 @@ float4 LumaSharpenPass(float4 inputcolor, float2 texcoord)
 
     return saturate(inputcolor);
 }
+
+float3 Compute_HeightFogColor(float3 vOriginColor, float3 toEye, float fNoise, FOG_DESC desc)
+{
+    /*  vOriginColor : 안개없이 원래 그리는 색상 
+        toEye : 카메라에서 픽셀 바라보는벡터 */ 
+    
+    // 지정 범위 Distance
+    float pixelDistance = desc.fFogDistanceDensity * (length(g_vCamPosition.w - toEye) - desc.fFogStartDepth);
+    
+	// 지정 범위 Height
+    float pixelHeight = desc.fFogHeightDensity * toEye.y;
+    
+    float distanceOffset = min(pow(2.0f, pixelDistance - desc.fFogStartDistance), 1.0f);
+    float heightOffset = min(pow(1.2f, -(pixelHeight + 3.0f)), 1.0f);
+    
+	// 거리 기반 안개 강도 설정
+    float distanceValue = exp(0.01f * pow(pixelDistance - desc.fFogDistanceValue, 3.0f));
+    float fogDistanceFactor = min(distanceValue, 1.0f);
+
+	// 높이 기반 안개 강도 설정
+    float heightValue = (pixelHeight * desc.fFogHeightValue) - 0.1f;
+    float fogHeightFactor = pow(pow(2.0f, -heightValue), heightValue) * (1.0f - distanceOffset);
+
+	// 두 요소를 결합한 최종 요소
+    float fogFinalFactor = min(fogDistanceFactor * fogHeightFactor * fNoise, 1.0f) + min(distanceOffset * heightOffset, 1.0f) + 0.01f;
+
+    vector vFogColor = desc.vFogColor;
+    
+	// 최종 혼합 색상
+    return lerp(vOriginColor.rgb, vFogColor.xyz, fogFinalFactor);
+}
+
 /*=============================================================
  
                              IN/OUT  
@@ -849,6 +901,44 @@ PS_OUT PS_MAIN_LUMA(PS_IN In)
     Out.vColor = c0;
     return Out;
 }
+
+/* ------------------- 11 - Fog -------------------*/
+PS_OUT PS_MAIN_FOG(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vOrigin = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    float fViewZ = vDepth.y * g_fCamFar;
+    
+    vector vWorldPos;
+    
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepth.x;
+    vWorldPos.w = 1.f;
+    
+    vWorldPos *= fViewZ;
+    
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+        
+    /* Fog */ 
+    float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 128000.f) / 128000.f; 
+    // 값을 0과 1로 정규화 
+    // 픽셀의 월드 공간 위치를 100배 확대한후 나눈다 -> 좌표가 [0, 120800] 으로 변환되고 이후에 [0, 1] 로 나뉨. 
+    vTexCoord.x += g_vFogUVAcc.x;
+    vTexCoord.y += g_vFogUVAcc.y;
+    
+    float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
+    
+    float3 vFinalColor = Compute_HeightFogColor(vOrigin.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
+    
+    Out.vColor = vector(vFinalColor.rgb, 1.f);
+    
+    return Out;
+}
 /*=============================================================
  
                          Technique 
@@ -992,5 +1082,17 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_LUMA();
+    }
+
+    pass Fog
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend_Add, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FOG();
     }
 }

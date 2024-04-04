@@ -202,11 +202,6 @@ HRESULT CRenderer::Render_NonLight()
 	return S_OK;
 }
 
-HRESULT CRenderer::Render_Fog()
-{
-	return S_OK;
-}
-
 
 HRESULT CRenderer::Render_NonBlend()
 {
@@ -788,6 +783,35 @@ HRESULT CRenderer::Render_DOF()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Fog()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Fog")));
+
+	/* Value */
+	_float			CamFar = m_pGameInstance->Get_CamFar();
+	_float4			vCampos = m_pGameInstance->Get_CamPosition();
+
+	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_fCamFar", &CamFar, sizeof(_float)));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_RawValue("g_vCamPosition", &vCampos, sizeof(_float4)));
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ViewMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_VIEW))); //
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_ProjMatrixInv", &m_pGameInstance->Get_TransformFloat4x4Inverse(CPipeLine::D3DTS_PROJ))); //
+	FAILED_CHECK(m_pShader_PostProcess->Bind_Struct("g_Fogdesc", &m_tFog_Option, sizeof(FOG_DESC)));
+
+	/* Target */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::FOG), m_pShader_PostProcess, "g_ProcessingTarget"));
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Depth"), m_pShader_PostProcess, "g_DepthTarget")); /* GameObject의 Depth */
+
+	/* Texture */
+	FAILED_CHECK(m_pPerlinNoiseTextureCom->Bind_ShaderResource(m_pShader_PostProcess, "g_PerlinNoiseTexture"));
+
+	FAILED_CHECK(m_pShader_PostProcess->Begin(ECast(POST_SHADER::POST_FOG)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+	FAILED_CHECK(m_pVIBuffer->Render());
+	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_RadialBlur()
 {
 	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_RaidalBlur")));
@@ -1313,15 +1337,20 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 	/* Target_Deferred -> Target_Effect_Final */
 	/* 순서 :DOF, HDF, Radial Blur, FXAA, HSV , Vignette, Chroma, MotionBlur*/
 
-	if (eCurrType == POST_TYPE::DOF)
+	if (eCurrType == POST_TYPE::FOG)
 	{
 		strCurrentTarget = TEXT("Target_Effect_Final");
-		m_ePrevTarget = POST_TYPE::DOF;
+		m_ePrevTarget = POST_TYPE::FOG;
 	}
 	else 
 	{
 		switch (m_ePrevTarget)
 		{
+		case POST_TYPE::FOG:
+			strCurrentTarget = TEXT("Target_Fog");
+			m_ePrevTarget = eCurrType;
+			break;
+
 		case POST_TYPE::DEFERRED:
 			strCurrentTarget = TEXT("Target_Effect_Final");
 			m_ePrevTarget = eCurrType;
@@ -1821,9 +1850,9 @@ HRESULT CRenderer::Ready_DebugRender()
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade3"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 5.f), fBigX, fBigY));
 	
 	/* Render_Shadow */ 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 1.f), fBigX, fBigY)); // Render_Shadow 결과 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shadow_Blur"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 3.f), fBigX, fBigY)); // 를 블러시킴 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_ViewShadow"),		((fBigX / 2.f * 1)), (fBigY / 2.f * 5.f), fBigX, fBigY)); // 를 디퍼드에서 계산하던거 함 
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 1.f), fBigX, fBigY)); // Render_Shadow 결과 
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shadow_Blur"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 3.f), fBigX, fBigY)); // 를 블러시킴 
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_ViewShadow"),		((fBigX / 2.f * 1)), (fBigY / 2.f * 5.f), fBigX, fBigY)); // 를 디퍼드에서 계산하던거 함 
 	
 	/* !유정 : Effect관련 RenderTarget */
 	{	

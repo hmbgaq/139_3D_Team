@@ -794,81 +794,24 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
         
         Out.vColor = vPriority;
     }
-    else
-    { 
-        // MRT_LightAcc : Shade 
-        vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-        vShade = saturate(vShade);
+    
+    // MRT_LightAcc : Shade 
+    vector vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
+    vShade = saturate(vShade);
 	
-        // MRT_GameObject : Specular 
-        vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-        vSpecular = saturate(vSpecular);
+    // MRT_GameObject : Specular 
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vSpecular = saturate(vSpecular);
 	
-        vector vAmbient = g_AmbientTexture.Sample(LinearSampler, In.vTexcoord);
-        vAmbient = saturate(vAmbient);
-    
-        // Target_HBAO
-        vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
-        if (g_bSSAO_Active)
-            vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
-    
-        Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vAmbient;
-    }
-    // MRT_GameObject : Depth
-    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
-    
-    float fViewZ = vDepthDesc.y * g_CamFar;
-	
-    vector vWorldPos;
-    
-    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
-    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
-    vWorldPos.z = vDepthDesc.x;
-    vWorldPos.w = 1.f;
-    
-    vWorldPos = vWorldPos * fViewZ;
-    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-        
-    if (true == g_bFog_Active)
-    {
-        float3 vTexCoord = float3((vWorldPos.xyz * 100.f) % 12800.f) / 12800.f;
-        vTexCoord.x += g_vFogUVAcc.x;
-        vTexCoord.y += g_vFogUVAcc.y;
-    
-        float fNoise = g_PerlinNoiseTexture.Sample(LinearSampler, vTexCoord.xy).r;
-    
-        float3 vFinalColor = Compute_HeightFogColor(Out.vColor.xyz, (vWorldPos - g_vCamPosition).xyz, fNoise, g_Fogdesc);
-        
-        //float4 colorDensityPerSlice = g_VoxelReadTexture.Sample(ClampSampler, In.vTexcoord);
-        //
-        //if (colorDensityPerSlice.a == 0)
-        //    discard;
-        //
-        //float4 accumulateResult = Accumulate(0, float4(0.0f, 0.0f, 0.0f, 1.0f), colorDensityPerSlice, g_Fogdesc.VloumeSize_Z);
-        //
-        //vFinalColor *= accumulateResult.rgb;
-        
-        Out.vColor = vector(vFinalColor.rgb, 1.f);
-    }
-    
-    if (true == g_bShadow_Active)
-    {
-        vWorldPos = mul(vWorldPos, g_LightViewMatrix);
-        vWorldPos = mul(vWorldPos, g_LightProjMatrix);
+    vector vAmbient = g_AmbientTexture.Sample(LinearSampler, In.vTexcoord);
+    vAmbient = saturate(vAmbient);
    
-        float2 vUV = (float2) 0.0f;
+    // Target_HBAO
+    vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
+    if (g_bSSAO_Active)
+        vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
    
-        vUV.x = (vWorldPos.x / vWorldPos.w) * 0.5f + 0.5f;
-        vUV.y = (vWorldPos.y / vWorldPos.w) * -0.5f + 0.5f;
-   
-        float4 vLightDepth = g_ShadowDepthTexture.Sample(LinearSampler, vUV);
-   
-        if (vWorldPos.w - 0.1f > vLightDepth.x * g_LightFar) /* LightFar */ 
-            Out.vColor = Out.vColor * 0.8f;
-    }
-    
-    //Out.vColor += vEffect;
+    Out.vColor = (vDiffuse * vShade * vSSAO) + vSpecular + vAmbient;
     Out.vColor.a = 1.f;
     
     return Out;
