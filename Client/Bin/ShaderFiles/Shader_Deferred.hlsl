@@ -593,11 +593,13 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
     
     // 원본
-    float4 vLightDir = vWorldPos - g_vLightPos;
+   // float4 vLightDir = vWorldPos - g_vLightPos;
+    float4 vLightDir = g_vLightPos - vWorldPos;
     float fDistance = length(vLightDir);
     
     float fAtt = max((g_fLightRange - fDistance) / g_fLightRange, 0.f);
-    clip(fAtt - 0.01f);
+
+    //clip(fAtt - 0.01f);
     //float4 vLightDir = vWorldPos - g_vLightPos;
     //float fDistance = length(vLightDir);
     //float fDenom = fDistance / g_fLightRange;
@@ -605,7 +607,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     //clip(fAtt - 0.01f);
     //fAtt *= g_fLightIntensity;
     
-    vector vLook = vWorldPos - g_vCamPosition;
+    vector vLook = g_vCamPosition - vWorldPos;
     
     if (g_bPBR)
     {
@@ -658,12 +660,15 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     else
     {
         /* 안하는경우 */
-        vector vReflect = reflect(normalize(vLightDir), vNormal);
-        
         Out.vAmbient = g_vLightDiffuse * min((max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f) * fAtt;
+
+        vector vLook = vWorldPos - g_vCamPosition;
+        vector vReflect = reflect(normalize(vLightDir), vNormal);
+
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f) * fAtt;
     }
     
+   
     return Out;
 }
 
@@ -798,7 +803,9 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     vAmbient = saturate(vAmbient);
    
     /* 그림자 Shadow */ 
-    vector vShadow = g_ShadowResult.Sample(LinearSampler, In.vTexcoord);
+    vector vShadow = { 1.f, 1.f, 1.f, 1.f };
+    if (true == g_bShadow_Active)
+        vShadow = g_ShadowResult.Sample(LinearSampler, In.vTexcoord);
     
     // Target_HBAO
     vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);

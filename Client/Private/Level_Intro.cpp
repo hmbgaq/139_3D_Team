@@ -61,7 +61,7 @@ HRESULT CLevel_Intro::Initialize()
 
     FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
-    FAILED_CHECK(Ready_Shader());
+    //FAILED_CHECK(Ready_Shader());
 
     return S_OK;
 }
@@ -1005,11 +1005,11 @@ HRESULT CLevel_Intro::Ready_Shader()
     Desc.eType = LIGHT_DESC::TYPE::TYPE_POINT;
     Desc.bEnable = true;
     Desc.vDiffuse = { 0.f, 1.f, 0.f, 1.f };
-    Desc.vAmbient = { 1.f, 1.f, 1.f, 0.f };
-    Desc.vSpecular = { 0.f, 1.f, 0.486f, 0.6f };
+    Desc.vAmbient = { 1.f, 1.f, 1.f, 1.f };
+    Desc.vSpecular = { 0.6f, 0.6f, 0.6f, 1.f };
     Desc.vLightFlag = { 1.f, 1.f, 1.f, 1.f };
     Desc.fIntensity = 1.f;
-    Desc.vPosition = { 15.f, 1.f, 15.f };
+    Desc.vPosition = { 20.f, 1.f, 5.f };
     Desc.fRange = 6.f;
     m_pGameInstance->Add_Light(Desc, iTemp);
 
@@ -1038,9 +1038,12 @@ HRESULT CLevel_Intro::Ready_Shader()
     //
     //m_pGameInstance->Ready_StaticLightMatrix(vOffset, vDir);
 
+    /* 1. 셰이더 초기화 */
+    m_pGameInstance->Off_Shader();
 
+    /* 2. 셰이더 셋팅 */
     PBR_DESC Desc_PBR = {};
-
+    
     DEFERRED_DESC Desc_Deferred = {};
     
     HBAO_PLUS_DESC Desc_Hbao = {};

@@ -637,7 +637,7 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     vNormal = mul(vNormal, WorldMatrix);
     Out.vNormal = (vector(vNormal * 0.5f + 0.5f, 0.f)) * 0.2;
     
-    Out.vIndependence = Out.vDiffuse;
+    //Out.vIndependence = Out.vDiffuse;
     
     //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     //Out.vDiffuse += vRimColor;
@@ -647,7 +647,7 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     
 }
 
-/* ------------------- (11) Icicle -------------------*/
+/* ------------------- (11) Clip -------------------*/
 PS_OUT PS_MAIN_CLIP(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
