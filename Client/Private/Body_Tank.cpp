@@ -97,7 +97,7 @@ HRESULT CBody_Tank::Ready_Components()
 	BoundingDesc.vExtents = _float3(0.6f, 0.6f, 0.6f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
-	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
+	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 
 	return S_OK;
 }

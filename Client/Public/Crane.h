@@ -1,18 +1,17 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Character.h"
 
 BEGIN(Engine)
-class CShader;
-class CModel;
-class CCollider;
-
+//class CShader;
+//class CModel;
+//class CCollider;
 END
 
 BEGIN(Client)
 
-class CCrane : public CGameObject
+class CCrane : public CCharacter
 {
 protected:
 	CCrane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -26,17 +25,12 @@ public:
 	virtual void		Tick(_float fTimeDelta) override;
 	virtual void		Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT		Render() override;
-	virtual HRESULT		Render_Shadow() override;
-
-
-public:
-	virtual void		OnCollisionEnter(CCollider* other)	override;
-	virtual void		OnCollisionStay(CCollider* other)	override;
-	virtual void		OnCollisionExit(CCollider* other)	override;
 
 protected:
-	virtual HRESULT			Ready_Components();
-	virtual HRESULT			Bind_ShaderResources();
+	HRESULT				Ready_Components();
+	HRESULT				Ready_PartObjects();
+
+	//virtual HRESULT			Bind_ShaderResources();
 
 protected:
 	CShader* m_pShaderCom = { nullptr };

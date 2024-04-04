@@ -321,6 +321,9 @@
     <ClInclude Include="..\Public\Body_Bandit.h" />
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
+    <ClInclude Include="..\Public\Body_Crane.h" />
+    <ClInclude Include="..\Public\Cargo_Crane.h" />
+    <ClInclude Include="..\Public\HitPoint_Crane.h" />
     <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
     <ClInclude Include="..\Public\Body_Infected.h" />
@@ -1520,6 +1523,7 @@
     <ClCompile Include="..\Private\Body_Bandit.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Heavy.cpp" />
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
+    <ClCompile Include="..\Private\Body_Crane.cpp" />
     <ClCompile Include="..\Private\Body_Edgar.cpp" />
     <ClCompile Include="..\Private\Body_Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
@@ -1540,6 +1544,7 @@
     <ClCompile Include="..\Private\Bullet_Teleport.cpp" />
     <ClCompile Include="..\Private\Bullet_Winchester.cpp" />
     <ClCompile Include="..\private\Camera_Dynamic.cpp" />
+    <ClCompile Include="..\Private\Cargo_Crane.cpp" />
     <ClCompile Include="..\Private\Character_Client.cpp" />
     <ClCompile Include="..\Private\Clone_Manager.cpp" />
     <ClCompile Include="..\Private\Crane.cpp" />
@@ -1627,6 +1632,7 @@
     <ClCompile Include="..\Private\Finisher_Tank.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
     <ClCompile Include="..\Private\Heavy_Vampiric_Zombie.cpp" />
+    <ClCompile Include="..\Private\HitPoint_Crane.cpp" />
     <ClCompile Include="..\Private\Impact_Slam.cpp" />
     <ClCompile Include="..\Private\Infected.cpp" />
     <ClCompile Include="..\Private\Infected_A.cpp" />

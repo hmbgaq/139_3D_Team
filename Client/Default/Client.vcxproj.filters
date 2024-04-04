@@ -3949,6 +3949,21 @@
     <Filter Include="02.GameObjects\96. Test">
       <UniqueIdentifier>{15ac04d5-eb01-420f-bca6-ee3ee75a9d55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts">
+      <UniqueIdentifier>{8d88110b-9015-4b72-8895-420d991ffc62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Body">
+      <UniqueIdentifier>{ae085884-d382-4d38-a786-6f8b07e5917a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Weapon">
+      <UniqueIdentifier>{7ba9e593-aec6-45c0-9cd6-e3c5bfc6be59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Weapon\HitPoint">
+      <UniqueIdentifier>{6d013c84-03fb-41f6-9676-662b25b97c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\96. Test\Parts\Weapon\Cargo">
+      <UniqueIdentifier>{3f62b169-75d8-4d0f-b6f8-b0e3dacb23d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7761,6 +7776,15 @@
     <ClInclude Include="..\Public\Crane.h">
       <Filter>02.GameObjects\96. Test</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HitPoint_Crane.h">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\HitPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cargo_Crane.h">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\Cargo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Crane.h">
+      <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11043,6 +11067,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Crane.cpp">
       <Filter>02.GameObjects\96. Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HitPoint_Crane.cpp">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\HitPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cargo_Crane.cpp">
+      <Filter>02.GameObjects\96. Test\Parts\Weapon\Cargo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Crane.cpp">
+      <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
