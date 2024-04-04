@@ -39,6 +39,7 @@ public:
 							INTERACT_WHIPSWING,
 							INTERACT_WHIPPULL,
 							INTERACT_ROTATIONVALVE,
+							INTERACT_NONE,
 							INTERACT_END 
 					    };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
@@ -140,6 +141,7 @@ public:
 public: //! For Public
 	void								StartGroupInteract();
 	void								Reset_Interact();
+	
 	void								Set_Interact(_bool bInteract) { m_bInteract = bInteract;}
 	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex; }
 	void								Set_InteractGroupIndex(_int iGroupIndex) { m_tEnvironmentDesc.iInteractGroupIndex = iGroupIndex; }
@@ -217,6 +219,8 @@ public: //! For ToolTest
 	void								Erase_UpdateCellForIndex(_int iCellIndex) { m_tEnvironmentDesc.vecUpdateCellIndex.erase(m_tEnvironmentDesc.vecUpdateCellIndex.begin() + iCellIndex);}
 	void								Enable_UpdateCells();
 	void								UnEnable_UpdateCells();
+
+	void								Reset_Rotate() { m_bInteractEnable = true; m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);}
 
 public: //! For RollerCoster Wagon && Spline
 	void								Start_SplineEvent() { m_bSpline = true; }

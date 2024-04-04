@@ -4062,6 +4062,11 @@ void CWindow_MapTool::Interact_RotationFunction()
 	{
 		pInteractObject->Set_RotationSpeed(m_tSelectInteractDesc.fRotationSpeed);
 	}
+
+	if (ImGui::Button(u8"로테이션 리셋"))
+	{
+		pInteractObject->Reset_Rotate();
+	}
 	
 }
 
@@ -9066,6 +9071,7 @@ void CWindow_MapTool::Interact_SelectTab()
 				"INTERACT_WHIPSWING",
 				"INTERACT_WHIPPULL",
 				"INTERACT_ROTATIONVALVE",
+				"INTERACT_NONE",
 			};
 			const char* InteractPreviewType = InteractTypes[m_eInteractType];
 
@@ -9216,12 +9222,6 @@ void CWindow_MapTool::Interact_SelectTab()
 				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_Navigation(m_pNavigation);
 			}
 
-
-			
-
-			
-
-			
 			
 		}
 

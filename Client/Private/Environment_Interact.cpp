@@ -124,8 +124,10 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		m_pModelCom->Play_Animation(fTimeDelta, true);
 	}
 
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
-	m_pMoveRangeColliderCom->Update(XMMatrixIdentity());
+	if (m_pColliderCom != nullptr)
+	{
+		m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	}
 
 	if(m_bInteractEnable == true)
 		Interact();
@@ -141,7 +143,6 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		if (RotationCheck(fTimeDelta))
 		{
 			StartGroupInteract();
-			m_tEnvironmentDesc.bRotate = false;
 			m_bInteractEnable = false;
 		}
 	}
@@ -395,7 +396,8 @@ void CEnvironment_Interact::Reset_Interact()
 	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
 	m_bInteractStart = false;
 	m_bInteract = false;
-	m_bInteractEnable = false;
+	m_bInteractEnable = true;
+
 
 }
 
@@ -1999,9 +2001,12 @@ HRESULT CEnvironment_Interact::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	if(FAILED(Ready_InteractCollider(m_tEnvironmentDesc.eInteractType)))
-		return E_FAIL;
 
+	if (m_tEnvironmentDesc.eInteractType != CEnvironment_Interact::INTERACT_NONE)
+	{
+		if (FAILED(Ready_InteractCollider(m_tEnvironmentDesc.eInteractType)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
