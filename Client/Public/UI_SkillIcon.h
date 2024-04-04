@@ -3,14 +3,16 @@
 #include "UI.h"
 
 /* 체력 프레임 */
-class CUI_Option_Title_Button final : public CUI
+class CUI_SkillIcon final : public CUI
 {
-	enum TEXTUREKIND { NONACTIVE, ACTIVE, SELECT, TEXTURE_END };
+public:
+	enum UI_Animation { UNLOCK, JUMP, UIANIM_END };
+	enum TEXTUREKIND { NONACTIVE, ACTIVE, TEXTURE_END };
 
 private:
-	CUI_Option_Title_Button(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI_Option_Title_Button(const CUI_Option_Title_Button& rhs);
-	virtual ~CUI_Option_Title_Button() = default;
+	CUI_SkillIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CUI_SkillIcon(const CUI_SkillIcon& rhs);
+	virtual ~CUI_SkillIcon() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -31,14 +33,22 @@ private:
 	virtual HRESULT			Bind_ShaderResources() override;
 
 public:
-	json				 Save_Desc(json& out_json);
-	void				 Load_Desc();
+	virtual HRESULT			Set_ParentTransform(CTransform* pParentTransformCom) override;
+
+private:
+	void					Compute_OwnerCamDistance();
+	_bool					In_Frustum();
+
+public:
+	json					Save_Desc(json& out_json);
+	void					Load_Desc();
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	UI_Animation m_eAnimType = UIANIM_END;
 
 public:
-	static CUI_Option_Title_Button* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
+	static CUI_SkillIcon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
 	virtual CGameObject* Pool() override;
 	virtual void			Free() override;

@@ -3,14 +3,12 @@
 #include "UI.h"
 
 /* 체력 프레임 */
-class CUI_Option_Title_Button final : public CUI
+class CUI_SkillPreview_Window final : public CUI
 {
-	enum TEXTUREKIND { NONACTIVE, ACTIVE, SELECT, TEXTURE_END };
-
 private:
-	CUI_Option_Title_Button(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI_Option_Title_Button(const CUI_Option_Title_Button& rhs);
-	virtual ~CUI_Option_Title_Button() = default;
+	CUI_SkillPreview_Window(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CUI_SkillPreview_Window(const CUI_SkillPreview_Window& rhs);
+	virtual ~CUI_SkillPreview_Window() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -31,14 +29,21 @@ private:
 	virtual HRESULT			Bind_ShaderResources() override;
 
 public:
-	json				 Save_Desc(json& out_json);
-	void				 Load_Desc();
+	virtual HRESULT			Set_ParentTransform(CTransform* pParentTransformCom) override;
 
 private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	void					Compute_OwnerCamDistance();
+	_bool					In_Frustum();
 
 public:
-	static CUI_Option_Title_Button* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
+	json					Save_Desc(json& out_json);
+	void					Load_Desc();
+
+private:
+	CTexture*				m_pTextureCom = nullptr;
+
+public:
+	static CUI_SkillPreview_Window* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
 	virtual CGameObject* Pool() override;
 	virtual void			Free() override;

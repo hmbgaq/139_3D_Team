@@ -190,6 +190,13 @@
 /* MainMenu */
 #include "UI_MainMenuList.h"
 #include "UI_MoveEffect.h"
+/* SkiilWindow */
+#include "UI_SkillIcon.h"
+#include "UI_Skill_Preview.h"
+#include "UI_SkillPreview_Window.h"
+#include "UI_SkillFrame.h"
+#include "UI_SkillScrew.h"
+#include "UI_ConnectionLine.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -1191,6 +1198,15 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma region MainMenu
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MainMenuList"), CUI_MainMenuList::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MainMenuList"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MoveEffect"), CUI_MoveEffect::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MoveEffect"))));
+#pragma endregion End
+
+#pragma region SkillWindow
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillIcon"), CUI_SkillIcon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillIcon"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Skill_Preview"), CUI_Skill_Preview::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Skill_Preview"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillPreview_Window"), CUI_SkillPreview_Window::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillPreview_Window"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillFrame"), CUI_SkillFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillFrame"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillScrew"), CUI_SkillScrew::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillScrew"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ConnectionLine"), CUI_ConnectionLine::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ConnectionLine"))));
 #pragma endregion End
 
 	return S_OK;

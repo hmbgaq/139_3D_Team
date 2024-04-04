@@ -354,10 +354,15 @@ private:
 	_bool	m_bRepetition = false;
 #pragma endregion
 
+	char m_cPath[MAX_PATH] = "";
+	char m_cFileName[MAX_PATH] = "";
+	string m_strFileName = "";
+
 public: /* Save/Load */
 	virtual	HRESULT				Save_Function(string strPath, string strFileName) override;
 	virtual HRESULT				Load_Function(string strPath, string strFileName) override;
-	void						Save_Keyframe();
+	void						Save_Animation(string& strPath, string& strFileName);
+	void						Change_Animation(const string& strAnimation);
 
 public: /* ================= Function ================= */
 	// string타입을 받는 벡터 컨테이너를 char*타입을 받는 벡터 컨테이너로 변환 해주는 함수
@@ -509,7 +514,13 @@ private:
 		"Sprite",
 		"Interaction",
 		"MainMenuList",
-		"MoveEffect"
+		"MoveEffect",
+		"SkillIcon",
+		"Skill_Preview",
+		"SkillPreview_Window",
+		"SkillFrame",
+		"ConnectionLine",
+		"SkillScrew"
 	};
 
 	// 클래스 목록을 저장하는 벡터

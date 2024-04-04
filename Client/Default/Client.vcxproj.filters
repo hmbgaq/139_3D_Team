@@ -3820,6 +3820,30 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile">
       <UniqueIdentifier>{6109841c-8165-4a1d-a04b-5241426aa06d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon">
+      <UniqueIdentifier>{e2046d16-712c-4726-a069-ab5e7a33750b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow">
+      <UniqueIdentifier>{7a35130a-379e-4624-9cf5-25853cb0dae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Window">
+      <UniqueIdentifier>{d27adb47-a950-451a-ad60-2096fa11287d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Preview">
+      <UniqueIdentifier>{f6d2aabd-89bf-4844-b3a1-c8b9379429b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\02. Popup">
+      <UniqueIdentifier>{043f3356-7cb0-4c88-802f-462fe68b5d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon\SkillFrame">
+      <UniqueIdentifier>{993e9a89-cd66-4b4a-88cf-45ce7d593425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\03. Skill_Screw">
+      <UniqueIdentifier>{4241231e-c2e2-4b90-a34e-642952e81562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine">
+      <UniqueIdentifier>{e1bd43c0-97b9-4c69-bd9c-1d6cd9b4998b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7563,6 +7587,24 @@
     <ClInclude Include="..\Public\MotherShakeTreeProjectile.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillIcon.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Skill_Preview.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillPreview_Window.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillFrame.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon\SkillFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillScrew.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\03. Skill_Screw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_ConnectionLine.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10752,6 +10794,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Skill_Preview.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillPreview_Window.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillFrame.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon\SkillFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillScrew.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\03. Skill_Screw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_ConnectionLine.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

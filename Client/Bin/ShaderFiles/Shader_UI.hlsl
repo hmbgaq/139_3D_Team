@@ -24,6 +24,8 @@ Texture2D g_DepthTexture;
 
 /* Alpha */
 float g_Alpha;
+float g_WithProgress;
+float2 g_Scale;
 
 /* Loading */
 float g_LoadingProgress;
@@ -106,6 +108,18 @@ float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int g_iColorM
     }
  
     return vResault;
+}
+
+// 좌측 끝부터 시작하여 우측 끝까지 점점 그려지는 효과를 주는 함수
+float DrawProgress(float2 uv)
+{
+    // 픽셀의 x 좌표에 따라 그려지는 정도를 계산
+    float progress = uv.x; // 좌측 끝부터 시작하여 우측 끝까지의 거리
+
+    // progress 값을 사용하여 그려지는 색상을 결정
+    float4 color = float4(progress, progress, progress, 1.0f); // 흑백 이미지로 예시
+
+    return color;
 }
 
 /* 정점의 변환(월드변환, 뷰변환, 투영변환.)을 수행한다. */
@@ -205,6 +219,28 @@ PS_OUT PS_MAIN(PS_IN In) // 0
         discard;
 	
     return Out;
+    
+    /*
+    PS_OUT Out = (PS_OUT) 0;
+
+	// 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다.
+    float4 vBackColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+   
+    float progress = g_WithProgress; // x 좌표를 진행도로 사용하여 이미지를 그립니다.
+    float4 vFrontColor = g_DiffuseTexture_Front.Sample(LinearSampler, float2(progress, In.vTexcoord.y)); // 진행도에 따른 이미지의 색상 샘플링
+
+    Out.vColor = vFrontColor;
+    if (Out.vColor.a < 0.9f)
+        Out.vColor = vBackColor;
+    
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
+    
+    return Out;
+    
+    */
 }
 
 PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In) // 1
@@ -764,6 +800,30 @@ PS_OUT PS_MAIN_HP_SHARD(PS_IN In) // 9
 
 }
 
+/* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
+PS_OUT PS_MAIN_SELECT(PS_IN In) // 10
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+	/* 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다. */
+    float4 vBackColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture_Front.Sample(LinearSampler, In.vTexcoord);
+   
+    float2 vScaledTexCoord = In.vTexcoord * g_Scale; // 이미지를 확대하기 위해 UV 좌표를 확대
+    float4 vFrontColor = g_DiffuseTexture_Front.Sample(LinearSampler, vScaledTexCoord); // 확대된 UV 좌표로 텍스처 샘플링
+    
+    Out.vColor = vFrontColor;
+    
+    if (Out.vColor.a < 9)
+        Out.vColor = vBackColor;
+	
+    Out.vColor.a -= g_Alpha;
+    if (Out.vColor.a < 0.1f)
+        discard;
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
@@ -897,5 +957,18 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_HP_SHARD();
+    }
+
+    pass Select // 10
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SELECT();
     }
 }
