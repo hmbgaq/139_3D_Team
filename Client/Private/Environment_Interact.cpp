@@ -93,6 +93,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 
 void CEnvironment_Interact::Priority_Tick(_float fTimeDelta)
 {
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CEnvironment_Interact::Tick(_float fTimeDelta)
@@ -227,7 +228,7 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	if (m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 5.f))
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
@@ -929,10 +930,10 @@ void CEnvironment_Interact::Interact()
 				}
 			}
 
-			if (m_bMove == true)
+			//if (m_bMove == true)
 				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
-			else
-				m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
+			//else
+			//	m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
 
 			//m_pPlayer->Set_Interection(true);
 
@@ -966,7 +967,7 @@ void CEnvironment_Interact::Interact()
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false) 
 		{
-			Enable_UpdateCells();
+			//Enable_UpdateCells();
 
 
 		}
