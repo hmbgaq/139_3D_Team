@@ -18,7 +18,7 @@ CState<CSon>* CSon_RangeAttackFar::Update(CSon* pActor, _float fTimeDelta)
 		_float4x4 BoneMatrix = pActor->Get_Body()->Get_BonePtr("Bone020")->Get_CombinedTransformationMatrix();
 		_float4x4 SonMatrix = pActor->Get_Transform()->Get_WorldMatrix();
 
-		BoneMatrix = BoneMatrix * SonMatrix;
+		BoneMatrix = SonMatrix * BoneMatrix;
 		CGameObject* pProjectile = { nullptr };
 		pProjectile = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", L"Prototype_GameObject_Son_Projectile");
 		pProjectile->Set_WorldMatrix(BoneMatrix);

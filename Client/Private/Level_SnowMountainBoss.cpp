@@ -210,7 +210,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-	pPlayer->Set_InitPosition(_float3(100.6f, 0.f, 65.2f));
+	pPlayer->Set_InitPosition(_float3(99.83f, 0.f, 25.80f));
 // 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
 // 
 // 	pPlayer->Set_Position(_float3(100.6f, 0.f, 65.2f));

@@ -309,7 +309,7 @@ void CEffect::Update_PivotMat()
 		if (m_tEffectDesc.bParentPivot)
 		{
 			// 주인의 매트릭스를 사용할거면 받아오기
-			m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+			m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldMatrix();
 			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
 		}
 	}

@@ -46,7 +46,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	//
 	//m_pTransformCom->Set_WorldMatrix(Temp);
 
-	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.5f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
+	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.0f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
 
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
