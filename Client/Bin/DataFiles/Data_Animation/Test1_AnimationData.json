@@ -1,1 +1,19 @@
-{"Body":{"AnimDuration":330.0,"AnimIndex":1,"AnimationName":"Player_GetUp","AnimationSpeed":20.0,"BoneIndex":12,"BoneName":"Head","ColliderSize":0.5,"ColliderTrackPositionOff":330.0,"ColliderTrackPositionOn":0.0,"CurrentTrackPosition":111.72769165039063,"Layer":"Layer_Player","Tag":"Prototype_GameObject_Player","Type":"TypeBody"},"Weapon":null}
+{
+  
+  "Body": {
+    "AnimDuration": 330.0,
+    "AnimIndex": 1,
+    "AnimationName": "Player_GetUp",
+    "AnimationSpeed": 20.0,
+    "BoneIndex": 12,
+    "BoneName": "Head",
+    "ColliderSize": 0.5,
+    "ColliderTrackPositionOff": 330.0,
+    "ColliderTrackPositionOn": 0.0,
+    "CurrentTrackPosition": 111.72769165039063,
+    "Layer": "Layer_Player",
+    "Tag": "Prototype_GameObject_Player",
+    "Type": "TypeBody"
+  },
+  "Weapon": null
+}

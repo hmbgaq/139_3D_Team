@@ -316,6 +316,15 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fCurSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxSpeed.x, m_tBufferDesc.vMinMaxSpeed.y);
 	m_vecParticleInfoDesc[iNum].fCurTornadoSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxTornadoSpeed.x, m_tBufferDesc.vMinMaxTornadoSpeed.y);
 
+
+	m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+
+	// 자체회전 스피드
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_X.x, m_tBufferDesc.vMinMaxRadianSpeed_X.y);
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_Y.x, m_tBufferDesc.vMinMaxRadianSpeed_Y.y);
+	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_Z.x, m_tBufferDesc.vMinMaxRadianSpeed_Z.y);
+
+
 	// 원 회전(이동) 각도
 	m_vecParticleInfoDesc[iNum].fCurTheta = XMConvertToRadians(SMath::fRandom(m_tBufferDesc.vMinMaxTheta.x, m_tBufferDesc.vMinMaxTheta.y));
 
@@ -481,9 +490,21 @@ void CVIBuffer_Particle::Rotation_Instance(_uint iNum)
 	_vector		vLook		= m_vecParticleShaderInfoDesc[iNum].vLook * m_vecParticleInfoDesc[iNum].vCurScales.y;
 
 
-	_vector		vRotation = XMQuaternionRotationRollPitchYaw( XMConvertToRadians(m_tBufferDesc.vRadian.x)
-															, XMConvertToRadians(m_tBufferDesc.vRadian.y)
-															, XMConvertToRadians(m_tBufferDesc.vRadian.z));
+	if (m_tBufferDesc.bRotAcc)	// 회전 업데이트 사용이면 회전각도 계속 누적
+	{
+		m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_tBufferDesc.vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
+		m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_tBufferDesc.vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
+		m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_tBufferDesc.vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
+	}
+	else
+	{
+		m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+	}
+
+
+	_vector		vRotation = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.x)
+		, XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.y)
+		, XMConvertToRadians(m_vecParticleInfoDesc[iNum].vCurRadian.z));
 
 	_matrix		RotationMatrix = XMMatrixRotationQuaternion(vRotation);
 
@@ -1282,7 +1303,6 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxMass"], m_tBufferDesc.vMinMaxMass);
 
 	/* For.Position */
-	Out_Json["Com_VIBuffer"]["eType_Dir"] = m_tBufferDesc.eType_Dir;
 	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMinCenterOffsetPos"], m_tBufferDesc.vMinCenterOffsetPos);
 	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMaxCenterOffsetPos"], m_tBufferDesc.vMaxCenterOffsetPos);
 
@@ -1294,7 +1314,13 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxTheta"], m_tBufferDesc.vMinMaxTheta);
 
 	/* For.Rotation */
+	Out_Json["Com_VIBuffer"]["eType_Dir"] = m_tBufferDesc.eType_Dir;
+
+	Out_Json["Com_VIBuffer"]["bRotAcc"] = m_tBufferDesc.bRotAcc;
 	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_X"], m_tBufferDesc.vMinMaxRadianSpeed_X);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Y"], m_tBufferDesc.vMinMaxRadianSpeed_Y);
+	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Z"], m_tBufferDesc.vMinMaxRadianSpeed_Z);
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);
@@ -1400,6 +1426,10 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 	/* For.Rotation */
 	if(In_Json["Com_VIBuffer"].contains("eType_Dir")) // 다시 저장 후 삭제
 		m_tBufferDesc.eType_Dir = In_Json["Com_VIBuffer"]["eType_Dir"];
+
+
+	if (In_Json["Com_VIBuffer"].contains("bRotAcc")) // 다시 저장 후 삭제
+		m_tBufferDesc.bRotAcc = In_Json["Com_VIBuffer"]["bRotAcc"];
 
 
 	if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제

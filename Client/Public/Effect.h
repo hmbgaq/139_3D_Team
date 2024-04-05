@@ -31,9 +31,9 @@ public:
 		_float	fRemainTime			= { 0.f };	/* 라이프타임이 지나고, 이 시간이 넘어가야 이펙트 종료. */
 		_float	fSequenceTime		= { 0.f };	/* 총 시퀀스 시간(fWaitingTime + fLifeTime + fRemainTime) */
 
+
 		// 주인
 		_bool		 bParentPivot	= { FALSE };
-
 
 		/* 업데이트 되면서 바뀌는 정보들(저장x) */
 		_bool	bActive_Tool = { TRUE };
@@ -51,6 +51,24 @@ public:
 		// 주인 객체는 게임오브젝트에 있는 것 사용
 		_float4x4	 matPivot		= {};	/* XMStoreFloat4x4(&m_tEffectDesc.matPivot, XMMatrixIdentity()); */
 		_float4x4	 matCombined	= {};
+
+		_bool		bUseSocket		= { FALSE };
+		string		strBoneTag		= { "" };
+
+
+
+		string		strFileName		= { "" };	// Json에 저장X (Json파일 이름 .json포함)
+
+
+		void Reset_Pivot()
+		{
+			XMStoreFloat4x4(&matPivot, XMMatrixIdentity());
+			XMStoreFloat4x4(&matCombined, XMMatrixIdentity());
+
+			bUseSocket = FALSE;
+			strBoneTag = { "" };
+		}
+
 
 	}EFFECT_DESC;
 
@@ -79,16 +97,20 @@ public:
 	void	ReSet_Effect();
 	void	Init_ReSet_Effect();
 	void	End_Effect();
+	void	End_Effect_ForPool();
+
+	_bool	Is_End_Effect() { return m_tEffectDesc.bFinished; }
 
 
 public:
-	HRESULT			Ready_Trail(_uint iLevelIndex, string strFileName);				
+	HRESULT			Ready_Trail(_uint iLevelIndex, string strFileName);
+	void			Set_Nullptr_Trail() { m_pTrail = nullptr; }
 	void			Set_Trail(CEffect_Trail* pTrail) { m_pTrail = pTrail; };	// 툴 용
 	CEffect_Trail*	Get_Trail() { return m_pTrail; }							// 툴 용
 
 public:
 	map<const wstring, class CGameObject*>* Get_PartObjects() { return &m_PartObjects; }
-	CGameObject* Get_FirstPartObject() { return m_PartObjects.begin()->second; }
+	CGameObject* Get_FirstPartObject() { return m_PartObjects.begin()->second; }	// 툴 용
 
 
 	CGameObject*	Find_PartObject(const wstring& strPartTag);

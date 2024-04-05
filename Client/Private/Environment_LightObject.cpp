@@ -64,8 +64,7 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (true == m_tEnvironmentDesc.bEffect)
 	{
-		m_pEffect = EFFECT_MANAGER->Create_Effect("Fire/", "Fire_Torch_05.json", this);
-		//m_pEffect->Set_Position(m_pTransformCom->Get_State(CTransform::STATE_POSITION));
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Fire_Torch_05.json", this);
 	}
 	
 	return S_OK;
@@ -296,13 +295,14 @@ void CEnvironment_LightObject::Change_LightEffect(LIGHT_EFFECT eLightEffectType)
 
 	if (m_pEffect != nullptr)
 	{
-		m_pEffect->Set_Dead(true);
+		//m_pEffect->Set_Dead(true);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		m_pEffect = nullptr;
 	}
 
 
+	m_pEffect = EFFECT_MANAGER->Play_Effect(strEffectFilePath);
 
-	m_pEffect = EFFECT_MANAGER->Create_Effect(strEffectFilePath);
 
 	if (m_pEffect == nullptr)
 		MSG_BOX("라이트 오브젝트 이펙트 변경 실패");
@@ -468,7 +468,7 @@ void CEnvironment_LightObject::Free()
 		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
 	
 	if (m_pEffect != nullptr)
-		Safe_Release(m_pEffect);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);

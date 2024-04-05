@@ -867,7 +867,7 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 			m_bActive = true;
 
 		m_fWorldToScreenX = -(_float)iWinHalfX;
-		m_fWorldToScreenY = m_fPreScreenY;
+		//m_fWorldToScreenY = m_fPreScreenY;
 
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
@@ -886,7 +886,7 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 			m_bActive = true;
 
 		m_fWorldToScreenX = (_float)iWinHalfX;
-		m_fWorldToScreenY = m_fPreScreenY;
+		//m_fWorldToScreenY = m_fPreScreenY;
 		//m_fWorldToScreenX = -300.f;
 		//m_fWorldToScreenY = -300.f;
 	}
@@ -1204,6 +1204,9 @@ json CUI::Save_Desc(json& out_json)
 
 		out_json["RenderGroup"] = m_tUIInfo.iRenderGroup;
 
+		out_json["Level"] = m_tUIInfo.iLevel;
+		out_json["MaxLevel"] = m_tUIInfo.iMaxLevel;
+
 	/* TransformCom */
 	m_pTransformCom->Write_Json(out_json);
 
@@ -1461,6 +1464,109 @@ json CUI::Save_Animation(json& out_json)
 	}
 
 	return out_json;
+}
+
+void CUI::Change_Animation(const string& strAnimPath)
+{
+	if (!m_vecAnimation.empty()) // 기존 애니메이션이 있는 경우
+		m_vecAnimation.clear();
+
+	json In_Json;
+	string strFile;
+
+	// FilePath
+	strFile = strAnimPath;
+
+	CJson_Utility::Load_Json(strFile.c_str(), In_Json);
+
+	for (auto& item : In_Json.items())
+	{
+		json object = item.value();
+
+		// "KeyframeNum" 키가 없으면 기본값 사용
+		_bool bKeyframeNum = object.contains("KeyframeNum");
+		m_tUIInfo.iKeyframeNum = bKeyframeNum ? object["KeyframeNum"] : 0;
+
+		for (_int i = 0; i < m_tUIInfo.iKeyframeNum; ++i) // 19. Keyframe
+		{
+			/* Keyframe */
+			m_tUIInfo.tKeyframe.fTime = object["Keyframe"][i]["Time"];
+			m_tUIInfo.tKeyframe.fValue = object["Keyframe"][i]["Value"];
+			m_tUIInfo.tKeyframe.fAnimSpeed = object["Keyframe"][i]["AnimSpeed"];
+			m_tUIInfo.tKeyframe.iType = object["Keyframe"][i]["Type"];
+			m_tUIInfo.tKeyframe.isEaseIn = object["Keyframe"][i]["EaseIn"];
+			m_tUIInfo.tKeyframe.isEaseOut = object["Keyframe"][i]["EaseOut"];
+			m_tUIInfo.tKeyframe.iTexureframe = object["Keyframe"][i]["Texureframe"];
+			m_tUIInfo.tKeyframe.vScale.x = object["Keyframe"][i]["ScaleX"];
+			m_tUIInfo.tKeyframe.vScale.y = object["Keyframe"][i]["ScaleY"];
+			m_tUIInfo.tKeyframe.vPos.x = object["Keyframe"][i]["PosX"];
+			m_tUIInfo.tKeyframe.vPos.y = object["Keyframe"][i]["PosY"];
+			m_tUIInfo.tKeyframe.fRot = object["Keyframe"][i]["Rot"];
+			m_tUIInfo.tKeyframe.vKeyFramePos.x = object["Keyframe"][i]["KeyFramePosX"];
+			m_tUIInfo.tKeyframe.vKeyFramePos.y = object["Keyframe"][i]["KeyFramePosY"];
+
+			m_tUIInfo.tKeyframe.fAlpha = object["Keyframe"][i]["Alpha"];
+			m_tUIInfo.tKeyframe.bActive = object["Keyframe"][i]["Active"];
+			m_tUIInfo.tKeyframe.bAppear = object["Keyframe"][i]["Appear"];
+			m_tUIInfo.tKeyframe.bTrigger = object["Keyframe"][i]["Trigger"];
+
+			if (object["Keyframe"][i].contains("Disappear")) // "Disappear" 키가 있으면
+				m_tUIInfo.tKeyframe.bDisappear = object["Keyframe"][i]["Disappear"];
+
+			if (object["Keyframe"][i].contains("LoopSection"))// "LoopSection" 키가 있으면
+				m_tUIInfo.tKeyframe.bLoopSection = object["Keyframe"][i]["LoopSection"];
+
+			if (object["Keyframe"][i].contains("StopPlay"))// "LoopSection" 키가 있으면
+				m_tUIInfo.tKeyframe.bStopPlay = object["Keyframe"][i]["StopPlay"];
+
+			if (object["Keyframe"][i].contains("ReversePlay"))// "LoopSection" 키가 있으면
+				m_tUIInfo.tKeyframe.bReversePlay = object["Keyframe"][i]["ReversePlay"];
+
+			if (object["Keyframe"][i].contains("MaskChange"))// "LoopSection" 키가 있으면
+				m_tUIInfo.tKeyframe.bMaskChange = object["Keyframe"][i]["MaskChange"];
+
+			if (object["Keyframe"][i].contains("NoiseChange"))// "LoopSection" 키가 있으면
+				m_tUIInfo.tKeyframe.bNoiseChange = object["Keyframe"][i]["NoiseChange"];
+
+			if (object["Keyframe"][i].contains("TimeAcc")) // 키가 있으면
+				m_tUIInfo.tKeyframe.fTimeAcc = object["Keyframe"][i]["TimeAcc"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsX")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vScrollSpeeds.x = object["Keyframe"][i]["ScrollSpeedsX"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsY")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vScrollSpeeds.y = object["Keyframe"][i]["ScrollSpeedsY"];
+			if (object["Keyframe"][i].contains("ScrollSpeedsZ")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vScrollSpeeds.z = object["Keyframe"][i]["ScrollSpeedsZ"];
+			if (object["Keyframe"][i].contains("ScalesX")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vScales.x = object["Keyframe"][i]["ScalesX"];
+			if (object["Keyframe"][i].contains("ScalesY")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vScales.y = object["Keyframe"][i]["ScalesY"];
+			if (object["Keyframe"][i].contains("ScalesZ")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vScales.z = object["Keyframe"][i]["ScalesZ"];
+			if (object["Keyframe"][i].contains("Distortion1X")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vDistortion1.x = object["Keyframe"][i]["Distortion1X"];
+			if (object["Keyframe"][i].contains("Distortion1Y")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vDistortion1.y = object["Keyframe"][i]["Distortion1Y"];
+			if (object["Keyframe"][i].contains("Distortion2X")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vDistortion2.x = object["Keyframe"][i]["Distortion2X"];
+			if (object["Keyframe"][i].contains("Distortion2Y")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vDistortion2.y = object["Keyframe"][i]["Distortion2Y"];
+			if (object["Keyframe"][i].contains("Distortion3X")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vDistortion3.y = object["Keyframe"][i]["Distortion3X"];
+			if (object["Keyframe"][i].contains("Distortion3Y")) // 키가 있으면
+				m_tUIInfo.tKeyframe.vDistortion3.y = object["Keyframe"][i]["Distortion3Y"];
+			if (object["Keyframe"][i].contains("DistortionScale")) // 키가 있으면
+				m_tUIInfo.tKeyframe.fDistortionScale = object["Keyframe"][i]["DistortionScale"];
+
+			if (object["Keyframe"].contains("DistortionUI")) // 키가 있으면
+				m_tUIInfo.tKeyframe.bDistortionUI = object["Distortion"][i]["DistortionUI"];
+			if (object["Keyframe"].contains("MaskNum")) // 키가 있으면
+				m_tUIInfo.tKeyframe.iMaskNum = object["Distortion"][i]["MaskNum"];
+			if (object["Keyframe"].contains("NoiseNum")) // 키가 있으면
+				m_tUIInfo.tKeyframe.iNoiseNum = object["Distortion"][i]["NoiseNum"];
+
+			m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
+		}
+	}
 }
 
 void CUI::Play_Animation(_float fTimeDelta)

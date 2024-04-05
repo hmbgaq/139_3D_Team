@@ -34,11 +34,6 @@
 #include "InstanceMonster.h"
 #pragma endregion
 
-#pragma region Effect_Test
-#include "Clone_Manager.h"
-#include "Effect.h"
-#include "Navigation.h"
-#pragma endregion
 
 #include "Level_Loading.h"
 
@@ -64,12 +59,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
+
 	return S_OK;
 }
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_M))
+	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
 		//m_pGameInstance->Get_Renderer()->Set_HBAO_Active(false);
 		//m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(false);
@@ -80,35 +76,9 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		//m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
 		//m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
 
-		//m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
-#pragma region Effect_Test
-
-	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
- 	//{
- 	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
- 	//	pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
- 	//}
-
-
-	//if (m_pGameInstance->Key_Down(DIK_TAB))
-	//{
-	//	CEffect* pEffect = CClone_Manager::GetInstance()->Create_Effect(LEVEL_GAMEPLAY, LAYER_EFFECT, "Hit_3.json");
-	//	if (nullptr != m_pGameInstance->Get_Player())
-	//	{
-	//		CTransform* pTransform = m_pGameInstance->Get_Player()->Get_Transform();
-	//		_float3 vPos = pTransform->Get_Position();
-	//		vPos.y += 1.f;
-	//		pEffect->Set_Position(vPos);
-	//	}
-	//	else
-	//	{
-	//		pEffect->Set_Position(_float3(0.f, 1.f, 0.f));
-	//	}
-	//}
-
-#pragma endregion
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -1118,6 +1088,5 @@ void CLevel_GamePlay::Free()
 	__super::Free();
 
 	m_pGameInstance->Clear_Event();
-	
 
 }

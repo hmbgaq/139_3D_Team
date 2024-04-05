@@ -80,6 +80,7 @@ float4x4    g_CamProjMatrix;
 float4      g_vCamPosition;
 float       g_fCamFar;
 float       g_fCamNear;
+
 Texture2D   g_ProcessingTarget;
 
 // HDR 
@@ -101,6 +102,10 @@ Texture2D g_Effect_Target;
 Texture2D g_EffectBlur_Target;
 Texture2D g_Effect_Solid;
 Texture2D g_Distortion_Target;
+Texture2D g_Effect_Priority_DistortionTarget;
+Texture2D g_Effect_Priority_Diffuse;
+Texture2D g_EffectBlur_Priority_Target;
+Texture2D g_Effect_Priority_Solid;
 
 // EffectDistortion
 Texture2D g_Deferred_Target;
@@ -560,20 +565,34 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
    // vector Ice = g_Ice_Target.Sample(LinearSampler, In.vTexcoord);
     
-    vector Effect = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
+    vector Effect_Diffuse = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
+    
+    vector Effect_Priority_Diffuse = g_Effect_Priority_Diffuse.Sample(LinearSampler, In.vTexcoord);
+    vector Effect_Priority_Blur = g_EffectBlur_Priority_Target.Sample(LinearSampler, In.vTexcoord);
+    vector Effect_Priority_Solid = g_Effect_Priority_Solid.Sample(LinearSampler, In.vTexcoord);
+    
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     
     
-    Out.vColor = Effect_Solid;
+    Out.vColor = Effect_Solid + Effect_Priority_Solid;
     
     if (Out.vColor.a == 0) 
         Out.vColor += Effect_Distortion;
     
-    if (Out.vColor.a == 0) 
-        Out.vColor += Deferred + Effect + Effect_Blur;
-       // Out.vColor += Deferred + Effect + Effect_Blur + Ice;
+    if (Out.vColor.a == 0.f)
+    {       
+        //Out.vColor += Deferred;
+        
+        //if (Effect.a > 0.f)
+        //   Out.vColor *= Effect + Effect_Blur;
+                 
+        Out.vColor += Deferred + Effect_Diffuse + Effect_Blur + Effect_Priority_Diffuse + Effect_Priority_Blur; // 원래
+    }
+   
+    
+    // Out.vColor += Deferred + Effect + Effect_Blur + Ice;
     
     ////if(Out.vColor.a == 0) /* 그뒤에 디퍼드 + 디퍼드 블러 같이 그린다. */ 
     //    //Out.vColor += Effect + Object_Blur + Effect_Blur;   // 이펙트랑 위에 디퍼드를 바꿨다(이펙트 때문)
@@ -591,7 +610,8 @@ PS_OUT PS_MAIN_EFFECT_DISTORTION(PS_IN In)
        
     // 전처리에서 찍어준 디스토션 렌더타겟을 샘플링해서 얻어온다.
     vector Distortion = g_Effect_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
-    Out.vColor = Distortion;
+    vector Priority_Distortion = g_Effect_Priority_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+    Out.vColor = Distortion + Priority_Distortion;
      
     // 왜곡된 텍스쿠드 좌표를 만든다.
     float2 vDistortedCoord = Distortion.xy + In.vTexcoord.xy;
@@ -913,7 +933,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         //SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;

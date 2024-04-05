@@ -60,8 +60,8 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact_03_Red_With_Rock_02.json", this);
-	m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
-
+	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Projectile_Range3_02.json", this);
 
 	return S_OK;
 }
@@ -80,8 +80,8 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
-	EFFECT_MANAGER->Tick_Create_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "VampireCommander/Projectile_Range3/" ,"Projectile_Range3_Tick_03.json"
-										, Get_Position(), TRUE, m_vPlayerPos );
+	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "Projectile_Range3_Tick_03.json", Get_Position(), TRUE, m_vPlayerPos);
+
 }
 
 void CVampireCommander_Projectile_Range3::Late_Tick(_float fTimeDelta)
@@ -114,12 +114,15 @@ void CVampireCommander_Projectile_Range3::OnCollisionEnter(CCollider* other)
 
 
 		// 타격 이펙트
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
-
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit_Normal.json", m_pGameInstance->Get_Player()->Get_Position());
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
-	m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
+	m_pEffect = nullptr;
+	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 
 }
 
@@ -192,4 +195,11 @@ CGameObject* CVampireCommander_Projectile_Range3::Pool()
 void CVampireCommander_Projectile_Range3::Free()
 {
 	__super::Free();
+
+	if (nullptr != m_pEffect)
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_pEffect = nullptr;
+		//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+	}
 }

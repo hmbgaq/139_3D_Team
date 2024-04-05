@@ -511,7 +511,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 25;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 26;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 
@@ -609,7 +609,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 170;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 173;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 						}ImGui::SameLine();
@@ -819,7 +819,40 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 				if (ImGui::CollapsingHeader(" Shader & RenderGroup _Particle"))
 				{
+
 					/* 쉐이더 패스 인덱스 변경_파티클 */
+					ImGui::SeparatorText("Shader Pass_Particle");
+
+					wstring strCurPassTag = TEXT("");
+					if (0 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle(중점 중앙 위)");
+					else if (1 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Solid(중점 중앙 위)");
+					else if (2 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Distortion_Post");
+					else if (3 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Center");
+					else if (4 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Center_Solid");
+					else if (5 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor(중점 중앙 위)");
+					else if (6 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor_Solid(중점 중앙 위)");
+					else if (7 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Distortion_Post_Floor");
+					else if (8 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor_Center");
+					else if (9 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Floor_Center_Solid");
+					else if (10 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Priority");
+					else if (11 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Priority_Solid");
+					else if (12 == m_iShaderPassIndex_Particle)
+						strCurPassTag = TEXT("Particle_Wireframe");
+
+					ImGui::Text(u8"현재 패스 : %s", m_pGameInstance->ConverWStringtoC(strCurPassTag));
+
 					if (ImGui::InputInt("Shader Pass_Particle", &m_iShaderPassIndex_Particle, 1))
 					{
 						if (m_iMaxShaderPassIndex_Particle < m_iShaderPassIndex_Particle)
@@ -843,16 +876,51 @@ void CWindow_EffectTool::Update_ParticleTab()
 					}
 
 
-					/* 렌더그룹 변경_파티클(현재는 Effect그룹으로 고정(9번) */
-					//ImGui::SeparatorText(" Render Group_Particle ");
-					//if (ImGui::InputInt(" Render Group_Particle ", &m_iRenderGroup_Particle, 1))
-					//{
-					//	if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Particle)
-					//	{
-					//		m_iRenderGroup_Particle = (_int)CRenderer::RENDER_END - 1;
-					//	}
-					//	m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Particle;
-					//}
+					/* 렌더그룹 변경_파티클 */
+					ImGui::SeparatorText("Render Group_Particle");
+
+					wstring strRenderGroupTag = TEXT("");
+					if (0 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_PRIORITY");
+					else if (1 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_NONLIGHT");
+					else if (2 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_OUTLINE");
+					else if (3 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_NONBLEND");
+					else if (4 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_SHADOW");
+					else if (5 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_DECAL");
+					else if (6 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_EFFECT");
+					else if (7 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_PRIORITY");
+					else if (8 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_MESH");
+					else if (9 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_UI_BACK");
+					else if (10 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_UI");
+					else if (9 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_UI_FRONT");
+					else if (10 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_CURSOR");
+					else if (11 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_BLEND");
+					else if (12 == m_iRenderGroup_Particle)
+						strRenderGroupTag = TEXT("RENDER_END");
+
+					ImGui::Text(u8"현재 렌더그룹 : %s", m_pGameInstance->ConverWStringtoC(strRenderGroupTag));
+
+					if (ImGui::InputInt(" Render Group_Particle ", &m_iRenderGroup_Particle, 1))
+					{
+						if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Particle)
+						{
+							m_iRenderGroup_Particle = (_int)CRenderer::RENDER_END - 1;
+						}
+						m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Particle;
+					}
 
 					ImGui::SeparatorText("");
 				}
@@ -1355,6 +1423,16 @@ void CWindow_EffectTool::Update_ParticleTab()
 					}
 
 
+					ImGui::SeparatorText(u8"회전누적");
+					ImGui::RadioButton(u8"회전 누적 사용_Particle", &m_iUseRotAcc_Particle, 0);
+					ImGui::RadioButton(u8"회전 누적 사용안함_Particle", &m_iUseRotAcc_Particle, 1);
+
+					if (0 == m_iUseRotAcc_Particle)
+						m_pParticleBufferDesc->bRotAcc = TRUE;
+					else if (1 == m_iUseRotAcc_Particle)
+						m_pParticleBufferDesc->bRotAcc = FALSE;
+
+
 					ImGui::SeparatorText(u8"인스턴스 회전");
 					if (ImGui::DragFloat(" Radian_X_Particle ", &m_vRadian_Particle[0], 1.f, 0.f, 360.f))
 						m_pParticleBufferDesc->vRadian.x = m_vRadian_Particle[0];
@@ -1364,6 +1442,42 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 					if (ImGui::DragFloat(" Radian_Z_Particle ", &m_vRadian_Particle[2], 1.f, 0.f, 360.f))
 						m_pParticleBufferDesc->vRadian.z = m_vRadian_Particle[2];
+
+
+
+					ImGui::SeparatorText(u8"인스턴스 회전 스피드");
+					if (ImGui::DragFloat2("vMinMaxRadianSpeed_X_Particle", m_vMinMaxRadianSpeed_X_Particle, 0.1f, -360.f, 360.f))
+					{
+						if (m_vMinMaxRadianSpeed_X_Particle[0] > m_vMinMaxRadianSpeed_X_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxRadianSpeed_X_Particle[1] = m_vMinMaxRadianSpeed_X_Particle[0];
+
+
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_X.x = m_vMinMaxRadianSpeed_X_Particle[0];
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_X.y = m_vMinMaxRadianSpeed_X_Particle[1];
+
+					}
+
+					if (ImGui::DragFloat2("vMinMaxRadianSpeed_Y_Particle", m_vMinMaxRadianSpeed_Y_Particle, 0.1f, -360.f, 360.f))
+					{
+						if (m_vMinMaxRadianSpeed_Y_Particle[0] > m_vMinMaxRadianSpeed_Y_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxRadianSpeed_Y_Particle[1] = m_vMinMaxRadianSpeed_Y_Particle[0];
+
+
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.x = m_vMinMaxRadianSpeed_Y_Particle[0];
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.y = m_vMinMaxRadianSpeed_Y_Particle[1];
+
+					}
+
+					if (ImGui::DragFloat2("vMinMaxRadianSpeed_Z_Particle", m_vMinMaxRadianSpeed_Z_Particle, 0.1f, -360.f, 360.f))
+					{
+						if (m_vMinMaxRadianSpeed_Z_Particle[0] > m_vMinMaxRadianSpeed_Z_Particle[1])	// Min이 Max보다 크면 Max를 Min으로
+							m_vMinMaxRadianSpeed_Z_Particle[1] = m_vMinMaxRadianSpeed_Z_Particle[0];
+
+
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.x = m_vMinMaxRadianSpeed_Z_Particle[0];
+						m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.y = m_vMinMaxRadianSpeed_Z_Particle[1];
+					}
+
 
 
 					ImGui::SeparatorText("");
@@ -1708,7 +1822,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 					{
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 24;
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 26;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 					}
 
@@ -1732,7 +1846,7 @@ void CWindow_EffectTool::Update_RectTab()
 				if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 				{
 					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 170;
+					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 173;
 					m_iTexIndex_Rect[CEffect_Void::TEXTURE_MASK] = 0;
 
 				}ImGui::SameLine();
@@ -2119,23 +2233,50 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Aoe_Lens"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
 
+						if (ImGui::Button("BendedCylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_BendedCylinder"));
+
 						if (ImGui::Button("Billboard_Circle_00"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
+
+						if (ImGui::Button("BoxCylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_BoxCylinder"));
 
 						if (ImGui::Button("Ring"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Ring"));
 						
-						ImGui::SameLine();		
+						ImGui::SameLine();
+						if (ImGui::Button("Ring_02"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Ring_02"));
+
 						if (ImGui::Button("Sphere"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Sphere"));
 
-						if (ImGui::Button("Projectile"))
-							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Projectile"));
-
 						if (ImGui::Button("Corn"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Corn"));
-						
+
+
+						if (ImGui::Button("Cylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Cylinder"));
+
 						ImGui::SameLine();
+						if (ImGui::Button("VFX_Cylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_VFX_Cylinder"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("InvertedCylinder"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_InvertedCylinder"));
+
+						if (ImGui::Button("Projectile"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Projectile"));
+	
+						if (ImGui::Button("Meteor"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Meteor"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Meteor_With_Rock"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Meteor_With_Rock"));
+
 						if (ImGui::Button("ShieldDome"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_ShieldDome"));
 
@@ -2164,6 +2305,17 @@ void CWindow_EffectTool::Update_MeshTab()
 
 						if (ImGui::Button("Coil"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Coil"));
+
+						if (ImGui::Button("Spiral"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Spiral"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Spring_Bullet"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Spring_Bullet"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Twist"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Twist"));
 
 
 						ImGui::SeparatorText("");
@@ -2286,7 +2438,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 25;
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 26;
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
 
@@ -2358,7 +2510,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 170;
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 173;
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
 						}ImGui::SameLine();
@@ -2435,33 +2587,96 @@ void CWindow_EffectTool::Update_MeshTab()
 				/* UV 값 조절 */
 				if (ImGui::CollapsingHeader(" UV Option_Mesh "))
 				{
-					if (ImGui::DragFloat2(" UV_Offset ", m_fUV_Offset_Mesh, 1.f, 0.f, 100.f))
+					ImGui::SeparatorText(u8"UV 이동");
+					if (ImGui::DragFloat2("UV_Offset", m_fUV_Offset_Mesh, 1.f, 0.f, 100.f))
 					{
 						m_pCurVoidDesc->vUV_Offset.x = m_fUV_Offset_Mesh[0];
 						m_pCurVoidDesc->vUV_Offset.y = m_fUV_Offset_Mesh[1];
-					}ImGui::SameLine();
-					HelpMarker(u8"UV 이동");
+					}
 
-					if (ImGui::DragFloat2(" UV_Scale ", m_vUV_Scale_Mesh, 1.f, 0.f, 100.f))
+					ImGui::SeparatorText(u8"UV 크기(타일링)");
+					if (ImGui::DragFloat2("UV_Scale", m_vUV_Scale_Mesh, 1.f, 0.f, 100.f))
 					{
 						m_pCurVoidDesc->vUV_Scale.x = m_vUV_Scale_Mesh[0];
 						m_pCurVoidDesc->vUV_Scale.y = m_vUV_Scale_Mesh[1];
-					}ImGui::SameLine();
-					HelpMarker(u8"UV 크기(타일링)");
+					}
 
-					if (ImGui::DragFloat(" RotDegree_Mesh ", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
+					ImGui::SeparatorText(u8"UV 회전");
+					if (ImGui::DragFloat("RotDegree_Mesh", &m_fUV_RotDegree_Mesh, 1.f, 0.f, 360.f))
 					{
 						m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
-					}ImGui::SameLine();
-					HelpMarker(u8"회전");
+					}
 
 					ImGui::SeparatorText("");
 				}
 
 
+				/* 마스크 UV 값 조절 */
+				if (ImGui::CollapsingHeader(" UV Mask_Mesh "))
+				{
+					// 마스크 웨이브
+					ImGui::SeparatorText(u8"UV 스크롤_마스크");
+					ImGui::RadioButton(u8"UV 스크롤 사용", &m_iUV_Wave, 0);
+					ImGui::RadioButton(u8"UV 스크롤 사용 안함", &m_iUV_Wave, 1);
+
+					if (0 == m_iUV_Wave)
+						m_pCurVoidDesc->bUV_Wave = TRUE;
+					else if (1 == m_iUV_Wave)
+						m_pCurVoidDesc->bUV_Wave = FALSE;
+
+
+					if (0 == m_iUV_Wave)
+					{
+						ImGui::SeparatorText(u8"UV 스크롤 속도");
+						if (ImGui::DragFloat2("UV_WaveSpeed_Mesh", m_fUV_WaveSpeed, 0.1f, -100.f, 100.f))
+						{
+							m_pCurVoidDesc->vUV_WaveSpeed.x = m_fUV_WaveSpeed[0];
+							m_pCurVoidDesc->vUV_WaveSpeed.y = m_fUV_WaveSpeed[1];
+						}
+					}
+
+
+					ImGui::SeparatorText(u8"UV 이동_마스크");
+					if (ImGui::DragFloat2("UV_Offset_Mask_Mesh", m_fUV_Offset_Mask, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Offset_Mask.x = m_fUV_Offset_Mask[0];
+						m_pCurVoidDesc->vUV_Offset_Mask.y = m_fUV_Offset_Mask[1];
+					}
+
+					ImGui::SeparatorText(u8"UV 크기(타일링)_마스크");
+					if (ImGui::DragFloat2("UV_Scale_Mask_Mesh", m_fUV_Scale_Mask, 1.f, 0.f, 100.f))
+					{
+						m_pCurVoidDesc->vUV_Scale_Mask.x = m_fUV_Scale_Mask[0];
+						m_pCurVoidDesc->vUV_Scale_Mask.y = m_fUV_Scale_Mask[1];
+					}
+
+
+					ImGui::SeparatorText("");
+				}
+
+
+
 				/* 쉐이더 패스 인덱스 변경 */
 				if (ImGui::CollapsingHeader(" Shader & Render _MESH "))
 				{
+					ImGui::SeparatorText("Shader Pass_Mesh");
+
+					wstring strCurPassTag = TEXT("");
+					if (0 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("WireFrame");
+					else if(1 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Effect");
+					else if (2 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Effect_Solid");
+					else if (3 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion");
+					else if (4 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion_Solid");
+					else if (5 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion_Post");
+					
+					ImGui::Text(u8"현재 패스 : %s", m_pGameInstance->ConverWStringtoC(strCurPassTag));
+
 					if (ImGui::InputInt("Shader Pass_Mesh", &m_iShaderPassIndex_Mesh, 1))
 					{
 						if (m_iMaxShaderPassIndex_Mesh < m_iShaderPassIndex_Mesh)
@@ -2483,16 +2698,52 @@ void CWindow_EffectTool::Update_MeshTab()
 					}
 
 
-					///* 렌더그룹 변경 */
-					//ImGui::SeparatorText("Render Group_MESH");
-					//if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
-					//{
-					//	if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
-					//	{
-					//		m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
-					//	}
-					//	m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Mesh;
-					//}
+					/* 렌더그룹 변경 */
+					ImGui::SeparatorText("Render Group_Mesh");
+
+					wstring strRenderGroupTag = TEXT("");
+					if (0 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_PRIORITY");
+					else if (1 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_NONLIGHT");
+					else if (2 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_OUTLINE");
+					else if (3 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_NONBLEND");
+					else if (4 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_SHADOW");
+					else if (5 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_DECAL");
+					else if (6 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_EFFECT");
+					else if (7 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_PRIORITY");
+					else if (8 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_EFFECT_MESH");
+					else if (9 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_UI_BACK");
+					else if (10 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_UI");
+					else if (9 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_UI_FRONT");
+					else if (10 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_CURSOR");
+					else if (11 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_BLEND");
+					else if (12 == m_iRenderGroup_Mesh)
+						strRenderGroupTag = TEXT("RENDER_END");
+
+
+					ImGui::Text(u8"현재 렌더그룹 : %s", m_pGameInstance->ConverWStringtoC(strRenderGroupTag));
+
+					if (ImGui::InputInt("Render Group_Mesh", &m_iRenderGroup_Mesh, 1))
+					{
+						if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Mesh)
+						{
+							m_iRenderGroup_Mesh = (_int)CRenderer::RENDER_END - 1;
+						}
+						m_pCurVoidDesc->iRenderGroup = m_iRenderGroup_Mesh;
+					}
 
 					ImGui::SeparatorText("");
 				}
@@ -3025,6 +3276,16 @@ void CWindow_EffectTool::Update_MeshTab()
 						}
 
 
+						ImGui::SeparatorText(u8"회전누적");
+						ImGui::RadioButton(u8"회전 누적 사용_Mesh", &m_iUseRotAcc_Mesh, 0);
+						ImGui::RadioButton(u8"회전 누적 사용안함_Mesh", &m_iUseRotAcc_Mesh, 1);
+
+						if (0 == m_iUseRotAcc_Mesh)
+							m_pMeshBufferDesc->bRotAcc = TRUE;
+						else if (1 == m_iUseRotAcc_Mesh)
+							m_pMeshBufferDesc->bRotAcc = FALSE;
+
+
 						ImGui::SeparatorText(u8"인스턴스 회전");
 						if (ImGui::DragFloat(" Radian_X_Mesh ", &m_vRadian_Mesh[0], 1.f, 0.f, 360.f))
 							m_pMeshBufferDesc->vRadian.x = m_vRadian_Mesh[0];
@@ -3034,6 +3295,42 @@ void CWindow_EffectTool::Update_MeshTab()
 
 						if (ImGui::DragFloat(" Radian_Z_Mesh ", &m_vRadian_Mesh[2], 1.f, 0.f, 360.f))
 							m_pMeshBufferDesc->vRadian.z = m_vRadian_Mesh[2];
+
+
+						ImGui::SeparatorText(u8"인스턴스 회전 스피드");
+						if (ImGui::DragFloat2("vMinMaxRadianSpeed_X_Mesh", m_vMinMaxRadianSpeed_X_Mesh, 0.1f, -360.f, 360.f))
+						{
+							if (m_vMinMaxRadianSpeed_X_Mesh[0] > m_vMinMaxRadianSpeed_X_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vMinMaxRadianSpeed_X_Mesh[1] = m_vMinMaxRadianSpeed_X_Mesh[0];
+
+
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_X.x = m_vMinMaxRadianSpeed_X_Mesh[0];
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_X.y = m_vMinMaxRadianSpeed_X_Mesh[1];
+
+						}
+
+						if (ImGui::DragFloat2("vMinMaxRadianSpeed_Y_Mesh", m_vMinMaxRadianSpeed_Y_Mesh, 0.1f, -360.f, 360.f))
+						{
+							if (m_vMinMaxRadianSpeed_Y_Mesh[0] > m_vMinMaxRadianSpeed_Y_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vMinMaxRadianSpeed_Y_Mesh[1] = m_vMinMaxRadianSpeed_Y_Mesh[0];
+
+
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.x = m_vMinMaxRadianSpeed_Y_Mesh[0];
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.y = m_vMinMaxRadianSpeed_Y_Mesh[1];
+
+						}
+
+						if (ImGui::DragFloat2("vMinMaxRadianSpeed_Z_Mesh", m_vMinMaxRadianSpeed_Z_Mesh, 0.1f, -360.f, 360.f))
+						{
+							if (m_vMinMaxRadianSpeed_Z_Mesh[0] > m_vMinMaxRadianSpeed_Z_Mesh[1])	// Min이 Max보다 크면 Max를 Min으로
+								m_vMinMaxRadianSpeed_Z_Mesh[1] = m_vMinMaxRadianSpeed_Z_Mesh[0];
+
+
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.x = m_vMinMaxRadianSpeed_Z_Mesh[0];
+							m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.y = m_vMinMaxRadianSpeed_Z_Mesh[1];
+						}
+
+
 
 						ImGui::SeparatorText("");
 					}
@@ -3402,6 +3699,27 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 		if (ImGui::CollapsingHeader("Shader & RenderGroup_Trail"))
 		{
 			/* 쉐이더 패스 인덱스 변경 */
+
+			ImGui::SeparatorText("Shader Pass_Trail");
+
+			wstring strCurPassTag = TEXT("");
+			if (0 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Effect");
+			else if (1 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Effect_Solid");
+			else if (2 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Distortion");
+			else if (3 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Distortion_Solid");
+			else if (4 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Distortion_Post");
+			else if (5 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("Effect_Wireframe");
+			else if (6 == m_iShaderPassIndex_Trail)
+				strCurPassTag = TEXT("SY");
+
+			ImGui::Text(u8"현재 패스 : %s", m_pGameInstance->ConverWStringtoC(strCurPassTag));
+
 			if (ImGui::InputInt("Shader Pass_Trail", &m_iShaderPassIndex_Trail, 1))
 			{
 				if (m_iMaxShaderPassIndex_Trail < m_iShaderPassIndex_Trail)
@@ -3424,16 +3742,51 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 				m_pVoidTrailDesc->vColor_Clip.w = m_vColor_Clip_Trail[3];
 			}
 
-			///* 렌더그룹 변경 */
-			//ImGui::SeparatorText("");
-			//if (ImGui::InputInt("Render Group_Trail", &m_iRenderGroup_Trail, 1))
-			//{
-			//	if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Trail)
-			//	{
-			//		m_iRenderGroup_Trail = (_int)CRenderer::RENDER_END - 1;
-			//	}
-			//	m_pVoidTrailDesc->iRenderGroup = m_iRenderGroup_Trail;
-			//}
+			/* 렌더그룹 변경 */
+			ImGui::SeparatorText("Render Group_Trail");
+
+			wstring strRenderGroupTag = TEXT("");
+			if (0 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_PRIORITY");
+			else if (1 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_NONLIGHT");
+			else if (2 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_OUTLINE");
+			else if (3 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_NONBLEND");
+			else if (4 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_SHADOW");
+			else if (5 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_DECAL");
+			else if (6 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_EFFECT");
+			else if (7 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_EFFECT_PRIORITY");
+			else if (8 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_EFFECT_MESH");
+			else if (9 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_UI_BACK");
+			else if (10 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_UI");
+			else if (9 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_UI_FRONT");
+			else if (10 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_CURSOR");
+			else if (11 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_BLEND");
+			else if (12 == m_iRenderGroup_Trail)
+				strRenderGroupTag = TEXT("RENDER_END");
+
+			ImGui::Text(u8"현재 렌더그룹 : %s", m_pGameInstance->ConverWStringtoC(strRenderGroupTag));
+
+			if (ImGui::InputInt("Render Group_Trail", &m_iRenderGroup_Trail, 1))
+			{
+				if ((_int)CRenderer::RENDER_END < m_iRenderGroup_Trail)
+				{
+					m_iRenderGroup_Trail = (_int)CRenderer::RENDER_END - 1;
+				}
+				m_pVoidTrailDesc->iRenderGroup = m_iRenderGroup_Trail;
+			}
 
 
 			ImGui::SeparatorText("");
@@ -3571,6 +3924,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_iLoop_Part = 0;
 		else
 			m_iLoop_Part = 1;
+
 
 
 		if (CEffect_Void::PARTICLE == eType_Effect)
@@ -3810,9 +4164,27 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 			/* 자체 회전 */
+			if (TRUE == m_pParticleBufferDesc->bRotAcc)
+				m_iUseRotAcc_Particle = 0;
+			else 
+				m_iUseRotAcc_Particle = 1;
+
+
 			m_vRadian_Particle[0] = m_pParticleBufferDesc->vRadian.x;
 			m_vRadian_Particle[1] = m_pParticleBufferDesc->vRadian.y;
 			m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
+
+
+			// 추가 자체회전
+			m_vMinMaxRadianSpeed_X_Particle[0] = m_pParticleBufferDesc->vMinMaxRadianSpeed_X.x;
+			m_vMinMaxRadianSpeed_X_Particle[1] = m_pParticleBufferDesc->vMinMaxRadianSpeed_X.y;
+
+			m_vMinMaxRadianSpeed_Y_Particle[0] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.x;
+			m_vMinMaxRadianSpeed_Y_Particle[1] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Y.y;
+
+			m_vMinMaxRadianSpeed_Z_Particle[0] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.x;
+			m_vMinMaxRadianSpeed_Z_Particle[1] = m_pParticleBufferDesc->vMinMaxRadianSpeed_Z.y;
+
 
 
 			/* 라업룩 어느 축을 진행방향으로 할건지 업데이트 */
@@ -4109,6 +4481,25 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_fUV_RotDegree_Mesh = m_pCurVoidDesc->fUV_RotDegree;
 
 
+			/* UV 마스크 업데이트 */
+			if (TRUE == m_pCurVoidDesc->bUV_Wave)
+				m_iUV_Wave = 0;
+			else if (FALSE == m_pCurVoidDesc->bUV_Wave)
+				m_iUV_Wave = 1;
+
+			// UV 스크롤 스피드
+			m_fUV_WaveSpeed[0] = m_pCurVoidDesc->vUV_WaveSpeed.x;
+			m_fUV_WaveSpeed[1] = m_pCurVoidDesc->vUV_WaveSpeed.y;
+
+			// Offset 
+			m_fUV_Offset_Mask[0] = m_pCurVoidDesc->vUV_Offset_Mask.x;
+			m_fUV_Offset_Mask[1] = m_pCurVoidDesc->vUV_Offset_Mask.y;
+
+			// Scale
+			m_fUV_Scale_Mask[0] = m_pCurVoidDesc->vUV_Scale_Mask.x;
+			m_fUV_Scale_Mask[1] = m_pCurVoidDesc->vUV_Scale_Mask.y;
+
+
 
 			// 리지드바디 업데이트 =============================================================================================================		
 			/* 리지드바디 사용 여부 */
@@ -4247,6 +4638,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 			/* 자체 회전 */
+			if (TRUE == m_pMeshBufferDesc->bRotAcc)
+				m_iUseRotAcc_Mesh = 0;
+			else
+				m_iUseRotAcc_Mesh = 1;
+
 			m_vRadian_Mesh[0] = m_pMeshBufferDesc->vRadian.x;
 			m_vRadian_Mesh[1] = m_pMeshBufferDesc->vRadian.y;
 			m_vRadian_Mesh[2] = m_pMeshBufferDesc->vRadian.z;
@@ -4271,6 +4667,15 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_vRotationOffsetZ_Mesh[0] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.x;
 			m_vRotationOffsetZ_Mesh[1] = m_pMeshBufferDesc->vMinMaxRotationOffsetZ.y;
 
+			// 추가 자체회전
+			m_vMinMaxRadianSpeed_X_Mesh[0] = m_pMeshBufferDesc->vMinMaxRadianSpeed_X.x;
+			m_vMinMaxRadianSpeed_X_Mesh[1] = m_pMeshBufferDesc->vMinMaxRadianSpeed_X.y;
+
+			m_vMinMaxRadianSpeed_Y_Mesh[0] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.x;
+			m_vMinMaxRadianSpeed_Y_Mesh[1] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Y.y;
+
+			m_vMinMaxRadianSpeed_Z_Mesh[0] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.x;
+			m_vMinMaxRadianSpeed_Z_Mesh[1] = m_pMeshBufferDesc->vMinMaxRadianSpeed_Z.y;
 
 
 			/* 스케일 러프 */
@@ -4969,7 +5374,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 		if (CModel::TYPE_ANIM == m_pModel_Preview->Get_Desc()->eType)
 		{
 			ImGui::SeparatorText("Model Animation");
-			if (ImGui::Button("Idle_"))
+			if (ImGui::Button("Idle_0"))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
@@ -4983,20 +5388,44 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_Idle);
 				}
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Attack_"))
+			if (ImGui::Button("Attack_0"))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
 					// 플레이어 공격
 					//m_pModel_Preview->Set_AnimIndex(CPlayer::Player_EnergyWhip_CloseRange_01);
 
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_SlamDown_v2);			
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
 				{
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_02);
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Attack_1"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_TeleportPunch_L01_Alt);
+				}
 
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
+				}
+			}
+
+			if (ImGui::Button("Heal_01"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_InteractionGlamour_Activate);
+				}
+
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
 				}
 			}
@@ -5099,15 +5528,18 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		if (ImGui::Button(" Test Create "))
 		{
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
-			m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+			//m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+			m_pTestEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test.json");
 		}
 	}
 	else
 	{
 		if (ImGui::Button(" Test Delete "))
 		{
-			m_pTestEffect->Set_Dead(TRUE);
+			EFFECT_MANAGER->Return_ToPool(m_pTestEffect);
 			m_pTestEffect = nullptr;
+
+			//m_pTestEffect->Set_Dead(TRUE);
 		}
 	}
 	
@@ -5276,23 +5708,49 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				if (ImGui::Button("Aoe_Lens"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Aoe_Lens"));
 
+				if (ImGui::Button("BendedCylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_BendedCylinder"));
+
 				if (ImGui::Button("Billboard_Circle_00"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Billboard_Circle_00"));
+
+				if (ImGui::Button("BoxCylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_BoxCylinder"));
 
 				if (ImGui::Button("Ring"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring"));
 				
 				ImGui::SameLine();
+				if (ImGui::Button("Ring_02"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Ring_02"));
+
 				if (ImGui::Button("Sphere"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Sphere"));
 
-				if (ImGui::Button("Projectile"))
-					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Projectile"));
-
 				if (ImGui::Button("Corn"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Corn"));
-				
+
+				if (ImGui::Button("Cylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Cylinder"));
+
 				ImGui::SameLine();
+				if (ImGui::Button("VFX_Cylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_VFX_Cylinder"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("InvertedCylinder"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_InvertedCylinder"));
+
+				if (ImGui::Button("Projectile"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Projectile"));
+				
+				if (ImGui::Button("Meteor"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Meteor"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("Meteor_With_Rock"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Meteor_With_Rock"));
+
 				if (ImGui::Button("ShieldDome"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_ShieldDome"));
 	
@@ -5321,6 +5779,19 @@ void CWindow_EffectTool::Update_EffectList_Window()
 
 				if (ImGui::Button("Coil"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Coil"));
+
+				if (ImGui::Button("Spiral"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Spiral"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("Spring_Bullet"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Spring_Bullet"));
+
+				ImGui::SameLine();
+				if (ImGui::Button("Twist"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Twist"));
+
+
 
 
 				ImGui::SeparatorText("");
@@ -5956,7 +6427,7 @@ void CWindow_EffectTool::Update_EffectTransform_Window()
 
 HRESULT CWindow_EffectTool::Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner)
 {
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+	//_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	CEffect::EFFECT_DESC	tEffectDesc = {};
 	tEffectDesc.fSpeedPerSec = { 5.f };

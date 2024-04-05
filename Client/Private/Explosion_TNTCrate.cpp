@@ -101,8 +101,8 @@ void CExplosion_TNTCrate::OnCollisionEnter(CCollider* other)
 
 		}
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
-
+		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+		
 	}
 
 }

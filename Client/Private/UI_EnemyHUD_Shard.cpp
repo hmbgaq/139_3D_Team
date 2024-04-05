@@ -3,6 +3,8 @@
 #include "Json_Utility.h"
 #include "GameObject.h"
 #include "UI_Manager.h"
+#include "UI_EnemyHP_Shard.h"
+#include "UI_EnemyState_Shard.h"
 
 CUI_EnemyHUD_Shard::CUI_EnemyHUD_Shard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -169,7 +171,21 @@ HRESULT CUI_EnemyHUD_Shard::Ready_ChildHUD()
 			return E_FAIL;
 
 		pUI_Object->Set_Object_Owner(m_pOwner);
-		pUI_Object->Setting_Owner();
+		//pUI_Object->Setting_Owner();
+
+		/* HP */
+		string strCloneTag_HPBar = "Prototype_GameObject_UI_EnemyHP_Shard";
+		if (pUI_Object->Get_UIDesc().strCloneTag == strCloneTag_HPBar)
+		{
+			dynamic_cast<CUI_EnemyHP_Shard*>(pUI_Object)->Setting_Owner();
+		}
+
+		/* State */
+		string strCloneTag_State = "Prototype_GameObject_UI_EnemyState_Shard";
+		if (pUI_Object->Get_UIDesc().strCloneTag == strCloneTag_State)
+		{
+			dynamic_cast<CUI_EnemyState_Shard*>(pUI_Object)->Setting_Owner();
+		}
 
 		m_vecEnemyHUD.push_back(pUI_Object);
 

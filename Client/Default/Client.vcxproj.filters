@@ -247,9 +247,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\20. InstanceMonster">
       <UniqueIdentifier>{c458b000-11e4-4332-8c04-df6714f6be7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow">
-      <UniqueIdentifier>{eb6483af-c74c-4ffa-9e3d-456a091385c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\99.StyleWindow">
       <UniqueIdentifier>{878c0a39-123a-47f1-9886-b7358e46d58a}</UniqueIdentifier>
     </Filter>
@@ -2377,9 +2374,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\0. Screamer">
       <UniqueIdentifier>{6ab1225a-12f3-4ff6-9880-7a7c7881548c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object">
-      <UniqueIdentifier>{054c2e5b-1f7a-4054-9c31-2bfcbf1230ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Event\Trigger">
       <UniqueIdentifier>{1cc45268-c32f-4055-ae97-4cbc14a521b0}</UniqueIdentifier>
     </Filter>
@@ -3963,6 +3957,39 @@
     </Filter>
     <Filter Include="02.GameObjects\96. Test\Parts\Weapon\Cargo">
       <UniqueIdentifier>{3f62b169-75d8-4d0f-b6f8-b0e3dacb23d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon">
+      <UniqueIdentifier>{e2046d16-712c-4726-a069-ab5e7a33750b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow">
+      <UniqueIdentifier>{7a35130a-379e-4624-9cf5-25853cb0dae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Window">
+      <UniqueIdentifier>{d27adb47-a950-451a-ad60-2096fa11287d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Preview">
+      <UniqueIdentifier>{f6d2aabd-89bf-4844-b3a1-c8b9379429b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\02. Popup">
+      <UniqueIdentifier>{043f3356-7cb0-4c88-802f-462fe68b5d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon\SkillFrame">
+      <UniqueIdentifier>{993e9a89-cd66-4b4a-88cf-45ce7d593425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\03. Skill_Screw">
+      <UniqueIdentifier>{4241231e-c2e2-4b90-a34e-642952e81562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine">
+      <UniqueIdentifier>{e1bd43c0-97b9-4c69-bd9c-1d6cd9b4998b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\05. SkillActive">
+      <UniqueIdentifier>{48b20abb-cce7-4281-8e4f-ff6e790e4b35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow">
+      <UniqueIdentifier>{eb6483af-c74c-4ffa-9e3d-456a091385c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.Tool\Imgui\Windows\ShaderToolWindow\Dummy_Object">
+      <UniqueIdentifier>{054c2e5b-1f7a-4054-9c31-2bfcbf1230ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7758,6 +7785,27 @@
     <ClInclude Include="..\Public\MotherShakeTreeProjectile.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillIcon.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Skill_Preview.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillPreview_Window.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillFrame.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon\SkillFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillScrew.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\03. Skill_Screw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_ConnectionLine.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillActive.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\05. SkillActive</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Explosion_TNTCrate.h">
       <Filter>02.GameObjects\05. DestructableProps\1. TNTCrate\Projectile</Filter>
     </ClInclude>
@@ -7784,6 +7832,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Body_Crane.h">
       <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Son_RotationProjectile.h">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -11050,6 +11101,27 @@
     <ClCompile Include="..\Private\MotherShakeTreeProjectile.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\MotherShakeTreeProjectile</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Skill_Preview.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillPreview_Window.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\01. PreviewWindow\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillFrame.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon\SkillFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillScrew.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\03. Skill_Screw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_ConnectionLine.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillActive.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\05. SkillActive</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Explosion_TNTCrate.cpp">
       <Filter>02.GameObjects\05. DestructableProps\1. TNTCrate\Projectile</Filter>
     </ClCompile>
@@ -11076,6 +11148,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body_Crane.cpp">
       <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Son_RotationProjectile.cpp">
+      <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

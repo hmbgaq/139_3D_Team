@@ -32,7 +32,7 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 20.f;
+	GameObjectDesc.fSpeedPerSec = 13.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -46,9 +46,9 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 
 	//m_pTransformCom->Set_WorldMatrix(Temp);
 
-	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION);
-
-	m_pTransformCom->Look_At(m_vPlayerPos);
+	//m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+	//
+	//m_pTransformCom->Look_At(m_vPlayerPos);
 
 	m_fDamage = 10.f;
 
@@ -71,10 +71,14 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
+	m_pTransformCom->Rotation_Quaternion(_float3(1.f, 0.f, 0.f));
+
 	m_pTransformCom->Go_Down(fTimeDelta,nullptr);
 	if (m_pTransformCom->Get_Position().y <= 0.f)
+	{
+		//여기서 이펙트도 터트려야 함 돌튀는거 
 		Set_Enable(false);
-	//플레이어보다 높으면 브레스가 터지면 안될거 같기도 하고 
+	}
 
 }
 
@@ -100,9 +104,9 @@ HRESULT CMotherShakeTreeProjectile::Render_Shadow()
 void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 {
 	//충돌 했을떄 카메라 쉐이킹 해줘야 함 ! 
-	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	pSpringCam->Set_ShakeCameraTime(0.2f);
-	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
+	//CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	//pSpringCam->Set_ShakeCameraTime(0.2f);
+	//pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
@@ -110,13 +114,11 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 	{
 		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
+		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
+	//this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
-	//this->Set_Dead(true);
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 }
 
@@ -146,7 +148,7 @@ HRESULT CMotherShakeTreeProjectile::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 100.f };
+	BoundingDesc.fRadius = { 1.5f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
