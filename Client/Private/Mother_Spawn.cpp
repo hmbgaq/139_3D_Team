@@ -22,7 +22,7 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 	//m_fOffSetX += fTimeDelta;
 	if (m_bFlags[7] == false)
 	{
-		m_fOffSetY += fTimeDelta*0.5f;
+		m_fOffSetY += (fTimeDelta*0.5f);
 		if (m_fOffSetY >= 1.5f)
 			m_fOffSetY = 1.5f;
 		m_fOffSetZ -= (fTimeDelta * 3.f);
