@@ -43,6 +43,10 @@ public:
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
 
+	HRESULT		Save_Temp(string strPath);
+	HRESULT		Load_Temp(string strPath, TYPE_FILE eType_File);
+
+
 /* For.Level Setting (환경 세팅) */
 public:
 	void	Show_ImGui_WindowSize();	// ImGui 윈도우 창 크기 표시
@@ -62,6 +66,8 @@ public:
 /* For.Window Update (창 업데이트) */
 public:
 	void	Update_LevelSetting_Window();	// 레벨(환경) 세팅 창(카메라, 스카이박스, 크기비교용 모델 등...)
+
+	void	Update_SaveSlot_Window();		// 임시 저장 슬롯 창
 
 	void	Update_EffectList_Window();			// 이펙트 리스트박스 창
 	void	Update_EffectTrail_Window();		// 트레일 (왼쪽 창)

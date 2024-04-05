@@ -34,6 +34,10 @@ HRESULT CEffect_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* 
 CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _bool bUseSocket, string strBoneTag)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
+
+	if (EffectPool == nullptr) 
+		return nullptr;
+	
 	CEffect* pEffect = EffectPool->front();
 
 	Safe_AddRef(pEffect);
@@ -60,6 +64,10 @@ CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _
 CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strFileName, CGameObject* pOwner, _float4x4 matPivot)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
+
+	if (EffectPool == nullptr)
+		return nullptr;
+
 	CEffect* pEffect = EffectPool->front();
 
 	Safe_AddRef(pEffect);
@@ -83,6 +91,10 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strFileName, CGameObjec
 CEffect* CEffect_Manager::Play_Effect(string strFileName, _float3 vPos, _bool bLookTarget, _float3 vTargetPos)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
+
+	if (EffectPool == nullptr)
+		return nullptr;
+
 	CEffect* pEffect = EffectPool->front();
 
 	Safe_AddRef(pEffect);
@@ -116,7 +128,6 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 	{
 		*fTimeAcc = 0.f;
 
-		// 현재 레벨에 생성
 		CEffect* pEffect = Play_Effect(strFileName, vPos, bLookTarget, vTargetPos);
 	}
 
@@ -202,6 +213,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 {
 	// Json로드까지 끝난 이펙트를 이펙트 풀에 등록한다. 
 	// Level_Logo 이니셜라이즈에서 호출하고 있다.(전체 게임 중 한번만 호출되어야 함)
+	// Bin/DataFiles/Data_Effect + 추가 경로
 
 	_uint iLevel = LEVEL_STATIC;	//_uint iCurLevel = m_pGameInstance->Get_NextLevel();
 
@@ -324,6 +336,9 @@ HRESULT CEffect_Manager::Add_ToPool(_uint iLevelIndex, string strAddPath, string
 
 void CEffect_Manager::Return_ToPool(CEffect* pEffect)
 {
+	if (pEffect == nullptr)
+		return;
+
 	pEffect->End_Effect_ForPool();
 
 	m_EffectPool[pEffect->Get_Desc()->strFileName].push(pEffect);
