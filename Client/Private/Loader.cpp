@@ -197,6 +197,7 @@
 #include "UI_SkillFrame.h"
 #include "UI_SkillScrew.h"
 #include "UI_ConnectionLine.h"
+#include "UI_SkillActive.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -1207,6 +1208,7 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillFrame"), CUI_SkillFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillScrew"), CUI_SkillScrew::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillScrew"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ConnectionLine"), CUI_ConnectionLine::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ConnectionLine"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillActive"), CUI_SkillActive::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillActive"))));
 #pragma endregion End
 
 	return S_OK;

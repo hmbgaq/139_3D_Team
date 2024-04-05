@@ -3897,7 +3897,7 @@ void CUI_Manager::Change_SkillPreview(const string& strUIName)
 	{
 		if (iter->Get_UIDesc().strUIName == strUIName)
 		{
-			iter->Change_;
+			//iter->Change_;
 		}
 	}
 }

@@ -3844,6 +3844,9 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine">
       <UniqueIdentifier>{e1bd43c0-97b9-4c69-bd9c-1d6cd9b4998b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\05. SkillActive">
+      <UniqueIdentifier>{48b20abb-cce7-4281-8e4f-ff6e790e4b35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7605,6 +7608,9 @@
     <ClInclude Include="..\Public\UI_ConnectionLine.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillActive.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\05. SkillActive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10812,6 +10818,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_ConnectionLine.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\04. ConnectionLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillActive.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\05. SkillActive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

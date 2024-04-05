@@ -42,8 +42,8 @@ public:
 	void					Load_Desc();
 
 private:
-	CTexture*	m_pTextureCom[TEXTURE_END] = { nullptr };
-	_bool		m_bFirstFrame = false;
+	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
+	_bool					m_bFirstFrame = false;
 
 public:
 	static CUI_SkillFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
