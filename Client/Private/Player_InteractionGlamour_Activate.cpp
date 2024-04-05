@@ -12,6 +12,8 @@ void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(true);
 
+	// !성희 추가 : 회복 쿨타임 적용
+	pActor->LeftHUDCoolDown("LeftHUD_Right", pActor->Get_LeftHUDMaxCoolTime("LeftHUD_Right"));
 	
 	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 

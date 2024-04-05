@@ -624,6 +624,16 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 	}
 }
 
+void CPlayer::LeftHUDCoolDown(const string& strUIName, _float fCoolTime)
+{
+	m_pUIManager->Change_LeftHUD_CurrentCoolTime(strUIName, fCoolTime); // 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
+}
+
+_float CPlayer::Get_LeftHUDMaxCoolTime(const string& strUIName)
+{
+	return m_pUIManager->Get_LeftHUD_MaxCoolTime(strUIName); // 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
+}
+
 void CPlayer::KeyInput(_float fTimeDelta)
 {
 	/* ! UI : ShaderOption Window / Key : Esc */

@@ -125,6 +125,9 @@ public:
 
 	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
+public:
+	void		 LeftHUDCoolDown(const string& strUIName, _float fCoolTime);
+	_float		 Get_LeftHUDMaxCoolTime(const string& strUIName);
 
 private:
 	void		 KeyInput(_float fTimeDelta);
