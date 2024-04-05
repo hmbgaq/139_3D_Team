@@ -1,5 +1,6 @@
 #include "..\Public\Player_Winchester_LowerHolster.h"
 #include "GameInstance.h"
+#
 
 void CPlayer_Winchester_LowerHolster::Initialize(CPlayer* pActor)
 {
@@ -34,4 +35,10 @@ void CPlayer_Winchester_LowerHolster::Release(CPlayer* pActor)
 	//pActor->Set_StiffnessRate_Upper(1.f);
 
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, false);
+
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	if (pSpringCam)
+	{
+		pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+	}
 }

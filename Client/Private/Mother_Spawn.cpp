@@ -9,18 +9,20 @@ void CMother_Spawn::Initialize(CMother* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 
+	pSpringCam->Set_CameraOffset(_float3(3.f, 1.5f, -9.f));
 
 }
 
 CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 {
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	if (m_bFlags[5] == false)
-	{
-		pSpringCam->Set_CameraOffset(_float3(3.f, 1.5f, -9.f));
-		m_bFlags[5] = true;
-	}
+	//if (m_bFlags[5] == false && pActor->Is_Inputable_Front(1))
+	//{
+	//	pSpringCam->Set_CameraOffset(_float3(3.f, 1.5f, -9.f));
+	//	m_bFlags[5] = true;
+	//}
 
 	if (m_bFlags[1] == false && pActor->Is_Inputable_Front(20))
 	{

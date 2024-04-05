@@ -273,6 +273,12 @@ CState<CPlayer>* CPlayer_State::Winchester_State(CPlayer* pActor, _float fTimeDe
 		{
 			return new CPlayer_Winchester_LowerHolster();
 		}
+
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		if (pSpringCam)
+		{
+			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+		}
 	}
 
 	return nullptr;
@@ -800,14 +806,14 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 			return new CPlayer_Winchester_WeaponUnholster();
 
 	}
-	else
-	{
-		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-		if (pSpringCam)
-		{
-			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
-		}
-	}
+// 	else
+// 	{
+// 		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+// 		if (pSpringCam)
+// 		{
+// 			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+// 		}
+// 	}
 
 	return nullptr;
 }
