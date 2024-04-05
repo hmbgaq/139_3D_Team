@@ -1,4 +1,5 @@
 {
+  
   "Basic_Json": [
     {
       "AnimType": false,
@@ -184,10 +185,10 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ -0.9991068840026855, -1.8183003476224258e-06, -0.04142393916845322, 0.0 ],
-          [ -1.744534756653593e-06, 1.0, -1.818363557504199e-06, 0.0 ],
-          [ 0.04142393916845322, -1.7444741615690873e-06, -0.9991068840026855, 0.0 ],
-          [ 104.58554077148438, -9.402999877929688, -32.56045150756836, 1.0 ]
+          [ -0.5994849801063538, -1.0910181345025194e-06, -0.024855246767401695, 0.0 ],
+          [ -1.7445346429667552e-06, 1.0, -1.818363557504199e-06, 0.0 ],
+          [ 0.024855246767401695, -1.0467208539921558e-06, -0.5994849801063538, 0.0 ],
+          [ 102.88462829589844, -0.3335143029689789, 28.3665828704834, 1.0 ]
         ]
       },
       "Index": 10,
@@ -205,7 +206,7 @@
           [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
           [ -1.8199259557150071e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
           [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
-          [ 7.098276615142822, -13.88599967956543, -12.851444244384766, 1.0 ]
+          [ 30.64313316345215, -13.8856840133667, 47.152000427246094, 1.0 ]
         ]
       },
       "Index": 11,
@@ -223,7 +224,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 193.34457397460938, -12.515000343322754, -19.298744201660156, 1.0 ]
+          [ 166.1721954345703, -12.515000343322754, 47.15192413330078, 1.0 ]
         ]
       },
       "Index": 12,
@@ -238,10 +239,10 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 1.5, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 6.884363174438477, -0.0, 179.9008331298828, 1.0 ]
+          [ 0.0, 0.0, 1.5, 0.0 ],
+          [ -40.90811538696289, 0.0, 279.5264892578125, 1.0 ]
         ]
       },
       "Index": 13,
@@ -256,10 +257,10 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 1.5, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 6.884363174438477, -1.9073486328125e-06, -20.121662139892578, 1.0 ]
+          [ 0.0, 0.0, 1.5, 0.0 ],
+          [ -40.08135223388672, -1.9073486328125e-06, -20.121662139892578, 1.0 ]
         ]
       },
       "Index": 14,
@@ -269,10 +270,63 @@
       "PlayAnimationIndex": 0,
       "ShaderPassIndex": 0,
       "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 209.98709106445313, -1.52587890625e-05, 45.6390380859375, 1.0 ]
+        ]
+      },
+      "Index": 15,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockBx20",
+      "ObjectTag": "MedievalDynastyCaveRockBx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ -14.979187965393066, 0.0, 50.50191116333008, 1.0 ]
+        ]
+      },
+      "Index": 16,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockBx20",
+      "ObjectTag": "MedievalDynastyCaveRockBx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -8.742278012618954e-09, 0.20000000298023224, 0.0, 0.0 ],
+          [ -0.17000000178813934, -7.430935866636901e-09, 0.0, 0.0 ],
+          [ 0.0, 0.0, 0.09993019700050354, 0.0 ],
+          [ 118.95640563964844, 3.3924999237060547, 59.31275177001953, 1.0 ]
+        ]
+      },
+      "Index": 17,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockAx20",
+      "ObjectTag": "MedievalDynastyCaveRockAx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
     }
   ],
-  "Instance_Json": 
-  [
+  "Instance_Json": [
     {
       "Component": {
         "Transform": [
@@ -338,7 +392,7 @@
           "Instance_Center": [ 109.88079833984375, 0.0, 80.67990112304688, 0.0 ],
           "Instance_Index": 7,
           "Instance_Rotation": [ 0.0, 0.0, 0.7088548541069031, 0.7053544521331787 ],
-          "Instance_Scale": [ 0.9999080896377563, 0.9999080896377563, 0.9999999403953552, 0.0 ],
+          "Instance_Scale": [ 0.9999071359634399, 0.9999071359634399, 0.9999999403953552, 0.0 ],
           "Instance_Translation": [ 92.80085754394531, -0.2064504623413086, 81.14305114746094, 0.0 ]
         },
         {
@@ -556,4 +610,160 @@
       "ShaderPassIndex": 6,
       "Type": "Instance"
     }
-  ],"Interact_Json":null,"LightObject_Json":null,"Light_Json":[{"Ambient":[0.9271478056907654,0.9284292459487915,0.9343629479408264,1.0],"CutOff":0.0,"Diffuse":[1.0,1.0,1.0,0.0],"Direction":[1.0,-1.0,1.0,0.0],"LightEnable":true,"LightIndex":0,"OuterCutOff":0.0,"Position":[0.0,0.0,0.0,0.0],"Range":0.0,"Specular":[0.1853281855583191,0.1853281855583191,0.1853281855583191,1.0],"Type":0}],"Monster_Json":null,"Special_Json":null,"Trigger_Json":null}
+  ],
+  "Interact_Json": [
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, -1.0, 0.0 ],
+      "ColliderSize": [ 30.0, 14.399999618530273, 2.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 101.22721862792969, -0.10899999737739563, 61.40272521972656, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 0,
+      "InteractGroupIndex": -1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 2,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank2",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainClimbLadderTopPlank1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.0, 2.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 90.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": [
+        { "UpdateCellIndex": 12 },
+        { "UpdateCellIndex": 13 },
+        { "UpdateCellIndex": 14 },
+        { "UpdateCellIndex": 15 },
+        { "UpdateCellIndex": 16 },
+        { "UpdateCellIndex": 17 },
+        { "UpdateCellIndex": 18 },
+        { "UpdateCellIndex": 19 },
+        { "UpdateCellIndex": 20 },
+        { "UpdateCellIndex": 21 },
+        { "UpdateCellIndex": 22 },
+        { "UpdateCellIndex": 23 }
+      ],
+      "UseGravity": true
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, 2.0, 0.0 ],
+      "ColliderSize": [ 30.0, 14.0, 4.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 103.56999969482422, 0.0, 56.56555938720703, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 1,
+      "InteractGroupIndex": -1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 12,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_ChainBeam3",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainClimbLadderTopPlank2",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.2, 1.100000023841858, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 90.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false
+    }
+  ],
+  "LightObject_Json": null,
+  "Light_Json": [
+    {
+      "Ambient": [ 1.0, 1.0, 1.0, 0.0 ],
+      "CutOff": 0.0,
+      "Diffuse": [ 0.1782919317483902, 0.48520606756210327, 0.8880308866500854, 0.0 ],
+      "Direction": [ 1.0, -1.0, 1.0, 0.0 ],
+      "LightEnable": true,
+      "LightIndex": 0,
+      "OuterCutOff": 0.0,
+      "Position": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Range": 0.0,
+      "Specular": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Type": 0
+    }
+  ],
+  "Monster_Json": [
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 100.95099639892578, 0.5, 112.35700225830078, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Mother",
+      "StartNaviIndex": 0
+    }
+  ],
+  "Special_Json": null,
+  "Trigger_Json": {
+    "MonsterTriggerJson": [
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 48.0, 20.0, 10.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 107.16552734375, 10.878019332885742, 76.57809448242188, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage2Boss_MapData_MapData.json",
+        "NameTag": "MonsterSpawn",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 0
+      }
+    ]
+  }
+}

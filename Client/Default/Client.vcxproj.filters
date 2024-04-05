@@ -613,9 +613,6 @@
     <Filter Include="02.GameObjects\00. Character\BossMonster\SecondBoss">
       <UniqueIdentifier>{9478358a-bef3-4395-b56d-6d8fa9c36220}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\00. Character\BossMonster\LastBoss">
-      <UniqueIdentifier>{38750173-374c-4aaf-a1ab-eab234e467d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander">
       <UniqueIdentifier>{832c2b76-6f3f-4fbd-9a6b-08ba3c2bccbe}</UniqueIdentifier>
     </Filter>
@@ -3465,12 +3462,6 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Bandit_Heavy_Vampiric">
       <UniqueIdentifier>{46453a21-20a0-4038-8f82-834f72bb7c96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Bandit_Heavy_Vampiric\Body">
-      <UniqueIdentifier>{3dec87dd-b724-48d3-9f18-2fc527d7a2df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\0. Bandit_Heavy_Vampiric\Weapon">
-      <UniqueIdentifier>{859ae25c-6b5b-41a4-9047-3a15c15891dd}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\1. Child\1. Heavy_Vampiric_Zombie\Body">
       <UniqueIdentifier>{ee3c5f6f-fba7-442a-a2d4-3ef72f1571fc}</UniqueIdentifier>

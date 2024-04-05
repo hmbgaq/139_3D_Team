@@ -64,7 +64,6 @@ void CBody_Son::Late_Tick(_float fTimeDelta)
 
 HRESULT CBody_Son::Render()
 {
-	//auto start = chrono::high_resolution_clock::now();
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -173,13 +172,7 @@ HRESULT CBody_Son::Ready_Components()
 
 HRESULT CBody_Son::Bind_ShaderResources()
 {
-	// 	FAILED_CHECK(__super::Bind_ShaderResources());
-	// 
-	// 	_float fCamFar = m_pGameInstance->Get_CamFar();
-	// 
-	// 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
-	if (FAILED(__super::Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Bind_ShaderResources());
 
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));

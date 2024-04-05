@@ -592,13 +592,13 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
     
+    
     // 원본
-   // float4 vLightDir = vWorldPos - g_vLightPos;
     float4 vLightDir = g_vLightPos - vWorldPos;
     float fDistance = length(vLightDir);
-    
     float fAtt = max((g_fLightRange - fDistance) / g_fLightRange, 0.f);
 
+    // 티메시아 
     //clip(fAtt - 0.01f);
     //float4 vLightDir = vWorldPos - g_vLightPos;
     //float fDistance = length(vLightDir);
@@ -607,9 +607,13 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     //clip(fAtt - 0.01f);
     //fAtt *= g_fLightIntensity;
     
+    
+    // int 
+    //float fAtt = 1.0f / (fDistance * fDistance);
+    
     vector vLook = g_vCamPosition - vWorldPos;
     
-    if (g_bPBR)
+    if (false)
     {
         /* PBR 하는경우 */ 
         vector vHBAO = g_SSAOTexture.Sample(PointSampler, In.vTexcoord);
@@ -653,9 +657,23 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         
         Out.vSpecular = vSpecularAcc;
         Out.vSpecular.a = 0.f;
-
+        
         Out.vAmbient = vAmbientColor;
         Out.vAmbient.a = 1.f;
+        
+        //float radiance = g_vLightDiffuse * fAtt;
+        //
+        //float3 Lo = (kD.xyz * vDiffuseColor.rgb / 3.14159265359f + vSpecular.xyz) * radiance * NdotL;
+        //
+        //Out.vAmbient = float4(float3(0.03f, 0.03f, 0.03f) * vDiffuseColor.rgb * float3(fOcclusion, fOcclusion, fOcclusion), 1.f);
+        //float3 Color = Out.vAmbient.rgb * Lo;
+        //
+        //Color = Color / (Color + float3(1.0f, 1.0f, 1.0f)); // tone mapping 
+        //
+        //Color = pow(Color, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f)); // gamma correction 
+        //
+        //Out.vSpecular = float4(Color, 1.f);
+
     }
     else
     {

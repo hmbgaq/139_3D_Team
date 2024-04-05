@@ -106,12 +106,18 @@ void CInfected::Tick(_float fTimeDelta)
 
 	if (true == m_bCntDead_Active)
 	{
-		fTimeAcc += fTimeDelta;
-		if (fTimeAcc >= m_fCntDead_Time)
+		if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
 		{
-			cout << " ¡Ù¡Ú InfectedD Set_dead¼öÇà " << endl;
-			fTimeAcc = 0.f;
-			Set_Dead(true);
+			fTimeAcc += fTimeDelta;
+			if (fTimeAcc >= m_fCntDead_Time)
+			{
+				fTimeAcc = 0.f;
+				Set_Dead(true);
+			}
+		}
+		else
+		{
+
 		}
 	}
 }

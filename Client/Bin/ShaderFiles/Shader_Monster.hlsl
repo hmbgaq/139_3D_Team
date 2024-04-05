@@ -295,6 +295,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     if (true == g_bEmissive_Available)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
     return Out;
 }
 

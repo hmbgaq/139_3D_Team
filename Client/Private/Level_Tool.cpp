@@ -17,6 +17,7 @@ HRESULT CLevel_Tool::Initialize()
 {
 	//Level_Tool 레벨 조정 
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+	m_pGameInstance->Off_Shader();
 
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));

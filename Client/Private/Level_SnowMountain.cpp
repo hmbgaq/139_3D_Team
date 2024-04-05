@@ -121,13 +121,13 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 			}
 		}
 
-		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+		//CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
 
-		if (pLight == nullptr)
-		{
-			MSG_BOX("라이트 불러오기 실패");
-			return E_FAIL;
-		}
+		//if (pLight == nullptr)
+		//{
+		//	MSG_BOX("라이트 불러오기 실패");
+		//	return E_FAIL;
+		//}
 
 	}
 
@@ -639,21 +639,21 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 	DEFERRED_DESC Desc_Deferred = {};
 
 	HBAO_PLUS_DESC Desc_Hbao = {};
-	Desc_Hbao.fRadius = 1.f;
-	Desc_Hbao.fBias = 0.1f;
-	Desc_Hbao.fBlur_Sharpness = 2.0f;
-	Desc_Hbao.fPowerExponent = 16.f;
+	Desc_Hbao.fRadius = 2.769f;
+	Desc_Hbao.fBias = 0.249f;
+	Desc_Hbao.fPowerExponent = 1.689f;
+	Desc_Hbao.fBlur_Sharpness = 13.0f;
 
 	FOG_DESC Desc_Fog = {};
-	Desc_Fog.fFogStartDepth			= 59.878f;
-	Desc_Fog.fFogStartDistance		= 4.537f;
-	Desc_Fog.fFogDistanceValue		= 30.f;
+	Desc_Fog.fFogStartDepth			= 92.805f;
+	Desc_Fog.fFogStartDistance		= 0.822f;
+	Desc_Fog.fFogDistanceValue		= 29.025f;
 	Desc_Fog.fFogHeightValue		= 50.f;
-	Desc_Fog.fFogDistanceDensity	= 0.079f;
-	Desc_Fog.fFogHeightDensity		= 0.040f;
-	Desc_Fog.vFogColor.x			= 43.f / 255.f;
-	Desc_Fog.vFogColor.y			= 43.f / 255.f;
-	Desc_Fog.vFogColor.z			= 48.f / 255.f;
+	Desc_Fog.fFogDistanceDensity	= 0.025f;
+	Desc_Fog.fFogHeightDensity		= 0.011f;
+	Desc_Fog.vFogColor.x			= 0.239f;
+	Desc_Fog.vFogColor.y			= 0.251f;
+	Desc_Fog.vFogColor.z			= 0.266f;
 	Desc_Fog.vFogColor.w			= 1.f;
 
 	RADIAL_DESC Desc_Radial = {};
@@ -694,8 +694,7 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 	LUMASHARPEN_DESC Desc_Luma = {};
 	Desc_Luma.foffset_bias = 1.873f;
 	Desc_Luma.fsharp_clamp = 0.05f;
-	Desc_Luma.fsharp_strength = 2.505f;
-
+	Desc_Luma.fsharp_strength = 1.193f;
 
 	Desc_PBR.bPBR_ACTIVE = true;
 	Desc_Deferred.bRimBloom_Blur_Active = true;
@@ -729,6 +728,22 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 	m_pGameInstance->Get_Renderer()->Set_Chroma_Option(Desc_Chroma);
 	m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(Desc_ScreenEffect);
 	m_pGameInstance->Get_Renderer()->Set_LumaSharpen_Option(Desc_Luma);
+
+	_int iTemp = 0;
+	LIGHT_DESC  Desc = {};
+	Desc.eType = LIGHT_DESC::TYPE::TYPE_DIRECTIONAL;
+	Desc.bEnable = true;
+	Desc.vDiffuse	= { (94.f / 255.f) , (95.f / 255.f), (103.f / 255.f), 1.f };
+	Desc.vAmbient	= { (51.f / 255.f) , (51.f / 255.f), (51.f / 255.f), 1.f };
+	Desc.vSpecular	= { (0.f / 255.f)  , (0.f / 255.f) , (0.f / 255.f), 1.f };
+	Desc.vLightFlag = { 1.f, 1.f, 1.f, 1.f };
+	Desc.fIntensity = 1.f;
+	Desc.vDirection = { 0.05f, 0.1f, 0.1f, 1.f };
+
+	m_pGameInstance->Add_Light(Desc, iTemp);
+
+
+
 
 	return S_OK;
 }
