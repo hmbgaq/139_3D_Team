@@ -4,6 +4,8 @@
 #include "Clone_Manager.h"
 #include "Effect.h"
 #include "Bone.h"
+#include "MasterCamera.h"
+#include "Data_Manager.h"
 
 void CPlayer_SlamTwoHand_TEMP::Initialize(CPlayer* pActor)
 {
@@ -17,6 +19,12 @@ CState<CPlayer>* CPlayer_SlamTwoHand_TEMP::Update(CPlayer* pActor, _float fTimeD
 
 	if (false == m_bFlags[0] && true == pActor->Is_Inputable_Front(20))
 	{
+
+		//CameraSetting
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		pSpringCam->Set_ShakeCameraTime(0.1f);
+		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
+
 		pActor->Apply_Shake_And_Blur(Power::Heavy);
 		pActor->Slam();
 		m_bFlags[0] = true;

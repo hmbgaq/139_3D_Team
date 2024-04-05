@@ -33,8 +33,7 @@
 #include "VampireCommander.h"
 #pragma endregion
 
-#pragma region Effect_Test
-#include "Effect_Manager.h"
+#pragma region Effect
 #include "Effect.h"
 #pragma endregion
 
@@ -62,6 +61,8 @@ HRESULT CLevel_IntroBoss::Initialize()
         return E_FAIL;
 
    //FAILED_CHECK(Ready_Shader());
+
+
 
     return S_OK;
 }

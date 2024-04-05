@@ -6,6 +6,9 @@
 #include "UI_Manager.h"
 #include "Data_Manager.h"
 
+
+#include "Effect_Manager.h"
+
 //#include <mfapi.h>
 //#include <mfreadwrite.h>
 
@@ -36,6 +39,9 @@ HRESULT CLevel_Logo::Initialize()
 	m_pUIManager->NonActive_MainLogo();
 	m_pDataManager->Set_GameState(GAME_STATE::UI);
 	ShowCursor(false);
+
+
+	//TODOFAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
 
 	return S_OK;
 }
@@ -172,6 +178,14 @@ void CLevel_Logo::Set_Filter()
 
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::EXPLOSION_ATTACK, (_uint)COLLISION_LAYER::PLAYER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::EXPLOSION_ATTACK, (_uint)COLLISION_LAYER::MONSTER);
+
+
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::OBSTACLE, (_uint)COLLISION_LAYER::PLAYER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::OBSTACLE, (_uint)COLLISION_LAYER::MONSTER);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::OBSTACLE, (_uint)COLLISION_LAYER::PLAYER_ATTACK);
+
+
+	//Obstacle
 
 
 

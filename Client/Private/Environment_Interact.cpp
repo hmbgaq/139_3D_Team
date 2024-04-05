@@ -66,10 +66,15 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 		Init_WagonEvent();
 	}
 
-	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == INTERACT_WAGONPUSH)
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
-		if (FAILED(Find_InteractGroupObject()))
-			return E_FAIL;
+		if (m_tEnvironmentDesc.bOwner == true)
+		{
+			if (FAILED(Find_InteractGroupObject()))
+				return E_FAIL;
+		}
+
+		
 	}
 
 	if (m_tEnvironmentDesc.bRotate == true)
@@ -180,7 +185,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 
 	if (m_tEnvironmentDesc.bRotate == true && m_bInteractEnable == true)
 	{
-		if (RotationCheck(fTimeDelta))
+		if (true == RotationCheck(fTimeDelta))
 		{
 			StartGroupInteract();
 			m_bInteractEnable = false;
@@ -1185,12 +1190,15 @@ _bool CEnvironment_Interact::RotationCheck(const _float fTimeDelta)
 		{
 			return m_pTransformCom->Rotation_LerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
 		}
+		
+		return false;
 	}
-	else
+	else if(m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
 		return m_pTransformCom->Rotation_LerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
 	}
 
+	return false;
 }
 
 _bool CEnvironment_Interact::Check_MoveCollider()

@@ -21,6 +21,11 @@ float2      g_UVOffset;
 float2      g_UVScale;
 float		g_fDegree;
 
+bool        g_bUV_Wave;
+float2      g_UV_WaveSpeed;
+float2      g_UVOffset_Mask;
+float2      g_UVScale_Mask;
+
 
 /* Color */
 int			g_iColorMode;
@@ -375,10 +380,11 @@ struct PS_OUT
 {	
 	float4 vDiffuse			: SV_TARGET0;
     float4 vSolid			: SV_TARGET1;
-	float4 vNormal			: SV_TARGET2;
-	float4 vDepth			: SV_TARGET3;
-	float4 vRimBloom		: SV_TARGET4;
-    float4 vDistortion		: SV_TARGET5;
+	//float4 vNormal		: SV_TARGET2;
+	//float4 vDepth			: SV_TARGET3;
+	float4 vRimBloom		: SV_TARGET2;
+    float4 vDistortion		: SV_TARGET3;
+    
 };
 
 
@@ -404,8 +410,8 @@ PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
     // 색상 혼합
     Out.vDiffuse = Calculation_ColorBlend(vFinalDiffuse, g_vColor_Mul, g_iColorMode);
 	
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
    
 
     /* ---------------- New ---------------- */
@@ -489,12 +495,26 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
     float4 vFinalDiffuse;
     float4 vAlphaColor;
 	
+     
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
 	
+    float2 vMaskUV = In.vTexUV * g_UVScale_Mask + g_UVOffset_Mask;
+    if (false == g_bUV_Wave)
+    {
+        if ((vMaskUV.x > 1.f) || (vMaskUV.y > 1.f) || (vMaskUV.x < 0.f) || (vMaskUV.y < 0.f))
+            discard;
+    }
+    else
+    {
+        vMaskUV.x = vMaskUV.x + (g_fFrameTime * g_UV_WaveSpeed.x);
+        vMaskUV.y = vMaskUV.y + (g_fFrameTime * g_UV_WaveSpeed.y);
+    }
+     
+    
     vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexUV);
-    vAlphaColor = g_MaskTexture.Sample(LinearSampler, In.vTexUV);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vMaskUV);
 
     vFinalDiffuse.a *= vAlphaColor;
 	
@@ -503,7 +523,6 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
     if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
         discard;
 	
-  
 
    // 색상 혼합
     Out.vDiffuse.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
@@ -527,8 +546,8 @@ PS_OUT PS_MAIN_Dissolve(PS_IN_NORMAL In, uniform bool bSolid)
 
     vPixelNormal = mul(vPixelNormal, WorldMatrix);
 
-    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+    //Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 
     
 	
@@ -626,6 +645,22 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
 	
+    
+
+    float2 vMaskUV = In.vTexUV * g_UVScale_Mask + g_UVOffset_Mask;
+    if (false == g_bUV_Wave)
+    {
+        if ((vMaskUV.x > 1.f) || (vMaskUV.y > 1.f) || (vMaskUV.x < 0.f) || (vMaskUV.y < 0.f))
+            discard;
+    }
+    else
+    {
+        vMaskUV.x = vMaskUV.x + (g_fFrameTime * g_UV_WaveSpeed.x);
+        vMaskUV.y = vMaskUV.y + (g_fFrameTime * g_UV_WaveSpeed.y);
+    }
+    
+    
+    
     /* Distortion ============================================================ */	
     
     vDistortion = Calculation_Distortion(In.vTexUV, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
@@ -644,7 +679,7 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 
 	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
-    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy);
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy + vMaskUV);
     vFinalDiffuse.a *= vAlphaColor.r;
 	
     
@@ -674,8 +709,8 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 	vPixelNormal = mul(vPixelNormal, WorldMatrix);
 
-	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
-	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+	//Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	
 	/* RimBloom ================================================================ */
@@ -713,7 +748,7 @@ PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
     
     
 	/* Depth ================================================================ */
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
 	
 	
 	/* RimBloom ============================================================== */

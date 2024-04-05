@@ -30,7 +30,7 @@
 #include "VampireCommander.h"
 #pragma endregion
 
-#pragma region Effect_Test
+#pragma region Effect
 #include "Effect_Manager.h"
 #include "Effect.h"
 #pragma endregion
@@ -165,9 +165,17 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     pMonster->Set_Position(_float3(0.0f, 0.f, 10.f));
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTPack"));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     pMonster->Set_Position(_float3(5.0f, 0.f, 10.f));
+
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_Position(_float3(0.0f, 0.f, 17.f));
+
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTPack"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_Position(_float3(0.0f, 0.f, 20.f));
 
     pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
     NULL_CHECK_RETURN(pMonster, E_FAIL);
@@ -217,9 +225,12 @@ HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
 
 HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 {
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
+
+	// 이펙트 테스트 (삭제처리 생각안함)
+    EFFECT_MANAGER->Play_Effect("Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));
+    EFFECT_MANAGER->Play_Effect("Circle_Floor_03_Solid.json", _float3(12.f, 0.f, 5.f));
+    EFFECT_MANAGER->Play_Effect("Circle_Floor_04.json", _float3(19.f, 0.f, 5.f));
+
 
     return S_OK;
 }
@@ -1130,5 +1141,6 @@ CLevel_Intro* CLevel_Intro::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 void CLevel_Intro::Free()
 {
     __super::Free();
+
 
 }

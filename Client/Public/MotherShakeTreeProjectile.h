@@ -30,6 +30,7 @@ public:
 	_vector				m_vPlayerPos = {};
 	_vector				m_vMonsterPos = {};
 
+	_float				m_fRadian = 0.f;
 private:
 	CEffect* m_pEffect = { nullptr };
 	CMother* m_pMother = { nullptr };

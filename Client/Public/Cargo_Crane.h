@@ -33,6 +33,7 @@ public:
 
 protected:
 	virtual HRESULT Ready_Components();
+	void Push(CCollider* other);
 
 public:
 	static CCargo_Crane* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -26,6 +26,9 @@ public:
 	virtual void		Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT		Render() override;
 
+public:
+	void Activate();
+
 protected:
 	HRESULT				Ready_Components();
 	HRESULT				Ready_PartObjects();
@@ -36,6 +39,9 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	//CCollider* m_pColliderCom = { nullptr };
+
+private:
+	_bool	m_bIsActivated = { false };
 
 
 public:

@@ -39,9 +39,9 @@ HRESULT CCargo_Crane::Ready_Components()
 
 	/* For.Com_Collider */
 	CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::OBSTACLE);
 	BoundingDesc.vExtents = _float3(2.0f, 2.0f, 2.0f);
-	BoundingDesc.vCenter = _float3(0.f, -2.f, 0.f);
+	BoundingDesc.vCenter = _float3(-2.f, 0.f, 0.f);
 
 	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc));
 
@@ -70,18 +70,43 @@ HRESULT CCargo_Crane::Render()
 	return S_OK;
 }
 
+void CCargo_Crane::Push(CCollider* other)
+{
+	if (nullptr == other || false == other->Get_Enable()) return;
+
+	if (other->Get_Layer() == ECast(COLLISION_LAYER::MONSTER)
+		|| other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER))
+	{
+		CGameObject* pOwner = other->Get_Owner();
+		if (nullptr == pOwner) return;
+
+		//Get_WorldPosition();
+		CCharacter* pParentCharacter = dynamic_cast<CCharacter*>(pOwner->Get_Object_Owner());
+		if (pParentCharacter)
+		{
+			_float3 vPos = Get_WorldPosition();
+			_vector vDir = pParentCharacter->Calc_Look_Dir_XZ(XMLoadFloat3(&vPos));
+			pParentCharacter->Add_Force(vDir, 17.f * m_pGameInstance->Get_TimeDelta());
+		}
+	}
+	else
+	{
+		CAttackObject* pAttackObject = Get_Target_AttackObject(other);
+		if (pAttackObject) 
+		{
+			pAttackObject->Set_Dead(true);
+		}
+	}
+}
+
 void CCargo_Crane::OnCollisionEnter(CCollider* other)
 {
-	//CAttackObject* pTarget_AttackObject = Get_Target_AttackObject(other);
-
-	//if (pTarget_AttackObject != nullptr)
-	//{
-	//	
-	//}
+	Push(other);
 }
 
 void CCargo_Crane::OnCollisionStay(CCollider* other)
 {
+	Push(other);
 }
 
 void CCargo_Crane::OnCollisionExit(CCollider* other)

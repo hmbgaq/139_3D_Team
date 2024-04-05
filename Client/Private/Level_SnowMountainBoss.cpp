@@ -32,6 +32,8 @@
 
 #pragma endregion
 
+
+
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
@@ -52,13 +54,14 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석. + 저두요
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_Shader());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
+
 
 	return S_OK;
 }
@@ -218,12 +221,12 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
-	
-	//	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+
+	//   FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
 	//if (nullptr == pPlayer)
-	//	return E_FAIL;
+	//   return E_FAIL;
 
 	//m_pGameInstance->Set_Player(pPlayer);
 
@@ -657,5 +660,6 @@ CLevel_SnowMountainBoss* CLevel_SnowMountainBoss::Create(ID3D11Device* pDevice, 
 void CLevel_SnowMountainBoss::Free()
 {
 	__super::Free();
+
 
 }

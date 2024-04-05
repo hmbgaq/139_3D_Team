@@ -30,10 +30,11 @@ public:
 	_vector				m_vPlayerPos = {};
 	_vector				m_vMonsterPos = {};
 	_bool				m_bFirst = true;
-
+	_float				m_fRadian = 0.f;
 private:
 	CEffect* m_pEffect = { nullptr };
 	CSon* m_pSon = { nullptr };
+	CGameObject* m_pRotationProjectile = { nullptr };
 public:
 	static CSon_Projectile* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg);

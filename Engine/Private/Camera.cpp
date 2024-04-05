@@ -77,7 +77,6 @@ void CCamera::Late_Tick(_float fTimeDelta)
 {
 }
 
-
 void CCamera::Set_Pos(float4x4 vPos)
 {
 	m_arrCameraWorld = vPos;

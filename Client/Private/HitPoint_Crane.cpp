@@ -6,6 +6,7 @@
 #include "AttackObject.h"
 #include "Tank.h"
 #include "Data_Manager.h"
+#include "Crane.h"
 
 CHitPoint_Crane::CHitPoint_Crane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -28,6 +29,8 @@ HRESULT CHitPoint_Crane::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	
+
 	return S_OK;
 }
 
@@ -39,7 +42,7 @@ HRESULT CHitPoint_Crane::Ready_Components()
 
 	/* For.Com_Collider */
 	CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::OBSTACLE);
 	BoundingDesc.vExtents = _float3(2.0f, 2.0f, 2.0f);
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
@@ -76,7 +79,11 @@ void CHitPoint_Crane::OnCollisionEnter(CCollider* other)
 
 	if (pTarget_AttackObject != nullptr)
 	{
-
+		CCrane* pCrane = dynamic_cast<CCrane*>(Get_PartOwner());
+		if (pCrane) 
+		{
+			pCrane->Activate();
+		}
 	}
 }
 

@@ -78,6 +78,7 @@ public:
 
 	void Set_ShakeCameraTime(_float _Shaketime) { m_fShakeTime = _Shaketime; }
 	void Set_ShakeCameraMinMax(_float2 _fShakeMinMax) { m_fShakeMinMax = _fShakeMinMax; }
+
 private:
 	// 	수평 , 수직 수행거리
 	_float hDist = 0.f;
