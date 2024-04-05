@@ -46,6 +46,9 @@ HRESULT CUI_SkillActive::Initialize(void* pArg)
 	m_fCoolTime = m_fMaxCoolTime;
 	m_bCoolDown = true;
 
+	m_fOriginScaleX = m_tUIInfo.fScaleX;
+	m_fOriginScaleY = m_tUIInfo.fScaleY;
+
 	return S_OK;
 }
 
@@ -60,6 +63,21 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
+		if (m_pGameInstance->Key_Down(DIK_G))
+		{
+			m_fOriginScaleX = m_tUIInfo.fScaleX;
+			m_fOriginScaleY = m_tUIInfo.fScaleY;
+		}
+		if (m_pGameInstance->Key_Down(DIK_SPACE))
+		{
+			m_fAlpha = 0.f;
+			m_fCoolTime = m_fMaxCoolTime;
+			m_bMaxCoolDown = false;
+			m_bCoolDown = true;
+
+			m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1);
+		}
+
 		if (m_bMaxCoolDown == false)
 		{
 			// È°¼ºÈ­
@@ -95,10 +113,10 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 		else
 		{
 			{
-				if (m_fScaleX < 200.f)
+				if (m_fScaleX < 180.f)
 					Change_SizeX((+m_fChangeScale * 1.5f));
 
-				if (m_fScaleY < 200.f)
+				if (m_fScaleY < 180.f)
 					Change_SizeY((+m_fChangeScale * 1.5f));
 
 				if (m_fAlpha < 1.f)
@@ -106,10 +124,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 
 				if (m_fAlpha >= 1.f)
 				{
-					m_fAlpha = 0.f;
-					m_bCoolDown = m_fMaxCoolTime;
-					m_bMaxCoolDown = false;
-					m_bCoolDown = true;
+
 				}
 			}
 		}

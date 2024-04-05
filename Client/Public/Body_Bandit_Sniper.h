@@ -37,6 +37,9 @@ private:
 	_float		m_fDissolve_feather = 0.f;
 	_float3		m_vDissolve_Color = { 0.f, 0.f, 0.f };
 	_float		m_fDissolve_Discard = 0.f;
+	_float		m_fTimeAcc = 0.f;
+
+	_bool               m_bDeadState = { false };
 
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

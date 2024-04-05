@@ -274,17 +274,17 @@ public:
 	void			Check_MouseInput(_float fTimeDelta);
 
 protected:
-	_bool			m_bMouseDown_LB = false;
-	_bool			m_bMouseDown_RB = false;
-	_bool			m_bMouseDown_MB = false;
-
-	_bool			m_bMousePressing_LB = false;
-	_bool			m_bMousePressing_RB = false;
-	_bool			m_bMousePressing_MB = false;
-
-	_bool			m_bMouseUp_LB = false;
-	_bool			m_bMouseUp_RB = false;
-	_bool			m_bMouseUp_MB = false;
+	//_bool			m_bMouseDown_LB = false;
+	//_bool			m_bMouseDown_RB = false;
+	//_bool			m_bMouseDown_MB = false;
+	//
+	//_bool			m_bMousePressing_LB = false;
+	//_bool			m_bMousePressing_RB = false;
+	//_bool			m_bMousePressing_MB = false;
+	//
+	//_bool			m_bMouseUp_LB = false;
+	//_bool			m_bMouseUp_RB = false;
+	//_bool			m_bMouseUp_MB = false;
 
 public: /* ============================== Add ============================== */
 	void			Add_Create_Parts(void* pArg);
@@ -336,7 +336,7 @@ public:
 
 protected:
 	_bool			m_bLifeTimeUI = false;
-	_float			m_fActive_Distance = 12.f;
+	_float			m_fActive_Distance = 16.f;
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
@@ -594,16 +594,16 @@ public:
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
-	_bool				m_bSelect = false;
-	_bool				m_bSelectPressing = false;
+	//_bool				m_bSelect = false;
+	//_bool				m_bSelectPressing = false;
 	_uint				m_iButtonState = {};
 	_bool				m_bChange_Proj = false;
 
 public:
-	void				Set_Select(_bool bSelect) { m_bSelect = bSelect; }
-	_bool				Get_Select() { return m_bSelect; }
-	void				Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
-	_bool				Get_SelectPressing() { return m_bSelectPressing; };
+	//void				Set_Select(_bool bSelect) { m_bSelect = bSelect; }
+	//_bool				Get_Select() { return m_bSelect; }
+	//void				Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
+	//_bool				Get_SelectPressing() { return m_bSelectPressing; };
 
 public:
 	void	ChangeProj() { m_bChange_Proj = true; }

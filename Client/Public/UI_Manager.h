@@ -15,6 +15,7 @@ class CUI_EnemyHUD_Shard;
 
 BEGIN(Client)
 //class CUI;
+class CData_Manager;
 
 class CUI_Manager : public CBase
 {
@@ -67,6 +68,8 @@ public: /* Ready_Preset */
 	/* EnemyShard */
 	CUI_EnemyHUD_Shard* Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
+private:
+	void			Check_MouseInput(_float fTimeDelta);
 public:
 	/* PlayerHUD */
 	void			Active_PlayerHUD();
@@ -353,6 +356,7 @@ private:
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
+	CData_Manager* m_pDataManager = { nullptr };
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 

@@ -199,14 +199,14 @@ HRESULT CUI_MouseCursor::Bind_ShaderResources()
 		if (FAILED(m_pTextureCom[CURSOR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		if (m_bMouseDown_LB == true ||
-			m_bMousePressing_LB == true)
+		if (g_UIMouseDownLB == true ||
+			g_UIMousePressingLB == true)
 		{
 			if (FAILED(m_pTextureCom[CURSOR_LEFTCLICK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 		}
-		else if (m_bMouseDown_RB == true ||
-			m_bMousePressing_RB == true)
+		else if (g_UIMouseDownRB == true ||
+			g_UIMousePressingRB == true)
 		{
 			if (FAILED(m_pTextureCom[CURSOR_RIGHTCLICK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;

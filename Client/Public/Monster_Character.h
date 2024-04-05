@@ -62,14 +62,15 @@ public:
 
 public:
 	virtual void Check_Frustum() override;
-protected: // !성희 추가
+//protected: // !성희 추가
+public: // !성희 추가
 	// 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
 	void Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner);
 
 	// 몬스터 HUD의 위치를 잡아줍니다. (매 틱마다 불러주세요. | 몬스터의 World매트릭스를 넣어주세요. | Offset만큼 위치를 움직일 수 있습니다. [Defualt (오프셋 안줬을 경우) : 0, 2, 0]
 	void Check_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 2.f, 0.f });
 	
-	// EnemyHUD Dead
+	// 몬스터 HUD를 삭제(비활성화)합니다. (몬스터가 죽을때 불러주세요)
 	void Set_EnemyHUD_Dead();
 
 	CUI_EnemyHUD_Shard* m_pEnemyHUD = nullptr;
