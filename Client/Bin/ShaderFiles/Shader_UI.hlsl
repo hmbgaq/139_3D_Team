@@ -400,6 +400,10 @@ PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
         Out.vColor.a = 0.f;
     }
 
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
     //Out.vColor.a -= g_Alpha;
     //
     //if (Out.vColor.a < 0.1f)

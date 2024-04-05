@@ -79,10 +79,6 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 
 					// È°¼ºÈ­
 					Check_SkillActive(fTimeDelta, SKILLSTATE::ACTIVE);
-					m_fCoolTime = m_fMaxCoolTime;
-
-					if (m_pGameInstance->Key_Up(DIK_SPACE))
-						m_bCoolDown = true;
 				}
 				else
 				{
@@ -109,7 +105,12 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					m_fAlpha += fTimeDelta * 1.5f;
 
 				if (m_fAlpha >= 1.f)
-					m_bActive = false;
+				{
+					m_fAlpha = 0.f;
+					m_bCoolDown = m_fMaxCoolTime;
+					m_bMaxCoolDown = false;
+					m_bCoolDown = true;
+				}
 			}
 		}
 
