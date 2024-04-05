@@ -828,7 +828,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bRotate = InteractJson[i]["Rotate"];
 			Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
 			Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
-			//Desc.eRotationState = InteractJson[i]["RotationType"];
+			Desc.eRotationState = InteractJson[i]["RotationType"];
 			Desc.bArrival = InteractJson[i]["Arrival"];
 			
 
@@ -3234,7 +3234,6 @@ void CWindow_MapTool::Interact_CreateTab()
 		if (IM_ARRAYSIZE(InteractTypes) <= m_eInteractType)
 		{
 			m_eInteractType = 0;
-			return;
 		}
 
 		const char* InteractPreviewType = InteractTypes[m_eInteractType];

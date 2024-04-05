@@ -72,6 +72,10 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 			return E_FAIL;
 	}
 
+	if (m_tEnvironmentDesc.bRotate == true)
+	{
+		UnEnable_UpdateCells();
+	}
 	//if (m_tEnvironmentDesc.bOffset == true && m_tEnvironmentDesc.bOwner == false)
 	//{
 	//	m_bInteractEnable = false;
@@ -88,12 +92,14 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	// !UI Add UI_Interaction
 	Find_UI_For_InteractType();
 
+	
 	return S_OK;
 }
 
 void CEnvironment_Interact::Priority_Tick(_float fTimeDelta)
 {
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if(m_pColliderCom != nullptr)
+		m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CEnvironment_Interact::Tick(_float fTimeDelta)
@@ -139,10 +145,10 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	
 
 
-	if(m_bInteractEnable == true)
+	if(m_bInteractEnable == true && m_tEnvironmentDesc.eInteractType != CEnvironment_Interact::INTERACT_NONE)
 		Interact();
 
-	if(m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == true && m_bExit == false)
+	if(m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == true && m_bExit == false && m_bFindPlayer == true)
 	{
 		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
 		{
@@ -163,6 +169,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		}
 	}
 		
+	
 
 
 	if (m_bSpline == true)
@@ -177,6 +184,8 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		{
 			StartGroupInteract();
 			m_bInteractEnable = false;
+			m_bInteract = true;
+			Enable_UpdateCells();
 		}
 	}
 
@@ -232,8 +241,12 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
-		m_pGameInstance->Add_DebugRender(m_pColliderCom);
-		m_pGameInstance->Add_DebugRender(m_pMoveRangeColliderCom);
+		if (m_pColliderCom != nullptr)
+		{
+			m_pGameInstance->Add_DebugRender(m_pColliderCom);
+			m_pGameInstance->Add_DebugRender(m_pMoveRangeColliderCom);
+		}
+		
 	}
 
 	/* 소영 보류 */
@@ -424,6 +437,7 @@ void CEnvironment_Interact::StartGroupInteract()
 	for (_uint i = 0; i < (_uint)iInteractGroupSize; ++i)
 	{
 		m_vecInteractGroup[i]->Set_Interact(false);
+		//m_vecInteractGroup[i]->set
 	}
 }
 
@@ -706,9 +720,14 @@ void CEnvironment_Interact::Interact()
 				case CEnvironment_Interact::INTERACT_ROTATIONVALVE:
 				{
 					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
 						m_pPlayer->SetState_InteractRotationValve();
 
+						StartGroupInteract();
+					}
+
 					break;
+
 				}
 			}
 
@@ -1160,9 +1179,18 @@ _bool CEnvironment_Interact::ArrivalCheck()
 
 _bool CEnvironment_Interact::RotationCheck(const _float fTimeDelta)
 {
-	return m_pTransformCom->Rotation_QuaternionLerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
-	//return m_pTransformCom->Rotation_LerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
-	//return m_pTransformCom->Rotation_Lerp(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, 1.f);
+	if (m_pOwnerInteract != nullptr)
+	{
+		if (m_pOwnerInteract->Is_OwnerInteract() == true)
+		{
+			return m_pTransformCom->Rotation_LerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
+		}
+	}
+	else
+	{
+		return m_pTransformCom->Rotation_LerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
+	}
+
 }
 
 _bool CEnvironment_Interact::Check_MoveCollider()

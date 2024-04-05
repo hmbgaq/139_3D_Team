@@ -80,8 +80,8 @@ public:
 
 		_float4			vArrivalPosition = {}; //! 특정 상호작용 오브젝트가 위치벡터에 도달하면 종료시키기위한 위치벡터
 		_float4			vOffset = {}; //!  특정 상호작용 오브젝트를 기준으로 위치해야하기 위한 오프셋
-		_float			fRotationAngle = 90.f; //! 특정 상호작용 오브젝트가 활성화될시 회전해야할 각도
-		_float			fRotationSpeed = 90.f; //! 회전해야하는 오브젝트인경우 회전 속도를 저장시키기위함.
+		_float			fRotationAngle = 0.f; //! 특정 상호작용 오브젝트가 활성화될시 회전해야할 각도
+		_float			fRotationSpeed = 0.f; //! 회전해야하는 오브젝트인경우 회전 속도를 저장시키기위함.
 		ROTATION_LERP_STATE eRotationState = LERP_Y; //! 회전할 방향
 
 		_bool			bOffset = false; //! 오프셋 위치가 적용시켜져야하는 지.
@@ -153,6 +153,8 @@ public: //! For Public
 	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex; }
 	void								Set_InteractGroupIndex(_int iGroupIndex) { m_tEnvironmentDesc.iInteractGroupIndex = iGroupIndex; }
 
+
+	_bool								Is_OwnerInteract() { return m_bInteract;}
 public:	//! For Spline
 	void								Set_SplineJsonPath(string strJsonPath) { m_tEnvironmentDesc.strSplineJsonPath = strJsonPath;}
 	void								Set_SplineDivergingCount(_int iDivergingCount) { m_iDivergingCount = iDivergingCount;} 
@@ -183,12 +185,13 @@ public:	//! For Public
 	_bool								Check_OwnerEnablePosition(); //! 주체 상호작용오브젝트가 목표위치에 도달했는지 확인해주자
 	
 	void								Stop_PlayerForArrival();
+	
 
 	_bool								ArrivalCheck(); //! 위치벡터에 도달했는지
 	_bool								RotationCheck(const _float fTimeDelta); //! 회전해야할 각도에 도달했는지.
 	_bool								Check_MoveCollider();
 	_bool								EnableCheck();
-	
+	void								Set_InteractEnable(_bool bInteractEnable) { m_bInteractEnable = bInteractEnable; }
 
 	//!_int			iInteractGroupIndex = -1; //! 특정 상호작용 오브젝트가 활성화될시 다른 상호작용 오브젝트도 활성시키기 위한 그룹핑인덱스
 	//!_float4			vEnablePosition = {}; //!  특정 상호작용 오브젝트가 다른 상호작용 오브젝트를 활성화시키기 위한 위치 조건을 위한 위치벡터
@@ -235,7 +238,7 @@ public: //! For ToolTest
 	void								Enable_UpdateCells();
 	void								UnEnable_UpdateCells();
 
-	void								Reset_Rotate() { m_bInteractEnable = true; m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);}
+	void								Reset_Rotate() { m_bInteractEnable = true; m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix); }
 
 public: //! For RollerCoster Wagon && Spline
 	void								Start_SplineEvent() { m_bSpline = true; }
@@ -313,7 +316,6 @@ private:
 	_int								m_iCalcCount = 0;
 	_bool								m_bArrival = false;
 	_bool								m_bMove = true;
-	
 	
 	_bool								m_bExit = false; 
 
