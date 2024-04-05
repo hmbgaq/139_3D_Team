@@ -31,28 +31,7 @@ HRESULT CCrane::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
-	//m_bEnable = true;
-	//m_iCurrnetLevel = m_pGameInstance->Get_NextLevel();
-
-	//GAMEOBJECT_DESC		Desc = {};
-
-	//if (nullptr != pArg)
-	//	Desc = *(GAMEOBJECT_DESC*)pArg;
-
-	//m_pTransformCom = CTransform::Create(m_pDevice, m_pContext, Desc.fSpeedPerSec, Desc.fRotationPerSec);
-	//NULL_CHECK_RETURN(m_pTransformCom, E_FAIL);
-
-	//if (nullptr != Find_Component(g_pTransformTag))
-	//	return E_FAIL;
-
-	//m_Components.emplace(g_pTransformTag, m_pTransformCom);
-
-	//Safe_AddRef(m_pTransformCom);
-
-
-	//FAILED_CHECK(Ready_Components());
-
-	//FAILED_CHECK(Ready_PartObjects());
+	m_bIsFixed = true;
 
 
 	return S_OK;
@@ -124,6 +103,16 @@ HRESULT CCrane::Render()
 	return S_OK;
 }
 
+void CCrane::Activate()
+{
+	if (false == m_bIsActivated) 
+	{
+		Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_NORMAL, true, false, 0);
+		m_bIsActivated = true;
+	}
+		
+}
+
 
 
 
@@ -154,7 +143,7 @@ HRESULT CCrane::Ready_PartObjects()
 	{
 		CWeapon::WEAPON_DESC		WeaponDesc = {};
 		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Cargo_Crane"), "Cargo", WeaponDesc, L"Cargo_Crane"));
-		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_HitPoint_Crane"), "Wheel1", WeaponDesc, L"HitPoint_Crane"));
+		FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_HitPoint_Crane"), "EngineWheel", WeaponDesc, L"HitPoint_Crane"));
 	}
 
 	return S_OK;
