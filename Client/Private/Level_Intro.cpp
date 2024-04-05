@@ -92,9 +92,9 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     }
 
     _bool bSpawnSniper = false;
-    _bool bSpawnTanker = true;
+    _bool bSpawnTanker = false;
     _bool bSpawnInfected = false;
-    _bool bSpawnZenuGiant = false;
+    _bool bSpawnZenuGiant = true;
     
 
     json MonsterJson = Stage1MapJson["Monster_Json"];
