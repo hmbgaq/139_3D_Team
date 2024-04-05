@@ -22,6 +22,8 @@ CState<CSon>* CSon_RangeAttackFar::Update(CSon* pActor, _float fTimeDelta)
 		CGameObject* pProjectile = { nullptr };
 		pProjectile = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", L"Prototype_GameObject_Son_Projectile");
 		pProjectile->Set_WorldMatrix(BoneMatrix);
+		//_float3 Temp = _float3(BoneMatrix._41, BoneMatrix._42, BoneMatrix._43);
+		//pProjectile->Set_Position(Temp);
 		pActor->m_bLookAt = false;
 		m_bFlags[0] = true;
 	}
