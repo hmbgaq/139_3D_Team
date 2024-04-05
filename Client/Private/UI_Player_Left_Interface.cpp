@@ -40,6 +40,7 @@ HRESULT CUI_Player_Left_Interface::Initialize(void* pArg)
 		return E_FAIL;
 
 	//m_eState = UISTATE::PLAYER_HUD;
+	m_tUIInfo.iRenderGroup = (_int)CRenderer::RENDER_UI_BACK;
 
 	return S_OK;
 }

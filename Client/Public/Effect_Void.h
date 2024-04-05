@@ -46,7 +46,10 @@ public:
 		_float		fUV_RotDegree	= { 0.f };
 
 		_bool		bUV_Wave		= { FALSE };
-		_float		fUV_WaveSpeed	= { 1.f };
+		_float2		vUV_WaveSpeed	= { 1.f, 1.f };
+		_float2		vUV_Offset_Mask = { 0.f, 0.f };
+		_float2		vUV_Scale_Mask  = { 1.f, 1.f };
+
 
 		_float4		vColor_Offset	= { 0.f, 0.f, 0.f, 0.f };
 		_float4		vColor_Clip		= { 0.f, 0.f, 0.f, 0.f };

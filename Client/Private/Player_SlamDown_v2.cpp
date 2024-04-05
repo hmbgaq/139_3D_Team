@@ -38,7 +38,8 @@ CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)
 		if (true == m_bFlags[1])
 		{
 			// ÀÌÆåÆ® »ý¼º
-			EFFECT_MANAGER->Create_Effect("Player/SlamDown/", "SlamDown_v2_22_Rock.json", pActor->Get_Position());
+			//EFFECT_MANAGER->Create_Effect("Player/SlamDown/", "SlamDown_v2_22_Rock.json", pActor->Get_Position());
+			EFFECT_MANAGER->Play_Effect("SlamDown_v2_22_Rock.json", pActor->Get_Position());
 
 			//CameraSetting
 			CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();

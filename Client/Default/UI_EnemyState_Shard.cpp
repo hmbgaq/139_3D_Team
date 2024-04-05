@@ -59,13 +59,6 @@ void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 	if (m_pCharacterOwner == nullptr)
 		return;
 
-	if (m_pCharacterOwner != nullptr)
-	{
-		if (m_pCharacterOwner->Is_Dead() == true)
-			Set_Dead(true);
-	}
-
-
 	if (m_pGameInstance->Key_Down(DIK_V))
 		m_fOffsetY -= 0.1f;
 	if (m_pGameInstance->Key_Down(DIK_B))
@@ -242,8 +235,6 @@ HRESULT CUI_EnemyState_Shard::Bind_ShaderResources()
 				return E_FAIL;
 		}
 	}
-
-
 
 	//switch (m_eCurState)
 	//{

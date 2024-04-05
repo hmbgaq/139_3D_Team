@@ -52,6 +52,7 @@ HRESULT CMainApp::Initialize()
 	CData_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	m_pUIManager->Initialize(m_pDevice, m_pContext);
+
 	CEffect_Manager::GetInstance()->Initialize(m_pDevice, m_pContext);
 
 	FAILED_CHECK(Ready_Font());
@@ -210,15 +211,21 @@ HRESULT CMainApp::Ready_UITexture()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_SSR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_SSR.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_PBR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_PBR.dds"))));
 
+	/* Tutorial Text */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TutorialText"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Tutorial/Text/TutorialText (%d).dds"), 2)));
+
+	/* EnemyHUD_Shard_Hp */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("EnemyHUD_Shard_Hp"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/EnemyHUD_Shard_Hp.dds"))));
+	
 	return S_OK;
 }
 
 // Effect & UI 공통 텍스처
 HRESULT CMainApp::Ready_Mask_Noise()
 {
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask (%d).dds"), 170)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Mask (%d).dds"), 173)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask_Waves"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Waves/Mask_Wave_%d.dds"), 6)));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask_Sprite"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Sprites/Mask_Sprite_%d.dds"), 28)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Mask_Sprite"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/02_Mask/Sprites/Mask_Sprite_%d.dds"), 29)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Noise"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/03_Noise/Noise (%d).dds"), 243)));
 
 	return S_OK;
@@ -237,6 +244,8 @@ HRESULT CMainApp::UI_TargetTexture()
 
 	return S_OK;
 }
+
+
 
 HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 {
@@ -424,5 +433,6 @@ void CMainApp::Free()
 	CEffect_Manager::DestroyInstance();
 
 	CGameInstance::Release_Engine();
+
 }
 

@@ -11,7 +11,7 @@ void CPlayer_Roll_R::Initialize(CPlayer* pActor)
 
 
 	// ÀÌÆåÆ® »ý¼º
-	EFFECT_MANAGER->Create_Effect("Player/Roll/", "Roll_R_04.json", pActor);
+	EFFECT_MANAGER->Play_Effect("Roll_R_04.json", pActor);
 
 }
 

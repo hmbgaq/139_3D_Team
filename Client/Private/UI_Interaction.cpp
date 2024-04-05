@@ -29,6 +29,11 @@ HRESULT CUI_Interaction::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	m_tUIInfo.fScaleX = 60.f;
+	m_tUIInfo.fScaleY = 60.f;
+	m_fOriginScaleX = m_tUIInfo.fScaleX;
+	m_fOriginScaleY = m_tUIInfo.fScaleY;
+
 	//m_tUIInfo.bWorld = true;
 
 	if (FAILED(Ready_Components()))
@@ -41,6 +46,13 @@ HRESULT CUI_Interaction::Initialize(void* pArg)
 	//m_tUIInfo.bWorld = true;
 	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
 
+
+
+	if (m_tUIInfo.strProtoTag == "")
+		m_tUIInfo.strProtoTag = "UI_Icon_exclamation_mark";
+
+	m_fActive_Distance = 10.f;
+
 	return S_OK;
 }
 
@@ -51,19 +63,21 @@ void CUI_Interaction::Priority_Tick(_float fTimeDelta)
 
 void CUI_Interaction::Tick(_float fTimeDelta)
 {
-	if (m_bActive == true)
-	{
-		__super::Tick(fTimeDelta);
-	}
-}
-
-void CUI_Interaction::Late_Tick(_float fTimeDelta)
-{
-	//if (m_tUIInfo.bWorldUI == true)
-	//	Compute_OwnerCamDistance();
+	__super::Tick(fTimeDelta);
 
 	if (m_pGameInstance->Key_Down(DIK_R))
 		m_bOnInteraction = true;
+
+
+	// 보이는 범위
+	if (m_fTarget_Distance <= m_fActive_Distance && m_bOnCollision == true)
+	{
+		m_bAvailable = true;
+	}
+	else
+	{
+		m_bAvailable = false;
+	}
 
 	if (m_bActive == true)
 	{
@@ -81,9 +95,18 @@ void CUI_Interaction::Late_Tick(_float fTimeDelta)
 			if (m_fAlpha >= 1.f)
 				m_bActive = false;
 		}
+	}
+}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-		return;
+void CUI_Interaction::Late_Tick(_float fTimeDelta)
+{
+	//if (m_tUIInfo.bWorldUI == true)
+	//	Compute_OwnerCamDistance();
+
+	if (m_bActive == true)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+			return;
 	}
 }
 
@@ -109,10 +132,12 @@ HRESULT CUI_Interaction::Render()
 
 void CUI_Interaction::UI_Ready(_float fTimeDelta)
 {
+
 }
 
 void CUI_Interaction::UI_Enter(_float fTimeDelta)
 {
+
 }
 
 void CUI_Interaction::UI_Loop(_float fTimeDelta)
@@ -169,6 +194,15 @@ void CUI_Interaction::Check_TargetWorld()
 	}
 }
 
+void CUI_Interaction::Reset_Interaction_UI()
+{
+
+	m_fAlpha = 0.f;
+	m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, m_tUIInfo.fPositionZ);
+	m_bAvailable = false;
+	m_bOnInteraction = false;
+}
+
 HRESULT CUI_Interaction::Ready_Components()
 {
 	//! For.Com_Shader
@@ -181,10 +215,24 @@ HRESULT CUI_Interaction::Ready_Components()
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UI_Icon_exclamation_mark"),
-		TEXT("Com_Texture_Interaction"), reinterpret_cast<CComponent**>(&m_pTextureCom[INTERACTION]))))
+#pragma region 아이콘
+	/* 첫 Create는 아무거나 기본 아이콘으로 Initialize에서 테그를 지정해주고, 선택된 텍스처를 파싱하면 파싱된 텍스처를 사용하게 해주자. */
+	wstring strPrototag;
+	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
+
+	//! For.Com_Texture2 // 비활성화
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+		TEXT("Com_Texture_Cooldown"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
 		return E_FAIL;
+
+	wstring strActive = TEXT("_active");
+	strPrototag += strActive;
+
+	//! For.Com_Texture2 // 활성화
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+		TEXT("Com_Texture_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
+		return E_FAIL;
+#pragma endregion
 
 	return S_OK;
 }
@@ -201,19 +249,15 @@ HRESULT CUI_Interaction::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
+	if (m_bAvailable == true)
 	{
-		switch (i)
-		{
-		case CUI_Interaction::INTERACTION:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
-			break;
-		}
-		default:
-			break;
-		}
+		if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
 	}
 
 	return S_OK;

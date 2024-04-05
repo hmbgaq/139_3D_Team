@@ -11,6 +11,15 @@ CState<CPlayer>* CPlayer_InteractionClimb450::Update(CPlayer* pActor, _float fTi
 {
 	__super::Update(pActor, fTimeDelta);
 
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(90);
+		if (true == m_bFlags[0])
+		{
+			pActor->Set_UseGravity(true);
+		}
+	}
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

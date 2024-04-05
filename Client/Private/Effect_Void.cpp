@@ -202,7 +202,10 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 	Out_Json["fUV_RotDegree"] = m_tVoidDesc.fUV_RotDegree;
 
 	Out_Json["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
-	Out_Json["fUV_WaveSpeed"] = m_tVoidDesc.fUV_WaveSpeed;
+	CJson_Utility::Write_Float2(Out_Json["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
+	CJson_Utility::Write_Float2(Out_Json["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
+	CJson_Utility::Write_Float2(Out_Json["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
+
 
 	CJson_Utility::Write_Float4(Out_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);
 	CJson_Utility::Write_Float4(Out_Json["vColor_Clip"], m_tVoidDesc.vColor_Clip);
@@ -286,7 +289,16 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	m_tVoidDesc.fUV_RotDegree = (_float)In_Json["fUV_RotDegree"];
 
 	m_tVoidDesc.bUV_Wave = (_bool)In_Json["bUV_Wave"];
-	m_tVoidDesc.fUV_WaveSpeed = (_float)In_Json["fUV_WaveSpeed"];
+
+	if (In_Json.contains("vUV_WaveSpeed")) // 다시 저장 후 if문 삭제
+		CJson_Utility::Load_Float2(In_Json["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
+
+
+	if (In_Json.contains("vUV_Offset_Mask")) // 다시 저장 후 if문 삭제
+	{
+		CJson_Utility::Load_Float2(In_Json["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
+		CJson_Utility::Load_Float2(In_Json["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
+	}
 
 
 	CJson_Utility::Load_Float4(In_Json["vColor_Offset"], m_tVoidDesc.vColor_Offset);

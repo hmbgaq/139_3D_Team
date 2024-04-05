@@ -10,7 +10,11 @@ class CCollider;
 class CNavigation;
 END
 
+// !Add Interaction UI
+class CUI_Interaction;
+
 BEGIN(Client)
+class CUI_Manager;
 
 class CEnvironment_Interact final : public CGameObject
 {
@@ -39,6 +43,7 @@ public:
 							INTERACT_WHIPSWING,
 							INTERACT_WHIPPULL,
 							INTERACT_ROTATIONVALVE,
+							INTERACT_NONE,
 							INTERACT_END 
 					    };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
@@ -85,6 +90,9 @@ public:
 		_bool			bArrival = false; //! 특정 지점에 가야하는 지
 		_bool			bMoveCollider = false;
 		_bool			bEnable = false; //! 활성화 시킬 위치가 있는 상호작용일 경우
+
+		vector<_int>	vecUpdateCellIndex; //! 활성화, 비활성화 시킬 셀들의 인덱스
+		
 
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
@@ -138,6 +146,7 @@ public:
 public: //! For Public
 	void								StartGroupInteract();
 	void								Reset_Interact();
+	
 	void								Set_Interact(_bool bInteract) { m_bInteract = bInteract;}
 	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex; }
 	void								Set_InteractGroupIndex(_int iGroupIndex) { m_tEnvironmentDesc.iInteractGroupIndex = iGroupIndex; }
@@ -160,6 +169,8 @@ public:
 
 
 public:	//! For Public
+	HRESULT								Find_UI_For_InteractType();
+
 	void								Move_For_PlayerRootMotion(); //! 플레이어의 애니메이션 움직임에 맞춰서 이동
 	void								Move_For_Offset(); //! 특저 오브젝트의 위치(오프셋)기준으로 같이 이동
 	void								Move_For_PlayerOffset();
@@ -210,8 +221,13 @@ public: //! For ToolTest
 	void								Set_EnableForPoint(_bool bEnable) { m_tEnvironmentDesc.bEnable = bEnable; }
 
 	void								Add_UpdateCellIndex(_int iCellIndex);
-	vector<_int>&						Get_UpdateCellIndexs() { return m_vecUpdateCellIndexs;}
-	void								Erase_UpdateCellForIndex(_int iCellIndex) { m_vecUpdateCellIndexs.erase(m_vecUpdateCellIndexs.begin() + iCellIndex);}
+	vector<_int>&						Get_UpdateCellIndexs() { return m_tEnvironmentDesc.vecUpdateCellIndex;}
+
+	void								Erase_UpdateCellForIndex(_int iCellIndex) { m_tEnvironmentDesc.vecUpdateCellIndex.erase(m_tEnvironmentDesc.vecUpdateCellIndex.begin() + iCellIndex);}
+	void								Enable_UpdateCells();
+	void								UnEnable_UpdateCells();
+
+	void								Reset_Rotate() { m_bInteractEnable = true; m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);}
 
 public: //! For RollerCoster Wagon && Spline
 	void								Start_SplineEvent() { m_bSpline = true; }
@@ -242,7 +258,12 @@ private:
 	CShader*							m_pShaderCom = { nullptr };	
 	CModel*								m_pModelCom = { nullptr };
 	CCollider*							m_pColliderCom = { nullptr };
+
+	CCollider*							m_pInteractColliderCom = { nullptr };
+
 	CCollider*							m_pMoveRangeColliderCom = { nullptr };
+	CCollider*							m_pFutureMoveColliderCom = {nullptr };
+
 	CNavigation*						m_pNavigationCom = { nullptr };
 
 	_int								m_iCurrentLevelIndex = -1;
@@ -285,18 +306,22 @@ private:
 	_bool								m_bArrival = false;
 	_bool								m_bMove = true;
 	
-	vector<_int>						m_vecUpdateCellIndexs; //! 업데이트 시켜야할 셀들이 있다면.
+	
+	_bool								m_bExit = false; 
 
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;
 	vector<string>						m_vecInteractGroupTag; //! 툴 또는 디버깅용
 	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
 
 	
-
+	
 	vector<_float4>						m_vecEnablePosition;
 private:
 	CPlayer*						    m_pPlayer = { nullptr };
 
+	// !성희 추가
+	CUI_Manager*						m_pUIManager = { nullptr };
+	CUI_Interaction*					m_pUI_Interaction = { nullptr };
 
 private:
 	HRESULT						Ready_Components();

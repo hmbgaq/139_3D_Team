@@ -134,9 +134,11 @@ void CSon_Weapon_Head::OnCollisionEnter(CCollider* other)
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 		//string Test = "Data_Animation/";
 		//parent->Set_EventNotify(Test, "Test2_AnimationData.json");
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos =this->Get_WorldPosition();
-		pEffect->Set_Position(vPos);
+
+		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", this->Get_WorldPosition());
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
+		//_float3 vPos =this->Get_WorldPosition();
+		//pEffect->Set_Position(vPos);
 
 	}
 // 	else if(nullptr != pTarget_Character && m_bSynced == true)//잡기 걸렸을때 

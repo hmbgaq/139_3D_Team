@@ -1,1 +1,26 @@
-{"Body":{"AnimDuration":67.0,"AnimIndex":55,"AnimationName":"VampireCommander_AttackMelee_02","AnimationSpeed":10.0,"BoneIndex":83,"BoneName":"RightHandIK","ColliderSize":0.5,"ColliderTrackPositionOff":55.0,"ColliderTrackPositionOn":34.0,"CurrentTrackPosition":5.300567150115967,"Layer":"Layer_Monster","SelectCreateIndex":2,"Tag":"Prototype_GameObject_VampireCommander","Type":"TypeBody"},"Effect":{"EffectFileName":"Test_Effect","EffectPosition":[0.0,0.0,0.0,0.0],"EffectTrackPosition":0.0,"TypeEffect":"TypeEffect"},"Weapon":null}
+{
+  
+  "Body": {
+    "AnimDuration": 67.0,
+    "AnimIndex": 55,
+    "AnimationName": "VampireCommander_AttackMelee_02",
+    "AnimationSpeed": 10.0,
+    "BoneIndex": 83,
+    "BoneName": "RightHandIK",
+    "ColliderSize": 0.5,
+    "ColliderTrackPositionOff": 55.0,
+    "ColliderTrackPositionOn": 34.0,
+    "CurrentTrackPosition": 5.300567150115967,
+    "Layer": "Layer_Monster",
+    "SelectCreateIndex": 2,
+    "Tag": "Prototype_GameObject_VampireCommander",
+    "Type": "TypeBody"
+  },
+  "Effect": {
+    "EffectFileName": "Hit_Normal",
+    "EffectPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+    "EffectTrackPosition": 0.0,
+    "TypeEffect": "TypeEffect"
+  },
+  "Weapon": null
+}

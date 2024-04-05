@@ -1,0 +1,754 @@
+{
+  
+  "Basic_Json": [
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, 1.0, 0.0 ],
+          [ -3.6398514566826634e-06, 0.9999999403953552, -1.6560649336236355e-12, 0.0 ],
+          [ -1.0, -3.639851684056339e-06, -9.099629210140847e-07, 0.0 ],
+          [ 100.95099639892578, 0.5, 112.35700225830078, 1.0 ]
+        ]
+      },
+      "Index": 0,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TreeParasiteMotherTree",
+      "ObjectTag": "TreeParasiteMotherTree",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
+          [ -1.8199259557150071e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
+          [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
+          [ 99.89529418945313, -8.0, -250.87179565429688, 1.0 ]
+        ]
+      },
+      "Index": 1,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyBentEntanceX40",
+      "ObjectTag": "MedievalDynastyBentEntanceX40",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.010039117187261581, 4.084128875092574e-07, -0.9999496340751648, 0.0 ],
+          [ 2.0481820683926344e-09, 1.0, 4.084128875092574e-07, 0.0 ],
+          [ 0.9999496340751648, 2.0481820683926344e-09, -0.010039117187261581, 0.0 ],
+          [ 27.5509033203125, -10.170000076293945, 156.08274841308594, 1.0 ]
+        ]
+      },
+      "Index": 2,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockAx20",
+      "ObjectTag": "MedievalDynastyCaveRockAx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.19312714040279388, 4.081360884811147e-07, -0.9811737537384033, 0.0 ],
+          [ -1.0080430001835339e-07, 1.0, 3.961255856665957e-07, 0.0 ],
+          [ 0.9811737537384033, 2.2404037736123428e-08, 0.19312714040279388, 0.0 ],
+          [ 177.16839599609375, -10.170000076293945, 151.72596740722656, 1.0 ]
+        ]
+      },
+      "Index": 3,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockAx20",
+      "ObjectTag": "MedievalDynastyCaveRockAx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 96.56190490722656, -402.10198974609375, 908.2861328125, 1.0 ]
+        ]
+      },
+      "Index": 4,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
+      "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, 1.0, 0.0 ],
+          [ -3.639851684056339e-06, 1.0, -1.6560650420438527e-12, 0.0 ],
+          [ -1.0, -3.639851684056339e-06, -9.099629210140847e-07, 0.0 ],
+          [ 178.96728515625, -10.170000076293945, 163.06930541992188, 1.0 ]
+        ]
+      },
+      "Index": 5,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockAx20",
+      "ObjectTag": "MedievalDynastyCaveRockA",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, 1.0, 0.0 ],
+          [ -3.639851684056339e-06, 1.0, -1.6560650420438527e-12, 0.0 ],
+          [ -1.0, -3.639851684056339e-06, -9.099629210140847e-07, 0.0 ],
+          [ 29.174945831298828, -10.170000076293945, 174.55857849121094, 1.0 ]
+        ]
+      },
+      "Index": 6,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockAx20",
+      "ObjectTag": "MedievalDynastyCaveRockA",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 97.57135009765625, -8.0, 248.919189453125, 1.0 ]
+        ]
+      },
+      "Index": 7,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
+      "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 101.42694091796875, -8.0, -276.072021484375, 1.0 ]
+        ]
+      },
+      "Index": 8,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
+      "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -1.0, -4.204111519356957e-06, 0.0, 0.0 ],
+          [ -4.204111519356957e-06, 1.0, 4.204111519356957e-06, 0.0 ],
+          [ -1.7674554528279707e-11, 4.204111519356957e-06, -1.0, 0.0 ],
+          [ 116.38855743408203, 231.50100708007813, -1157.7738037109375, 1.0 ]
+        ]
+      },
+      "Index": 9,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraightUp",
+      "ObjectTag": "MedievalDynastyCaveBentBranchingStraightUp",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.5994849801063538, -1.0910181345025194e-06, -0.024855246767401695, 0.0 ],
+          [ -1.7445346429667552e-06, 1.0, -1.818363557504199e-06, 0.0 ],
+          [ 0.024855246767401695, -1.0467208539921558e-06, -0.5994849801063538, 0.0 ],
+          [ 102.62187957763672, -0.3335035443305969, 34.70464324951172, 1.0 ]
+        ]
+      },
+      "Index": 10,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyBentEntance",
+      "ObjectTag": "MedievalDynastyCaveBentEntrance",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
+          [ -1.8199259557150071e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
+          [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
+          [ 30.64313316345215, -13.8856840133667, 47.152000427246094, 1.0 ]
+        ]
+      },
+      "Index": 11,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockBx20",
+      "ObjectTag": "MedievalDynastyCaveRockBx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 166.1721954345703, -12.515000343322754, 47.15192413330078, 1.0 ]
+        ]
+      },
+      "Index": 12,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockBx20",
+      "ObjectTag": "MedievalDynastyCaveRockBx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.5, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.5, 0.0 ],
+          [ -40.90811538696289, 0.0, 279.5264892578125, 1.0 ]
+        ]
+      },
+      "Index": 13,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_PUBGSnowField6",
+      "ObjectTag": "PUBGSnowField6",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.5, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.5, 0.0 ],
+          [ -40.08135223388672, -1.9073486328125e-06, -20.121662139892578, 1.0 ]
+        ]
+      },
+      "Index": 14,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_PUBGSnowField6",
+      "ObjectTag": "PUBGSnowField6",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 209.98709106445313, -1.52587890625e-05, 45.6390380859375, 1.0 ]
+        ]
+      },
+      "Index": 15,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockBx20",
+      "ObjectTag": "MedievalDynastyCaveRockBx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ -14.979187965393066, 0.0, 50.50191116333008, 1.0 ]
+        ]
+      },
+      "Index": 16,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockBx20",
+      "ObjectTag": "MedievalDynastyCaveRockBx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 11,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -8.742278012618954e-09, 0.20000000298023224, 0.0, 0.0 ],
+          [ -0.17000000178813934, -7.430935866636901e-09, 0.0, 0.0 ],
+          [ 0.0, 0.0, 0.09996773302555084, 0.0 ],
+          [ 118.95640563964844, 3.392263412475586, 31.29215431213379, 1.0 ]
+        ]
+      },
+      "Index": 17,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockAx20",
+      "ObjectTag": "MedievalDynastyCaveRockAx20",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    }
+  ],
+  "Instance_Json": [
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.0, 0.0, 0.0, 1.0 ]
+        ]
+      },
+      "Index": 0,
+      "InstanceCount": 13,
+      "InstanceInfo_Json": [
+        {
+          "Instance_Center": [ 32.09990692138672, 0.0, 79.42144775390625, 0.0 ],
+          "Instance_Index": 0,
+          "Instance_Rotation": [ -0.0, 0.0, 0.6437997817993164, 0.7651939988136292 ],
+          "Instance_Scale": [ 0.9999997615814209, 0.9999997615814209, 1.0, 0.0 ],
+          "Instance_Translation": [ 36.86425018310547, -0.352457731962204, 79.42144775390625, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 41.37420654296875, -7.62939453125e-06, 79.23806762695313, 0.0 ],
+          "Instance_Index": 1,
+          "Instance_Rotation": [ -0.0, 0.0, 0.6437963843345642, 0.7651968598365784 ],
+          "Instance_Scale": [ 0.9999993443489075, 0.9999993443489075, 1.0, 0.0 ],
+          "Instance_Translation": [ 42.703834533691406, -0.2308441698551178, 79.70923614501953, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 50.226097106933594, -7.62939453125e-06, 79.60829162597656, 0.0 ],
+          "Instance_Index": 2,
+          "Instance_Rotation": [ -0.0, 0.0, 0.6437963843345642, 0.7651968598365784 ],
+          "Instance_Scale": [ 0.9999993443489075, 0.9999993443489075, 1.0, 0.0 ],
+          "Instance_Translation": [ 51.036190032958984, -0.6570351719856262, 80.20826721191406, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 59.11261749267578, -7.62939453125e-06, 80.75536346435547, 0.0 ],
+          "Instance_Index": 3,
+          "Instance_Rotation": [ -0.0, 0.0, 0.6437963843345642, 0.7651968598365784 ],
+          "Instance_Scale": [ 0.9999993443489075, 0.9999993443489075, 1.0, 0.0 ],
+          "Instance_Translation": [ 59.38512420654297, -0.6513816714286804, 80.75536346435547, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 67.1614990234375, 0.0, 78.93595886230469, 0.0 ],
+          "Instance_Index": 4,
+          "Instance_Rotation": [ -0.0, 0.0, 0.6437963843345642, 0.7651968598365784 ],
+          "Instance_Scale": [ 0.9999993443489075, 0.9999993443489075, 1.0, 0.0 ],
+          "Instance_Translation": [ 67.93218994140625, -0.6651321649551392, 80.69842529296875, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 78.45915222167969, 0.0, 80.14298248291016, 0.0 ],
+          "Instance_Index": 5,
+          "Instance_Rotation": [ -0.0, 0.0, 0.6437963843345642, 0.7651968598365784 ],
+          "Instance_Scale": [ 0.9999993443489075, 0.9999993443489075, 1.0, 0.0 ],
+          "Instance_Translation": [ 76.54085540771484, -0.806631326675415, 81.56397247314453, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 92.55924987792969, 0.0, 79.99763488769531, 0.0 ],
+          "Instance_Index": 6,
+          "Instance_Rotation": [ -0.0, 0.0, 0.6437963843345642, 0.7651968598365784 ],
+          "Instance_Scale": [ 0.9999993443489075, 0.9999993443489075, 1.0, 0.0 ],
+          "Instance_Translation": [ 84.49562072753906, -0.6978051066398621, 81.81195068359375, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 109.88079833984375, 0.0, 80.67990112304688, 0.0 ],
+          "Instance_Index": 7,
+          "Instance_Rotation": [ 0.0, 0.0, 0.7088548541069031, 0.7053544521331787 ],
+          "Instance_Scale": [ 0.9999071359634399, 0.9999071359634399, 0.9999999403953552, 0.0 ],
+          "Instance_Translation": [ 92.80085754394531, -0.2064504623413086, 81.14305114746094, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 122.70747375488281, 0.0, 82.59402465820313, 0.0 ],
+          "Instance_Index": 8,
+          "Instance_Rotation": [ 0.0, 0.0, 0.7088568806648254, 0.7053523659706116 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 101.4753646850586, 0.23946964740753174, 81.44992065429688, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 135.90597534179688, 7.62939453125e-06, 86.64179229736328, 0.0 ],
+          "Instance_Index": 9,
+          "Instance_Rotation": [ 0.0, 0.0, 0.7088568806648254, 0.7053523659706116 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 109.91307830810547, 0.28082096576690674, 81.44999694824219, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 147.48300170898438, 0.0, 92.0355224609375, 0.0 ],
+          "Instance_Index": 10,
+          "Instance_Rotation": [ 0.0, 0.0, 0.7088568806648254, 0.7053523659706116 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 118.34953308105469, 0.3226337134838104, 81.44999694824219, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 156.9214630126953, -7.62939453125e-06, 96.9766845703125, 0.0 ],
+          "Instance_Index": 11,
+          "Instance_Rotation": [ 0.0, 0.0, 0.7088568806648254, 0.7053523659706116 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 127.15316772460938, 0.3662663400173187, 81.44999694824219, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 163.46363830566406, 0.0, 102.10881042480469, 0.0 ],
+          "Instance_Index": 12,
+          "Instance_Rotation": [ 0.0, 0.0, 0.7088568806648254, 0.7053523659706116 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 135.69329833984375, 0.40859317779541016, 81.44999694824219, 0.0 ]
+        }
+      ],
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockA",
+      "ObjectTag": "MedievalDynastyCaveRockA",
+      "ShaderPassIndex": 6,
+      "Type": "Instance"
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.0, 0.0, 0.0, 1.0 ]
+        ]
+      },
+      "Index": 1,
+      "InstanceCount": 22,
+      "InstanceInfo_Json": [
+        {
+          "Instance_Center": [ 139.0831756591797, -1.9073486328125e-06, 81.15364074707031, 0.0 ],
+          "Instance_Index": 0,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999932050704956, 0.9999932050704956, 0.999993085861206, 0.0 ],
+          "Instance_Translation": [ 40.0620002746582, -1.9073486328125e-06, 81.15364074707031, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 144.11463928222656, 0.0, 81.45612335205078, 0.0 ],
+          "Instance_Index": 1,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999988079071045, 0.9999988079071045, 0.9999986886978149, 0.0 ],
+          "Instance_Translation": [ 45.77543640136719, -4.438915013338374e-08, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 148.3302459716797, 1.9073486328125e-06, 80.78515625, 0.0 ],
+          "Instance_Index": 2,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999988675117493, 0.9999988675117493, 0.9999987483024597, 0.0 ],
+          "Instance_Translation": [ 51.1158447265625, -4.4306395352577965e-07, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 154.36322021484375, 0.0, 81.68382263183594, 0.0 ],
+          "Instance_Index": 3,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999988079071045, 0.9999988079071045, 0.9999986886978149, 0.0 ],
+          "Instance_Translation": [ 56.25723648071289, 1.331854264208232e-06, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 159.74942016601563, 1.9073486328125e-06, 82.32844543457031, 0.0 ],
+          "Instance_Index": 4,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999988079071045, 0.9999988079071045, 0.9999986886978149, 0.0 ],
+          "Instance_Translation": [ 61.84505081176758, -1.7225005649379455e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 166.9962615966797, 0.0, 82.9605712890625, 0.0 ],
+          "Instance_Index": 5,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999988079071045, 0.9999988079071045, 0.9999986886978149, 0.0 ],
+          "Instance_Translation": [ 69.0513687133789, -2.2923341020941734e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 173.42942810058594, 1.9073486328125e-06, 83.61378479003906, 0.0 ],
+          "Instance_Index": 6,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999988079071045, 0.9999988079071045, 0.9999986886978149, 0.0 ],
+          "Instance_Translation": [ 77.98837280273438, -2.9990231269039214e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 163.8621368408203, 0.0, 82.93917846679688, 0.0 ],
+          "Instance_Index": 7,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999988675117493, 0.9999988675117493, 0.9999987483024597, 0.0 ],
+          "Instance_Translation": [ 85.50713348388672, -3.5935612686444074e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 34.12763595581055, 0.0, 80.07649230957031, 0.0 ],
+          "Instance_Index": 8,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999980330467224, 0.9999980330467224, 0.9999983310699463, 0.0 ],
+          "Instance_Translation": [ 91.73741149902344, -4.086227636435069e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 40.06184387207031, 0.0, 81.47528076171875, 0.0 ],
+          "Instance_Index": 9,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999994039535522, 0.9999994039535522, 0.9999992847442627, 0.0 ],
+          "Instance_Translation": [ 103.03304290771484, -4.979446021025069e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 43.794403076171875, -1.9073486328125e-06, 82.06678771972656, 0.0 ],
+          "Instance_Index": 10,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.999999463558197, 0.999999463558197, 0.9999993443489075, 0.0 ],
+          "Instance_Translation": [ 110.32479095458984, -5.746796159655787e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 48.52208709716797, -1.9073486328125e-06, 82.52723693847656, 0.0 ],
+          "Instance_Index": 11,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.999999463558197, 0.999999463558197, 0.9999993443489075, 0.0 ],
+          "Instance_Translation": [ 142.7179412841797, -8.308273390866816e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 56.3223991394043, 0.0, 82.72827911376953, 0.0 ],
+          "Instance_Index": 12,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999994039535522, 0.9999994039535522, 0.9999992847442627, 0.0 ],
+          "Instance_Translation": [ 148.22232055664063, -8.552826329832897e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 65.02685546875, 0.0, 83.61872863769531, 0.0 ],
+          "Instance_Index": 13,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.999999463558197, 0.999999463558197, 0.9999993443489075, 0.0 ],
+          "Instance_Translation": [ 153.828857421875, -8.996141696115956e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 73.7105712890625, 0.0, 82.946044921875, 0.0 ],
+          "Instance_Index": 14,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.999999463558197, 0.999999463558197, 0.9999993443489075, 0.0 ],
+          "Instance_Translation": [ 159.28643798828125, -9.427731856703758e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 81.47142028808594, 0.0, 83.58111572265625, 0.0 ],
+          "Instance_Index": 15,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999994039535522, 0.9999994039535522, 0.9999992847442627, 0.0 ],
+          "Instance_Translation": [ 165.39865112304688, -9.911056258715689e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 90.23643493652344, 3.814697265625e-06, 82.85102844238281, 0.0 ],
+          "Instance_Index": 16,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999994039535522, 0.9999994039535522, 0.9999992847442627, 0.0 ],
+          "Instance_Translation": [ 169.2696990966797, -0.00010217163071502, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 98.3554916381836, 3.814697265625e-06, 83.23770141601563, 0.0 ],
+          "Instance_Index": 17,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999994039535522, 0.9999994039535522, 0.9999992847442627, 0.0 ],
+          "Instance_Translation": [ 174.21507263183594, -0.00010608135198708624, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 107.13640594482422, -3.814697265625e-06, 83.5430908203125, 0.0 ],
+          "Instance_Index": 18,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999995231628418, 0.9999995231628418, 0.9999994039535522, 0.0 ],
+          "Instance_Translation": [ 36.29328918457031, -8.345905371243134e-07, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 116.0854263305664, 0.0, 83.45841979980469, 0.0 ],
+          "Instance_Index": 19,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999994039535522, 0.9999994039535522, 0.9999992847442627, 0.0 ],
+          "Instance_Translation": [ 95.49906158447266, -4.3837149860337377e-05, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 124.64755249023438, -1.9073486328125e-06, 83.32941436767578, 0.0 ],
+          "Instance_Index": 20,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.9999994039535522, 0.9999994039535522, 0.9999992847442627, 0.0 ],
+          "Instance_Translation": [ 177.09048461914063, -0.00011026333959307522, 81.15399932861328, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 132.974853515625, 1.9073486328125e-06, 83.66323852539063, 0.0 ],
+          "Instance_Index": 21,
+          "Instance_Rotation": [ -0.0, 0.0, 0.7071065306663513, 0.7071070671081543 ],
+          "Instance_Scale": [ 0.999999463558197, 0.999999463558197, 0.9999993443489075, 0.0 ],
+          "Instance_Translation": [ 87.60918426513672, -3.7598270864691585e-05, 81.15399932861328, 0.0 ]
+        }
+      ],
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockD",
+      "ObjectTag": "MedievalDynastyCaveRockD",
+      "ShaderPassIndex": 6,
+      "Type": "Instance"
+    }
+  ],
+  "Interact_Json": [
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, -1.0, 0.0 ],
+      "ColliderSize": [ 48.0, 10.0, 2.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 101.28089141845703, -9.5367431640625e-07, 34.588741302490234, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 0,
+      "InteractGroupIndex": -1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 2,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank2",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainClimbLadderTopPlank1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 2.0, 2.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 90.0,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, -1.0, 0.0 ],
+      "ColliderSize": [ 30.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 98.39403533935547, 9.5367431640625e-07, 28.715057373046875, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 1,
+      "InteractGroupIndex": -1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 12,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_ChainBeam3",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainClimbLadderTopPlank2",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.2999999523162842, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 90.0,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false
+    }
+  ],
+  "LightObject_Json": null,
+  "Light_Json": [
+    {
+      "Ambient": [ 0.0, 0.9284292459487915, 0.9343629479408264, 1.0 ],
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 1.0, 1.0, 1.0 ],
+      "Direction": [ 1.0, -1.0, 1.0, 0.0 ],
+      "LightEnable": true,
+      "LightIndex": 0,
+      "OuterCutOff": 0.0,
+      "Position": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Range": 0.0,
+      "Specular": [ 0.1853281855583191, 0.1853281855583191, 0.1853281855583191, 1.0 ],
+      "Type": 0
+    }
+  ],
+  "Monster_Json": [
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 100.95099639892578, 0.5, 112.35700225830078, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Mother",
+      "StartNaviIndex": 0
+    }
+  ],
+  "Special_Json": null,
+  "Trigger_Json": {
+    "MonsterTriggerJson": [
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 48.0, 20.0, 10.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 107.16552734375, 10.878019332885742, 49.462703704833984, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage2Boss_ReEditjson_MapData.json",
+        "NameTag": "MonsterSpawn",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 0
+      }
+    ]
+  }
+}

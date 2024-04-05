@@ -109,7 +109,8 @@ HRESULT CGameObject::Set_InitPosition(const _float3& vPos)
 	CNavigation* pNavi = dynamic_cast<CCharacter*>(this)->Get_Navigation();
 	NULL_CHECK_RETURN(pNavi, E_FAIL);
 
-	_int iCheckIndex = pNavi->Get_SelectRangeCellIndex(this);
+
+	_int iCheckIndex = pNavi->Find_CurrentCellIndex(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
 	if (iCheckIndex == -1)
 		this->Set_Dead(true);
 

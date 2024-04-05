@@ -78,7 +78,8 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
 	 
-	m_pMapEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
+	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Map_Blood_04.json", m_pTransformCom->Get_Position());
 
 
 	if (nullptr == m_pTarget)
@@ -282,6 +283,9 @@ void CVampireCommander::Free()
 
 	if (nullptr != m_pMapEffect)
 	{
-		m_pMapEffect->Set_Dead(TRUE);
+		EFFECT_MANAGER->Return_ToPool(m_pMapEffect);
+		Safe_Release(m_pMapEffect);
+		//m_pMapEffect = nullptr;
+		//m_pMapEffect->Set_Dead(TRUE);
 	}
 }

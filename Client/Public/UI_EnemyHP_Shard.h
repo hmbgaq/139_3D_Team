@@ -31,7 +31,8 @@ public:
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
-	CGameObject* m_pTarget = nullptr;
+
+	CGameObject*			m_pTarget = nullptr;
 	_vector					m_vTargetPosition = { 0.f, 0.f, 0.f, 0.f };
 	_matrix					m_World = XMMatrixIdentity();
 	_float					m_fChangeScale = 1.f;

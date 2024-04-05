@@ -553,11 +553,25 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNaviga
 
 void CTransform::Add_RootBone_ForTarget(const _float3& vPos, CNavigation* pNavigation, CTransform* pTargetTransform)
 {
+	
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
+	
 	_vector vResult = vRootMove;
 	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
 
 	Move_On_Navigation(vResult, pNavigation);
+}
+
+_float3 CTransform::Get_RootBone_ForTarget(const _float3& vPos, CTransform* pTargetTransform)
+{
+	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
+
+	_vector vResult = vRootMove;
+
+	_float3 vReturnFloat3;
+	XMStoreFloat3(&vReturnFloat3, vRootMove);
+
+	return vReturnFloat3;
 }
 
 void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, CNavigation* pNavigation)
@@ -571,18 +585,28 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDe
 	//Move_On_Navigation_ForSliding(vResult, fTimeDelta, pNavigation);
 }
 
+// 타겟의 포지션을 넣으면, 카메라 기준으로 상대가 앞인지 뒤인지 구분해줍니다. (true : 앞, false : 뒤)
 _bool CTransform::Calc_FrontCheck(const _float3& vTargetPos)
 {
 	_float3 vMyLook = Get_Look();
 	_float3 vMyPos = Get_Pos();
 	_float3 vTargetDir = XMVector3Normalize(vTargetPos - vMyPos);
 	
-	//! 앞인지 뒤인지 구분
-	{
-		if (XMVectorGetX(XMVector3Dot(vTargetDir, vMyLook)) > 0)
-			return true;
-		else
-			return false;
+	//! 내가 바라보는 방향 벡터와 타겟까지의 방향 벡터의 내적 계산
+	_float3 vTargetDirDot;
+	XMStoreFloat3(&vTargetDirDot, XMVector3Dot(XMLoadFloat3(&vMyLook), XMVector3Normalize(XMLoadFloat3(&vTargetDir))));
+
+	//!타겟이 앞에 있는경우
+	//!성희 수정 : 앞뒤가 반대로 나옴 (true가 앞인걸로 수정)
+	if (vTargetDirDot.x >= 0)
+	{ // 뒤
+		return false;
+		//return true;
+	}
+	else
+	{ // 앞
+		return true;
+		//return false;
 	}
 
 }

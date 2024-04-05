@@ -75,7 +75,6 @@ void CWindow_AnimTool::Tick(_float fTimeDelta)
 		CCharacter* pPlayer = dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player")));
 		m_pGameInstance->Set_Player(pPlayer);
 		m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
-		
 	}
 	//disPlay
 	ShowDialog();
@@ -276,7 +275,8 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 				ImGui::SetItemDefaultFocus();
 				if (m_bCreateEffect)
 				{
-					CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
+					
+					//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, LAYER_EFFECT, m_vecEffectName[n]+".json");
 					if (m_pBones.size() > 0)// 본이 존재한다면 
 					{
 						_float4x4 BoneMatrix = {};
@@ -285,19 +285,23 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 						m_EffectPosition.y = BoneMatrix._42 + m_AddPositions[1];
 						m_EffectPosition.z = BoneMatrix._43 + m_AddPositions[2];
 
-						pEffect->Set_Position(m_EffectPosition);
+						EFFECT_MANAGER->Play_Effect(m_vecEffectName[n] + ".json", m_EffectPosition);
+						//pEffect->Set_Position(m_EffectPosition);
 						m_bCreateEffect = false;
 					}
 					else // 만약 본이 선택되지 않고 없다라면 0값으로 초기화
 					{
-						pEffect->Set_Position({ 0.0f, 0.0f, 0.0f });
+						EFFECT_MANAGER->Play_Effect(m_vecEffectName[n] + ".json", _float3(0.0f, 0.0f, 0.0f));
+						//pEffect->Set_Position({ 0.0f, 0.0f, 0.0f });
 					}
 					if (m_bAddEffectposition) // 값을 넣어서 위치를 수정하고 싶다면 조절하고 조절 값을 여기에 다시 늘린다.
 					{
 						m_EffectPosition.x = m_EffectPosition.x + m_AddPositions[0];
 						m_EffectPosition.y = m_EffectPosition.y + m_AddPositions[1];
 						m_EffectPosition.z = m_EffectPosition.z + m_AddPositions[2];
-						pEffect->Set_Position(m_EffectPosition);
+
+						EFFECT_MANAGER->Play_Effect(m_vecEffectName[n] + ".json", m_EffectPosition);
+						//pEffect->Set_Position(m_EffectPosition);
 					}
 				}
 				
@@ -1459,6 +1463,15 @@ wchar_t* CWindow_AnimTool::ConvertCtoWC(const char* str)
 
 
 	return pStr;
+}
+
+void CWindow_AnimTool::Call_SeungYongButton()
+{
+	//TODO 승용 전용 함수
+
+	CCharacter* pPlayer = dynamic_cast<CCharacter*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Player"), TEXT("Prototype_GameObject_Player")));
+	m_pGameInstance->Set_Player(pPlayer);
+	m_pGameInstance->Get_CloneGameObjects(LEVEL_TOOL, &m_CreateList);
 }
 
 CWindow_AnimTool* CWindow_AnimTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

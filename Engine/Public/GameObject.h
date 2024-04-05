@@ -64,7 +64,7 @@ public: /* For. Transform */
 
 	void				Set_Position(const _float3& vState);
 	void				Set_WorldMatrix(_float4x4 matrix);
-	HRESULT				Set_InitPosition(const _float3& vPos);
+	virtual HRESULT		Set_InitPosition(const _float3& vPos);
 
 public: /* For. Model */
 	void				Set_ModelWidth(_float fWidth) { m_fModelWidth = fWidth; }
