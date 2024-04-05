@@ -82,9 +82,11 @@ public:
 		_float4			vOffset = {}; //!  특정 상호작용 오브젝트를 기준으로 위치해야하기 위한 오프셋
 		_float			fRotationAngle = 90.f; //! 특정 상호작용 오브젝트가 활성화될시 회전해야할 각도
 		_float			fRotationSpeed = 90.f; //! 회전해야하는 오브젝트인경우 회전 속도를 저장시키기위함.
+		ROTATION_LERP_STATE eRotationState = LERP_Y; //! 회전할 방향
 
 		_bool			bOffset = false; //! 오프셋 위치가 적용시켜져야하는 지.
 		_bool			bRotate = false; //! 활성화시 회전해야할지
+		
 		_bool			bOwner = false; //! 오너임을 알기위함.
 		_bool			bRootTranslate = false; //! 플레이어의 루트모션에 따라 이동되여야하는지
 		_bool			bArrival = false; //! 특정 지점에 가야하는 지
@@ -200,9 +202,15 @@ public:	//! For Public
 	
 public: //! For ToolTest
 	HRESULT								Add_InteractGroupObject(CEnvironment_Interact* pInteractObject);
+
+
+	void								Set_DescWorldMatrix() { m_tEnvironmentDesc.WorldMatrix = m_pTransformCom->Get_WorldMatrix();}
+
 	void								Set_Rotate(_bool bRotate) { m_tEnvironmentDesc.bRotate = bRotate; }
 	void								Set_RotationAngle(_float fAngle) { m_tEnvironmentDesc.fRotationAngle = fAngle;}
 	void								Set_RotationSpeed(_float fRotationSpeed) { m_tEnvironmentDesc.fRotationSpeed = fRotationSpeed; m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(fRotationSpeed)); }
+	void								Set_RotationType(ROTATION_LERP_STATE eRotateState) { m_tEnvironmentDesc.eRotationState = eRotateState;}
+
 	void								Set_OwnerPromotion(_bool bOwnerPromotion) { m_tEnvironmentDesc.bOwner = bOwnerPromotion; m_bInteractEnable = true;}
 	void								Set_RootTranslate(_bool bRootTranslate) { m_tEnvironmentDesc.bRootTranslate = bRootTranslate;}
 	void								Set_Offset(_bool bOffset, _float4 vOffset) { m_tEnvironmentDesc.bOffset = bOffset; m_tEnvironmentDesc.vOffset = vOffset; }

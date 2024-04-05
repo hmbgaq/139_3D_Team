@@ -207,8 +207,8 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-	pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
-	CNavigation* pNavigation = pPlayer->Get_Navigation();
+	pPlayer->Set_InitPosition(_float3(14.87f, 0.f, -8.06f));
+	
 
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 

@@ -431,6 +431,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractGroupIndex", Desc.iInteractGroupIndex);				
 				InteractJson[i].emplace("RotationAngle", Desc.fRotationAngle);
 				InteractJson[i].emplace("RotationSpeed", Desc.fRotationSpeed);
+				InteractJson[i].emplace("RotationType", Desc.eRotationState);
+
 				InteractJson[i].emplace("Offset", Desc.bOffset);
 				InteractJson[i].emplace("Rotate", Desc.bRotate);
 				InteractJson[i].emplace("Owner", Desc.bOwner);
@@ -826,6 +828,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bRotate = InteractJson[i]["Rotate"];
 			Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
 			Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+			//Desc.eRotationState = InteractJson[i]["RotationType"];
 			Desc.bArrival = InteractJson[i]["Arrival"];
 			
 
@@ -4052,6 +4055,26 @@ void CWindow_MapTool::Interact_RotationFunction()
 
 	CEnvironment_Interact* pInteractObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
 
+	ImGui::SeparatorText(u8"회전 방향");
+	{
+		static int iRotateType = 0;
+
+		const char* RotateType[3] = { u8"X축_회전", u8"Y축_회전", u8"Z축_회전"};
+
+
+		for (_uint i = 0; i < IM_ARRAYSIZE(RotateType); ++i)
+		{
+			if (i > 0) { ImGui::SameLine(); }
+
+			if (ImGui::RadioButton(RotateType[i], &iRotateType, i))
+			{
+				m_tSelectInteractDesc.eRotationState = (ROTATION_LERP_STATE)iRotateType;
+				pInteractObject->Set_RotationType(m_tSelectInteractDesc.eRotationState);
+			}
+		}
+
+	}
+
 
 	if (ImGui::InputFloat(u8"로테이션 각도", &m_tSelectInteractDesc.fRotationAngle))
 	{
@@ -4067,6 +4090,15 @@ void CWindow_MapTool::Interact_RotationFunction()
 	{
 		pInteractObject->Reset_Rotate();
 	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"현재 각도 저장"))
+	{
+		pInteractObject->Set_DescWorldMatrix();
+	}
+
+
 	
 }
 

@@ -722,7 +722,9 @@ void CEnvironment_Interact::Interact()
 			}
 
 			Enable_UpdateCells();
-			m_pPlayer->Set_UseGravity(false);
+			if (m_tEnvironmentDesc.bUseGravity == false)
+				m_pPlayer->Set_UseGravity(false);
+
 			m_bInteract = true;
 
 		
@@ -930,8 +932,8 @@ void CEnvironment_Interact::Interact()
 				}
 			}
 
-
-			m_pPlayer->Set_UseGravity(false);
+			if(m_tEnvironmentDesc.bUseGravity == false)
+				m_pPlayer->Set_UseGravity(false);
 			//if (m_bMove == true)
 				m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
 			//else
@@ -1158,7 +1160,9 @@ _bool CEnvironment_Interact::ArrivalCheck()
 
 _bool CEnvironment_Interact::RotationCheck(const _float fTimeDelta)
 {
-	return m_pTransformCom->Rotation_Lerp(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, 1.f);
+	return m_pTransformCom->Rotation_QuaternionLerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
+	//return m_pTransformCom->Rotation_LerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
+	//return m_pTransformCom->Rotation_Lerp(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, 1.f);
 }
 
 _bool CEnvironment_Interact::Check_MoveCollider()

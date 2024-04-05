@@ -269,12 +269,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
-	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper ¾Õ */
-	
-	CNavigation* pNavigation = pPlayer->Get_Navigation();
-
-	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+	pPlayer->Set_InitPosition(_float3(250.66f, 0.f, 2.38f));
+	//pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	////pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper ¾Õ */
+	//
+	//
+	//CNavigation* pNavigation = pPlayer->Get_Navigation();
+	//
+	//
+	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"));
 
