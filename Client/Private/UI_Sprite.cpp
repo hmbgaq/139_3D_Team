@@ -67,7 +67,12 @@ void CUI_Sprite::Tick(_float fTimeDelta)
 	if(m_pGameInstance->Key_Down(DIK_M))
 		m_fFrameChangeTime += 5.f;
 	if (m_pGameInstance->Key_Down(DIK_R))
+	{
 		Start_Setting();
+		m_pUIManager->NonActive_LevelList();
+		m_pUIManager->NonActive_MainList();
+		m_pUIManager->NonActive_MainLogo();
+	}
 
 	if (m_Time + m_fFrameChangeTime < GetTickCount64())
 	{

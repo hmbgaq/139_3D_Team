@@ -30,7 +30,7 @@ public:
 	void					Set_TargetPosition(_vector vTargetPosition);
 	void					Check_TargetWorld();
 
-private:
+public:
 	virtual HRESULT			Setting_Owner();
 
 private:

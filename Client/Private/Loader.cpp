@@ -213,6 +213,14 @@
 /* MainMenu */
 #include "UI_MainMenuList.h"
 #include "UI_MoveEffect.h"
+/* SkiilWindow */
+#include "UI_SkillIcon.h"
+#include "UI_Skill_Preview.h"
+#include "UI_SkillPreview_Window.h"
+#include "UI_SkillFrame.h"
+#include "UI_SkillScrew.h"
+#include "UI_ConnectionLine.h"
+#include "UI_SkillActive.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -779,7 +787,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 	/* ------------------ Player ------------------ */
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//FAILED_CHECK(Loading_Player(LEVEL_TOOL));
+	FAILED_CHECK(Loading_Player(LEVEL_TOOL));
 
 
 	//TODO VampireCommander
@@ -837,7 +845,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
-	//Ready_Environment_Model(LEVEL_TOOL);
+	Ready_Environment_Model(LEVEL_TOOL);
 #pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
@@ -1207,6 +1215,16 @@ HRESULT CLoader::Ready_UI_Origin()
 #pragma region MainMenu
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MainMenuList"), CUI_MainMenuList::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MainMenuList"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_MoveEffect"), CUI_MoveEffect::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_MoveEffect"))));
+#pragma endregion End
+
+#pragma region SkillWindow
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillIcon"), CUI_SkillIcon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillIcon"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Skill_Preview"), CUI_Skill_Preview::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Skill_Preview"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillPreview_Window"), CUI_SkillPreview_Window::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillPreview_Window"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillFrame"), CUI_SkillFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillFrame"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillScrew"), CUI_SkillScrew::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillScrew"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ConnectionLine"), CUI_ConnectionLine::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ConnectionLine"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillActive"), CUI_SkillActive::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillActive"))));
 #pragma endregion End
 
 	return S_OK;

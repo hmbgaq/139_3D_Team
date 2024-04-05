@@ -5,7 +5,7 @@
 /* 체력 프레임 */
 class CUI_Option_Title_Button final : public CUI
 {
-	enum TEXTUREKIND { NONACTIVE, ACTIVE, TEXTURE_END };
+	enum TEXTUREKIND { NONACTIVE, ACTIVE, SELECT, TEXTURE_END };
 
 private:
 	CUI_Option_Title_Button(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

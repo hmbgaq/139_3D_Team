@@ -81,7 +81,7 @@ void CUI_Distortion::Tick(_float fTimeDelta)
 		else
 		{
 			m_fTimeAcc += m_tUIInfo.fTimeAcc * fTimeDelta;
-			m_fAlpha = m_tUIInfo.fAlphaTrue;
+			m_fAlpha = m_tUIInfo.fAlpha;
 		}
 	}
 }
