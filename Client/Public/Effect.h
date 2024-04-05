@@ -55,6 +55,7 @@ public:
 		_bool		bUseSocket		= { FALSE };
 		string		strBoneTag		= { "" };
 
+		_bool		bAttachStatic = { FALSE };
 
 
 		string		strFileName		= { "" };	// Json에 저장X (Json파일 이름 .json포함)
@@ -67,6 +68,8 @@ public:
 
 			bUseSocket = FALSE;
 			strBoneTag = { "" };
+
+			bAttachStatic = FALSE;
 		}
 
 

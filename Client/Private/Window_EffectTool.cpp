@@ -5429,6 +5429,23 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
 				}
 			}
+			ImGui::SameLine();
+			if (ImGui::Button("Aim_01"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Winchester_Ironsights_AimPose);
+				}
+			}
+
+			if (ImGui::Button("Revolver_01"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Bandit_Special_01);
+				}
+			}
+
 		}
 
 

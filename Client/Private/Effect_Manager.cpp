@@ -44,7 +44,7 @@ CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _
 
 	if (bUseSocket)	// 소켓 사용이면 정보 세팅
 	{
-		pEffect->Get_Desc()->bUseSocket = bUseSocket;
+		pEffect->Get_Desc()->bUseSocket = bUseSocket; 
 		pEffect->Get_Desc()->strBoneTag = strBoneTag;
 	}
 
@@ -55,6 +55,28 @@ CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _
 
 	return pEffect;
 
+}
+
+CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strFileName, CGameObject* pOwner, _float4x4 matPivot)
+{
+	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
+	CEffect* pEffect = EffectPool->front();
+
+	Safe_AddRef(pEffect);
+
+	if (nullptr != pOwner)
+		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
+
+
+	pEffect->Get_Desc()->bAttachStatic = TRUE;
+	pEffect->Get_Desc()->matPivot = matPivot;
+
+	pEffect->Get_Desc()->bPlay = TRUE;
+	pEffect->Set_Enable(TRUE);
+
+	EffectPool->pop();
+
+	return pEffect;
 }
 
 // 주인 없이 위치 생성 이펙트
@@ -219,6 +241,17 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Boos 2 */
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
+
+
+#pragma region 플레이어 이펙트
+
+		/* Revolver_Fire */
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json"));
+		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json"));
+
+#pragma endregion
+
+
 	}
 
 
@@ -245,7 +278,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_30.json"));
 
 		/* SlamDown */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_22_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_25_Rock.json"));
 
 		/* DodgeBlink */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json"));
@@ -254,6 +289,10 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Roll */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
+
+		/* Revolver */
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json"));
 
 #pragma endregion
 

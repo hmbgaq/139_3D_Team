@@ -40,7 +40,6 @@ HRESULT CLevel_Logo::Initialize()
 	m_pDataManager->Set_GameState(GAME_STATE::UI);
 	ShowCursor(false);
 
-
 	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ¿Ã∆Â∆Æ «Æ
 
 	return S_OK;

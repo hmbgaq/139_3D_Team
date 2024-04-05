@@ -911,7 +911,37 @@ technique11 DefaultTechnique
     }
 
 
-    pass Particle_Wireframe // 12
+    pass Particle_Priority_Floor // 12
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(3);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE_PRIORITY(false);
+    }
+
+
+    pass Particle_Priority_Floor_Solid // 13
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend_Effect, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+		/* ·»´õ½ºÅ×ÀÌÃ÷ */
+        VertexShader = compile vs_5_0 VS_MAIN_PARTICLE();
+        GeometryShader = compile gs_5_0 GS_MAIN(3);
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PARTICLE_PRIORITY(true);
+    }
+
+
+    pass Particle_Wireframe // 14
     {
         SetRasterizerState(RS_NoneCull_Wireframe);
         SetDepthStencilState(DSS_Default, 0);

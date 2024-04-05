@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 #include "Player_IdleLoop.h"
 
+#include "Effect_Manager.h"
+
 void CPlayer_SlamDown_v3::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -32,6 +34,7 @@ CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 		if (true == m_bFlags[1])
 		{
 			pActor->Apply_Shake_And_Blur(Power::Medium);
+			EFFECT_MANAGER->Play_Effect("SlamDown_v2_24_Rock.json", pActor->Get_Position());
 			pActor->Slam();
 		}
 	}

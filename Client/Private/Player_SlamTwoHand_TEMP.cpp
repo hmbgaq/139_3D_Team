@@ -5,6 +5,8 @@
 #include "Effect.h"
 #include "Bone.h"
 
+#include "Effect_Manager.h"
+
 void CPlayer_SlamTwoHand_TEMP::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -17,6 +19,7 @@ CState<CPlayer>* CPlayer_SlamTwoHand_TEMP::Update(CPlayer* pActor, _float fTimeD
 
 	if (false == m_bFlags[0] && true == pActor->Is_Inputable_Front(20))
 	{
+		EFFECT_MANAGER->Play_Effect("SlamDown_v2_25_Rock.json", pActor->Get_Position());
 		pActor->Apply_Shake_And_Blur(Power::Heavy);
 		pActor->Slam();
 		m_bFlags[0] = true;
