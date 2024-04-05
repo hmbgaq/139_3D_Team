@@ -71,7 +71,7 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
-	m_pTransformCom->Rotation_Quaternion(_float3(1.f, 0.f, 0.f));
+	m_pTransformCom->Rotation_Quaternion(_float3(0.f, 0.f, 1.f));
 
 	m_pTransformCom->Go_Down(fTimeDelta,nullptr);
 	if (m_pTransformCom->Get_Position().y <= 0.f)
@@ -112,7 +112,9 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
-		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		//pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+
+		pTarget_Character->Get_Damaged(m_fDamage);
 
 		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 

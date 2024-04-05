@@ -11,7 +11,8 @@ CState<CVampireCommander>* CVampireCommander_CutScene::Update(CVampireCommander*
 {
 	if (pActor->Is_Animation_End())
 	{
-		pActor->Set_Dead(true);
+		pActor->m_bCntDead_Active = true;
+
 	}
 
 	return nullptr;

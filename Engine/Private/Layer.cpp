@@ -30,20 +30,33 @@ HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 
 void CLayer::Priority_Tick(_float fTimeDelta)
 {
+	
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
-			pGameObject->Priority_Tick(fTimeDelta);
-	}	
+		if (nullptr != pGameObject)
+		{
+			if (true == pGameObject->Get_Enable())
+			{
+				pGameObject->Priority_Tick(fTimeDelta);
+			}
+		}
+	}
 }
 
 void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
-			pGameObject->Tick(fTimeDelta);
-		
+		if(pGameObject == nullptr)
+			continue;
+
+		if (nullptr != pGameObject)
+		{
+			if (true == pGameObject->Get_Enable())
+			{
+				pGameObject->Tick(fTimeDelta);
+			}
+		}
 	}
 }
 
