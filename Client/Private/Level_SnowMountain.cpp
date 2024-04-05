@@ -61,7 +61,7 @@ HRESULT CLevel_SnowMountain::Initialize()
 
 void CLevel_SnowMountain::Tick(_float fTimeDelta)
 {
-	
+
 }
 
 HRESULT CLevel_SnowMountain::Render()
@@ -199,7 +199,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -207,16 +207,16 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
-	pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
-	CNavigation* pNavigation = pPlayer->Get_Navigation();
+	pPlayer->Set_InitPosition(_float3(14.87f, 0.f, -8.06f));
+
 
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
-//	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+ //   FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
 	//if (nullptr == pPlayer)
-	//	return E_FAIL;
+	//   return E_FAIL;
 
 	//m_pGameInstance->Set_Player(pPlayer);
 
@@ -315,7 +315,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 
-		
+
 
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
@@ -429,7 +429,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		SpecialDesc.iPlayAnimationIndex = SpecialJson[i]["PlayAnimationIndex"];
 		SpecialDesc.iSpecialGroupIndex = SpecialJson[i]["SpecialGroupIndex"];
 		SpecialDesc.eSpecialType = SpecialJson[i]["SpecialType"];
-		//TODOSpecialDesc.iBloomMeshIndex =		SpecialJson[i]["BloomMeshIndex"];
+		//TODOSpecialDesc.iBloomMeshIndex =      SpecialJson[i]["BloomMeshIndex"];
 		SpecialDesc.bPreview = false;
 
 
@@ -457,7 +457,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 				MSG_BOX("스페셜오브젝트 생성실패");
 				return E_FAIL;
 			}
-				
+
 		}
 		else
 			continue;
@@ -472,7 +472,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		SpecialDesc.iPlayAnimationIndex = SpecialJson[i]["PlayAnimationIndex"];
 		SpecialDesc.iSpecialGroupIndex = SpecialJson[i]["SpecialGroupIndex"];
 		SpecialDesc.eSpecialType = SpecialJson[i]["SpecialType"];
-		//TODOSpecialDesc.iBloomMeshIndex =		SpecialJson[i]["BloomMeshIndex"];
+		//TODOSpecialDesc.iBloomMeshIndex =      SpecialJson[i]["BloomMeshIndex"];
 		SpecialDesc.bPreview = false;
 
 
@@ -500,7 +500,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 				MSG_BOX("스페셜오브젝트 생성실패");
 				return E_FAIL;
 			}
-			
+
 		}
 		else
 			continue;
@@ -580,9 +580,9 @@ HRESULT CLevel_SnowMountain::Ready_Layer_UI_Monster(const wstring& strLayerTag, 
 
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
 
-	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
+	_int      iPathNum = 0;
+	string      strFileName;
+	string      strFilePath;
 
 
 	CJson_Utility::Load_Json(filePath, json_in);
@@ -611,7 +611,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_UI_Monster(const wstring& strLayerTag, 
 
 
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
-	//	return E_FAIL;
+	//   return E_FAIL;
 
 	return S_OK;
 }
@@ -694,7 +694,7 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 	Desc_SSR.fRayStep = {};
 	Desc_SSR.fStepCnt = {};
 
-	CHROMA_DESC	Desc_Chroma = {};
+	CHROMA_DESC   Desc_Chroma = {};
 	Desc_Chroma.bChroma_Active = false;
 	Desc_Chroma.fChromaticIntensity = false;
 

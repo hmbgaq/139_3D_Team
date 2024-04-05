@@ -93,8 +93,26 @@ _float3 CCell::Get_Compare_Point(const _float3* pPoint)
 	return vPointBool;
 }
 
+_bool CCell::Check_CurrentCell(_fvector vPosition)
+{
+	for (_uint i = 0; i < (_uint)LINE_END; ++i)
+	{
+		_vector		vDir = XMVector3Normalize(vPosition - XMLoadFloat3(&m_vPoints[i]));
+		_vector		vNormal = XMVector3Normalize(XMVectorSet(m_vLines[i].z * -1.f, 0, m_vLines[i].x, 0.f));
+
+		if ((0.f < XMVectorGetX(XMVector3Dot(vDir, vNormal))))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 _bool CCell::Is_Out(_fvector vWorldPos, _fvector vLook, _fmatrix WorldMatrix, _int* pNeighborIndex, _float4* pSliding)
 {
+	if(m_bMoveEnable == false)
+		return false;
+
 	/* 현재셀의 밖으로 나가는 함수 */
 	for (size_t i = 0; i < LINE_END; i++)
 	{
@@ -133,6 +151,10 @@ HRESULT CCell::Initialize(const _float3 * pPoints, _uint iIndex)
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * POINT_END);
 
 	m_iIndex = iIndex;
+
+	m_vLines[LINE_AB] = XMLoadFloat3(&m_vPoints[POINT_B]) - XMLoadFloat3(&m_vPoints[POINT_A]);
+	m_vLines[LINE_BC] = XMLoadFloat3(&m_vPoints[POINT_C]) - XMLoadFloat3(&m_vPoints[POINT_B]);
+	m_vLines[LINE_CA] = XMLoadFloat3(&m_vPoints[POINT_A]) - XMLoadFloat3(&m_vPoints[POINT_C]);
 
 	_vector		vLine = XMLoadFloat3(&m_vPoints[POINT_B]) - XMLoadFloat3(&m_vPoints[POINT_A]);
 	XMStoreFloat3(&m_vNormals[LINE_AB], XMVectorSet(XMVectorGetZ(vLine) * -1.f, 0.f, XMVectorGetX(vLine), 0.f));
@@ -201,6 +223,9 @@ _bool CCell::Compare_Points(const _float3 * pSourPoint, const _float3 * pDestPoi
 
 _bool CCell::isIn(_fvector vPosition, _fmatrix WorldMatrix, _int* pNeighborIndex)
 {
+	if(m_bMoveEnable == false)
+		return false;
+
 	for (size_t i = 0; i < LINE_END; i++)
 	{
 		_vector	vStartPoint = XMVector3TransformCoord(XMLoadFloat3(&m_vPoints[i]), WorldMatrix);

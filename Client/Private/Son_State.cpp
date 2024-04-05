@@ -51,12 +51,12 @@ CState<CSon>* CSon_State::Attack_State(CSon* pActor, _float fTimeDelta, _uint _i
 			pActor->m_bLookAt = true;
 			return new CSon_RangeAttackFar;
 		}
-		else if (25.f > pActor->Calc_Distance() && 20.f <= pActor->Calc_Distance())
+		else if (24.f > pActor->Calc_Distance() && 20.f <= pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_LongAttack;
 		}
-		else if (100.f > pActor->Calc_Distance()&& 25.f<=pActor->Calc_Distance())
+		else if (100.f > pActor->Calc_Distance()&& 24.f<=pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_RangeAttackFar;
@@ -79,7 +79,7 @@ CState<CSon>* CSon_State::Attack_State(CSon* pActor, _float fTimeDelta, _uint _i
 			pActor->m_bLookAt = true;
 			return new CSon_RangeAttackFar;
 		}
-		else if (25.f > pActor->Calc_Distance() && 20.f <= pActor->Calc_Distance())
+		else if (24.f > pActor->Calc_Distance() && 20.f <= pActor->Calc_Distance())
 		{
 			_uint iRandom = SMath::Random(0, 2);
 
@@ -100,7 +100,7 @@ CState<CSon>* CSon_State::Attack_State(CSon* pActor, _float fTimeDelta, _uint _i
 			}
 		
 		}
-		else if (100.f > pActor->Calc_Distance() && 25.f <= pActor->Calc_Distance())
+		else if (100.f > pActor->Calc_Distance() && 24.f <= pActor->Calc_Distance())
 		{
 			pActor->m_bLookAt = true;
 			return new CSon_RangeAttackFar;

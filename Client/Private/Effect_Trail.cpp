@@ -9,7 +9,7 @@
 CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = TRUE;
+	m_bIsPoolObject = FALSE;
 }
 
 CEffect_Trail::CEffect_Trail(const CEffect_Trail& rhs)
@@ -150,20 +150,20 @@ HRESULT CEffect_Trail::Render()
 
 HRESULT CEffect_Trail::Ready_Components()
 {
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+	//_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_EffectTex"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_EffectTex"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 
 	/* For.Com_VIBuffer */
 	CVIBuffer_Trail::TRAIL_BUFFER_DESC tBufferInfo = {};
-	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_VIBuffer_Trail"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Trail"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom, &tBufferInfo));
 
 
 	/* For.Com_Texture */
 	{
-		if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Texture_Effect_Diffuse"),
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Effect_Diffuse"),
 			TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTURE_DIFFUSE]))))
 			return E_FAIL;
 
@@ -290,8 +290,10 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Scale"], m_tVoidDesc.vUV_Scale);
 	Out_Json["Trail"]["fUV_RotDegree"] = m_tVoidDesc.fUV_RotDegree;
 
-	Out_Json["Trail"]["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
-	Out_Json["Trail"]["fUV_WaveSpeed"] = m_tVoidDesc.fUV_WaveSpeed;
+	Out_Json["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
+	CJson_Utility::Write_Float2(Out_Json["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
+	CJson_Utility::Write_Float2(Out_Json["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
+	CJson_Utility::Write_Float2(Out_Json["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
 
 
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
@@ -353,7 +355,12 @@ void CEffect_Trail::Load_FromJson(const json& In_Json)
 	m_tVoidDesc.fUV_RotDegree = (_float)In_Json["Trail"]["fUV_RotDegree"];
 
 	m_tVoidDesc.bUV_Wave = (_bool)In_Json["Trail"]["bUV_Wave"];
-	m_tVoidDesc.fUV_WaveSpeed = (_float)In_Json["Trail"]["fUV_WaveSpeed"];
+	if (In_Json.contains("vUV_WaveSpeed")) // 다시 저장 후 if문 삭제
+	{
+		CJson_Utility::Load_Float2(In_Json["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
+		CJson_Utility::Load_Float2(In_Json["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
+		CJson_Utility::Load_Float2(In_Json["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
+	}
 
 
 	CJson_Utility::Load_Float4(In_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);

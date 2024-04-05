@@ -103,6 +103,11 @@ HRESULT CInfected_D::Ready_Option()
 	return S_OK;
 }
 
+void CInfected_D::Check_Frustum()
+{
+	m_bIsInFrustum = true;
+}
+
 HRESULT CInfected_D::Ready_PartObjects()
 {
 	/* For. Body */

@@ -132,7 +132,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
 	//m_pPhysXCollider->Add_PhysXActorAtScene();
 
-
 	return S_OK;
 }
 
@@ -160,10 +159,23 @@ void CPlayer::Tick(_float fTimeDelta)
 		
 		Update_ChargingTime(fTimeDelta);
 
-	CData_Manager::GetInstance()->Set_CurHP(m_fHp);
+		CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
 		//if (m_pGameInstance->Key_Down(DIK_C))
 		//	m_fHp = 100;
+
+
+		if (m_pGameInstance->Key_Down(DIK_T))
+		{
+			Teleport();
+		}
+
+		//if (m_pGameInstance->Key_Down(DIK_V)) 
+		//{
+		//	SetState_InteractWhipSwing();
+		//	//SetState_InteractCartRideWagonJump();
+		//}
+
 	}
 
 
@@ -232,9 +244,10 @@ void CPlayer::Set_Navigation(CNavigation* pNavigation)
 		Safe_Release(m_pNavigationCom);
 
 	m_pNavigationCom = pNavigation;
-	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Get_SelectRangeCellIndex(this));
+	m_pNavigationCom->Set_CurrentIndex(m_pNavigationCom->Find_CurrentCellIndex(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION)));
+	//Set_InitPosition(m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION));
+	
 	Safe_AddRef(pNavigation);
-
 	
 }
 
@@ -622,6 +635,8 @@ HRESULT CPlayer::Ready_PartObjects()
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELWinchester"), "RightHandIK", WeaponDesc,		PLAYER_WEAPON_WINCHESTER));
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Revolver"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_REVOLVER));
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_ELShotgun"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_SHOTGUN));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Dynamite"), "RightInHandIndex", WeaponDesc,	PLAYER_WEAPON_DYNAMITE));
+	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Whip"), "RightInHandIndex", WeaponDesc,		PLAYER_WEAPON_WHIP));
 
 
 	FAILED_CHECK(Add_Weapon(TEXT("Prototype_GameObject_Player_Weapon_Kick"), "RightFoot", WeaponDesc,			PLAYER_WEAPON_KICK));
@@ -673,13 +688,37 @@ void CPlayer::Update_ChargingTime(_float fTimeDelta)
 	}
 }
 
-CGameObject* CPlayer::Slam()
+void CPlayer::Slam()
 {
 	CGameObject* pSlam = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Impact_Slam");
 	pSlam->Set_Position(Get_Position());
+}
+
+void CPlayer::Throw_Dynamite()
+{
+	CGameObject* pDynamite = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Dynamite");
 	
+	_float3 vSpawnPos = Get_Position();
+	vSpawnPos.y += 1.f;
 	
-	return nullptr;
+	_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 1.f, 1.f));
+	
+	pDynamite->Set_Position(vSpawnPos);
+	pDynamite->Get_Transform()->Look_At_OnLand(vTargetPos);
+
+}
+
+void CPlayer::Teleport()
+{
+	CGameObject* pTeleport = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_PLAYER_BULLET, L"Prototype_GameObject_Bullet_Teleport");
+
+	_float3 vSpawnPos = Get_Position();
+	vSpawnPos.y += 1.f;
+
+	_float3 vTargetPos = Calc_Front_Pos(_float3(0.f, 1.f, 1.f));
+
+	pTeleport->Set_InitPosition(vSpawnPos);
+	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
 }
 
 void CPlayer::Hitted_Left(Power ePower)

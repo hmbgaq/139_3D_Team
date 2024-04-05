@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Heavy_Vampiric_Zombie.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
+#include "Player.h"
 #include "UI_Manager.h"
 #include "UI_EnemyHP_Shard.h"
 //#include "Body_Heavy_Vampiric_Zombie.h"
@@ -27,6 +29,9 @@ HRESULT CHeavy_Vampiric_Zombie::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	m_pTarget = CData_Manager::GetInstance()->Get_Player();
+	
+	m_fHp = 100.f;
 	/* !성희 추가 : 몬스터 HUD 생성 */ // 생성함수 호출시 CMonster_Character에게 상속받은 m_pEnemyHUD 멤버변수 사용가능.
 	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 

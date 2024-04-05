@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 
 #include "Component.h"
 
@@ -129,6 +129,7 @@ public:
 
 	void	Turn(_fvector vAxis, _float fTimeDelta);
 	void	Rotation(_fvector vAxis, _float fRadian);
+	void RotationToProjectile(_fvector vAxis, _float fRadian);
 	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);
 	void	Rotation_Quaternion(_float3 vRotation);
 	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 1.0f);
@@ -172,6 +173,7 @@ public:
 public:
 	void		Add_RootBone_Position(const _float3& vPos, class CNavigation* pNavigation = nullptr);
 	void		Add_RootBone_ForTarget(const _float3& vPos, class CNavigation* pNavigation = nullptr, CTransform* pTargetTransform = nullptr);
+	_float3		Get_RootBone_ForTarget(const _float3& vPos, CTransform* pTargetTransform = nullptr);
 	void		Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, class CNavigation* pNavigation = nullptr);
 
 public:

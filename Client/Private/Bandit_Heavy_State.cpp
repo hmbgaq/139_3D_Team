@@ -101,6 +101,8 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Normal(CBandit_Heavy* pActor, _float
 {
 	CState<CBandit_Heavy>* pState = { nullptr };
 
+	
+
 	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
 
@@ -129,7 +131,7 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Run(CBandit_Heavy* pActor, _float fT
 {
 	//CState<CBandit_Heavy>* pState = { nullptr };
 
-	if (pActor->Get_Target() && CBanditHeavy_Run_F::g_iAnimIndex != _iAnimIndex)
+	if (15.f >= pActor->Calc_Distance() && CBanditHeavy_Run_F::g_iAnimIndex != _iAnimIndex)
 	{
 		return new CBanditHeavy_Run_F();
 	}
@@ -139,49 +141,117 @@ CState<CBandit_Heavy>* CBandit_Heavy_State::Run(CBandit_Heavy* pActor, _float fT
 
 CState<CBandit_Heavy>* CBandit_Heavy_State::Attack(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	CCharacter* pTarget = pActor->Get_Target();
-	if (nullptr == pTarget)	return nullptr;
-
-	_float fDistance = pTarget->Calc_Distance();
+	_float fDistance = pActor->Calc_Distance();
 	if (2.f > fDistance)
 	{
 		_uint iRand = SMath::Random(0,5);
+		_uint iSelectedAnimation;
 		switch (iRand)
 		{
 		case 0:
-			return new CBanditHeavy_Melee_LD();
+			iSelectedAnimation = CBanditHeavy_Melee_LD::g_iAnimIndex;
+			break;
 		case 1:
-			return new CBanditHeavy_Melee_LM();
+			iSelectedAnimation = CBanditHeavy_Melee_LM::g_iAnimIndex;
+			break;
 		case 2:
-			return new CBanditHeavy_Melee_LU();
+			iSelectedAnimation = CBanditHeavy_Melee_LU::g_iAnimIndex;
+			break;
 		case 3:
-			return new CBanditHeavy_MeleeHeavy();
+			iSelectedAnimation = CBanditHeavy_MeleeHeavy::g_iAnimIndex;
+			break;
 		case 4:
-			return new CBanditHeavy_MeleeHeavy_02();
+			iSelectedAnimation = CBanditHeavy_MeleeHeavy_02::g_iAnimIndex;
+			break;
 		default:
+			iSelectedAnimation = CBanditHeavy_Melee_LM::g_iAnimIndex;
+			break;
+		}
+
+		
+		if (false == pActor->Compare_PrevState(iSelectedAnimation))
+		{
+			pActor->Set_PrevState(iSelectedAnimation);
+
+			switch (iSelectedAnimation)
+			{
+			case CBanditHeavy_Melee_LD::g_iAnimIndex:
+				return new CBanditHeavy_Melee_LD();
+			case CBanditHeavy_Melee_LM::g_iAnimIndex:
+				return new CBanditHeavy_Melee_LM();
+			case CBanditHeavy_Melee_LU::g_iAnimIndex:
+				return new CBanditHeavy_Melee_LU();
+			case CBanditHeavy_MeleeHeavy::g_iAnimIndex:
+				return new CBanditHeavy_MeleeHeavy();
+			case CBanditHeavy_MeleeHeavy_02::g_iAnimIndex:
+				return new CBanditHeavy_MeleeHeavy_02();
+			default:
+				return new CBanditHeavy_Melee_LM();
+			}
+		}
+		else 
+		{
 			return new CBanditHeavy_Melee_LM();
 		}
+
 	}
 	else if (4.f > fDistance)
 	{
 		_uint iRand = SMath::Random(0, 6);
+		_uint iSelectedAnimation;
 		switch (iRand)
 		{
 		case 0:
-			return new CBanditHeavy_MeleeDynamic_LD();
+			iSelectedAnimation = CBanditHeavy_MeleeDynamic_LD::g_iAnimIndex;
+			break;
 		case 1:
-			return new CBanditHeavy_MeleeDynamic_RD();
+			iSelectedAnimation = CBanditHeavy_MeleeDynamic_RD::g_iAnimIndex;
+			break;
 		case 2:
-			return new CBanditHeavy_MeleeDynamic_LM();
+			iSelectedAnimation = CBanditHeavy_MeleeDynamic_LM::g_iAnimIndex;
+			break;
 		case 3:
-			return new CBanditHeavy_MeleeDynamic_LU();
+			iSelectedAnimation = CBanditHeavy_MeleeDynamic_LU::g_iAnimIndex;
+			break;
 		case 4:
-			return new CBanditHeavy_MeleeDynamicHeavy();
+			iSelectedAnimation = CBanditHeavy_MeleeDynamicHeavy::g_iAnimIndex;
+			break;
 		case 5:
-			return new CBanditHeavy_StrongSlamDouble();
+			iSelectedAnimation = CBanditHeavy_StrongSlamDouble::g_iAnimIndex;
+			break;
 		default:
+			iSelectedAnimation = CBanditHeavy_MeleeDynamic_LM::g_iAnimIndex;
+			break;
+		}
+
+		
+		if (false == pActor->Compare_PrevState(iSelectedAnimation))
+		{
+			pActor->Set_PrevState(iSelectedAnimation);
+
+			switch (iSelectedAnimation)
+			{
+			case CBanditHeavy_MeleeDynamic_LD::g_iAnimIndex:
+				return new CBanditHeavy_MeleeDynamic_LD();
+			case CBanditHeavy_MeleeDynamic_RD::g_iAnimIndex:
+				return new CBanditHeavy_MeleeDynamic_RD();
+			case CBanditHeavy_MeleeDynamic_LM::g_iAnimIndex:
+				return new CBanditHeavy_MeleeDynamic_LM();
+			case CBanditHeavy_MeleeDynamic_LU::g_iAnimIndex:
+				return new CBanditHeavy_MeleeDynamic_LU();
+			case CBanditHeavy_MeleeDynamicHeavy::g_iAnimIndex:
+				return new CBanditHeavy_MeleeDynamicHeavy();
+			case CBanditHeavy_StrongSlamDouble::g_iAnimIndex:
+				return new CBanditHeavy_StrongSlamDouble();
+			default:
+				return new CBanditHeavy_MeleeDynamic_LM();
+			}
+		}
+		else
+		{
 			return new CBanditHeavy_MeleeDynamic_LM();
 		}
+
 	}
 	else if (7.f > fDistance)
 	{

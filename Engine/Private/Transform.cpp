@@ -305,6 +305,23 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
 }
 
+void CTransform::RotationToProjectile(_fvector vAxis, _float fRadian)
+{
+	_float3		vScale = Get_Scaled();
+	m_fRadian = fRadian;
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, m_fRadian);
+
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+
+
+	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+}
+
 _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian)
 {
 	_fvector vAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
@@ -536,11 +553,25 @@ void CTransform::Add_RootBone_Position(const _float3& vPos, CNavigation* pNaviga
 
 void CTransform::Add_RootBone_ForTarget(const _float3& vPos, CNavigation* pNavigation, CTransform* pTargetTransform)
 {
+	
 	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
+	
 	_vector vResult = vRootMove;
 	//Move_On_Navigation_ForSliding(vResult, m_pGameInstance->Get_TimeDelta(), pNavigation);
 
 	Move_On_Navigation(vResult, pNavigation);
+}
+
+_float3 CTransform::Get_RootBone_ForTarget(const _float3& vPos, CTransform* pTargetTransform)
+{
+	_vector vRootMove = XMVector3TransformNormal(XMLoadFloat3(&vPos), pTargetTransform->Get_WorldFloat4x4());
+
+	_vector vResult = vRootMove;
+
+	_float3 vReturnFloat3;
+	XMStoreFloat3(&vReturnFloat3, vRootMove);
+
+	return vReturnFloat3;
 }
 
 void CTransform::Add_RootBone_Position(const _float3& vPos, const _float fTimeDelta, CNavigation* pNavigation)

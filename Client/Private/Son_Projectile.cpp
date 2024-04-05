@@ -46,16 +46,18 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	//
 	//m_pTransformCom->Set_WorldMatrix(Temp);
 
-	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.5f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
+	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.0f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
 
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 20.f;
+	m_fDamage = 15.f;
 
 
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
+	//m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test_02.json", this);
+
 
 	return S_OK;
 }
@@ -66,20 +68,23 @@ void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 	if (m_bFirst == true)
 	{
 		m_pTransformCom->Look_At(m_vPlayerPos);
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Son_Test_06.json", this);
 		m_bFirst = false;
 	}
 }
 
 void CSon_Projectile::Tick(_float fTimeDelta)
 {
-
 	__super::Tick(fTimeDelta);
 
-	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
-	
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
-
+	//m_fRadian += fTimeDelta;
+	//_float4x4 Temp = {};
+	//Temp = XMMatrixRotationRollPitchYaw(m_fRadian, 0.f, 0.0f);
+	//
+	//m_pTransformCom->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix() * Temp);
+	////m_pTransformCom->RotationToProjectile(Get_Transform()->Get_State(CTransform::STATE_LOOK), m_fRadian);
 }
 
 void CSon_Projectile::Late_Tick(_float fTimeDelta)
@@ -89,12 +94,9 @@ void CSon_Projectile::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_Projectile::Render()
 {
-	/*auto start = chrono::high_resolution_clock::now();*/
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-// 	auto End = chrono::high_resolution_clock::now();
-// 	chrono::duration<double> duration0 = End - start;
-// 	cout << "Son Projectile Render 실행시간 : " << duration0.count() << endl;
+
 	return S_OK;
 }
 
@@ -116,10 +118,14 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 
 		// 이펙트 생성
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
+
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
+	m_pEffect = nullptr;
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기 (EffectOut : 당장 안쓰는 이펙트라고 해서 일단 빼뒀습니다. [성희])
 }
 
@@ -194,7 +200,11 @@ void CSon_Projectile::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_pEffect = nullptr;
+		//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+	}
 
 	//if(nullptr != m_pEffect)
 	//	Safe_Release(m_pEffect);

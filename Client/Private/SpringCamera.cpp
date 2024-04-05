@@ -390,6 +390,7 @@ void CSpringCamera::Shake_Camera(_float fTimeDelta)
 		if (m_fShakeTime <= 0.f)
 		{
 			m_bShake = false;
+			m_fShakeTime = 0.f;
 		}
 	}
 	ActualPosition += Temp;

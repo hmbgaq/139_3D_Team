@@ -44,12 +44,57 @@ CState<CEdgar>* CEdgar_State::Cover_State(CEdgar* pActor, _float fTimeDelta, _ui
 	return nullptr;
 }
 
+CState<CEdgar>* CEdgar_State::Cover_High_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Cover_High_Left_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Cover_High_Right_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Cover_Low_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Cover_Low_Over_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Cover_Low_Left_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Cover_Low_Right_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
 CState<CEdgar>* CEdgar_State::Crouch_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }
 
 CState<CEdgar>* CEdgar_State::Hit_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::CutScene_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
+{
+	return nullptr;
+}
+
+CState<CEdgar>* CEdgar_State::Throw_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	return nullptr;
 }

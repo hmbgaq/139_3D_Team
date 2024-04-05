@@ -7,6 +7,7 @@
 #include "Effect_Manager.h"
 #include "Mother.h"
 #include "Bone.h"
+#include "SMath.h"
 
 CMother_Egg::CMother_Egg(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
@@ -30,7 +31,7 @@ HRESULT CMother_Egg::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 15.f;
+	GameObjectDesc.fSpeedPerSec = 20.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -50,7 +51,8 @@ HRESULT CMother_Egg::Initialize(void* pArg)
 
 	m_fDamage = 10.f;
 
-	
+	m_fMaxHp = 20.f;
+	m_fHp = m_fMaxHp;
 	// 이펙트 생성
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
 
@@ -61,17 +63,58 @@ HRESULT CMother_Egg::Initialize(void* pArg)
 void CMother_Egg::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+
 }
 
 void CMother_Egg::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (m_fHp <= 0.f)
+		this->Set_Enable(false);
+
+	if (m_pTransformCom->Get_Position().y <= 0.f)
+	{
+		m_fTimeDelta += fTimeDelta;
+	}
+
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
-	if(m_pTransformCom->Get_Position().y >=0.f)
+	if (m_pTransformCom->Get_Position().y > 0.f)
+	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
+	}
+	
+	else if (m_pTransformCom->Get_Position().y <= 0.f && m_fTimeDelta >= 5.f)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			_int randomX = SMath::Random(-2, 2);
+			_int randomZ = SMath::Random(-2, 2);
+			CGameObject* pMonster = nullptr;
+			_float3 Temp =m_pTransformCom->Get_Position() + _float3((_float)randomX, 0.f, (_float)randomZ);
+			
+			pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", TEXT("Prototype_GameObject_Infected_D"));
+			pMonster->Set_InitPosition(Temp);
+			
 
+		}
+// 		CGameObject* pMonster = { nullptr };
+// 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_Component_Model_Infected_D");
+// 		pMonster->Set_Position(this->Get_Transform()->Get_State(CTransform::STATE_POSITION) + this->Get_Transform()->Get_State(CTransform::STATE_LOOK));
+// 
+// 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_Component_Model_Infected_D");
+// 		pMonster->Set_Position(this->Get_Transform()->Get_State(CTransform::STATE_POSITION) + this->Get_Transform()->Get_State(CTransform::STATE_RIGHT));
+// 
+// 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_Component_Model_Infected_D");
+// 		pMonster->Set_Position(this->Get_Transform()->Get_State(CTransform::STATE_POSITION) - this->Get_Transform()->Get_State(CTransform::STATE_RIGHT));
+		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_pEffect = nullptr;
+ 		Set_Enable(false);
+	}
+	
 }
 
 void CMother_Egg::Late_Tick(_float fTimeDelta)
@@ -102,9 +145,8 @@ void CMother_Egg::OnCollisionEnter(CCollider* other)
 	{
 		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
-		CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		_float3 vPos = m_pTransformCom->Get_Position();
-		pEffect->Set_Position(vPos);
+
+		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	//m_pCollider->Set_Enable(false);
@@ -182,7 +224,7 @@ CGameObject* CMother_Egg::Pool()
 void CMother_Egg::Free()
 {
 	__super::Free();
-
+	
 	//if(nullptr != m_pEffect)
 	//	Safe_Release(m_pEffect);
 
