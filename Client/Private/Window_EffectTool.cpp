@@ -4286,6 +4286,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iType_Fade_Takes_Particle = 5;
 
 
+			/* 알파 가중치 업데이트 */
+			m_fMinMaxAlpha_Particle[0] = m_pParticleBufferDesc->vMinMaxAlpha.x;
+			m_fMinMaxAlpha_Particle[1] = m_pParticleBufferDesc->vMinMaxAlpha.y;
+
 
 			/* 림 블룸 값 업데이트 */
 			m_vBloomPower_Particle[0] = m_pCurVoidDesc->vBloomPower.x;
@@ -4765,6 +4769,11 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_fColor_Cur_Mesh[3] = m_pMeshBufferDesc->vCurrentColor.y;
 
 			}
+
+
+			/* 알파 가중치 업데이트 */
+			m_fMinMaxAlpha_Mesh[0] = m_pMeshBufferDesc->vMinMaxAlpha.x;
+			m_fMinMaxAlpha_Mesh[1] = m_pMeshBufferDesc->vMinMaxAlpha.y;
 
 
 			/* Rim Bloom 림블룸 관련 */
