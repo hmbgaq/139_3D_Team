@@ -152,7 +152,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Hit(CPlayer* pActor, _uint iHitCou
 		{
 			pTarget->Hitted_Opened(Direction::Right);
 		}
-		pTarget->Set_Invincible(true);
+		//pTarget->Set_Invincible(true);
 
 		//pActor->Apply_Shake_And_Blur();
 

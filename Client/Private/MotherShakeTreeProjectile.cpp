@@ -54,7 +54,7 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 
 	Set_Enable(true);
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Circle_Floor_04.json",_float3(this->Get_Position().x,0.f, this->Get_Position().z));
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Circle_Floor_04.json",_float3(this->Get_Position().x,1.f, this->Get_Position().z));
 
 
 	return S_OK;
@@ -71,7 +71,7 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
-	m_pTransformCom->Rotation_Quaternion(_float3(0.f, 0.f, 1.f));
+	m_pTransformCom->Rotation_Quaternion(_float3(1.f, 0.f, 0.f));
 
 	m_pTransformCom->Go_Down(fTimeDelta,nullptr);
 	if (m_pTransformCom->Get_Position().y <= 0.f)
