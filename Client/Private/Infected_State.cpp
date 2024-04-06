@@ -180,6 +180,8 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 			}
 			
 			m_bFlags[0] = true;
+
+			pActor->Set_EnemyHUD_Dead();
 			pActor->Set_Dead(true);
 		}	
 	}

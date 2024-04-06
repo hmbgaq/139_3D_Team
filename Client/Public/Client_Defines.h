@@ -17,6 +17,9 @@ namespace Client
 	// ! Close Window
 	_bool g_CloseWindow = false;
 	_bool g_UIMouseDownLB = false;
+	_bool g_UIMousePressingLB = false;
+	_bool g_UIMouseDownRB = false;
+	_bool g_UIMousePressingRB = false;
 
 	enum LEVEL { 
 		LEVEL_STATIC, 

@@ -76,7 +76,9 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		//m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
 		//m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
 
-		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+
+		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+		//m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
 }

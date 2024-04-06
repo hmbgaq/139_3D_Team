@@ -30,6 +30,21 @@ public:
 		TeleportPunch_State_End
 	};
 
+	enum class HUD 
+	{
+		LEFT_TOP,
+		LEFT_RIGHT,
+		LEFT_BOTTOM,
+		LEFT_LEFT,
+
+		RIGHT_TOP,
+		RIGHT_RIGHT,
+		RIGHT_BOTTOM,
+		RIGHT_LEFT,
+
+		HUD_END
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer(const CPlayer& rhs);
@@ -60,6 +75,14 @@ public:
 public:
 	void Aim_Walk(_float fTimeDelta);
 	void Activate_ShootingReaction(_float fHeight = 20.f);
+
+public:
+	string Get_HUD_Tag(HUD eHUD);
+	void Set_HUD_MaxCooltime(HUD eHUD, _float fCurrnetCooltime);
+	void Set_HUD_Cooltime(HUD eHUD, _float fCurrnetCooltime);
+	void Activate_HUD_Skill(HUD eHUD);
+	_bool Is_HUD_Cooltime_End(HUD eHUD);
+	
 
 public://!For. Interact
 	void SetState_InteractJumpDown100();
@@ -102,6 +125,9 @@ public:
 
 	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
 
+public:
+	void		 LeftHUDCoolDown(const string& strUIName, _float fCoolTime);
+	_float		 Get_LeftHUDMaxCoolTime(const string& strUIName);
 
 private:
 	void		 KeyInput(_float fTimeDelta);
@@ -158,22 +184,22 @@ private:
 
 private:
 	_float	m_fChargingTime = { 0.f };
+	_uint m_iLadderCount = { 0 };
+	_bool m_bIsInterection = { false };
 
-private:
 	_bool m_bIsActivated_TeleportPunch = { false };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
-private:
-	_uint m_iLadderCount = { 0 };
-
-private:
-	_bool m_bIsInterection = { false };
 
 public:
 	_bool	m_bPlayerCheck = true;
 
 private:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };
+
+private:
+	_float m_MaxCooltimes[ECast(HUD::HUD_END)];
+
 
 
 public:

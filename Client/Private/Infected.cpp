@@ -87,6 +87,7 @@ HRESULT CInfected::Initialize(void* pArg)
 
 	/* Target ¼³Á¤ */
 	m_pTarget = m_pGameInstance->Get_Player();
+
 	return S_OK;
 }
 

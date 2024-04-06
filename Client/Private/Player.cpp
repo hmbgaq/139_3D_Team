@@ -114,26 +114,31 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pRigidBody->Set_UseGravity(true);
 
-	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
+	//_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 
 	CData_Manager::GetInstance()->Set_Player(this);
 	m_pGameInstance->Set_Player(this);
 
+	Set_HUD_MaxCooltime(HUD::LEFT_TOP, 5.f);
+	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT, 5.f);
+	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM, 5.f);
+	Set_HUD_MaxCooltime(HUD::LEFT_LEFT, 5.f);
 
-	///* For.Com_PhysXController */
-	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXController"), TEXT("Com_PhysXController"), reinterpret_cast<CComponent**>(&m_pPhysXControllerCom)));
-	//m_pPhysXControllerCom->Init_Controller(Preset::PhysXControllerDesc::PlayerSetting(m_pTransformCom), (_uint)PHYSX_COLLISION_LAYER::PLAYER);
-	////m_pPhysXControllerCom->
+	Set_HUD_MaxCooltime(HUD::RIGHT_TOP, 5.f);
+	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT, 5.f);
+	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM, 5.f);
+	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT, 5.f);
 
-	///* For.Com_PhysXCollider */
-	//FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_PhysXCollider"), TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider)));
-	//
+	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Top", 5.f);
+	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f);
+	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Bottom", 5.f);
+	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Left", 5.f);
 
-	//CPhysXCollider::PhysXColliderDesc tPhysXColliderDesc;
-	//Preset::PhysXColliderDesc::GroundSetting(tPhysXColliderDesc, m_pTransformCom);
-	//m_pPhysXCollider->CreatePhysXActor(tPhysXColliderDesc);
-	//m_pPhysXCollider->Add_PhysXActorAtScene();
+	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Top", 5.f);
+	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Right", 5.f);
+	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Bottom", 5.f);
+	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Left", 5.f);
 
 	return S_OK;
 }
@@ -187,43 +192,12 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 
-	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
+	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) || true == Is_Splitted());
 	m_pDataManager->Set_ShowInterface(bIsNotIdle);
 	
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
-
-
-	//_float3 vPos = Get_Position();
-
-	//PxControllerFilters Filters;
-	//
-	//m_pPhysXControllerCom->Synchronize_Controller(m_pTransformCom, fTimeDelta, Filters);
-
-	//m_LastCollisionFlags = m_pPhysXControllerCom->MoveGravity(fTimeDelta, Filters);
-
-	//_vector vPxPos = m_pPhysXControllerCom->Get_Position();
-	//_float3 vResult;
-	//XMStoreFloat3(&vResult, vPxPos);
-
-	//if (m_LastCollisionFlags & PxControllerCollisionFlag::eCOLLISION_DOWN)
-	//{
-	//	_int a = 0;
-	//	//m_pPhysXControllerCom->Reset_Gravity();
-	//}
-
-	//else if (vPos.y < 0)
-	//{
-	//	_int a = 0;
-	//}
-
-	//else 
-	//{
-	//	Set_Position(vResult);
-	//}
-	
-
 
 }
 
@@ -231,11 +205,6 @@ void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	#ifdef _DEBUG
-	
-		//if(m_pNavigationCom != nullptr)
-        //m_pGameInstance->Add_DebugRender(m_pNavigationCom);
-    #endif // _DEBUG
 }
 	
 HRESULT CPlayer::Render()
@@ -389,6 +358,120 @@ void CPlayer::Aim_Walk(_float fTimeDelta)
 void CPlayer::Activate_ShootingReaction(_float fHeight)
 {
 	m_pBody->Activate_ShootingReaction(fHeight);
+}
+
+string CPlayer::Get_HUD_Tag(HUD eHUD)
+{
+	string strHUDTag = "";
+
+	switch (eHUD)
+	{
+	case Client::CPlayer::HUD::LEFT_TOP:
+		strHUDTag = "LeftHUD_Top";
+		break;
+	case Client::CPlayer::HUD::LEFT_RIGHT:
+		strHUDTag = "LeftHUD_Right";
+		break;
+	case Client::CPlayer::HUD::LEFT_BOTTOM:
+		strHUDTag = "LeftHUD_Bottom";
+		break;
+	case Client::CPlayer::HUD::LEFT_LEFT:
+		strHUDTag = "LeftHUD_Left";
+		break;
+	case Client::CPlayer::HUD::RIGHT_TOP:
+		strHUDTag = "RightHUD_Top";
+		break;
+	case Client::CPlayer::HUD::RIGHT_RIGHT:
+		strHUDTag = "RightHUD_Right";
+		break;
+	case Client::CPlayer::HUD::RIGHT_BOTTOM:
+		strHUDTag = "RightHUD_Bottom";
+		break;
+	case Client::CPlayer::HUD::RIGHT_LEFT:
+		strHUDTag = "RightHUD_Left";
+		break;
+	}
+
+	return strHUDTag;
+}
+
+void CPlayer::Set_HUD_MaxCooltime(HUD eHUD, _float fCurrnetCooltime)
+{
+	string strHUDTag = Get_HUD_Tag(eHUD);
+	_uint iIndex = ECast(eHUD);
+	m_MaxCooltimes[iIndex] = fCurrnetCooltime;
+
+	switch (eHUD)
+	{
+	case Client::CPlayer::HUD::LEFT_TOP:
+	case Client::CPlayer::HUD::LEFT_RIGHT:
+	case Client::CPlayer::HUD::LEFT_BOTTOM:
+	case Client::CPlayer::HUD::LEFT_LEFT:
+		m_pUIManager->Change_LeftHUD_MaxCoolTime(strHUDTag, fCurrnetCooltime);
+		break;
+
+	case Client::CPlayer::HUD::RIGHT_TOP:
+	case Client::CPlayer::HUD::RIGHT_RIGHT:
+	case Client::CPlayer::HUD::RIGHT_BOTTOM:
+	case Client::CPlayer::HUD::RIGHT_LEFT:
+		m_pUIManager->Change_RightHUD_MaxCoolTime(strHUDTag, fCurrnetCooltime);
+		break;
+	}
+}
+
+void CPlayer::Set_HUD_Cooltime(HUD eHUD, _float fCurrnetCooltime)
+{
+	string strHUDTag = Get_HUD_Tag(eHUD);
+
+	switch (eHUD)
+	{
+	case Client::CPlayer::HUD::LEFT_TOP:
+	case Client::CPlayer::HUD::LEFT_RIGHT:
+	case Client::CPlayer::HUD::LEFT_BOTTOM:
+	case Client::CPlayer::HUD::LEFT_LEFT:
+		m_pUIManager->Change_LeftHUD_CurrentCoolTime(strHUDTag, fCurrnetCooltime);
+		break;
+
+	case Client::CPlayer::HUD::RIGHT_TOP:
+	case Client::CPlayer::HUD::RIGHT_RIGHT:
+	case Client::CPlayer::HUD::RIGHT_BOTTOM:
+	case Client::CPlayer::HUD::RIGHT_LEFT:
+		m_pUIManager->Change_RightHUD_CurrentCoolTime(strHUDTag, fCurrnetCooltime);
+		break;
+	}
+}
+
+void CPlayer::Activate_HUD_Skill(HUD eHUD)
+{
+	_uint iIndex = ECast(eHUD);
+	_float fCooltime = m_MaxCooltimes[iIndex];
+
+	Set_HUD_Cooltime(eHUD, fCooltime);
+}
+
+_bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD)
+{
+	_float fCooltime = 10000.f;
+	string strHUDTag = Get_HUD_Tag(eHUD);
+
+	switch (eHUD)
+	{
+	case Client::CPlayer::HUD::LEFT_TOP:
+	case Client::CPlayer::HUD::LEFT_RIGHT:
+	case Client::CPlayer::HUD::LEFT_BOTTOM:
+	case Client::CPlayer::HUD::LEFT_LEFT:
+		fCooltime = m_pUIManager->Get_LeftHUD_CurrentCoolTime(strHUDTag);
+		break;
+	case Client::CPlayer::HUD::RIGHT_TOP:
+	case Client::CPlayer::HUD::RIGHT_RIGHT:
+	case Client::CPlayer::HUD::RIGHT_BOTTOM:
+	case Client::CPlayer::HUD::RIGHT_LEFT:
+		fCooltime = m_pUIManager->Get_RightHUD_CurrentCoolTime(strHUDTag);
+		break;
+	}
+
+	_bool bResult = 0 >= fCooltime;
+	return bResult;
 }
 
 
@@ -547,6 +630,16 @@ void CPlayer::Chasing_Attack(_float fTimeDelta, _float fMaxDistance, _uint iCoun
 			Move_In_Proportion_To_Enemy(fTimeDelta);
 		}
 	}
+}
+
+void CPlayer::LeftHUDCoolDown(const string& strUIName, _float fCoolTime)
+{
+	m_pUIManager->Change_LeftHUD_CurrentCoolTime(strUIName, fCoolTime); // 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
+}
+
+_float CPlayer::Get_LeftHUDMaxCoolTime(const string& strUIName)
+{
+	return m_pUIManager->Get_LeftHUD_MaxCoolTime(strUIName); // 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
 }
 
 void CPlayer::KeyInput(_float fTimeDelta)

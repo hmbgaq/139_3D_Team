@@ -126,7 +126,7 @@ void CMonster_Character::Check_EnemyHUD_World(_matrix matWorld, _float3 vOffsetP
 		m_pEnemyHUD->Set_EnemyHUD_World(matWorld, vOffsetPos);
 }
 
-// 몬스터 HUD의 위치를 잡아줍니다. (매 틱마다 불러주세요. | 몬스터의 World매트릭스를 넣어주세요. | Offset만큼 위치를 움직일 수 있습니다. [Defualt (오프셋 안줬을 경우) : 0, 2, 0]
+// 몬스터 HUD를 삭제(비활성화)합니다. (몬스터가 죽을때 불러주세요)
 void CMonster_Character::Set_EnemyHUD_Dead()
 {
 	if(m_pEnemyHUD != nullptr)

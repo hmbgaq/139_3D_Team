@@ -16,13 +16,16 @@
 #include "UI_Player_Skill_Guige.h"
 #include "UI_Interaction.h"
 #pragma endregion
+#include "Data_Manager.h"
 
 IMPLEMENT_SINGLETON(CUI_Manager);
 
 CUI_Manager::CUI_Manager()
 	: m_pGameInstance(CGameInstance::GetInstance())
+	, m_pDataManager(CData_Manager::GetInstance())
 {
 	Safe_AddRef(m_pGameInstance);
+	Safe_AddRef(m_pDataManager);
 }
 
 HRESULT CUI_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -43,6 +46,13 @@ void CUI_Manager::Tick(_float fTimeDelta)
 { 
 	//Check_Active(fTimeDelta);
 	//Check_UIPicking(fTimeDelta);
+
+	if (m_pDataManager->Get_GameState() == GAME_STATE::UI)
+	{
+		Check_MouseInput(fTimeDelta);
+	}
+
+
 }
 
 // 플레이 화면의 모든 UI생성
@@ -119,6 +129,42 @@ HRESULT CUI_Manager::Ready_BossHUD_Bar(_uint iLevelIndex, CGameObject* pOwner, c
 CUI_EnemyHUD_Shard* CUI_Manager::Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner)
 {
 	return Add_EnemyHUD_Shard(iLevelIndex, TEXT("Layer_EnemyHUDShard"), pOwner);;
+}
+
+void CUI_Manager::Check_MouseInput(_float fTimeDelta)
+{
+	if (m_pGameInstance->Mouse_Down(DIM_LB))
+	{
+		g_UIMouseDownLB = true;
+	}
+	else
+		g_UIMouseDownLB = false;
+
+	if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+	{
+		g_UIMousePressingLB = true;
+	}
+	else
+		g_UIMousePressingLB = false;
+
+	if (m_pGameInstance->Mouse_Down(DIM_RB))
+		g_UIMouseDownRB = true;
+	else
+		g_UIMouseDownRB = false;
+
+	if (m_pGameInstance->Mouse_Pressing(DIM_RB))
+	{
+		g_UIMousePressingRB = true;
+	}
+	else
+		g_UIMousePressingRB = false;
+
+	//if (m_pGameInstance->Mouse_Up(DIM_LB))
+	//{
+	//	g_UIMouseDownLB = false;
+	//}
+
+
 }
 
 HRESULT CUI_Manager::Ready_DiedScreen(_uint iLevelIndex)
@@ -3974,37 +4020,37 @@ void CUI_Manager::NonActive_UI()
 
 void CUI_Manager::Check_UIPicking(_float fTimeDelta)
 {
-	/* Option */ // 전체 다 꺼져있다가 마우스 클릭시 전부 같은녀석으로 켜짐 (확인 필요)
-	if (!m_vecOption.empty())
-	{
-		if (m_vecOption.front()->Get_Active() == true)
-		{
-			for (auto& Option : m_vecOption)
-			{
-				m_bMouseOver = Option->Get_Pick();
+	///* Option */ // 전체 다 꺼져있다가 마우스 클릭시 전부 같은녀석으로 켜짐 (확인 필요)
+	//if (!m_vecOption.empty())
+	//{
+	//	if (m_vecOption.front()->Get_Active() == true)
+	//	{
+	//		for (auto& Option : m_vecOption)
+	//		{
+	//			m_bMouseOver = Option->Get_Pick();
 
-				if (m_bMouseOver == true)
-				{// 마우스 오버시에 모든 정보를 넘겨주고 리턴시켜야함 -> 계속 순회하며 값을 바꾸니까 오버한게 덮혀서 안나온것. (오버한 녀석이 있다면, 그 순간 선택했는지 안했는지 정보까지 주면된다.)
-					m_strMouseOverUI = Option->Get_UIDesc().strUIName;
-					m_strSelectUI = Option->Get_UIDesc().strUIName;
-					m_bSelect = Option->Get_Select();
-					m_bSelectPressing = Option->Get_SelectPressing();
-					if (m_bSelect == true || m_bSelectPressing == true)
-						m_pUI = Option; // 이때 선택했을 경우만 UI를 넘겨주면됨 (필요하다면 오버했을 때도 넘겨주는식으로 바꿔써도 된다.)
-					else
-					{
-						m_pUI = nullptr;
-						m_strSelectUI = "";
-					}
-					return;
-				}
-				else
-				{
-					m_strMouseOverUI = "";
-				}
-			}
-		}
-	}
+	//			if (m_bMouseOver == true)
+	//			{// 마우스 오버시에 모든 정보를 넘겨주고 리턴시켜야함 -> 계속 순회하며 값을 바꾸니까 오버한게 덮혀서 안나온것. (오버한 녀석이 있다면, 그 순간 선택했는지 안했는지 정보까지 주면된다.)
+	//				m_strMouseOverUI = Option->Get_UIDesc().strUIName;
+	//				m_strSelectUI = Option->Get_UIDesc().strUIName;
+	//				m_bSelect = Option->Get_Select();
+	//				m_bSelectPressing = Option->Get_SelectPressing();
+	//				if (m_bSelect == true || m_bSelectPressing == true)
+	//					m_pUI = Option; // 이때 선택했을 경우만 UI를 넘겨주면됨 (필요하다면 오버했을 때도 넘겨주는식으로 바꿔써도 된다.)
+	//				else
+	//				{
+	//					m_pUI = nullptr;
+	//					m_strSelectUI = "";
+	//				}
+	//				return;
+	//			}
+	//			else
+	//			{
+	//				m_strMouseOverUI = "";
+	//			}
+	//		}
+	//	}
+	//}
 
 	/*  */
 
@@ -4099,6 +4145,7 @@ HRESULT CUI_Manager::Load_Json(const string& strPath, const string& strFileName)
 void CUI_Manager::Free()
 {
 	Safe_Release(m_pGameInstance);
+	Safe_Release(m_pDataManager);
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 
