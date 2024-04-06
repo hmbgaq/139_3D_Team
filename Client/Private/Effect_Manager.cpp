@@ -254,7 +254,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 		/* Boos 2 */
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json"));
 		//Boss2 MotherShakeTreeProjectile
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
 

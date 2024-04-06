@@ -84,15 +84,16 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 	{
 		//Son1
 		pActor->m_pMonster1 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+		//CData_Manager::GetInstance()->Set_Son(pActor->m_pMonster1);
 		pActor->m_pMonster1->Set_Position(_float3(90.f, 0.f, 88.f));
 		pActor->m_pMonster1->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
-
 		m_bFlags[0] = true;
 	}
 	if (m_bFlags[4] == false && pActor->Is_Inputable_Front(203))
 	{
 		//Son2
 		pActor->m_pMonster2 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+		//CData_Manager::GetInstance()->Set_Son2(pActor->m_pMonster2);
 		pActor->m_pMonster2->Set_Position(_float3(110.f, 0.f, 88.f));//임시 좌표값 이거 승용이가 맵 깔면 다시 설정해야 할수 있음. 
 		pActor->m_pMonster2->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
 		m_bFlags[4] = true;

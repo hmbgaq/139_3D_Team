@@ -103,7 +103,7 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 	pSpringCam->Set_ShakeCameraTime(0.2f);
 	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
-
+	CData_Manager::GetInstance()->Get_Player()->Apply_Shake_And_Blur(Light);
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
 	if (nullptr != pTarget_Character)// 일반 타격 
