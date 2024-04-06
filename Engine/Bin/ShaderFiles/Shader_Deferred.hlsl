@@ -830,8 +830,12 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     if (g_bSSAO_Active)
         vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
    
+    float gamma = 2.2f;
+    float4 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord);
+    vEmissive = pow(vEmissive, gamma);
+    
     // Emissive -> 
-    Out.vColor = (vDiffuse * vShadow * vSSAO) + vSpecular + vAmbient;
+    Out.vColor = (vDiffuse * vShadow * vSSAO) + vEmissive;
     Out.vColor.a = 1.f;
     
     return Out;

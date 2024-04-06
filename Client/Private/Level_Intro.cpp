@@ -155,9 +155,6 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
             return E_FAIL;
     }
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
 
     pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Edgar"));
     NULL_CHECK_RETURN(pMonster, E_FAIL);
@@ -167,20 +164,48 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     pMonster->Set_InitPosition(_float3(10.f, 0.f, 25.f));
 
-    
-    
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
-    
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
 
-    /* Shader Test Model */
-    //CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+
+    /* Intro Boss */
+    {
+       //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_Boss", TEXT("Prototype_GameObject_VampireCommander"));
+       //
+       //if (nullptr == pMonster)   return E_FAIL;
+       //pMonster->Set_Position(_float3(50.0f, 0.f, 30.f));
+       //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+       //CNavigation* pVampireNavi = dynamic_cast<CVampireCommander*>(pMonster)->Get_Navigation();
+       //pVampireNavi->Set_CurrentIndex(pVampireNavi->Get_SelectRangeCellIndex(pMonster));
+    }
+
+    /* SnowMountain Boss*/
+    {
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Mother"));
+        //if (nullptr == pMonster)   return E_FAIL;
+        //pMonster->Set_Position(_float3(103.f, 0.f, 112.36f));
+        //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
+        //
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+        //if (nullptr == pMonster)   return E_FAIL;
+        //pMonster->Set_Position(_float3(86.f, 0.f, 80.36f));
+        //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+        //
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+        //if (nullptr == pMonster)   return E_FAIL;
+        //pMonster->Set_Position(_float3(120.f, 0.f, 80.36f));
+        //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+    }
 
     return S_OK;
 }

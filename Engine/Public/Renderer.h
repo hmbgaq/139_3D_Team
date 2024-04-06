@@ -210,7 +210,9 @@ private:
 
 	/* For. Tool */
 	class CTexture* m_pTool_IrradianceTextureCom[10] = { nullptr };
+	class CTexture* m_pTool_2_IrradianceTextureCom[10] = { nullptr };
 	class CTexture* m_pTool_PreFilteredTextureCom[10] = { nullptr };
+	class CTexture* m_pTool_2_PreFilteredTextureCom[10] = { nullptr };
 
 public:
 	_bool			m_bUI_MRT = false;
