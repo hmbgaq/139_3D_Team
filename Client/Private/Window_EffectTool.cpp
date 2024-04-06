@@ -5514,28 +5514,28 @@ void CWindow_EffectTool::Update_SaveSlot_Window()
 
 				// 파티클 임시저장 슬롯
 				if (ImGui::Button("Save_P_01"))
-					Save_Temp("Data_Particle/99_Temp_Save/Save_P_01");
+					Save_Temp("Data_Particle/99_Temp_Save/Save_P_01.json");
 		
 				ImGui::SameLine();
 				if (ImGui::Button("Save_P_02"))
-					Save_Temp("Data_Particle/99_Temp_Save/Save_P_02");
+					Save_Temp("Data_Particle/99_Temp_Save/Save_P_02.json");
 
 				ImGui::SameLine();
 				if (ImGui::Button("Save_P_03"))
-					Save_Temp("Data_Particle/99_Temp_Save/Save_P_03");
+					Save_Temp("Data_Particle/99_Temp_Save/Save_P_03.json");
 
 
 				// 파티클 임시저장 로드 슬롯
 				if (ImGui::Button("Load_P_01"))
-					Load_Temp("Data_Particle/99_Temp_Save/Save_P_01", FILE_PART_PARTICLE);
+					Load_Temp("Data_Particle/99_Temp_Save/Save_P_01.json", FILE_PART_PARTICLE);
 				
 				ImGui::SameLine();
 				if (ImGui::Button("Load_P_02"))
-					Load_Temp("Data_Particle/99_Temp_Save/Save_P_02", FILE_PART_PARTICLE);
+					Load_Temp("Data_Particle/99_Temp_Save/Save_P_02.json", FILE_PART_PARTICLE);
 
 				ImGui::SameLine();
 				if (ImGui::Button("Load_P_03"))
-					Load_Temp("Data_Particle/99_Temp_Save/Save_P_03", FILE_PART_PARTICLE);
+					Load_Temp("Data_Particle/99_Temp_Save/Save_P_03.json", FILE_PART_PARTICLE);
 
 			}
 			else if (CEffect_Void::MESH == eType_Effect)
@@ -5544,28 +5544,28 @@ void CWindow_EffectTool::Update_SaveSlot_Window()
 
 				// 메쉬 임시저장 슬롯
 				if (ImGui::Button("Save_M_01"))
-					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_01");
+					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_01.json");
 
 				ImGui::SameLine();
 				if (ImGui::Button("Save_M_02"))
-					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_02");
+					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_02.json");
 
 				ImGui::SameLine();
 				if (ImGui::Button("Save_M_03"))
-					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_03");
+					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_03.json");
 
 
 				// 메쉬 임시저장 로드 슬롯
 				if (ImGui::Button("Load_M_01"))
-					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_01", FILE_PART_MESH);
+					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_01.json", FILE_PART_MESH);
 
 				ImGui::SameLine();
 				if (ImGui::Button("Load_M_02"))
-					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_02", FILE_PART_MESH);
+					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_02.json", FILE_PART_MESH);
 
 				ImGui::SameLine();
 				if (ImGui::Button("Load_M_03"))
-					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_03", FILE_PART_MESH);
+					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_03.json", FILE_PART_MESH);
 
 
 			}
@@ -5641,26 +5641,26 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	ImGui::PopID();
 
 
-	ImGui::SeparatorText("");
-	if (nullptr == m_pTestEffect)
-	{
-		if (ImGui::Button(" Test Create "))
-		{
-			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
-			//m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
-			m_pTestEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test.json");
-		}
-	}
-	else
-	{
-		if (ImGui::Button(" Test Delete "))
-		{
-			EFFECT_MANAGER->Return_ToPool(m_pTestEffect);
-			m_pTestEffect = nullptr;
+	//ImGui::SeparatorText("Test");
+	//if (nullptr == m_pTestEffect)
+	//{
+	//	if (ImGui::Button(" Test Create "))
+	//	{
+	//		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
+	//		//m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+	//		m_pTestEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test.json");
+	//	}
+	//}
+	//else
+	//{
+	//	if (ImGui::Button(" Test Delete "))
+	//	{
+	//		EFFECT_MANAGER->Return_ToPool(m_pTestEffect);
+	//		m_pTestEffect = nullptr;
 
-			//m_pTestEffect->Set_Dead(TRUE);
-		}
-	}
+	//		//m_pTestEffect->Set_Dead(TRUE);
+	//	}
+	//}
 	
 
 
