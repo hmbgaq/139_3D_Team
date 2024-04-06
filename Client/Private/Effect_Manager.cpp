@@ -34,6 +34,10 @@ HRESULT CEffect_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* 
 CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _bool bUseSocket, string strBoneTag)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
+
+	if (EffectPool == nullptr) 
+		return nullptr;
+	
 	CEffect* pEffect = EffectPool->front();
 
 	Safe_AddRef(pEffect);
@@ -44,7 +48,7 @@ CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _
 
 	if (bUseSocket)	// 소켓 사용이면 정보 세팅
 	{
-		pEffect->Get_Desc()->bUseSocket = bUseSocket;
+		pEffect->Get_Desc()->bUseSocket = bUseSocket; 
 		pEffect->Get_Desc()->strBoneTag = strBoneTag;
 	}
 
@@ -57,10 +61,40 @@ CEffect* CEffect_Manager::Play_Effect(string strFileName, CGameObject* pOwner, _
 
 }
 
+CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strFileName, CGameObject* pOwner, _float4x4 matPivot)
+{
+	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
+
+	if (EffectPool == nullptr)
+		return nullptr;
+
+	CEffect* pEffect = EffectPool->front();
+
+	Safe_AddRef(pEffect);
+
+	if (nullptr != pOwner)
+		pEffect->Set_Object_Owner(pOwner);	// 부모 설정 (부모가 있고, 이펙트의 bParentPivot이 True이면 오너객체를 따라다님)
+
+
+	pEffect->Get_Desc()->bAttachStatic = TRUE;
+	pEffect->Get_Desc()->matPivot = matPivot;
+
+	pEffect->Get_Desc()->bPlay = TRUE;
+	pEffect->Set_Enable(TRUE);
+
+	EffectPool->pop();
+
+	return pEffect;
+}
+
 // 주인 없이 위치 생성 이펙트
 CEffect* CEffect_Manager::Play_Effect(string strFileName, _float3 vPos, _bool bLookTarget, _float3 vTargetPos)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
+
+	if (EffectPool == nullptr)
+		return nullptr;
+
 	CEffect* pEffect = EffectPool->front();
 
 	Safe_AddRef(pEffect);
@@ -94,7 +128,6 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 	{
 		*fTimeAcc = 0.f;
 
-		// 현재 레벨에 생성
 		CEffect* pEffect = Play_Effect(strFileName, vPos, bLookTarget, vTargetPos);
 	}
 
@@ -180,6 +213,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 {
 	// Json로드까지 끝난 이펙트를 이펙트 풀에 등록한다. 
 	// Level_Logo 이니셜라이즈에서 호출하고 있다.(전체 게임 중 한번만 호출되어야 함)
+	// Bin/DataFiles/Data_Effect + 추가 경로
 
 	_uint iLevel = LEVEL_STATIC;	//_uint iCurLevel = m_pGameInstance->Get_NextLevel();
 
@@ -219,6 +253,17 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Boos 2 */
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
+
+
+#pragma region 플레이어 이펙트
+
+		/* Revolver_Fire */
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json"));
+		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json"));
+
+#pragma endregion
+
+
 	}
 
 
@@ -233,12 +278,21 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json"));
 
+		/* Heal_Blue */
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_08_Blue.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Reverse_Blue.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_07_Light_03_Blue.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Blue.json"));
+
+
 		/* EnergyWhip */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_21_distortionTest.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_30.json"));
 
 		/* SlamDown */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_22_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_25_Rock.json"));
 
 		/* DodgeBlink */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json"));
@@ -247,6 +301,10 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Roll */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
+
+		/* Revolver */
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json"));
 
 #pragma endregion
 
@@ -278,6 +336,9 @@ HRESULT CEffect_Manager::Add_ToPool(_uint iLevelIndex, string strAddPath, string
 
 void CEffect_Manager::Return_ToPool(CEffect* pEffect)
 {
+	if (pEffect == nullptr)
+		return;
+
 	pEffect->End_Effect_ForPool();
 
 	m_EffectPool[pEffect->Get_Desc()->strFileName].push(pEffect);

@@ -76,7 +76,9 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		//m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
 		//m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
 
-		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+
+		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+		//m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
 }
@@ -239,12 +241,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
-	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper ¾Õ */
-	
-	CNavigation* pNavigation = pPlayer->Get_Navigation();
-
-	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+	pPlayer->Set_InitPosition(_float3(250.66f, 0.f, 2.38f));
+	//pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	////pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper ¾Õ */
+	//
+	//
+	//CNavigation* pNavigation = pPlayer->Get_Navigation();
+	//
+	//
+	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"));
 

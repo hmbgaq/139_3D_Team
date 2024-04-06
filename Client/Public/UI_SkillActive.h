@@ -53,6 +53,8 @@ private:
 	_float					m_fCoolTime = 0.f;
 	_float					m_fMaxCoolTime = 10.f;
 	_float					m_fChangeScale = 1.0f;
+	_float					m_fOriginScaleX = 50.0f;
+	_float					m_fOriginScaleY = 50.0f;
 	_int					m_iShaderNum = 0;
 	_bool					m_bCoolDown = false;
 	_bool					m_bMaxCoolDown = false;

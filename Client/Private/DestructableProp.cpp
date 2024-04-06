@@ -40,6 +40,7 @@ void CDestructableProp::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if(m_pColliderCom != nullptr)
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldFloat4x4());
 }
 
@@ -56,6 +57,7 @@ void CDestructableProp::Late_Tick(_float fTimeDelta)
 			return;
 
 #ifdef _DEBUG
+		if(m_pColliderCom != nullptr)
 		m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 	}

@@ -133,15 +133,12 @@ void CUI_MainMenuList::Check_Picking(_float fTimeDelta)
 {
 	if (m_bPick == true)
 	{
-		if (m_bSelect == true || m_bSelectPressing == true)
+		if (g_UIMouseDownLB == true)
 		{
 			if (m_tUIInfo.strUIName == "GAMEPLAY")
 			{
 				m_pUIManager->Active_LevelList();
 				m_pUIManager->NonActive_MainList();
-				m_bPick = false;
-				m_bSelect = false;
-				m_bSelectPressing = false;
 			}
 			else if (m_tUIInfo.strUIName == "INTRO")
 			{

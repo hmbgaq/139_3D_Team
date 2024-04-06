@@ -208,6 +208,6 @@ void CSon_Projectile::Free()
 	}
 
 	//if(nullptr != m_pEffect)
-	//	Safe_Release(m_pEffect);
+
 
 }

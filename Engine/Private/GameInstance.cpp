@@ -119,6 +119,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Tick(m_fTimeDelta);
 
+	Open_Requested_Level();
+
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -284,6 +286,32 @@ _float CGameInstance::Compute_TimeDelta(const wstring & strTimeTag)
 		return 0.0f;
 
 	return m_pTimer_Manager->Compute_TimeDelta(strTimeTag);
+}
+
+HRESULT CGameInstance::Request_Level_Opening(_uint iCurrentLevelIndex, CLevel* pNewLevel)
+{
+	if (nullptr == m_pLevel_Manager)
+		return E_FAIL;
+
+	m_iCurrentLevelIndex = iCurrentLevelIndex;
+	m_pNewLevel = pNewLevel;
+	m_bIsRequestOpenLevel = true;
+
+	return S_OK;
+}
+
+HRESULT CGameInstance::Open_Requested_Level()
+{
+	if (nullptr == m_pLevel_Manager)
+		return E_FAIL;
+
+	if (true == m_bIsRequestOpenLevel)
+	{
+		m_bIsRequestOpenLevel = false;
+		return m_pLevel_Manager->Open_Level(m_iCurrentLevelIndex, m_pNewLevel);
+	}
+
+	return S_OK;
 }
 
 HRESULT CGameInstance::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)

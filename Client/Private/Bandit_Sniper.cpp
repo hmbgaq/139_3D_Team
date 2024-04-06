@@ -72,7 +72,8 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 	
 	m_fHp = 20.f;
 	m_pTransformCom->Set_Look(0.f, 0.f, -1.f);
-
+	///* !성희 추가 : 몬스터 HUD 생성 */
+	//Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 	return S_OK;
 }
 
@@ -87,6 +88,8 @@ void CBandit_Sniper::Tick(_float fTimeDelta)
 
 	if (m_pActor)
 	{
+		///* !성희 추가 : 몬스터 HUD 위치 갱신 */
+		//Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 		m_pActor->Update_State(fTimeDelta);
 	}
 

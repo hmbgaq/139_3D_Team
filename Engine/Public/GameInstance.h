@@ -55,6 +55,9 @@ public: /* For.Timer_Manager */
 	_float		Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
+	HRESULT		Request_Level_Opening(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	HRESULT		Open_Requested_Level();
+
 	HRESULT		Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
 	_uint		Get_NextLevel();
 	_uint		Get_CurrentLevel();
@@ -281,6 +284,11 @@ private:
 	_float m_fHitlag_Time = { 0.f };
 	_float m_fTimeDelta = { 0.f };
 	_float m_fRadialBlurTime = { 0.f };
+
+private:
+	_uint m_iCurrentLevelIndex = { 0 };
+	CLevel* m_pNewLevel = { nullptr };
+	_bool m_bIsRequestOpenLevel = { false };
 
 
 public:
