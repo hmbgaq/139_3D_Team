@@ -54,7 +54,7 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 
 	Set_Enable(true);
 	// 이펙트 생성
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Circle_Floor_04.json",_float3(this->Get_Position().x,0.f, this->Get_Position().z));
 
 
 	return S_OK;
@@ -77,6 +77,7 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 	if (m_pTransformCom->Get_Position().y <= 0.f)
 	{
 		//여기서 이펙트도 터트려야 함 돌튀는거 
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		Set_Enable(false);
 	}
 

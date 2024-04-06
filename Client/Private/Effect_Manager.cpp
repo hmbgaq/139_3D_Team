@@ -222,7 +222,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Circle_Floor */
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
 
 		/* Boos 1 */
 		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
@@ -235,10 +234,13 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	{
 		/* Light */
 		FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json"));
+		
 
 		/* Hit */
 		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json"));
+
+
 	}
 
 
@@ -253,7 +255,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Boos 2 */
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
-
+		//Boss2 MotherShakeTreeProjectile
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
 
 #pragma region 플레이어 이펙트
 
