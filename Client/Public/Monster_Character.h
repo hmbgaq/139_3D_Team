@@ -15,7 +15,6 @@ class CMonster_Character abstract : public CCharacter_Client
 public:
 	enum class Monster_State 
 	{
-		NONE,
 		ATTACK,
 		ELECTROCUTE,
 		Monster_State_End,
@@ -69,6 +68,10 @@ public:
 
 public:
 	virtual void Check_Frustum() override;
+
+public:
+	void Set_Monster_State(Monster_State _eMonster_State) { m_eMonster_State = _eMonster_State; };
+
 //protected: // !성희 추가
 public: // !성희 추가
 	// 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
@@ -86,6 +89,8 @@ protected:
 	MONSTER_DESC			m_tMonsterDesc = {};
 	_float					m_fAttackDelay = { 0.f };
 	_uint					m_iAttackCount = { 0 };
+
+	Monster_State			m_eMonster_State = { Monster_State::Monster_State_End };
 	
 
 protected:

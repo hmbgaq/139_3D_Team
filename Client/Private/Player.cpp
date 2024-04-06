@@ -101,7 +101,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
-	m_fHp = 100;
+	m_fHp = 1.f;
+	//m_fHp = 100;
+
 
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 // 	{
@@ -642,6 +644,24 @@ _float CPlayer::Get_LeftHUDMaxCoolTime(const string& strUIName)
 	return m_pUIManager->Get_LeftHUD_MaxCoolTime(strUIName); // 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
 }
 
+void CPlayer::Set_DiedScreen(_bool _bShowDiedScreen)
+{
+	m_bShowDiedScreen = _bShowDiedScreen;
+
+	if (m_bShowDiedScreen == true)
+	{
+		m_pUIManager->Active_DiedScreen();
+		m_pDataManager->Set_GameState(GAME_STATE::UI);
+	}
+	else
+	{
+		m_fHp = m_fMaxHp;
+		m_pUIManager->NonActive_DiedScreen();
+		m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+	}
+
+}
+
 void CPlayer::KeyInput(_float fTimeDelta)
 {
 	/* ! UI : ShaderOption Window / Key : Esc */
@@ -651,12 +671,14 @@ void CPlayer::KeyInput(_float fTimeDelta)
 	
 		if (m_bShowOption == true)
 		{
+			
 			m_pUIManager->Active_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::UI);
 		}
 		else
 		{
+			
 			m_pUIManager->NonActive_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
@@ -675,6 +697,7 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 		else
 		{
+			m_fHp = m_fMaxHp;
 			m_pUIManager->NonActive_DiedScreen();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
 		}

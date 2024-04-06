@@ -12,6 +12,8 @@ void CInfected_State_Attack::Initialize(CInfected* pActor)
 	AttackState_Setting(pActor);
 
 	__super::Initialize(pActor);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::ATTACK);
 }
 
 CState<CInfected>* CInfected_State_Attack::Update(CInfected* pActor, _float fTimeDelta)
@@ -30,6 +32,8 @@ void CInfected_State_Attack::Release(CInfected* pActor)
 	}
 		
 	__super::Release(pActor);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::Monster_State_End);
 }
 
 void CInfected_State_Attack::AttackState_Setting(CInfected* pActor)

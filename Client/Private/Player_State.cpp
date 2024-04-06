@@ -365,6 +365,7 @@ CState<CPlayer>* CPlayer_State::Death_State(CPlayer* pActor, _float fTimeDelta, 
 	//임시 코드
 	if (pActor->Is_Animation_End())
 	{
+		pActor->Set_Invincible(false);
 		return new CPlayer_IdleLoop();
 	}
 

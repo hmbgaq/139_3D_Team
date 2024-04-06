@@ -198,10 +198,10 @@ void CTank::Hitted_Front(Power ePower)
 	}
 }
 
-void CTank::Hitted_Stun(Power ePower)
-{
-	m_pActor->Set_State(new CTank_Stun_Start());
-}
+//void CTank::Hitted_Stun(Power ePower)
+//{
+//	m_pActor->Set_State(new CTank_Stun_Start());
+//}
 
 void CTank::Hitted_Finish()
 {

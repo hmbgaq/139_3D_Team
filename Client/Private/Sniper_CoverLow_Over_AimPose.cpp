@@ -11,6 +11,8 @@ void CSniper_CoverLow_Over_AimPose::Initialize(CBandit_Sniper* pActor)
 
 	//pActor->Set_ColliderSize(0.4f, 0.9f, 0.4f);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::ATTACK);
 }
 
 CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pActor, _float fTimeDelta)
@@ -90,4 +92,6 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pA
 void CSniper_CoverLow_Over_AimPose::Release(CBandit_Sniper* pActor)
 {
 	__super::Release(pActor);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::Monster_State_End);
 }

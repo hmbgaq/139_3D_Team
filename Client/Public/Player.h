@@ -128,6 +128,7 @@ public:
 public:
 	void		 LeftHUDCoolDown(const string& strUIName, _float fCoolTime);
 	_float		 Get_LeftHUDMaxCoolTime(const string& strUIName);
+	void		 Set_DiedScreen(_bool _bShowDiedScreen);
 
 private:
 	void		 KeyInput(_float fTimeDelta);

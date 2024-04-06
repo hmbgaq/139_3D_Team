@@ -13,6 +13,16 @@ CState<CPlayer>* CPlayer_DeathLight_F_02::Update(CPlayer* pActor, _float fTimeDe
 {
 	__super::Update(pActor, fTimeDelta);
 
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(23);
+		if (true == m_bFlags[0])
+		{
+			pActor->Set_DiedScreen(true);
+			pActor->Set_Animation(CPlayer::Player_State::Player_IdleLoop, CModel::ANIM_STATE::ANIM_STATE_NORMAL, false, false, 0);
+		}
+	}
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 
