@@ -68,7 +68,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 
 void CLevel_SnowMountainBoss::Tick(_float fTimeDelta)
 {
-	
+
 }
 
 HRESULT CLevel_SnowMountainBoss::Render()
@@ -81,8 +81,8 @@ HRESULT CLevel_SnowMountainBoss::Render()
 HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 {
 	/* For. Shadow */
-		//XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-		//XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
+	   //XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	   //XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
 	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
@@ -207,7 +207,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_MasterCamera"))))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -389,7 +389,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 
 
 
-		if(FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAINBOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc)))
+		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAINBOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc)))
 			return E_FAIL;
 	}
 
@@ -433,8 +433,8 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 
 	}
 
-	
-	
+
+
 
 	//CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc;
 	//
@@ -510,9 +510,9 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_UI_Monster(const wstring& strLayerT
 
 	char filePath[MAX_PATH] = "../Bin/DataFiles/Data_UI/UI_Info";
 
-	_int		iPathNum = 0;
-	string		strFileName;
-	string		strFilePath;
+	_int      iPathNum = 0;
+	string      strFileName;
+	string      strFilePath;
 
 
 	CJson_Utility::Load_Json(filePath, json_in);
@@ -539,7 +539,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_UI_Monster(const wstring& strLayerT
 		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &tUI_Info));
 	}
 	//if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Anything"), &json_in)))
-	//	return E_FAIL;
+	//   return E_FAIL;
 
 	return S_OK;
 }
@@ -551,48 +551,48 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_UI_Player(const wstring& strLayerTa
 
 HRESULT CLevel_SnowMountainBoss::Ready_Event()
 {
-	
-		json LoadJson;
 
-		if (FAILED(CJson_Utility::Load_Json(m_strMapLoadPath.c_str(), LoadJson)))
+	json LoadJson;
+
+	if (FAILED(CJson_Utility::Load_Json(m_strMapLoadPath.c_str(), LoadJson)))
+	{
+		MSG_BOX("이벤트 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json TriggerJson = LoadJson["Trigger_Json"];
+
+	json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
+	_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
+
+	for (_int i = 0; i < iMonsterTriggerSize; ++i)
+	{
+		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+		MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
+		MonsterTriggerDesc.strSpawnMonsterJsonPath = m_strMapLoadPath;
+		MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
+		MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+
+		CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+		pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
+
+		if (pMonsterTrigger == nullptr)
 		{
-			MSG_BOX("이벤트 불러오기 실패");
+			MSG_BOX("몬스터 트리거 불러오기 실패");
 			return E_FAIL;
 		}
-
-		json TriggerJson = LoadJson["Trigger_Json"];
-
-		json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
-		_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
-
-		for (_int i = 0; i < iMonsterTriggerSize; ++i)
+		else
 		{
-			CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
-			MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
-			MonsterTriggerDesc.strSpawnMonsterJsonPath = m_strMapLoadPath;
-			MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
-			MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
-			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
-			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
-
-			CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
-
-			pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
-
-			if (pMonsterTrigger == nullptr)
-			{
-				MSG_BOX("몬스터 트리거 불러오기 실패");
-				return E_FAIL;
-			}
-			else
-			{
-				m_pGameInstance->Add_Event(pMonsterTrigger);
-			}
-
+			m_pGameInstance->Add_Event(pMonsterTrigger);
 		}
-		
 
-		return S_OK;
+	}
+
+
+	return S_OK;
 
 }
 

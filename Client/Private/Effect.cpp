@@ -11,6 +11,7 @@
 
 #include "Bone.h"
 #include "Character.h"
+#include "Weapon.h"
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -327,6 +328,12 @@ void CEffect::Update_PivotMat()
 				// 소켓사용이 트루이면 밖에서 소켓에 대한 정보를 던져주고 이걸 사용함
 				m_tEffectDesc.matPivot = dynamic_cast<CCharacter*>(m_pOwner)->Get_Body()->Get_BonePtr(m_tEffectDesc.strBoneTag.c_str())->Get_CombinedTransformationMatrix();
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
+			
+			}
+			else if (m_tEffectDesc.bAttachStatic)
+			{
+				// 업데이트 안되는 월드랑 곱하기
+				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);	// 나 * 피봇월드
 			}
 			else
 			{
@@ -336,7 +343,13 @@ void CEffect::Update_PivotMat()
 			}
 
 		}
+		else
+		{
+
+		}
+
 	}
+
 
 
 }

@@ -431,6 +431,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractGroupIndex", Desc.iInteractGroupIndex);				
 				InteractJson[i].emplace("RotationAngle", Desc.fRotationAngle);
 				InteractJson[i].emplace("RotationSpeed", Desc.fRotationSpeed);
+				InteractJson[i].emplace("RotationType", Desc.eRotationState);
+
 				InteractJson[i].emplace("Offset", Desc.bOffset);
 				InteractJson[i].emplace("Rotate", Desc.bRotate);
 				InteractJson[i].emplace("Owner", Desc.bOwner);
@@ -816,7 +818,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			//Desc.bLevelChange = false;
 			Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 			
-			//Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+			Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 			Desc.bEnable = InteractJson[i]["Enable"];
 			Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
 			Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
@@ -826,6 +828,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bRotate = InteractJson[i]["Rotate"];
 			Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
 			Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+			Desc.eRotationState = InteractJson[i]["RotationType"];
 			Desc.bArrival = InteractJson[i]["Arrival"];
 			
 
@@ -837,7 +840,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
-
+			
 			CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
 			CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
 			CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
@@ -855,14 +858,14 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 			Desc.WorldMatrix = WorldMatrix;
-
-			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-			_int iUpdateCellJsonSize = UpdateCellJson.size();
-
-			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
-			{
-				Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
-			}
+			//
+			//json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+			//_int iUpdateCellJsonSize = UpdateCellJson.size();
+			//
+			//for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+			//{
+			//	Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+			//}
 			
 			
 			CEnvironment_Interact* pObject = { nullptr };
@@ -3231,7 +3234,6 @@ void CWindow_MapTool::Interact_CreateTab()
 		if (IM_ARRAYSIZE(InteractTypes) <= m_eInteractType)
 		{
 			m_eInteractType = 0;
-			return;
 		}
 
 		const char* InteractPreviewType = InteractTypes[m_eInteractType];
@@ -4052,6 +4054,26 @@ void CWindow_MapTool::Interact_RotationFunction()
 
 	CEnvironment_Interact* pInteractObject = m_vecCreateInteractObject[m_iSelectObjectIndex];
 
+	ImGui::SeparatorText(u8"회전 방향");
+	{
+		static int iRotateType = 0;
+
+		const char* RotateType[3] = { u8"X축_회전", u8"Y축_회전", u8"Z축_회전"};
+
+
+		for (_uint i = 0; i < IM_ARRAYSIZE(RotateType); ++i)
+		{
+			if (i > 0) { ImGui::SameLine(); }
+
+			if (ImGui::RadioButton(RotateType[i], &iRotateType, i))
+			{
+				m_tSelectInteractDesc.eRotationState = (ROTATION_LERP_STATE)iRotateType;
+				pInteractObject->Set_RotationType(m_tSelectInteractDesc.eRotationState);
+			}
+		}
+
+	}
+
 
 	if (ImGui::InputFloat(u8"로테이션 각도", &m_tSelectInteractDesc.fRotationAngle))
 	{
@@ -4067,6 +4089,15 @@ void CWindow_MapTool::Interact_RotationFunction()
 	{
 		pInteractObject->Reset_Rotate();
 	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"현재 각도 저장"))
+	{
+		pInteractObject->Set_DescWorldMatrix();
+	}
+
+
 	
 }
 

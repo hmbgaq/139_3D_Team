@@ -1070,7 +1070,7 @@
           [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
           [ 0.0, 0.9999987483024597, -1.656062982059725e-12, 0.0 ],
           [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 76.48104095458984, 3.40596342086792, -13.955925941467285, 1.0 ]
+          [ 76.48104095458984, 3.4059998989105225, -13.955925941467285, 1.0 ]
         ]
       },
       "Index": 59,
@@ -2075,49 +2075,13 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
-          [ 0.0, 0.9999931454658508, -1.6560536579210416e-12, 0.0 ],
-          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 55.553775787353516, 4.093576431274414, -21.22384262084961, 1.0 ]
-        ]
-      },
-      "Index": 115,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_LocomotiveDoor3",
-      "ObjectTag": "LocomotiveDoor3",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 9.099629210140847e-07, 7.51376912078161e-12, 1.0, 0.0 ],
-          [ 0.0, 0.9999995231628418, -7.513765651334658e-12, 0.0 ],
-          [ -1.0, 0.0, 9.099629210140847e-07, 0.0 ],
-          [ 55.76776123046875, 4.093999862670898, -18.547771453857422, 1.0 ]
-        ]
-      },
-      "Index": 116,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_LocomotiveDoor3",
-      "ObjectTag": "LocomotiveDoor3",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
           [ 0.9974569082260132, -7.203130236374533e-13, 0.07121829688549042, 0.0 ],
           [ -2.347839010423972e-16, 0.9999996423721313, 1.0117442474089078e-11, 0.0 ],
           [ -0.07121829688549042, -1.0091733872175102e-11, 0.9974569082260132, 0.0 ],
           [ 25.000383377075195, -0.05144178867340088, -19.72939682006836, 1.0 ]
         ]
       },
-      "Index": 117,
+      "Index": 115,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMergeRentierBuildingBaseB",
       "ObjectTag": "TeslaMergeRentierBuildingBaseB",
@@ -2135,7 +2099,7 @@
           [ 54.16484451293945, 10.22646713256836, -29.032114028930664, 1.0 ]
         ]
       },
-      "Index": 118,
+      "Index": 116,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaDetachHouse1",
       "ObjectTag": "TeslaDetachHouse1",
@@ -2153,7 +2117,7 @@
           [ 21.789514541625977, 1.9073486328125e-06, -58.00348663330078, 1.0 ]
         ]
       },
-      "Index": 119,
+      "Index": 117,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MineBuilding1",
       "ObjectTag": "MineBuilding1",
@@ -2171,7 +2135,7 @@
           [ 13.984138488769531, 16.45338249206543, -53.22066879272461, 1.0 ]
         ]
       },
-      "Index": 120,
+      "Index": 118,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_LocomotiveSegment15",
       "ObjectTag": "LocomotiveSegment15",
@@ -2189,7 +2153,7 @@
           [ 23.84933090209961, 13.639745712280273, -36.65716552734375, 1.0 ]
         ]
       },
-      "Index": 121,
+      "Index": 119,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower4",
       "ObjectTag": "ElevatorTower4",
@@ -2207,7 +2171,7 @@
           [ 23.849000930786133, 20.47152328491211, -32.49620819091797, 1.0 ]
         ]
       },
-      "Index": 122,
+      "Index": 120,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower3",
       "ObjectTag": "ElevatorTower3",
@@ -2225,7 +2189,7 @@
           [ 23.79952049255371, 13.733380317687988, -35.35411834716797, 1.0 ]
         ]
       },
-      "Index": 123,
+      "Index": 121,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower2",
       "ObjectTag": "ElevatorTower2",
@@ -2243,7 +2207,7 @@
           [ 23.849000930786133, 10.945107460021973, -32.49599838256836, 1.0 ]
         ]
       },
-      "Index": 124,
+      "Index": 122,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower3",
       "ObjectTag": "ElevatorTower3",
@@ -2261,7 +2225,7 @@
           [ 23.849000930786133, 4.668769359588623, -32.49599838256836, 1.0 ]
         ]
       },
-      "Index": 125,
+      "Index": 123,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower3",
       "ObjectTag": "ElevatorTower3",
@@ -2279,7 +2243,7 @@
           [ 23.799999237060547, -1.4422435760498047, -35.354000091552734, 1.0 ]
         ]
       },
-      "Index": 126,
+      "Index": 124,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower2",
       "ObjectTag": "ElevatorTower2",
@@ -2297,7 +2261,7 @@
           [ 23.909351348876953, -1.0028167963027954, -45.7032585144043, 1.0 ]
         ]
       },
-      "Index": 127,
+      "Index": 125,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower3",
       "ObjectTag": "ElevatorTower3",
@@ -2315,7 +2279,7 @@
           [ 23.909000396728516, 5.193114280700684, -45.702999114990234, 1.0 ]
         ]
       },
-      "Index": 128,
+      "Index": 126,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower3",
       "ObjectTag": "ElevatorTower3",
@@ -2333,7 +2297,7 @@
           [ 23.909000396728516, 10.617659568786621, -45.702999114990234, 1.0 ]
         ]
       },
-      "Index": 129,
+      "Index": 127,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ElevatorTower3",
       "ObjectTag": "ElevatorTower3",
@@ -2351,7 +2315,7 @@
           [ 30.44976806640625, 16.951000213623047, -56.76599884033203, 1.0 ]
         ]
       },
-      "Index": 130,
+      "Index": 128,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatform1",
       "ObjectTag": "TeslaRICellMovingPlatform1",
@@ -2369,7 +2333,7 @@
           [ 28.30246925354004, 17.30203628540039, -56.87744903564453, 1.0 ]
         ]
       },
-      "Index": 131,
+      "Index": 129,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
       "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
@@ -2387,7 +2351,7 @@
           [ 28.287002563476563, 17.302230834960938, -56.83259963989258, 1.0 ]
         ]
       },
-      "Index": 132,
+      "Index": 130,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
       "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
@@ -2405,7 +2369,7 @@
           [ 29.43315887451172, 17.328655242919922, -54.502567291259766, 1.0 ]
         ]
       },
-      "Index": 133,
+      "Index": 131,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
       "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
@@ -2423,7 +2387,7 @@
           [ 31.495622634887695, 17.339513778686523, -54.53406524658203, 1.0 ]
         ]
       },
-      "Index": 134,
+      "Index": 132,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
       "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
@@ -2441,7 +2405,7 @@
           [ 32.73126220703125, 17.299686431884766, -56.82879638671875, 1.0 ]
         ]
       },
-      "Index": 135,
+      "Index": 133,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
       "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
@@ -2459,7 +2423,7 @@
           [ 32.769744873046875, 17.29938507080078, -56.87053680419922, 1.0 ]
         ]
       },
-      "Index": 136,
+      "Index": 134,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
       "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
@@ -2477,7 +2441,7 @@
           [ 29.430875778198242, 17.32699966430664, -59.2278938293457, 1.0 ]
         ]
       },
-      "Index": 137,
+      "Index": 135,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
       "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
@@ -2495,7 +2459,7 @@
           [ 30.467655181884766, 17.327001571655273, -59.17866134643555, 1.0 ]
         ]
       },
-      "Index": 138,
+      "Index": 136,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
       "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
@@ -2513,7 +2477,7 @@
           [ 24.36732292175293, 22.487504959106445, -56.78935241699219, 1.0 ]
         ]
       },
-      "Index": 139,
+      "Index": 137,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaAerialTramStandB",
       "ObjectTag": "TeslaAerialTramStandB",
@@ -2531,7 +2495,7 @@
           [ 36.490291595458984, 19.498905181884766, -56.76879119873047, 1.0 ]
         ]
       },
-      "Index": 140,
+      "Index": 138,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_Cable1",
       "ObjectTag": "Cable1",
@@ -2549,7 +2513,7 @@
           [ 51.13274002075195, 17.105628967285156, -56.76900100708008, 1.0 ]
         ]
       },
-      "Index": 141,
+      "Index": 139,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_Cable1",
       "ObjectTag": "Cable1",
@@ -2567,7 +2531,7 @@
           [ 54.30343246459961, 11.610528945922852, -57.04552459716797, 1.0 ]
         ]
       },
-      "Index": 142,
+      "Index": 140,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaAerialTramStandA",
       "ObjectTag": "TeslaAerialTramStandA",
@@ -2585,7 +2549,7 @@
           [ 54.5947151184082, 16.396015167236328, -56.77924728393555, 1.0 ]
         ]
       },
-      "Index": 143,
+      "Index": 141,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaAerialTramStand3",
       "ObjectTag": "TeslaAerialTramStand3",
@@ -2603,7 +2567,7 @@
           [ 54.749839782714844, -4.877023220062256, -55.71305465698242, 1.0 ]
         ]
       },
-      "Index": 144,
+      "Index": 142,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MineBuilding1",
       "ObjectTag": "MineBuilding1",
@@ -2621,7 +2585,7 @@
           [ -41.985958099365234, -81.7118148803711, -423.6727294921875, 1.0 ]
         ]
       },
-      "Index": 145,
+      "Index": 143,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_PUBGFrozenField1",
       "ObjectTag": "PUBGFrozenField1",
@@ -2639,28 +2603,10 @@
           [ -29.105846405029297, -79.00210571289063, -148.0270538330078, 1.0 ]
         ]
       },
-      "Index": 146,
+      "Index": 144,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment1",
       "ObjectTag": "TeslaEmbankment1",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 0.0, 0.0, 0.0, 1.0 ]
-        ]
-      },
-      "Index": 147,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_Cable1",
-      "ObjectTag": "Cable1",
       "PlayAnimationIndex": 0,
       "ShaderPassIndex": 0,
       "Type": "Basic"
@@ -2675,7 +2621,7 @@
           [ -247.81056213378906, -43.68299865722656, -446.1361083984375, 1.0 ]
         ]
       },
-      "Index": 148,
+      "Index": 145,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDown",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDown",
@@ -2693,7 +2639,7 @@
           [ -246.94290161132813, -43.58377456665039, -445.93609619140625, 1.0 ]
         ]
       },
-      "Index": 149,
+      "Index": 146,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2711,7 +2657,7 @@
           [ -247.24923706054688, -59.53396987915039, -400.3363952636719, 1.0 ]
         ]
       },
-      "Index": 150,
+      "Index": 147,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
@@ -2729,7 +2675,7 @@
           [ -214.24664306640625, -62.69972610473633, -481.17718505859375, 1.0 ]
         ]
       },
-      "Index": 151,
+      "Index": 148,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
@@ -2747,7 +2693,7 @@
           [ -195.4278564453125, -62.70000076293945, -486.4595031738281, 1.0 ]
         ]
       },
-      "Index": 152,
+      "Index": 149,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentRight",
       "ObjectTag": "MedievalDynastyCaveBentRight",
@@ -2765,7 +2711,7 @@
           [ -165.7362823486328, -62.70000076293945, -483.8046569824219, 1.0 ]
         ]
       },
-      "Index": 153,
+      "Index": 150,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraightIsland",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraightIsland",
@@ -2783,7 +2729,7 @@
           [ -150.0446014404297, -62.54785919189453, -481.23846435546875, 1.0 ]
         ]
       },
-      "Index": 154,
+      "Index": 151,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2801,7 +2747,7 @@
           [ -133.93161010742188, -62.54800033569336, -480.22344970703125, 1.0 ]
         ]
       },
-      "Index": 155,
+      "Index": 152,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2819,7 +2765,7 @@
           [ -117.9603042602539, -62.54800033569336, -471.7077331542969, 1.0 ]
         ]
       },
-      "Index": 156,
+      "Index": 153,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentRight",
       "ObjectTag": "MedievalDynastyCaveBentRight",
@@ -2837,7 +2783,7 @@
           [ -110.2676010131836, -62.54800033569336, -460.2647705078125, 1.0 ]
         ]
       },
-      "Index": 157,
+      "Index": 154,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentRight",
       "ObjectTag": "MedievalDynastyCaveBentRight",
@@ -2855,7 +2801,7 @@
           [ -111.06877136230469, -62.54793930053711, -461.2248840332031, 1.0 ]
         ]
       },
-      "Index": 158,
+      "Index": 155,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranching",
       "ObjectTag": "MedievalDynastyCaveBentBranching",
@@ -2873,7 +2819,7 @@
           [ -66.32609558105469, -78.4150161743164, -439.0292053222656, 1.0 ]
         ]
       },
-      "Index": 159,
+      "Index": 156,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
@@ -2891,7 +2837,7 @@
           [ -120.73829650878906, -60.70203399658203, -442.8841247558594, 1.0 ]
         ]
       },
-      "Index": 160,
+      "Index": 157,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingEnd",
       "ObjectTag": "MedievalDynastyCaveBentBranchingEnd",
@@ -2909,7 +2855,7 @@
           [ -252.11541748046875, -43.840545654296875, -454.2397766113281, 1.0 ]
         ]
       },
-      "Index": 161,
+      "Index": 158,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2927,7 +2873,7 @@
           [ -7.362637042999268, -0.01701216772198677, 26.304868698120117, 1.0 ]
         ]
       },
-      "Index": 162,
+      "Index": 159,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_LocomotiveBuilding2",
       "ObjectTag": "LocomotiveBuilding2",
@@ -2945,7 +2891,7 @@
           [ 8.121509552001953, 12.079212188720703, 66.57096862792969, 1.0 ]
         ]
       },
-      "Index": 163,
+      "Index": 160,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_PersphoneMergeHouse1",
       "ObjectTag": "PersphoneMergeHouse1",
@@ -2963,7 +2909,7 @@
           [ -10.551471710205078, -0.017019957304000854, 8.883041381835938, 1.0 ]
         ]
       },
-      "Index": 164,
+      "Index": 161,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_RentierBuildingGroundFloor",
       "ObjectTag": "RentierBuildingGroundFloor",
@@ -2981,7 +2927,7 @@
           [ -66.46269989013672, 2.741795539855957, 141.31094360351563, 1.0 ]
         ]
       },
-      "Index": 165,
+      "Index": 162,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainBuilding",
       "ObjectTag": "TeslaMainBuilding",
@@ -2999,7 +2945,7 @@
           [ -73.8826904296875, -0.017015427350997925, 154.99822998046875, 1.0 ]
         ]
       },
-      "Index": 166,
+      "Index": 163,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainCage",
       "ObjectTag": "TeslaMainCage",
@@ -3017,7 +2963,7 @@
           [ -72.87614440917969, -0.017006367444992065, 155.5001220703125, 1.0 ]
         ]
       },
-      "Index": 167,
+      "Index": 164,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainCageFence",
       "ObjectTag": "TeslaMainCageFence",
@@ -3035,7 +2981,7 @@
           [ -19.052452087402344, 2.3753628730773926, -40.50480651855469, 1.0 ]
         ]
       },
-      "Index": 168,
+      "Index": 165,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainFloor",
       "ObjectTag": "TeslaMainFloor",
@@ -3053,7 +2999,7 @@
           [ -19.052000045776367, 58.978759765625, -40.505001068115234, 1.0 ]
         ]
       },
-      "Index": 169,
+      "Index": 166,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainFoundation",
       "ObjectTag": "TeslaMainFoundation",
@@ -3071,7 +3017,7 @@
           [ -33.85807800292969, -0.01702222228050232, 11.943496704101563, 1.0 ]
         ]
       },
-      "Index": 170,
+      "Index": 167,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaTowerB",
       "ObjectTag": "TeslaTowerB",
@@ -3089,7 +3035,7 @@
           [ -19.529024124145508, -8.408865928649902, 48.882286071777344, 1.0 ]
         ]
       },
-      "Index": 171,
+      "Index": 168,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
       "ObjectTag": "TeslaRockGroup2",
@@ -3107,7 +3053,7 @@
           [ -6.68206787109375, 19.758108139038086, 28.488628387451172, 1.0 ]
         ]
       },
-      "Index": 172,
+      "Index": 169,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofSnow1",
       "ObjectTag": "TeslaRoofSnow1",
@@ -3125,7 +3071,7 @@
           [ -6.8899688720703125, 17.157855987548828, 32.50492477416992, 1.0 ]
         ]
       },
-      "Index": 173,
+      "Index": 170,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofSnow1",
       "ObjectTag": "TeslaRoofSnow1",
@@ -3143,7 +3089,7 @@
           [ -7.5450921058654785, 16.54154396057129, 22.069725036621094, 1.0 ]
         ]
       },
-      "Index": 174,
+      "Index": 171,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofSnow1",
       "ObjectTag": "TeslaRoofSnow1",
@@ -3161,7 +3107,7 @@
           [ -4.238518238067627, 4.098412990570068, 25.6970272064209, 1.0 ]
         ]
       },
-      "Index": 175,
+      "Index": 172,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicleLong1",
       "ObjectTag": "TeslaIcicleLong1",
@@ -3179,7 +3125,7 @@
           [ -2.8200507164001465, 13.00913143157959, 32.19206619262695, 1.0 ]
         ]
       },
-      "Index": 176,
+      "Index": 173,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicle1",
       "ObjectTag": "TeslaIcicle1",
@@ -3197,7 +3143,7 @@
           [ -2.534005880355835, 19.022216796875, 28.15094757080078, 1.0 ]
         ]
       },
-      "Index": 177,
+      "Index": 174,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicle1",
       "ObjectTag": "TeslaIcicle1",
@@ -3215,7 +3161,7 @@
           [ -3.344977617263794, 12.453771591186523, 21.63297462463379, 1.0 ]
         ]
       },
-      "Index": 178,
+      "Index": 175,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicleLong2",
       "ObjectTag": "TeslaIcicleLong2",
@@ -3233,7 +3179,7 @@
           [ 10.225858688354492, 11.82414436340332, 63.384307861328125, 1.0 ]
         ]
       },
-      "Index": 179,
+      "Index": 176,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicleLong1",
       "ObjectTag": "TeslaIcicleLong1",
@@ -3251,7 +3197,7 @@
           [ 9.684602737426758, 13.116704940795898, 67.03515625, 1.0 ]
         ]
       },
-      "Index": 180,
+      "Index": 177,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoof9",
       "ObjectTag": "TeslaRoof9",
@@ -3269,7 +3215,7 @@
           [ 7.328847885131836, -0.805838406085968, 59.36810302734375, 1.0 ]
         ]
       },
-      "Index": 181,
+      "Index": 178,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment1",
       "ObjectTag": "TeslaEmbankment1",
@@ -3287,7 +3233,7 @@
           [ 18.641780853271484, -0.017018824815750122, 48.64672088623047, 1.0 ]
         ]
       },
-      "Index": 182,
+      "Index": 179,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_RentierBuildingGroundFloor",
       "ObjectTag": "RentierBuildingGroundFloor",
@@ -3305,7 +3251,7 @@
           [ 18.6319522857666, 5.830273628234863, 48.39280700683594, 1.0 ]
         ]
       },
-      "Index": 183,
+      "Index": 180,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofRentier",
       "ObjectTag": "TeslaRoofRentier",
@@ -3323,7 +3269,7 @@
           [ -275.8435974121094, -187.053955078125, -314.6854248046875, 1.0 ]
         ]
       },
-      "Index": 184,
+      "Index": 181,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRockGroup5",
       "ObjectTag": "TeslaRockGroup5",
@@ -3341,7 +3287,7 @@
           [ -422.6053771972656, 20.809926986694336, -14.386154174804688, 1.0 ]
         ]
       },
-      "Index": 185,
+      "Index": 182,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaSnowMountain",
       "ObjectTag": "TeslaSnowMountain",
@@ -3359,7 +3305,7 @@
           [ 81.78468322753906, -0.017019957304000854, 5.054053783416748, 1.0 ]
         ]
       },
-      "Index": 186,
+      "Index": 183,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_RentierBuildingGroundFloor",
       "ObjectTag": "RentierBuildingGroundFloor",
@@ -3377,7 +3323,7 @@
           [ 81.78500366210938, 3.7838034629821777, 5.053999900817871, 1.0 ]
         ]
       },
-      "Index": 187,
+      "Index": 184,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofRentier",
       "ObjectTag": "TeslaRoofRentier",
@@ -3395,7 +3341,7 @@
           [ 110.6831283569336, -0.017018824815750122, 8.088638305664063, 1.0 ]
         ]
       },
-      "Index": 188,
+      "Index": 185,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaTowerA",
       "ObjectTag": "TeslaTowerA",
@@ -3413,7 +3359,7 @@
           [ 79.35401916503906, -0.01702052354812622, -2.7948760986328125, 1.0 ]
         ]
       },
-      "Index": 189,
+      "Index": 186,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
       "ObjectTag": "TeslaEmbankment8",
@@ -3431,7 +3377,7 @@
           [ 81.99933624267578, -0.017019564285874367, -1.3543610572814941, 1.0 ]
         ]
       },
-      "Index": 190,
+      "Index": 187,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
       "ObjectTag": "TeslaEmbankment8",
@@ -3449,7 +3395,7 @@
           [ 60.27728271484375, 0.0, -6.5829925537109375, 1.0 ]
         ]
       },
-      "Index": 191,
+      "Index": 188,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TrackModule10M1",
       "ObjectTag": "TrackModule10M1",
@@ -16413,9 +16359,11 @@
       "Rotate": false,
       "RotationAngle": 90.0,
       "RotationSpeed": 90.0,
+      "RotationType": 1,
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
+      "UpdateCellJson": null,
       "UseGravity": true
     },
     {
@@ -16429,7 +16377,7 @@
           [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
           [ 0.0, 0.9999987483024597, -1.656062982059725e-12, 0.0 ],
           [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 69.6983642578125, 0.0, -6.568700790405273, 1.0 ]
+          [ 69.29569244384766, 1.4469765119429212e-07, -7.560979843139648, 1.0 ]
         ]
       },
       "Enable": false,
@@ -16438,13 +16386,13 @@
       "Index": 1,
       "InteractGroupIndex": 0,
       "InteractLevel": 3,
-      "InteractState": 1,
+      "InteractState": 0,
       "InteractType": 5,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
       "ModelTag": "Prototype_Component_Model_MergeCoalWagon",
       "MoveColliderCenter": [ 65.5, 1.0, -6.568999767303467, 0.0 ],
-      "MoveColliderSize": [ 8.199999809265137, 1.0, 1.0, 0.0 ],
+      "MoveColliderSize": [ 5.0, 1.0, 1.0, 0.0 ],
       "ObjectTag": "MergeCoalWagon",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
@@ -16455,9 +16403,29 @@
       "Rotate": false,
       "RotationAngle": 90.0,
       "RotationSpeed": 90.0,
+      "RotationType": 1,
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
+      "UpdateCellJson": [
+        { "UpdateCellIndex": 334 },
+        { "UpdateCellIndex": 335 },
+        { "UpdateCellIndex": 336 },
+        { "UpdateCellIndex": 337 },
+        { "UpdateCellIndex": 338 },
+        { "UpdateCellIndex": 339 },
+        { "UpdateCellIndex": 340 },
+        { "UpdateCellIndex": 341 },
+        { "UpdateCellIndex": 342 },
+        { "UpdateCellIndex": 343 },
+        { "UpdateCellIndex": 344 },
+        { "UpdateCellIndex": 345 },
+        { "UpdateCellIndex": 346 },
+        { "UpdateCellIndex": 347 },
+        { "UpdateCellIndex": 348 },
+        { "UpdateCellIndex": 363 },
+        { "UpdateCellIndex": 364 }
+      ],
       "UseGravity": true
     },
     {
@@ -16471,7 +16439,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 69.6983642578125, -2.4000000953674316, -5.368700981140137, 1.0 ]
+          [ 69.29569244384766, -2.3999998569488525, -6.360980033874512, 1.0 ]
         ]
       },
       "Enable": false,
@@ -16497,9 +16465,11 @@
       "Rotate": false,
       "RotationAngle": 90.0,
       "RotationSpeed": 90.0,
+      "RotationType": 1,
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
+      "UpdateCellJson": null,
       "UseGravity": false
     },
     {
@@ -16513,7 +16483,7 @@
           [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
           [ -1.8199259557150071e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
           [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
-          [ 69.6983642578125, -2.4000000953674316, -7.76870059967041, 1.0 ]
+          [ 69.29569244384766, -2.3999998569488525, -8.760979652404785, 1.0 ]
         ]
       },
       "Enable": false,
@@ -16539,9 +16509,11 @@
       "Rotate": false,
       "RotationAngle": 90.0,
       "RotationSpeed": 90.0,
+      "RotationType": 1,
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
+      "UpdateCellJson": null,
       "UseGravity": false
     },
     {
@@ -16555,7 +16527,7 @@
           [ 0.9999998807907104, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 0.9999998807907104, 0.0 ],
-          [ 60.06098937988281, 0.0, -6.58729362487793, 1.0 ]
+          [ 60.095481872558594, -8.71909833222162e-08, -5.415400505065918, 1.0 ]
         ]
       },
       "Enable": false,
@@ -16570,7 +16542,7 @@
       "LevelChange": false,
       "ModelTag": "Prototype_Component_Model_InteractCoalWagon3",
       "MoveColliderCenter": [ 60.06098937988281, 1.0, -6.300000190734863, 0.0 ],
-      "MoveColliderSize": [ 1.0, 1.0, 4.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 3.0, 0.0 ],
       "ObjectTag": "InteractCoalWagon3",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
@@ -16581,9 +16553,319 @@
       "Rotate": false,
       "RotationAngle": 90.0,
       "RotationSpeed": 90.0,
+      "RotationType": 1,
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ -0.699999988079071, 0.0, 0.0, 0.0 ],
+      "ColliderSize": [ 0.699999988079071, 0.800000011920929, 0.699999988079071, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 45.456939697265625, 1.2490646839141846, 37.508094787597656, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 5,
+      "InteractGroupIndex": -1,
+      "InteractLevel": 3,
+      "InteractState": 0,
+      "InteractType": 4,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_ChainBeam5",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainPlank1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 0.6000000238418579, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 90.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, -5.778153129576413e-12, -1.0, 0.0 ],
+          [ 1.5083926882653031e-05, 0.999998927116394, 7.947667697572047e-12, 0.0 ],
+          [ 1.0, -1.5083943253557663e-05, 9.099629210140847e-07, 0.0 ],
+          [ 58.39056396484375, 1.2788846492767334, 22.814409255981445, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 6,
+      "InteractGroupIndex": -1,
+      "InteractLevel": 3,
+      "InteractState": 0,
+      "InteractType": 3,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank2",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainBeam5",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 2.0, 3.0, 2.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 90.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ -0.9996196031570435, 1.8192334891864448e-06, 0.01484826859086752, 0.0 ],
+          [ 1.8469528413334046e-06, 0.9999983310699463, 1.8197220015281346e-06, 0.0 ],
+          [ -0.01484826859086752, 1.846456939347263e-06, -0.9996196031570435, 0.0 ],
+          [ 74.31480407714844, 4.396507263183594, -19.883953094482422, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 7,
+      "InteractGroupIndex": 1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 22,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_ChainInteraction2",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "LocomotiveInteractDoorB01Rotate90",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": true,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 90.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 0.9999991655349731, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.9999991655349731, 0.0, 0.0 ],
+          [ 0.0, 0.0, 0.9998701810836792, 0.0 ],
+          [ 64.44208526611328, 4.365223407745361, -18.56820297241211, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 8,
+      "InteractGroupIndex": 1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 23,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoor01Rotate90",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainInteraction2",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": true,
+      "RotationAngle": -90.0,
+      "RotationSpeed": 10.0,
+      "RotationType": 2,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 0.9999967217445374, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.9999967217445374, 0.0, 0.0 ],
+          [ 0.0, 0.0, 0.9999743700027466, 0.0 ],
+          [ 71.12496185302734, 4.351385593414307, -18.535642623901367, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 9,
+      "InteractGroupIndex": 1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 23,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoor01Rotate90",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "LocomotiveInteractDoor01Rotate90",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": true,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 10.0,
+      "RotationType": 2,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ -0.9999945163726807, -1.81991583758645e-06, 0.0, 0.0 ],
+          [ -1.8199258420281694e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
+          [ 3.3121118694912077e-12, -1.81991583758645e-06, -0.9999945163726807, 0.0 ],
+          [ 55.554443359375, 4.093999862670898, -22.813175201416016, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 10,
+      "InteractGroupIndex": 1,
+      "InteractLevel": 3,
+      "InteractState": 1,
+      "InteractType": 0,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoorB02MinXRotate90",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "LocomotiveInteractDoorB02MinXRotate90",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": true,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 5.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 0.9999873638153076, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.9999999403953552, 0.0, 0.0 ],
+          [ 0.0, 0.0, 0.9999873638153076, 0.0 ],
+          [ 55.69868087768555, 4.094000339508057, -17.068437576293945, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 11,
+      "InteractGroupIndex": 1,
+      "InteractLevel": 3,
+      "InteractState": 0,
+      "InteractType": 0,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoorB02MinXRotate90",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "LocomotiveInteractDoorB02MinXRotate90",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": true,
+      "RotationAngle": 90.0,
+      "RotationSpeed": 5.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
       "UseGravity": true
     }
   ],

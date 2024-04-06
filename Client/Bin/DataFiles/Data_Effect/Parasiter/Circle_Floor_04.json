@@ -10,7 +10,7 @@
   },
   "Effect": {
     "bFinished": false,
-    "bLoop": false,
+    "bLoop": true,
     "bParentPivot": false,
     "bPlay": true,
     "bRender": true,

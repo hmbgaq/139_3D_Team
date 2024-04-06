@@ -26,6 +26,8 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 
+#include "Level_Loading.h"
+
 CVampireCommander::CVampireCommander(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CMonster_Character(pDevice, pContext, strPrototypeTag)
 {
@@ -66,7 +68,7 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 		m_pActor->Set_State(new CVampireCommander_Spawn1);
 	}
 	//HP
-	m_fMaxHp = 1000;
+	m_fMaxHp = 1000.f;
 	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;
@@ -123,7 +125,15 @@ void CVampireCommander::Tick(_float fTimeDelta)
 		}
 	}
 	//Search_Target(200.f);
-
+	if (true == m_bCntDead_Active)
+	{
+		fTimeAcc += fTimeDelta;
+		if (fTimeAcc >= 3.f)
+		{
+			Set_Dead(true);
+			m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
+		}
+	}
 	
 	
 }
@@ -284,8 +294,5 @@ void CVampireCommander::Free()
 	if (nullptr != m_pMapEffect)
 	{
 		EFFECT_MANAGER->Return_ToPool(m_pMapEffect);
-		Safe_Release(m_pMapEffect);
-		//m_pMapEffect = nullptr;
-		//m_pMapEffect->Set_Dead(TRUE);
 	}
 }

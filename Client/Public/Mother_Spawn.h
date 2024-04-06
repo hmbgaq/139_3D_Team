@@ -11,7 +11,10 @@ public:
 	virtual void Release(CMother* pActor) override;
 
 public:
-
+	_float m_fOffSetX = 1.f;
+	_float m_fOffSetY = 0.5f;
+	_float m_fOffSetZ = -3.f;
+	_float3 m_fOffSet = {};
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::GrandParasiter_Intro;
 

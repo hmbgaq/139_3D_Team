@@ -41,8 +41,11 @@ void CLayer::Tick(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)
 	{
-		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
-			pGameObject->Tick(fTimeDelta);
+		if (nullptr != pGameObject)
+		{
+			if(true == pGameObject->Get_Enable())
+				pGameObject->Tick(fTimeDelta);
+		}
 		
 	}
 }
@@ -102,8 +105,6 @@ void CLayer::Free()
 		{
 			Safe_Release(pGameObject);
 		}
-
-
 		
 	}
 		

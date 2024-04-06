@@ -12,6 +12,8 @@ class ENGINE_DLL CTransform final : public CComponent
 public:
 	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
 
+	
+
 private:
 	CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTransform(const CTransform& rhs);
@@ -133,8 +135,11 @@ public:
 	_bool	Rotation_Lerp2(_float fRadian, _float fTimeDelta);
 	void	Rotation_Quaternion(_float3 vRotation);
 	_bool	Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRadian = 1.0f);
+	
+	_bool	Rotation_LerpAxis(_float fRadian, _float fTimeDelta, ROTATION_LERP_STATE eLerpAxis, _float fMinRadian = 1.f);
+	_bool   Rotation_QuaternionLerpAxis(_float fRadian, _float fTimeDelta, ROTATION_LERP_STATE eLerpAxis, _float fMinRadian = 1.f);
 
-	_bool Rotation_LerpTest(_float fRadian, _float fTimeDelta);
+	_bool	Rotation_LerpTest(_float fRadian, _float fTimeDelta);
 
 	void	Go_Target(_fvector vTargetPos, _float fTimeDelta, _float fSpare = 0.1f);
 	_bool	Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta, _float fSpare = 0.1f);
@@ -208,6 +213,12 @@ private:
 	_float4				m_fPosition = {};
 	_bool				m_bIsGround = { false };
 	_float				m_fGravityAcc = { 0.f };
+
+
+private:
+	_float				m_fRotationX = 0.0f;
+	_float				m_fRotationY = 0.0f;
+	_float				m_fRotationZ = 0.0f;
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _float fSpeedPerSec, _float fRotationPerSec);

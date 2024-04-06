@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "Character.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: CCamera(pDevice, pContext, strPrototypeTag)
@@ -80,6 +81,11 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 		{
 			if (m_pGameInstance->Key_Down(DIK_F2))
 				CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+		}
+
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
+		{
+			m_pGameInstance->Get_Player()->Set_InitPosition(m_pTransformCom->Get_Position());
 		}
 
 	__super::Tick(fTimeDelta);

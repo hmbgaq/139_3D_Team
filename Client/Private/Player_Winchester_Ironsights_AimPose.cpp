@@ -10,6 +10,9 @@
 
 #include "Renderer.h"
 
+#include "Effect_Manager.h"
+#include "Bone.h"
+
 void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -45,7 +48,11 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 		pActor->Apply_Shake_And_Blur(Power::Medium);
 		CUI_Manager::GetInstance()->Trigger_Crosshair(true);
 		pActor->Activate_ShootingReaction();
+
+
+		EFFECT_MANAGER->Play_Effect("Revolver_13.json", pActor);
 		
+
 		return new CPlayer_Winchester_Ironsights_Reload_01();
 	}
 

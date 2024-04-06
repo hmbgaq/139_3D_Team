@@ -46,12 +46,13 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	//
 	//m_pTransformCom->Set_WorldMatrix(Temp);
 
+
 	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.0f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
 
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 15.f;
+	m_fDamage = 10.f;
 
 
 	// ÀÌÆåÆ® »ý¼º
@@ -121,7 +122,7 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
-	m_pCollider->Set_Enable(false);
+	//m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
 
 	EFFECT_MANAGER->Return_ToPool(m_pEffect);
@@ -207,6 +208,6 @@ void CSon_Projectile::Free()
 	}
 
 	//if(nullptr != m_pEffect)
-	//	Safe_Release(m_pEffect);
+
 
 }

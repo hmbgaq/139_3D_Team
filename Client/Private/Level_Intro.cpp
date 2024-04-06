@@ -57,6 +57,7 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
+
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 
@@ -161,25 +162,25 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
 
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_Position(_float3(0.0f, 0.f, 10.f));
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(0.0f, 0.f, 10.f));
+    //
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(5.0f, 0.f, 10.f));
+    //
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(0.0f, 0.f, 17.f));
+    //
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTPack"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(0.0f, 0.f, 20.f));
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_Position(_float3(5.0f, 0.f, 10.f));
-
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_Position(_float3(0.0f, 0.f, 17.f));
-
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTPack"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_Position(_float3(0.0f, 0.f, 20.f));
-
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_Position(_float3(-10.0f, 0.f, 50.f));
+    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
+    //NULL_CHECK_RETURN(pMonster, E_FAIL);
+    //pMonster->Set_Position(_float3(-10.0f, 0.f, 50.f));
 
 
     //pMonster->Set_InitPosition(_float3(0.0f, 0.f, 2.f));
