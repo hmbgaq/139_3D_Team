@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Texture.h"
+#include "UI_Manager.h"
 
 CUI_SkillFrame::CUI_SkillFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -57,97 +58,8 @@ void CUI_SkillFrame::Tick(_float fTimeDelta)
 		if (m_pGameInstance->Key_Down(DIK_9))
 			m_eUI_Level = LEVEL2;
 
-
-		if (m_bPick == true)
-		{
-			//m_pUIManager->Set_SelectSkill(m_tUIInfo.strUIName);
-		}
-#pragma region 1
-			if (m_tUIInfo.strUIName == "Kick")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ElectricDash")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "DashShock")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ElectricCord")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "PowerUP")
-			{
-
-			}
-#pragma region 2
-			else if (m_tUIInfo.strUIName == "UpperCut")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "OneTouch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "TwoTouch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ThreeTouch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ComboPunch")
-			{
-
-			}
-#pragma region 3
-			else if (m_tUIInfo.strUIName == "Punch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "SuperChargeMod")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "TeleportPunch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "IncreaseEXP")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "NPCPowerUP")
-			{
-
-			}
-#pragma region 4
-			else if (m_tUIInfo.strUIName == "Heal")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "RecoveryEnergy")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "IncreaseHP")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "IncreaseEnergy")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "MaxHP")
-			{
-
-			}
-
-
+		Check_Picking(fTimeDelta);
+		Check_State(fTimeDelta);
 	}
 
 
@@ -353,6 +265,188 @@ HRESULT CUI_SkillFrame::Set_ParentTransform(CTransform* pParentTransformCom)
 {
 	m_tUIInfo.pParentTransformCom = pParentTransformCom;
 	return S_OK;
+}
+
+void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
+{
+	if (m_bPick == true)
+	{
+		if (g_UIMouseDownLB == true)
+		{
+#pragma region 1
+			if (m_tUIInfo.strUIName == "Kick")
+			{
+				m_pUIManager->Change_SkillPreview("Kick");
+			}
+			else if (m_tUIInfo.strUIName == "ElectricDash")
+			{
+				m_pUIManager->Change_SkillPreview("ElectricDash");
+			}
+			else if (m_tUIInfo.strUIName == "DashShock")
+			{
+				m_pUIManager->Change_SkillPreview("DashShock");
+			}
+			else if (m_tUIInfo.strUIName == "ElectricCord")
+			{
+				m_pUIManager->Change_SkillPreview("ElectricCord");
+			}
+			else if (m_tUIInfo.strUIName == "PowerUP")
+			{
+				m_pUIManager->Change_SkillPreview("PowerUP");
+			}
+#pragma region 2
+			else if (m_tUIInfo.strUIName == "UpperCut")
+			{
+				m_pUIManager->Change_SkillPreview("UpperCut");
+			}
+			else if (m_tUIInfo.strUIName == "OneTouch")
+			{
+				m_pUIManager->Change_SkillPreview("OneTouch");
+			}
+			else if (m_tUIInfo.strUIName == "TwoTouch")
+			{
+				m_pUIManager->Change_SkillPreview("TwoTouch");
+			}
+			else if (m_tUIInfo.strUIName == "ThreeTouch")
+			{
+				m_pUIManager->Change_SkillPreview("ThreeTouch");
+			}
+			else if (m_tUIInfo.strUIName == "ComboPunch")
+			{
+				m_pUIManager->Change_SkillPreview("ComboPunch");
+			}
+#pragma region 3
+			else if (m_tUIInfo.strUIName == "Punch")
+			{
+				m_pUIManager->Change_SkillPreview("Punch");
+			}
+			else if (m_tUIInfo.strUIName == "SuperChargeMod")
+			{
+				m_pUIManager->Change_SkillPreview("SuperChargeMod");
+			}
+			else if (m_tUIInfo.strUIName == "TeleportPunch")
+			{
+				m_pUIManager->Change_SkillPreview("TeleportPunch");
+			}
+			else if (m_tUIInfo.strUIName == "IncreaseEXP")
+			{
+				m_pUIManager->Change_SkillPreview("IncreaseEXP");
+			}
+			else if (m_tUIInfo.strUIName == "NPCPowerUP")
+			{
+				m_pUIManager->Change_SkillPreview("NPCPowerUP");
+			}
+#pragma region 4
+			else if (m_tUIInfo.strUIName == "Heal")
+			{
+				m_pUIManager->Change_SkillPreview("Heal");
+			}
+			else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+			{
+				m_pUIManager->Change_SkillPreview("RecoveryEnergy");
+			}
+			else if (m_tUIInfo.strUIName == "IncreaseHP")
+			{
+				m_pUIManager->Change_SkillPreview("IncreaseHP");
+			}
+			else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+			{
+				m_pUIManager->Change_SkillPreview("IncreaseEnergy");
+			}
+			else if (m_tUIInfo.strUIName == "MaxHP")
+			{
+				m_pUIManager->Change_SkillPreview("MaxHP");
+			}
+		}
+	}
+}
+
+void CUI_SkillFrame::Check_State(_float fTimeDelta)
+{
+#pragma region 1
+	if (m_tUIInfo.strUIName == "Kick")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ElectricDash")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "DashShock")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ElectricCord")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "PowerUP")
+	{
+
+	}
+#pragma region 2
+	else if (m_tUIInfo.strUIName == "UpperCut")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "OneTouch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "TwoTouch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ThreeTouch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ComboPunch")
+	{
+
+	}
+#pragma region 3
+	else if (m_tUIInfo.strUIName == "Punch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "SuperChargeMod")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "TeleportPunch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseEXP")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "NPCPowerUP")
+	{
+
+	}
+#pragma region 4
+	else if (m_tUIInfo.strUIName == "Heal")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseHP")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "MaxHP")
+	{
+
+	}
 }
 
 void CUI_SkillFrame::Compute_OwnerCamDistance()

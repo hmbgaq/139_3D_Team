@@ -253,6 +253,10 @@ public: /* ============================== Get / Set ============================
 	void			Set_Active(_bool bActive) { m_bActive = bActive; }
 	_bool			Get_Active() { return m_bActive; }
 
+	_int			Get_AnimCurrentIndex() { return iFrameIndex; }
+	_bool			Get_AnimTrigger() { return m_bTrigger; }
+	void			Set_AnimTrigger(_bool bTrigger) { m_bTrigger = bTrigger; }
+
 	/* Debug */
 	void			Set_Tool(_bool bTool) { m_bTool = bTool; }
 	_bool			m_bTool = false;

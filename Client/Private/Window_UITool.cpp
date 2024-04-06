@@ -4208,6 +4208,15 @@ void CWindow_UITool::UI_Preset()
 	{
 		m_pUIManager->Active_LevelList();
 	}
+	if (ImGui::Button("SkillWindowButton"))
+	{
+		m_pUIManager->Ready_SkillWindowButton(LEVEL_STATIC);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("SkillWindowButtonActive"))
+	{
+		m_pUIManager->Active_SkillWindowButton(true);
+	}
 }
 
 CWindow_UITool* CWindow_UITool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

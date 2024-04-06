@@ -64,12 +64,18 @@ public: /* Ready_Preset */
 	HRESULT Ready_MainMenu(_uint iLevelIndex);
 	HRESULT Ready_MouseCursor(_uint iLevelIndex);
 	HRESULT Ready_HitUI(_uint iLevelIndex);
+	HRESULT Ready_SkillWindowButton(_uint iLevelIndex);
+	HRESULT Ready_SkillWindow(_uint iLevelIndex);
 
 	/* EnemyShard */
 	CUI_EnemyHUD_Shard* Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
+public:
+	void			NonActive_SkillWindowAll();
+
 private:
 	void			Check_MouseInput(_float fTimeDelta);
+
 public:
 	/* PlayerHUD */
 	void			Active_PlayerHUD();
@@ -271,6 +277,13 @@ public:
 	/* Interaction */
 	CUI_Interaction*	Add_Interaction(_uint iLevelIndex, const string& strUIName, const string& strProtoTag);
 
+	/* SkillPreview */
+	HRESULT			Add_SkillWindow(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_SkillWindow(_bool bActive);
+	void			NonActive_SkillWindow();
+	void			Change_SkillWindow(const string& strUIName);
+	vector<CUI*>	m_vecSkillWindow;
+
 	/* SkillIcon(And Frame) */
 	HRESULT			Add_SkillIcon(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_SkillIcon(_bool bActive);
@@ -285,6 +298,21 @@ public:
 	void			Change_SkillPreview(const string& strUIName);
 	vector<CUI*>	m_vecSkillPreview;
 
+	/* SkillWindowButton */
+	HRESULT			Add_SkillWindowButton(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_SkillWindowButton(_bool bActive);
+	void			NonActive_SkillWindowButton();
+	void			Select_SkillWindowButton(const string& strUIName, _bool bSelect);
+	vector<CUI*>	m_vecSkillWindowButton;
+
+	/* SkillWindowBackground */
+	HRESULT			Add_SkillWindowBackground(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_SkillWindowBackground();
+	void			NonActive_SkillWindowBackground();
+	void			Check_SkillWindowTrigger();
+	CUI*			m_pSkillWindowBackground = nullptr;
+
+	void			Select_Skill(const string& strSelecSkill);
 
 	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
 	void			Active_UI();
@@ -304,6 +332,7 @@ private:
 	_bool				m_bMouseOver = false;
 	_bool				m_bSelect = false;
 	_bool				m_bSelectPressing = false;
+	_bool				m_bShowSkillWindow = false;
 	string				m_strSelectUI = "";
 	string				m_strMouseOverUI = "";
 	CUI*				m_pUI = nullptr;

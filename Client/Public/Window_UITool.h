@@ -521,7 +521,8 @@ private:
 		"SkillFrame",
 		"ConnectionLine",
 		"SkillScrew",
-		"SkillActive"
+		"SkillActive",
+		"SkillWindow_Button"
 	};
 
 	// 클래스 목록을 저장하는 벡터

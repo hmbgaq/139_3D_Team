@@ -1039,6 +1039,16 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI_FRONT].clear();
 
+	for (auto& pGameObject : m_RenderObjects[RENDER_CURSOR])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_CURSOR].clear();
+
 	return S_OK;
 }
 

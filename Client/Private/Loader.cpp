@@ -221,6 +221,7 @@
 #include "UI_SkillScrew.h"
 #include "UI_ConnectionLine.h"
 #include "UI_SkillActive.h"
+#include "UI_SkillWindow_Button.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -845,7 +846,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
-	Ready_Environment_Model(LEVEL_TOOL);
+	//Ready_Environment_Model(LEVEL_TOOL);
 #pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
@@ -1225,6 +1226,7 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillScrew"), CUI_SkillScrew::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillScrew"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ConnectionLine"), CUI_ConnectionLine::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ConnectionLine"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillActive"), CUI_SkillActive::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillActive"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillWindow_Button"), CUI_SkillWindow_Button::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillWindow_Button"))));
 #pragma endregion End
 
 	return S_OK;

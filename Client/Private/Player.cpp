@@ -180,7 +180,9 @@ void CPlayer::Tick(_float fTimeDelta)
 
 
 	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
-	m_pDataManager->Set_ShowInterface(bIsNotIdle);
+	
+	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
+		m_pDataManager->Set_ShowInterface(bIsNotIdle);
 	
 
 	if (m_pNavigationCom != nullptr)
@@ -568,6 +570,23 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		{
 			m_pUIManager->NonActive_Option();
 			m_pUIManager->Active_MouseCursor();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
+
+	/* ! UI : SkillWindow / Key : K */
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		m_bShowSkillWindow = !m_bShowSkillWindow;
+
+		if (m_bShowSkillWindow == true)
+		{
+			m_pUIManager->Active_SkillWindowBackground();
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_SkillWindowAll();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
 		}
 	}

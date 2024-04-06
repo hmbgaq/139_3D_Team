@@ -51,42 +51,52 @@ void CUI_Skill_Preview::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_Time + m_fFrameChangeTime < GetTickCount64())
+	if (m_bActive == true)
 	{
-		++m_iCurrentFrame;
+		if (m_Time + m_fFrameChangeTime < GetTickCount64())
+		{
+			++m_iCurrentFrame;
 
-		if (m_iCurrentFrame >= m_iMaxFrame && m_bFinish == false)
-		{// Loop
+			if (m_iCurrentFrame >= m_iMaxFrame && m_bFinish == false)
+			{// Loop
 
-			if(m_bLoop == true)
-				m_iCurrentFrame = 0;
+				if (m_bLoop == true)
+					m_iCurrentFrame = 0;
 
-			m_bFinish = true;
+				m_bFinish = true;
+			}
+
+			m_Time = (DWORD)GetTickCount64();
 		}
-
-		m_Time = (DWORD)GetTickCount64();
 	}
+
 }
 
 void CUI_Skill_Preview::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-		return;
+	if (m_bActive == true)
+	{
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+			return;
+	}
 }
 
 HRESULT CUI_Skill_Preview::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그린다.
-	m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그린다.
+		m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }
@@ -124,6 +134,7 @@ void CUI_Skill_Preview::Start_Setting()
 	m_iCurrentFrame = 0;		 // Frame
 }
 
+// 스킬 미리보기 변경
 void CUI_Skill_Preview::Change_Priview(const string& strUIName)
 {
 	if (m_strPreName != strUIName)
@@ -263,8 +274,13 @@ void CUI_Skill_Preview::Change_Priview(const string& strUIName)
 
 HRESULT CUI_Skill_Preview::Ready_Components()
 {
+	////! For.Com_Texture // MainStart (LogoLevel)
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Inventory_Background"),
+	//	TEXT("Com_Texture_PreView"), reinterpret_cast<CComponent**>(&m_pTextureCom[SKILLPREVIEW]))))
+	//	return E_FAIL;
+
 	//! For.Com_Texture // MainStart (LogoLevel)
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Inventory_Background"),
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Kick"),
 		TEXT("Com_Texture_PreView"), reinterpret_cast<CComponent**>(&m_pTextureCom[SKILLPREVIEW]))))
 		return E_FAIL;
 

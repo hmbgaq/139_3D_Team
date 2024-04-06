@@ -33,6 +33,10 @@ private:
 public:
 	virtual HRESULT			Set_ParentTransform(CTransform* pParentTransformCom) override;
 
+public:
+	void					Check_Picking(_float fTimeDelta);
+	void					Check_State(_float fTimeDelta);
+
 private:
 	void					Compute_OwnerCamDistance();
 	_bool					In_Frustum();

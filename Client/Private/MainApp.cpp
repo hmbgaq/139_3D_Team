@@ -219,10 +219,13 @@ HRESULT CMainApp::Ready_UITexture()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("EnemyHUD_Shard_Hp_Pre"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/EnemyHUD_Shard_Hp_Pre.dds"))));
 	
 	/* SkillWindow */
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButton.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButtonActive.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButton.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButtonActive.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButton.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButtonActive.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButton.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButtonActive.dds"))));
+	
+	/* SkillDescription */
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Kick"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/Kick.dds"))));
 	
 	return S_OK;
 }
