@@ -9,6 +9,7 @@ namespace Engine
 
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
+	enum ROTATION_LERP_STATE { LERP_X, LERP_Y, LERP_Z };
 	
 	/* RigidBody */
 	static const wchar_t* g_pRigidBodyTag = TEXT("Com_RigidBody");
