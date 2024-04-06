@@ -108,13 +108,16 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
-		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		//pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
+		pTarget_Character->Get_Damaged(m_fDamage);
 
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	this->Set_Enable(false);
+
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
