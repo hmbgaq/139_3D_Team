@@ -155,6 +155,7 @@ void CPlayer_Bandit_Special_01::Fire(CPlayer* pActor)
 	{
 		CWeapon* pRevolver = pActor->Get_Weapon(PLAYER_WEAPON_REVOLVER);
 		pRevolver->Fire(_float3(0.f, 0.f, 1.f), pActor->Get_Target());
+		m_pGameInstance->Set_RadialBlurTime(0.1f);
 	}
 	pActor->Set_Target(nullptr);
 }
