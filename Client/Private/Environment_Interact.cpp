@@ -751,7 +751,14 @@ void CEnvironment_Interact::Interact()
 
 			m_bInteract = true;
 
-		
+			if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true)
+			{
+				if (m_pPlayer->Is_Inputable_Front(32) && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
+				{
+					m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+					m_bInteract = false;
+				}
+			}
 
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)

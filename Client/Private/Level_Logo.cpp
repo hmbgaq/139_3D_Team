@@ -41,7 +41,7 @@ HRESULT CLevel_Logo::Initialize()
 	ShowCursor(false);
 
 
-	//TODOFAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ¿Ã∆Â∆Æ «Æ
+	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ¿Ã∆Â∆Æ «Æ
 
 	return S_OK;
 }

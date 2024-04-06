@@ -71,6 +71,9 @@
 #include "Effect_Manager.h"
 
 
+//!For Debug
+#include "Level_Loading.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
 {
@@ -175,6 +178,11 @@ void CPlayer::Tick(_float fTimeDelta)
 		//	SetState_InteractWhipSwing();
 		//	//SetState_InteractCartRideWagonJump();
 		//}
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
+		{
+			m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+			
+		}
 
 	}
 

@@ -818,7 +818,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			//Desc.bLevelChange = false;
 			Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 			
-			//Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+			Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 			Desc.bEnable = InteractJson[i]["Enable"];
 			Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
 			Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
@@ -840,7 +840,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
-
+			
 			CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
 			CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
 			CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
@@ -858,14 +858,14 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 			Desc.WorldMatrix = WorldMatrix;
-
-			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-			_int iUpdateCellJsonSize = UpdateCellJson.size();
-
-			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
-			{
-				Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
-			}
+			//
+			//json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+			//_int iUpdateCellJsonSize = UpdateCellJson.size();
+			//
+			//for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+			//{
+			//	Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+			//}
 			
 			
 			CEnvironment_Interact* pObject = { nullptr };
