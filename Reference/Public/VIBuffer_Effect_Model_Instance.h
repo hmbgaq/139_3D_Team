@@ -86,7 +86,11 @@ public:
 		TYPE_DIRAXIS eType_Dir = { DIR_LOOK };
 
 		_bool		bRotAcc = { FALSE };
-		_float3		vRadian = { 0.f, 0.f, 0.f };
+
+		//_float3		vRadian = { 0.f, 0.f, 0.f };
+		_float3		vMinRadian = { 0.f, 0.f, 0.f };
+		_float3		vMaxRadian = { 0.f, 0.f, 0.f };
+
 		_float2		vMinMaxRadianSpeed_X = { 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_Y = { 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_Z = { 0.f, 0.f };
@@ -173,6 +177,7 @@ public:
 		_float	fCurTornadoSpeed	= { 1.f };
 
 		// È¸Àü
+		_float3	vRadian				= { 0.f, 0.f, 0.f };
 		_float3	vCurRadian			= { 0.f, 0.f, 0.f };
 		_float3	vAddRadianSpeed		= { 0.f, 0.f, 0.f };
 

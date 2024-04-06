@@ -220,7 +220,7 @@ void CEffect_Particle::ReSet_Effect()
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
 	{
-		m_tVoidDesc.bRender = FALSE;
+		//m_tVoidDesc.bRender = FALSE;
 		m_pVIBufferCom->ReSet(); // 버퍼 리셋
 	}
 

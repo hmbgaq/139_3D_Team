@@ -303,7 +303,14 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fCurTornadoSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxTornadoSpeed.x, m_tBufferDesc.vMinMaxTornadoSpeed.y);
 
 
-	m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+	//m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+
+	m_vecParticleInfoDesc[iNum].vRadian = _float3(SMath::fRandom(m_tBufferDesc.vMinRadian.x, m_tBufferDesc.vMaxRadian.x)
+													, SMath::fRandom(m_tBufferDesc.vMinRadian.y, m_tBufferDesc.vMaxRadian.y)
+													, SMath::fRandom(m_tBufferDesc.vMinRadian.z, m_tBufferDesc.vMaxRadian.z));
+
+
+	m_vecParticleInfoDesc[iNum].vCurRadian = m_vecParticleInfoDesc[iNum].vRadian;
 
 	// 자체회전 스피드
 	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_X.x, m_tBufferDesc.vMinMaxRadianSpeed_X.y);
@@ -462,13 +469,13 @@ void CVIBuffer_Effect_Model_Instance::Rotation_Instance(_uint iNum)
 
 	if (m_tBufferDesc.bRotAcc)	// 회전 업데이트 사용이면 회전각도 계속 누적
 	{
-		m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_tBufferDesc.vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
-		m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_tBufferDesc.vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
-		m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_tBufferDesc.vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
+		m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_vecParticleInfoDesc[iNum].vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
+		m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_vecParticleInfoDesc[iNum].vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
+		m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_vecParticleInfoDesc[iNum].vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
 	}
 	else
 	{
-		m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+		m_vecParticleInfoDesc[iNum].vCurRadian = m_vecParticleInfoDesc[iNum].vRadian;
 	}
 
 
@@ -1217,7 +1224,11 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eType_Dir"] = m_tBufferDesc.eType_Dir;
 
 	Out_Json["Com_VIBuffer"]["bRotAcc"] = m_tBufferDesc.bRotAcc;
-	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
+	//CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMinRadian"], m_tBufferDesc.vMinRadian);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMaxRadian"], m_tBufferDesc.vMaxRadian);
+
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_X"], m_tBufferDesc.vMinMaxRadianSpeed_X);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Y"], m_tBufferDesc.vMinMaxRadianSpeed_Y);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Z"], m_tBufferDesc.vMinMaxRadianSpeed_Z);
@@ -1328,8 +1339,14 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 	if (In_Json["Com_VIBuffer"].contains("bRotAcc")) // 다시 저장 후 삭제
 		m_tBufferDesc.bRotAcc = In_Json["Com_VIBuffer"]["bRotAcc"];
 
-	if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제
-		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	//if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제
+	//	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
+	if (In_Json["Com_VIBuffer"].contains("vMinRadian")) // 다시 저장 후 삭제
+	{
+		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMinRadian"], m_tBufferDesc.vMinRadian);
+		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMaxRadian"], m_tBufferDesc.vMaxRadian);
+	}
 
 
 	if (In_Json["Com_VIBuffer"].contains("vMinMaxRadianSpeed_X")) // 다시 저장 후 삭제

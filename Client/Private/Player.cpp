@@ -140,6 +140,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Bottom", 5.f);
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Left", 5.f);
 
+
 	return S_OK;
 }
 

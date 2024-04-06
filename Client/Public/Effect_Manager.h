@@ -66,7 +66,7 @@ private:
 
 
 private:
-	static const _uint iMaxManyEffect			= { 300 };
+	static const _uint iMaxManyEffect			= { 200 };
 	static const _uint iMaxEffect				= { 100 };
 	static const _uint iMaxFewEffect			= { 10 };
 	unordered_map<string, queue<CEffect*>>		m_EffectPool;

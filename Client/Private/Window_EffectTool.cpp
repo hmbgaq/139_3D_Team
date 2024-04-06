@@ -1450,14 +1450,28 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 					ImGui::SeparatorText(u8"인스턴스 회전");
-					if (ImGui::DragFloat(" Radian_X_Particle ", &m_vRadian_Particle[0], 1.f, 0.f, 360.f))
-						m_pParticleBufferDesc->vRadian.x = m_vRadian_Particle[0];
+					if (ImGui::DragFloat3(" Min_Radian_Particle ", &m_vMinRadian_Particle[0], 0.5f, -360.f, 360.f))
+					{
+						m_pParticleBufferDesc->vMinRadian.x = m_vMinRadian_Particle[0];
+						m_pParticleBufferDesc->vMinRadian.y = m_vMinRadian_Particle[1];
+						m_pParticleBufferDesc->vMinRadian.z = m_vMinRadian_Particle[2];
+					}
 
-					if (ImGui::DragFloat(" Radian_Y_Particle ", &m_vRadian_Particle[1], 1.f, 0.f, 360.f))
-						m_pParticleBufferDesc->vRadian.y = m_vRadian_Particle[1];
+					if (ImGui::DragFloat3(" Max_Radian_Particle ", &m_vMaxRadian_Particle[0], 0.5f, -360.f, 360.f))
+					{
+						m_pParticleBufferDesc->vMaxRadian.x = m_vMaxRadian_Particle[0];
+						m_pParticleBufferDesc->vMaxRadian.y = m_vMaxRadian_Particle[1];
+						m_pParticleBufferDesc->vMaxRadian.z = m_vMaxRadian_Particle[2];
+					}
 
-					if (ImGui::DragFloat(" Radian_Z_Particle ", &m_vRadian_Particle[2], 1.f, 0.f, 360.f))
-						m_pParticleBufferDesc->vRadian.z = m_vRadian_Particle[2];
+					//if (ImGui::DragFloat(" Radian_X_Particle ", &m_vRadian_Particle[0], 1.f, 0.f, 360.f))
+					//	m_pParticleBufferDesc->vRadian.x = m_vRadian_Particle[0];
+
+					//if (ImGui::DragFloat(" Radian_Y_Particle ", &m_vRadian_Particle[1], 1.f, 0.f, 360.f))
+					//	m_pParticleBufferDesc->vRadian.y = m_vRadian_Particle[1];
+
+					//if (ImGui::DragFloat(" Radian_Z_Particle ", &m_vRadian_Particle[2], 1.f, 0.f, 360.f))
+					//	m_pParticleBufferDesc->vRadian.z = m_vRadian_Particle[2];
 
 
 
@@ -2333,6 +2347,8 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Twist"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Twist"));
 
+						if (ImGui::Button("Wind"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Wind"));
 
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
@@ -2387,6 +2403,24 @@ void CWindow_EffectTool::Update_MeshTab()
 
 						if (ImGui::Button("LeafPlane"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_LeafPlane"));
+
+						if (ImGui::Button("Destro_00"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Destro_00"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Destro_01"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Destro_01"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Destro_02"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Destro_02"));
+
+						if (ImGui::Button("Nail_00"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Nail_00"));
+
+						if (ImGui::Button("Wood_00"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Wood_00"));
+
 
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
@@ -3303,14 +3337,28 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 						ImGui::SeparatorText(u8"인스턴스 회전");
-						if (ImGui::DragFloat(" Radian_X_Mesh ", &m_vRadian_Mesh[0], 1.f, 0.f, 360.f))
-							m_pMeshBufferDesc->vRadian.x = m_vRadian_Mesh[0];
+						if (ImGui::DragFloat3(" Min_Radian_Mesh ", &m_vMinRadian_Mesh[0], 0.5f, -360.f, 360.f))
+						{
+							m_pMeshBufferDesc->vMinRadian.x = m_vMinRadian_Mesh[0];
+							m_pMeshBufferDesc->vMinRadian.y = m_vMinRadian_Mesh[1];
+							m_pMeshBufferDesc->vMinRadian.z = m_vMinRadian_Mesh[2];
+						}
 
-						if (ImGui::DragFloat(" Radian_Y_Mesh ", &m_vRadian_Mesh[1], 1.f, 0.f, 360.f))
-							m_pMeshBufferDesc->vRadian.y = m_vRadian_Mesh[1];
+						if (ImGui::DragFloat3(" Max_Radian_Mesh ", &m_vMaxRadian_Mesh[0], 0.5f, -360.f, 360.f))
+						{
+							m_pMeshBufferDesc->vMaxRadian.x = m_vMaxRadian_Mesh[0];
+							m_pMeshBufferDesc->vMaxRadian.y = m_vMaxRadian_Mesh[1];
+							m_pMeshBufferDesc->vMaxRadian.z = m_vMaxRadian_Mesh[2];
+						}
 
-						if (ImGui::DragFloat(" Radian_Z_Mesh ", &m_vRadian_Mesh[2], 1.f, 0.f, 360.f))
-							m_pMeshBufferDesc->vRadian.z = m_vRadian_Mesh[2];
+						//if (ImGui::DragFloat(" Radian_X_Mesh ", &m_vRadian_Mesh[0], 1.f, 0.f, 360.f))
+						//	m_pMeshBufferDesc->vRadian.x = m_vRadian_Mesh[0];
+
+						//if (ImGui::DragFloat(" Radian_Y_Mesh ", &m_vRadian_Mesh[1], 1.f, 0.f, 360.f))
+						//	m_pMeshBufferDesc->vRadian.y = m_vRadian_Mesh[1];
+
+						//if (ImGui::DragFloat(" Radian_Z_Mesh ", &m_vRadian_Mesh[2], 1.f, 0.f, 360.f))
+						//	m_pMeshBufferDesc->vRadian.z = m_vRadian_Mesh[2];
 
 
 						ImGui::SeparatorText(u8"인스턴스 회전 스피드");
@@ -4186,9 +4234,20 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iUseRotAcc_Particle = 1;
 
 
-			m_vRadian_Particle[0] = m_pParticleBufferDesc->vRadian.x;
-			m_vRadian_Particle[1] = m_pParticleBufferDesc->vRadian.y;
-			m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
+			//m_vRadian_Particle[0] = m_pParticleBufferDesc->vRadian.x;
+			//m_vRadian_Particle[1] = m_pParticleBufferDesc->vRadian.y;
+			//m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
+
+
+			m_vMinRadian_Particle[0] = m_pParticleBufferDesc->vMinRadian.x;
+			m_vMinRadian_Particle[1] = m_pParticleBufferDesc->vMinRadian.y;
+			m_vMinRadian_Particle[2] = m_pParticleBufferDesc->vMinRadian.z;
+
+
+			m_vMaxRadian_Particle[0] = m_pParticleBufferDesc->vMaxRadian.x;
+			m_vMaxRadian_Particle[1] = m_pParticleBufferDesc->vMaxRadian.y;
+			m_vMaxRadian_Particle[2] = m_pParticleBufferDesc->vMaxRadian.z;
+
 
 
 			// 추가 자체회전
@@ -4663,9 +4722,15 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			else
 				m_iUseRotAcc_Mesh = 1;
 
-			m_vRadian_Mesh[0] = m_pMeshBufferDesc->vRadian.x;
-			m_vRadian_Mesh[1] = m_pMeshBufferDesc->vRadian.y;
-			m_vRadian_Mesh[2] = m_pMeshBufferDesc->vRadian.z;
+
+			m_vMinRadian_Mesh[0] = m_pMeshBufferDesc->vMinRadian.x;
+			m_vMinRadian_Mesh[1] = m_pMeshBufferDesc->vMinRadian.y;
+			m_vMinRadian_Mesh[2] = m_pMeshBufferDesc->vMinRadian.z;
+
+
+			m_vMaxRadian_Mesh[0] = m_pMeshBufferDesc->vMaxRadian.x;
+			m_vMaxRadian_Mesh[1] = m_pMeshBufferDesc->vMaxRadian.y;
+			m_vMaxRadian_Mesh[2] = m_pMeshBufferDesc->vMaxRadian.z;
 
 
 			/* 라업룩 어느 축을 진행방향으로 할건지 업데이트 */
@@ -5910,7 +5975,8 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				if (ImGui::Button("Twist"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Twist"));
 
-
+				if (ImGui::Button("Wind"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Wind"));
 
 
 				ImGui::SeparatorText("");
@@ -5989,6 +6055,34 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LeafPlane"));
 				}
+
+				if (ImGui::Button("Destro_00"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Destro_00"));
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button("Destro_01"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Destro_01"));
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button("Destro_02"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Destro_02"));
+				}
+
+				if (ImGui::Button("Nail_00"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Nail_00"));
+				}
+
+				if (ImGui::Button("Wood_00"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Wood_00"));
+				}
+
 
 				ImGui::SeparatorText("");
 
