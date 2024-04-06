@@ -193,9 +193,8 @@ void CSon_RotationProjectile::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);	// ÀÌÆåÆ® Á×ÀÌ±â
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 
-	//if(nullptr != m_pEffect)
-	//	Safe_Release(m_pEffect);
+
 
 }
