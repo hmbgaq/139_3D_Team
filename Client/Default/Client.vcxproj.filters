@@ -4080,9 +4080,6 @@
     <ClInclude Include="..\Public\Environment_Instance.h">
       <Filter>02.GameObjects\02. Environment\Environment_Instance</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Body_Player.h">
-      <Filter>02.GameObjects\00. Character\NPC\Player\Parts\Body</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Weapon_Player.h">
       <Filter>02.GameObjects\00. Character\NPC\Player\Parts\Weapon</Filter>
     </ClInclude>
@@ -7842,6 +7839,9 @@
     <ClInclude Include="..\Public\UI_SkillWindow_Button.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\06. SkillWindowButton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Body_Player.h">
+      <Filter>02.GameObjects\00. Character\NPC\Player\Parts\Body</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -10030,9 +10030,6 @@
     <ClCompile Include="..\Private\Player_WhipSlam.cpp">
       <Filter>02.GameObjects\00. Character\NPC\Player\State\02. Attack\4. Whip\Slam</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_WhipPull.cpp">
-      <Filter>02.GameObjects\00. Character\NPC\Player\State\02. Attack\4. Whip\Pull</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\BanditHeavy_DeathHeavy_F_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\7. Death\Heavy</Filter>
     </ClCompile>
@@ -11160,6 +11157,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SkillWindow_Button.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\06. SkillWindowButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_WhipPull.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\Player\State\02. Attack\4. Whip\Pull</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
