@@ -25,6 +25,9 @@
 #include "Model_Preview.h"
 #include "Part_Preview.h"
 
+#include "Projectile.h"
+#include "Son_Projectile.h"
+
 #include "Player.h"
 #include "VampireCommander.h"
 
@@ -2966,6 +2969,20 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pMeshBufferDesc->vMinMaxSpeed.y = m_vMinMaxSpeed_Mesh[1];
 				}
 
+
+				/* 토네이도 스피드 */
+				if (CVIBuffer_Effect_Model_Instance::TORNADO == m_pMeshBufferDesc->eType_Action)
+				{
+					ImGui::SeparatorText(" Tornado Speed_Mesh ");
+					if (ImGui::DragFloat2("vMinMaxTornadoSpeed_Mesh", m_vMinMaxTornadoSpeed_Mesh, 0.1f, 0.f, 5000.f))
+					{
+						m_pMeshBufferDesc->vMinMaxTornadoSpeed.x = m_vMinMaxTornadoSpeed_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxTornadoSpeed.y = m_vMinMaxTornadoSpeed_Mesh[1];
+					}
+				}
+
+
+
 				if (ImGui::TreeNode(" Speed_Easing Types_Mesh "))
 				{
 					ImGui::Text("Selected Type : %d", m_pMeshBufferDesc->eType_SpeedLerp);
@@ -5453,7 +5470,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 			if (ImGui::Button(" Look_At "))
 			{
-				m_pCurEffect->Get_Transform()->Look_At(m_pModel_Preview->Get_Position());
+				m_pCurEffect->Get_Transform()->Look_At(m_pModel_Preview->Get_Position_Vector());
 			}
 
 		}
@@ -5556,6 +5573,72 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 		}
 	}
+
+
+
+	// 테스트용 투사체 생성
+	if (nullptr == m_pTestProjectile)
+	{
+		if (ImGui::Button("Create Son_Projectile"))	// 모델 생성
+		{
+			m_pTestProjectile = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, L"Prototype_GameObject_Son_Projectile");
+		}
+
+	}
+	else
+	{
+		if (m_pTestProjectile->Is_Dead())
+		{
+			// 투사체가 죽었으면
+			if (nullptr != m_pCurEffect)
+			{
+				if (nullptr != m_pCurEffect->Get_Object_Owner())
+				{
+					// 현재 이펙트의 오너가 nullptr이 아니면 오너 해제
+					m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+					m_pCurEffect->Delete_Object_Owner();
+				}
+			}
+			m_pTestProjectile = nullptr;
+		}
+
+		if (ImGui::Button("Delete Son_Projectile"))		// 투사체 삭제 버튼
+		{
+			if (nullptr != m_pCurEffect)
+			{
+				if (nullptr != m_pCurEffect->Get_Object_Owner())
+				{
+					// 현재 이펙트의 오너가 nullptr이 아니면 오너부터 해제 해주고 모델 삭제
+					m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+					m_pCurEffect->Delete_Object_Owner();
+				}
+			}
+
+			m_pTestProjectile->Set_Dead(TRUE);
+			m_pTestProjectile = nullptr;
+		}
+
+
+
+		if (nullptr != m_pCurEffect)
+		{
+			// 이펙트의주인 정해주기 테스트(투사체
+			if (ImGui::Button(u8" ON  Pivot_투사체 "))
+			{
+				m_pCurEffect->Set_Object_Owner(m_pTestProjectile);
+				m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button(u8" OFF Pivot_투사체 "))
+			{
+				m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+				m_pCurEffect->Delete_Object_Owner();
+			}
+
+		}
+	}
+
+
 
 
 	// 마우스 위치 표시
@@ -7494,6 +7577,7 @@ HRESULT CWindow_EffectTool::Delete_Trail()
 
 void CWindow_EffectTool::Delete_CurEffectObject()
 {
+	m_pCurEffect->Delete_Object_Owner();
 	m_pCurEffect->Set_Dead(TRUE);
 	m_pCurEffect = nullptr;
 	m_pCurPartEffect = nullptr;

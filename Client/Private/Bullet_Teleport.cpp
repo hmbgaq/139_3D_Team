@@ -222,7 +222,7 @@ void CBullet_Teleport::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect)
 
 	if (m_pNavigationCom)
 		Safe_Release(m_pNavigationCom);

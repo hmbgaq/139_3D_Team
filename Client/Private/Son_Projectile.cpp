@@ -69,7 +69,7 @@ void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 	if (m_bFirst == true)
 	{
 		m_pTransformCom->Look_At(m_vPlayerPos);
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Son_Test_06.json", this);
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Son_Test_07.json", this);
 		m_bFirst = false;
 	}
 }
@@ -95,8 +95,8 @@ void CSon_Projectile::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_Projectile::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	//if (FAILED(__super::Render()))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -120,14 +120,14 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 		// 이펙트 생성
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	//m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
 
 	EFFECT_MANAGER->Return_ToPool(m_pEffect);
-	m_pEffect = nullptr;
-	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기 (EffectOut : 당장 안쓰는 이펙트라고 해서 일단 빼뒀습니다. [성희])
+	//m_pEffect = nullptr;
+
 }
 
 void CSon_Projectile::OnCollisionStay(CCollider* other)
@@ -201,13 +201,6 @@ void CSon_Projectile::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-	{
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-		m_pEffect = nullptr;
-		//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
-	}
-
-	//if(nullptr != m_pEffect)
-
-
+		Safe_Release(m_pEffect);
+	
 }

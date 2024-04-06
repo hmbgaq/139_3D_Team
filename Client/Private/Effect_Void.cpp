@@ -125,13 +125,13 @@ void CEffect_Void::Update_PivotMat()
 			CGameObject* pParentOwner = m_pOwner->Get_Object_Owner();
 			if (nullptr != pParentOwner)
 			{
-				// 부모의 오너가 있으면 부모의 컴바인 매트릭스 사용
+				// 부모(Effect)의 오너가 있으면 부모의 컴바인 매트릭스 사용
 				m_tVoidDesc.matPivot = dynamic_cast<CEffect*>(m_pOwner)->Get_Desc()->matCombined;
 				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
 			}
 			else
 			{
-				// 부모의 오너가 없으면 부모의 월드만 사용
+				// 부모(Effect)의 오너가 없으면 부모의 월드만 사용
 				m_tVoidDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
 				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
 			}

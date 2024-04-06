@@ -70,7 +70,7 @@ CEffect* CCharacter_Client::Create_Effect(CGameObject* pOwner)
 		strEffectFileName = "Hit_Normal";
 	}
 	//return EFFECT_MANAGER->Create_Effect("Hit/", strEffectFileName + ".json", pOwner);
-	return EFFECT_MANAGER->Play_Effect(strEffectFileName + ".json", pOwner);
+	return EFFECT_MANAGER->Play_Effect("Hit/", strEffectFileName + ".json", pOwner);
 }
 
 
@@ -137,7 +137,7 @@ void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string
 	//if (pEffect)
 	//	pEffect->Set_Position(vPos);
 
-	EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", vPos);
+	EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos);
 
 
 	Apply_Shake_And_Blur(ePower);

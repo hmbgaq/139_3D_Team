@@ -11,6 +11,7 @@ class CEffect_Instance;
 class CEffect_Trail;
 
 class CSky;
+class CProjectile;
 
 class CWindow_EffectTool final : public CImgui_Window
 {
@@ -424,7 +425,7 @@ private:
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 	_float	m_vMinMaxSpeed_Mesh[2] = { 1.f, 1.f };
-
+	_float	m_vMinMaxTornadoSpeed_Mesh[2] = { 1.f, 1.f };
 
 	/* Emitter */
 	_float	m_fEmissionTime_Mesh = { 0.f };			// 방출 시간 텀
@@ -586,7 +587,9 @@ private:
 	_float			m_vScale_Model[3] = { 0.f, 0.f, 0.f };			// 크기 비교용 모델 크기
 	_float			m_fModelRot = { 0.f };
 
-	CEffect* m_pTestEffect = { nullptr };
+	CEffect*		m_pTestEffect = { nullptr };
+
+	CGameObject*	m_pTestProjectile = { nullptr };
 #pragma endregion
 
 

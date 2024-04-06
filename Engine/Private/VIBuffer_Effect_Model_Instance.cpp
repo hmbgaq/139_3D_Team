@@ -944,6 +944,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 						else if (BLINK == m_tBufferDesc.eType_Action)
 						{
 							// 이동 없음
+							_vector vMovePos = m_vecParticleInfoDesc[i].vCenterPositions + m_vecParticleInfoDesc[i].vDir * m_vecParticleInfoDesc[i].fMaxRange;
+							XMStoreFloat4(&pModelInstance[i].vTranslation, vMovePos);
 
 							// 죽음 조건
 							if (m_vecParticleInfoDesc[i].fLifeTime <= m_vecParticleInfoDesc[i].fTimeAccs)	// 라이프 타임이 끝나면 초기화 or 죽음

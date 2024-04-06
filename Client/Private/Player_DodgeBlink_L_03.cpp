@@ -11,7 +11,7 @@ void CPlayer_DodgeBlink_L_03::Initialize(CPlayer* pActor)
 
 
 	// 이펙트 플레이
-	EFFECT_MANAGER->Play_Effect("DodgeBlink_L_18.json", pActor);
+	EFFECT_MANAGER->Play_Effect("Player/DodgeBlink/", "DodgeBlink_L_18.json", pActor);
 
 }
 

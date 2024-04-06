@@ -57,7 +57,7 @@ HRESULT CVampireCommander_Projectile_Range1::Initialize(void* pArg)
 	m_fDamage = 30.f;
 
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Projectile_Range1_04.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", this);
 	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", this);
 
 	return S_OK;
@@ -107,7 +107,7 @@ void CVampireCommander_Projectile_Range1::OnCollisionEnter(CCollider* other)
 		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		
 		// Å¸°Ý ÀÌÆåÆ®
-		EFFECT_MANAGER->Play_Effect("Hit_Normal.json", m_pGameInstance->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pGameInstance->Get_Player()->Get_Position());
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}

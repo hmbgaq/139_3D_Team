@@ -346,6 +346,7 @@ void CEffect::Update_PivotMat()
 		else
 		{
 
+
 		}
 
 	}
@@ -401,12 +402,12 @@ void CEffect::End_Effect()
 		if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 		{
 			m_tEffectDesc.bActive_Tool = FALSE;
-			ReSet_Effect();	//bLoop가 False일 때, 툴 레벨이면 리셋, 아니면 죽이기
+			ReSet_Effect();	//bLoop가 false일 때, 툴 레벨이면 리셋, 아니면 죽이기
 		}
 		else
 #endif // _DEBUG
 		{		
-			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면(파티클 등) 라이프 타임이 끝났을 때 죽이기.
+			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면 라이프 타임이 끝났을 때 죽이기.
 			{
 				EFFECT_MANAGER->Return_ToPool(this);
 				//Set_Dead(TRUE);
@@ -425,12 +426,12 @@ void CEffect::End_Effect()
 void CEffect::End_Effect_ForPool()
 {
 	if (nullptr != m_pTrail)
-		m_pTrail->Set_Play(FALSE);
+		m_pTrail->Set_Play(false);
 
-	m_tEffectDesc.bFinished = TRUE;	// 이펙트 종료
+	m_tEffectDesc.bFinished = true;	// 이펙트 종료
 
-	m_tEffectDesc.bPlay = FALSE;	// 재생 정지
-	m_bEnable = FALSE;				// 사용 끔
+	m_tEffectDesc.bPlay = false;	// 재생 정지
+	m_bEnable = false;				// 사용 끔
 
 	Init_ReSet_Effect();			// 리셋
 
