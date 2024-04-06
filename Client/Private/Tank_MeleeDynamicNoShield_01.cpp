@@ -20,6 +20,8 @@ void CTank_MeleeDynamicNoShield_01::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_MeleeDynamicNoShield_01::Update(CTank* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(23);

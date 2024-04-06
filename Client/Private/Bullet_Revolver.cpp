@@ -95,8 +95,9 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
 		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Medium;
+		m_eHitPower = Power::Light;
 		m_fForce = 0.f;
+		m_fDamage = 4.f;
 
 		_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
 		_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);

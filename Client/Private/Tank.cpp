@@ -60,6 +60,11 @@ HRESULT CTank::Initialize_Prototype()
 
 HRESULT CTank::Initialize(void* pArg)
 {
+	m_fMaxHp = 100;
+	m_fHp = m_fMaxHp;
+
+	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+
 
 	if (pArg == nullptr)
 	{
@@ -91,15 +96,11 @@ HRESULT CTank::Initialize(void* pArg)
 
 	}
 
-
 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 	{
 		m_pActor = new CActor<CTank>(this);
 		m_pActor->Set_State(new CTank_Idle());
 	}
-
-	//m_iHp = 150;
-	m_fHp = 100;
 
 
 	m_bIsFixed = true;
@@ -117,6 +118,9 @@ void CTank::Priority_Tick(_float fTimeDelta)
 
 void CTank::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_pActor)
@@ -135,6 +139,9 @@ void CTank::Tick(_float fTimeDelta)
 	{
 		Search_Target(10.f);
 	}
+
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 
 	//if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
 	//{

@@ -15,7 +15,7 @@ CState<CPlayer>* CPlayer_DeathLight_F_01::Update(CPlayer* pActor, _float fTimeDe
 
 	if (false == m_bFlags[0])
 	{
-		m_bFlags[0] = pActor->Is_Inputable_Front(23);
+		m_bFlags[0] = pActor->Is_Animation_End();//Is_Inputable_Front(23)
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_DiedScreen(true);

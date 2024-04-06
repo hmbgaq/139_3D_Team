@@ -18,7 +18,8 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 	pActor->Set_Splitted(false);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_STOP, true, false, 17);
-	Create_Bullet(pActor);
+	Fire(pActor);
+	//Create_Bullet(pActor);
 }
 
 CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTimeDelta)

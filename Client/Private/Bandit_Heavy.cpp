@@ -70,7 +70,6 @@ HRESULT CBandit_Heavy::Initialize(void* pArg)
 		m_pActor->Set_State(new CBanditHeavy_Idle());
 	}
 
-
 	return S_OK;
 }
 
@@ -81,6 +80,9 @@ void CBandit_Heavy::Priority_Tick(_float fTimeDelta)
 
 void CBandit_Heavy::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_pActor)
@@ -93,6 +95,11 @@ void CBandit_Heavy::Tick(_float fTimeDelta)
 	{
 		Search_Target(10.f);
 	}
+
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+
+
 
 	//if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
 	//{

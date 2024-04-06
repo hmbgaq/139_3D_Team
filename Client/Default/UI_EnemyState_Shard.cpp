@@ -59,7 +59,7 @@ void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 	//if (m_pCharacterOwner == nullptr)
 	//	return;
 
-	if (m_pCharacterOwner == nullptr)
+	if (m_pCharacterOwner != nullptr)
 	{
 		if (m_pCharacterOwner->Get_MonsterAttackState() == true)
 		{

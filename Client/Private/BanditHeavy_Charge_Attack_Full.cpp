@@ -19,6 +19,8 @@ void CBanditHeavy_Charge_Attack_Full::Initialize(CBandit_Heavy* pActor)
 
 CState<CBandit_Heavy>* CBanditHeavy_Charge_Attack_Full::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(36);

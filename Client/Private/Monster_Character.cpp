@@ -129,11 +129,17 @@ void CMonster_Character::Check_EnemyHUD_World(_matrix matWorld, _float3 vOffsetP
 // 몬스터 HUD를 삭제(비활성화)합니다. (몬스터가 죽을때 불러주세요)
 void CMonster_Character::Set_EnemyHUD_Dead()
 {
-	if(m_pEnemyHUD != nullptr)
+	if (m_pEnemyHUD != nullptr) 
+	{
 		m_pEnemyHUD->Set_Dead_Owner(true);
+		m_pEnemyHUD = nullptr;
+	}
+		
 }
 
 void CMonster_Character::Free()
 {
 	__super::Free();
+
+	Set_EnemyHUD_Dead();
 }

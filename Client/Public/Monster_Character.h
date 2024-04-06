@@ -71,6 +71,7 @@ public:
 
 public:
 	void Set_Monster_State(Monster_State _eMonster_State) { m_eMonster_State = _eMonster_State; };
+	_bool Is_Attack_State() { return Monster_State::ATTACK == m_eMonster_State; }
 
 //protected: // !성희 추가
 public: // !성희 추가
@@ -83,7 +84,7 @@ public: // !성희 추가
 	// 몬스터 HUD를 삭제(비활성화)합니다. (몬스터가 죽을때 불러주세요)
 	void Set_EnemyHUD_Dead();
 
-	CUI_EnemyHUD_Shard* m_pEnemyHUD = nullptr;
+	CUI_EnemyHUD_Shard* m_pEnemyHUD = { m_pEnemyHUD };
 
 protected:
 	MONSTER_DESC			m_tMonsterDesc = {};

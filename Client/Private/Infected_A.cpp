@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Infected_A.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 /* Spawn */
 #include "Infected_SpawnClimb_01.h"
@@ -38,11 +39,10 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 
-	m_pTarget = m_pGameInstance->Get_Player();
-
-	
 	/* !성희 추가 : 몬스터 HUD 생성 */
 	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+
+	m_pTarget = m_pGameInstance->Get_Player();
 
 	return S_OK;
 }
@@ -54,11 +54,12 @@ void CInfected_A::Priority_Tick(_float fTimeDelta)
 
 void CInfected_A::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	/* 상위 CInfected 에서 Actor 돌리는중 */
 	__super::Tick(fTimeDelta);
 	
-	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
-	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 }
 
 void CInfected_A::Late_Tick(_float fTimeDelta)
