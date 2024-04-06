@@ -95,7 +95,7 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
 		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Light;
+		m_eHitPower = Power::Medium;
 		m_fForce = 0.f;
 		m_fDamage = 4.f;
 

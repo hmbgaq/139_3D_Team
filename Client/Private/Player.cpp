@@ -927,8 +927,8 @@ void CPlayer::Hitted_Dead(Power ePower)
 	case Engine::Medium:
 		m_pActor->Set_State(new CPlayer_DeathNormal_F_01());
 		break;
-
 	default:
+		m_pActor->Set_State(new CPlayer_DeathNormal_F_01());
 		break;
 	}
 }
