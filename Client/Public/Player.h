@@ -96,6 +96,8 @@ public://!For. Interact
 
 	void SetState_InteractionPush_Rock_Idle();
 	void SetState_InteractionPull_Rock_Idle();
+	void SetState_InteractionPush_End();
+	void SetState_InteractionPull_End();
 
 
 	void SetState_InteractClimb100();

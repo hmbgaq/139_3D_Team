@@ -37,6 +37,9 @@
 #include "Player_InteractionPull_Rock_Idle.h"
 #include "Player_InteractionPush_Rock_Idle.h"
 
+#include "Player_InteractionPush_Rock_End.h"
+#include "Player_InteractionPull_Rock_End.h"
+
 
 
 #include "Player_InteractionClimb100.h"
@@ -526,6 +529,16 @@ void CPlayer::SetState_InteractionPush_Rock_Idle()
 void CPlayer::SetState_InteractionPull_Rock_Idle()
 {
 	m_pActor->Set_State(new CPlayer_InteractionPull_Rock_Idle());
+}
+
+void CPlayer::SetState_InteractionPush_End()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPush_Rock_End());
+}
+
+void CPlayer::SetState_InteractionPull_End()
+{
+	m_pActor->Set_State(new CPlayer_InteractionPull_Rock_End());
 }
 
 void CPlayer::SetState_InteractClimb100()

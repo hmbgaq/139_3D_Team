@@ -103,8 +103,8 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 
 void CEnvironment_Interact::Priority_Tick(_float fTimeDelta)
 {
-	if(m_pColliderCom != nullptr)
-		m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if(m_pInteractColliderCom != nullptr)
+		m_pInteractColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 }
 
 void CEnvironment_Interact::Tick(_float fTimeDelta)
@@ -246,9 +246,9 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{
-		if (m_pColliderCom != nullptr)
+		if (m_pInteractColliderCom != nullptr)
 		{
-			m_pGameInstance->Add_DebugRender(m_pColliderCom);
+			m_pGameInstance->Add_DebugRender(m_pInteractColliderCom);
 			m_pGameInstance->Add_DebugRender(m_pMoveRangeColliderCom);
 		}
 		
@@ -460,7 +460,7 @@ void CEnvironment_Interact::Reset_Interact()
 
 void CEnvironment_Interact::Set_ColliderSize(_float3 vColliderSize)
 {
-	CBounding* pBounding = m_pColliderCom->Get_Bounding();
+	CBounding* pBounding = m_pInteractColliderCom->Get_Bounding();
 
 	CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
 	
@@ -472,12 +472,12 @@ void CEnvironment_Interact::Set_ColliderSize(_float3 vColliderSize)
 	pBox->Extents = vColliderSize;
 	m_tEnvironmentDesc.vColliderSize = vColliderSize;
 
-	//m_pColliderCom->Set_Bounding()
+	//m_pInteractColliderCom->Set_Bounding()
 }
 
 void CEnvironment_Interact::Set_ColliderCenter(_float3 vColliderCenter)
 {
-	CBounding* pBounding = m_pColliderCom->Get_Bounding();
+	CBounding* pBounding = m_pInteractColliderCom->Get_Bounding();
 
 	CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
 
@@ -522,7 +522,7 @@ void CEnvironment_Interact::Interact()
 	if(m_bFindPlayer == false)
 		return;
 	
-	if (true == m_pColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
+	if (true == m_pInteractColliderCom->Is_Collision(m_pPlayer->Get_Collider()))
 	{
 
 		// !UI Add
@@ -1093,7 +1093,28 @@ void CEnvironment_Interact::Move_For_PlayerRootMotion()
 		vPlayerRootMotion.x = 0.f;
 
 		m_pTransformCom->Add_RootBone_ForTarget(vPlayerRootMotion, m_pNavigationCom, m_pPlayer->Get_Transform());
+	}
+	else
+	{
+		
+		switch (m_pPlayer->Get_CurrentAnimIndex())
+		{
+			case CPlayer::Player_State::Player_InteractionPush_Rock_Loop:
+			{
+				m_pPlayer->SetState_InteractionPush_End();
+				m_bInteract = false;
+				break;
+			}
+			
+			case CPlayer::Player_State::Player_InteractionPull_Rock_Loop:
+			{
+				m_pPlayer->SetState_InteractionPull_End();
+				m_bInteract = false;
+				break;
+			}
 
+		}
+		//m_pPlayer->Set_RootMoveRate(_float3(0.f, 0.f, 0.f));
 	}
 	
 }
@@ -2176,6 +2197,17 @@ HRESULT CEnvironment_Interact::Ready_Components()
 HRESULT CEnvironment_Interact::Ready_InteractCollider(INTERACT_TYPE eInteractType)
 {
 	
+	/* For.Com_Collider */
+	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
+	BoundingDesc.vExtents = m_tEnvironmentDesc.vColliderSize;
+	BoundingDesc.vCenter = m_tEnvironmentDesc.vColliderCenter;
+
+
+	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+		return E_FAIL;
+
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
@@ -2185,9 +2217,8 @@ HRESULT CEnvironment_Interact::Ready_InteractCollider(INTERACT_TYPE eInteractTyp
 
 	
 	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
+		TEXT("Com_InteractCollider"), reinterpret_cast<CComponent**>(&m_pInteractColliderCom), &BoundingDesc)))
 		return E_FAIL;
-
 
 	
 	/* For.Com_Collider */
@@ -2201,16 +2232,7 @@ HRESULT CEnvironment_Interact::Ready_InteractCollider(INTERACT_TYPE eInteractTyp
 		TEXT("Com_MoveCollider"), reinterpret_cast<CComponent**>(&m_pMoveRangeColliderCom), &BoundingDesc)))
 		return E_FAIL;
 
-	/* For.Com_Collider */
-	BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
-	BoundingDesc.vExtents = m_tEnvironmentDesc.vMoveRangeColliderSize;
-	BoundingDesc.vCenter = m_tEnvironmentDesc.vMoveRangeColliderCenter;
-
-
-	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_FutureMoveCollider"), reinterpret_cast<CComponent**>(&m_pFutureMoveColliderCom), &BoundingDesc)))
-		return E_FAIL;
+	
 
 	return S_OK;
 }
