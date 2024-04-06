@@ -46,12 +46,12 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	//
 	//m_pTransformCom->Set_WorldMatrix(Temp);
 
-	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.5f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
+	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.0f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
 
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 20.f;
+	m_fDamage = 15.f;
 
 
 	// 이펙트 생성
@@ -75,14 +75,16 @@ void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 
 void CSon_Projectile::Tick(_float fTimeDelta)
 {
-
 	__super::Tick(fTimeDelta);
 
-	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
-	
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
-
+	//m_fRadian += fTimeDelta;
+	//_float4x4 Temp = {};
+	//Temp = XMMatrixRotationRollPitchYaw(m_fRadian, 0.f, 0.0f);
+	//
+	//m_pTransformCom->Set_WorldMatrix(m_pTransformCom->Get_WorldMatrix() * Temp);
+	////m_pTransformCom->RotationToProjectile(Get_Transform()->Get_State(CTransform::STATE_LOOK), m_fRadian);
 }
 
 void CSon_Projectile::Late_Tick(_float fTimeDelta)
@@ -92,12 +94,9 @@ void CSon_Projectile::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_Projectile::Render()
 {
-	/*auto start = chrono::high_resolution_clock::now();*/
-	//if (FAILED(__super::Render()))
-	//	return E_FAIL;
-// 	auto End = chrono::high_resolution_clock::now();
-// 	chrono::duration<double> duration0 = End - start;
-// 	cout << "Son Projectile Render 실행시간 : " << duration0.count() << endl;
+	if (FAILED(__super::Render()))
+		return E_FAIL;
+
 	return S_OK;
 }
 

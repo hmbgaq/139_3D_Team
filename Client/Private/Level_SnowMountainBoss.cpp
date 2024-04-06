@@ -221,12 +221,12 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
-	
-	//	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+
+	//   FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
 	//if (nullptr == pPlayer)
-	//	return E_FAIL;
+	//   return E_FAIL;
 
 	//m_pGameInstance->Set_Player(pPlayer);
 

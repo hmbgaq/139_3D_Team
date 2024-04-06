@@ -1,6 +1,8 @@
 #include "..\Public\Player_SlamDown_v3.h"
 #include "GameInstance.h"
 #include "Player_IdleLoop.h"
+#include "MasterCamera.h"
+#include "Data_Manager.h"
 
 #include "Effect_Manager.h"
 
@@ -33,6 +35,11 @@ CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 		m_bFlags[1] = pActor->Is_Inputable_Front(19);
 		if (true == m_bFlags[1])
 		{
+			//CameraSetting
+			CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+			pSpringCam->Set_ShakeCameraTime(0.1f);
+			pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
+
 			pActor->Apply_Shake_And_Blur(Power::Medium);
 			EFFECT_MANAGER->Play_Effect("SlamDown_v2_24_Rock.json", pActor->Get_Position());
 			pActor->Slam();

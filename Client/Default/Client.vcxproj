@@ -1150,6 +1150,7 @@
     <ClInclude Include="..\Public\Son_Projectile.h" />
     <ClInclude Include="..\Public\Son_RangeAttackFar.h" />
     <ClInclude Include="..\Public\Son_RangeAttackNear.h" />
+    <ClInclude Include="..\Public\Son_RotationProjectile.h" />
     <ClInclude Include="..\Public\Son_ShortAttack.h" />
     <ClInclude Include="..\Public\Son_Spawn.h" />
     <ClInclude Include="..\Public\Son_State.h" />
@@ -1254,6 +1255,7 @@
     <ClInclude Include="..\Public\TNTPack.h" />
     <ClInclude Include="..\Public\UI_BackGround.h" />
     <ClInclude Include="..\Public\UI_Collection_Button.h" />
+    <ClInclude Include="..\Public\UI_ConnectionLine.h" />
     <ClInclude Include="..\Public\UI_Distortion.h" />
     <ClInclude Include="..\Public\UI_ElementList.h" />
     <ClInclude Include="..\Public\UI_EnemyFrame_Shard.h" />
@@ -1272,8 +1274,15 @@
     <ClInclude Include="..\Public\UI_Option_Button.h" />
     <ClInclude Include="..\Public\UI_Option_SubTitle_Button.h" />
     <ClInclude Include="..\Public\UI_SelectList.h" />
+    <ClInclude Include="..\Public\UI_SkillActive.h" />
+    <ClInclude Include="..\Public\UI_SkillFrame.h" />
+    <ClInclude Include="..\Public\UI_SkillIcon.h" />
+    <ClInclude Include="..\Public\UI_SkillPreview_Window.h" />
+    <ClInclude Include="..\Public\UI_SkillScrew.h" />
+    <ClInclude Include="..\Public\UI_SkillWindow_Button.h" />
     <ClInclude Include="..\Public\UI_Skill_Button.h" />
     <ClInclude Include="..\Public\UI_Option_Title_Button.h" />
+    <ClInclude Include="..\Public\UI_Skill_Preview.h" />
     <ClInclude Include="..\Public\UI_Sprite.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
@@ -2191,6 +2200,7 @@
     <ClCompile Include="..\Private\Son_Projectile.cpp" />
     <ClCompile Include="..\Private\Son_RangeAttackFar.cpp" />
     <ClCompile Include="..\Private\Son_RangeAttackNear.cpp" />
+    <ClCompile Include="..\Private\Son_RotationProjectile.cpp" />
     <ClCompile Include="..\Private\Son_ShortAttack.cpp" />
     <ClCompile Include="..\Private\Son_Spawn.cpp" />
     <ClCompile Include="..\Private\Son_State.cpp" />
@@ -2285,6 +2295,7 @@
     <ClCompile Include="..\Private\TNTPack.cpp" />
     <ClCompile Include="..\Private\UI_BackGround.cpp" />
     <ClCompile Include="..\Private\UI_Collection_Button.cpp" />
+    <ClCompile Include="..\Private\UI_ConnectionLine.cpp" />
     <ClCompile Include="..\Private\UI_Distortion.cpp" />
     <ClCompile Include="..\Private\UI_ElementList.cpp" />
     <ClCompile Include="..\Private\UI_EnemyFrame_Shard.cpp" />
@@ -2302,8 +2313,15 @@
     <ClCompile Include="..\Private\UI_Option_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_SubTitle_Button.cpp" />
     <ClCompile Include="..\Private\UI_SelectList.cpp" />
+    <ClCompile Include="..\Private\UI_SkillActive.cpp" />
+    <ClCompile Include="..\Private\UI_SkillFrame.cpp" />
+    <ClCompile Include="..\Private\UI_SkillIcon.cpp" />
+    <ClCompile Include="..\Private\UI_SkillPreview_Window.cpp" />
+    <ClCompile Include="..\Private\UI_SkillScrew.cpp" />
+    <ClCompile Include="..\Private\UI_SkillWindow_Button.cpp" />
     <ClCompile Include="..\Private\UI_Skill_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_Title_Button.cpp" />
+    <ClCompile Include="..\Private\UI_Skill_Preview.cpp" />
     <ClCompile Include="..\Private\UI_Sprite.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />

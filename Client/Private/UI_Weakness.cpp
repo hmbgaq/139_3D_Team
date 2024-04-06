@@ -41,6 +41,10 @@ HRESULT CUI_Weakness::Initialize(void* pArg)
 	//m_tUIInfo.bWorld = true;
 	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
 
+	m_fActive_Distance = 60.f;
+
+	m_bActive = true;
+
 	return S_OK;
 }
 
@@ -57,9 +61,12 @@ void CUI_Weakness::Tick(_float fTimeDelta)
 		m_fOffsetY += 0.1f;
 
 
-	__super::Tick(fTimeDelta);
+	if (m_bActive == true)
+	{
+		__super::Tick(fTimeDelta);
 
-	m_pColliderCom->Update(matTargetWorld);
+		m_pColliderCom->Update(matTargetWorld);
+	}
 
 }
 
@@ -67,50 +74,56 @@ void CUI_Weakness::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
-
-	m_pTransformCom->Turn(m_vAxis, -fTimeDelta * 1.5f);
-
-	//if (m_fTime + m_fActiveTime < GetTickCount64())
+	if (m_bActive == true)
 	{
-		if (m_fScaleX > 40.f)
-		{
-			Change_SizeX((-m_fChangeScale));
-		}
+		m_pTransformCom->Turn(m_vAxis, -fTimeDelta * 1.5f);
 
-		if (m_fScaleY > 40.f)
+		//if (m_fTime + m_fActiveTime < GetTickCount64())
 		{
-			Change_SizeY((-m_fChangeScale));
-		}
+			if (m_fScaleX > 40.f)
+			{
+				Change_SizeX((-m_fChangeScale));
+			}
 
-		if (m_fScaleX <= 40.f && m_fScaleY <= 40.f)
-		{
-			m_fScaleX = 40.f;
-			m_fScaleY = 40.f;
-			m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+			if (m_fScaleY > 40.f)
+			{
+				Change_SizeY((-m_fChangeScale));
+			}
+
+			if (m_fScaleX <= 40.f && m_fScaleY <= 40.f)
+			{
+				m_fScaleX = 40.f;
+				m_fScaleY = 40.f;
+				m_pTransformCom->Set_Scaling(m_fScaleX, m_fScaleY, 1.f);
+			}
 		}
-	}
 
 #ifdef _DEBUG
-	m_pGameInstance->Add_DebugRender(m_pColliderCom);
+		m_pGameInstance->Add_DebugRender(m_pColliderCom);
 #endif	
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-		return;
+		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+			return;
+	}
+
 }
 
 HRESULT CUI_Weakness::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (FAILED(Bind_ShaderResources()))
+			return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그릴거야.
-	m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		//! 이 셰이더에 0번째 패스로 그릴거야.
+		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+		//! 바인딩된 정점, 인덱스를 그려
+		m_pVIBufferCom->Render();
+	}
 
 	return S_OK;
 }

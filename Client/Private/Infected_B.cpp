@@ -39,6 +39,9 @@ HRESULT CInfected_B::Initialize(void* pArg)
 
 	m_pTarget = m_pGameInstance->Get_Player();
 
+	/* !성희 추가 : 몬스터 HUD 생성 */
+	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+
 	return S_OK;
 }
 
@@ -51,6 +54,8 @@ void CInfected_B::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 	//if (m_pActor)
 	//{
 	//	m_pActor->Update_State(fTimeDelta);

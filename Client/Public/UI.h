@@ -15,8 +15,16 @@ class CUI abstract : public CGameObject
 public:
 	enum DISTORTIONKIND { MASK, NOISE, DISTORTION_END };
 	enum UI_KIND { NORMAL, TEXT, KIND_END };
-	enum UI_STATE {};
+	enum UI_LEVEL { LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, STAGE_END };
 
+public:
+	void		Set_UILevel(_uint eLevel) { m_eUI_Level = (UI_LEVEL)eLevel; }
+	UI_LEVEL	Get_UILevel() { return m_eUI_Level; }
+
+protected:
+	UI_LEVEL	m_eUI_Level = LEVEL0;
+
+public:
 	// 키프레임 구조체
 	typedef struct tagUIKeyframe
 	{
@@ -155,6 +163,8 @@ public:
 		_float		fAlpha = 0.f;
 		_float		fAlphaTrue = 0.f;
 
+		_int		iLevel = 0.f;
+		_int		iMaxLevel = 0.f;
 		_int		iObjectNum = 0;			// 몇번째 녀석인지
 		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
 
@@ -264,17 +274,17 @@ public:
 	void			Check_MouseInput(_float fTimeDelta);
 
 protected:
-	_bool			m_bMouseDown_LB = false;
-	_bool			m_bMouseDown_RB = false;
-	_bool			m_bMouseDown_MB = false;
-
-	_bool			m_bMousePressing_LB = false;
-	_bool			m_bMousePressing_RB = false;
-	_bool			m_bMousePressing_MB = false;
-
-	_bool			m_bMouseUp_LB = false;
-	_bool			m_bMouseUp_RB = false;
-	_bool			m_bMouseUp_MB = false;
+	//_bool			m_bMouseDown_LB = false;
+	//_bool			m_bMouseDown_RB = false;
+	//_bool			m_bMouseDown_MB = false;
+	//
+	//_bool			m_bMousePressing_LB = false;
+	//_bool			m_bMousePressing_RB = false;
+	//_bool			m_bMousePressing_MB = false;
+	//
+	//_bool			m_bMouseUp_LB = false;
+	//_bool			m_bMouseUp_RB = false;
+	//_bool			m_bMouseUp_MB = false;
 
 public: /* ============================== Add ============================== */
 	void			Add_Create_Parts(void* pArg);
@@ -326,7 +336,7 @@ public:
 
 protected:
 	_bool			m_bLifeTimeUI = false;
-	_float			m_fActive_Distance = 12.f;
+	_float			m_fActive_Distance = 16.f;
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
@@ -378,6 +388,7 @@ public: /* =========================== Save/Load ============================== 
 	virtual void	Load_FromJson(const json& In_Json);
 	virtual json	Save_Desc(json& out_json);
 	virtual json	Save_Animation(json& out_json);
+	virtual void	Change_Animation(const string& strAnimPath);
 
 public: /* =========================== Animation ============================== */
 	void			Play_Animation(_float fTimeDelta);
@@ -455,6 +466,8 @@ public: /* =========================== Animation ============================== 
 
 	// 디스토션 Bias
 	_float			fDistortionBias_Delta = 0.f;
+
+	_bool			m_bAnimChange = false;
 
 public:
 	void	Set_TimeAcc(_float fTimeAcc) { m_tUIInfo.fTimeAcc = fTimeAcc; }
@@ -575,20 +588,22 @@ public:
 
 	// 투명도
 	_float				m_fAlpha = 0.f;
+	_float2				m_vScale = { 1.f, 1.f };
+	_float				m_fWithProgress = 1.f;
 	_bool				m_bTrigger = false;
 
 protected: /* ============================ bool =============================== */
 	_bool				m_bPick = false;
-	_bool				m_bSelect = false;
-	_bool				m_bSelectPressing = false;
+	//_bool				m_bSelect = false;
+	//_bool				m_bSelectPressing = false;
 	_uint				m_iButtonState = {};
 	_bool				m_bChange_Proj = false;
 
 public:
-	void				Set_Select(_bool bSelect) { m_bSelect = bSelect; }
-	_bool				Get_Select() { return m_bSelect; }
-	void				Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
-	_bool				Get_SelectPressing() { return m_bSelectPressing; };
+	//void				Set_Select(_bool bSelect) { m_bSelect = bSelect; }
+	//_bool				Get_Select() { return m_bSelect; }
+	//void				Set_SelectPressing(_bool bSelectPressing) { m_bSelectPressing = bSelectPressing; }
+	//_bool				Get_SelectPressing() { return m_bSelectPressing; };
 
 public:
 	void	ChangeProj() { m_bChange_Proj = true; }

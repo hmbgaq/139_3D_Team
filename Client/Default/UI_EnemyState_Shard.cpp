@@ -56,8 +56,16 @@ void CUI_EnemyState_Shard::Priority_Tick(_float fTimeDelta)
 
 void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 {
+	//if (m_pCharacterOwner == nullptr)
+	//	return;
+
 	if (m_pCharacterOwner == nullptr)
-		return;
+	{
+		if (m_pCharacterOwner->Get_MonsterAttackState() == true)
+		{
+			return;
+		}
+	}
 
 	if (m_pGameInstance->Key_Down(DIK_V))
 		m_fOffsetY -= 0.1f;

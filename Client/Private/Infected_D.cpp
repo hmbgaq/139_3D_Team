@@ -29,6 +29,9 @@ HRESULT CInfected_D::Initialize(void* pArg)
 
 	FAILED_CHECK(Ready_Option());
 
+	/* !성희 추가 : 몬스터 HUD 생성 */
+	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+
 	return S_OK;
 }
 
@@ -40,6 +43,9 @@ void CInfected_D::Priority_Tick(_float fTimeDelta)
 void CInfected_D::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 }
 
 void CInfected_D::Late_Tick(_float fTimeDelta)
@@ -101,6 +107,11 @@ HRESULT CInfected_D::Ready_Option()
 	}
 
 	return S_OK;
+}
+
+void CInfected_D::Check_Frustum()
+{
+	m_bIsInFrustum = true;
 }
 
 HRESULT CInfected_D::Ready_PartObjects()

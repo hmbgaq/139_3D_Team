@@ -23,7 +23,7 @@ private:
 	HRESULT Ready_Static_UI();
 
 private:
-	void Set_Filter();
+	void  Set_Filter();
 	class CData_Manager* m_pDataManager = nullptr;
 	class CUI_Manager* m_pUIManager = nullptr;
 	_bool				m_bUI_ReadyOK = false;

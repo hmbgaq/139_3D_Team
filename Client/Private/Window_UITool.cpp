@@ -1091,6 +1091,22 @@ void CWindow_UITool::Setting_Child()
 
 			ImGui::SeparatorText("");
 		}
+
+		string strPath = "";
+		//if (ImGui::InputText("AnimPath", m_cPath, sizeof(m_cPath)))
+		//	strPath = string(m_cPath, &m_cPath[strlen(m_cPath)]);
+
+		ImGui::SameLine();
+
+		
+		if (ImGui::InputText("AnimFileName", m_cFileName, sizeof(m_cFileName)))
+			m_strFileName = string(m_cFileName, &m_cFileName[strlen(m_cFileName)]);
+	
+		if (ImGui::Button("Save_Animation"))
+			Save_Animation(strPath, m_strFileName);
+
+		if (ImGui::Button("Change_Animation"))
+			Change_Animation(m_strFileName);
 	}
 
 
@@ -3807,9 +3823,14 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 		if (object.contains("ColorA"))
 			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
 		if (object.contains("ColorMode"))
-			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+			tUI_Info.eColorMode = object["ColorMode"];				// 17. Mode
 		if (object.contains("RenderGroup"))
-			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 18. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
 
 		wstring wstrLayer = TEXT("");
 		if (m_strLayer[m_iCurrLayerNum] != "")
@@ -3842,7 +3863,7 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 
 		//tUI_Info.iKeyframeNum = object["KeyframeNum"];	// 18. KeyframeNum
 		
-	// "KeyframeNum" 키가 없으면 기본값 사용
+		// "KeyframeNum" 키가 없으면 기본값 사용
 		_bool bKeyframeNum = object.contains("KeyframeNum");
 		tUI_Info.iKeyframeNum = bKeyframeNum ? object["KeyframeNum"] : 0;
 
@@ -4021,9 +4042,45 @@ HRESULT CWindow_UITool::Load_Function(string strPath, string strFileName)
 	return S_OK;
 }
 
-void CWindow_UITool::Save_Keyframe()
+void CWindow_UITool::Save_Animation(string& strPath, string& strFileName)
 {
+	_ushort iIndex = 0;
 
+	//strPath = strPath + "\\" + strFileName;
+	string strFilePath = "../Bin/DataFiles/Data_UI/Animation/" + strFileName + ".json";
+
+	json Out_Json;
+
+	if (!m_vecChildObject.empty())
+	{
+		for (auto& Child : m_vecChildObject)
+		{
+			json Out_Object;
+
+			m_pCurrSelectUI->Save_Animation(Out_Object);
+			Out_Json.emplace(to_string(iIndex++), Out_Object);
+		}
+	}
+
+	CJson_Utility::Save_Json(ConverWStringtoC(ConvertToWideString(strFilePath)), Out_Json);
+}
+
+void CWindow_UITool::Change_Animation(const string& strAnimation)
+{
+	json json_in;
+	string strFile;
+
+	// FilePath
+	strFile = "../Bin/DataFiles/Data_UI/Animation/" + strAnimation + ".json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+
+		m_pCurrSelectUI->Change_Animation(strFile); // Animation Change
+	}
 }
 
 _bool CWindow_UITool::Check_ImGui_Rect()

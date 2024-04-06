@@ -27,6 +27,8 @@ protected:
 	HRESULT Ready_PartObjects();
 	HRESULT Ready_Option();
 
+	virtual void Check_Frustum() override;
+
 private:
 	CActor<CInfected>* m_pActor = { nullptr };
 

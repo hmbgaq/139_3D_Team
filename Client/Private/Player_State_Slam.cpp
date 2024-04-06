@@ -11,7 +11,7 @@ void CPlayer_State_Slam::Initialize(CPlayer* pActor)
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 	if (pSpringCam)
 	{
-		pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -4.0f));
+		pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -5.0f));
 	}
 }
 

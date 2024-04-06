@@ -37,6 +37,8 @@ HRESULT CUI_ElementList::Initialize(void* pArg)
 
 	m_bButtonUI = true;
 
+	m_fWithProgress = -1.f;
+
 	return S_OK;
 }
 
@@ -47,7 +49,17 @@ void CUI_ElementList::Priority_Tick(_float fTimeDelta)
 
 void CUI_ElementList::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 
+	Check_Picking(fTimeDelta);
+
+	if (m_bActive == true)
+	{
+		if (m_fWithProgress < 1.f)
+			m_fWithProgress += fTimeDelta;
+		else
+			m_fWithProgress = -1.f;
+	}
 }
 
 void CUI_ElementList::Late_Tick(_float fTimeDelta)
@@ -55,11 +67,8 @@ void CUI_ElementList::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
 
-	Check_Picking(fTimeDelta);
-
-	if (m_bActive)
+	if (m_bActive == true)
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
@@ -281,7 +290,8 @@ HRESULT CUI_ElementList::Bind_ShaderResources()
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
-
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_WithProgress", &m_fWithProgress, sizeof(_float))))
+		return E_FAIL;
 
 	if (m_bPick == true)
 	{

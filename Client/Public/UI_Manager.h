@@ -15,6 +15,7 @@ class CUI_EnemyHUD_Shard;
 
 BEGIN(Client)
 //class CUI;
+class CData_Manager;
 
 class CUI_Manager : public CBase
 {
@@ -67,6 +68,8 @@ public: /* Ready_Preset */
 	/* EnemyShard */
 	CUI_EnemyHUD_Shard* Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
+private:
+	void			Check_MouseInput(_float fTimeDelta);
 public:
 	/* PlayerHUD */
 	void			Active_PlayerHUD();
@@ -268,6 +271,20 @@ public:
 	/* Interaction */
 	CUI_Interaction*	Add_Interaction(_uint iLevelIndex, const string& strUIName, const string& strProtoTag);
 
+	/* SkillIcon(And Frame) */
+	HRESULT			Add_SkillIcon(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_SkillIcon(_bool bActive);
+	void			NonActive_SkillIcon();
+	void			Change_SkillIcon_Level(const string& strUIName, _uint iUILevel);
+	vector<CUI*>	m_vecSkillIcon;
+
+	/* SkillPreview */
+	HRESULT			Add_SkillPreview(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_SkillPreview(_bool bActive);
+	void			NonActive_SkillPreview();
+	void			Change_SkillPreview(const string& strUIName);
+	vector<CUI*>	m_vecSkillPreview;
+
 
 	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
 	void			Active_UI();
@@ -339,6 +356,7 @@ private:
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
+	CData_Manager* m_pDataManager = { nullptr };
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 

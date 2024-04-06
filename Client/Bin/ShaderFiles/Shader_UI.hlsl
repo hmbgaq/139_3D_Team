@@ -11,6 +11,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D g_DiffuseTexture;
+Texture2D g_DiffuseTexturePreShard;
 Texture2D g_DiffuseTexture_Front;
 Texture2D g_DiffuseTexture_Second;
 Texture2D g_DiffuseTexture_Third;
@@ -23,6 +24,8 @@ Texture2D g_DepthTexture;
 
 /* Alpha */
 float g_Alpha;
+float g_WithProgress;
+float2 g_Scale;
 
 /* Loading */
 float g_LoadingProgress;
@@ -54,6 +57,7 @@ float     g_Radius;
 float     g_CoolTime;
 float     g_MaxCoolTime;
 float     g_Ratio;
+float     g_CurRatio;
 
 texture2D g_DissolveTexture;
 texture2D g_AlphaTexture;
@@ -104,6 +108,18 @@ float4 Calculation_ColorBlend(float4 vDiffuse, float4 vBlendColor, int g_iColorM
     }
  
     return vResault;
+}
+
+// 좌측 끝부터 시작하여 우측 끝까지 점점 그려지는 효과를 주는 함수
+float DrawProgress(float2 uv)
+{
+    // 픽셀의 x 좌표에 따라 그려지는 정도를 계산
+    float progress = uv.x; // 좌측 끝부터 시작하여 우측 끝까지의 거리
+
+    // progress 값을 사용하여 그려지는 색상을 결정
+    float4 color = float4(progress, progress, progress, 1.0f); // 흑백 이미지로 예시
+
+    return color;
 }
 
 /* 정점의 변환(월드변환, 뷰변환, 투영변환.)을 수행한다. */
@@ -203,6 +219,28 @@ PS_OUT PS_MAIN(PS_IN In) // 0
         discard;
 	
     return Out;
+    
+    /*
+    PS_OUT Out = (PS_OUT) 0;
+
+	// 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다.
+    float4 vBackColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+   
+    float progress = g_WithProgress; // x 좌표를 진행도로 사용하여 이미지를 그립니다.
+    float4 vFrontColor = g_DiffuseTexture_Front.Sample(LinearSampler, float2(progress, In.vTexcoord.y)); // 진행도에 따른 이미지의 색상 샘플링
+
+    Out.vColor = vFrontColor;
+    if (Out.vColor.a < 0.9f)
+        Out.vColor = vBackColor;
+    
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
+    
+    return Out;
+    
+    */
 }
 
 PS_OUT PS_HPBAR_GAUGE_LERP(PS_IN In) // 1
@@ -362,6 +400,10 @@ PS_OUT PS_MAIN_COOLTIME(PS_IN In) // 5
         Out.vColor.a = 0.f;
     }
 
+    Out.vColor.a -= g_Alpha;
+    
+    if (Out.vColor.a < 0.1f)
+        discard;
     //Out.vColor.a -= g_Alpha;
     //
     //if (Out.vColor.a < 0.1f)
@@ -625,6 +667,167 @@ PS_OUT PS_MAIN_DIFFUSE_DOUBLE(PS_IN In) // 8
     return Out;
 }
 
+PS_OUT PS_MAIN_HP_SHARD(PS_IN In) // 9
+{
+    PS_OUT Out = (PS_OUT) 0; // 초기화
+
+    //float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord); // Diffuse Tex Sampling
+    //float4 vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord); // Mask Tex Sampling
+    //
+   //// if (vMaskColor.r > 0.9f && vMaskColor.g > 0.9f && vMaskColor.b > 0.9f)
+    //{
+    //    Out.vColor = saturate(vColor);
+    //    if (Out.vColor.a < 0.1f)
+    //        discard;
+    //}
+    ////else
+    ////    discard;
+    //
+	//// 여기까지 마스크를 씌운 상태
+    //
+    //float2 vDir = In.vTexcoord - float2(0.5f, 0.5f); // float2(0.5f, 0.5f)는 중점이다.
+    //vDir = normalize(vDir); // 방향벡터 Normalize
+    //float2 vUpDir = float2(0.0f, sign(vDir.x));
+    //vUpDir = normalize(vUpDir);
+    //
+    //float fDot = dot(vUpDir, vDir); // 두 벡터를 내적한다.
+    //float fDotRatio = g_Ratio;
+    //
+	//// 방향벡터가 음수인 경우, 비교할 기준 벡터의 방향은 위
+    //if (vDir.x < 0.f)
+    //{
+    //    fDotRatio -= 0.5f;
+    //}
+    //
+    //fDotRatio = fDotRatio * 4.f - 1.f;
+    //
+    // // 픽셀이 서서히 사라지게 한다.
+    //if (fDotRatio < fDot)
+    //{
+	//	//Out.vColor.rgb = lerp(vColor.rgb, float3(0.0f, 0.0f, 0.0f), 0.5f);
+    //    //Out.vColor.a = 0.f;
+    //}
+    //else
+    //{
+    //    Out.vColor.a = 0.f;
+    //}
+    //
+    ////Out.vColor.a -= g_Alpha;
+    ////
+    ////if (Out.vColor.a < 0.1f)
+    ////    discard;
+    //
+    //return Out;
+    
+      /*
+    !흰색 체력이 따라오게 하려고 하고 있었음.
+        PS_OUT Out = (PS_OUT) 0; // 초기화
+    */
+  
+    float4 vColorPreHP = g_DiffuseTexturePreShard.Sample(LinearSampler, In.vTexcoord); // Diffuse Tex Sampling
+    float4 vColorCurHP = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord); // Diffuse Tex Sampling
+    float4 vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord); // Mask Tex Sampling
+
+   // if (vMaskColor.r > 0.9f && vMaskColor.g > 0.9f && vMaskColor.b > 0.9f)
+    {
+        Out.vColor = saturate(vColorCurHP);
+        if (Out.vColor.a < 0.1f)
+            Out.vColor = vColorPreHP;
+    }
+    //else
+    //    discard;
+
+	// 여기까지 마스크를 씌운 상태
+
+    float2 vDir = In.vTexcoord - float2(0.5f, 0.5f); // float2(0.5f, 0.5f)는 중점이다.
+    vDir = normalize(vDir); // 방향벡터 Normalize
+    float2 vUpDir = float2(0.0f, sign(vDir.x));
+    vUpDir = normalize(vUpDir);
+
+    float fDot = dot(vUpDir, vDir); // 두 벡터를 내적한다.
+    float fDotRatio = g_Ratio;
+    float fCurDotRatio = g_CurRatio;
+
+	// 방향벡터가 음수인 경우, 비교할 기준 벡터의 방향은 위
+    if (vDir.x < 0.f)
+    {
+        fCurDotRatio -= 0.5f;
+    }
+
+    fCurDotRatio = fCurDotRatio * 4.f - 1.f;
+
+    // 방향벡터가 음수인 경우, 비교할 기준 벡터의 방향은 위
+    if (vDir.x < 0.f)
+    {
+        fDotRatio -= 0.5f;
+    }
+
+    fDotRatio = fDotRatio * 4.f - 1.f;
+    
+    // 픽셀이 서서히 사라지게 한다.
+    if (fCurDotRatio < fDot)
+    {
+		//Out.vColor.rgb = lerp(vColor.rgb, float3(0.0f, 0.0f, 0.0f), 0.5f);
+        //Out.vColor.a = 0.f;
+        //if (Out.vColor.a == 0.f)
+        
+        Out.vColor = vColorCurHP;
+    }
+    else
+    {
+        Out.vColor.a = 0.f;
+
+        if (Out.vColor.a == 0.f)
+            Out.vColor = vColorPreHP;
+
+    }
+    
+     // 픽셀이 서서히 사라지게 한다.
+    if (fDotRatio < fDot)
+    {
+		//Out.vColor.rgb = lerp(vColor.rgb, float3(0.0f, 0.0f, 0.0f), 0.5f);
+        //Out.vColor.a = 0.f;
+        //if (Out.vColor.a == 0.f)
+       
+    }
+    else
+    {
+        Out.vColor.a = 0.f;
+    }
+
+    //Out.vColor.a -= g_Alpha;
+    //
+    //if (Out.vColor.a < 0.1f)
+    //    discard;
+    
+    return Out;
+
+}
+
+/* 픽셀셰이더 : 픽셀의 색!!!! 을 결정한다. */
+PS_OUT PS_MAIN_SELECT(PS_IN In) // 10
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+	/* 이 셰이더를 사용하는 객체의 색상을 g_DiffuseTexture의 색상으로 적용시키겠다. */
+    float4 vBackColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture_Front.Sample(LinearSampler, In.vTexcoord);
+   
+    float2 vScaledTexCoord = In.vTexcoord * g_Scale; // 이미지를 확대하기 위해 UV 좌표를 확대
+    float4 vFrontColor = g_DiffuseTexture_Front.Sample(LinearSampler, vScaledTexCoord); // 확대된 UV 좌표로 텍스처 샘플링
+    
+    Out.vColor = vFrontColor;
+    
+    if (Out.vColor.a < 9)
+        Out.vColor = vBackColor;
+	
+    Out.vColor.a -= g_Alpha;
+    if (Out.vColor.a < 0.1f)
+        discard;
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */
@@ -745,5 +948,31 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DIFFUSE_DOUBLE();
+    }
+
+    pass Shard_HP // 9
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_HP_SHARD();
+    }
+
+    pass Select // 10
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SELECT();
     }
 }

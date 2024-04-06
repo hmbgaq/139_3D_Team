@@ -10,38 +10,71 @@ void CMother_Spawn::Initialize(CMother* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	
+
 }
 
 CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 {
-	//if (m_bFlags[5] == false)
-	//{
-	//	m_pSpringCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	//	m_bFlags[5] = true;
-	//}
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	if (m_bFlags[5] == false)
+	{
+		pSpringCam->Set_CameraOffset(_float3(3.f, 1.5f, -9.f));
+		m_bFlags[5] = true;
+	}
+
+	if (m_bFlags[1] == false && pActor->Is_Inputable_Front(20))
+	{
+		pSpringCam->Set_ShakeCameraTime(0.2f);
+		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
+		pActor->Apply_Shake_And_Blur(Power::Medium);
+
+		m_bFlags[1] = true;
+	}
+
+
+
+	if (m_bFlags[2] == false && pActor->Is_Inputable_Front(100))
+	{
+		pSpringCam->Set_ShakeCameraTime(1.f);
+		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
+		pActor->Apply_Shake_And_Blur(Power::Medium);
+
+		m_bFlags[2] = true;
+	}
+
+	if (m_bFlags[3] == false && pActor->Is_Inputable_Front(190))
+	{
+		pSpringCam->Set_ShakeCameraTime(1.f);
+		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
+		pActor->Apply_Shake_And_Blur(Power::Medium);
+
+		m_bFlags[3] = true;
+	}
 	//if (m_pSpringCamera != nullptr)
 	//{
-	//	m_fCameraFovy += fTimeDelta;
-	//	if (m_fCameraFovy >= 90.f)
-	//		m_fCameraFovy = 90.f;
-	//	m_pSpringCamera->Set_Fovy(m_fCameraFovy);
+	//	m_fCameraFovy += (fTimeDelta);
+	//	if (m_fCurrentFovy+m_fCameraFovy >= 90.f)
+	//		m_fCameraFovy = 30.f;
+	//	m_pSpringCamera->Set_Fovy(m_fCurrentFovy + m_fCameraFovy);
 	//}
 
 
-	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(92))
+	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(192))
 	{
-	
 		//Son1
 		pActor->m_pMonster1 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
-		pActor->m_pMonster1->Set_Position(_float3(90.f, 0.f, 90.f));
+		pActor->m_pMonster1->Set_Position(_float3(90.f, 0.f, 88.f));
 		pActor->m_pMonster1->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
 
+		m_bFlags[0] = true;
+	}
+	if (m_bFlags[4] == false && pActor->Is_Inputable_Front(203))
+	{
 		//Son2
 		pActor->m_pMonster2 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
-		pActor->m_pMonster2->Set_Position(_float3(110.f, 0.f, 90.f));//임시 좌표값 이거 승용이가 맵 깔면 다시 설정해야 할수 있음. 
+		pActor->m_pMonster2->Set_Position(_float3(110.f, 0.f, 88.f));//임시 좌표값 이거 승용이가 맵 깔면 다시 설정해야 할수 있음. 
 		pActor->m_pMonster2->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
-		m_bFlags[0] = true;
+		m_bFlags[4] = true;
 	}
 	if (pActor->Is_Animation_End())
 	{
@@ -54,4 +87,7 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 void CMother_Spawn::Release(CMother* pActor)
 {
 	__super::Release(pActor);
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+ 
 }

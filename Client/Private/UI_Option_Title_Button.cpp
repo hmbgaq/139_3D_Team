@@ -34,6 +34,9 @@ HRESULT CUI_Option_Title_Button::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	m_vScale.x = 0.f;
+	m_vScale.y = 1.f;
+
 	return S_OK;
 }
 
@@ -44,7 +47,18 @@ void CUI_Option_Title_Button::Priority_Tick(_float fTimeDelta)
 
 void CUI_Option_Title_Button::Tick(_float fTimeDelta)
 {
+	__super::Tick(fTimeDelta);
 
+	if (m_bActive == true)
+	{
+		if (m_bPick == true)
+		{
+			if (m_vScale.x < 1.f)
+				m_vScale.x += fTimeDelta * 1.5f;
+			else
+				m_vScale.x = 1.f;
+		}
+	}
 }
 
 void CUI_Option_Title_Button::Late_Tick(_float fTimeDelta)
@@ -52,9 +66,9 @@ void CUI_Option_Title_Button::Late_Tick(_float fTimeDelta)
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
 
-	__super::Tick(fTimeDelta);
 
-	if (m_bActive)
+
+	if (m_bActive == true)
 	{
 		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
 			return;
@@ -69,7 +83,7 @@ HRESULT CUI_Option_Title_Button::Render()
 			return E_FAIL;
 
 		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+		m_pShaderCom->Begin(10); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
 		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
 		m_pVIBufferCom->Bind_VIBuffers();
@@ -139,16 +153,21 @@ HRESULT CUI_Option_Title_Button::Ready_Components()
 	}
 	else //발견되지 않은 경우
 	{
-		//! For.Com_Texture2 // NonActive
+		//! For.Com_Texture // NonActive
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 			TEXT("Com_Texture_NonActive"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
 			return E_FAIL;
 
-		//! For.Com_Texture2 // Active
+		//! For.Com_Texture // Active
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 			TEXT("Com_Texture_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
 			return E_FAIL;
 	}
+
+	//! For.Com_Texture // Select
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_mm_selection"),
+		TEXT("Com_Texture_Select"), reinterpret_cast<CComponent**>(&m_pTextureCom[SELECT]))))
+		return E_FAIL;
 #pragma endregion
 
 	return S_OK;
@@ -166,9 +185,15 @@ HRESULT CUI_Option_Title_Button::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Scale", &m_vScale, sizeof(_float2))))
+		return E_FAIL;
+
 	if (m_bPick == true)
 	{
 		if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			return E_FAIL;
+
+		if (FAILED(m_pTextureCom[SELECT]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Front")))
 			return E_FAIL;
 	}
 	else
