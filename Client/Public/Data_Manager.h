@@ -90,6 +90,13 @@ public:
 	void	Set_SelectLevel(LEVEL eSelectLevel) { m_eSelectLevel = eSelectLevel; }
 	LEVEL	Get_SelectLevel() { return m_eSelectLevel; }
 
+public:
+	_bool Is_AdditionalSkill_Learned(Additional_Skill eAdditional_Skill) { return m_AdditionalSkills[ECast(eAdditional_Skill)]; }
+	void Set_AdditionalSkill(Additional_Skill eAdditional_Skill, _bool bValue) { m_AdditionalSkills[ECast(eAdditional_Skill)] = bValue; };
+
+private:
+	_bool	m_AdditionalSkills[ECast(Additional_Skill::Additional_Skill_End)];
+
 private: /* _int */
 	_int	m_iCurLevel = 1;
 

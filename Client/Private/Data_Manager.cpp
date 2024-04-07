@@ -30,6 +30,12 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
 	PlayerInfo_Setting();
 
+	for (_uint i = 0; i < ECast(Additional_Skill::Additional_Skill_End); ++i)
+	{
+		m_AdditionalSkills[i] = false;
+	}
+	
+
 	return S_OK;
 }
 

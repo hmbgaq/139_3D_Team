@@ -4,6 +4,7 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 #include "Bone.h"
+#include "Data_Manager.h"
 
 void CPlayer_EnergyWhip_Leap::Initialize(CPlayer* pActor)
 {
@@ -31,7 +32,16 @@ CState<CPlayer>* CPlayer_EnergyWhip_Leap::Update(CPlayer* pActor, _float fTimeDe
 
 		CCharacter* pTarget = pActor->Get_Target();
 		pTarget->Look_At_OnLand(pActor->Get_Position_Vector());
-		pTarget->Hitted_Electrocute();
+
+		if (CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::ELECTROCUTE))
+		{
+			pTarget->Hitted_Electrocute();
+		}
+		else 
+		{
+			pTarget->Hitted_Front(Power::Medium);
+		}
+		
 		m_bFlags[1] = true;
 	}
 

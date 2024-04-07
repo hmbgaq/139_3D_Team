@@ -1,5 +1,6 @@
 #include "..\Public\Player_State.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 #pragma region 플레이어 상태 헤더
 
@@ -204,8 +205,11 @@ CState<CPlayer>* CPlayer_State::Dodge_State(CPlayer* pActor, _float fTimeDelta, 
 	//pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
 
-	pState = Melee_Dynamic(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::HERO_PUNCH))
+	{
+		pState = Melee_Dynamic(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
 	pState = Roll(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -416,9 +420,14 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 		//	return new CPlayer_CartRide_Loop();
 		//}
 
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
 
-		pState = Heal(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+		if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::HEAL))
+		{
+			pState = Heal(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
+
 
 		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
@@ -596,17 +605,32 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
 
-	pState = OpenStateCombo_8hit(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::SUPER_CHARGE))
+	{
+		pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
+	
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::HIT_EIGHT))
+	{
+		pState = OpenStateCombo_8hit(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
-	pState = Slam(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::QUAKE_PUNCH))
+	{
+		pState = Slam(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
-	pState = Kick(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::KICK))
+	{
+		pState = Kick(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
+
 
 
 	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
@@ -623,12 +647,16 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 
 CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (0.3f <= pActor->Get_ChargingTime())
-	{
-		pActor->Set_ChargingTime(0.f);
-		return new CPlayer_MeleeUppercut_01v2();
-	}
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
 
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::UPPER_CUT))
+	{
+		if (0.3f <= pActor->Get_ChargingTime())
+		{
+			pActor->Set_ChargingTime(0.f);
+			return new CPlayer_MeleeUppercut_01v2();
+		}
+	}
 
 	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
 
@@ -919,7 +947,13 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 		}
 	}
 
-	if (true == pActor->Is_SuperCharge() && (m_pGameInstance->Mouse_Down(DIM_LB) || m_pGameInstance->Mouse_Up(DIM_LB)))
+	_bool bIsLearned = CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::TELEPORT_PUNCH);
+
+	if (
+		true == pActor->Is_SuperCharge() 
+		&& (m_pGameInstance->Mouse_Down(DIM_LB) || m_pGameInstance->Mouse_Up(DIM_LB)) 
+		&& true == bIsLearned
+		)
 	{
 		pActor->Search_Target(30.f);
 		CCharacter* pTarget = pActor->Get_Target();
@@ -1013,12 +1047,23 @@ CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _
 
 	if (m_pGameInstance->Key_Down(DIK_X))
 	{
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
+
 		switch (eState)
 		{
 		case CPlayer::Player_SlamDown_v2:
-			return new CPlayer_SlamDown_v3();
+			if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::QUAKE_PUNCH2))
+			{
+				return new CPlayer_SlamDown_v3();
+			}
+			
+			break;
 		case CPlayer::Player_SlamDown_v3:
-			return new CPlayer_SlamTwoHand_TEMP();
+			if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::QUAKE_PUNCH3))
+			{
+				return new CPlayer_SlamTwoHand_TEMP();
+			}
+			break;
 		case CPlayer::Player_SlamTwoHand_TEMP:
 			break;
 		default:
@@ -1028,9 +1073,7 @@ CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _
 			{
 				return new CPlayer_SlamDown_v2();
 			}
-			
 			break;
-			
 		}
 	}
 

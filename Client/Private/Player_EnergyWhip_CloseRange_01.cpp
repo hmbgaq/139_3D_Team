@@ -4,6 +4,7 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 #include "Bone.h"
+#include "Data_Manager.h"
 
 #include "Player_EnergyWhip_Leap.h"
 #include "Player_EnergyWhip_LongRange.h"
@@ -62,7 +63,10 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 		m_bFlags[2] = true;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_W)) 
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
+	_bool bIsLearned = pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::ELECTRIC_DASH);
+
+	if (m_pGameInstance->Key_Down(DIK_W) && true == bIsLearned)
 	{
 		pActor->Search_Target(20.f);
 		if (pActor->Get_Target()) 
@@ -72,7 +76,8 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_S))
+	bIsLearned = pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::ELECTRIC_WHIP);
+	if (m_pGameInstance->Key_Down(DIK_S) && true == bIsLearned)
 	{
 		pActor->Search_Target(20.f);
 		if (pActor->Get_Target())

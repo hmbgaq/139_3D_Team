@@ -152,10 +152,23 @@ namespace Client
 	};
 
 
-	//enum class Player_Skill 
-	//{
-	//
-	//};
+	enum class Additional_Skill 
+	{
+		KICK,
+		UPPER_CUT,
+		HERO_PUNCH,
+		HEAL,
+		ELECTRIC_DASH,
+		ELECTROCUTE,
+		ELECTRIC_WHIP,
+		QUAKE_PUNCH,
+		QUAKE_PUNCH2,
+		QUAKE_PUNCH3,
+		HIT_EIGHT,
+		SUPER_CHARGE,
+		TELEPORT_PUNCH,
+		Additional_Skill_End
+	};
 
 }
 #endif // Client_Enum_h__
