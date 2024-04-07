@@ -51,13 +51,8 @@ void CSon_ColliderBody::Priority_Tick(_float fTimeDelta)
 
 void CSon_ColliderBody::Tick(_float fTimeDelta)
 {
-	/*auto start = chrono::high_resolution_clock::now();*/
-
 	__super::Tick(fTimeDelta);   
 
-// 	auto End = chrono::high_resolution_clock::now();
-// 	chrono::duration<double> duration0 = End - start;
-// 	cout << "Son ColliderBody 실행시간 : " << duration0.count() << endl;
 }
 
 void CSon_ColliderBody::Late_Tick(_float fTimeDelta)
@@ -67,13 +62,9 @@ void CSon_ColliderBody::Late_Tick(_float fTimeDelta)
 
 HRESULT CSon_ColliderBody::Render()
 {
-	/*auto start = chrono::high_resolution_clock::now();*/
+
 	if (FAILED(__super::Render()))
 		return E_FAIL;
-
-// 	auto End = chrono::high_resolution_clock::now();
-// 	chrono::duration<double> duration0 = End - start;
-// 	cout << "Son ColliderBody 실행시간 : " << duration0.count() << endl;
 
 	return S_OK;
 }
@@ -117,21 +108,12 @@ void CSon_ColliderBody::OnCollisionEnter(CCollider* other)
 
 void CSon_ColliderBody::OnCollisionStay(CCollider* other)
 {
-	CAttackObject* pAttackObject = Get_Target_AttackObject(other);
-
-	if (pAttackObject != nullptr)
-	{
-		if (other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER_ATTACK))
-		{
-			m_pMother->Get_Damaged(pAttackObject->Get_Damage());
-		}
-	}
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-
+	
 		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1, 9.f * m_pGameInstance->Get_TimeDelta());
 	}
 }

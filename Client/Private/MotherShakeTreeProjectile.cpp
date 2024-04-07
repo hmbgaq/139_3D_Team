@@ -54,6 +54,7 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 
 	Set_Enable(true);
 	// ÀÌÆåÆ® »ý¼º
+	m_pMainEffect = EFFECT_MANAGER->Play_Effect("MotherShakeTreeProjectile1.json", this);
 
 
 	return S_OK;
@@ -71,7 +72,6 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 	if (m_bFirst)
 	{
 		m_pEffect = EFFECT_MANAGER->Play_Effect("Circle_Floor_03.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
-		m_pMainEffect = EFFECT_MANAGER->Play_Effect("MotherShakeTreeProjectile1.json", this);
 		m_bFirst = false;
 	}
 
