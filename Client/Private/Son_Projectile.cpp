@@ -119,9 +119,8 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	//m_pCollider->Set_Enable(false);
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);
-	this->Set_Dead(true);
 
+	this->Set_Dead(true);
 
 }
 
@@ -195,7 +194,6 @@ void CSon_Projectile::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pEffect)
-		Safe_Release(m_pEffect);
-	
+	Safe_Release(m_pEffect);
+		
 }

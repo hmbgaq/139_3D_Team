@@ -638,6 +638,8 @@ void CEffect_Particle::Free()
 {
 	__super::Free();
 
+	Delete_Object_Owner();
+
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
 

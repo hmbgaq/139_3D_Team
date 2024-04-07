@@ -340,7 +340,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	}
 
 
-	// 중간 필요한 이펙트 (100개)
+	// 중간 필요한 이펙트 (50개)
 	for (_uint i = 0; i < iMaxEffect; ++i)
 	{
 		
@@ -357,15 +357,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
-
-#pragma region 플레이어 이펙트
-
-		/* Revolver_Fire */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json"));
-		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json"));
-
-#pragma endregion
-
 
 	}
 
@@ -396,7 +387,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* SlamDown */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_25_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json"));
 
 		/* DodgeBlink */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json"));
@@ -409,6 +400,11 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Revolver */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json"));
+
+		/* Revolver_Fire */
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json"));
+		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json"));
+
 
 #pragma endregion
 

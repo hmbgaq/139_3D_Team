@@ -314,7 +314,6 @@ void CEffect::Update_PivotMat()
 			if (nullptr != m_pTrail)	// 트레일을 갖고있던 이펙트면 트레일 멈춤
 				m_pTrail->Set_Play(FALSE);
 			
-
 			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
 			EFFECT_MANAGER->Return_ToPool(this);
 
@@ -410,7 +409,6 @@ void CEffect::End_Effect()
 			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면 라이프 타임이 끝났을 때 죽이기.
 			{
 				EFFECT_MANAGER->Return_ToPool(this);
-				//Set_Dead(TRUE);
 			}
 			else if (DEAD_OWNER == m_tEffectDesc.eType_Dead)	// 루프가 아니라도 죽음이 외부에서 정해진다면 라이프 타임이 끝났을 때 리셋만.
 			{
@@ -436,8 +434,7 @@ void CEffect::End_Effect_ForPool()
 	Init_ReSet_Effect();			// 리셋
 
 	// 주인이 존재하면 지워줌
-	if (nullptr != m_pOwner)
-		Delete_Object_Owner();
+	Delete_Object_Owner();
 
 	m_tEffectDesc.Reset_Pivot();
 }
@@ -568,6 +565,7 @@ void CEffect::Free()
 {
 	__super::Free();
 
+	Delete_Object_Owner();
 
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);

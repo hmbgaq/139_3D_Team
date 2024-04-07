@@ -292,7 +292,6 @@ void CVampireCommander::Free()
 	}
 
 
-	if (nullptr != m_pMapEffect)
-		Safe_Release(m_pMapEffect);
+	Safe_Release(m_pMapEffect);
 	
 }

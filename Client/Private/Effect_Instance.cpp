@@ -609,6 +609,8 @@ void CEffect_Instance::Free()
 {
 	__super::Free();
 
+	Delete_Object_Owner();
+
 	Safe_Release(m_pModelCom);
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)

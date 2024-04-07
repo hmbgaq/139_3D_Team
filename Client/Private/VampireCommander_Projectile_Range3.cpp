@@ -59,8 +59,6 @@ HRESULT CVampireCommander_Projectile_Range3::Initialize(void* pArg)
 
 
 	// ÀÌÆåÆ® »ı¼º
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Impact_03_Red_With_Rock_02.json", this);
-	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
 	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
 
 	return S_OK;
@@ -119,10 +117,6 @@ void CVampireCommander_Projectile_Range3::OnCollisionEnter(CCollider* other)
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);
-
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);
-	m_pEffect = nullptr;
-	//m_pEffect->Set_Dead(true);	// ÀÌÆåÆ® Á×ÀÌ±â
 
 }
 
@@ -196,10 +190,5 @@ void CVampireCommander_Projectile_Range3::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pEffect)
-	{
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-		m_pEffect = nullptr;
-		//m_pEffect->Set_Dead(true);	// ÀÌÆåÆ® Á×ÀÌ±â
-	}
+	Safe_Release(m_pEffect);
 }
