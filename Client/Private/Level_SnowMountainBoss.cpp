@@ -39,6 +39,7 @@
 #include "SpringCamera.h"
 #include "Light.h"
 #include "Event_MonsterSpawnTrigger.h"
+#include "Effect_Manager.h"
 
 
 CLevel_SnowMountainBoss::CLevel_SnowMountainBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -216,6 +217,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
 	pPlayer->Set_InitPosition(_float3(99.83f, 0.f, 25.80f));
+
 	//pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
 	//CNavigation* pNavigation = pPlayer->Get_Navigation();
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
@@ -660,6 +662,8 @@ CLevel_SnowMountainBoss* CLevel_SnowMountainBoss::Create(ID3D11Device* pDevice, 
 void CLevel_SnowMountainBoss::Free()
 {
 	__super::Free();
+
+	
 
 
 }

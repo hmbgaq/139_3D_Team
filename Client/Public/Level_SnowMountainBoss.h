@@ -41,7 +41,6 @@ private: /* Shader */
 private:
 	_int			TempLightNumber = 0;
 	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData_MapData.json";
-
 public:
 	static CLevel_SnowMountainBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

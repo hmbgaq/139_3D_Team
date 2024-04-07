@@ -2424,6 +2424,9 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Egg_Mother"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
 
+						if (ImGui::Button("MotherShakeTreeProjectile"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
+
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
 					}
@@ -6036,6 +6039,12 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
 				}
+
+				if (ImGui::Button("MotherShakeTreeProjectile"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
+				}
+
 
 				ImGui::SeparatorText("");
 

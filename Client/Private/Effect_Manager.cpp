@@ -226,8 +226,15 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Boos 1 */
 		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura.json"));
+
 	}
 
+	for (_uint i = 0; i < 500; ++i)
+	{
+		//Boss2 SonProjectile
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json"));
+	}
 
 	// 대량으로 필요한 이펙트 (300개)
 	for (_uint i = 0; i < iMaxManyEffect; ++i)
@@ -239,7 +246,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Hit */
 		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json"));
-
+		//Boss2 SonProjectile
+		//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
 
 	}
 
@@ -256,7 +265,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json"));
 		//Boss2 MotherShakeTreeProjectile
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
+		//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
 
 #pragma region 플레이어 이펙트
 

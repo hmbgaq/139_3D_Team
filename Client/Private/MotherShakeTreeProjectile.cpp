@@ -54,7 +54,6 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 
 	Set_Enable(true);
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Circle_Floor_04.json",_float3(this->Get_Position().x,1.f, this->Get_Position().z));
 
 
 	return S_OK;
@@ -68,6 +67,13 @@ void CMotherShakeTreeProjectile::Priority_Tick(_float fTimeDelta)
 void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (m_bFirst)
+	{
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Circle_Floor_03.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
+		m_pMainEffect = EFFECT_MANAGER->Play_Effect("MotherShakeTreeProjectile1.json", this);
+		m_bFirst = false;
+	}
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
@@ -90,8 +96,8 @@ void CMotherShakeTreeProjectile::Late_Tick(_float fTimeDelta)
 
 HRESULT CMotherShakeTreeProjectile::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	//if (FAILED(__super::Render()))
+	//	return E_FAIL;
 
 	return S_OK;
 }
