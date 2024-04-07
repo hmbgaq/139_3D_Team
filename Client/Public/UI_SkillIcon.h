@@ -29,6 +29,10 @@ public:
 	virtual void	UI_Exit(_float fTimeDelta);
 
 private:
+	void					Check_LevelChange(_float fTimeDelta);
+	void					Check_Animation(_float fTimeDelta);
+
+private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
 
@@ -46,6 +50,7 @@ public:
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 	UI_Animation m_eAnimType = UIANIM_END;
+	string			m_strChangeAnim = "";
 
 public:
 	static CUI_SkillIcon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

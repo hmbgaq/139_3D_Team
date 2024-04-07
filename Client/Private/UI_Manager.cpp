@@ -139,6 +139,7 @@ void CUI_Manager::NonActive_SkillWindowAll()
 {
 	NonActive_SkillWindowBackground();
 	NonActive_SkillWindow();
+	NonActive_SkillFrame();
 	NonActive_SkillIcon();
 	NonActive_SkillPreview();
 	NonActive_SkillWindowButton();
@@ -232,6 +233,7 @@ HRESULT CUI_Manager::Ready_SkillWindow(_uint iLevelIndex)
 {
 	Add_SkillWindowBackground(iLevelIndex, TEXT("Layer_SkillWindowBacground"));
 	Add_SkillWindow(iLevelIndex, TEXT("Layer_SkillWindow"));
+	Add_SkillFrame(iLevelIndex, TEXT("Layer_SkillFrame"));
 	Add_SkillIcon(iLevelIndex, TEXT("Layer_SkillIcon"));
 	Add_SkillPreview(iLevelIndex, TEXT("Layer_SkillPreview"));
 	Add_SkillWindowButton(iLevelIndex, TEXT("Layer_SkillWindowButton"));
@@ -3975,6 +3977,127 @@ void CUI_Manager::Change_SkillIcon_Level(const string& strUIName, _uint iUILevel
 	}
 }
 
+HRESULT CUI_Manager::Add_SkillFrame(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/SkillWindow/SkillFrame.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecSkillFrame.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_SkillFrame(_bool bActive)
+{
+	if (m_vecSkillFrame.empty())
+		return;
+
+	for (auto& iter : m_vecSkillFrame)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(false);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::NonActive_SkillFrame()
+{
+	if (m_vecSkillFrame.empty())
+		return;
+
+	for (auto& iter : m_vecSkillFrame)
+	{
+		iter->Set_Alpha(1.f);		// UI 알파값 초기화
+		iter->Set_Active(false);	// UI 활성화
+		iter->Set_AnimPlay(false);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(true);	// UI 사라짐 Off
+	}
+}
+
 HRESULT CUI_Manager::Add_SkillPreview(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 	json json_in;
@@ -4105,7 +4228,7 @@ void CUI_Manager::Change_SkillPreview(const string& strUIName)
 	{
 		if (iter->Get_UIDesc().strUIName == strUIName)
 		{
-			//iter->Change_;
+			//iter->Change_; //오늘할일
 		}
 	}
 }
@@ -4379,6 +4502,16 @@ void CUI_Manager::Check_SkillWindowTrigger()
 
 void CUI_Manager::Select_Skill(const string& strSelecSkill)
 {
+	if (m_vecSkillFrame.empty())
+		return;
+
+	for (auto& iter : m_vecSkillFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strSelecSkill)
+		{
+			m_pUI_SelectSkill = iter;
+		}
+	}
 }
 
 void CUI_Manager::Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info)

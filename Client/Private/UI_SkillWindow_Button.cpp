@@ -130,6 +130,7 @@ void CUI_SkillWindow_Button::Check_Picking(_float fTimeDelta)
 				m_bSelectButton = true;
 				m_pUIManager->Select_SkillWindowButton("WeaponButton", false); // 선택한 버튼을 제외하고 모두 꺼준다.
 				m_pUIManager->NonActive_SkillIcon();
+				m_pUIManager->NonActive_SkillFrame();
 			}
 			else if (m_tUIInfo.strProtoTag == "SkillButton" ||
 				m_tUIInfo.strProtoTag == "SkillButtonActive")
@@ -137,6 +138,7 @@ void CUI_SkillWindow_Button::Check_Picking(_float fTimeDelta)
 				m_bSelectButton = true;
 				m_pUIManager->Select_SkillWindowButton("SkillButton", false); // 선택한 버튼을 제외하고 모두 꺼준다.
 				m_pUIManager->Active_SkillIcon(true);
+				m_pUIManager->Active_SkillFrame(true);
 			}
 		}
 	}

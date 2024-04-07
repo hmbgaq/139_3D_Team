@@ -954,6 +954,16 @@ void CWindow_UITool::Setting_Child()
 		ImGui::SameLine();
 		ImGui::RadioButton("Front", m_pCurrSelectUI->Get_RenderGroup(), 11);
 
+		ImGui::RadioButton("First", m_pCurrSelectUI->Get_RenderGroup(), 12);
+		ImGui::SameLine();
+		ImGui::RadioButton("Second", m_pCurrSelectUI->Get_RenderGroup(), 13);
+		ImGui::SameLine();
+		ImGui::RadioButton("Third", m_pCurrSelectUI->Get_RenderGroup(), 14);
+		ImGui::SameLine();
+		ImGui::RadioButton("Fourth", m_pCurrSelectUI->Get_RenderGroup(), 15);
+		ImGui::SameLine();
+		ImGui::RadioButton("PopUP", m_pCurrSelectUI->Get_RenderGroup(), 16);
+
 		if (ImGui::InputText("UI_NAME", m_cName, sizeof(m_cName))) // 문자열 저장해야함
 		{
 			wstring str;
@@ -1219,6 +1229,11 @@ void CWindow_UITool::Child_Object(_float fTimeDelta)
 	if (ImGui::Button("Delete_Child"))
 	{
 		Delete_Child(fTimeDelta);
+	}
+
+	if (ImGui::Button("Delete_All"))
+	{
+		Delete_Child_All(fTimeDelta);
 	}
 #pragma endregion End
 
@@ -1705,6 +1720,27 @@ void CWindow_UITool::Delete_Child(_float fTimeDelta)
 
 
 	m_iSelected_ChildObjectIndex = m_iSelected_ChildObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
+}
+
+void CWindow_UITool::Delete_Child_All(_float fTimeDelta)
+{
+	if (m_vecChildObject.empty())
+		return;
+
+	// 오브젝트 선택 해제
+	m_pCurrSelectUI = nullptr;
+	m_iSelected_ChildObjectIndex = 0;
+
+	// 오브젝트 삭제
+	for (auto& iter : m_vecChildObject)
+		iter->Set_Dead(true);
+
+	/* Set_Dead를 요청하면 매니저에게 알아서 해당 객체를 지워달라고 한거니까 그 객체에 대한 삭제처리는 내가 따로 또 하면 안된다. (근데 왜 됐지?) */
+	//Safe_Release(m_vecChildObject[m_iSelected_ChildObjectIndex]);
+
+	if (!m_vecChildObject.empty())
+		m_vecChildObject.clear();
+
 }
 
 void CWindow_UITool::Add_ParentIndexNumber(PATHINFO& UI_Info)

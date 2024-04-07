@@ -6,7 +6,8 @@
 class CUI_Skill_Preview final : public CUI
 {
 public: /* 각 UI파츠마다 어떤걸 얼마나 가질지 설정해주자. */
-	enum TEXTUREKIND { SKILLPREVIEW, TEXTURE_END };
+	enum TEXTUREKIND { KICK, COMBOPUNCH, DASHSHOCK, ELECTRICCORD, ELECTRICDASH, INCREASEENERGY, INCREASEEXP, INCREASEHP, MAXHP, NPCPOWERUP,
+		ONETOUCH, POWERUP, PUNCH, RECOVERYENERGY, SUPERCHARGEMOD, TELEPORTPUNCH, THREETOUCH, TWOTOUCH, UPPERCUT, HEAL, TEXTURE_END };
 
 private:
 	CUI_Skill_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -29,7 +30,7 @@ public:
 
 public:
 	void			Start_Setting();
-	void			Change_Priview(const string& strUIName);
+	void			Change_Preview(const string& strUIName);
 
 private:
 	virtual HRESULT			Ready_Components() override;
@@ -37,17 +38,9 @@ private:
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
-
-private: // Frame
-	_int		m_iCurrentFrame = 0;
-	DWORD		m_Time = (DWORD)GetTickCount64();
-	_float		m_fFrameChangeTime = 0.f;
+	TEXTUREKIND m_eTextureKind = TEXTURE_END;
 
 private: // Sprite Info
-	_int		m_iMaxFrame = 0;
-	_bool		m_bFinish = false;
-	_bool		m_bSkip = false;
-	_bool		m_bLoop = false;
 	string		m_strPreName = "";
 
 public:

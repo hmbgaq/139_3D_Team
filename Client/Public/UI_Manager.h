@@ -81,22 +81,27 @@ public:
 	void			Active_PlayerHUD();
 	void			NonActive_PlayerHUD();
 
+public:
 	/* LeftHUD */
 	HRESULT			Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_LeftHUD();
 	void			NonActive_LeftHUD();
 	void			LeftSkillState(const string& strUIName, SKILLSTATE eState);
 	void			LeftSkillUnlock(const string& strUIName, _bool bUnlock);
+private:
 	vector<CUI*>	m_vecLeftHUD;
 
+public:
 	/* RightHUD */
 	HRESULT			Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_RightHUD();
 	void			NonActive_RightHUD();
 	void			RightSkillState(const string& strUIName, SKILLSTATE eState);
 	void			RightSkillUnlock(const string& strUIName, _bool bUnlock);
+private:
 	vector<CUI*>	m_vecRightHUD;
 
+public:
 	/* LeftSkill */
 	HRESULT			Add_LeftSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_LeftSkill();
@@ -114,9 +119,10 @@ public:
 	_float			Get_LeftHUD_MaxCoolTime(const string& strUIName);
 	// 스킬 해금
 	void			Change_LeftHUD_SkillUnlock(const string& strUIName, _bool bUnlock);
-
+private:
 	vector<CUI*>	m_vecLeftSkill;
 
+public:
 	/* RightSkill */
 	HRESULT			Add_RightSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_RightSkill();
@@ -134,116 +140,158 @@ public:
 	_float			Get_RightHUD_MaxCoolTime(const string& strUIName);
 	// 스킬 해금
 	void			Change_RightHUD_SkillUnlock(const string& strUIName, _bool bUnlock);
-
+private:
 	vector<CUI*>	m_vecRightSkill;
 
+public:
 	/* TutorialBox */
 	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_TutorialBox();
 	void	NonActive_TutorialBox();
 	void	Change_TutorialText(TUTORIAL_TEXT eChangeText);
-
+private:
 	vector<CUI*>	m_vecTutorialBox;
+
+public:
 	/* LevelUp */
 	HRESULT Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_LevelUp();
 	void	NonActive_LevelUp();
+private:
 	vector<CUI*>	m_vecLevelUP;
+
+public:
 	/* RewardBox */
 	HRESULT Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_RewardBox();
 	void	NonActive_RewardBox();
+private:
 	vector<CUI*>	m_vecRewardBox;
 
+public:
 	/* QuestBox */
 	HRESULT Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_QuestBox();
+private:
 	vector<CUI*>	m_vecQuestBox;
 
+public:
 	/* Distortion */
 	HRESULT Add_Distortion(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Distortion();
 	void	NonActive_Distortion();
+private:
 	vector<CUI*>	m_vecDistortion;
 
+
 #pragma region Loading
+public:
 	/* IntroLoading */
 	HRESULT Add_Loading_Intro(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_Intro(_bool bActive);
 	void	NonActive_Loading_Intro();
+private:
 	vector<CUI*>	m_vecLoading;
 
+
+public:
 	/* BossLoading */
 	HRESULT Add_Loading_IntroBoss(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_IntroBoss(_bool bActive);
 	void	NonActive_Loading_IntroBoss();
+private:
 	vector<CUI*>	m_vecLoadingIntroBoss;
 
+
+public:
 	/* SnowMountainLoading */
 	HRESULT Add_Loading_SnowMountain(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_SnowMountain(_bool bActive);
 	void	NonActive_Loading_SnowMountain();
+private:
 	vector<CUI*>	m_vecLoadingSnowMountain;
 
+
+public:
 	/* SnowMountainBossLoading */
 	HRESULT Add_Loading_SnowMountainBoss(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_SnowMountainBoss(_bool bActive);
 	void	NonActive_Loading_SnowMountainBoss();
+private:
 	vector<CUI*>	m_vecLoadingSnowMountainBoss;
 
+
+public:
 	/* ToolLoading */
 	HRESULT Add_Loading_ToolLevel(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_ToolLevel(_bool bActive);
 	void	NonActive_Loading_ToolLevel();
+private:
 	vector<CUI*>	m_vecLoadingTool;
 
+
+public:
 	/* GamePlayLoading */
 	HRESULT Add_Loading_TestLevel(_uint iLevelIndex, const wstring& strLayerTag);
 	void	Active_Loading_TestLevel(_bool bActive);
 	void	NonActive_Loading_TestLevel();
+private:
 	vector<CUI*>	m_vecLoadingTest;
-#pragma endregion
+#pragma endregion Loading End
 
+public:
 	/* Crosshair */
 	HRESULT			Add_Crosshair(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_Crosshair(_bool bActive);
 	void			NonActive_Crosshair();
 	void			Trigger_Crosshair(_bool bPlayAnim);
+private:
 	vector<CUI*>	m_vecCrosshair;
 
+public:
 	/* BossHUD(Bar) */
 	HRESULT			Add_BossHUD_Bar(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr, const string& strBossName = "");
 	void			Active_BossHUD_Bar(_bool bActive);
 	void			NonActive_BossHUD_Bar();
+private:
 	vector<CUI*>	m_vecBossHUD_Bar;
 
+public:
 	/* BossHUD(Shard) */
 	HRESULT			Add_BossHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_BossHUD_Shard(_bool bActive);
 	void			NonActive_BossHUD_Shard();
 	void			Dead_BossHUD_Shard(_bool bDeadOwner);
+private:
 	vector<CUI*>	m_vecBossHUD_Shard;
 
+public:
 	/* EnemyHUD(Shard) */
 	CUI_EnemyHUD_Shard*		Add_EnemyHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void					Active_EnemyHUD_Shard(_bool bActive);
 	void					NonActive_EnemyHUD_Shard();
 	void					Set_EnemyHUD_World(_matrix matWorld, _float3 vOffsetPos = { 0.f, 0.f, 0.f });
 	void					Set_Offset(_float fOffsetX, _float fOffsetY);
+private:
 	vector<CUI*>			m_vecEnemyHUD_Shard;
 
+public:
 	/* DiedScreen */
 	HRESULT			Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_DiedScreen();
 	void			NonActive_DiedScreen();
+private:
 	vector<CUI*>	m_vecDiedScreen;
 
+public:
 	/* Option */
 	HRESULT			Add_Option(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_Option();
 	void			NonActive_Option();
+private:
 	vector<CUI*>	m_vecOption;
 
+public:
 	/* MainMenu */
 	HRESULT			Add_MainMenu(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_MainMenu();
@@ -262,56 +310,80 @@ public:
 	void			Active_MainLogo();
 	void			NonActive_MainLogo();
 
+public:
 	/* MouseCusor */
 	HRESULT			Add_MouseCursor(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_MouseCursor();
 	void			NonActive_MouseCursor();
+private:
 	CUI*			m_pMouseCursor = nullptr;
 
+public:
 	/* HitUI */
 	HRESULT			Add_HitUI(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_HitUI();
 	void			NonActive_HitUI();
+private:
 	CUI*			m_pHitUI = nullptr;
 
+public:
 	/* Interaction */
 	CUI_Interaction*	Add_Interaction(_uint iLevelIndex, const string& strUIName, const string& strProtoTag);
 
+public:
 	/* SkillPreview */
 	HRESULT			Add_SkillWindow(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_SkillWindow(_bool bActive);
 	void			NonActive_SkillWindow();
 	void			Change_SkillWindow(const string& strUIName);
+private:
 	vector<CUI*>	m_vecSkillWindow;
 
+public:
 	/* SkillIcon(And Frame) */
 	HRESULT			Add_SkillIcon(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_SkillIcon(_bool bActive);
 	void			NonActive_SkillIcon();
 	void			Change_SkillIcon_Level(const string& strUIName, _uint iUILevel);
+private:
 	vector<CUI*>	m_vecSkillIcon;
 
+public:
+	/* SkillFrame */
+	HRESULT			Add_SkillFrame(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
+	void			Active_SkillFrame(_bool bActive);
+	void			NonActive_SkillFrame();
+private:
+	vector<CUI*>	m_vecSkillFrame;
+
+public:
 	/* SkillPreview */
 	HRESULT			Add_SkillPreview(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_SkillPreview(_bool bActive);
 	void			NonActive_SkillPreview();
 	void			Change_SkillPreview(const string& strUIName);
+private:
 	vector<CUI*>	m_vecSkillPreview;
 
+public:
 	/* SkillWindowButton */
 	HRESULT			Add_SkillWindowButton(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_SkillWindowButton(_bool bActive);
 	void			NonActive_SkillWindowButton();
 	void			Select_SkillWindowButton(const string& strUIName, _bool bSelect);
+private:
 	vector<CUI*>	m_vecSkillWindowButton;
 
+public:
 	/* SkillWindowBackground */
 	HRESULT			Add_SkillWindowBackground(_uint iLevelIndex, const wstring& strLayerTag);
 	void			Active_SkillWindowBackground();
 	void			NonActive_SkillWindowBackground();
 	void			Check_SkillWindowTrigger();
+private:
 	CUI*			m_pSkillWindowBackground = nullptr;
 
+public:
 	void			Select_Skill(const string& strSelecSkill);
 
 	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
@@ -336,6 +408,7 @@ private:
 	string				m_strSelectUI = "";
 	string				m_strMouseOverUI = "";
 	CUI*				m_pUI = nullptr;
+	CUI*				m_pUI_SelectSkill = nullptr;
 	//CUI_Interaction*	m_pInteraction = nullptr;
 	vector<CUI_Interaction*> m_vecInterraction;
 
@@ -366,11 +439,28 @@ public:
 			return nullptr;
 	}
 
+	// UI
+	CUI::UI_LEVEL	Get_Select_SkillLevel() 
+	{
+		if (m_pUI_SelectSkill != nullptr)
+			return m_pUI_SelectSkill->Get_UILevel();
+		else
+			return CUI::UI_LEVEL::LEVEL_END;
+	}
+
+	// UI
+	void			Select_SkillLevelUP()
+	{
+		if (m_pUI_SelectSkill != nullptr)
+			m_pUI_SelectSkill->UILevelUP();
+	}
+
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 #ifdef _DEBUG
 	CUI*			Add_Tool(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg);
 	void			Active_Tool();
+private:
 	vector<CUI*>	m_vecUI_Manager;
 #endif // DEBUG
 

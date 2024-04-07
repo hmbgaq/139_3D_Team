@@ -80,8 +80,11 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 
 		if (m_bMaxCoolDown == false)
 		{
-			// 활성화
-			if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+			// 활성화 (선택한 스킬이 있을 경우) [현재 레벨 0일 때만]
+			if (m_pGameInstance->Key_Pressing(DIK_SPACE) &&
+				m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL_END &&
+				m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL0 &&	// 최소
+				m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL1)		// 최대
 			{
 				if (m_bCoolDown == true &&
 					m_bMaxCoolDown == false)
@@ -90,8 +93,12 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					m_iShaderNum = 5; // 원형 게이지 pass
 				}
 
-				if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
+				if (m_fCoolTime <= 0.f && 
+					m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL_END && // 예외
+					m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL0 &&	// 최소
+					m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL1)		// 최대
 				{
+					m_pUIManager->Select_SkillLevelUP(); // 레벨업
 					m_bCoolDown = false;
 					m_bMaxCoolDown = true;
 

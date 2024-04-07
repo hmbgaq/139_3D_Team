@@ -15,14 +15,20 @@ class CUI abstract : public CGameObject
 public:
 	enum DISTORTIONKIND { MASK, NOISE, DISTORTION_END };
 	enum UI_KIND { NORMAL, TEXT, KIND_END };
-	enum UI_LEVEL { LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, STAGE_END };
+	enum UI_LEVEL { LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL_END };
 
 public:
 	void		Set_UILevel(_uint eLevel) { m_eUI_Level = (UI_LEVEL)eLevel; }
+	void		UILevelUP() 
+	{ 
+		if (m_eUI_Level < (UI_LEVEL)(LEVEL_END - LEVEL1) && m_eUI_Level >= LEVEL0)
+			m_eUI_Level = (UI_LEVEL)(m_eUI_Level + (UI_LEVEL)LEVEL1);
+	}
 	UI_LEVEL	Get_UILevel() { return m_eUI_Level; }
 
 protected:
 	UI_LEVEL	m_eUI_Level = LEVEL0;
+	UI_LEVEL	m_eUI_PreLevel = LEVEL0;
 
 public:
 	// 키프레임 구조체

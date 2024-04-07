@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Texture.h"
+#include "UI_Manager.h"
 
 CUI_SkillIcon::CUI_SkillIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -52,109 +53,13 @@ void CUI_SkillIcon::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		if (m_bAnimChange == true)
-		{
-			switch (m_eAnimType)
-			{
-				case CUI_SkillIcon::UNLOCK:
-					Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconUnlock.json");
-					break;
-				case CUI_SkillIcon::JUMP:
-					Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconJump.json");
-					break;
-				case CUI_SkillIcon::UIANIM_END:
-					break;
-				default:
-					break;
-			}
+		// Level
+		Check_LevelChange(fTimeDelta);
 
-			m_bAnimChange = false;
-		}
-#pragma region 1
-		if (m_tUIInfo.strUIName == "Kick")
-		{
+		// Animation
+		Check_Animation(fTimeDelta);
 
-		}
-		else if(m_tUIInfo.strUIName == "ElectricDash")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "DashShock")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "ElectricCord")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "PowerUP")
-		{
-
-		}
-#pragma region 2
-		else if(m_tUIInfo.strUIName == "UpperCut")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "OneTouch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "TwoTouch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "ThreeTouch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "ComboPunch")
-		{
-
-		}
-#pragma region 3
-		else if(m_tUIInfo.strUIName == "Punch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "SuperChargeMod")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "TeleportPunch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "IncreaseEXP")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "NPCPowerUP")
-		{
-
-		}
-#pragma region 4
-		else if(m_tUIInfo.strUIName == "Heal")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "RecoveryEnergy")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "IncreaseHP")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "IncreaseEnergy")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "MaxHP")
-		{
-
-		}
-
+		m_eUI_PreLevel = m_eUI_Level;
 	}
 }
 
@@ -234,6 +139,134 @@ void CUI_SkillIcon::UI_Exit(_float fTimeDelta)
 {
 }
 
+void CUI_SkillIcon::Check_LevelChange(_float fTimeDelta)
+{
+	if (m_eUI_PreLevel != m_eUI_Level)
+	{
+		m_bAnimChange = true;
+
+		if (m_eUI_Level == LEVEL1)
+			m_eAnimType = UNLOCK;
+
+#pragma region 1
+		if (m_tUIInfo.strUIName == "Kick")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ElectricDash")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "DashShock")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ElectricCord")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "PowerUP")
+		{
+
+		}
+#pragma region 2
+		else if (m_tUIInfo.strUIName == "UpperCut")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "OneTouch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "TwoTouch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ThreeTouch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ComboPunch")
+		{
+
+		}
+#pragma region 3
+		else if (m_tUIInfo.strUIName == "Punch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "SuperChargeMod")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "TeleportPunch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEXP")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "NPCPowerUP")
+		{
+
+		}
+#pragma region 4
+		else if (m_tUIInfo.strUIName == "Heal")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseHP")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "MaxHP")
+		{
+
+		}
+	}
+	else
+	{
+		m_eAnimType = JUMP;
+	}
+}
+
+void CUI_SkillIcon::Check_Animation(_float fTimeDelta)
+{
+	if (m_bAnimChange == true)
+	{
+		// Animation Name
+		m_strChangeAnim = "../Bin/DataFiles/Data_UI/Animation/" + m_tUIInfo.strUIName + ".json";
+
+		switch (m_eAnimType)
+		{
+		case CUI_SkillIcon::UNLOCK:
+			Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconUnlock.json");
+			//Change_Animation(m_strChangeAnim);
+			break;
+		case CUI_SkillIcon::JUMP:
+			Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconJump.json");
+			break;
+		case CUI_SkillIcon::UIANIM_END:
+			break;
+		default:
+			break;
+		}
+
+		m_pUIManager->Active_SkillIcon(true);
+
+		m_bAnimChange = false;
+	}
+}
+
 HRESULT CUI_SkillIcon::Ready_Components()
 {
 	//! For.Com_Shader
@@ -299,7 +332,7 @@ HRESULT CUI_SkillIcon::Bind_ShaderResources()
 			break;
 		case Client::CUI::LEVEL5:
 			break;
-		case Client::CUI::STAGE_END:
+		case Client::CUI::LEVEL_END:
 			break;
 		default:
 			break;

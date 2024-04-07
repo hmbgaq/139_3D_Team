@@ -60,6 +60,9 @@ void CUI_SkillFrame::Tick(_float fTimeDelta)
 
 		Check_Picking(fTimeDelta);
 		Check_State(fTimeDelta);
+		Check_LevelChange(fTimeDelta);
+
+		m_eUI_PreLevel = m_eUI_Level;
 	}
 
 
@@ -224,7 +227,7 @@ HRESULT CUI_SkillFrame::Bind_ShaderResources()
 			break;
 		case Client::CUI::LEVEL5:
 			break;
-		case Client::CUI::STAGE_END:
+		case Client::CUI::LEVEL_END:
 			break;
 		default:
 			break;
@@ -251,7 +254,7 @@ HRESULT CUI_SkillFrame::Bind_ShaderResources()
 			break;
 		case Client::CUI::LEVEL5:
 			break;
-		case Client::CUI::STAGE_END:
+		case Client::CUI::LEVEL_END:
 			break;
 		default:
 			break;
@@ -277,85 +280,105 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 			if (m_tUIInfo.strUIName == "Kick")
 			{
 				m_pUIManager->Change_SkillPreview("Kick");
+				m_pUIManager->Select_Skill("Kick");
 			}
 			else if (m_tUIInfo.strUIName == "ElectricDash")
 			{
 				m_pUIManager->Change_SkillPreview("ElectricDash");
+				m_pUIManager->Select_Skill("ElectricDash");
 			}
 			else if (m_tUIInfo.strUIName == "DashShock")
 			{
 				m_pUIManager->Change_SkillPreview("DashShock");
+				m_pUIManager->Select_Skill("DashShock");
 			}
 			else if (m_tUIInfo.strUIName == "ElectricCord")
 			{
 				m_pUIManager->Change_SkillPreview("ElectricCord");
+				m_pUIManager->Select_Skill("ElectricCord");
 			}
 			else if (m_tUIInfo.strUIName == "PowerUP")
 			{
 				m_pUIManager->Change_SkillPreview("PowerUP");
+				m_pUIManager->Select_Skill("PowerUP");
 			}
 #pragma region 2
 			else if (m_tUIInfo.strUIName == "UpperCut")
 			{
 				m_pUIManager->Change_SkillPreview("UpperCut");
+				m_pUIManager->Select_Skill("UpperCut");
 			}
 			else if (m_tUIInfo.strUIName == "OneTouch")
 			{
 				m_pUIManager->Change_SkillPreview("OneTouch");
+				m_pUIManager->Select_Skill("OneTouch");
 			}
 			else if (m_tUIInfo.strUIName == "TwoTouch")
 			{
 				m_pUIManager->Change_SkillPreview("TwoTouch");
+				m_pUIManager->Select_Skill("TwoTouch");
 			}
 			else if (m_tUIInfo.strUIName == "ThreeTouch")
 			{
 				m_pUIManager->Change_SkillPreview("ThreeTouch");
+				m_pUIManager->Select_Skill("ThreeTouch");
 			}
 			else if (m_tUIInfo.strUIName == "ComboPunch")
 			{
 				m_pUIManager->Change_SkillPreview("ComboPunch");
+				m_pUIManager->Select_Skill("ComboPunch");
 			}
 #pragma region 3
 			else if (m_tUIInfo.strUIName == "Punch")
 			{
 				m_pUIManager->Change_SkillPreview("Punch");
+				m_pUIManager->Select_Skill("Punch");
 			}
 			else if (m_tUIInfo.strUIName == "SuperChargeMod")
 			{
 				m_pUIManager->Change_SkillPreview("SuperChargeMod");
+				m_pUIManager->Select_Skill("SuperChargeMod");
 			}
 			else if (m_tUIInfo.strUIName == "TeleportPunch")
 			{
 				m_pUIManager->Change_SkillPreview("TeleportPunch");
+				m_pUIManager->Select_Skill("TeleportPunch");
 			}
 			else if (m_tUIInfo.strUIName == "IncreaseEXP")
 			{
 				m_pUIManager->Change_SkillPreview("IncreaseEXP");
+				m_pUIManager->Select_Skill("IncreaseEXP");
 			}
 			else if (m_tUIInfo.strUIName == "NPCPowerUP")
 			{
 				m_pUIManager->Change_SkillPreview("NPCPowerUP");
+				m_pUIManager->Select_Skill("NPCPowerUP");
 			}
 #pragma region 4
 			else if (m_tUIInfo.strUIName == "Heal")
 			{
 				m_pUIManager->Change_SkillPreview("Heal");
+				m_pUIManager->Select_Skill("Heal");
 			}
 			else if (m_tUIInfo.strUIName == "RecoveryEnergy")
 			{
 				m_pUIManager->Change_SkillPreview("RecoveryEnergy");
+				m_pUIManager->Select_Skill("RecoveryEnergy");
 			}
 			else if (m_tUIInfo.strUIName == "IncreaseHP")
 			{
 				m_pUIManager->Change_SkillPreview("IncreaseHP");
+				m_pUIManager->Select_Skill("IncreaseHP");
 			}
 			else if (m_tUIInfo.strUIName == "IncreaseEnergy")
 			{
 				m_pUIManager->Change_SkillPreview("IncreaseEnergy");
+				m_pUIManager->Select_Skill("IncreaseEnergy");
 			}
 			else if (m_tUIInfo.strUIName == "MaxHP")
 			{
 				m_pUIManager->Change_SkillPreview("MaxHP");
+				m_pUIManager->Select_Skill("MaxHP");
 			}
 		}
 	}
@@ -446,6 +469,97 @@ void CUI_SkillFrame::Check_State(_float fTimeDelta)
 	else if (m_tUIInfo.strUIName == "MaxHP")
 	{
 
+	}
+}
+
+void CUI_SkillFrame::Check_LevelChange(_float fTimeDelta)
+{
+	if (m_eUI_PreLevel != m_eUI_Level)
+	{
+#pragma region 1
+		if (m_tUIInfo.strUIName == "Kick")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "ElectricDash")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "DashShock")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "ElectricCord")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "PowerUP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+#pragma region 2
+		else if (m_tUIInfo.strUIName == "UpperCut")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "OneTouch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "TwoTouch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "ThreeTouch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "ComboPunch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+#pragma region 3
+		else if (m_tUIInfo.strUIName == "Punch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "SuperChargeMod")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "TeleportPunch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEXP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "NPCPowerUP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+#pragma region 4
+		else if (m_tUIInfo.strUIName == "Heal")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseHP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
+		else if (m_tUIInfo.strUIName == "MaxHP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+		}
 	}
 }
 
