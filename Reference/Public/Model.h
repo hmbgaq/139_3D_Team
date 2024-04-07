@@ -214,6 +214,7 @@ public: /* Cascade */
 
 	/* ORM Texture */
 	CTexture* Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* strOriginFileName, const char* strOriginDrive, const char* strOriginDirectory, const char* strOriginExt, _int iCnt = 1);
+	void Update_EmissiveTextures(const string& fileName, MATERIAL_DESC& materialDesc, const char* szFileName, const char* szDrive, const char* szDirectory, const char* szEXT);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);

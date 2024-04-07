@@ -56,7 +56,6 @@ _bool CLight_Manager::Remove_Light(const _uint& iIndex)
 
 _bool CLight_Manager::Remove_AllLight()
 {
-
 	return _bool();
 }
 
@@ -123,14 +122,6 @@ HRESULT CLight_Manager::Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4
 
 HRESULT CLight_Manager::Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp)
 {
-	/* _float4x4		ViewMatrix, ProjMatrix;
-
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, m_pGameInstance->Get_CamFar()));
-
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &ViewMatrix));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &ProjMatrix));*/
-
 	auto iter = m_ShadowLight_ViewMatrix.find(iLevelIndex);
 
 	if (iter != m_ShadowLight_ViewMatrix.end())
@@ -141,6 +132,7 @@ HRESULT CLight_Manager::Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _v
 
 	m_ShadowLight_ViewMatrix.emplace(iLevelIndex, ViewMatrix);
 	m_ShadowLight_Pos.emplace(iLevelIndex, vEye);
+	m_ShadowLight_Dir.emplace(iLevelIndex, vAt);
 
 	return S_OK;
 }
@@ -154,8 +146,7 @@ HRESULT CLight_Manager::Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngle
 
 	_float4x4 ProjMatrix;
 	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(fFovAngleY), fAspectRatio, fNearZ, fFarZ));
-	//XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f,LightFar));
-
+	
 	m_ShadowLight_ProjMatrix.emplace(iLevelIndex, ProjMatrix);
 	m_ShadowLight_Far.emplace(iLevelIndex, fFarZ);
 
@@ -213,6 +204,23 @@ _float4 CLight_Manager::Get_ShadowLightPos(_uint iLevelIndex)
 		return _float4();
 	else
 		return iter->second;
+}
+
+_float4 CLight_Manager::Get_ShadowLightDir(_uint iLevelIndex)
+{
+	auto iter = m_ShadowLight_Dir.find(iLevelIndex);
+
+	if (iter == m_ShadowLight_Dir.end())
+		return _float4();
+	else
+		return iter->second;
+}
+
+HRESULT CLight_Manager::Ready_StaticLightMatrix(_float3 vPos, _float3 vLook)
+{
+	m_StaticLightMatrix = XMMatrixLookAtLH(vPos, vPos + vLook, _float3(0.0f, 1.0f, 0.0f));
+
+	return S_OK;
 }
 
 CLight_Manager * CLight_Manager::Create()

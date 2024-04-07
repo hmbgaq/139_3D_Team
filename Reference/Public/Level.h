@@ -15,6 +15,9 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	HRESULT Set_ShaderOption(string filePath);
+
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };

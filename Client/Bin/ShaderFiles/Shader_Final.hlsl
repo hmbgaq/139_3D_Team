@@ -227,19 +227,20 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
     vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
-    float4 MainObject = vFinal + vDebug + vRimBloom + vOutLine;
+    
+    float4 MainObject = vFinal + vDebug + vRimBloom;
     
     Out.vColor = vUI;
        
    if (Out.vColor.a == 0)
-        Out.vColor = vIndep;
+        Out.vColor = vIndep ;
+    
+    if(Out.vColor.a == 0)
+        Out.vColor = vOutLine;
     
     if (Out.vColor.a == 0)
         Out.vColor = MainObject;
        
-    if (Out.vColor.a == 0)
-        discard;
-    
     return Out;
 }
 /* ------------------ 4 - Effect Blend ------------------ */

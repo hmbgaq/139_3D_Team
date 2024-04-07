@@ -81,18 +81,26 @@ using namespace std;
 
 namespace Engine 
 {
-	static float					g_iWinsizeX = 1280.f;
-	static float					g_iWinsizeY = 720.f;
+	//static float					g_iWinsizeX = 1280.f;
+	//static float					g_iWinsizeY = 720.f;
 	//static float					g_iWinsizeX = 1600;
 	//static float					g_iWinsizeY = 900.f;
-	//static float					g_iWinsizeX = 1920;
-	//static float					g_iWinsizeY = 1080.f;
+	static float					g_iWinsizeX = 1920;
+	static float					g_iWinsizeY = 1080.f;
 	//static float					g_iWinsizeX = 2560.f;
 	//static float					g_iWinsizeY = 1440.f;
 
 	static float					g_fLightNear = 0.1f;
-	static float					g_fLightFar = 3000.f;
-	static DirectX::XMFLOAT4		g_vLightPos = { 0.f, 120.f, -105.f, 1.f };
+	static float					g_fLightFar = 1500.f;
+	static DirectX::XMFLOAT4		g_vLightEye = { 0.f, 120.f, -150.f, 1.f };
+	static DirectX::XMFLOAT4		g_vLightAt = { 0.f, 0.f, 0.f, 1.f };
+	static DirectX::XMFLOAT4		g_vLightUp = { 0.f, 1.f, 0.f, 0.f };
+
+	/* 수업 코드 */
+	// XMVectorSet(-20.f, 20.f, -20.f, 1.f), 
+	// XMVectorSet(0.f, 0.f, 0.f, 1.f),
+	// XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	
 }
 
 using namespace Engine;

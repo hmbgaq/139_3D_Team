@@ -15,7 +15,7 @@ class CSky final : public CGameObject
 {
 public:
 	//enum SKYTYPE { SKY_STAGE1, SKY_STAGE1BOSS, SKY_TEMP1, SKY_TEMP2 };
-	enum SKYTYPE { SKY_STAGE1, SKY_STAGE1BOSS, SKY_STAGE2, SKY_STAGE2BOSS, SKY_TEMP, SKY_END };
+	enum SKYTYPE { SKY_STAGE1, SKY_STAGE1BOSS, SKY_STAGE2, SKY_STAGE2BOSS, SKY4, SKY5, SKY6, SKY7, SKY8, SKY9, SKY_END };
 
 private:
 	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
@@ -31,6 +31,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	_int	Get_MaxTextureCnt() { return m_iMaxTextureCnt; }
 	void	Set_TextureIndex(_int iIndex) { (_uint)m_eSkyType;}
 	_int	Get_TextureIndex() { return (_uint)m_eSkyType; }
 	
@@ -49,8 +50,8 @@ private:
 	
 private:
 	SKYTYPE				m_eSkyType = SKY_STAGE1;
-
 	_bool				m_bRender_Tool = { TRUE };
+	_int				m_iMaxTextureCnt = {};
 
 private:
 	HRESULT Ready_Components();
@@ -58,14 +59,9 @@ private:
 
 
 public:
-	/* 원형객체를 생성한다. */
 	static CSky* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-
-	/* 사본객체를 생성한다. */
 	virtual CGameObject* Clone(void* pArg) override;
-
 	virtual CGameObject* Pool();
-
 	virtual void Free() override;
 	
 };

@@ -157,6 +157,7 @@ void CUI_SelectList::Check_Picking(_float fTimeDelta)
 			{
 				m_bShadow_Active = !m_bShadow_Active;
 				m_pTransformCom->Set_Position(m_pUIManager->Get_CurrentUI()->Get_Position());
+				m_pGameInstance->Clear_MRT(TEXT("MRT_Blur_ViewShadow"));
 			}
 		}
 		else if (m_pUIManager->Get_strSelectUI() == "PBR")
