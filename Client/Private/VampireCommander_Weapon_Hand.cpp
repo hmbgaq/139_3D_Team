@@ -208,7 +208,6 @@ void CVampireCommander_Weapon_Hand::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pTrail)
-		Safe_Release(m_pTrail);
-		//m_pTrail->Set_Dead(TRUE);
+	Safe_Release(m_pTrail);
+
 }

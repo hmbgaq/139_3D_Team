@@ -7192,8 +7192,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tVoidDesc.bBillBoard = { FALSE };
 
 
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01] = strModelTag;
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02] = TEXT("");
+		tVoidDesc.strModelTag[0] = strModelTag;
+		//tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02] = TEXT("");
 
 
 		tVoidDesc.bPlay				= { TRUE };
@@ -7410,8 +7410,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 
 		tVoidDesc.bBillBoard = { FALSE };
 
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01] = strModelTag1;
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02] = strModelTag2;
+		tVoidDesc.strModelTag[0] = strModelTag1;
+		tVoidDesc.strModelTag[1] = strModelTag2;
 
 		tVoidDesc.bPlay = { TRUE };
 		tVoidDesc.bUseRigidBody = { TRUE };

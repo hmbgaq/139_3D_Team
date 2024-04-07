@@ -53,6 +53,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 	m_fDamage = 1.f;
 
 	Set_Enable(true);
+
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
 
@@ -194,7 +195,9 @@ void CMotherVomit::Free()
 {
 	__super::Free();
 
-	//if(nullptr != m_pEffect)
+
+	if (nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 
 }

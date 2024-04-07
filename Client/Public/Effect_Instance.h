@@ -70,7 +70,7 @@ public:
 
 private:
 	CShader*							m_pShaderCom				= { nullptr };	
-	CModel*								m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_END]	= { nullptr };
+	CModel*								m_pModelCom					= { nullptr };
 	CTexture*							m_pTextureCom[TEXTURE_END]	= { nullptr };
 	CVIBuffer_Effect_Model_Instance*	m_pVIBufferCom				= { nullptr };
 

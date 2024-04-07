@@ -297,7 +297,6 @@ void CEnvironment_LightObject::Change_LightEffect(LIGHT_EFFECT eLightEffectType)
 	{
 		//m_pEffect->Set_Dead(true);
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-		m_pEffect = nullptr;
 	}
 
 

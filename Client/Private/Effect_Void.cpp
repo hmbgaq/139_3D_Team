@@ -173,7 +173,7 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 
 
 	/* Model */
-	for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); i++)
+	for (_int i = 0; i < 2; i++)
 	{
 		m_pGameInstance->WString_To_String(m_tVoidDesc.strModelTag[i], strTag);
 		Out_Json["strModelTag"][i] = strTag;
@@ -258,7 +258,7 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 
 	/* Model */
-	for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); i++)
+	for (_int i = 0; i < 2; i++)
 	{
 		strTag = static_cast<string>(In_Json["strModelTag"][i]);
 		m_pGameInstance->String_To_WString(strTag, m_tVoidDesc.strModelTag[i]);

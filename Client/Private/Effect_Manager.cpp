@@ -319,7 +319,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	_uint iLevel = LEVEL_STATIC;	//_uint iCurLevel = m_pGameInstance->Get_NextLevel();
 
 	// 1개만 있어도 되는 이펙트
-	{
+	{ 
 		/* Circle_Floor */
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
@@ -376,7 +376,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma region 플레이어 이펙트
 
 		/* Heal */
-		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json"));
@@ -390,8 +390,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 
 		/* EnergyWhip */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_21_distortionTest.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_30.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json"));
 
 		/* SlamDown */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json"));
@@ -440,14 +440,14 @@ HRESULT CEffect_Manager::Add_ToPool(_uint iLevelIndex, string strAddPath, string
 	return S_OK;
 }
 
-void CEffect_Manager::Return_ToPool(CEffect* pEffect)
+HRESULT CEffect_Manager::Return_ToPool(CEffect* pEffect)
 {
 	if (pEffect == nullptr)
 	{
 //#ifdef _DEBUG
 		MSG_BOX("nullptr : CEffect_Manager::Return_ToPool()");
+		return E_FAIL;
 //#endif // _DEBUG
-		return;
 	}
 
 	pEffect->End_Effect_ForPool();
@@ -460,6 +460,8 @@ void CEffect_Manager::Return_ToPool(CEffect* pEffect)
 	}
 
 	//Safe_Release(pEffect);
+
+	return S_OK;
 }
 
 

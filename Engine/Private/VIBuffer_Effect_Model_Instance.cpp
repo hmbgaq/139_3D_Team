@@ -4,6 +4,8 @@
 #include "SMath.h"
 #include "Easing_Utillity.h"
 
+#include "Model.h"
+
 CVIBuffer_Effect_Model_Instance::CVIBuffer_Effect_Model_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Model_Instance(pDevice,pContext)
 {
@@ -24,33 +26,24 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 	m_tBufferDesc = *(EFFECT_MODEL_INSTANCE_DESC*)pArg;
 
 
-	CModel* pModel[MORPH_END] = { nullptr };
-	for (_uint i = 0; i < ECast<_uint>(MORPH_END); ++i)
-	{	
-		if (nullptr != m_tBufferDesc.pModel[i])
-		{
-			Safe_AddRef(m_tBufferDesc.pModel[i]);
-			pModel[i] = m_tBufferDesc.pModel[i];
-		}
-	}
-	
-	vector<CMesh*> Meshes[MORPH_END];
-	for (_uint i = 0; i < ECast<_uint>(MORPH_END); ++i)
+	Safe_AddRef(m_tBufferDesc.pModel);
+
+	CModel* pModel = m_tBufferDesc.pModel;
+
+	vector<CMesh*> Meshes = pModel->Get_Meshes();
+	m_iNumMeshes = (_int)Meshes.size();
+
+	for (_int i = 0; i < m_iNumMeshes; ++i)
 	{
-		if (nullptr != pModel[i])
-		{
-			Meshes[i] = pModel[i]->Get_Meshes();
-			m_iNumMeshes = (_int)Meshes[i].size();
-
-			for (_int j = 0; j < m_iNumMeshes; ++j)
-			{
-				m_vecInstanceMesh.push_back(Meshes[i][j]);
-				Safe_AddRef(Meshes[i][j]);
-			}
-
-			m_iNumMaterials = pModel[i]->Get_NumMaterials();
-		}
+		m_vecInstanceMesh.push_back(Meshes[i]);
+		Safe_AddRef(Meshes[i]);
 	}
+
+	m_iNumMaterials = pModel->Get_NumMaterials();
+
+
+	//////////////////////////////////////////////////////////////
+
 
 
 	// º¤ÅÍ °ø°£ ¿¹¾à(ÆÄÆ¼Å¬¸ðµåÀÏ¶§¸¸)
@@ -175,26 +168,30 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 HRESULT CVIBuffer_Effect_Model_Instance::Change_Model(CModel* pChangeModel)
 {
 
-	if (nullptr != m_tBufferDesc.pModel[0])
+	// ±âÁ¸²¨ »èÁ¦
+	if (nullptr != m_tBufferDesc.pModel)
 	{
-		Safe_Release(m_tBufferDesc.pModel[0]);
-
-		m_tBufferDesc.pModel[0] = pChangeModel;
-		Safe_AddRef(m_tBufferDesc.pModel[0]);
-	}
-
-	if (nullptr != m_tBufferDesc.pModel[0])
-	{
-		if (!m_vecInstanceMesh.empty())
+		for (_int i = 0; i < m_iNumMeshes; ++i)
 		{
-			for (_int i = 0; i < m_iNumMeshes; ++i)
-			{
-				Safe_AddRef(m_vecInstanceMesh[i]);
-			}
-			m_vecInstanceMesh.clear();
+			Safe_Release(m_vecInstanceMesh[i]);
 		}
 
-		vector<CMesh*> Meshes = m_tBufferDesc.pModel[0]->Get_Meshes();
+		m_vecInstanceMesh.clear();
+		Safe_Release(m_tBufferDesc.pModel);
+	}
+
+
+	// ¹Ù²Ü ¸ðµ¨·Î ¹Ù²ãÁÖ±â
+	if (nullptr != pChangeModel)
+	{
+		m_tBufferDesc.pModel = pChangeModel;
+
+		Safe_AddRef(m_tBufferDesc.pModel);
+
+
+		CModel* pModel = m_tBufferDesc.pModel;
+
+		vector<CMesh*> Meshes = pModel->Get_Meshes();
 		m_iNumMeshes = (_int)Meshes.size();
 
 		for (_int i = 0; i < m_iNumMeshes; ++i)
@@ -203,7 +200,7 @@ HRESULT CVIBuffer_Effect_Model_Instance::Change_Model(CModel* pChangeModel)
 			Safe_AddRef(Meshes[i]);
 		}
 
-		m_iNumMaterials = m_tBufferDesc.pModel[0]->Get_NumMaterials();
+		m_iNumMaterials = pModel->Get_NumMaterials();
 	}
 
 
@@ -618,27 +615,27 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 
 
-#pragma region ¸ðµ¨ ¹Ù²ã³¢±â ½ÃÀÛ
-		// ¸ðÇÁ°¡ TrueÀÌ¸é 
-		if (m_tBufferDesc.bMorph)
-		{
-			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
-
-			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
-			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
-			{
-				iNum += 1;
-				m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
-
-				if (m_tBufferDesc.eCurModelNum >= MORPH_END)
-				{
-					m_tBufferDesc.eCurModelNum = MORPH_01;
-				}
-
-				m_tBufferDesc.fMorphTimeAcc = 0.f;
-			}
-		}
-#pragma region ¸ðµ¨ ¹Ù²ã³¢±â ³¡
+//#pragma region ¸ðµ¨ ¹Ù²ã³¢±â ½ÃÀÛ
+//		// ¸ðÇÁ°¡ TrueÀÌ¸é 
+//		if (m_tBufferDesc.bMorph)
+//		{
+//			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
+//
+//			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
+//			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
+//			{
+//				iNum += 1;
+//				m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
+//
+//				if (m_tBufferDesc.eCurModelNum >= MORPH_END)
+//				{
+//					m_tBufferDesc.eCurModelNum = MORPH_01;
+//				}
+//
+//				m_tBufferDesc.fMorphTimeAcc = 0.f;
+//			}
+//		}
+//#pragma region ¸ðµ¨ ¹Ù²ã³¢±â ³¡
 
 
 #pragma region ¹æÃâ ½ÃÀÛ
@@ -1153,14 +1150,18 @@ HRESULT CVIBuffer_Effect_Model_Instance::Bind_VIBuffers(_uint iMeshContainerInde
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
 
-	if (m_tBufferDesc.bMorph)	// ¸ðÇÁ°¡ TrueÀÌ¸é (¹ÚÁã ¸ðµ¨)
-	{
-		Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
-		m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[m_tBufferDesc.eCurModelNum]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+	if (nullptr == m_tBufferDesc.pModel)
+		return E_FAIL;
 
-		return S_OK;
-	}
-	else
+
+	//if (m_tBufferDesc.bMorph)	// ¸ðÇÁ°¡ TrueÀÌ¸é (¹ÚÁã ¸ðµ¨)
+	//{
+	//	Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
+	//	m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[m_tBufferDesc.eCurModelNum]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+
+	//	return S_OK;
+	//}
+	//else
 	{
 		Bind_VIBuffers(iMeshIndex);
 		m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[iMeshIndex]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
@@ -1603,5 +1604,19 @@ CComponent* CVIBuffer_Effect_Model_Instance::Clone(void* pArg)
 void CVIBuffer_Effect_Model_Instance::Free()
 {
 	__super::Free();
+
+
+
+	if (nullptr != m_tBufferDesc.pModel)
+	{
+		for (_int i = 0; i < m_iNumMeshes; ++i)
+		{
+			Safe_Release(m_vecInstanceMesh[i]);
+		}
+
+		m_vecInstanceMesh.clear();
+		Safe_Release(m_tBufferDesc.pModel);
+	}
+
 
 }

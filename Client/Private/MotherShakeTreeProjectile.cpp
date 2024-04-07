@@ -53,6 +53,7 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 	m_fDamage = 10.f;
 
 	Set_Enable(true);
+
 	// ¿Ã∆Â∆Æ ª˝º∫
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
 
@@ -121,7 +122,7 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 	}
 	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
-	//m_pEffect->Set_Dead(true);	// ¿Ã∆Â∆Æ ¡◊¿Ã±‚
+
 }
 
 void CMotherShakeTreeProjectile::OnCollisionStay(CCollider* other)
@@ -195,7 +196,9 @@ void CMotherShakeTreeProjectile::Free()
 {
 	__super::Free();
 
-	//if(nullptr != m_pEffect)
+
+	if (nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 
 }

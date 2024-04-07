@@ -53,7 +53,7 @@ public:
 	HRESULT				Ready_EffectPool();
 
 	HRESULT				Add_ToPool(_uint iLevelIndex, string strAddPath, string strFileName, _bool bHasTrail = false, string strTrailFileName = "");
-	void				Return_ToPool(CEffect* pEffect);
+	HRESULT				Return_ToPool(CEffect* pEffect);
 
 
 private:

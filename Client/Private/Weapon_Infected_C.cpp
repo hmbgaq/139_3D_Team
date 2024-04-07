@@ -123,7 +123,7 @@ void CWeapon_Infected_C::Free()
 {
 	__super::Free();
 
-
+	Safe_Release(m_pTrail);
 }
 
 

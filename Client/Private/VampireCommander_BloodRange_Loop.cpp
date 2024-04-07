@@ -132,15 +132,10 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 
 void CVampireCommander_BloodRange_Loop::Release(CVampireCommander* pActor)
 {
-	__super::Release(pActor);
-
 	if (m_pEffect != nullptr)
-	{
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-		//Safe_Release(m_pEffect);
-		//m_pEffect->Set_Dead(true);
-	}
 
+	__super::Release(pActor);
 
 	for (int i = 0; i < pActor->m_pWeakneesUIs.size();++i)
 	{

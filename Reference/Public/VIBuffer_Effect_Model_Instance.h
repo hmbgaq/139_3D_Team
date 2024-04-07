@@ -4,13 +4,14 @@
 
 BEGIN(Engine)
 class CMesh;
+class CModel;
 
 class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instance
 {
 public:
 	enum TYPE_MODE		{ MODE_STATIC, MODE_PARTICLE, MODE_END };
 	enum TYPE_ACTION	{ SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
-	enum MODEL_MORPH	{ MORPH_01, MORPH_02, MORPH_END };
+	//enum MODEL_MORPH	{ MORPH_01, MORPH_02, MORPH_END };
 
 	enum TYPE_FADE			{ FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 	enum TYPE_FADE_TAKES	{ LIFE, DIST, HEIGHT, SCALE, TYPE_FADE_TAKES_END };
@@ -21,8 +22,9 @@ public:
 		// 저장해야 하는 고정 정보들
 		_int			iCurNumInstance		= { 1000 };		// 초기화 값이 최대 개수가 됨	
 
-		class CModel*	pModel[MORPH_END]	= { nullptr };	// 저장 X
-		MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
+		CModel* pModel		= { nullptr };
+		//CModel*			pModel[MORPH_END]	= { nullptr };	// 저장 X
+		//MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
 
 
 		/* States */
@@ -306,7 +308,7 @@ private:
 
 
 
-	vector<CMesh*>		m_vecInstanceMeshs[MORPH_END] = {};
+	//vector<CMesh*>		m_vecInstanceMeshs[MORPH_END] = {};
 
 public:
 	static CVIBuffer_Effect_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

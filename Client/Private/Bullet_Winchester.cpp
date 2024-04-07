@@ -131,12 +131,11 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		}
 		
-
-		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 		//EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 
+	m_pTrail->Set_Play(false);
 	Set_Dead(true);
 
 }
@@ -212,7 +211,7 @@ void CBullet_Winchester::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pTrail)
-		m_pTrail->Set_Dead(TRUE);
+
+	Safe_Release(m_pTrail);
 
 }

@@ -88,7 +88,7 @@ void CEffect::Tick(_float fTimeDelta)
 						m_tEffectDesc.bRender = true;
 
 						if (nullptr != m_pTrail)	// 트레일이 존재하면 이때 플레이 시작
-							m_pTrail->Set_Play(TRUE);
+							m_pTrail->Set_Play(true);
 					}					
 					else
 						return;
@@ -267,7 +267,7 @@ void CEffect::Load_FromJson(const json& In_Json)
 			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strPartTag);
 		
 
-			for (_int k = 0; k < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); ++k)
+			for (_int k = 0; k < 2; ++k)
 			{
 				strTag = In_Json["Part"][i]["strModelTag"][k];
 				m_pGameInstance->String_To_WString(strTag, tVoidDesc.strModelTag[k]);
@@ -522,8 +522,11 @@ HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
-	pPartObject->Set_Object_Owner(this);	// 부모 설정
 	m_PartObjects.emplace(strPartTag, pPartObject);
+
+	pPartObject->Set_Object_Owner(this);	// 부모 설정
+
+	//Safe_AddRef(pPartObject);
 
 	return S_OK;
 }
@@ -565,16 +568,14 @@ void CEffect::Free()
 {
 	__super::Free();
 
+
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);
 
 	m_PartObjects.clear();
 
 
-	if (nullptr != m_pTrail)
-	{
-		Safe_Release(m_pTrail);
-	}	
+	Safe_Release(m_pTrail);	
 
 }
 

@@ -108,8 +108,6 @@ void CExplosion_Dynamite::OnCollisionEnter(CCollider* other)
 
 	//Set_Dead(true);
 
-
-	//m_pEffect->Set_Dead(true);
 }
 
 void CExplosion_Dynamite::OnCollisionStay(CCollider* other)

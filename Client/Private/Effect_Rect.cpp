@@ -7,7 +7,7 @@
 CEffect_Rect::CEffect_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = false;
 }
 
 CEffect_Rect::CEffect_Rect(const CEffect_Rect & rhs)
@@ -34,7 +34,7 @@ HRESULT CEffect_Rect::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	m_pTransformCom->Set_Scaling(0.5f, 1.f, 1.f);
+	m_pTransformCom->Set_Scaling(1.f, 1.f, 1.f);
 
 
 	return S_OK;
@@ -555,10 +555,10 @@ void CEffect_Rect::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVIBufferCom);
-
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
+
+	Safe_Release(m_pVIBufferCom);
 
 	Safe_Release(m_pShaderCom);
 }

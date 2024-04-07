@@ -189,5 +189,5 @@ void CBullet_Revolver::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		Safe_Release(m_pEffect)
+		Safe_Release(m_pEffect);
 }

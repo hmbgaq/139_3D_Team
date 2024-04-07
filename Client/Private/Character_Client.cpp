@@ -62,39 +62,39 @@ HRESULT CCharacter_Client::Render()
 	return S_OK;
 }
 
-CEffect* CCharacter_Client::Create_Effect(CGameObject* pOwner)
-{
-	string strEffectFileName = Get_CharcterDesc().EffectFileName;
-	if ("" == strEffectFileName)
-	{
-		strEffectFileName = "Hit_Normal";
-	}
-	//return EFFECT_MANAGER->Create_Effect("Hit/", strEffectFileName + ".json", pOwner);
-	return EFFECT_MANAGER->Play_Effect("Hit/", strEffectFileName + ".json", pOwner);
-}
+//CEffect* CCharacter_Client::Create_Effect(CGameObject* pOwner)
+//{
+//	string strEffectFileName = Get_CharcterDesc().EffectFileName;
+//	if ("" == strEffectFileName)
+//	{
+//		strEffectFileName = "Hit_Normal";
+//	}
+//	//return EFFECT_MANAGER->Create_Effect("Hit/", strEffectFileName + ".json", pOwner);
+//	return EFFECT_MANAGER->Play_Effect("Hit/", strEffectFileName + ".json", pOwner);
+//}
+//
+//
+//CEffect* CCharacter_Client::Create_Effect(_float3 vPos, CGameObject* pOwner)
+//{
+//	CEffect* pEffect = Create_Effect(pOwner);
+//	if (pEffect) 
+//		pEffect->Set_Position(vPos);
+//
+//	return pEffect;
+//}
 
-
-CEffect* CCharacter_Client::Create_Effect(_float3 vPos, CGameObject* pOwner)
-{
-	CEffect* pEffect = Create_Effect(pOwner);
-	if (pEffect) 
-		pEffect->Set_Position(vPos);
-
-	return pEffect;
-}
-
-CEffect* CCharacter_Client::Create_Effect(const wstring& strPartTag)
-{
-	CGameObject* pPartObject = Find_PartObject(strPartTag);
-	
-
-	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
-	//_float3 vPos = pWeapon->Get_WorldPosition();
-
-	//pActor->Create_Effect(vPos);
-
-	return nullptr;
-}
+//CEffect* CCharacter_Client::Create_Effect(const wstring& strPartTag)
+//{
+//	CGameObject* pPartObject = Find_PartObject(strPartTag);
+//	
+//
+//	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Punch_R"));
+//	//_float3 vPos = pWeapon->Get_WorldPosition();
+//
+//	//pActor->Create_Effect(vPos);
+//
+//	return nullptr;
+//}
 
 void CCharacter_Client::Reset_UpperAngle()
 {
@@ -128,10 +128,6 @@ void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string
 	//strEffectFileName = strEffectName != "" ? strEffectName : Get_CharcterDesc().EffectFileName;
 	//strEffectFileName = strEffectFileName != "" ? strEffectFileName : "Hit_Normal";
 
-	if (nullptr == m_pEffectManager)
-	{
-		m_pEffectManager = EFFECT_MANAGER;
-	}
 
 	
 	//if (pEffect)
@@ -158,4 +154,5 @@ void CCharacter_Client::Free()
 
 	if (m_pDataManager)
 		Safe_Release(m_pDataManager);
+
 }

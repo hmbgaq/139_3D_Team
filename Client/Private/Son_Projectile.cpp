@@ -55,10 +55,6 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_fDamage = 10.f;
 
 
-	// ÀÌÆåÆ® »ý¼º
-	//m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
-	//m_pEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test_02.json", this);
-
 
 	return S_OK;
 }
@@ -123,10 +119,9 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	//m_pCollider->Set_Enable(false);
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	this->Set_Dead(true);
 
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);
-	//m_pEffect = nullptr;
 
 }
 

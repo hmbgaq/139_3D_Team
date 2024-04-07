@@ -44,8 +44,6 @@ HRESULT CProjectile_GroundWave::Initialize(void* pArg)
 	m_fDamage = 10.f;
 
 	// ÀÌÆåÆ® »ý¼º
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Impact_03_Red_With_Rock_02.json", this);
-	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
 	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
 
 
@@ -107,15 +105,12 @@ void CProjectile_GroundWave::OnCollisionEnter(CCollider* other)
 		}
 
 
-		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Effect.json");
-		//_float3 vPos = m_pTransformCom->Get_Position();
-		//pEffect->Set_Position(vPos);
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal", m_pTransformCom->Get_Position());
 	}
 
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	Set_Dead(true);
 
-
-	//m_pEffect->Set_Dead(true);
 }
 
 void CProjectile_GroundWave::OnCollisionStay(CCollider* other)
@@ -189,6 +184,5 @@ void CProjectile_GroundWave::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-		//m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 }
