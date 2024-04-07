@@ -5,6 +5,8 @@ void CPlayer_InteractionJumpDown300::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Set_UseGravity(false);
 }
 
 CState<CPlayer>* CPlayer_InteractionJumpDown300::Update(CPlayer* pActor, _float fTimeDelta)
@@ -13,7 +15,7 @@ CState<CPlayer>* CPlayer_InteractionJumpDown300::Update(CPlayer* pActor, _float 
 
 	if (false == m_bFlags[0])
 	{
-		m_bFlags[0] = pActor->Is_Inputable_Front(31);
+		m_bFlags[0] = pActor->Is_Inputable_Front(24);
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_UseGravity(true);

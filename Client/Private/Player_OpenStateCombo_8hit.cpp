@@ -103,6 +103,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 			m_pGameInstance->Set_RadialBlurTime(0.7f);
 			pTarget->Look_At_And_Knockback(pActor->Get_Position(), 0.7f);
 			pTarget->Hitted_Dead(Power::Heavy);
+			pTarget->Get_Damaged(30.f);
 			pTarget->Set_Invincible(true);
 
 			
@@ -152,7 +153,10 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Hit(CPlayer* pActor, _uint iHitCou
 		{
 			pTarget->Hitted_Opened(Direction::Right);
 		}
-		//pTarget->Set_Invincible(true);
+		pTarget->Get_Damaged(3.f);
+
+
+		//pActor->Set_Invincible(true);
 
 		//pActor->Apply_Shake_And_Blur();
 

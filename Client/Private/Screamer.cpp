@@ -103,7 +103,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		m_pModelCom->Play_Animation(fTimeDelta, vPos);
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 
 		m_pGameInstance->Add_DebugRender(m_pColliderCom);
 	}

@@ -105,24 +105,27 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 	{		
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), ); //m_bIsInFrustum
 
-		_float3 vBodyMovePos = m_pBody->Get_MovePos();
-
-		_float fDiff = abs(vBodyMovePos.x) + abs(vBodyMovePos.y) + abs(vBodyMovePos.z);
-
-		if (0.0001f < fDiff)
+		if (false == m_bRootMoveEnd)
 		{
-			m_vAddRootPosition = vBodyMovePos;
+			_float3 vBodyMovePos = m_pBody->Get_MovePos();
 
-			//_float3 vResult = vBodyMovePos;
-			m_vAddRootPosition.x *= m_vRootMoveRate.x;
-			m_vAddRootPosition.y *= m_vRootMoveRate.y;
-			m_vAddRootPosition.z *= m_vRootMoveRate.z;
-			//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
-			m_pTransformCom->Add_RootBone_Position(m_vAddRootPosition, fTimeDelta, m_pNavigationCom);
-		}
-		else
-		{
-			m_vAddRootPosition = {};
+			_float fDiff = abs(vBodyMovePos.x) + abs(vBodyMovePos.y) + abs(vBodyMovePos.z);
+
+			if (0.0001f < fDiff)
+			{
+				m_vAddRootPosition = vBodyMovePos;
+
+				//_float3 vResult = vBodyMovePos;
+				m_vAddRootPosition.x *= m_vRootMoveRate.x;
+				m_vAddRootPosition.y *= m_vRootMoveRate.y;
+				m_vAddRootPosition.z *= m_vRootMoveRate.z;
+				//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+				m_pTransformCom->Add_RootBone_Position(m_vAddRootPosition, fTimeDelta, m_pNavigationCom);
+			}
+			else
+			{
+				m_vAddRootPosition = {};
+			}
 		}
 		
 	}
@@ -560,7 +563,7 @@ void CCharacter::Look_At_OnLand(_fvector vTargetPos)
 
 void CCharacter::Look_At_Target()
 {
-	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable() || true == m_pTarget->Is_Dead())
 		return;
 
 	_fvector vTargetPos = m_pTarget->Get_Position_Vector();

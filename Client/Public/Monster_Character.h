@@ -12,7 +12,14 @@ class CPlayer;
 
 class CMonster_Character abstract : public CCharacter_Client
 {
-
+public:
+	enum class Monster_State 
+	{
+		NONE,
+		ATTACK,
+		ELECTROCUTE,
+		Monster_State_End,
+	};
 
 public:
 	typedef struct tagMonsterDesc : public CGameObject::tagGameObjectDesc
@@ -50,7 +57,6 @@ public:
 	CPlayer* Set_Player_Finisher_Pos(_float3 vPlayerPos);
 	CPlayer* Set_Finish_Pos(_float3 vPos);
 
-	_int iMeshNumber = 0;
 	MONSTER_DESC* Get_MonsterDesc() { return &m_tMonsterDesc; }
 
 	_float Get_AttackDelay() { return m_fAttackDelay; };
@@ -59,9 +65,11 @@ public:
 	_uint Get_AttackCount() { return m_iAttackCount; };
 	void Add_AttackCount() { m_iAttackCount += 1; };
 	void Reset_AttackCount() { m_iAttackCount = 0; };
+	virtual void Check_Frustum() override;
 
 public:
-	virtual void Check_Frustum() override;
+	_int iMeshNumber = 0;
+
 //protected: // !성희 추가
 public: // !성희 추가
 	// 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
@@ -79,7 +87,7 @@ protected:
 	MONSTER_DESC			m_tMonsterDesc = {};
 	_float					m_fAttackDelay = { 0.f };
 	_uint					m_iAttackCount = { 0 };
-
+	
 protected:
 	HRESULT Ready_Components() PURE;
 	HRESULT Ready_PartObjects() PURE;
