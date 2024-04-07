@@ -84,6 +84,7 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 	{
 		//여기서 이펙트도 터트려야 함 돌튀는거 
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		EFFECT_MANAGER->Return_ToPool(m_pMainEffect);
 		Set_Enable(false);
 	}
 
