@@ -787,6 +787,7 @@ CState<CPlayer>* CPlayer_State::Rifle(CPlayer* pActor, _float fTimeDelta, _uint 
 	{
 		if (CPlayer_Rifle_Ironsights_Fire::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Rifle_Ironsights_Fire();
+
 	}
 
 	return nullptr;
@@ -802,11 +803,11 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 			pSpringCam->Set_CameraOffset(_float3(1.f, 0.3f, -1.7f));
 		}
 		
-
 		if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Winchester_WeaponUnholster();
 
 	}
+
 // 	else
 // 	{
 // 		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
@@ -857,10 +858,17 @@ CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _ui
 
 CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+
 	if (m_pGameInstance->Key_Down(DIK_F))
 	{
-		if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_ShotgunElectric_Fire_ShortRange();
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SHOTGUN);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		if (true == bIsCooltimeEnd)
+		{
+			if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_ShotgunElectric_Fire_ShortRange();
+		}
+
 	}
 
 	return nullptr;
@@ -903,11 +911,20 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 {
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SUPER_CHARGE);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		if (true == bIsCooltimeEnd)
+		{
+			pActor->Activate_SuperCharge();
+		}
+	}
+
+	if (true == pActor->Is_SuperCharge() && (m_pGameInstance->Mouse_Down(DIM_LB) || m_pGameInstance->Mouse_Up(DIM_LB)))
+	{
 		pActor->Search_Target(30.f);
 		CCharacter* pTarget = pActor->Get_Target();
 		if (nullptr == pTarget)
 			return nullptr;
-
 
 		CPlayer::TeleportPunch_State eState = pActor->Get_TeleportPunch_State();
 
@@ -945,7 +962,6 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 	{
 		return new CPlayer_IdleLoop();
 	}
-	
 
 	return nullptr;
 }
@@ -1006,7 +1022,15 @@ CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _
 		case CPlayer::Player_SlamTwoHand_TEMP:
 			break;
 		default:
-			return new CPlayer_SlamDown_v2();
+			CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SLAM_DOWM);
+			_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+			if (true == bIsCooltimeEnd)
+			{
+				return new CPlayer_SlamDown_v2();
+			}
+			
+			break;
+			
 		}
 	}
 
@@ -1017,8 +1041,13 @@ CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _
 {
 	if (m_pGameInstance->Key_Down(DIK_R))
 	{
-		if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_MeleeKick();
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::KICK);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		if (true == bIsCooltimeEnd)
+		{
+			if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_MeleeKick();
+		}
 	}
 
 	return nullptr;

@@ -77,7 +77,17 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 		pActor->Search_Target(20.f);
 		if (pActor->Get_Target())
 		{
-			return new CPlayer_EnergyWhip_Pull();
+			CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::ELECTRIC_WHIP);
+			_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+			if (true == bIsCooltimeEnd)
+			{
+				return new CPlayer_EnergyWhip_Pull();
+			}
+			else 
+			{
+				pActor->Set_Target(nullptr);
+			}
+			
 		}
 	}
 

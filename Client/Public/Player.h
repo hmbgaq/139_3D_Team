@@ -186,6 +186,14 @@ public:
 	_bool Is_Interection() { return m_bIsInterection; }
 	void Set_Interection(_bool _bIsInterection) { m_bIsInterection = _bIsInterection; }
 
+public:
+	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
+	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
+	void Update_SuperCharge(_float fTimeDelta) { 
+		_float fTime = m_fSuperChargeTime - fTimeDelta;
+		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
+	};
+
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -205,7 +213,7 @@ private:
 	_uint m_iLadderCount = { 0 };
 	_bool m_bIsInterection = { false };
 
-	_bool m_bIsActivated_TeleportPunch = { false };
+	_float m_fSuperChargeTime = { 0.f };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
 

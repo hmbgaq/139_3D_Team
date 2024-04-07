@@ -127,7 +127,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM, 3.f);		//리볼버
 	Set_HUD_MaxCooltime(HUD::LEFT_LEFT, 10.f);		//샷건
 
-	Set_HUD_MaxCooltime(HUD::RIGHT_TOP, 1.5f);		//라이플
+	Set_HUD_MaxCooltime(HUD::RIGHT_TOP, 2.0f);		//라이플
 	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT, 10.f);	//내려찍기
 	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM, 1.f);	//발차기
 	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT, 1.f);		//전기 줄
@@ -168,6 +168,8 @@ void CPlayer::Tick(_float fTimeDelta)
 		}
 		
 		Update_ChargingTime(fTimeDelta);
+
+		Update_SuperCharge(fTimeDelta);
 
 		CData_Manager::GetInstance()->Set_CurHP(m_fHp);
 
@@ -555,11 +557,11 @@ CPlayer::HUD CPlayer::Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill)
 	switch (ePlayer_Skill)
 	{
 	case Client::CPlayer::Player_Skill::SUPER_CHARGE:
-		return HUD::LEFT_TOP;
+		//return HUD::LEFT_TOP;
+		return HUD::LEFT_RIGHT;
 	case Client::CPlayer::Player_Skill::HEAL:
 		return HUD::LEFT_RIGHT;
 	case Client::CPlayer::Player_Skill::REVOLVER:
-		//return HUD::LEFT_RIGHT;
 		return HUD::LEFT_BOTTOM;
 	case Client::CPlayer::Player_Skill::SHOTGUN:
 		return HUD::LEFT_LEFT;
