@@ -1,10 +1,12 @@
 #include "..\Public\Player_InteractionClimb450.h"
-
+#include "Navigation.h"
 void CPlayer_InteractionClimb450::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Get_Navigation()->Set_InteractMoveMode(true);
+	pActor->Set_UseGravity(false);
 }
 
 CState<CPlayer>* CPlayer_InteractionClimb450::Update(CPlayer* pActor, _float fTimeDelta)
@@ -25,5 +27,6 @@ CState<CPlayer>* CPlayer_InteractionClimb450::Update(CPlayer* pActor, _float fTi
 
 void CPlayer_InteractionClimb450::Release(CPlayer* pActor)
 {
+	pActor->Get_Navigation()->Set_InteractMoveMode(false);
 	__super::Release(pActor);
 }

@@ -160,7 +160,11 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 }
 
 _bool CNavigation::isMove(_fvector vPosition)
-{
+{	
+	if(m_bInteractMoveMode == true)
+		return true;
+	
+
 	if (true == m_Cells.empty())
 		return false;
 
@@ -205,6 +209,9 @@ _bool CNavigation::isMove(_fvector vPosition)
 _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4* vOutSlidingDir)
 {
 	/* 일단 이웃이 없다는 의미로 디폴트 -1로 셋팅해둔다. */
+	if (m_bInteractMoveMode == true)
+		return true;
+
 	_int      iNeighborIndex = { -1 };
 	
 	/* 이동한 지점의 결과가 현재 셀 내부에 있을경우 true반환

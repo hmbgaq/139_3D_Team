@@ -43,6 +43,10 @@ public:
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
 
+	HRESULT		Save_Temp(string strPath);
+	HRESULT		Load_Temp(string strPath, TYPE_FILE eType_File);
+
+
 /* For.Level Setting (환경 세팅) */
 public:
 	void	Show_ImGui_WindowSize();	// ImGui 윈도우 창 크기 표시
@@ -62,6 +66,8 @@ public:
 /* For.Window Update (창 업데이트) */
 public:
 	void	Update_LevelSetting_Window();	// 레벨(환경) 세팅 창(카메라, 스카이박스, 크기비교용 모델 등...)
+
+	void	Update_SaveSlot_Window();		// 임시 저장 슬롯 창
 
 	void	Update_EffectList_Window();			// 이펙트 리스트박스 창
 	void	Update_EffectTrail_Window();		// 트레일 (왼쪽 창)
@@ -157,7 +163,7 @@ private:
 private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
-	_int m_iMaxShaderPassIndex_Particle						= { 12 };
+	_int m_iMaxShaderPassIndex_Particle						= { 14 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
 	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 26, 9, 173, 243, 24 };
 

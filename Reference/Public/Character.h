@@ -284,6 +284,9 @@ public:
 public:
 	virtual void Check_Frustum();
 
+public:
+	void Set_RootMove_End(_bool _bRootMoveEnd) { m_bRootMoveEnd = _bRootMoveEnd; }
+
 protected:
 	CHARCTER_DESC CharAnimDesc = {};
 
@@ -333,7 +336,7 @@ protected:
 
 protected:
 	_float3		m_vRootMoveRate = { 1.f, 1.f, 1.f };
-
+	_bool		m_bRootMoveEnd = { false };
 
 protected:
 	CPhysXCharacterController* m_pPhysXControllerCom = { nullptr };

@@ -12,7 +12,7 @@ CState<CVampireCommander>* CVampireCommander_Dead::Update(CVampireCommander* pAc
 	//임시 죽음 나중에 디졸브 체크하면서 해야 함 
 	if (pActor->Is_Animation_End())
 	{
-		pActor->Set_Dead(true);
+		pActor->m_bCntDead_Active = true;
 	}
 
 	return nullptr;

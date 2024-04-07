@@ -313,7 +313,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 	}
 	else
 	{
-		string strNoExtFileName = filesystem::path(strFileName).stem().string();
+		string strNoExtFileName = filesystem::path(strFileName).stem().string() + "_MapData";
 
 
 		string strBasic = "Basic";
@@ -439,6 +439,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("RootTranslate", Desc.bRootTranslate);
 				InteractJson[i].emplace("Arrival", Desc.bArrival);
 				InteractJson[i].emplace("Enable", Desc.bEnable);
+				InteractJson[i].emplace("InteractMove", Desc.bInteractMoveMode);
 
 				
 
@@ -448,10 +449,14 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 				CJson_Utility::Write_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
-				CJson_Utility::Write_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-				CJson_Utility::Write_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+				CJson_Utility::Write_Float3(InteractJson[i]["BodyColliderSize"],	Desc.vBodyColliderSize);
+				CJson_Utility::Write_Float3(InteractJson[i]["BodyColliderCenter"],	Desc.vBodyColliderCenter);
+				CJson_Utility::Write_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+				CJson_Utility::Write_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 				CJson_Utility::Write_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 				CJson_Utility::Write_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+				CJson_Utility::Write_Float3(InteractJson[i]["InteractMoveColliderSize"],	Desc.vInteractMoveColliderSize);
+				CJson_Utility::Write_Float3(InteractJson[i]["InteractMoveColliderCenter"],	Desc.vInteractMoveColliderCenter);
 				m_vecCreateInteractObject[i]->Write_Json(InteractJson[i]);
 
 				vector<_int> vecUpdateCellIndexs = m_vecCreateInteractObject[i]->Get_UpdateCellIndexs();
@@ -667,6 +672,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 		if (false == m_vecCreateSpecialObject.empty())
 		{
+			json UpdateCellJson = {};
+
 			_int iCreateSpecialSize = (_int)m_vecCreateSpecialObject.size();
 
 			for (_int i = 0; i < iCreateSpecialSize; ++i)
@@ -685,6 +692,25 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				SpecialJson[i].emplace("PlayAnimationIndex", SpecialDesc.iPlayAnimationIndex);
 				SpecialJson[i].emplace("SpecialGroupIndex", SpecialDesc.iSpecialGroupIndex);
 				SpecialJson[i].emplace("BloomMeshIndex", SpecialDesc.iBloomMeshIndex);
+				SpecialJson[i].emplace("ElevatorType", SpecialDesc.eElevatorType);
+				SpecialJson[i].emplace("ElevatorMinHeight", SpecialDesc.fElevatorMinHeight);
+				SpecialJson[i].emplace("ElevatorMaxHeight", SpecialDesc.fElevatorMaxHeight);
+				SpecialJson[i].emplace("ElevatorSpeed", SpecialDesc.fElevatorSpeed);
+				SpecialJson[i].emplace("ElevatorRotationSpeed", SpecialDesc.fElevatorRotationSpeed);
+
+				CJson_Utility::Write_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
+				CJson_Utility::Write_Float3(SpecialJson[i]["ColliderSize"], SpecialDesc.vElevatorColliderSize);
+				CJson_Utility::Write_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
+
+				vector<_uint> vecUpdateCellIndexs = m_vecCreateSpecialObject[i]->Get_UpdateCellIndexs();
+				_int iUpdateCellSize = vecUpdateCellIndexs.size();
+
+				for (_int i = 0; i < iUpdateCellSize; ++i)
+				{
+					UpdateCellJson[i].emplace("UpdateCellIndex", vecUpdateCellIndexs[i]);
+				}
+
+				SpecialJson[i].emplace("UpdateCellJson", UpdateCellJson);
 			}
 		}
 		
@@ -713,11 +739,11 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 	// 문자열에 추가
 	std::ostringstream oss;
-	oss << "../Bin/DataFiles/Data_Map/Tool/MapData"
+	oss << "../Bin/DataFiles/Data_Map/Tool/" << strNoExtFileName.c_str()
 		<< std::setfill('0') << std::setw(4) << year // 4자리로 년도 포맷
-		<< std::setw(2) << month // 2자리로 월 포맷
-		<< std::setw(2) << day // 2자리로 일 포맷
-		<< std::setw(2) << hour // 2자리로 시간 포맷
+		<< std::setw(2) << month << "_" // 2자리로 월 포맷
+		<< std::setw(2) << day << "_" // 2자리로 일 포맷
+		<< std::setw(2) << hour << "_" // 2자리로 시간 포맷
 		<< std::setw(2) << minute // 2자리로 분 포맷
 		<< ".json";
 
@@ -854,16 +880,21 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
 			Desc.eRotationState = InteractJson[i]["RotationType"];
 			Desc.bArrival = InteractJson[i]["Arrival"];
+			Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 			
 
 			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
 			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
-			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);	
+			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
+			CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"],		Desc.vInteractColliderSize);
+			CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"],	Desc.vInteractColliderCenter);
 
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+			CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+			CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
 			
 			CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
 			CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
@@ -4053,19 +4084,19 @@ void CWindow_MapTool::Interact_ColliderFunction()
 
 
 
-		if (ImGui::Button(u8"콜라이더 사이즈 업데이트"))
+		if (ImGui::Button(u8"상호작용 콜라이더 사이즈 업데이트"))
 		{
 #ifdef _DEBUG
-			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderSize(_float3(m_fSelectColliderSizeArray[0], m_fSelectColliderSizeArray[1], m_fSelectColliderSizeArray[2]));
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractColliderSize(_float3(m_fSelectColliderSizeArray[0], m_fSelectColliderSizeArray[1], m_fSelectColliderSizeArray[2]));
 #endif // _DEBUG
 		}
 
 		ImGui::SameLine();
 
-		if (ImGui::Button(u8"콜라이더 센터 업데이트"))
+		if (ImGui::Button(u8"상호작용 콜라이더 센터 업데이트"))
 		{
 #ifdef _DEBUG
-			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderCenter(_float3(m_fSelectColliderCenterArray[0], m_fSelectColliderCenterArray[1], m_fSelectColliderCenterArray[2]));
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractColliderCenter(_float3(m_fSelectColliderCenterArray[0], m_fSelectColliderCenterArray[1], m_fSelectColliderCenterArray[2]));
 #endif // _DEBUG
 		}
 	}
@@ -4656,6 +4687,35 @@ void CWindow_MapTool::Interact_EnableFunction()
 	
 }
 
+void CWindow_MapTool::Interact_BodyColiderFunction()
+{
+	ImGui::SeparatorText(u8"바디 콜라이더 셋팅");
+	{
+		if (ImGui::InputFloat3(u8"바디 콜라이더 사이즈", m_fBodyColliderSizeArray))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderSize(_float3(m_fBodyColliderSizeArray[0], m_fBodyColliderSizeArray[1], m_fBodyColliderSizeArray[2]));
+		}
+
+		if (ImGui::InputFloat3(u8"바디 콜라이더 센터", m_fBodyColliderCenterArray))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderCenter(_float3(m_fBodyColliderCenterArray[0], m_fBodyColliderCenterArray[1], m_fBodyColliderCenterArray[2]));
+		}
+
+		if (ImGui::Button(u8"선택한 오브젝트 기준 센터로 이동"))
+		{
+			_float3 vPosition = m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_Position();
+			vPosition.y = vPosition.y + 1.f;
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderCenter(vPosition);
+
+			m_fBodyColliderCenterArray[0] = vPosition.x;
+			m_fBodyColliderCenterArray[1] = vPosition.y;
+			m_fBodyColliderCenterArray[2] = vPosition.z;
+		}
+
+
+	}
+}
+
 void CWindow_MapTool::Interact_MoveColiderFunction()
 {
 	ImGui::SeparatorText(u8"무브 콜라이더 셋팅");
@@ -4681,6 +4741,41 @@ void CWindow_MapTool::Interact_MoveColiderFunction()
 			m_fMoveColliderCenterArray[2] = vPosition.z;
 		}
 		
+	
+	}
+}
+
+void CWindow_MapTool::Interact_InteractMoveColiderFunction()
+{
+	ImGui::SeparatorText(u8"플레이어 무브 콜라이더 셋팅");
+	{
+		if (ImGui::InputFloat3(u8"플레이어 무브 콜라이더 사이즈", m_fInteractMoveColliderSizeArray))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractMoveColliderSize(_float3(m_fInteractMoveColliderSizeArray[0], m_fInteractMoveColliderSizeArray[1], m_fInteractMoveColliderSizeArray[2]));
+		}
+
+		if (ImGui::InputFloat3(u8"플레이어 무브 콜라이더 센터", m_fInteractMoveColliderCenterArray))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractMoveColliderCenter(_float3(m_fInteractMoveColliderCenterArray[0], m_fInteractMoveColliderCenterArray[1], m_fInteractMoveColliderCenterArray[2]));
+		}
+
+		if (ImGui::Button(u8"선택한 오브젝트 기준 센터로 이동"))
+		{
+			_float3 vPosition = m_vecCreateInteractObject[m_iSelectObjectIndex]->Get_Position();
+			vPosition.y = vPosition.y + 1.f;
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractMoveColliderCenter(vPosition);
+
+			m_fInteractMoveColliderCenterArray[0] = vPosition.x;
+			m_fInteractMoveColliderCenterArray[1] = vPosition.y;
+			m_fInteractMoveColliderCenterArray[2] = vPosition.z;
+		}
+
+		static _bool bExit = false;
+
+		if (ImGui::Checkbox(u8"충돌체에서 벗어날수있게하기", &bExit))
+		{
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_Exit(bExit);
+		}
 	}
 }
 
@@ -4922,7 +5017,7 @@ void CWindow_MapTool::Special_CreateTab()
 
 		static _int iSpecialType = 0;
 
-		const char* SpecialType[2] = { u8"신호등", u8"트랙레버"};
+		const char* SpecialType[3] = { u8"신호등", u8"트랙레버", u8"엘리베이터"};
 
 		for (_uint i = 0; i < IM_ARRAYSIZE(SpecialType); ++i)
 		{
@@ -5039,6 +5134,19 @@ void CWindow_MapTool::Special_SelectTab()
 					m_iShaderPassIndex = Desc.iShaderPassIndex;
 					m_iSpecialGroupIndex = Desc.iSpecialGroupIndex;
 
+
+					if (Desc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
+					{
+						m_vElevatorColliderSize = Desc.vElevatorColliderSize;
+						m_vElevatorColliderCenter = Desc.vElevatorColliderCenter;
+						m_eElevatorType = Desc.eElevatorType;
+						m_vElevatorArrivalPosition = Desc.vArrivalPosition;
+						m_fElevatorMinHeight = Desc.fElevatorMinHeight;
+						m_fElevatorMaxHeight = Desc.fElevatorMaxHeight;
+						m_fElevatorSpeed = Desc.fElevatorSpeed;
+						m_fElevatorRotationSpeed = XMConvertToDegrees(Desc.fElevatorRotationSpeed);
+						
+					}
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -5093,6 +5201,133 @@ void CWindow_MapTool::Special_SelectTab()
 				{
 					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->SignalInit();
 				}
+			}
+
+			else if (m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Get_SpecialType() == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
+			{
+				if (ImGui::Button(u8"엘리베이터 테스트"))
+				{
+					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorOn(!m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Get_ElevatorOn());
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::Button(u8"엘리베이터 초기화"))
+				{
+					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorInit();
+				}
+
+
+				//TODOenum ELEVATORTYPE { ELEVATOR_UP, ELEVATOR_DOWN, ELEVATOR_TARGET, ELEVATOR_TYPEEND };
+
+				
+					const char* ElevatorTypes[] = { "ELEVATOR_UP", "ELEVATOR_DOWN", "ELEVATOR_TARGET", "ELEVATOR_END"};
+					const char* ElevatorPreviewType = ElevatorTypes[m_eElevatorType];
+
+					static ImGuiComboFlags ComboFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
+
+					if (ImGui::BeginCombo(u8"엘리베이터 타입", ElevatorPreviewType, ComboFlags))
+					{
+						for (int i = 0; i < IM_ARRAYSIZE(ElevatorTypes); ++i)
+						{
+							const bool is_Selected = (m_eElevatorType == i);
+
+							if (ImGui::Selectable(ElevatorTypes[i], is_Selected))
+							{
+								m_eElevatorType = i;
+								m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorType((CEnvironment_SpecialObject::ELEVATORTYPE)m_eElevatorType);
+								
+							}
+
+							if (true == is_Selected)
+								ImGui::SetItemDefaultFocus();
+						}
+
+						ImGui::EndCombo();
+					}
+				
+				
+
+				ImGui::NewLine();
+				ImGui::SeparatorText(u8"엘리베이터 콜라이더 셋팅");
+				{
+					if (ImGui::InputFloat3(u8"엘리베이터 콜라이더 사이즈", &m_vElevatorColliderSize.x))
+					{
+						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorColliderSize(m_vElevatorColliderSize);
+					}
+
+					if (ImGui::InputFloat3(u8"엘리베이터 콜라이더 센터", &m_vElevatorColliderCenter.x))
+					{
+						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorColliderCenter(m_vElevatorColliderCenter);
+					}
+				}
+
+				ImGui::NewLine();
+				
+				ImGui::SeparatorText(u8"엘리베이터 도착지점 셋팅");
+
+				if (ImGui::InputFloat4(u8"도착 지점", &m_vElevatorArrivalPosition.x))
+				{
+					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalPosition(m_vElevatorArrivalPosition);
+				}
+
+				static _bool bArrivalPosPicking = false;
+
+				ImGui::NewLine();
+
+				if (m_eElevatorType == (_uint)CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_UP || m_eElevatorType == (_uint)CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_DOWN)
+				{
+					if (ImGui::InputFloat(u8"엘리베이터 최소높이", &m_fElevatorMinHeight))
+					{
+						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorMinHeight(m_fElevatorMinHeight);
+					}
+
+					
+
+					if (ImGui::InputFloat(u8"엘리베이터 최대높이", &m_fElevatorMaxHeight))
+					{
+						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorMaxHeight(m_fElevatorMaxHeight);
+					}
+
+
+					if (ImGui::InputFloat(u8"엘리베이터 속도", &m_fElevatorSpeed))
+					{
+						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_Speed(m_fElevatorSpeed);
+					}
+
+
+					if (ImGui::InputFloat(u8"엘리베이터 회전속도", &m_fElevatorRotationSpeed))
+					{
+						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_RotationSpeed(m_fElevatorRotationSpeed);
+					}
+				}
+				else if (m_eElevatorType == (_uint)CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_TARGET)
+				{
+					ImGui::Checkbox(u8"도착 지점 픽킹 모드", &bArrivalPosPicking);
+
+					if (bArrivalPosPicking == true)
+					{
+						if (m_pGameInstance->Mouse_Down(DIM_LB) && ImGui_MouseInCheck() == TRUE)
+						{
+							if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
+							{
+								m_vElevatorArrivalPosition = m_fRayPos;
+								m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalPosition(m_vElevatorArrivalPosition);
+
+							}
+							else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
+							{
+								m_vElevatorArrivalPosition = m_fRayPos;
+								m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalPosition(m_vElevatorArrivalPosition);
+							}
+						}
+
+					}
+				}
+
+				
+
+				
 			}
 			
 
@@ -6475,6 +6710,9 @@ void CWindow_MapTool::LoadNavi(string strFullPath)
 
 void CWindow_MapTool::LoadCells()
 {
+	m_vecCells.clear();
+	m_vecCellIndexs.clear();
+	
 	vector<CCell*> vecCells = m_pNavigation->Get_Cells();
 
 	_int iCellSize = (_int)vecCells.size();
@@ -7759,8 +7997,8 @@ void CWindow_MapTool::CreateInteractPreview()
 		InteractDesc.eInteractType = (CEnvironment_Interact::INTERACT_TYPE)m_eInteractType;
 		InteractDesc.eInteractState = (CEnvironment_Interact::INTERACT_STATE)m_eInteractState;
 		InteractDesc.iShaderPassIndex = m_iShaderPassIndex;
-		InteractDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
-		InteractDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+		InteractDesc.vInteractColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+		InteractDesc.vInteractColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
 
 		if (m_bAnimType == true)
 		{
@@ -8417,8 +8655,8 @@ void CWindow_MapTool::Interact_CreateFunction()
 			Desc.iShaderPassIndex = m_iShaderPassIndex;
 			Desc.eInteractState = (CEnvironment_Interact::INTERACT_STATE)m_eInteractState;
 			Desc.eInteractType = (CEnvironment_Interact::INTERACT_TYPE)m_eInteractType;
-			Desc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
-			Desc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+			Desc.vInteractColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+			Desc.vInteractColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
 			Desc.strModelTag = m_pPreviewInteract->Get_ModelTag();
 			Desc.bPreview = false;
 			Desc.WorldMatrix = m_pPreviewInteract->Get_Transform()->Get_WorldMatrix();
@@ -8468,8 +8706,8 @@ void CWindow_MapTool::Interact_CreateFunction()
 		Desc.iShaderPassIndex = m_iShaderPassIndex;
 		Desc.eInteractState = (CEnvironment_Interact::INTERACT_STATE)m_eInteractState;
 		Desc.eInteractType = (CEnvironment_Interact::INTERACT_TYPE)m_eInteractType;
-		Desc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
-		Desc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+		Desc.vInteractColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+		Desc.vInteractColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
 		Desc.strModelTag = m_pPreviewInteract->Get_ModelTag();
 		Desc.bPreview = false;
 		Desc.WorldMatrix = m_pPreviewInteract->Get_Transform()->Get_WorldMatrix();
@@ -8533,6 +8771,7 @@ void CWindow_MapTool::Special_CreateFunction()
 			Desc.WorldMatrix = m_pPreviewSpecialObject->Get_Transform()->Get_WorldMatrix();
 			Desc.iSpecialGroupIndex = m_iSpecialGroupIndex;
 			Desc.iPlayAnimationIndex = m_iAnimIndex;
+			
 		
 			CEnvironment_SpecialObject* pObject = dynamic_cast<CEnvironment_SpecialObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &Desc));
 
@@ -9009,8 +9248,6 @@ void CWindow_MapTool::Interact_SelectTab()
 	}
 	else
 	{
-		
-
 		if (ImGui::BeginListBox(u8"생성 객체 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 		{
 			for (_uint i = 0; i < iObjectTagSize; ++i)
@@ -9060,8 +9297,8 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_bInteractLevelChange = InteractDesc.bLevelChange;
 					m_bInteractUseGravity = InteractDesc.bUseGravity;
 
-					_float3 vColliderSize = InteractDesc.vColliderSize;
-					_float3 vColliderCenter = InteractDesc.vColliderCenter;
+					_float3 vColliderSize = InteractDesc.vInteractColliderSize;
+					_float3 vColliderCenter = InteractDesc.vInteractColliderCenter;
 
 					m_fSelectColliderSizeArray[0] = vColliderSize.x;
 					m_fSelectColliderSizeArray[1] = vColliderSize.y;
@@ -9071,6 +9308,14 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_fSelectColliderCenterArray[1] = vColliderCenter.y;
 					m_fSelectColliderCenterArray[2] = vColliderCenter.z;
 
+					m_fBodyColliderSizeArray[0] = InteractDesc.vBodyColliderSize.x;
+					m_fBodyColliderSizeArray[1] = InteractDesc.vBodyColliderSize.y;
+					m_fBodyColliderSizeArray[2] = InteractDesc.vBodyColliderSize.z;
+
+					m_fBodyColliderCenterArray[0] = InteractDesc.vBodyColliderCenter.x;
+					m_fBodyColliderCenterArray[1] = InteractDesc.vBodyColliderCenter.y;
+					m_fBodyColliderCenterArray[2] = InteractDesc.vBodyColliderCenter.z;
+
 					m_fMoveColliderSizeArray[0] = InteractDesc.vMoveRangeColliderSize.x;
 					m_fMoveColliderSizeArray[1] = InteractDesc.vMoveRangeColliderSize.y;
 					m_fMoveColliderSizeArray[2] = InteractDesc.vMoveRangeColliderSize.z;
@@ -9078,6 +9323,15 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_fMoveColliderCenterArray[0] = InteractDesc.vMoveRangeColliderCenter.x;
 					m_fMoveColliderCenterArray[1] = InteractDesc.vMoveRangeColliderCenter.y;
 					m_fMoveColliderCenterArray[2] = InteractDesc.vMoveRangeColliderCenter.z;
+
+					m_fInteractMoveColliderSizeArray[0] = InteractDesc.vInteractMoveColliderSize.x;
+					m_fInteractMoveColliderSizeArray[1] = InteractDesc.vInteractMoveColliderSize.y;
+					m_fInteractMoveColliderSizeArray[2] = InteractDesc.vInteractMoveColliderSize.z;
+
+					m_fInteractMoveColliderCenterArray[0] = InteractDesc.vInteractMoveColliderCenter.x;
+					m_fInteractMoveColliderCenterArray[1] = InteractDesc.vInteractMoveColliderCenter.y;
+					m_fInteractMoveColliderCenterArray[2] = InteractDesc.vInteractMoveColliderCenter.z;
+
 
 					if (isSelected)
 					{
@@ -9220,7 +9474,11 @@ void CWindow_MapTool::Interact_SelectTab()
 			ImGui::Checkbox(u8"상호작용 그룹", &m_bInteractUseGroup);
 
 			ImGui::SameLine();
-			ImGui::Checkbox(u8"콜라이더 셋팅", &m_bInteractColliderSetting);
+			
+			if (ImGui::Checkbox(u8"콜라이더 셋팅", &m_bInteractColliderSetting))
+			{
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractColliderRender(m_bInteractColliderSetting);
+			}
 
 			ImGui::NewLine();
 
@@ -9235,6 +9493,7 @@ void CWindow_MapTool::Interact_SelectTab()
 			if (ImGui::Checkbox(u8"플레이어루트모션에영향받기", &m_tSelectInteractDesc.bRootTranslate))
 			{
 				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_RootTranslate(m_tSelectInteractDesc.bRootTranslate);
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_MoveColliderRender(m_tSelectInteractDesc.bRootTranslate);
 			}
 
 			ImGui::SameLine();
@@ -9246,6 +9505,28 @@ void CWindow_MapTool::Interact_SelectTab()
 			static _bool bNavigationMode = false;
 
 			ImGui::Checkbox(u8"상호작용 네비게이션 셀 추가", &bNavigationMode);
+
+
+			ImGui::SameLine();
+			
+			
+
+			if (ImGui::Checkbox(u8"플레이어 무브 콜라이더 추가", &m_tSelectInteractDesc.bInteractMoveMode))
+			{
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractMoveMode(m_tSelectInteractDesc.bInteractMoveMode);
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_InteractMoveColliderRender(m_tSelectInteractDesc.bInteractMoveMode);
+			}
+
+			ImGui::SameLine();
+
+			static _bool bBodyCollider = false;
+			if (ImGui::Checkbox(u8"바디 콜라이더 셋팅", &bBodyCollider))
+			{
+				m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_ColliderRender(bBodyCollider);
+			}
+			
+
+			
 
 			if (bNavigationMode == true)
 			{
@@ -9277,6 +9558,15 @@ void CWindow_MapTool::Interact_SelectTab()
 				Interact_MoveColiderFunction();
 			}
 
+			if (m_tSelectInteractDesc.bInteractMoveMode == true)
+			{
+				Interact_InteractMoveColiderFunction();
+			}
+
+			if (bBodyCollider == true)
+			{
+				Interact_BodyColiderFunction();
+			}
 			
 			if (ImGui::Button(u8"네비게이션 컴주기"))
 			{
@@ -9342,8 +9632,8 @@ void CWindow_MapTool::Interact_SelectTab()
 				m_bInteractLevelChange = InteractDesc.bLevelChange;
 				m_bInteractUseGravity = InteractDesc.bUseGravity;
 
-				_float3 vColliderSize = InteractDesc.vColliderSize;
-				_float3 vColliderCenter = InteractDesc.vColliderCenter;
+				_float3 vColliderSize = InteractDesc.vInteractColliderSize;
+				_float3 vColliderCenter = InteractDesc.vInteractColliderCenter;
 
 				m_fSelectColliderSizeArray[0] = vColliderSize.x;
 				m_fSelectColliderSizeArray[1] = vColliderSize.y;
@@ -9411,8 +9701,8 @@ void CWindow_MapTool::Interact_SelectTab()
 				m_bInteractLevelChange = InteractDesc.bLevelChange;
 				m_bInteractUseGravity = InteractDesc.bUseGravity;
 
-				_float3 vColliderSize = InteractDesc.vColliderSize;
-				_float3 vColliderCenter = InteractDesc.vColliderCenter;
+				_float3 vColliderSize = InteractDesc.vInteractColliderSize;
+				_float3 vColliderCenter = InteractDesc.vInteractColliderCenter;
 
 				m_fSelectColliderSizeArray[0] = vColliderSize.x;
 				m_fSelectColliderSizeArray[1] = vColliderSize.y;

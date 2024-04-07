@@ -51,7 +51,9 @@ public://뼈 13개
 public:
 	vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
-
+	_bool	m_bCntDead_Active = { false };
+	_float	m_fCntDead_Time = 3.f;
+	_float fTimeAcc = 0.f;
 public:
 	/* 원형객체를 생성한다. */
 	static CVampireCommander* Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strPrototypeTag);

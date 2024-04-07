@@ -79,6 +79,17 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 
 		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &m_bIsGround);
 
+		if (isnan(fHeight) == true)
+		{
+			
+			_float fTimeDelta = m_pGameInstance->Get_TimeDelta();
+
+			Update_GravityAcc(fTimeDelta);
+			vResult.y -= 9.81f * m_fGravityAcc * fTimeDelta;
+			
+			
+		}
+
 		if (true == m_bIsGround)
 		{
 			vResult.y = fHeight;

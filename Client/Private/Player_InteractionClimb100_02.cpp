@@ -5,6 +5,8 @@ void CPlayer_InteractionClimb100_02::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Set_UseGravity(false);
 }
 
 CState<CPlayer>* CPlayer_InteractionClimb100_02::Update(CPlayer* pActor, _float fTimeDelta)

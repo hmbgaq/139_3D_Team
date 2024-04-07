@@ -12,7 +12,14 @@ class CPlayer;
 
 class CMonster_Character abstract : public CCharacter_Client
 {
-
+public:
+	enum class Monster_State 
+	{
+		NONE,
+		ATTACK,
+		ELECTROCUTE,
+		Monster_State_End,
+	};
 
 public:
 	typedef struct tagMonsterDesc : public CGameObject::tagGameObjectDesc
@@ -79,6 +86,7 @@ protected:
 	MONSTER_DESC			m_tMonsterDesc = {};
 	_float					m_fAttackDelay = { 0.f };
 	_uint					m_iAttackCount = { 0 };
+	
 
 protected:
 	HRESULT Ready_Components() PURE;

@@ -85,7 +85,12 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 
 		if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
 		{
-			m_pGameInstance->Get_Player()->Set_InitPosition(m_pTransformCom->Get_Position());
+			CCharacter* pCharacter = m_pGameInstance->Get_Player();
+
+			if(pCharacter != nullptr)
+				pCharacter->Set_InitPosition(m_pTransformCom->Get_Position());
+			else
+				MSG_BOX("플레이어가 없서영");
 		}
 
 	__super::Tick(fTimeDelta);

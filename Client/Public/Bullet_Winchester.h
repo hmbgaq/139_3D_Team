@@ -30,7 +30,6 @@ public:
 
 public:
 	_vector				m_vTargetPos = {};
-	CEffect*			m_pEffect = { nullptr };
 
 
 private:

@@ -54,7 +54,18 @@ public:
 		_int		iBloomMeshIndex = 0;
 
 
-		ELEVATORTYPE eElevatorType = ELEVATOR_TYPEEND;
+		//!For Elevator
+		ELEVATORTYPE	eElevatorType = ELEVATOR_TYPEEND;
+		vector<_uint>	vecUpdateCellIndexs;
+		vector<CCell*>	vecUpdateCells;
+		_float3			vElevatorColliderSize = { 1.f, 1.f, 1.f};
+		_float3			vElevatorColliderCenter = { 0.f, 1.f, 0.f};
+		_float			fElevatorMinHeight = 0.f;
+		_float			fElevatorMaxHeight = 10.f;
+		_float			fElevatorSpeed = 10.f;
+		_float			fElevatorRotationSpeed = XMConvertToRadians(90.f);
+
+		_float4			vArrivalPosition = {};
 	}ENVIRONMENT_SPECIALOBJECT_DESC;
 
 
@@ -121,12 +132,31 @@ public:
 	void				TrackLeverFunction();
 	CUI*				Get_LeverWeakUI() { return m_pLeverWeaknessUI; }
 
-public:
+public: //!For Elevator
 	HRESULT				ElevatorInit();
+	void				Set_ElevatorType(ELEVATORTYPE eElevatorType) { m_tEnvironmentDesc.eElevatorType = eElevatorType;}
 	void				ElevatorFunction(const _float fTimeDelta);
-	void				UpdateCell();
-
 	
+	void				Set_Speed(_float fSpeed);
+	void				Set_RotationSpeed(_float fRotationSpeed);
+	void				Set_ElevatorMinHeight(_float fElevatorMinHeight) { m_tEnvironmentDesc.fElevatorMinHeight = fElevatorMinHeight; }
+	void				Set_ElevatorMaxHeight(_float fElevatorMaxHeight) { m_tEnvironmentDesc.fElevatorMaxHeight = fElevatorMaxHeight; }
+	void				Set_ArrivalPosition(_float4 vArrivalPosition) { m_tEnvironmentDesc.vArrivalPosition = vArrivalPosition; }
+	void				Set_ElevatorColliderSize(_float3 vElevatorColliderSize);
+	void				Set_ElevatorColliderCenter(_float3 vElevatorColliderCenter);
+
+	_bool				Get_ElevatorOn() { return m_bElevatorOn;}
+	void				Set_ElevatorOn(_bool bElevatorOn);
+	void				Set_ElevatorInit();
+	
+	
+public:
+	void								Add_UpdateCellIndex(_int iCellIndex);
+	vector<_uint>&						Get_UpdateCellIndexs() { return m_tEnvironmentDesc.vecUpdateCellIndexs; }
+
+	void								Erase_UpdateCellForIndex(_int iCellIndex) { m_tEnvironmentDesc.vecUpdateCellIndexs.erase(m_tEnvironmentDesc.vecUpdateCellIndexs.begin() + iCellIndex); }
+	void								Enable_UpdateCells();
+	void								UnEnable_UpdateCells();
 
 public:
 	
@@ -140,6 +170,9 @@ private:
 	CTexture*			m_pDiffuseTexture = { nullptr };
 	CTexture*			m_pMaskTexture = { nullptr };
 	CTexture*			m_pNoiseTexture = { nullptr };
+
+	CPlayer*			m_pPlayer = { nullptr };
+	_bool				m_bFindPlayer = false;
 	
 
 private:
@@ -166,15 +199,10 @@ private: //! For. TrackLever
 	CEnvironment_Interact*			m_pSnowMountainWagon = { nullptr };
 	
 private: //!For. Elevator 
-	_float4							m_vArrivalPosition = {};
-	vector<_uint>					m_vecUpdateCellIndexs;
-	vector<CCell*>					m_vecUpdateCells;
-
-	_float							m_fMinY = {};
-	_float							m_fMaxY = {};
-	
+	_float4							m_vInitPosition = {};
 	_bool							m_bElevatorOn = false;
-	
+	_bool							m_bArrival = false;
+	CCollider*						m_pElevatorColliderCom = { nullptr };
 	
 
 private:

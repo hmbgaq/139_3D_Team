@@ -3,6 +3,9 @@
 
 #include "Player_Winchester_Ironsights_AimPose.h"
 
+#include "Data_Manager.h"
+#include "MasterCamera.h"
+
 void CPlayer_Winchester_WeaponUnholster::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -31,5 +34,6 @@ CState<CPlayer>* CPlayer_Winchester_WeaponUnholster::Update(CPlayer* pActor, _fl
 void CPlayer_Winchester_WeaponUnholster::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+	
 	//pActor->Set_Splitted(false);
 }
