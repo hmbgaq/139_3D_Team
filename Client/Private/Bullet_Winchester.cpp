@@ -136,8 +136,8 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 		//EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
-	Set_Enable(false);
-	this->Set_Dead(true);
+	//Set_Enable(false);
+	Set_Dead(true);
 
 }
 
