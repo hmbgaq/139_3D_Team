@@ -152,6 +152,10 @@ namespace Client
 	};
 
 
+	//enum class Player_Skill 
+	//{
+	//
+	//};
 
 }
 #endif // Client_Enum_h__

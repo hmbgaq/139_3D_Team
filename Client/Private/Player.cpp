@@ -101,8 +101,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
 
-	m_fHp = 1.f;
-	//m_fHp = 100;
+	m_fHp = 100;
+	m_fMaxHp = m_fHp;
+
 
 
 // 	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
@@ -124,7 +125,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Set_HUD_MaxCooltime(HUD::LEFT_TOP, 30.f);		//½´ÆÛÂ÷Áö
 	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT, 5.f);		//Èú
-	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM, 3.f);		//¸®º¼¹ö
+	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM, 6.f);		//¸®º¼¹ö
 	Set_HUD_MaxCooltime(HUD::LEFT_LEFT, 10.f);		//¼¦°Ç
 
 	Set_HUD_MaxCooltime(HUD::RIGHT_TOP, 2.0f);		//¶óÀÌÇÃ
@@ -534,7 +535,7 @@ _bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD, _float fCost)
 
 	_bool bResult = { false };
 	if (0 > fCost) 
-	{
+	{	
 		bResult = 0.1f >= fCooltime;
 	}
 	else 
@@ -557,14 +558,14 @@ CPlayer::HUD CPlayer::Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill)
 	switch (ePlayer_Skill)
 	{
 	case Client::CPlayer::Player_Skill::SUPER_CHARGE:
-		//return HUD::LEFT_TOP;
-		return HUD::LEFT_RIGHT;
+		return HUD::LEFT_TOP;
 	case Client::CPlayer::Player_Skill::HEAL:
 		return HUD::LEFT_RIGHT;
 	case Client::CPlayer::Player_Skill::REVOLVER:
 		return HUD::LEFT_BOTTOM;
 	case Client::CPlayer::Player_Skill::SHOTGUN:
 		return HUD::LEFT_LEFT;
+
 	case Client::CPlayer::Player_Skill::RIFLE:
 		return HUD::RIGHT_TOP;
 	case Client::CPlayer::Player_Skill::SLAM_DOWM:

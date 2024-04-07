@@ -915,7 +915,7 @@ _float CUI_Manager::Get_RightHUD_CurrentCoolTime(const string& strUIName)
 	{
 		if (iter->Get_UIDesc().strUIName == strUIName)
 		{
-			return  dynamic_cast<CUI_Player_Skill_Guige*>(iter)->Get_MaxCoolTime();
+			return  dynamic_cast<CUI_Player_Skill_Guige*>(iter)->Get_CurCoolTime();
 		}
 	}
 
