@@ -360,7 +360,7 @@ HRESULT CLoader::Loading_For_Logo_Level()
 HRESULT CLoader::Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL)
 {
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로드하는 중입니다.")); 
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Texture_Sky"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 9)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 9)));
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로드하는 중입니다."));
