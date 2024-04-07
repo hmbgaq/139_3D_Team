@@ -337,6 +337,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Hit */
 		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json"));
+
+
 	}
 
 
@@ -356,6 +358,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json"));
+
+		//Boss2 MotherShakeTreeProjectile
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
 
 	}

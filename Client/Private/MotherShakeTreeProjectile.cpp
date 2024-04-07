@@ -55,7 +55,7 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 	Set_Enable(true);
 
 	// 이펙트 생성
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_04.json", _float3(this->Get_Position().x,1.f, this->Get_Position().z));	// 주인 설정이 없으니 직접 풀에 반납해야합니다.
 
 
 	return S_OK;
@@ -72,12 +72,14 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
-	m_pTransformCom->Rotation_Quaternion(_float3(0.f, 0.f, 1.f));
+	m_pTransformCom->Rotation_Quaternion(_float3(1.f, 0.f, 0.f));
 
 	m_pTransformCom->Go_Down(fTimeDelta,nullptr);
 	if (m_pTransformCom->Get_Position().y <= 0.f)
 	{
 		//여기서 이펙트도 터트려야 함 돌튀는거 
+
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);	// 동그라미 돌려줌
 		Set_Enable(false);
 	}
 
@@ -120,6 +122,8 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
+
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);	// 동그라미 돌려줌
 	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
 
@@ -197,8 +201,6 @@ void CMotherShakeTreeProjectile::Free()
 	__super::Free();
 
 
-	if (nullptr != m_pEffect)
-		Safe_Release(m_pEffect);
-
+	Safe_Release(m_pEffect);	// 동그라미 삭제
 
 }

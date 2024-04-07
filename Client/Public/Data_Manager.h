@@ -40,8 +40,10 @@ public:
 	void Set_Mother(CMother* _pMother);
 	CMother* Get_Mother();
 
-	void Set_Son(CSon* _pSon);
-	CSon* Get_Son();
+	void Set_Son(CGameObject* _pSon);
+	CGameObject* Get_Son();
+	void Set_Son2(CGameObject* _pSon);
+	CGameObject* Get_Son2();
 
 public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
@@ -225,7 +227,8 @@ private:
 	CMasterCamera* m_pMasterCamera = { nullptr };
 	CPlayer* m_pPlayer = { nullptr };
 	CMother* m_pMother = { nullptr };
-	CSon*	m_pSon = { nullptr };
+	CGameObject*	m_pSon = { nullptr };
+	CGameObject*	m_pSon2 = { nullptr };
 
 	CSky* m_pSky = { nullptr };
 	CNavigation* m_pNavigation = { nullptr };

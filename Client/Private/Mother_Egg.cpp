@@ -74,8 +74,8 @@ void CMother_Egg::Tick(_float fTimeDelta)
 
 	if (m_fHp <= 0.f)
 	{
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 		this->Set_Enable(false);
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 
@@ -112,9 +112,9 @@ void CMother_Egg::Tick(_float fTimeDelta)
 // 
 // 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_Component_Model_Infected_D");
 // 		pMonster->Set_Position(this->Get_Transform()->Get_State(CTransform::STATE_POSITION) - this->Get_Transform()->Get_State(CTransform::STATE_RIGHT));
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		//EFFECT_MANAGER->Return_ToPool(m_pEffect);
  		Set_Enable(false);
 	}
 	
@@ -150,10 +150,11 @@ void CMother_Egg::OnCollisionEnter(CCollider* other)
 
 
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-
 	}
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);
-
+	
+	//m_pCollider->Set_Enable(false);
+	//this->Set_Dead(true);
+	//m_pEffect->Set_Dead(true);	// ¿Ã∆Â∆Æ ¡◊¿Ã±‚
 }
 
 void CMother_Egg::OnCollisionStay(CCollider* other)
@@ -227,8 +228,8 @@ void CMother_Egg::Free()
 {
 	__super::Free();
 	
-	if (nullptr != m_pEffect)
-		Safe_Release(m_pEffect);
+
+	Safe_Release(m_pEffect);
 
 
 }

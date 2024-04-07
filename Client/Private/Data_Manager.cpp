@@ -87,14 +87,24 @@ CMother* CData_Manager::Get_Mother()
 	return m_pMother;
 }
 
-void CData_Manager::Set_Son(CSon* _pSon)
+void CData_Manager::Set_Son(CGameObject* _pSon)
 {
 	m_pSon = _pSon;
 }
 
-CSon* CData_Manager::Get_Son()
+CGameObject* CData_Manager::Get_Son()
 {
 	return m_pSon;
+}
+
+void CData_Manager::Set_Son2(CGameObject* _pSon)
+{
+	m_pSon2 = _pSon;
+}
+
+CGameObject* CData_Manager::Get_Son2()
+{
+	return m_pSon2;
 }
 
 void CData_Manager::Apply_Shake_And_Blur(Power ePower)
