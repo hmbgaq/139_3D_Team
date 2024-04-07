@@ -220,7 +220,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	// 1개만 있어도 되는 이펙트
 	{
 		/* Circle_Floor */
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
+		//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
 
 		/* Boos 1 */
