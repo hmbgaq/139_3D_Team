@@ -76,9 +76,6 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 		m_bFirst = false;
 	}
 
-	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
-	//if (m_pTransformCom->Get_Position().y >= 0.f)
-	m_pTransformCom->Rotation_Quaternion(_float3(1.f, 0.f, 0.f));
 
 	m_pTransformCom->Go_Down(fTimeDelta,nullptr);
 	if (m_pTransformCom->Get_Position().y <= 0.f)

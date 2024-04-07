@@ -97,18 +97,15 @@ void CSon_ColliderBody::OnCollisionEnter(CCollider* other)
 {
 	CAttackObject* pAttackObject = Get_Target_AttackObject(other);
 
-	if (m_bFirst)
+
+	if (pAttackObject != nullptr)
 	{
-		if (pAttackObject != nullptr)
+		if (other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER_ATTACK))
 		{
-			if (other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER_ATTACK))
-			{
-				m_pMother->Get_Damaged(pAttackObject->Get_Damage());
-			}
+			m_pMother->Get_Damaged(pAttackObject->Get_Damage());
 		}
-		m_bFirst = false;
 	}
-	
+
 }
 
 void CSon_ColliderBody::OnCollisionStay(CCollider* other)

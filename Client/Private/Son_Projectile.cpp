@@ -147,7 +147,7 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 		}
 // 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 // 		m_pEffect = nullptr;
-		//m_pCollider->Set_Enable(false);
+		m_pCollider->Set_Enable(false);
 		this->Set_Dead(true);
 
 	}
