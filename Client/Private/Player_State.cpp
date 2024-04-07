@@ -1022,10 +1022,15 @@ CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _
 
 CState<CPlayer>* CPlayer_State::Heal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+
 	if (m_pGameInstance->Key_Down(DIK_C))
 	{
-		if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_InteractionGlamour_Activate();
+		_bool bIsCootimeEnd = pActor->Activate_HUD_Skill(CPlayer::HUD::LEFT_RIGHT);
+		if (true == bIsCootimeEnd)
+		{
+			if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_InteractionGlamour_Activate();
+		}
 	}
 
 	return nullptr;

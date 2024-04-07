@@ -80,8 +80,10 @@ public:
 	string Get_HUD_Tag(HUD eHUD);
 	void Set_HUD_MaxCooltime(HUD eHUD, _float fCurrnetCooltime);
 	void Set_HUD_Cooltime(HUD eHUD, _float fCurrnetCooltime);
-	void Activate_HUD_Skill(HUD eHUD);
-	_bool Is_HUD_Cooltime_End(HUD eHUD);
+	_float Get_HUD_Cooltime(HUD eHUD);
+	//_bool Activate_HUD_Skill(HUD eHUD);
+	_bool Activate_HUD_Skill(HUD eHUD, _float fCost = -1.f);
+	_bool Is_HUD_Cooltime_End(HUD eHUD, _float fCost = -1.f);
 	
 
 public://!For. Interact

@@ -27,7 +27,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 	__super::Update(pActor, fTimeDelta);
 
 	fInputWaitTime += fTimeDelta;
-	if (0.7f <= fInputWaitTime)
+	if (0.7f <= fInputWaitTime) // || 
 	{
 		return new CPlayer_IdleLoop();
 	}

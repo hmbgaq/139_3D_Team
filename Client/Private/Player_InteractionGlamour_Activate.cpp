@@ -23,7 +23,10 @@ void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 	EFFECT_MANAGER->Play_Effect("Heal_Particle_07_Reverse.json", pActor);
 	EFFECT_MANAGER->Play_Effect("Heal_Particle_07.json", pActor);
 
-	pActor->Activate_HUD_Skill(CPlayer::HUD::LEFT_RIGHT);
+
+	//pActor->Activate_HUD_Skill(CPlayer::HUD::LEFT_RIGHT);
+
+
 	//pActor->Set_HUD_Cooltime(CPlayer::HUD::LEFT_RIGHT, 5.f);
 	//pActor->Set_HUD_MaxCooltime(CPlayer::HUD::LEFT_RIGHT, 5.f);
 }
