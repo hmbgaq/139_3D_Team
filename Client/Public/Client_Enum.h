@@ -167,7 +167,25 @@ namespace Client
 		HIT_EIGHT,
 		SUPER_CHARGE,
 		TELEPORT_PUNCH,
+
+		//MAX_HP,
+		//REGEN_HP,
+		//ELECTRIC_DAMAGE_INCREASE,
+		//ELECTRIC_COOLTIME_DECREASE,
+		//MELEE_DAMAGE_INCREASE,
+		//MELEE_COOLTIME_DECREASE,
+		//HASTE,
+
+
 		Additional_Skill_End
+	};
+
+	enum class Additional_Weapon
+	{
+		REVOLVER,
+		RIFLE,
+		SHOTGUN,
+		Additional_Weapon_End
 	};
 
 }

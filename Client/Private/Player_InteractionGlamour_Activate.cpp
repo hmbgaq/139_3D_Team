@@ -1,5 +1,5 @@
 #include "..\Public\Player_InteractionGlamour_Activate.h"
-
+#include "Data_Manager.h"
 
 #include "Bone.h"
 #include "Effect.h"
@@ -42,7 +42,7 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 		m_bFlags[0] = pActor->Is_Upper_Inputable_Front(24);
 		if (true == m_bFlags[0])
 		{		
-			pActor->Set_Hp(pActor->Get_MaxHP());
+			pActor->Set_Hp(CData_Manager::GetInstance()->Get_HpRegen());
 		}
 	}
 	

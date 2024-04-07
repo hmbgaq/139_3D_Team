@@ -89,8 +89,9 @@ void CPlayer_Weapon_Punch::Attack(CCollider* other)
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
 		_vector vHitDir = Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1;
 
+		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
 
-		pTarget_Character->Set_Hitted(m_fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee, m_bKnockUp);
+		pTarget_Character->Set_Hitted(fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee, m_bKnockUp);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
 		CCharacter_Client* pOwnerCharacter = dynamic_cast<CCharacter_Client*>(Get_Object_Owner());
