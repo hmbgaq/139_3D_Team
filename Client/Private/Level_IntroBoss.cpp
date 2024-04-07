@@ -62,7 +62,10 @@ HRESULT CLevel_IntroBoss::Initialize()
         return E_FAIL;
 
    //FAILED_CHECK(Ready_Shader());
-   Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
+
+    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+    Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
 
     return S_OK;
 }
@@ -198,9 +201,6 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
         }
     }
 
-    
-
-    
     return S_OK;
 }
 
@@ -906,9 +906,7 @@ HRESULT CLevel_IntroBoss::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 HRESULT CLevel_IntroBoss::Ready_Shader()
 {
     /* For. Shadow */
-    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
-    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
-
+   
     /* 1. 셰이더 초기화 */
     m_pGameInstance->Off_Shader();
 
