@@ -843,9 +843,13 @@ CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _ui
 		//if (CPlayer_Bandit_Special_01::g_iAnimIndex != _iAnimIndex)
 		//	return new CPlayer_Bandit_Special_01();
 
-
-		if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_Revolver_WeaponUnholster();
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER);
+		_bool bIsCooltimeEnd = pActor->Is_HUD_Cooltime_End(eSelectedHUD, REVOLVER_DELAY * 2.f);
+		if (true == bIsCooltimeEnd) 
+		{
+			if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Revolver_WeaponUnholster();
+		}
 	}
 
 	return nullptr;
@@ -1025,7 +1029,7 @@ CState<CPlayer>* CPlayer_State::Heal(CPlayer* pActor, _float fTimeDelta, _uint _
 
 	if (m_pGameInstance->Key_Down(DIK_C))
 	{
-		_bool bIsCootimeEnd = pActor->Activate_HUD_Skill(CPlayer::HUD::LEFT_RIGHT);
+		_bool bIsCootimeEnd = pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::HEAL)); //CPlayer::HUD::LEFT_RIGHT
 		if (true == bIsCootimeEnd)
 		{
 			if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)

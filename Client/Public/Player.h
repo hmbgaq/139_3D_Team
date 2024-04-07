@@ -45,6 +45,19 @@ public:
 		HUD_END
 	};
 
+	enum class Player_Skill 
+	{
+		SUPER_CHARGE,
+		HEAL,
+		REVOLVER,
+		SHOTGUN,
+		RIFLE,
+		SLAM_DOWM,
+		KICK,
+		ELECTRIC_WHIP,
+		Player_Skill_End
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer(const CPlayer& rhs);
@@ -84,6 +97,8 @@ public:
 	//_bool Activate_HUD_Skill(HUD eHUD);
 	_bool Activate_HUD_Skill(HUD eHUD, _float fCost = -1.f);
 	_bool Is_HUD_Cooltime_End(HUD eHUD, _float fCost = -1.f);
+
+	HUD Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill);
 	
 
 public://!For. Interact

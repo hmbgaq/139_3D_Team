@@ -482,6 +482,7 @@ _bool CPlayer::Activate_HUD_Skill(HUD eHUD, _float fCost)
 	_bool bIsCooltimeEnd = Is_HUD_Cooltime_End(eHUD, fCost);
 	if (false == bIsCooltimeEnd)
 	{
+
 		return false;
 	}
 
@@ -536,6 +537,11 @@ _bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD, _float fCost)
 	}
 	else 
 	{
+		if (fCooltime >= fMaxCooltime)
+		{
+			fMaxCooltime = fCooltime;
+		}
+
 		_float fDiff = fMaxCooltime - fCooltime;
 
 		bResult = fDiff >= fCost;
@@ -543,6 +549,33 @@ _bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD, _float fCost)
 
 	return bResult;
 }
+
+CPlayer::HUD CPlayer::Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill)
+{
+	switch (ePlayer_Skill)
+	{
+	case Client::CPlayer::Player_Skill::SUPER_CHARGE:
+		return HUD::LEFT_TOP;
+	case Client::CPlayer::Player_Skill::HEAL:
+		return HUD::LEFT_RIGHT;
+	case Client::CPlayer::Player_Skill::REVOLVER:
+		//return HUD::LEFT_RIGHT;
+		return HUD::LEFT_BOTTOM;
+	case Client::CPlayer::Player_Skill::SHOTGUN:
+		return HUD::LEFT_LEFT;
+	case Client::CPlayer::Player_Skill::RIFLE:
+		return HUD::RIGHT_TOP;
+	case Client::CPlayer::Player_Skill::SLAM_DOWM:
+		return HUD::RIGHT_RIGHT;
+	case Client::CPlayer::Player_Skill::KICK:
+		return HUD::RIGHT_BOTTOM;
+	case Client::CPlayer::Player_Skill::ELECTRIC_WHIP:
+		return HUD::RIGHT_LEFT;
+	}
+
+	return HUD();
+}
+
 
 
 #pragma region 상호작용

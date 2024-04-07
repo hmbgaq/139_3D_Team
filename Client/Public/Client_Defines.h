@@ -88,7 +88,7 @@ namespace Client
 	#define NPC_WEAPON_EDGAR				TEXT("Weapon_Edgar")
 
 	
-
+	#define	REVOLVER_DELAY					1.0f
 
 
 
