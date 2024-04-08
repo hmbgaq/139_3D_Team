@@ -26,6 +26,7 @@ namespace Engine
 		MYPBR,				 // 6 - PBR (외부 참고)
 		VIEW_SHADOW,		 // 7 - 
 		FOG,				 // 8 -
+		TEST, 
 		SHADER_END };
 
 	enum class SSAO_SHADER {
@@ -52,6 +53,7 @@ namespace Engine
 	enum class FINAL_SHADER {
 		FINAL_DEFAULT, FINAL_HSV, FINAL_MIX, FINAL, FINAL_MIXEFFECT, 
 		FINAL_SCREEN_SEPHIA, FINAL_SCREEN_GRAY,
+		TEST,
 		FINAL_END
 	};
 

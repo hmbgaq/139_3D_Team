@@ -19,6 +19,7 @@ public:
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_CASCADE, RENDER_END
 	};
+
 	enum class POST_TYPE { DEFERRED, FOG, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
 						   MOTIONBLUR, LUMASHARPEN, FINAL, TYPE_END};
 
@@ -41,6 +42,8 @@ public:
 	HRESULT Draw_RenderGroup();
 
 private:
+	HRESULT Render_Test();
+
 	HRESULT Render_Priority();
 	HRESULT Render_NonLight();
 	HRESULT Render_Fog();
@@ -231,8 +234,8 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { false };
-	_bool			m_bDebugCom				= { true };
+	_bool			m_bDebugRenderTarget	= { true };
+	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 

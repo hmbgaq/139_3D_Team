@@ -85,8 +85,6 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 
 	//if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
 	//{
-	//
-	//
 	//	m_pGameInstance->Get_Player()->Set_InitPosition(m_pTransformCom->Get_Position());
 	//}
 
