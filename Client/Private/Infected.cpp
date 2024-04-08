@@ -114,19 +114,26 @@ void CInfected::Tick(_float fTimeDelta)
 
 	if (true == m_bCntDead_Active)
 	{
-		fTimeAcc += fTimeDelta;
-		if (fTimeAcc >= m_fCntDead_Time)
+		if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
 		{
-			fTimeAcc = 0.f;
-			Set_Dead(true);
+			fTimeAcc += fTimeDelta;
+			if (fTimeAcc >= m_fCntDead_Time)
+			{
+				fTimeAcc = 0.f;
+				Set_Dead(true);
+			}
+		}
+		else
+		{
+
 		}
 	}
 }
 
 void CInfected::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-
+	if (false == m_bCntDead_Active)
+		__super::Late_Tick(fTimeDelta);
 }
 
 HRESULT CInfected::Render()

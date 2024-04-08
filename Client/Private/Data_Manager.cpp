@@ -32,7 +32,7 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
 	for (_uint i = 0; i < ECast(Additional_Skill::Additional_Skill_End); ++i)
 	{
-		m_AdditionalSkills[i] = false;
+		m_AdditionalSkills[i] = true;
 	}
 
 	//for (_uint i = 0; i < ECast(Additional_Weapon::Additional_Weapon_End); ++i)

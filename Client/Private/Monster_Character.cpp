@@ -72,6 +72,11 @@ void CMonster_Character::Tick(_float fTimeDelta)
 void CMonster_Character::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (true == m_bDead)
+	{
+		Set_EnemyHUD_Dead();
+	}
 }
 
 HRESULT CMonster_Character::Render()
@@ -140,6 +145,4 @@ void CMonster_Character::Set_EnemyHUD_Dead()
 void CMonster_Character::Free()
 {
 	__super::Free();
-
-	Set_EnemyHUD_Dead();
 }

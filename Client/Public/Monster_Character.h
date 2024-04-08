@@ -56,7 +56,6 @@ public:
 	CPlayer* Set_Player_Finisher_Pos(_float3 vPlayerPos);
 	CPlayer* Set_Finish_Pos(_float3 vPos);
 
-	_int iMeshNumber = 0;
 	MONSTER_DESC* Get_MonsterDesc() { return &m_tMonsterDesc; }
 
 	_float Get_AttackDelay() { return m_fAttackDelay; };
@@ -72,6 +71,7 @@ public:
 public:
 	void Set_Monster_State(Monster_State _eMonster_State) { m_eMonster_State = _eMonster_State; };
 	_bool Is_Attack_State() { return Monster_State::ATTACK == m_eMonster_State; }
+	_int iMeshNumber = 0;
 
 //protected: // !¼ºÈñ Ãß°¡
 public: // !¼ºÈñ Ãß°¡
@@ -93,7 +93,6 @@ protected:
 
 	Monster_State			m_eMonster_State = { Monster_State::Monster_State_End };
 	
-
 protected:
 	HRESULT Ready_Components() PURE;
 	HRESULT Ready_PartObjects() PURE;

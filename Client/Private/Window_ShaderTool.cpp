@@ -1,3 +1,4 @@
+#include "Sky.h"
 #include "Light.h"
 #include "SMath.h"
 #include "stdafx.h"
@@ -23,7 +24,9 @@ HRESULT CWindow_ShaderTool::Initialize()
 	Imgui_Setting();
 
 	m_pGameInstance->Get_ModelTag(&m_vObjectModelTag);
-	
+
+	m_pSky = CData_Manager::GetInstance()->Get_pSkyBox();
+
 	return S_OK;
 }
 
@@ -42,6 +45,8 @@ void CWindow_ShaderTool::Tick(_float fTimeDelta)
 
 	Choice_Level_N_Object(); /* 어느거 조정할지 선택 */
 	
+	FAILED(Control_Skybox());
+
 	if (ImGui::CollapsingHeader("Level Light Control"))
 		Layer_Light_Control();
 
@@ -97,6 +102,48 @@ void CWindow_ShaderTool::Choice_Level_N_Object()
 
 	if (m_bCreate_Level_Button)
 		Select_Level();
+}
+
+HRESULT CWindow_ShaderTool::Control_Skybox()
+{
+	if (nullptr == m_pSky)
+		return S_OK;
+
+	_int iCurrentTexture = m_pSky->Get_SkyTextureCount();
+	_int iMaxTexture = m_pSky->Get_MaxTextureCnt();
+	// 스카이박스 텍스처 변경
+
+	if (ImGui::InputInt(" SkyBox Texture Index ", &m_iSkyTextureIndex))
+	{
+		if (m_iSkyTextureIndex < 0)
+			m_iSkyTextureIndex = 0;
+
+		if (m_iSkyTextureIndex == iMaxTexture)
+			m_iSkyTextureIndex -= 1;
+
+		if(m_iSkyTextureIndex == 0 )
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1);
+		else if (m_iSkyTextureIndex == 1)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1BOSS);
+		else if (m_iSkyTextureIndex == 2)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2);
+		else if (m_iSkyTextureIndex == 3)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2BOSS);
+		else if (m_iSkyTextureIndex == 4)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY4);
+		else if (m_iSkyTextureIndex == 5)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY5);
+		else if (m_iSkyTextureIndex == 6)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY6);
+		else if (m_iSkyTextureIndex == 7)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY7);
+		else if (m_iSkyTextureIndex == 8)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY8);
+		else if (m_iSkyTextureIndex == 9)
+			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY9);
+	}
+
+	return S_OK;
 }
 
 #pragma region Create Object
@@ -374,7 +421,6 @@ void CWindow_ShaderTool::Compress_SpotLight()
 		LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
 		LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
 		LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
-		LightDesc.fVolumetricStrength = 10.f;
 
 		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, Temp);
 	}
@@ -513,8 +559,11 @@ void CWindow_ShaderTool::Compress_PBR_Setting()
 
 	if (m_iPBRTextureNumber < 0)
 		m_iPBRTextureNumber = 0;
-	if (m_iPBRTextureNumber >= 10)
-		m_iPBRTextureNumber = 10;
+	if (m_iPBRTextureNumber >= 8)
+		m_iPBRTextureNumber = 8;
+
+	ImGui::SliderFloat("BrightnessOffset", &m_ePBR_Desc.fBrightnessOffset, 0.f, 5.0f, "BrightnessOffset = %.3f");
+	ImGui::SliderFloat("SaturationOffset", &m_ePBR_Desc.fSaturationOffset, 0.f, 5.0f, "SaturationOffset = %.3f");
 
 	m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTextureNumber);
 	m_pGameInstance->Get_Renderer()->Set_PBR_Option(m_ePBR_Desc);
@@ -695,55 +744,95 @@ void CWindow_ShaderTool::Compress_Luma_Setting()
 	m_pGameInstance->Get_Renderer()->Set_LumaSharpen_Option(m_eLuma_Desc);
 }
 
-void CWindow_ShaderTool::Save_Shader()
+HRESULT CWindow_ShaderTool::Save_Shader()
 {
 	string path = "../Bin/DataFiles/Data_Shader/Level/";
 
 	string LevelString = SMath::capitalizeString(m_eCurrLevel_String);
+
+	if (LevelString == "")
+	{
+		MSG_BOX("Check Level");
+		m_bShaderSave = false;
+		return S_OK;
+	}
+	path += LevelString;
 	path += "_Shader.json";
 
 	json Out_Json;
 
-	Out_Json["HBAO"]["bHBAO_Active"] = m_eHBAO_Desc.bHBAO_Active;
-	Out_Json["HBAO"]["fBias"] = m_eHBAO_Desc.fBias;
-	Out_Json["HBAO"]["fBlur_Sharpness"] = m_eHBAO_Desc.fBlur_Sharpness;
-	Out_Json["HBAO"]["fPowerExponent"] = m_eHBAO_Desc.fPowerExponent;
-	Out_Json["HBAO"]["fRadius"] = m_eHBAO_Desc.fRadius;
+	Out_Json["PBR"]["bPBR_Active"]			= m_ePBR_Desc.bPBR_ACTIVE;
+	Out_Json["PBR"]["fPBR_Brightness"]		= m_ePBR_Desc.fBrightnessOffset;
+	Out_Json["PBR"]["fPBR_Saturation"]		= m_ePBR_Desc.fSaturationOffset;
 
 	Out_Json["Deferred"]["bRimBloom_Blur_Active"] = m_eDeferred_Desc.bRimBloom_Blur_Active;
-	Out_Json["Deferred"]["bShadow_Active"] = m_eDeferred_Desc.bShadow_Active;
+	Out_Json["Deferred"]["bShadow_Active"]	= m_eDeferred_Desc.bShadow_Active;
 
-	Out_Json["Fog"]["bFog_Active"] = m_eFog_Desc.bFog_Active;
-	Out_Json["Fog"]["fFogStartDepth"] = m_eFog_Desc.fFogStartDepth;
-	Out_Json["Fog"]["fFogStartDistance"] = m_eFog_Desc.fFogStartDistance;
-	Out_Json["Fog"]["fFogDistanceValue"] = m_eFog_Desc.fFogDistanceValue;
-	Out_Json["Fog"]["fFogHeightValue"] = m_eFog_Desc.fFogHeightValue;
-	Out_Json["Fog"]["fFogDistanceDensity"] = m_eFog_Desc.fFogDistanceDensity;
-	Out_Json["Fog"]["fFogHeightDensity"] = m_eFog_Desc.fFogHeightDensity;
-	Out_Json["Fog"]["vFogColor_x"] = m_eFog_Desc.vFogColor.x;
-	Out_Json["Fog"]["vFogColor_y"] = m_eFog_Desc.vFogColor.y;
-	Out_Json["Fog"]["vFogColor_z"] = m_eFog_Desc.vFogColor.z;
-	Out_Json["Fog"]["vFogColor_w"] = m_eFog_Desc.vFogColor.w;
+	Out_Json	["HBAO"]["bHBAO_Active"]		= m_eHBAO_Desc.bHBAO_Active;
+	Out_Json	["HBAO"]["fBias"]				= m_eHBAO_Desc.fBias;
+	Out_Json	["HBAO"]["fBlur_Sharpness"]		= m_eHBAO_Desc.fBlur_Sharpness;
+	Out_Json	["HBAO"]["fPowerExponent"]		= m_eHBAO_Desc.fPowerExponent;
+	Out_Json	["HBAO"]["fRadius"]				= m_eHBAO_Desc.fRadius;
 
-	Out_Json["HDR"]["bHDR_Active"] = m_eHDR_Desc.bHDR_Active;
-	Out_Json["HDR"]["fmax_white"] = m_eHDR_Desc.fmax_white;
+	Out_Json["Fog"]["bFog_Active"]			= m_eFog_Desc.bFog_Active;
+	Out_Json["Fog"]["fFogDistanceDensity"]	= m_eFog_Desc.fFogDistanceDensity;
+	Out_Json["Fog"]["fFogDistanceValue"]	= m_eFog_Desc.fFogDistanceValue;
+	Out_Json["Fog"]["fFogHeightDensity"]	= m_eFog_Desc.fFogHeightDensity;
+	Out_Json["Fog"]["fFogHeightValue"]		= m_eFog_Desc.fFogHeightValue;
+	Out_Json["Fog"]["fFogStartDepth"]		= m_eFog_Desc.fFogStartDepth;
+	Out_Json["Fog"]["fFogStartDistance"]	= m_eFog_Desc.fFogStartDistance;
+	Out_Json["Fog"]["vFogColor_x"]			= m_eFog_Desc.vFogColor.x;
+	Out_Json["Fog"]["vFogColor_y"]			= m_eFog_Desc.vFogColor.y;
+	Out_Json["Fog"]["vFogColor_z"]			= m_eFog_Desc.vFogColor.z;
+	Out_Json["Fog"]["vFogColor_w"]			= m_eFog_Desc.vFogColor.w;
 
-	Out_Json["Anti"]["bFXAA_Active"] = m_eAnti_Desc.bFXAA_Active;
+	Out_Json["Radial"]["bRadial_Active"]	= m_eRadial_Desc.bRadial_Active;
+	Out_Json["Radial"]["fRadial_Quality"]	= m_eRadial_Desc.fRadial_Quality;
+	Out_Json["Radial"]["fRadial_Power"]		= m_eRadial_Desc.fRadial_Power;
 
-	Out_Json["HSV"]["bScreen_Active"] = m_eHSV_Desc.bScreen_Active;
-	Out_Json["HSV"]["fFinal_Saturation"] = m_eHSV_Desc.fFinal_Saturation;
-	Out_Json["HSV"]["fFinal_Brightness"] = m_eHSV_Desc.fFinal_Brightness;
+	Out_Json["DOF"]["bDOF_Active"]			= m_eDOF_Desc.bDOF_Active;
+	Out_Json["DOF"]["fDOF_Distance"]		= m_eDOF_Desc.DOF_Distance;
 
-	Out_Json["Radial"]["bRadial_Active"] = m_eRadial_Desc.bRadial_Active;
-	Out_Json["Radial"]["fRadial_Quality"] = m_eRadial_Desc.fRadial_Quality;
-	Out_Json["Radial"]["fRadial_Power"] = m_eRadial_Desc.fRadial_Power;
+	Out_Json["HDR"]["bHDR_Active"]			= m_eHDR_Desc.bHDR_Active;
+	Out_Json["HDR"]["fmax_white"]			= m_eHDR_Desc.fmax_white;
 
-	Out_Json["DOF"]["bDOF_Active"] = m_eDOF_Desc.bDOF_Active;
-	Out_Json["DOF"]["fDOF_Distance"] = m_eDOF_Desc.DOF_Distance;
-	//Out_Json["DOF"]["fFocusDistance"] = m_eDOF_Desc.fFocusDistance;
-	//Out_Json["DOF"]["fFocusRange"] = m_eDOF_Desc.fFocusRange;
+	Out_Json["Anti"]["bFXAA_Active"]		= m_eAnti_Desc.bFXAA_Active;
 
-	CJson_Utility::Save_Json(path.c_str(), Out_Json);
+	Out_Json["HSV"]["bScreen_Active"]		= m_eHSV_Desc.bScreen_Active;
+	Out_Json["HSV"]["fFinal_Saturation"]	= m_eHSV_Desc.fFinal_Saturation;
+	Out_Json["HSV"]["fFinal_Brightness"]	= m_eHSV_Desc.fFinal_Brightness;
+
+	Out_Json["Vignette"]["bFinal_Active"]	= m_eVignette_Desc.bVignette_Active;
+	Out_Json["Vignette"]["fFinal_Amount"]	= m_eVignette_Desc.fVignetteAmount;
+	Out_Json["Vignette"]["fFinal_CenterX"]	= m_eVignette_Desc.fVignetteCenter_X;
+	Out_Json["Vignette"]["fFinal_CenterY"]	= m_eVignette_Desc.fVignetteCenter_Y;
+	Out_Json["Vignette"]["fFinal_Radius"]	= m_eVignette_Desc.fVignetteRadius;
+	Out_Json["Vignette"]["fFinal_Ratio"]	= m_eVignette_Desc.fVignetteRatio;
+	Out_Json["Vignette"]["fFinal_Slope"]	= m_eVignette_Desc.fVignetteSlope;
+
+	Out_Json["SSR"]["bFinal_Active"]	= m_eSSR_Desc.bSSR_Active;
+	Out_Json["SSR"]["fFinal_RayStep"]	= m_eSSR_Desc.fRayStep;
+	Out_Json["SSR"]["fFinal_StepCnt"]	= m_eSSR_Desc.fStepCnt;
+
+	Out_Json["Chroma"]["bFinal_Active"]	= m_eChroma_Desc.bChroma_Active;
+	Out_Json["Chroma"]["fFinal_Intensity"]	= m_eChroma_Desc.fChromaticIntensity;
+
+	Out_Json["Luma"]["bLuma_Active"]	= m_eLuma_Desc.bLumaSharpen_Active;
+	Out_Json["Luma"]["fLuma_bias"]	= m_eLuma_Desc.foffset_bias;
+	Out_Json["Luma"]["fLuma_clamp"]	= m_eLuma_Desc.fsharp_clamp;
+	Out_Json["Luma"]["fLuma_strength"]	= m_eLuma_Desc.fsharp_strength;
+
+	Out_Json["Screen"]["GrayActive"] = m_eScreenDEffect_Desc.bGrayScale_Active;
+	Out_Json["Screen"]["SephiaActive"] = m_eScreenDEffect_Desc.bSephia_Active;
+	Out_Json["Screen"]["GreyPower"] = m_eScreenDEffect_Desc.GreyPower;
+	Out_Json["Screen"]["SepiaPower"] = m_eScreenDEffect_Desc.SepiaPower;
+
+	FAILED_CHECK(CJson_Utility::Save_Json(path.c_str(), Out_Json));
+
+	MSG_BOX("Save ShaderData Successed.");
+	m_bShaderSave = false;
+
+	return S_OK;
 
 }
 
@@ -800,7 +889,7 @@ void CWindow_ShaderTool::Select_Level()
 					m_eCurrLevel_String = "LEVEL_SNOWMOUNTAIN";
 					break;
 				case 5: // SNOWMOUNTAINBOSS
-					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_TestMap.json";
+					m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData.json";
 					m_eCurrLevel_Enum = LEVEL::LEVEL_SNOWMOUNTAINBOSS;
 					m_eCurrLevel_String = "LEVEL_LAVA";
 					break;

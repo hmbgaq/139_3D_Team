@@ -80,13 +80,11 @@ HRESULT CLevel_SnowMountainBoss::Render()
 
 HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 {
-	/* For. Shadow */
-	   //XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(-20.f, 20.f, -20.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	   //XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (float)g_iWinSizeY, 0.1f, lightfar 임 ));
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+	/* Shadow Light */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-
+	/* Map Light */
 	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
 	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
@@ -380,7 +378,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 		Desc.WorldMatrix = WorldMatrix;
 
 		json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-		_int iUpdateCellJsonSize = UpdateCellJson.size();
+		_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
 
 		for (_int i = 0; i < iUpdateCellJsonSize; ++i)
 		{
@@ -478,12 +476,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 
 	return S_OK;
 
-
-
 }
-
-
-
 
 HRESULT CLevel_SnowMountainBoss::Ready_Layer_Test(const wstring& strLayerTag)
 {
@@ -597,49 +590,13 @@ HRESULT CLevel_SnowMountainBoss::Ready_Event()
 }
 
 HRESULT CLevel_SnowMountainBoss::Ready_Shader()
-{
+{  
+	/* For. Shadow */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+
 	/* 1. 셰이더 초기화 */
 	m_pGameInstance->Off_Shader();
-
-	/* 2. 셰이더 옵션 조절 */
-	m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_Shadow_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_HBAO_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
-	m_pGameInstance->Get_Renderer()->Set_FXAA_Active(true);
-	m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
-
-	HBAO_PLUS_DESC Desc_Hbao = {};
-	Desc_Hbao.bHBAO_Active = true;
-	Desc_Hbao.fRadius = 1.f;
-	Desc_Hbao.fBias = 0.1f;
-	Desc_Hbao.fBlur_Sharpness = 16.f;
-	Desc_Hbao.fPowerExponent = 2.f;
-
-	DEFERRED_DESC Desc_Deferred = {};
-	Desc_Deferred.bRimBloom_Blur_Active = true;
-	Desc_Deferred.bShadow_Active = true;
-
-	HDR_DESC Desc_HDR = {};
-	Desc_HDR.bHDR_Active = false;
-	Desc_HDR.fmax_white = 0.539f;
-
-	ANTI_DESC Desc_Anti = {};
-	Desc_Anti.bFXAA_Active = true;
-
-	HSV_DESC Desc_HSV = {};
-	Desc_HSV.bScreen_Active = false;
-	Desc_HSV.fFinal_Brightness = 1.284f;
-	Desc_HSV.fFinal_Saturation = 0.850f;
-
-	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-	m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
-	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
-	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
-	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
 
 	return S_OK;
 }

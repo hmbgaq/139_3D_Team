@@ -28,32 +28,32 @@ HRESULT CSky::Initialize(void* pArg)
 	{
 		case LEVEL::LEVEL_INTRO: // 사실상 여기가 테스트맵 
 		{
-			m_eSkyType = CSky::SKYTYPE::SKY_STAGE2;
+			m_eSkyType = CSky::SKYTYPE::SKY4;
 			break;
 		}
-		case  LEVEL::LEVEL_GAMEPLAY: // 시작 사막맵 
+		case  LEVEL::LEVEL_GAMEPLAY: // 시작 사막맵 ( 확정 ) 
 		{
 			m_eSkyType = CSky::SKYTYPE::SKY_STAGE1;
 			break;
 		}
-		case  LEVEL::LEVEL_INTRO_BOSS: // 1스테이지 보스 
+		case  LEVEL::LEVEL_INTRO_BOSS: // 1스테이지 보스 (미정)
 		{
 			m_eSkyType = CSky::SKYTYPE::SKY_STAGE1BOSS;
 			break;
 		}
-		case  LEVEL::LEVEL_SNOWMOUNTAIN:
+		case  LEVEL::LEVEL_SNOWMOUNTAIN: // 스노우맵 (확정) 
 		{
 			m_eSkyType = CSky::SKYTYPE::SKY_STAGE2;
 			break;
 		}
-		case LEVEL::LEVEL_SNOWMOUNTAINBOSS:
+		case LEVEL::LEVEL_SNOWMOUNTAINBOSS: // 스노우맵 보스 (미정)
 		{
-			m_eSkyType = CSky::SKYTYPE::SKY_STAGE2;
+			m_eSkyType = CSky::SKYTYPE::SKY_STAGE2BOSS;
 			break;
 		}
-		case  LEVEL::LEVEL_TOOL:
+		case  LEVEL::LEVEL_TOOL: // 툴레벨 (미정)
 		{
-			m_eSkyType = CSky::SKY_STAGE1;
+			m_eSkyType = CSky::SKYTYPE::SKY4;
 			break;
 		}
 	}
@@ -102,6 +102,7 @@ HRESULT CSky::Ready_Components()
 
 	/* For.Com_Texture */
 	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Sky"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom)));
+	m_iMaxTextureCnt = m_pTextureCom->Get_TextureCount();
 
 	/* For.Com_VIBuffer */
 	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_VIBuffer_Cube"), TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom)));

@@ -172,11 +172,7 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		Mouse_Fix();
 	}
 
-	
-
 	__super::Tick(fTimeDelta);
-	
-
 	
 }
 

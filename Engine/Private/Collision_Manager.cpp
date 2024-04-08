@@ -105,7 +105,8 @@ void CCollision_Manager::Remove_DeadCollision()
 	{
 		for (auto iter = m_ColliderList[i].begin(); iter != m_ColliderList[i].end();)
 		{
-			if (nullptr == (*iter) || false == (*iter)->Get_Enable())
+			if (nullptr == (*iter) || false == (*iter)->Get_Enable() || 
+				nullptr == (*iter)->Get_Owner() || false == (*iter)->Get_Owner()->Get_Enable() || true == (*iter)->Get_Owner()->Is_Dead())
 			{
 				Safe_Release(*iter);
 				iter = m_ColliderList[i].erase(iter);
@@ -124,10 +125,11 @@ void CCollision_Manager::Update_CollisionGroup(const _uint& In_iLeftLayer, const
 	{
 		for (CCollider* elem_Right : m_ColliderList[In_iRightLayer])
 		{
-			if (nullptr == elem_Left || nullptr == elem_Right || elem_Left == elem_Right)
+			if (nullptr == elem_Left || nullptr == elem_Right || elem_Left == elem_Right || elem_Left->Get_Owner() == elem_Right->Get_Owner())
 			{
 				continue;
 			}
+
 			if (elem_Left->Is_Collision(elem_Right))
 			{
 				elem_Left->Collision(elem_Right);

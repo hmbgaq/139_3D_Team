@@ -33,15 +33,20 @@ public:
 	_float4x4		Get_ShadowLightProjMatrix(_uint iLevelIndex);
 	_float			Get_ShadowLightFar(_uint iLevelIndex);
 	_float4			Get_ShadowLightPos(_uint iLevelIndex);
+	_float4			Get_ShadowLightDir(_uint iLevelIndex);
+	HRESULT			Ready_StaticLightMatrix(_float3 vPos, _float3 vLook);
+	_float4x4		Get_StaticLight() { return m_StaticLightMatrix; }
 
 private:
 	_float4x4					Identity_Matrix;
+	_float4x4					m_StaticLightMatrix;
 	list<class CLight*>			m_Lights;
 
 	map<_uint, _float4x4>		m_ShadowLight_ViewMatrix;
 	map<_uint, _float4x4>		m_ShadowLight_ProjMatrix;
 	map<_uint, _float>			m_ShadowLight_Far;
 	map<_uint, _float4>			m_ShadowLight_Pos;
+	map<_uint, _float4>			m_ShadowLight_Dir;
 	
 
 public:

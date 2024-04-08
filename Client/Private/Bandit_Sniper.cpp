@@ -96,7 +96,14 @@ void CBandit_Sniper::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
-	//cout << "Bullet Cnt : " << m_iBulletCnt << endl;
+	if (true == m_bDeadState)
+	{
+		m_fTimeAcc += fTimeDelta;
+		if (m_fTimeAcc >= 2.f)
+		{
+			Set_Dead(true);
+		}
+	}
 }
 
 void CBandit_Sniper::Late_Tick(_float fTimeDelta)
@@ -236,6 +243,9 @@ void CBandit_Sniper::Hitted_Knock(_bool bIsCannonball)
 
 void CBandit_Sniper::Hitted_Dead(Power ePower)
 {
+	m_pBody->Collider_Off(); // 바디콜라이더 비활성화 
+	m_bDeadState = true;
+
 	switch (ePower)
 	{
 	case Engine::Light:

@@ -34,9 +34,9 @@ HRESULT CInfected_B::Initialize(void* pArg)
 {
 	/* Ready_Component, Ready_PartObjects는 Initialize를 타고 올라가다보면 CCharacter클래스에서 수행하고있음.*/
 
-	FAILED_CHECK(Ready_Option());
-
 	FAILED_CHECK(__super::Initialize(pArg));
+
+	FAILED_CHECK(Ready_Option());
 
 	/* !성희 추가 : 몬스터 HUD 생성 */
 	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
