@@ -90,10 +90,16 @@ public:
 	void	Set_SelectLevel(LEVEL eSelectLevel) { m_eSelectLevel = eSelectLevel; }
 	LEVEL	Get_SelectLevel() { return m_eSelectLevel; }
 
+
 public:
 	_bool Is_AdditionalSkill_Learned(Additional_Skill eAdditional_Skill) { return m_AdditionalSkills[ECast(eAdditional_Skill)]; }
 	void Set_AdditionalSkill(Additional_Skill eAdditional_Skill, _bool bValue) { m_AdditionalSkills[ECast(eAdditional_Skill)] = bValue; };
 
+	_bool Is_AdditionalWeapon_Acquired(Additional_Weapon eAdditional_Weapon) { return m_AdditionalWeapons[ECast(eAdditional_Weapon)]; }
+	void Set_AdditionalWeapon(Additional_Weapon eAdditional_Weapon, _bool bValue) { m_AdditionalWeapons[ECast(eAdditional_Weapon)] = bValue; };
+
+
+public:
 	_float Get_Additional_ElectricDamage() { return m_fAdditional_ElectricDamage; }
 	void Activate_Additional_ElectricDamage() { m_fAdditional_ElectricDamage = 5.f; };
 
@@ -106,19 +112,21 @@ public:
 	_float Get_Additional_MoveSpeed() { return m_fAdditional_MoveSpeed; }
 	void Activate_Additional_MoveSpeed() { m_fAdditional_MoveSpeed = 1.f; };
 
-
-
+	_float Get_ExpGain() { return m_fExpGain; };
+	void Activate_ExpGain(_float _fExpGain) { m_fExpGain = 1.5f; };
 
 
 private:
 	_bool	m_AdditionalSkills[ECast(Additional_Skill::Additional_Skill_End)];
-	//_bool	m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
+	_bool	m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
 
 	_float	m_fAdditional_ElectricDamage = { 0.f };
 	_float	m_fAdditional_MeleeDamage = { 0.f };
 
 	_float  m_fHpRegen = { 100.f };
 	_float	m_fAdditional_MoveSpeed = { 0.f };
+
+	_float	m_fExpGain = { 1.f };
 
 	//쿨타임 감소은 UI 수정, 
 
@@ -188,7 +196,7 @@ public: /* ========================== Player Info ========================== */
 	// =>현재 경험치 Set함수
 	void	Set_CurEXP(_float fCurEXP) { m_fCurEXP = fCurEXP; }
 	// =>현재 경험치 Add함수
-	void	Add_CurEXP(_float fAddCurEXP) { m_fCurEXP += fAddCurEXP; }
+	void	Add_CurEXP(_float fAddCurEXP) { m_fCurEXP += fAddCurEXP * m_fExpGain; }
 
 #pragma region =========> MAX_ENERGYGUIGE <=========
 	// =>SkillGuige (Limit)

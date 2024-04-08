@@ -218,9 +218,17 @@ void CBody::OnCollisionStay(CCollider* other)
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
 	{
-		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
+		if (true == pTarget_Character->Is_Invincible())
+			return;
 
-		pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1	, 9.f * m_pGameInstance->Get_TimeDelta());
+		CGameObject* pObjectOwner = Get_Object_Owner();
+		if (nullptr == pObjectOwner || false == pObjectOwner->Get_Enable() || true == pObjectOwner->Is_Dead())
+			return;
+
+		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
+		_vector vDir = pObjectOwner->Calc_Look_Dir_XZ(vTargetPos) * -1;
+
+		pTarget_Character->Add_Force(vDir, 9.f * m_pGameInstance->Get_TimeDelta());
 	}
 }
 
@@ -253,11 +261,17 @@ void CBody::Set_MouseMove(_float fTimeDelta, _bool bIsUseMouseMove)
 
 CCharacter* CBody::Get_Target_Character(CCollider* other)
 {
-	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+	CGameObject* pOwner = other->Get_Owner();
+
+	if (nullptr == other || nullptr == pOwner || false == pOwner->Get_Enable() || true == pOwner->Is_Dead())
 		return nullptr;
 
-	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
-	if (nullptr == pTarget_Character)
+	CGameObject* pObjectOwner = other->Get_Owner()->Get_Object_Owner();
+	if (nullptr == pObjectOwner || false == pObjectOwner->Get_Enable() || true == pObjectOwner->Is_Dead())
+		return nullptr;
+
+	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(pObjectOwner);
+	if (nullptr == pTarget_Character || false == pTarget_Character->Get_Enable() || true == pTarget_Character->Is_Dead())
 		return nullptr;
 
 	return pTarget_Character;

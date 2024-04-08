@@ -432,17 +432,27 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 
-		pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::RIFLE))
+		{
+			pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
 
 		//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
 		//if (pState)	return pState;
 
-		pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER))
+		{
+			pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
 
-		pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::SHOTGUN))
+		{
+			pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
 
 		//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
 		//if (pState)	return pState;

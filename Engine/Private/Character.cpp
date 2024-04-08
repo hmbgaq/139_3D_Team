@@ -566,6 +566,9 @@ void CCharacter::Look_At_Target()
 	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable() || true == m_pTarget->Is_Dead())
 		return;
 
+	if (nullptr == m_pTarget->Get_Transform() || false == m_pTarget->Get_Transform()->Get_Enable())
+		return;
+
 	_fvector vTargetPos = m_pTarget->Get_Position_Vector();
 	m_pTransformCom->Look_At_OnLand(vTargetPos);
 }
