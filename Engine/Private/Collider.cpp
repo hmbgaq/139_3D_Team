@@ -185,6 +185,10 @@ void CCollider::OnCollisionExit(CCollider* other)
 
 void CCollider::Set_Enable(_bool _Enable)
 {
+	if (nullptr == this)
+		return;
+
+
 	if (false == m_bEnable && true == _Enable)
 	{
 		m_pGameInstance->Add_Collision(m_iLayer, this);

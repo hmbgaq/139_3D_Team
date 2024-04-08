@@ -78,6 +78,16 @@ HRESULT CInfected_D::Update_RenderState(_int CurrentHP)
 	return S_OK;
 }
 
+void CInfected_D::Explosion()
+{
+	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_MONSTER_BULLET, L"Prototype_GameObject_Explosion_Infected_D");
+	_float3 vSpawnPos = Get_Position();
+	_vector vLook = m_pTransformCom->Get_State(CTransform::STATE_LOOK);
+
+	pBullet->Set_Position(vSpawnPos);
+	pBullet->Get_Transform()->Look_At(vLook * -1);
+}
+
 #pragma region Base Setting
 
 HRESULT CInfected_D::Ready_Components()

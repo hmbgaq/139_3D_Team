@@ -3988,6 +3988,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\1. Parts">
       <UniqueIdentifier>{f7dc8737-b5b3-45ac-9bf1-1a3d9f086c52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon\Projectile">
+      <UniqueIdentifier>{e06b24fb-8f39-4a37-acc7-9a7116730f28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7836,6 +7839,9 @@
     <ClInclude Include="..\Public\UI_SkillWindow_Button.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\06. SkillWindowButton</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Explosion_Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11154,6 +11160,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SkillWindow_Button.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\06. SkillWindowButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion_Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

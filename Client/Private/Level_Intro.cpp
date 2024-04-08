@@ -61,7 +61,7 @@ HRESULT CLevel_Intro::Initialize()
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 
-    FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+    //FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
     //FAILED_CHECK(Ready_Shader());
 
