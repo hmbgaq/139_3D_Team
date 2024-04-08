@@ -39,7 +39,6 @@
 #include "SpringCamera.h"
 #include "Light.h"
 #include "Event_MonsterSpawnTrigger.h"
-#include "Effect_Manager.h"
 
 
 CLevel_SnowMountainBoss::CLevel_SnowMountainBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -63,6 +62,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json");
 
 	return S_OK;
 }
@@ -74,7 +74,7 @@ void CLevel_SnowMountainBoss::Tick(_float fTimeDelta)
 
 HRESULT CLevel_SnowMountainBoss::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("SnowMountain Boss 레벨입니다."));
 
 	return S_OK;
 }
@@ -215,8 +215,6 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Player(const wstring& strLayerTag)
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, strLayerTag, TEXT("Prototype_GameObject_Player")));
 
 	pPlayer->Set_InitPosition(_float3(99.83f, 0.f, 25.80f));
-	//m_pMainEffect = EFFECT_MANAGER->Play_Effect("MotherShakeTreeProjectile1.json", _float3(99.83f, 0.f, 25.80f));
-
 	//pPlayer->Set_Position(_float3(60.0f, 0.f, 29.84f));
 	//CNavigation* pNavigation = pPlayer->Get_Navigation();
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
@@ -593,7 +591,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Event()
 }
 
 HRESULT CLevel_SnowMountainBoss::Ready_Shader()
-{  
+{
 	/* For. Shadow */
 	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
@@ -620,8 +618,6 @@ CLevel_SnowMountainBoss* CLevel_SnowMountainBoss::Create(ID3D11Device* pDevice, 
 void CLevel_SnowMountainBoss::Free()
 {
 	__super::Free();
-
-	
 
 
 }
