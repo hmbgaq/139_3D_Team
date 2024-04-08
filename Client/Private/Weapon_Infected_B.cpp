@@ -122,6 +122,8 @@ CGameObject* CWeapon_Infected_B::Pool()
 void CWeapon_Infected_B::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTrail);
 }
 
 

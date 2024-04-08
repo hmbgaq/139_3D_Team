@@ -71,6 +71,8 @@ void CBody::Tick(_float fTimeDelta)
 
 void CBody::Late_Tick(_float fTimeDelta)
 {
+	__super::Late_Tick(fTimeDelta);
+
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
 
 	Check_Frustum();
@@ -123,7 +125,7 @@ HRESULT CBody::Render_Shadow()
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pShaderCom->Begin(2);
 		m_pModelCom->Render((_uint)i);
 	}

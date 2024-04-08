@@ -237,9 +237,9 @@ HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 {
 
 	// 이펙트 테스트 (삭제처리 생각안함)
-    EFFECT_MANAGER->Play_Effect("Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));
-    EFFECT_MANAGER->Play_Effect("Circle_Floor_03_Solid.json", _float3(12.f, 0.f, 5.f));
-    EFFECT_MANAGER->Play_Effect("Circle_Floor_04.json", _float3(19.f, 0.f, 5.f));
+    EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));
+    EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03_Solid.json", _float3(12.f, 0.f, 5.f));
+    EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_04.json", _float3(19.f, 0.f, 5.f));
 
 
     return S_OK;

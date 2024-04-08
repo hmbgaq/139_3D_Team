@@ -106,7 +106,7 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 
 
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	if (CData_Manager::GetInstance()->Get_Mother() != nullptr)
@@ -190,5 +190,5 @@ void CBullet_Revolver::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 }

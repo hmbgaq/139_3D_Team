@@ -220,7 +220,7 @@ void CEffect_Particle::ReSet_Effect()
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
 	{
-		m_tVoidDesc.bRender = FALSE;
+		//m_tVoidDesc.bRender = FALSE;
 		m_pVIBufferCom->ReSet(); // 버퍼 리셋
 	}
 
@@ -638,14 +638,15 @@ void CEffect_Particle::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pModelCom);
-	//Safe_Release(m_pVIBufferCom_Model);
-
-	Safe_Release(m_pVIBufferCom);
+	Delete_Object_Owner();
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
 
+	Safe_Release(m_pVIBufferCom);
+
 	Safe_Release(m_pShaderCom);
+
+
 }
 

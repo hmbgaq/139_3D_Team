@@ -101,7 +101,7 @@ void CExplosion_TNTCrate::OnCollisionEnter(CCollider* other)
 
 		}
 
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 		
 	}
 
@@ -178,5 +178,5 @@ void CExplosion_TNTCrate::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 }

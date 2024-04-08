@@ -159,11 +159,9 @@ CGameObject* CBullet_Bandit_Sniper::Pool()
 
 void CBullet_Bandit_Sniper::Free()
 {
-	
-	if (nullptr != m_pTrail)
-		m_pTrail->Set_Dead(TRUE);
-
 	__super::Free();
+
+	Safe_Release(m_pTrail);
 
 	//Safe_Release(m_pCollider);
 }
