@@ -308,17 +308,18 @@ void CEffect::Update_PivotMat()
 {
 	if (nullptr != m_pOwner)	// 주인이 존재하고,
 	{
-		// 이펙트의 주인이 죽었다. 또는 비활성화 상태다
+		// 이펙트의 주인이 죽었다. 또는 비활성화 상태다.
 		if (m_pOwner->Is_Dead() || !m_pOwner->Get_Enable())
 		{
 			if (nullptr != m_pTrail)	// 트레일을 갖고있던 이펙트면 트레일 멈춤
-				m_pTrail->Set_Play(FALSE);
+				m_pTrail->Set_Play(false);
 			
 			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
 			EFFECT_MANAGER->Return_ToPool(this);
 
 			return;
 		}
+
 
 		if (m_tEffectDesc.bParentPivot)
 		{	
@@ -356,8 +357,8 @@ void CEffect::Update_PivotMat()
 
 void CEffect::ReSet_Effect()
 {
-	m_tEffectDesc.bFinished = FALSE;
-	//m_tEffectDesc.bRender	= FALSE;
+	m_tEffectDesc.bFinished = false;
+	//m_tEffectDesc.bRender	= false;
 
 	m_tEffectDesc.fSequenceAcc	 = 0.f;
 	m_tEffectDesc.fTimeAcc		 = 0.f;
@@ -382,7 +383,7 @@ void CEffect::Init_ReSet_Effect()
 
 void CEffect::End_Effect()
 {
-	m_tEffectDesc.bFinished = TRUE;
+	m_tEffectDesc.bFinished = true;
 
 	if (m_tEffectDesc.bLoop)
 	{	
@@ -400,7 +401,7 @@ void CEffect::End_Effect()
 #ifdef _DEBUG
 		if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 		{
-			m_tEffectDesc.bActive_Tool = FALSE;
+			m_tEffectDesc.bActive_Tool = false;
 			ReSet_Effect();	//bLoop가 false일 때, 툴 레벨이면 리셋, 아니면 죽이기
 		}
 		else
@@ -487,7 +488,7 @@ void CEffect::Delete_PartObject(const wstring& strPartTag)
 	auto erase_iter = iter;
 	++erase_iter; // 삭제된 항목 이후의 첫 번째 항목
 
-	iter->second->Set_Dead(TRUE);		// 객체 삭제
+	iter->second->Set_Dead(true);		// 객체 삭제
 	m_PartObjects.erase(strPartTag);	// 맵컨테이너에서 삭제
 
 

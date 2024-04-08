@@ -154,7 +154,6 @@ void CMother_Egg::OnCollisionEnter(CCollider* other)
 	
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
-	//m_pEffect->Set_Dead(true);	// ÀÌÆåÆ® Á×ÀÌ±â
 }
 
 void CMother_Egg::OnCollisionStay(CCollider* other)

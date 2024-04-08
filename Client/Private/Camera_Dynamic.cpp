@@ -84,10 +84,10 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 		}
 
 		// 병합할 때 주석 풀기
-		//if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
-		//{
-		//	m_pGameInstance->Get_Player()->Set_InitPosition(m_pTransformCom->Get_Position());
-		//}
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
+		{
+			m_pGameInstance->Get_Player()->Set_InitPosition(m_pTransformCom->Get_Position());
+		}
 
 	__super::Tick(fTimeDelta);
 }
