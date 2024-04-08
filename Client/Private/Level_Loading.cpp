@@ -95,7 +95,7 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 	if (nullptr == m_pGameInstance)
 		return;
 
-	if (true == m_pLoader->isFinished())
+	if (true == m_pLoader->isFinished() && true == m_pLoader->isEnvironmentFinished())
 	{
 		//if (GetKeyState(VK_RETURN) & 0x8000)
 		{
