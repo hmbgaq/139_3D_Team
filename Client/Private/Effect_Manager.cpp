@@ -268,6 +268,7 @@ CEffect* CEffect_Manager::Create_Effect_ForDebug_StaticPivot(string strAddPath, 
 
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
 {
+
 	CEffect_Void::EFFECTVOID_DESC	tVoidDesc = {};
 
 	tVoidDesc.eType_Effect = { CEffect_Void::TRAIL };
@@ -291,16 +292,13 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 	json In_Json;
 	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
 
-	if (nullptr != pOwner)
-		pTrail->Set_Object_Owner(pOwner);
+	if(nullptr != pOwner)
+		pTrail->Set_Object_Owner(pOwner); // 오너 설정
 
 	pTrail->Load_FromJson(In_Json);
 
 	return pTrail;
 
-
-	/* 사용 예시 */
-	// m_pTrail = EFFECT_MANAGER->Ready_Trail(LEVEL_TOOL, LAYER_EFFECT, "Test_Trail.json"); // 또는 Part_Preview클래스 참고
 }
 
 

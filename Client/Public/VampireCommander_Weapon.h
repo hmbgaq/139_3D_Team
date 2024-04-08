@@ -24,10 +24,16 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
+public:
+	void	Play_Trail(_bool bPlay);
+
 protected:
 	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
+
+protected:
+	class CEffect_Trail* m_pTrail = { nullptr };	//! 유정 : 트레일 추가
 
 
 public:

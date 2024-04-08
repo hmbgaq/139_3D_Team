@@ -137,7 +137,8 @@ protected:
 
 protected:
 	class CTransform* m_pParentTransform = { nullptr };
-	_float4x4	m_WorldMatrix = {};
+	_float4x4	m_WorldMatrix			= {};
+	_float4x4	m_WorldMatrix_Trail		= {};
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
 
 

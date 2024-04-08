@@ -75,8 +75,10 @@ HRESULT CWeapon_Infected_B::Ready_Components()
 		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc));
 	}
 
+
 	//! 유정: 트레일 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json", this);
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json");
+	m_pTrail->Set_Play(false);		// 시작은 끄기
 
 	return S_OK;
 }
@@ -123,7 +125,6 @@ void CWeapon_Infected_B::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTrail);
 }
 
 

@@ -2,6 +2,7 @@
 #include "Infected_Walk_B.h"
 #include "Infected_State_Attack.h"
 #include "Body_Infected.h"
+#include "Weapon_Infected.h"
 
 void CInfected_State_Attack::Initialize(CInfected* pActor)
 {
@@ -10,6 +11,8 @@ void CInfected_State_Attack::Initialize(CInfected* pActor)
 	Safe_AddRef(m_pWeapon);
 
 	AttackState_Setting(pActor);
+
+	dynamic_cast<CWeapon_Infected*>(m_pWeapon)->Play_Trail(true);	// 트레일 켜기
 
 	__super::Initialize(pActor);
 }
@@ -25,7 +28,9 @@ void CInfected_State_Attack::Release(CInfected* pActor)
 {
 	if (nullptr != m_pWeapon) 
 	{
+		dynamic_cast<CWeapon_Infected*>(m_pWeapon)->Play_Trail(false); // 트레일 끄기
 		m_pWeapon->Set_Enable(false);
+
 		Safe_Release(m_pWeapon);
 	}
 		
