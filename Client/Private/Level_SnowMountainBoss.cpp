@@ -245,7 +245,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Effect(const wstring& strLayerTag)
 
 HRESULT CLevel_SnowMountainBoss::Ready_Layer_Monster(const wstring& strLayerTag)
 {
-	CGameObject* pMonster = { nullptr };
+	//CGameObject* pMonster = { nullptr };
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
 	////! Boss
 	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Mother"));

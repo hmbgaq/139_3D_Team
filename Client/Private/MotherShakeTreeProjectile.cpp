@@ -125,7 +125,8 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
-	this->Set_Enable(false);
+	Set_Dead(true);
+	//this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
 	//m_pEffect->Set_Dead(true);	// ÀÌÆåÆ® Á×ÀÌ±â
 }
