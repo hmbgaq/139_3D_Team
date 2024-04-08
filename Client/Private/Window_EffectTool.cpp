@@ -1214,19 +1214,35 @@ void CWindow_EffectTool::Update_ParticleTab()
 							{
 								m_pParticleBufferDesc->fGravity = m_fGravity_Particle;
 							}
+
+
+							if (FORCE_MODE::FORCE == m_pParticleBufferDesc->eForce_Mode)
+							{
+								if (ImGui::DragFloat("Gravity_X_Particle", &m_fGravity_X_Particle, 0.5f, -100.f, 1000.f))
+								{
+									m_pParticleBufferDesc->fGravity_X = m_fGravity_X_Particle;
+								}
+
+								if (ImGui::DragFloat("Gravity_Z_Particle", &m_fGravity_Z_Particle, 0.5f, -100.f, 1000.f))
+								{
+									m_pParticleBufferDesc->fGravity_Z = m_fGravity_Z_Particle;
+								}
+
+							}
+
 						}
 
-						///* 리지드바디 : Force Mode */
-						//ImGui::SeparatorText("Force Mode");
-						//if (ImGui::Button(" FORCE "))
-						//{
-						//	m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
-						//}
-						//ImGui::SameLine();
-						//if (ImGui::Button(" IMPULSE "))
-						//{
-						//	m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
-						//}
+						/* 리지드바디 : Gravity Mode (Force Mode) */
+						ImGui::SeparatorText("Gravity Mode_Particle"); // ImGui::SeparatorText("Force Mode");
+						if (ImGui::Button(" XYZ_Gravity_Particle ")) // if (ImGui::Button(" FORCE "))
+						{
+							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button(" Y Onty_Gravity_Particle ")) //if (ImGui::Button(" IMPULSE "))
+						{
+							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
+						}
 						//ImGui::SameLine();
 						//if (ImGui::Button(" ACCELERATION "))
 						//{
@@ -3091,17 +3107,36 @@ void CWindow_EffectTool::Update_MeshTab()
 						{
 							m_pMeshBufferDesc->fGravity = m_fGravity_Mesh;
 						}
+
+
+						if (FORCE_MODE::FORCE == m_pMeshBufferDesc->eForce_Mode)
+						{
+							if (ImGui::DragFloat("Gravity_X_Mesh", &m_fGravity_X_Mesh, 0.5f, 0.f, 1000.f))
+							{
+								m_pMeshBufferDesc->fGravity_X = m_fGravity_X_Mesh;
+							}
+
+							if (ImGui::DragFloat("Gravity_Z_Mesh", &m_fGravity_Z_Mesh, 0.5f, 0.f, 1000.f))
+							{
+								m_pMeshBufferDesc->fGravity_Z = m_fGravity_Z_Mesh;
+							}
+
+						}
+
 					}
 
-					//if (ImGui::Button(" FORCE "))
-					//{
-					//	m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
-					//}
-					//ImGui::SameLine();
-					//if (ImGui::Button(" IMPULSE "))
-					//{
-					//	m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
-					//}
+					/* Gravity Mode (Force Mode_Mesh) */
+					ImGui::SeparatorText("Gravity Mode_Mesh"); // ImGui::SeparatorText("Force Mode_Mesh");
+					if (ImGui::Button(" XYZ_Gravity_Mesh ")) // if (ImGui::Button(" FORCE_Mesh "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" Y Onty_Gravity_Mesh ")) //if (ImGui::Button(" IMPULSE_Mesh "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
+					}
+
 					//ImGui::SameLine();
 					//if (ImGui::Button(" ACCELERATION "))
 					//{
@@ -4142,6 +4177,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 				m_fGravity_Particle = m_pParticleBufferDesc->fGravity;	// 중력 가속도
+				m_fGravity_X_Particle = m_pParticleBufferDesc->fGravity_X;	// 중력 가속도 X
+				m_fGravity_Z_Particle = m_pParticleBufferDesc->fGravity_Z;	// 중력 가속도 Z
 
 				//m_fFriction_Particle = m_pParticleBufferDesc->fFriction;	// 마찰 계수
 				m_vFrictionLerp_Pos_Particle[0] = m_pParticleBufferDesc->vFrictionLerp_Pos.x;
@@ -4152,6 +4189,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 				m_fSleepThreshold_Particle = m_pParticleBufferDesc->fSleepThreshold;	// 슬립 한계점
+
+
+				/* Force Mode */
+
 
 
 				/* 파워 */
@@ -4619,7 +4660,9 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 					m_iUseGravity_Mesh = 1;
 
 
-				m_fGravity_Mesh			= m_pMeshBufferDesc->fGravity;			// 중력 가속도
+				m_fGravity_Mesh		= m_pMeshBufferDesc->fGravity;		// 중력 가속도
+				m_fGravity_X_Mesh	= m_pMeshBufferDesc->fGravity_X;	// 중력 가속도 X
+				m_fGravity_Z_Mesh	= m_pMeshBufferDesc->fGravity_Z;	// 중력 가속도 Z
 
 
 				/* 파워 */
@@ -4850,13 +4893,13 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iDynamic_Color_Mesh = 1;
 
 			m_fColor_Min_Mesh[0] = m_pMeshBufferDesc->vMinMaxRed.x;
-			m_fColor_Min_Mesh[1] = m_pMeshBufferDesc->vMinMaxBlue.x;
-			m_fColor_Min_Mesh[2] = m_pMeshBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Mesh[1] = m_pMeshBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Mesh[2] = m_pMeshBufferDesc->vMinMaxBlue.x;
 			m_fColor_Min_Mesh[3] = m_pMeshBufferDesc->vMinMaxAlpha.x;
 
 			m_fColor_Max_Mesh[0] = m_pMeshBufferDesc->vMinMaxRed.y;
-			m_fColor_Max_Mesh[1] = m_pMeshBufferDesc->vMinMaxBlue.y;
-			m_fColor_Max_Mesh[2] = m_pMeshBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Mesh[1] = m_pMeshBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Mesh[2] = m_pMeshBufferDesc->vMinMaxBlue.y;
 			m_fColor_Max_Mesh[3] = m_pMeshBufferDesc->vMinMaxAlpha.y;
 
 			if (0 == m_iDynamic_Color_Mesh)

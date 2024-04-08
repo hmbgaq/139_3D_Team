@@ -316,125 +316,118 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	_uint iLevel = LEVEL_STATIC;	//_uint iCurLevel = m_pGameInstance->Get_NextLevel();
 
-	// 1개만 있어도 되는 이펙트
-	{ 
-		/* Circle_Floor */
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
+
+#pragma region 테스트 이펙트 시작
+
+	/* Circle_Floor */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
+
+	/* Test Explosion */
+	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05_Big.json"));
+
+#pragma endregion 테스트 이펙트 끝
 
 
-		/* Boos 1 */
-		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
-	}
+#pragma region Hit 이펙트 시작
+	/* Hit */
+	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json", 200));
+#pragma endregion Hit 이펙트 끝
 
 
-	// 대량으로 필요한 이펙트 (200개)
-	for (_uint i = 0; i < iMaxManyEffect; ++i)
-	{
-		/* Hit */
-		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json"));
+	/* Light */
+	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
+	
+
+#pragma region 보스1 이펙트 시작
+	/* Boos 1 */
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json", 50));
+#pragma endregion 보스1 이펙트 끝
 
 
-		//Boss2 MotherShakeTreeProjectile
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
+#pragma region 보스2 이펙트 시작
+	/* Boos 2 */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json", 50));
 
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json"));
-	}
+	/* Boss2 MotherShakeTreeProjectile */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json", 200));
 
-
-	// 중간 필요한 이펙트 (50개)
-	for (_uint i = 0; i < iMaxEffect; ++i)
-	{
-		
-		/* Light */
-		FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json"));
-
-		/* Boos 1 */
-		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json"));
-
-		/* Boos 2 */
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 200));
+#pragma endregion 보스2 이펙트 끝
 
 
-	}
-
-
-	// 극소량 필요한 이펙트 (10개)
-	for (_uint i = 0; i < iMaxFewEffect; ++i)
-	{
-#pragma region 플레이어 이펙트
-
+#pragma region 플레이어 이펙트 시작
 		/* Heal */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json"));
-
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json", 10));
 
 		/* Heal_Blue */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_08_Blue.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Reverse_Blue.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_07_Light_03_Blue.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Blue.json"));
-
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_08_Blue.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Reverse_Blue.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_07_Light_03_Blue.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Blue.json", 10));
 
 		/* EnergyWhip */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json", 10));
 
 		/* SlamDown */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json", 10));
 
 		/* DodgeBlink */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json", 10));
 
 		/* Roll */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 10));
 
 		/* Revolver */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json"));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json", 10));
 
 		/* Revolver_Fire */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json"));
-		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json"));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
+		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
+#pragma endregion 플레이어 이펙트 끝
 
-
-#pragma endregion
-
-
-	}
 
 	return S_OK;
 }
 
 
 
-HRESULT CEffect_Manager::Add_ToPool(_uint iLevelIndex, string strAddPath, string strFileName, _bool bHasTrail, string strTrailFileName)
+HRESULT CEffect_Manager::Add_ToPool(_uint iLevelIndex, string strAddPath, string strFileName, _uint iCount, _bool bHasTrail, string strTrailFileName)
 {
-	CEffect* pEffect = Load_Effect(iLevelIndex, strAddPath, strFileName, bHasTrail, strTrailFileName);
-
-	pEffect->End_Effect_ForPool();		// 리셋 & 정지 상태로 만들기
-
-	if (0 == m_EffectPool.count(strFileName))
+	for (_uint i = 0; i < iCount; ++i)
 	{
-		queue<CEffect*> TempQueue;
-		TempQueue.push(pEffect);
-		m_EffectPool.insert({ strFileName, TempQueue });
-	}
-	else
-		m_EffectPool[strFileName].push(pEffect);
+		CEffect* pEffect = Load_Effect(iLevelIndex, strAddPath, strFileName, bHasTrail, strTrailFileName);
 
-	Safe_AddRef(pEffect);
+		pEffect->End_Effect_ForPool();		// 리셋 & 정지 상태로 만들기
+
+		if (0 == m_EffectPool.count(strFileName))
+		{
+			queue<CEffect*> TempQueue;
+			TempQueue.push(pEffect);
+			m_EffectPool.insert({ strFileName, TempQueue });
+		}
+		else
+			m_EffectPool[strFileName].push(pEffect);
+
+		Safe_AddRef(pEffect);
+	}
 
 	return S_OK;
 }
