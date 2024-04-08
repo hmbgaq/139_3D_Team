@@ -10,7 +10,7 @@ void CPlayer_Roll_L::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	// ÀÌÆåÆ® »ý¼º
-	EFFECT_MANAGER->Play_Effect("Roll_R_04.json", pActor);
+	EFFECT_MANAGER->Play_Effect("Player/Roll/", "Roll_R_04.json", pActor);
 }
 
 CState<CPlayer>* CPlayer_Roll_L::Update(CPlayer* pActor, _float fTimeDelta)

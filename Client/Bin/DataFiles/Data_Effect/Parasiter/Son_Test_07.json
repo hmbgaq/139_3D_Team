@@ -108,7 +108,7 @@
       "fUV_RotDegree": 0.0,
       "fWaitingTime": 0.0,
       "iCurNumInstance": 1,
-      "iRenderGroup": 6,
+      "iRenderGroup": 7,
       "iShaderPassIndex": 2,
       "iTextureIndex": [ 25, 0, 0, 0, 0 ],
       "strModelTag": [ "Prototype_Component_Model_Effect_Egg", "" ],

@@ -43,7 +43,7 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 
 			// 이펙트 생성 테스트
 			//EFFECT_MANAGER->Create_Effect("Player/Zapper_Shield/", "Zapper_Shield_20_distortionTest.json", pActor);
-			EFFECT_MANAGER->Play_Effect("Zapper_Shield_21_distortionTest.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json", pActor);
 
 			//pActor->Get_Body()->Collider_Off();
 		}

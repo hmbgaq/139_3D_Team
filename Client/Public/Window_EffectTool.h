@@ -11,6 +11,7 @@ class CEffect_Instance;
 class CEffect_Trail;
 
 class CSky;
+class CProjectile;
 
 class CWindow_EffectTool final : public CImgui_Window
 {
@@ -282,7 +283,10 @@ private:
 	/* For.Rotation */
 	_int	m_iUseRotAcc_Particle = { 1 };
 
-	_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
+	//_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMinRadian_Particle[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxRadian_Particle[3] = { 0.f, 0.f, 0.f };
+
 
 	_float	m_vMinMaxRadianSpeed_X_Particle[2] = { 0.f, 0.f };
 	_float	m_vMinMaxRadianSpeed_Y_Particle[2] = { 0.f, 0.f };
@@ -421,7 +425,7 @@ private:
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 	_float	m_vMinMaxSpeed_Mesh[2] = { 1.f, 1.f };
-
+	_float	m_vMinMaxTornadoSpeed_Mesh[2] = { 1.f, 1.f };
 
 	/* Emitter */
 	_float	m_fEmissionTime_Mesh = { 0.f };			// 방출 시간 텀
@@ -482,7 +486,9 @@ private:
 	/* Rotation_Mesh */
 	_int	m_iUseRotAcc_Mesh = { 1 }; // 1이 사용안함
 
-	_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
+	//_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMinRadian_Mesh[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxRadian_Mesh[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vMinMaxRadianSpeed_X_Mesh[2] = { 0.f, 0.f };
 	_float	m_vMinMaxRadianSpeed_Y_Mesh[2] = { 0.f, 0.f };
@@ -581,7 +587,9 @@ private:
 	_float			m_vScale_Model[3] = { 0.f, 0.f, 0.f };			// 크기 비교용 모델 크기
 	_float			m_fModelRot = { 0.f };
 
-	CEffect* m_pTestEffect = { nullptr };
+	CEffect*		m_pTestEffect = { nullptr };
+
+	CGameObject*	m_pTestProjectile = { nullptr };
 #pragma endregion
 
 

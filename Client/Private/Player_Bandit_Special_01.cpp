@@ -45,7 +45,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		if (true == m_bFlags[0])
 		{
 
-			EFFECT_MANAGER->Play_Effect("Revolver_Fire_03.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
 			Fire(pActor);
@@ -58,7 +58,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[1] = pActor->Is_Inputable_Front(28);
 		if (true == m_bFlags[1])
 		{
-			EFFECT_MANAGER->Play_Effect("Revolver_Fire_03.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
 			Fire(pActor);
@@ -71,7 +71,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[2] = pActor->Is_Inputable_Front(34);
 		if (true == m_bFlags[2])
 		{
-			EFFECT_MANAGER->Play_Effect("Revolver_Fire_03.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
 			Fire(pActor);
@@ -84,7 +84,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[3] = pActor->Is_Inputable_Front(39);
 		if (true == m_bFlags[3])
 		{
-			EFFECT_MANAGER->Play_Effect("Revolver_Fire_03.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
 			Fire(pActor);
@@ -97,7 +97,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[4] = pActor->Is_Inputable_Front(39);
 		if (true == m_bFlags[4])
 		{
-			EFFECT_MANAGER->Play_Effect("Revolver_Fire_03.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
 			Fire(pActor);
@@ -110,7 +110,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[5] = pActor->Is_Inputable_Front(45);
 		if (true == m_bFlags[5])
 		{
-			EFFECT_MANAGER->Play_Effect("Revolver_Fire_03.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
 			Fire(pActor);

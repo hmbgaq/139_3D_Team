@@ -42,7 +42,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	//m_pSon = CData_Manager::GetInstance()->Get_Son();
 
 
-	
+
 	//
 	//m_pTransformCom->Set_WorldMatrix(Temp);
 // 	list<CGameObject*>* _pMTargets = m_pGameInstance->Get_GameObjects(LEVEL_SNOWMOUNTAINBOSS, TEXT("Layer_Boss"));
@@ -67,9 +67,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_fDamage = 10.f;
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
-	// ¿Ã∆Â∆Æ ª˝º∫
-	//m_pEffect = EFFECT_MANAGER->Create_Effect("Parasiter/", "Yellow_Blood_Test_02.json", this);
-	//m_pEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test_02.json", this);
+
 
 
 	return S_OK;
@@ -80,20 +78,20 @@ void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 	__super::Priority_Tick(fTimeDelta);
 	if (m_bFirst == true)
 	{
-		
+
 		CSon* pSon = dynamic_cast<CSon*>(m_pOwner);
-		
+
 		_float4x4 SonMatrix = pSon->Get_Transform()->Get_WorldMatrix();
-		
+
 		m_pTransformCom->Set_WorldMatrix(SonMatrix);
-	
-		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION) +0.8f* m_pTransformCom->Get_State(CTransform::STATE_RIGHT)+4.f* m_pTransformCom->Get_State(CTransform::STATE_UP)+8.5f* m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION) + 0.8f * m_pTransformCom->Get_State(CTransform::STATE_RIGHT) + 4.f * m_pTransformCom->Get_State(CTransform::STATE_UP) + 8.5f * m_pTransformCom->Get_State(CTransform::STATE_LOOK));
 
 		//m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.0f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
 
 		m_pTransformCom->Look_At(m_vPlayerPos);
 
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Son_Test_07.json", this);
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Son_Test_07.json", this);
 
 		m_bFirst = false;
 	}
@@ -143,16 +141,13 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 			// ¿Ã∆Â∆Æ ª˝º∫
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-			EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+			EFFECT_MANAGER->Play_Effect("Hit", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 		}
-// 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-// 		m_pEffect = nullptr;
+
 		//m_pCollider->Set_Enable(false);
 		this->Set_Dead(true);
 
 	}
-
-	//m_pEffect->Set_Dead(true);	// ¿Ã∆Â∆Æ ¡◊¿Ã±‚ (EffectOut : ¥Á¿Â æ»æ≤¥¬ ¿Ã∆Â∆Æ∂Û∞Ì «ÿº≠ ¿œ¥‹ ª©µ◊Ω¿¥œ¥Ÿ. [º∫»Ò])
 }
 
 void CSon_Projectile::OnCollisionStay(CCollider* other)
@@ -225,14 +220,7 @@ void CSon_Projectile::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pEffect)
-	{
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-		m_pEffect = nullptr;
-		//m_pEffect->Set_Dead(true);	// ¿Ã∆Â∆Æ ¡◊¿Ã±‚
-	}
-
-	//if(nullptr != m_pEffect)
+	Safe_Release(m_pEffect);
 
 
 }

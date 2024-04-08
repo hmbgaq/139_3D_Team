@@ -64,7 +64,7 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (true == m_tEnvironmentDesc.bEffect)
 	{
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Fire_Torch_05.json", this);
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Fire/", "Fire_Torch_05.json", this);
 	}
 	
 	return S_OK;
@@ -297,11 +297,10 @@ void CEnvironment_LightObject::Change_LightEffect(LIGHT_EFFECT eLightEffectType)
 	{
 		//m_pEffect->Set_Dead(true);
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
-		m_pEffect = nullptr;
 	}
 
 
-	m_pEffect = EFFECT_MANAGER->Play_Effect(strEffectFilePath);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Fire/", strEffectFilePath);
 
 
 	if (m_pEffect == nullptr)
@@ -467,8 +466,11 @@ void CEnvironment_LightObject::Free()
 	if (pLight != nullptr)
 		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
 	
+
 	if (m_pEffect != nullptr)
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		Safe_Release(m_pEffect);
+	
+	
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);

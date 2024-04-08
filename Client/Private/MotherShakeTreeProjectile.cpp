@@ -70,9 +70,9 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 
 	if (m_bFirst)
 	{
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Circle_Floor_03.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
-		m_pMainEffect = EFFECT_MANAGER->Play_Effect("MotherShakeTreeProjectile1.json", this);
-		EFFECT_MANAGER->Play_Effect("SY_Falling_Leaves_04.json", m_pTransformCom->Get_Position());
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
+		m_pMainEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherShakeTreeProjectile1.json", this);
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_04.json", m_pTransformCom->Get_Position());
 		m_bFirst = false;
 	}
 
@@ -121,7 +121,7 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 
 		pTarget_Character->Get_Damaged(m_fDamage);
 
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	EFFECT_MANAGER->Return_ToPool(m_pEffect);
@@ -203,7 +203,7 @@ void CMotherShakeTreeProjectile::Free()
 {
 	__super::Free();
 
-	//if(nullptr != m_pEffect)
 
+	Safe_Release(m_pEffect);	// 동그라미 삭제
 
 }

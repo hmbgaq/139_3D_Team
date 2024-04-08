@@ -30,10 +30,10 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	CEffect* Create_Effect(CGameObject* pOwner = nullptr);
-	CEffect* Create_Effect(_float3 vPos, CGameObject* pOwner = nullptr);
-	CEffect* Create_Effect(const wstring& strPartTag);
+//public:
+//	CEffect* Create_Effect(CGameObject* pOwner = nullptr);
+//	CEffect* Create_Effect(_float3 vPos, CGameObject* pOwner = nullptr);
+//	CEffect* Create_Effect(const wstring& strPartTag);
 
 public:
 	void Reset_UpperAngle();
@@ -60,7 +60,6 @@ public:
 	virtual void Free() override;
 
 protected:
-	CEffect_Manager* m_pEffectManager = { nullptr };
 	CData_Manager* m_pDataManager = { nullptr };
 	CUI_Manager* m_pUIManager = { nullptr };
 };
