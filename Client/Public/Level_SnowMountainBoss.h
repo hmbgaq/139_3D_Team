@@ -40,7 +40,7 @@ private: /* Shader */
 
 private:
 	_int			TempLightNumber = 0;
-	CEffect* m_pMainEffect = nullptr;
+	class CEffect*  m_pMainEffect = nullptr;
 	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData_MapData.json";
 public:
 	static CLevel_SnowMountainBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

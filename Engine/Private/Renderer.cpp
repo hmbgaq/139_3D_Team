@@ -537,8 +537,7 @@ HRESULT CRenderer::Render_MyPBR()
 	switch (m_pGameInstance->Get_NextLevel())
 	{
 	case 2: // Level_Intro = 테스트맵 
-		FAILED_CHECK(m_pTool_IrradianceTextureCom[4]->Bind_ShaderResource(m_pShader_Deferred, "g_Irradiance"));
-		FAILED_CHECK(m_pTool_PreFilteredTextureCom[4]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
+		m_bToolLevel = true;
 		break;
 
 	case 9: // LEVEL_GamePlay
