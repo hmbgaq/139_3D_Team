@@ -79,10 +79,12 @@ void CImpact_Slam::OnCollisionEnter(CCollider* other)
 		m_eHitPower = Power::Medium;
 		m_fForce = 0.5f;
 
+		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
+
 		//_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
 		//_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 		_vector vDir = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Look();
-		pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 
 		// 타격 이펙트

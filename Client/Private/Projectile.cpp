@@ -130,6 +130,14 @@ HRESULT CProjectile::Render_Shadow()
 	return S_OK;
 }
 
+void CProjectile::Set_Enable(_bool _Enable)
+{
+	m_pCollider->Set_Enable(false);
+
+	__super::Set_Enable(_Enable);
+
+}
+
 //CCharacter* CProjectile::Get_Target_Character(CCollider* other)
 //{
 //	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
@@ -257,7 +265,16 @@ HRESULT CProjectile::Bind_ShaderResources()
 
 void CProjectile::Free()
 {
+	Set_Enable(false);
+
+	//if (m_pCollider)
+	//{
+	//	m_pCollider->Set_Enable(false);
+	//}
+
 	__super::Free();
+
+
 
 	Safe_Release(m_pCollider);
 	Safe_Release(m_pShaderCom);

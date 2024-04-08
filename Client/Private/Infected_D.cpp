@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Infected_D.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 /* Spawn */
 #include "Infected_IdleAct_01.h"
@@ -42,10 +43,12 @@ void CInfected_D::Priority_Tick(_float fTimeDelta)
 
 void CInfected_D::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
-	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
-	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+
 }
 
 void CInfected_D::Late_Tick(_float fTimeDelta)

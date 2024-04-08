@@ -105,7 +105,8 @@ void CCollision_Manager::Remove_DeadCollision()
 	{
 		for (auto iter = m_ColliderList[i].begin(); iter != m_ColliderList[i].end();)
 		{
-			if (nullptr == (*iter) || false == (*iter)->Get_Enable())
+			if (nullptr == (*iter) || false == (*iter)->Get_Enable() || 
+				nullptr == (*iter)->Get_Owner() || false == (*iter)->Get_Owner()->Get_Enable() || true == (*iter)->Get_Owner()->Is_Dead())
 			{
 				Safe_Release(*iter);
 				iter = m_ColliderList[i].erase(iter);

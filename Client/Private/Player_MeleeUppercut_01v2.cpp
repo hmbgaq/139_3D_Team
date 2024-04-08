@@ -4,6 +4,7 @@
 #include "Clone_Manager.h"
 #include "Effect.h"
 #include "Bone.h"
+#include "Data_Manager.h"
 
 #include "Player_Leap_01_Lower.h"
 #include "Player_Bandit_Special_01.h"
@@ -52,7 +53,8 @@ CState<CPlayer>* CPlayer_MeleeUppercut_01v2::Update(CPlayer* pActor, _float fTim
 
 	if (pActor->Is_Inputable_Front(29))
 	{
-		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
+		_bool bIsLearned = CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::HERO_PUNCH);
+		if (m_pGameInstance->Mouse_Pressing(DIM_LB) && true == bIsLearned)
 		{
 			return new CPlayer_Leap_01_Lower();
 		}

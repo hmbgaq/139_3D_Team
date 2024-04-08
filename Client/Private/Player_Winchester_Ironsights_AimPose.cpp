@@ -43,17 +43,21 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB))
 	{
-		CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_WINCHESTER);
-		pWeapon->Fire();
-		pActor->Apply_Shake_And_Blur(Power::Medium);
-		CUI_Manager::GetInstance()->Trigger_Crosshair(true);
-		pActor->Activate_ShootingReaction();
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::RIFLE);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		if (true == bIsCooltimeEnd)
+		{
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_WINCHESTER);
+			pWeapon->Fire();
+			pActor->Apply_Shake_And_Blur(Power::Medium);
+			CUI_Manager::GetInstance()->Trigger_Crosshair(true);
+			pActor->Activate_ShootingReaction();
 
+			EFFECT_MANAGER->Play_Effect("Revolver_13.json", pActor);
 
-		EFFECT_MANAGER->Play_Effect("Player/Revolver/", "Revolver_13.json", pActor);
-		
+			return new CPlayer_Winchester_Ironsights_Reload_01();
+		}
 
-		return new CPlayer_Winchester_Ironsights_Reload_01();
 	}
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);

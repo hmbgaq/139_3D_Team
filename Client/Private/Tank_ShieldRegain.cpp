@@ -13,6 +13,8 @@ void CTank_ShieldRegain::Initialize(CTank* pActor)
 		pWeapon_Tank->Set_Follow(true);
 		pWeapon_Tank->Set_Animation(0, CModel::ANIM_STATE_REVERSE, 28);
 	}
+
+	pActor->Set_MonsterAttackState(false);
 }
 
 CState<CTank>* CTank_ShieldRegain::Update(CTank* pActor, _float fTimeDelta)

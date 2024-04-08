@@ -52,10 +52,13 @@ HRESULT CAttackObject::Render()
 
 CCharacter* CAttackObject::Get_Target_Character(CCollider* other)
 {
-	if (nullptr == other || nullptr == other->Get_Owner() || nullptr == other->Get_Owner()->Get_Object_Owner())
+	CGameObject* pObjectOwner = other->Get_Owner()->Get_Object_Owner();
+	if (nullptr == other || false == other->Get_Enable()
+		|| nullptr == other->Get_Owner() || false == other->Get_Owner()->Get_Enable() || true == other->Get_Owner()->Is_Dead()
+		|| nullptr == pObjectOwner || false == pObjectOwner->Get_Enable() || true == pObjectOwner->Is_Dead())
 		return nullptr;
 
-	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(other->Get_Owner()->Get_Object_Owner());
+	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(pObjectOwner);
 	if (nullptr == pTarget_Character)
 		return nullptr;
 

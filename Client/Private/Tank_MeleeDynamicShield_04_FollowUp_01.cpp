@@ -22,6 +22,8 @@ void CTank_MeleeDynamicShield_04_FollowUp_01::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_MeleeDynamicShield_04_FollowUp_01::Update(CTank* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	//pActor->Look_At_Target_Lerp(fTimeDelta);
 
 	if (false == m_bFlags[0])

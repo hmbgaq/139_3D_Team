@@ -144,6 +144,7 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 
 void CBullet_Winchester::OnCollisionStay(CCollider* other)
 {
+	Set_Dead(true);
 }
 
 void CBullet_Winchester::OnCollisionExit(CCollider* other)

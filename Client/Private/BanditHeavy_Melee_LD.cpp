@@ -20,6 +20,8 @@ void CBanditHeavy_Melee_LD::Initialize(CBandit_Heavy* pActor)
 
 CState<CBandit_Heavy>* CBanditHeavy_Melee_LD::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(37);

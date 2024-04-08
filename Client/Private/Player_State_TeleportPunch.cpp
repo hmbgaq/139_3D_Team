@@ -1,6 +1,7 @@
 #include "..\Public\Player_State_TeleportPunch.h"
 #include "Player_IdleLoop.h"
 #include "Transform.h"
+#include "Data_Manager.h"
 
 void CPlayer_State_TeleportPunch::Initialize(CPlayer* pActor)
 {
@@ -33,7 +34,7 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 		//_vector vPlayerPos = pActor->Get_Position_Vector();
 		//_vector vDir = pTarget->Calc_Look_Dir_XZ(vPlayerPos);
 		
-		_float fDamage = 30.f;
+		_float fDamage = 30.f + CData_Manager::GetInstance()->Get_Additional_ElectricDamage();
 		_float fForce = 1.f;
 		Direction eDir = Direction::Front;
 		Power ePower = Power::Heavy;
