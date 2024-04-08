@@ -157,9 +157,6 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
             return E_FAIL;
     }
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(50.0f, 0.f, 35.f));
 
 
     //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
@@ -188,20 +185,52 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 
 
 
-    
-    
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(252.5f, 0.f, 9.f));	
-    
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(161.5f, 14.65f, 215.5f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(10.f, 0.f, 25.f));
 
-    /* Shader Test Model */
-    //CGameObject* pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_Position(_float3(250.5, 0.f, 20.f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
+
+    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
+    NULL_CHECK_RETURN(pMonster, E_FAIL);
+    pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+
+    /* Intro Boss */
+    {
+       //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_Boss", TEXT("Prototype_GameObject_VampireCommander"));
+       //
+       //if (nullptr == pMonster)   return E_FAIL;
+       //pMonster->Set_Position(_float3(50.0f, 0.f, 30.f));
+       //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+       //CNavigation* pVampireNavi = dynamic_cast<CVampireCommander*>(pMonster)->Get_Navigation();
+       //pVampireNavi->Set_CurrentIndex(pVampireNavi->Get_SelectRangeCellIndex(pMonster));
+    }
+
+    /* SnowMountain Boss*/
+    {
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Mother"));
+        //if (nullptr == pMonster)   return E_FAIL;
+        //pMonster->Set_Position(_float3(103.f, 0.f, 112.36f));
+        //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-90.f));
+        //
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+        //if (nullptr == pMonster)   return E_FAIL;
+        //pMonster->Set_Position(_float3(86.f, 0.f, 80.36f));
+        //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+        //
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Son"));
+        //if (nullptr == pMonster)   return E_FAIL;
+        //pMonster->Set_Position(_float3(120.f, 0.f, 80.36f));
+        //pMonster->Get_Transform()->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-180.f));
+    }
 
     return S_OK;
 }
@@ -325,9 +354,6 @@ HRESULT CLevel_Intro::Ready_Layer_Player(const wstring& strLayerTag)
 HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
     FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Sky")));
-
-    
-
 
     json Stage1MapJson = {};
 
@@ -902,21 +928,11 @@ HRESULT CLevel_Intro::Ready_Layer_UI(const wstring& strLayerTag, void* pArg)
 
 HRESULT CLevel_Intro::Ready_LightDesc()
 {
-    /* For. Shadow */
-    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+    /* Shadow Light */
+    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
     m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-   //LIGHT_DESC         LightDesc{};
-   //{
-   //    LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-   //    LightDesc.vDirection = _float4(0.125f, -0.01f, -0.45f, 0.485f);
-   //    LightDesc.vDiffuse = _float4(0.822f, 0.822f, 0.822f, 0.5f);
-   //    LightDesc.vAmbient = _float4(0.243f, 0.386f, 0.253f, 0.604f);
-   //    LightDesc.vSpecular = _float4(0.428f, 0.985f, 0.350f, 0.5f);
-   //
-   //    FAILED_CHECK(m_pGameInstance->Add_Light(LightDesc, TempLightNumber));
-   //}
-
+    /* Map Light */
     json Stage1MapJson = {};
 
     if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
@@ -949,6 +965,9 @@ HRESULT CLevel_Intro::Ready_LightDesc()
         if (LightDesc.eType == tagLightDesc::TYPE_DIRECTIONAL)
         {
             CLight* pDirectionLight = m_pGameInstance->Get_DirectionLight();
+
+            //
+           // m_pGameInstance->Ready_StaticLightMatrix()
 
             if (pDirectionLight != nullptr)
             {
@@ -1030,25 +1049,65 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 
 HRESULT CLevel_Intro::Ready_Shader()
 {
-    PBR_DESC Desc_PBR = {};
-    Desc_PBR.bPBR_ACTIVE = true;
-    m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
+    /* For. Shadow */
+    m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+    m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
+    _int iTemp = {};
+
+    /* For. Light */
+    LIGHT_DESC Desc = {};
+    Desc.eType = LIGHT_DESC::TYPE::TYPE_POINT;
+    Desc.bEnable = true;
+    Desc.vDiffuse = { 0.f, 1.f, 0.f, 1.f };
+    Desc.vAmbient = { 1.f, 1.f, 1.f, 1.f };
+    Desc.vSpecular = { 0.6f, 0.6f, 0.6f, 1.f };
+    Desc.vLightFlag = { 1.f, 1.f, 1.f, 1.f };
+    Desc.fIntensity = 1.f;
+    Desc.vPosition = { 20.f, 1.f, 5.f };
+    Desc.fRange = 6.f;
+    m_pGameInstance->Add_Light(Desc, iTemp);
+
+   // /* For. SpotLight */
+   // Desc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+   // Desc.bEnable = true;
+   // Desc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
+   // Desc.vAmbient = { 1.f, 1.f, 1.f, 0.f };
+   // Desc.vSpecular = { 0.f, 1.f, 0.486f, 0.6f };
+   // Desc.fIntensity = 10.f;
+   // Desc.vDirection = { 1.f, -1.f, 0.f, 0.f };
+   // Desc.vPosition = { 3.f, 1.f, 25.f };
+   // Desc.fRange = 6.f;
+   // Desc.fCutOff = cosf(XMConvertToRadians(20.f));
+   // Desc.fOuterCutOff = cosf(XMConvertToRadians(30.f));
+   //
+   // m_pGameInstance->Add_Light(Desc, iTemp);
+
+
+    /* Cascade */
+    //_float3 Dir = m_pGameInstance->Get_DirectionLight()->Get_LightDesc().vDirection;
+    //_float3 vDir;
+    //XMStoreFloat3(&vDir, XMVector3Normalize(XMLoadFloat3(&Dir)));
+    //
+    //_float3 vOffset = { 0.f, 30.f, 0.f };
+    //
+    //m_pGameInstance->Ready_StaticLightMatrix(vOffset, vDir);
+
+    /* 1. 셰이더 초기화 */
+    m_pGameInstance->Off_Shader();
+
+    /* 2. 셰이더 셋팅 */
+    PBR_DESC Desc_PBR = {};
+    
     DEFERRED_DESC Desc_Deferred = {};
-    Desc_Deferred.bRimBloom_Blur_Active = true;
-    Desc_Deferred.bShadow_Active        = false;
-    m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
     
     HBAO_PLUS_DESC Desc_Hbao = {};
-    Desc_Hbao.bHBAO_Active          = true;
     Desc_Hbao.fRadius               = 2.f;
     Desc_Hbao.fBias                 = 0.3f;
     Desc_Hbao.fBlur_Sharpness       = 2.222f;
     Desc_Hbao.fPowerExponent        = 16.f;
-    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
     
     FOG_DESC Desc_Fog = {};
-    Desc_Fog.bFog_Active            = false;
     Desc_Fog.fFogStartDepth         = {};
     Desc_Fog.fFogStartDistance      = {};
     Desc_Fog.fFogDistanceValue      = {};
@@ -1059,67 +1118,79 @@ HRESULT CLevel_Intro::Ready_Shader()
     Desc_Fog.vFogColor.y            = {};
     Desc_Fog.vFogColor.z            = {};
     Desc_Fog.vFogColor.w            = {};
-    m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
     
     RADIAL_DESC Desc_Radial = {};
-    Desc_Radial.bRadial_Active      = false;
     Desc_Radial.fRadial_Quality     = 8.f;
     Desc_Radial.fRadial_Power       = 0.1f;
-    m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
     
     DOF_DESC Desc_Dof = {};
-    Desc_Dof.bDOF_Active            = false;
     Desc_Dof.DOF_Distance           = 3.f;
-    m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
     
     HDR_DESC Desc_HDR = {};
-    Desc_HDR.bHDR_Active            = true;
     Desc_HDR.fmax_white             = 0.5f;
-    m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
 
     ANTI_DESC Desc_Anti = {};
-    Desc_Anti.bFXAA_Active          = true;
-    m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
 
     HSV_DESC Desc_HSV = {};
-    Desc_HSV.bScreen_Active         = true;
     Desc_HSV.fFinal_Brightness      = 1.156f;
     Desc_HSV.fFinal_Saturation      = 1.312f;
-    m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
 
     VIGNETTE_DESC Desc_Vignette     = {};
-    Desc_Vignette.bVignette_Active  = false;
     Desc_Vignette.fVignetteAmount   = -1.f;
     Desc_Vignette.fVignetteCenter_X = 0.5f;
     Desc_Vignette.fVignetteCenter_Y = 0.5f;
     Desc_Vignette.fVignetteRadius   = 1.f;
     Desc_Vignette.fVignetteRatio    = 1.f;
     Desc_Vignette.fVignetteSlope    = 8.f;
-    m_pGameInstance->Get_Renderer()->Set_Vignette_Option(Desc_Vignette);
     
     SSR_DESC Desc_SSR = {};
-    Desc_SSR.bSSR_Active = false;
-    Desc_SSR.fRayStep = 0.005f;
-    Desc_SSR.fStepCnt = 75.f;
-    m_pGameInstance->Get_Renderer()->Set_SSR_Option(Desc_SSR);
+    Desc_SSR.fRayStep               = 0.005f;
+    Desc_SSR.fStepCnt               = 75.f;
     
-    CHROMA_DESC	Desc_Chroma = {};
-    Desc_Chroma.bChroma_Active = false;
-    Desc_Chroma.fChromaticIntensity = false;
-    m_pGameInstance->Get_Renderer()->Set_Chroma_Option(Desc_Chroma);
+    CHROMA_DESC	Desc_Chroma         = {};
+    Desc_Chroma.fChromaticIntensity = 11.f;
     
     SCREENEFFECT_DESC Desc_ScreenEffect = {};
-    Desc_ScreenEffect.bGrayScale_Active = false;
-    Desc_ScreenEffect.bSephia_Active = false;
-    Desc_ScreenEffect.GreyPower = 0.11f;
-    Desc_ScreenEffect.SepiaPower = 0.58f;
-    m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(Desc_ScreenEffect);
+    Desc_ScreenEffect.GreyPower         = 0.11f;
+    Desc_ScreenEffect.SepiaPower        = 0.58f;
 
     LUMASHARPEN_DESC Desc_Luma = {};
-    Desc_Luma.bLumaSharpen_Active = true;
-    Desc_Luma.foffset_bias = 0.883f;
-    Desc_Luma.fsharp_clamp = 0.1f;
-    Desc_Luma.fsharp_strength = 0.5f;
+    Desc_Luma.foffset_bias          = 0.883f;
+    Desc_Luma.fsharp_clamp          = 0.1f;
+    Desc_Luma.fsharp_strength       = 0.5f;
+
+
+    Desc_Deferred.bRimBloom_Blur_Active         = true;
+    Desc_Deferred.bShadow_Active                = true;
+    Desc_Hbao.bHBAO_Active                      = true;
+    Desc_PBR.bPBR_ACTIVE                        = true;
+
+    Desc_Fog.bFog_Active                        = false;
+    Desc_SSR.bSSR_Active                        = false;
+    Desc_Radial.bRadial_Active                  = false;
+    Desc_HDR.bHDR_Active                        = true;
+    Desc_Dof.bDOF_Active                        = false;
+    Desc_Anti.bFXAA_Active                      = true;
+    Desc_HSV.bScreen_Active                     = false;
+    Desc_Vignette.bVignette_Active              = false;
+    Desc_Chroma.bChroma_Active                  = false;
+    Desc_Luma.bLumaSharpen_Active               = true;
+    Desc_ScreenEffect.bGrayScale_Active         = false;
+    Desc_ScreenEffect.bSephia_Active            = false;
+
+    m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
+    m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
+    m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
+    m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
+    m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
+    m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
+    m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
+    m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
+    m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
+    m_pGameInstance->Get_Renderer()->Set_Vignette_Option(Desc_Vignette);
+    m_pGameInstance->Get_Renderer()->Set_SSR_Option(Desc_SSR);
+    m_pGameInstance->Get_Renderer()->Set_Chroma_Option(Desc_Chroma);
+    m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(Desc_ScreenEffect);
     m_pGameInstance->Get_Renderer()->Set_LumaSharpen_Option(Desc_Luma);
 
     return S_OK;

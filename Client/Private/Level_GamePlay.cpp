@@ -54,7 +54,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	//FAILED_CHECK(Ready_Shader());
 
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
@@ -92,10 +91,11 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_LightDesc()
 {
-	/* For. Shadow */
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY),  60.f,  (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear,  Engine::g_fLightFar);
+	/* Shadow Light */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
+	/* Map Light */
 	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
 	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
@@ -508,6 +508,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Shader()
 {
+	/* For. Shadow */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+
 	/* 1. 셰이더 초기화 */
 	m_pGameInstance->Off_Shader(); 
 

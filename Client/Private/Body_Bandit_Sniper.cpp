@@ -23,6 +23,8 @@ HRESULT CBody_Bandit_Sniper::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	FAILED_CHECK(Ready_ShadeValue());
+
 	return S_OK;
 }
 
@@ -44,11 +46,6 @@ HRESULT CBody_Bandit_Sniper::Ready_Components()
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 
-	m_fDissolveWeight = 0.f;
-	m_fDissolve_feather = 0.1f;
-	m_vDissolve_Color = { 1.f, 0.f, 0.f };
-	m_fDissolve_Discard = 0.2f;
-
 	return S_OK;
 }
 void CBody_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
@@ -65,6 +62,14 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 		if (m_fDissolveWeight <= 3.f)
 			m_fDissolveWeight += fTimeDelta * 0.5f;
 
+	}
+
+	// 소영 - 렌더 필요사항
+	if (true == m_bOutLine)
+	{
+		m_fLineTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
+		m_bIncrease = (m_fLineTimeAcc >= 1.0f) ? false : (m_fLineTimeAcc <= 0.1f) ? true : m_bIncrease;
+		m_bOutLine = false;
 	}
 
 	__super::Tick(fTimeDelta);
@@ -118,33 +123,69 @@ HRESULT CBody_Bandit_Sniper::Render()
 	return S_OK;
 }
 
+
 HRESULT CBody_Bandit_Sniper::Render_Shadow()
 {
-	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
-	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
+	FAILED_CHECK(__super::Render_Shadow());
+	
+	return S_OK;
+}
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
+
+HRESULT CBody_Bandit_Sniper::Render_CSM(_uint i)
+{
+	FAILED_CHECK(__super::Render_CSM(i));
+
+	return S_OK;
+}
+
+HRESULT CBody_Bandit_Sniper::Render_OutLine()
+{
+	m_bOutLine = true;
+
+	_float Dist = XMVectorGetX(XMVector4Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_Pos()));
+	m_fLineThick_Ratio = m_fLineThick / Dist;
+
+	FAILED_CHECK(Bind_ShaderResources());
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick_Ratio, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_TimeDelta", &m_fLineTimeAcc, sizeof(_float)));
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_SHADOW));
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_OUTLINE_BLINK));
 		m_pModelCom->Render((_uint)i);
 	}
 
 	return S_OK;
 }
 
-
 HRESULT CBody_Bandit_Sniper::Bind_ShaderResources()
 {
 	FAILED_CHECK(__super::Bind_ShaderResources());
 
-	_float fCamFar = m_pGameInstance->Get_CamFar();
+	m_fCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_fCamFar, sizeof(_float)));
 
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
+	return S_OK;
+}
+
+HRESULT CBody_Bandit_Sniper::Ready_ShadeValue()
+{
+	/* Dissolve */
+	m_fDissolveWeight = 0.f;
+	m_fDissolve_feather = 0.1f;
+	m_vDissolve_Color = { 1.f, 0.f, 0.f };
+	m_fDissolve_Discard = 0.2f;
+
+	/* OutLine */
+	m_vLineColor = { 1.f, 0.f, 0.f, 1.f };
+	m_fLineThick = 0.3f;
+	m_fLineTimeAcc = 0.f;
+	m_bIncrease = true;
 
 	return S_OK;
 }

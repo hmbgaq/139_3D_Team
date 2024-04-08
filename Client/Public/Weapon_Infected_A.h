@@ -26,6 +26,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual	HRESULT Render_Shadow() override { return S_OK; };
 
+
 protected:
 	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

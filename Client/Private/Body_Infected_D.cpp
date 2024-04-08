@@ -28,6 +28,33 @@ HRESULT CBody_Infected_D::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CBody_Infected_D::OptionSetting()
+{
+	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
+
+	return S_OK;
+}
+
+HRESULT CBody_Infected_D::Ready_Components()
+{
+	FAILED_CHECK(__super::Ready_Components());
+
+	/* For.Com_Model */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Infected_D"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+
+	return S_OK;
+}
+
+HRESULT CBody_Infected_D::Bind_ShaderResources()
+{
+	FAILED_CHECK(__super::Bind_ShaderResources());
+
+	m_gCamFar = m_pGameInstance->Get_CamFar();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float)));
+
+	return S_OK;
+}
+
 void CBody_Infected_D::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
@@ -59,7 +86,7 @@ HRESULT CBody_Infected_D::Render()
 		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
-		
+
 		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
 		m_pModelCom->Render((_uint)i);
 	}
@@ -69,37 +96,14 @@ HRESULT CBody_Infected_D::Render()
 
 HRESULT CBody_Infected_D::Render_Shadow()
 {
-	if (m_bAlive == false)
-		return S_OK;
-
-	//FAILED_CHECK(__super::Render_Shadow());
+	FAILED_CHECK(__super::Render_Shadow());
 
 	return S_OK;
 }
 
-HRESULT CBody_Infected_D::OptionSetting()
+HRESULT CBody_Infected_D::Render_CSM(_uint i)
 {
-	m_eRender_State = CBody_Infected::RENDER_STATE::ORIGIN;
-
-	return S_OK;
-}
-
-HRESULT CBody_Infected_D::Ready_Components()
-{
-	FAILED_CHECK(__super::Ready_Components());
-
-	/* For.Com_Model */
-	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Model_Infected_D"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-
-	return S_OK;
-}
-
-HRESULT CBody_Infected_D::Bind_ShaderResources()
-{
-	FAILED_CHECK(__super::Bind_ShaderResources());
-
-	m_gCamFar = m_pGameInstance->Get_CamFar();
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float)));
+	//FAILED_CHECK(__super::Render_CSM(i));
 
 	return S_OK;
 }

@@ -121,6 +121,7 @@ public:
 	virtual HRESULT		Render() override;
 	virtual HRESULT		Render_Shadow() override;
 	virtual HRESULT		Render_OutLine() override;
+	virtual HRESULT		Render_CSM(_uint i) override;
 
 public:
 	virtual _bool		Write_Json(json& Out_Json) override;
@@ -402,12 +403,16 @@ private:
 
 
 	/* Origin Shader */
-	_float		m_gCamFar = 0.f;
+	_float		m_gCamFar				= 0.f;
 
 	/* OutLine Shader */
-	_float4		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-	_float		m_fLineThick = 0.f;
-	_float		m_fTimeAcc = 0.f;
+	_float		m_fTimeAcc				= 0.f; /* 디퓨즈 자체 */
+
+	_float4		m_vLineColor			= { 1.f, 1.f, 1.f, 1.f };
+	_bool		m_bLineIncrease			= true;
+	_float		m_fLineThick			= 0.f;
+	_float		m_fLineTimeAcc			= 0.f;
+	_float		m_fLineThick_Ratio		= 0.f;
 
 public:
 	/* 원형객체를 생성한다. */

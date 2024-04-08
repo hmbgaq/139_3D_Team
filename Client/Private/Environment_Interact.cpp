@@ -265,7 +265,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	if (m_bRenderOutLine)
 	{
 		m_fTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
-		m_bIncrease = (m_fTimeAcc >= 0.8f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
+		m_bIncrease = (m_fTimeAcc >= 0.7f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
 	}
 
 	//if (m_pNavigationCom != nullptr)
@@ -322,8 +322,13 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	if(m_pRigidBodyCom != nullptr)
 		m_pRigidBodyCom->Late_Tick(fTimeDelta);
 	/* 소영 보류 */
-	//if(true == m_bRenderOutLine)
-	//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+	if (true == m_bRenderOutLine)
+	{
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
+	}
 }
 
 HRESULT CEnvironment_Interact::Render()
@@ -388,15 +393,16 @@ HRESULT CEnvironment_Interact::Render()
 HRESULT CEnvironment_Interact::Render_Shadow()
 {
 	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
-	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
 	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
@@ -406,17 +412,42 @@ HRESULT CEnvironment_Interact::Render_Shadow()
 
 HRESULT CEnvironment_Interact::Render_OutLine()
 {
-	FAILED_CHECK(Bind_ShaderResources());
-	m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-	m_fLineThick = 3.f;
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float)));
+	if (false == m_bRenderOutLine)
+		return S_OK;
 
+	_float Dist = XMVectorGetX(XMVector4Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_Pos()));
+	m_fLineThick_Ratio = m_fLineThick / Dist;
+
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick_Ratio, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float)));
+
+	FAILED_CHECK(Bind_ShaderResources());
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE));
+		auto& iter = find(m_vChainMesh.begin(), m_vChainMesh.end(), i);
+		if (iter != m_vChainMesh.end())
+		{
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE_BLINK));
+			m_pModelCom->Render((_uint)i);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CEnvironment_Interact::Render_CSM(_uint i)
+{
+	FAILED_CHECK(Bind_ShaderResources());	
+	
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pShaderCom->Begin(3);
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -1612,7 +1643,7 @@ _bool CEnvironment_Interact::Check_InteractMoveCollider()
 
 _bool CEnvironment_Interact::EnableCheck()
 {
-	_int iEnableCheckCount = m_vecEnablePosition.size();
+	_int iEnableCheckCount = (_int)m_vecEnablePosition.size();
 
 	for (_int i = 0; i < iEnableCheckCount; ++i)
 	{
@@ -1704,7 +1735,7 @@ void CEnvironment_Interact::Enable_UpdateCells()
 		return;
 	
 
-	_int iUpdateCellCount = m_tEnvironmentDesc.vecUpdateCellIndex.size();
+	_int iUpdateCellCount = (_int)m_tEnvironmentDesc.vecUpdateCellIndex.size();
 
 	for (_int i = 0; i < iUpdateCellCount; ++i)
 	{
@@ -1722,7 +1753,7 @@ void CEnvironment_Interact::UnEnable_UpdateCells()
 	if (pNavigation == nullptr)
 		return;
 
-	_int iUpdateCellCount = m_tEnvironmentDesc.vecUpdateCellIndex.size();
+	_int iUpdateCellCount = (_int)m_tEnvironmentDesc.vecUpdateCellIndex.size();
 
 	for (_int i = 0; i < iUpdateCellCount; ++i)
 	{
@@ -2154,7 +2185,7 @@ HRESULT CEnvironment_Interact::Load_EnableJson()
 	if(CJson_Utility::Load_Json(m_tEnvironmentDesc.strEnableJsonPath.c_str(), EnablePointJson))
 		return E_FAIL;
 
-	_int iJsonSize = EnablePointJson.size();
+	_int iJsonSize = (_int)EnablePointJson.size();
 
 	for (_int i = 0; i < iJsonSize; ++i)
 	{
@@ -2614,7 +2645,7 @@ HRESULT CEnvironment_Interact::Classification_Model()
 		m_vChainMesh.push_back(1);
 		m_vChainMesh.push_back(2);
 		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-		m_fLineThick = 1.0f;
+		m_fLineThick = 0.3f;
 	}
 	else if (TEXT("Prototype_Component_Model_ChainBeam2") == strTemp ||
 			 TEXT("Prototype_Component_Model_ChainBeam3") == strTemp ||
@@ -2633,7 +2664,7 @@ HRESULT CEnvironment_Interact::Classification_Model()
 		m_bRenderOutLine = true;
 		m_vChainMesh.push_back(0);
 		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-		m_fLineThick = 1.0f;
+		m_fLineThick = 0.3f;
 	}
 	else if (TEXT("Prototype_Component_Model_ChainClimbLadder1") == strTemp ||
 			 TEXT("Prototype_Component_Model_ChainClimbLadder2") == strTemp ||
@@ -2644,7 +2675,7 @@ HRESULT CEnvironment_Interact::Classification_Model()
 		m_bRenderOutLine = true;
 		m_vChainMesh.push_back(1);
 		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-		m_fLineThick = 1.0f;
+		m_fLineThick = 0.3f;
 	}
 	else if (TEXT("Prototype_Component_Model_ChainClimbLadder5") == strTemp ||
 			 TEXT("Prototype_Component_Model_ChainClimbLadder2") == strTemp ||
@@ -2653,7 +2684,7 @@ HRESULT CEnvironment_Interact::Classification_Model()
 		m_bRenderOutLine = true;
 		m_vChainMesh.push_back(2);
 		m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
-		m_fLineThick = 1.0f;
+		m_fLineThick = 0.3f;
 	}
 	else
 		m_bRenderOutLine = false;

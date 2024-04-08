@@ -567,7 +567,7 @@ void CCharacter::Look_At_OnLand(_fvector vTargetPos)
 
 void CCharacter::Look_At_Target()
 {
-	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable())
+	if (nullptr == m_pTarget || false == m_pTarget->Get_Enable() || true == m_pTarget->Is_Dead())
 		return;
 
 	_fvector vTargetPos = m_pTarget->Get_Position_Vector();

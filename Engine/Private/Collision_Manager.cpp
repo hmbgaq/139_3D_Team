@@ -124,10 +124,11 @@ void CCollision_Manager::Update_CollisionGroup(const _uint& In_iLeftLayer, const
 	{
 		for (CCollider* elem_Right : m_ColliderList[In_iRightLayer])
 		{
-			if (nullptr == elem_Left || nullptr == elem_Right || elem_Left == elem_Right)
+			if (nullptr == elem_Left || nullptr == elem_Right || elem_Left == elem_Right || elem_Left->Get_Owner() == elem_Right->Get_Owner() || false == elem_Left->Get_Enable() || false == elem_Right->Get_Enable())
 			{
 				continue;
 			}
+
 			if (elem_Left->Is_Collision(elem_Right))
 			{
 				elem_Left->Collision(elem_Right);
