@@ -64,6 +64,7 @@
 #include "Player_InteractionClimbRope_Start.h"
 #include "Player_InteractionRope_Down_Start.h"
 
+#include "Environment_Interact.h"
 
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"

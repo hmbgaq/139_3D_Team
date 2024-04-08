@@ -88,7 +88,7 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAINBOSS)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData_MapData.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage2Boss_Test.json";
 		}
 		
 

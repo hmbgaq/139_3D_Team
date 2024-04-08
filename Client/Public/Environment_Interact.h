@@ -11,11 +11,13 @@ class CNavigation;
 class CRigidBody;
 END
 
-// !Add Interaction UI
-class CUI_Interaction;
 
 BEGIN(Client)
+// !Add Interaction UI
 class CUI_Manager;
+class CUI;
+class CUI_Interaction;
+
 
 class CEnvironment_Interact final : public CGameObject
 {
@@ -136,8 +138,8 @@ private:
 	void				Collision_Push_ForPlayer(CCollider* other);
 	void				Collision_Push_ForOtherInteract(CCollider* other);
 
+
 public:
-	
 	ENVIRONMENT_INTERACTOBJECT_DESC*	Get_EnvironmentDesc() { return &m_tEnvironmentDesc; }
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	string&								Get_StringModelTag() { return m_pGameInstance->Convert_WString_To_String(m_tEnvironmentDesc.strModelTag);}
@@ -187,6 +189,14 @@ public: //! For Public
 public:	//! For Spline
 	void								Set_SplineJsonPath(string strJsonPath) { m_tEnvironmentDesc.strSplineJsonPath = strJsonPath;}
 	void								Set_SplineDivergingCount(_int iDivergingCount) { m_iDivergingCount = iDivergingCount;} 
+
+public: //! For RopeChainClimb _ RopeChainDown
+	void								Rope_ChainFunction(const _float fTimeDelta);
+	//_int								Get_RollDown // 2
+	//_int								Get_ChainUpIndex(); //  7
+	//_int								Get_RopeDownIndex(); 
+
+
 
 #ifdef _DEBUG
 public: //! For.Tool
@@ -317,6 +327,7 @@ private:
 
 	CNavigation*						m_pNavigationCom = { nullptr };
 	
+	
 
 	_int								m_iCurrentLevelIndex = -1;
 
@@ -385,6 +396,7 @@ private:
 	// !¼ºÈñ Ãß°¡
 	CUI_Manager*						m_pUIManager = { nullptr };
 	CUI_Interaction*					m_pUI_Interaction = { nullptr };
+	CUI*								m_pWeaknessUI = { nullptr };
 
 private:
 	HRESULT						Ready_Components();

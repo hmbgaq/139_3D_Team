@@ -1,5 +1,4 @@
 {
-  
   "Basic_Json": [
     {
       "AnimType": false,
@@ -616,22 +615,27 @@
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 0.0, 1.0, -1.0, 0.0 ],
-      "ColliderSize": [ 30.0, 14.399999618530273, 2.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 101.22721862792969, -0.10899999737739563, 61.40272521972656, 1.0 ]
+          [ 101.22721862792969, -0.10899999737739563, 62.2137565612793, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 0,
+      "InteractColliderCenter": [ 0.0, 1.0, -1.0, 0.0 ],
+      "InteractColliderSize": [ 30.0, 14.399999618530273, 2.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 2.0, 6.0, -1.0, 0.0 ],
+      "InteractMoveColliderSize": [ 3.0, 1.0, 1.0, 0.0 ],
       "InteractState": 1,
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
@@ -647,15 +651,13 @@
       "RootMoveRate": [ 1.0, 1.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
-      "RotationAngle": 90.0,
-      "RotationSpeed": 90.0,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
       "RotationType": 1,
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": [
-        { "UpdateCellIndex": 12 },
-        { "UpdateCellIndex": 13 },
         { "UpdateCellIndex": 14 },
         { "UpdateCellIndex": 15 },
         { "UpdateCellIndex": 16 },
@@ -665,16 +667,29 @@
         { "UpdateCellIndex": 20 },
         { "UpdateCellIndex": 21 },
         { "UpdateCellIndex": 22 },
-        { "UpdateCellIndex": 23 }
+        { "UpdateCellIndex": 23 },
+        { "UpdateCellIndex": 24 },
+        { "UpdateCellIndex": 25 },
+        { "UpdateCellIndex": 26 },
+        { "UpdateCellIndex": 27 },
+        { "UpdateCellIndex": 28 },
+        { "UpdateCellIndex": 29 },
+        { "UpdateCellIndex": 30 },
+        { "UpdateCellIndex": 31 },
+        { "UpdateCellIndex": 32 },
+        { "UpdateCellIndex": 33 },
+        { "UpdateCellIndex": 34 },
+        { "UpdateCellIndex": 35 },
+        { "UpdateCellIndex": 36 }
       ],
-      "UseGravity": true
+      "UseGravity": false
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 0.0, 1.0, 2.0, 0.0 ],
-      "ColliderSize": [ 30.0, 14.0, 4.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -687,8 +702,13 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 1,
+      "InteractColliderCenter": [ 0.0, 1.0, 2.0, 0.0 ],
+      "InteractColliderSize": [ 30.0, 14.0, 4.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractState": 1,
       "InteractType": 12,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
@@ -701,11 +721,11 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
-      "RootMoveRate": [ 1.0, 1.2, 1.100000023841858, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.7000000476837158, 1.25, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
-      "RotationAngle": 90.0,
-      "RotationSpeed": 90.0,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
       "RotationType": 1,
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
@@ -756,10 +776,10 @@
             [ 1.0, 0.0, 0.0, 0.0 ],
             [ 0.0, 1.0, 0.0, 0.0 ],
             [ 0.0, 0.0, 1.0, 0.0 ],
-            [ 107.16552734375, 10.878019332885742, 76.57809448242188, 1.0 ]
+            [ 107.16552734375, 10.878019332885742, 73.57027313232422, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage2Boss_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage2Boss_Test.json",
         "NameTag": "MonsterSpawn",
         "OnTrigger": false,
         "SpawnGroupIndex": 0

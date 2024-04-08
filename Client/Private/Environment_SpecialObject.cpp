@@ -63,7 +63,7 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 		if(FAILED(TrackLeverInit()))
 			return E_FAIL;
 	}
-	else if (m_tEnvironmentDesc.eSpecialType != CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
+	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
 	{
 		if(FAILED(ElevatorInit()))
 			return E_FAIL;
@@ -410,10 +410,15 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 
 HRESULT CEnvironment_SpecialObject::ElevatorInit()
 {
-	m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
-	Safe_AddRef(m_pPlayer);
+	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
+	{
+		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+		Safe_AddRef(m_pPlayer);
+		m_bFindPlayer = true;
+	}
+	
 	m_vInitPosition = Get_Position_Vector();
-	m_bFindPlayer = true;
+	
 	Set_Speed(m_tEnvironmentDesc.fElevatorSpeed);
 	Set_RotationSpeed(m_tEnvironmentDesc.fElevatorRotationSpeed);
 
@@ -434,14 +439,78 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 
 		if (true == m_pElevatorColliderCom->Is_Collision(m_pPlayer->Get_Collider())) //! 충돌 중이라면 플레이어  y값 고정
 		{
+			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(true);
+
+			
+
+			switch (m_tEnvironmentDesc.eElevatorType)
+			{
+				case CEnvironment_SpecialObject::ELEVATOR_UP:
+				{
+					if (m_tEnvironmentDesc.fElevatorMaxHeight > vPosition.y)
+					{
+						m_pTransformCom->Go_Up(fTimeDelta, nullptr);
+					}
+					else
+					{
+						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
+						m_bArrival = true;
+						m_bElevatorOn = false;
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+					}
+
+					break;
+				}
+
+				case CEnvironment_SpecialObject::ELEVATOR_DOWN:
+				{
+					if (m_tEnvironmentDesc.fElevatorMinHeight < vPosition.y)
+					{
+						m_pTransformCom->Go_Down(fTimeDelta, nullptr);
+					}
+					else
+					{
+						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
+						m_bArrival = true;
+						m_bElevatorOn = false;
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+					}
+
+					break;
+				}
+
+				case CEnvironment_SpecialObject::ELEVATOR_TARGET:
+				{
+					if (false == SMath::Is_InRange(m_tEnvironmentDesc.vArrivalPosition, vPosition, 0.5f))
+					{
+						m_pTransformCom->Go_Target(m_tEnvironmentDesc.vArrivalPosition, fTimeDelta, 0.5f);
+					}
+					else
+					{
+						_float4 vSwapPosition = m_tEnvironmentDesc.vArrivalPosition;
+						m_tEnvironmentDesc.vArrivalPosition = m_vInitPosition;
+						m_vInitPosition = vSwapPosition;
+						m_bArrival = true;
+						
+						m_bElevatorOn = false;
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+					}
+
+					break;
+				}
+			}
+
 			_float3 vMinCorner = dynamic_cast<CBounding_AABB*>(m_pElevatorColliderCom->Get_Bounding())->Get_MinCorner();
 			_float3 vMaxCorner = dynamic_cast<CBounding_AABB*>(m_pElevatorColliderCom->Get_Bounding())->Get_MaxCorner();
 
-			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(true);
+
 
 			vPlayerPos.y = vMinCorner.y;
 
-			
+
 
 			if (vPlayerPos.x < vMinCorner.x)
 			{
@@ -462,64 +531,12 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 				vPlayerPos.z = vMaxCorner.z;
 			}
 
-
 			m_pPlayer->Set_Position(vPlayerPos);
-
-			switch (m_tEnvironmentDesc.eElevatorType)
-			{
-				case CEnvironment_SpecialObject::ELEVATOR_UP:
-				{
-					if (m_tEnvironmentDesc.fElevatorMaxHeight > vPosition.y)
-					{
-						m_pTransformCom->Go_Up(fTimeDelta, nullptr);
-					}
-					else
-					{
-						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
-						m_bArrival = true;
-					}
-
-					break;
-				}
-
-				case CEnvironment_SpecialObject::ELEVATOR_DOWN:
-				{
-					if (m_tEnvironmentDesc.fElevatorMinHeight < vPosition.y)
-					{
-						m_pTransformCom->Go_Down(fTimeDelta, nullptr);
-					}
-					else
-					{
-						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
-						m_bArrival = true;
-						
-					}
-
-					break;
-				}
-
-				case CEnvironment_SpecialObject::ELEVATOR_TARGET:
-				{
-					if (false == SMath::Is_InRange(m_tEnvironmentDesc.vArrivalPosition, vPosition, 0.5f))
-					{
-						m_pTransformCom->Go_Target(m_tEnvironmentDesc.vArrivalPosition, fTimeDelta, 0.5f);
-					}
-					else
-					{
-						_float4 vSwapPosition = m_tEnvironmentDesc.vArrivalPosition;
-						m_tEnvironmentDesc.vArrivalPosition = m_vInitPosition;
-						m_vInitPosition = vSwapPosition;
-						m_bArrival = true;
-						
-					}
-
-					break;
-				}
-			}
 		}
 		else
 		{
 			m_bElevatorOn = false;
+			m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
 			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 		}
 

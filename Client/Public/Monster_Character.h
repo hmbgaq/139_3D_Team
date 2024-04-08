@@ -4,10 +4,10 @@
 #include "Character_Client.h"
 #include "Actor.h"
 
-class CUI_EnemyHUD_Shard;
 
 BEGIN(Client)
 
+class CUI_EnemyHUD_Shard;
 class CPlayer;
 
 class CMonster_Character abstract : public CCharacter_Client

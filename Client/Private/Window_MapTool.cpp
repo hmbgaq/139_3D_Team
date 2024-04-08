@@ -1117,120 +1117,120 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			}
 		}
 
-		//json LightObjectJson = LoadJson["LightObject_Json"];
-		//_int iLightObjectJsonSize = (_int)LightObjectJson.size();
-		//
-		//for (_int i = 0; i < iLightObjectJsonSize; ++i)
-		//{
-		//	CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = {};
-		//
-		//	LightObjectDesc.bAnimModel = LightObjectJson[i]["AnimType"];
-		//	LightObjectDesc.bEffect = LightObjectJson[i]["Effect"];
-		//	LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
-		//	LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
-		//	LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
-		//	LightObjectDesc.iSpecialGroupIndex = LightObjectJson[i]["SpecialGroupIndex"];
-		//	LightObjectDesc.bPreview = false;
-		//	
-		//	m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
-		//		
-		//	const json& TransformJson = LightObjectJson[i]["Component"]["Transform"];
-		//	_float4x4 WorldMatrix;
-		//
-		//	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		//	{
-		//		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-		//		{
-		//			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-		//		}
-		//	}
-		//
-		//	LightObjectDesc.WorldMatrix = WorldMatrix;
-		//
-		//
-		//
-		//	LIGHT_DESC LightDesc = {};
-		//
-		//	LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
-		//	LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
-		//	LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
-		//	LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
-		//
-		//	LightDesc.eType = LightObjectJson[i]["LightType"];
-		//	CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
-		//	LightDesc.fRange = LightObjectJson[i]["Range"];
-		//	CJson_Utility::Load_Float4(LightObjectJson[i]["Position"], LightDesc.vPosition);
-		//	CJson_Utility::Load_Float4(LightObjectJson[i]["Diffuse"], LightDesc.vDiffuse);
-		//	CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
-		//	CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
-		//
-		//	
-		//	LightObjectDesc.LightDesc = LightDesc;
-		//
-		//	CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
-		//
-		//	if (pLightObject == nullptr)
-		//	{
-		//		MSG_BOX("라이트오브젝트 생성실패");
-		//	}
-		//
-		//	m_vecCreateLightObject.push_back(pLightObject);
-		//
-		//	wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pLightObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateLightObjectIndex));
-		//	string strConvertTag;
-		//	m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
-		//	m_vecCreateLightObjectTag.push_back(strConvertTag);
-		//
-		//	m_iCreateLightObjectIndex++;
-		//	
-		//}
-		//
-		//json TriggerJson = LoadJson["Trigger_Json"];
-		//
-		//
-		//
-		//json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
-		//_int iMonsterTriggerJsonSize = (_int)MonsterTriggerJson.size();
-		//
-		//for (_int i = 0; i < iMonsterTriggerJsonSize; ++i)
-		//{
-		//	CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
-		//	MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
-		//	MonsterTriggerDesc.strSpawnMonsterJsonPath = MonsterTriggerJson[i]["JsonPath"];
-		//	MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
-		//	MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
-		//	CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
-		//	CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
-		//
-		//	CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
-		//
-// 		//
-// 		//	const json& TransformJson = MonsterTriggerJson[i]["Component"]["Transform"];
-// 		//	_float4x4 WorldMatrix;
-// 		//
-// 		//	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-// 		//	{
-// 		//		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-// 		//		{
-// 		//			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-// 		//		}
-// 		//	}
-		//
-		//	pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
-		//
-		//	if (pMonsterTrigger == nullptr)
-		//	{
-		//		MSG_BOX("몬스터 트리거 불러오기 실패");
-		//		return E_FAIL;
-		//	}
-		//	else
-		//	{
-		//		m_vecCreateMonsterTrigger.push_back(pMonsterTrigger);
-		//		m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
-		//	}
-		//
-		//
-		//}
+		json LightObjectJson = LoadJson["LightObject_Json"];
+		_int iLightObjectJsonSize = (_int)LightObjectJson.size();
+		
+		for (_int i = 0; i < iLightObjectJsonSize; ++i)
+		{
+			CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = {};
+		
+			LightObjectDesc.bAnimModel = LightObjectJson[i]["AnimType"];
+			LightObjectDesc.bEffect = LightObjectJson[i]["Effect"];
+			LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
+			LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
+			LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+			LightObjectDesc.iSpecialGroupIndex = LightObjectJson[i]["SpecialGroupIndex"];
+			LightObjectDesc.bPreview = false;
+			
+			m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
+				
+			const json& TransformJson = LightObjectJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+		
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+		
+			LightObjectDesc.WorldMatrix = WorldMatrix;
+		
+		
+		
+			LIGHT_DESC LightDesc = {};
+		
+			LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
+			LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
+			LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
+			LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		
+			LightDesc.eType = LightObjectJson[i]["LightType"];
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
+			LightDesc.fRange = LightObjectJson[i]["Range"];
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Position"], LightDesc.vPosition);
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Diffuse"], LightDesc.vDiffuse);
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
+			CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
+		
+			
+			LightObjectDesc.LightDesc = LightDesc;
+		
+			CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+		
+			if (pLightObject == nullptr)
+			{
+				MSG_BOX("라이트오브젝트 생성실패");
+			}
+		
+			m_vecCreateLightObject.push_back(pLightObject);
+		
+			wstring strCreateObjectTag = m_pGameInstance->SliceObjectTag(pLightObject->Get_ModelTag() + L"@" + to_wstring(m_iCreateLightObjectIndex));
+			string strConvertTag;
+			m_pGameInstance->WString_To_String(strCreateObjectTag, strConvertTag);
+			m_vecCreateLightObjectTag.push_back(strConvertTag);
+		
+			m_iCreateLightObjectIndex++;
+			
+		}
+		
+		json TriggerJson = LoadJson["Trigger_Json"];
+		
+		
+		
+		json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
+		_int iMonsterTriggerJsonSize = (_int)MonsterTriggerJson.size();
+		
+		for (_int i = 0; i < iMonsterTriggerJsonSize; ++i)
+		{
+			CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+			MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
+			MonsterTriggerDesc.strSpawnMonsterJsonPath = MonsterTriggerJson[i]["JsonPath"];
+			MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
+			MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+		
+			CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+		
+ 		
+ 			const json& TransformJson = MonsterTriggerJson[i]["Component"]["Transform"];
+ 			_float4x4 WorldMatrix;
+ 		
+ 			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+ 			{
+ 				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+ 				{
+ 					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+ 				}
+ 			}
+		
+			pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
+		
+			if (pMonsterTrigger == nullptr)
+			{
+				MSG_BOX("몬스터 트리거 불러오기 실패");
+				return E_FAIL;
+			}
+			else
+			{
+				m_vecCreateMonsterTrigger.push_back(pMonsterTrigger);
+				m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
+			}
+		
+		
+		}
 
 		json SpecialJson = LoadJson["Special_Json"];
 		_int iSpecialJsonSize = (_int)SpecialJson.size();
@@ -1246,7 +1246,24 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			SpecialDesc.eSpecialType =			SpecialJson[i]["SpecialType"];
 			//TODOSpecialDesc.iBloomMeshIndex =		SpecialJson[i]["BloomMeshIndex"];
 			SpecialDesc.bPreview = false;
+			SpecialDesc.eElevatorType =			 SpecialJson[i]["ElevatorType"];
+			SpecialDesc.fElevatorMinHeight =	 SpecialJson[i]["ElevatorMinHeight"];
+			SpecialDesc.fElevatorMaxHeight =	 SpecialJson[i]["ElevatorMaxHeight"];
+			SpecialDesc.fElevatorSpeed =		 SpecialJson[i]["ElevatorSpeed"];
+			SpecialDesc.fElevatorRotationSpeed = SpecialJson[i]["ElevatorRotationSpeed"];
 			
+			
+			CJson_Utility::Load_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
+			CJson_Utility::Load_Float3(SpecialJson[i]["ColliderSize"], SpecialDesc.vElevatorColliderSize);
+			CJson_Utility::Load_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
+
+			json UpdateCellJson = SpecialJson[i]["UpdateCellJson"];
+			_int iUpdateCellJsonSize = UpdateCellJson.size();
+
+			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+			{
+				SpecialDesc.vecUpdateCellIndexs.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+			}
 
 			m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
 
@@ -1394,7 +1411,7 @@ void CWindow_MapTool::Reset_Function()
 
 	for (_int i = 0; i < iCreateMonsterSize; ++i)
 	{
-		m_vecCreateMonster[i]->Set_Dead(false);
+		m_vecCreateMonster[i]->Set_Dead(true);
 	}
 
 	m_iCreateMonsterIndex = 0;
@@ -1417,7 +1434,7 @@ void CWindow_MapTool::Reset_Function()
 
 	for (_int i = 0; i < iCreateLightObjectSize; ++i)
 	{
-		m_vecCreateLightObject[i]->Set_Dead(false);
+		m_vecCreateLightObject[i]->Set_Dead(true);
 	}
 
 	m_iCreateLightObjectIndex = 0;
@@ -1459,7 +1476,7 @@ void CWindow_MapTool::Reset_Function()
 
 	for (_int i = 0; i < iCreateSpecialSize; ++i)
 	{
-		m_vecCreateSpecialObject[i]->Set_Dead(false);
+		m_vecCreateSpecialObject[i]->Set_Dead(true);
 	}
 
 	m_iCreateSpecialObjectIndex = 0;
@@ -4928,6 +4945,19 @@ void CWindow_MapTool::Interact_NavigationFunction()
 		Reset_NaviPicking();
 	}
 
+	ImGui::SameLine();
+	if (ImGui::Button(u8"네비 활성화"))
+	{
+		pInteract->Enable_UpdateCells();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button(u8"네비 비활성화"))
+	{
+		pInteract->UnEnable_UpdateCells();
+	}
+
 	ImGui::Checkbox(u8"픽킹모드", &m_bPickingNaviMode);
 
 	if (m_pGameInstance->Mouse_Down(DIM_LB) && true == ImGui_MouseInCheck() && true == m_bPickingNaviMode)
@@ -5271,6 +5301,17 @@ void CWindow_MapTool::Special_SelectTab()
 					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalPosition(m_vElevatorArrivalPosition);
 				}
 
+				if (ImGui::InputFloat(u8"엘리베이터 속도", &m_fElevatorSpeed))
+				{
+					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_Speed(m_fElevatorSpeed);
+				}
+
+
+				if (ImGui::InputFloat(u8"엘리베이터 회전속도", &m_fElevatorRotationSpeed))
+				{
+					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_RotationSpeed(m_fElevatorRotationSpeed);
+				}
+
 				static _bool bArrivalPosPicking = false;
 
 				ImGui::NewLine();
@@ -5289,17 +5330,6 @@ void CWindow_MapTool::Special_SelectTab()
 						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ElevatorMaxHeight(m_fElevatorMaxHeight);
 					}
 
-
-					if (ImGui::InputFloat(u8"엘리베이터 속도", &m_fElevatorSpeed))
-					{
-						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_Speed(m_fElevatorSpeed);
-					}
-
-
-					if (ImGui::InputFloat(u8"엘리베이터 회전속도", &m_fElevatorRotationSpeed))
-					{
-						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_RotationSpeed(m_fElevatorRotationSpeed);
-					}
 				}
 				else if (m_eElevatorType == (_uint)CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_TARGET)
 				{
@@ -5317,7 +5347,7 @@ void CWindow_MapTool::Special_SelectTab()
 							}
 							else if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_MESH)
 							{
-								m_vElevatorArrivalPosition = m_fRayPos;
+								m_vElevatorArrivalPosition = m_fMeshPos;
 								m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalPosition(m_vElevatorArrivalPosition);
 							}
 						}
@@ -6329,7 +6359,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 			Set_CCW(points);
 
-			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_pNavigation->Get_CellSize());
+			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_vecCells.size());
 
 			m_pNavigation->AddCell(pCell);
 			m_vecCells.push_back(pCell);
@@ -6557,6 +6587,7 @@ void CWindow_MapTool::Navigation_DeleteTab()
 
 void CWindow_MapTool::Set_CCW(_float3* vPoint)
 {
+
 	_vector vPositionFromVector[3];
 	for (int i(0); i < 3; i++)
 		vPositionFromVector[i] = XMLoadFloat3(&(vPoint[i]));
@@ -6578,6 +6609,7 @@ void CWindow_MapTool::Set_CCW(_float3* vPoint)
 		XMStoreFloat3(&vPoint[1], vPositionFromVector[2]);
 		XMStoreFloat3(&vPoint[2], vPositionFromVector[1]);
 	}
+
 }
 
 void CWindow_MapTool::Reset_NaviPicking()
@@ -6720,7 +6752,7 @@ void CWindow_MapTool::LoadCells()
 	for (_int i = 0; i < iCellSize; ++i)
 	{
 		m_vecCells.push_back(vecCells[i]);
-		m_vecCellIndexs.push_back(to_string(m_vecCells[i]->Get_Index()));
+		m_vecCellIndexs.push_back(to_string(vecCells[i]->Get_Index()));
 	}
 }
 

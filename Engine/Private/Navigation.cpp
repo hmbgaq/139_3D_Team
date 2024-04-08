@@ -556,6 +556,9 @@ _uint CNavigation::Find_CurrentCellIndex(const _vector& vPos)
 	_uint iSize = (_uint)m_Cells.size();
 	for (_uint i = 0; i < iSize; ++i)
 	{
+		
+		//if (m_Cells[i]->IsIn_CurrentCell(vPos))
+		//	return i;
 		if (m_Cells[i]->Check_CurrentCell(vPos))
 			return i;
 	}

@@ -87,8 +87,12 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 		{
 			CCharacter* pCharacter = m_pGameInstance->Get_Player();
 
-			if(pCharacter != nullptr)
+			if (pCharacter != nullptr)
+			{
+				//pCharacter->Get_Navigation()->SpawnCell_Setting(m_pTransformCom->Get_Position());
 				pCharacter->Set_InitPosition(m_pTransformCom->Get_Position());
+
+			}
 			else
 				MSG_BOX("플레이어가 없서영");
 		}

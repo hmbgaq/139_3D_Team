@@ -57,6 +57,7 @@ public:
 	_uint					Find_CurrentCellIndex(const _vector& vPos);
 
 public:
+	_bool					Get_InteractMoveMode() { return m_bInteractMoveMode;}
 	void					Set_InteractMoveMode(_bool bMoveMode) { m_bInteractMoveMode = bMoveMode;}
 
 private:

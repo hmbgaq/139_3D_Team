@@ -13,6 +13,8 @@
 // !Add UI
 #include "UI_Manager.h"
 #include "UI_Interaction.h"
+#include "UI_Weakness.h"
+#include "UI.h"
 
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -36,6 +38,7 @@ HRESULT CEnvironment_Interact::Initialize_Prototype()
 
 HRESULT CEnvironment_Interact::Initialize(void* pArg)
 {	
+
 	m_tEnvironmentDesc = *(ENVIRONMENT_INTERACTOBJECT_DESC*)pArg;
 
 	m_iCurrentLevelIndex = m_pGameInstance->Get_NextLevel();
@@ -128,6 +131,25 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 		m_bTest = TRUE;
 	}
 
+
+	if (m_tEnvironmentDesc.bAnimModel == true)
+	{
+		if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPEDOWN || m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB)
+		{
+			m_pWeaknessUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+			m_pWeaknessUI->Set_Active(true);
+			m_pWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 1.f, 0.f));
+		}
+
+		//if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB)
+		//{
+		//	m_pWeaknessUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
+		//	m_pWeaknessUI->Set_Active(true);
+		//	m_pWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 1.f, 0.f));
+		//}
+
+	}
+
 	return S_OK;
 }
 
@@ -174,7 +196,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 
 	if (true == m_tEnvironmentDesc.bAnimModel)// && true == m_bPlay)
 	{
-		m_pModelCom->Play_Animation(fTimeDelta, true);
+		m_pModelCom->Play_Animation(fTimeDelta, _float3());
 	}
 
 	
@@ -252,7 +274,10 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		Move_For_PlayerRootMotion();
 	}
 
-	
+	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB || m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB)
+	{
+		Rope_ChainFunction(fTimeDelta);
+	}
 	//if (m_tEnvironmentDesc.bOwner == false && m_pOwnerInteract != nullptr)
 	//{
 	//	if (true == Check_OwnerEnablePosition())
@@ -468,7 +493,9 @@ void CEnvironment_Interact::OnCollisionEnter(CCollider* other)
 {
 	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
 	{
-		Collision_Push_ForPlayer(other);
+		if (m_bFindPlayer == true)
+			Collision_Push_ForPlayer(other);
+
 		Collision_Push_ForOtherInteract(other);
 	}
 
@@ -479,7 +506,9 @@ void CEnvironment_Interact::OnCollisionStay(CCollider* other)
 {
 	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
 	{
-		Collision_Push_ForPlayer(other);
+		if (m_bFindPlayer == true)
+			Collision_Push_ForPlayer(other);
+
 		Collision_Push_ForOtherInteract(other);
 	}
 }
@@ -488,7 +517,9 @@ void CEnvironment_Interact::OnCollisionExit(CCollider* other)
 {
 	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
 	{
-		Collision_Push_ForPlayer(other);
+		if(m_bFindPlayer == true)
+			Collision_Push_ForPlayer(other);
+
 		Collision_Push_ForOtherInteract(other);
 	}
 }
@@ -717,6 +748,27 @@ void CEnvironment_Interact::Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel
 
 
 
+void CEnvironment_Interact::Rope_ChainFunction(const _float fTimeDelta)
+{
+	if (m_pWeaknessUI != nullptr)
+	{
+		if (m_pWeaknessUI->Get_Enable() == false)
+		{
+			m_pModelCom->Set_Animation(2, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
+			
+		}
+		else
+		{
+			m_pWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 1.f, 0.f));
+		}
+
+		if (m_bInteract == true && m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimbRope_Stop)
+		{
+			m_pModelCom->Set_Animation(7, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
+		}
+	}
+}
+
 _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 {
 	GRAPHIC_DESC GraphicDesc = *m_pGameInstance->Get_GraphicDesc();
@@ -895,6 +947,7 @@ void CEnvironment_Interact::Interact()
 					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 						m_pPlayer->SetState_InteractClimbRope();
 
+
 					break;
 				}
 
@@ -916,11 +969,31 @@ void CEnvironment_Interact::Interact()
 
 				case CEnvironment_Interact::INTERACT_LADDERUP:
 				{
-					//m_tEnvironmentDesc.strModelTag
-
-
 					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder1")
+						{
+							m_pPlayer->Set_Ladder_Count(4);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder2")
+						{
+							m_pPlayer->Set_Ladder_Count(3);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder3")
+						{
+							m_pPlayer->Set_Ladder_Count(2);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder4")
+						{
+							m_pPlayer->Set_Ladder_Count(1);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder5")
+						{
+							m_pPlayer->Set_Ladder_Count(1);
+						}
+
 						m_pPlayer->SetState_InteractLadderUpStart();
+					}
 
 					break;
 				}
@@ -1155,7 +1228,30 @@ void CEnvironment_Interact::Interact()
 				case CEnvironment_Interact::INTERACT_LADDERUP:
 				{
 					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
+					{
+						if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder1")
+						{
+							m_pPlayer->Set_Ladder_Count(4);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder2")
+						{
+							m_pPlayer->Set_Ladder_Count(3);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder3")
+						{
+							m_pPlayer->Set_Ladder_Count(2);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder4")
+						{
+							m_pPlayer->Set_Ladder_Count(1);
+						}
+						else if (m_tEnvironmentDesc.strModelTag == L"Prototype_Component_Model_ChainClimbLadder5")
+						{
+							m_pPlayer->Set_Ladder_Count(1);
+						}
+
 						m_pPlayer->SetState_InteractLadderUpStart();
+					}
 
 					break;
 				}
@@ -2571,7 +2667,8 @@ HRESULT CEnvironment_Interact::Ready_InteractCollider(INTERACT_TYPE eInteractTyp
 	
 	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
 	{
-		BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
+		BoundingDesc.iLayer = ECast(COLLISION_LAYER::NONE);
+		//BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
 		BoundingDesc.vExtents = m_tEnvironmentDesc.vBodyColliderSize;
 		BoundingDesc.vCenter = m_tEnvironmentDesc.vBodyColliderCenter;
 	

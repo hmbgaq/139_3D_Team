@@ -12,6 +12,7 @@ class CNavigation;
 class CCell;
 END
 
+
 BEGIN(Client)
 class CEnvironment_LightObject;
 class CEnvironment_Interact;
