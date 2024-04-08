@@ -3,16 +3,16 @@
 #include "UI.h"
 
 /* 체력 프레임 */
-class CUI_SkillIcon final : public CUI
+class CUI_WeaponIcon final : public CUI
 {
 public:
 	enum UI_Animation { UNLOCK, JUMP, UIANIM_END };
 	enum TEXTUREKIND { LOCK, NONACTIVE, ACTIVE, TEXTURE_END };
 
 private:
-	CUI_SkillIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI_SkillIcon(const CUI_SkillIcon& rhs);
-	virtual ~CUI_SkillIcon() = default;
+	CUI_WeaponIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CUI_WeaponIcon(const CUI_WeaponIcon& rhs);
+	virtual ~CUI_WeaponIcon() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -52,9 +52,10 @@ private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 	UI_Animation m_eAnimType = UIANIM_END;
 	string			m_strChangeAnim = "";
+	_bool			m_bWeapon = false;
 
 public:
-	static CUI_SkillIcon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
+	static CUI_WeaponIcon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
 	virtual CGameObject* Pool() override;
 	virtual void			Free() override;

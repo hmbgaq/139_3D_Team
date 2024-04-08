@@ -3,15 +3,15 @@
 #include "UI.h"
 
 /* 체력 프레임 */
-class CUI_Player_Skill_Guige final : public CUI
+class CUI_WeaponActiveGuige final : public CUI
 {
 public:
 	enum TEXTUREKIND { INACTIVE, ACTIVE, TEXTURE_END };
 
 private:
-	CUI_Player_Skill_Guige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI_Player_Skill_Guige(const CUI_Player_Skill_Guige& rhs);
-	virtual ~CUI_Player_Skill_Guige() = default;
+	CUI_WeaponActiveGuige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CUI_WeaponActiveGuige(const CUI_WeaponActiveGuige& rhs);
+	virtual ~CUI_WeaponActiveGuige() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -41,25 +41,28 @@ private:
 
 private:
 	void					Check_SkillActive(_float fTimeDelta, SKILLSTATE eState);
-	void					Check_GuigeActive(_float fTimeDelta);
 
 public:
 	json					Save_Desc(json& out_json);
 	void					Load_Desc();
 
 private:
-	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
+	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 	_float2					m_vCenter = { 0.f, 0.f };
 	_float					m_fRadius = 0.f;
-	_float					m_fCoolTime = 10.f;
+	_float					m_fCoolTime = 0.f;
 	_float					m_fMaxCoolTime = 10.f;
+	_float					m_fChangeScale = 1.0f;
+	_float					m_fOriginScaleX = 50.0f;
+	_float					m_fOriginScaleY = 50.0f;
 	_int					m_iShaderNum = 0;
-	_bool					m_bGuigeOff = false;
+	_bool					m_bCoolDown = false;
+	_bool					m_bMaxCoolDown = false;
 
 public:
-	static CUI_Player_Skill_Guige* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
-	virtual CGameObject*	Clone(void* pArg) override; //! 사본객체 생성
-	virtual CGameObject*	Pool() override;
+	static CUI_WeaponActiveGuige* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
+	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
+	virtual CGameObject* Pool() override;
 	virtual void			Free() override;
 };
 

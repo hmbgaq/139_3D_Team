@@ -1,22 +1,22 @@
 #include "stdafx.h"
-#include "UI_SkillIcon.h"
+#include "UI_WeaponIcon.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Texture.h"
 #include "UI_Manager.h"
 
-CUI_SkillIcon::CUI_SkillIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_WeaponIcon::CUI_WeaponIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_SkillIcon::CUI_SkillIcon(const CUI_SkillIcon& rhs)
+CUI_WeaponIcon::CUI_WeaponIcon(const CUI_WeaponIcon& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_SkillIcon::Initialize_Prototype()
+HRESULT CUI_WeaponIcon::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -25,7 +25,7 @@ HRESULT CUI_SkillIcon::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_SkillIcon::Initialize(void* pArg)
+HRESULT CUI_WeaponIcon::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -45,12 +45,12 @@ HRESULT CUI_SkillIcon::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_SkillIcon::Priority_Tick(_float fTimeDelta)
+void CUI_WeaponIcon::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_SkillIcon::Tick(_float fTimeDelta)
+void CUI_WeaponIcon::Tick(_float fTimeDelta)
 {
 	//if(!m_vecAnimation.empty())
 	//	m_bActive = m_vecAnimation[iFrameIndex].bDisappear;
@@ -64,6 +64,11 @@ void CUI_SkillIcon::Tick(_float fTimeDelta)
 		// Level
 		Check_LevelChange(fTimeDelta);
 
+		if (m_pGameInstance->Key_Down(DIK_X))
+			m_eUI_Level = LEVEL0;
+		if (m_pGameInstance->Key_Down(DIK_C))
+			m_eUI_Level = LEVEL1;
+
 		// Animation
 		//Check_Animation(fTimeDelta);
 
@@ -71,7 +76,7 @@ void CUI_SkillIcon::Tick(_float fTimeDelta)
 	}
 }
 
-void CUI_SkillIcon::Late_Tick(_float fTimeDelta)
+void CUI_WeaponIcon::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
@@ -102,7 +107,7 @@ void CUI_SkillIcon::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CUI_SkillIcon::Render()
+HRESULT CUI_WeaponIcon::Render()
 {
 	//TODO 셰이더에게 행렬을 던져주는 행위는 반드시 셰이더의 비긴함수를 호출하기 이전에 해야한다.
 	//! 그 이유는, 셰이더의 비긴함수 내에서 pPass->Apply(0, m_prContext); 코드를 수행한다.
@@ -116,7 +121,7 @@ HRESULT CUI_SkillIcon::Render()
 		{
 			if (FAILED(Bind_ShaderResources()))
 				return E_FAIL;
-			
+
 			//! 이 셰이더에 0번째 패스로 그릴거야.
 			m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
@@ -131,28 +136,28 @@ HRESULT CUI_SkillIcon::Render()
 	return S_OK;
 }
 
-void CUI_SkillIcon::UI_Ready(_float fTimeDelta)
+void CUI_WeaponIcon::UI_Ready(_float fTimeDelta)
 {
 }
 
-void CUI_SkillIcon::UI_Enter(_float fTimeDelta)
+void CUI_WeaponIcon::UI_Enter(_float fTimeDelta)
 {
 }
 
-void CUI_SkillIcon::UI_Loop(_float fTimeDelta)
+void CUI_WeaponIcon::UI_Loop(_float fTimeDelta)
 {
 }
 
-void CUI_SkillIcon::UI_Exit(_float fTimeDelta)
+void CUI_WeaponIcon::UI_Exit(_float fTimeDelta)
 {
 }
 
-void CUI_SkillIcon::Check_LevelChange(_float fTimeDelta)
+void CUI_WeaponIcon::Check_LevelChange(_float fTimeDelta)
 {
 	if (m_eUI_PreLevel != m_eUI_Level)
 	{
 		// Size Check
-		Check_IconSize();
+		//Check_IconSize();
 
 		m_bAnimChange = true;
 
@@ -160,107 +165,15 @@ void CUI_SkillIcon::Check_LevelChange(_float fTimeDelta)
 			m_eAnimType = UNLOCK;
 
 #pragma region 1
-		if (m_tUIInfo.strUIName == "Kick")
+		if (m_tUIInfo.strUIName == "Rifle")
 		{
 
 		}
-		else if (m_tUIInfo.strUIName == "ElectricDash")
+		else if (m_tUIInfo.strUIName == "Revolver")
 		{
 
 		}
-		else if (m_tUIInfo.strUIName == "DashShock")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "ElectricCord")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "PowerUP")
-		{
-
-		}
-#pragma region 2
-		else if (m_tUIInfo.strUIName == "UpperCut")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "OneTouch")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "TwoTouch")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "ThreeTouch")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "ComboPunch")
-		{
-
-		}
-#pragma region 3
-		else if (m_tUIInfo.strUIName == "Punch")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "SuperChargeMod")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "TeleportPunch")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "IncreaseEXP")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "NPCPowerUP")
-		{
-
-		}
-#pragma region 4
-		else if (m_tUIInfo.strUIName == "Heal")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "RecoveryEnergy")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "IncreaseHP")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "IncreaseEnergy")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "MaxHP")
-		{
-
-		}
-#pragma region 4
-		else if (m_tUIInfo.strUIName == "Heal")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "RecoveryEnergy")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "IncreaseHP")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "IncreaseEnergy")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "MaxHP")
+		else if (m_tUIInfo.strUIName == "Shotgun")
 		{
 
 		}
@@ -271,7 +184,7 @@ void CUI_SkillIcon::Check_LevelChange(_float fTimeDelta)
 	}
 }
 
-void CUI_SkillIcon::Check_Animation(_float fTimeDelta)
+void CUI_WeaponIcon::Check_Animation(_float fTimeDelta)
 {
 	if (m_bAnimChange == true)
 	{
@@ -280,14 +193,14 @@ void CUI_SkillIcon::Check_Animation(_float fTimeDelta)
 
 		switch (m_eAnimType)
 		{
-		case CUI_SkillIcon::UNLOCK:
+		case CUI_WeaponIcon::UNLOCK:
 			Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconUnlock.json");
 			//Change_Animation(m_strChangeAnim);
 			break;
-		case CUI_SkillIcon::JUMP:
+		case CUI_WeaponIcon::JUMP:
 			Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconJump.json");
 			break;
-		case CUI_SkillIcon::UIANIM_END:
+		case CUI_WeaponIcon::UIANIM_END:
 			break;
 		default:
 			break;
@@ -299,33 +212,75 @@ void CUI_SkillIcon::Check_Animation(_float fTimeDelta)
 	}
 }
 
-void CUI_SkillIcon::Check_IconSize()
+void CUI_WeaponIcon::Check_IconSize()
 {
-	switch (m_eUI_Level)
+	if (m_bWeapon == true)
 	{
-	case Client::CUI::LEVEL0:
-		m_pTransformCom->Set_Scaling(45.f, 45.f, 0.1f);
-		break;
-	case Client::CUI::LEVEL1:
-		m_pTransformCom->Set_Scaling(85.f, 85.f, 0.1f);
-		break;
-	case Client::CUI::LEVEL2:
-		m_pTransformCom->Set_Scaling(85.f, 85.f, 0.1f);
-		break;
-	case Client::CUI::LEVEL3:
-		break;
-	case Client::CUI::LEVEL4:
-		break;
-	case Client::CUI::LEVEL5:
-		break;
-	case Client::CUI::LEVEL_END:
-		break;
-	default:
-		break;
+		switch (m_eUI_Level)
+		{
+		case Client::CUI::LEVEL0:
+			if (m_tUIInfo.strUIName == "Revolver")
+			{
+				m_pTransformCom->Set_Scaling(75.f, 75.f, 0.1f);
+			}
+			else
+			{
+				m_pTransformCom->Set_Scaling(45.f, 45.f, 0.1f);
+			}
+
+			break;
+		case Client::CUI::LEVEL1:
+			if (m_tUIInfo.strUIName == "Revolver")
+			{
+				m_pTransformCom->Set_Scaling(100.f, 100.f, 0.1f);
+			}
+			else
+			{
+				m_pTransformCom->Set_Scaling(70.f, 70.f, 0.1f);
+			}
+			break;
+		case Client::CUI::LEVEL2:
+			break;
+		case Client::CUI::LEVEL3:
+			break;
+		case Client::CUI::LEVEL4:
+			break;
+		case Client::CUI::LEVEL5:
+			break;
+		case Client::CUI::LEVEL_END:
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		switch (m_eUI_Level)
+		{
+		case Client::CUI::LEVEL0:
+			m_pTransformCom->Set_Scaling(40.f, 40.f, 0.1f);
+			break;
+		case Client::CUI::LEVEL1:
+			m_pTransformCom->Set_Scaling(80.f, 80.f, 0.1f);
+			break;
+		case Client::CUI::LEVEL2:
+			m_pTransformCom->Set_Scaling(80.f, 80.f, 0.1f);
+			break;
+		case Client::CUI::LEVEL3:
+			break;
+		case Client::CUI::LEVEL4:
+			break;
+		case Client::CUI::LEVEL5:
+			break;
+		case Client::CUI::LEVEL_END:
+			break;
+		default:
+			break;
+		}
 	}
 }
 
-HRESULT CUI_SkillIcon::Ready_Components()
+HRESULT CUI_WeaponIcon::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -342,30 +297,51 @@ HRESULT CUI_SkillIcon::Ready_Components()
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
 
-	wstring strActive;
+	// 부분 문자열 검색
+	size_t found = strPrototag.find(L"skin_");
 
 	//! For.Com_Texture2 // 비활성화
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("lock_icon_g"), // error : 테그도 잘맞고 내부 함수에서 텍스처도 잘 찾는데 nullptr로 터짐 -> m_pTextureCom을 사용은 배열식으로 사용했는데, 멤버변수로 선언할때 배열로 선언 안했음.. 
 		TEXT("Com_Texture_SkillIcon_Lock"), reinterpret_cast<CComponent**>(&m_pTextureCom[LOCK]))))
 		return E_FAIL;
 
-	//! For.Com_Texture2 // 비활성화
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag, // error : 테그도 잘맞고 내부 함수에서 텍스처도 잘 찾는데 nullptr로 터짐 -> m_pTextureCom을 사용은 배열식으로 사용했는데, 멤버변수로 선언할때 배열로 선언 안했음.. 
-		TEXT("Com_Texture_SkillIcon_NonActive"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
-		return E_FAIL;
+	// 발견된 경우
+	if (found != std::wstring::npos)
+	{ // Skill
+		//! For.Com_Texture2 // 비활성화
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+			TEXT("Com_Texture_SkillIcon_NonActive"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
+			return E_FAIL;
 
-	strActive = strPrototag + L"_active";
+		if (m_tUIInfo.strProtoTag == "skin_revolver_w")
+			strPrototag = L"skin_revolver_y";
 
-	//! For.Com_Texture2 // 활성화
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strActive,
-		TEXT("Com_Texture_SkillIcon_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
-		return E_FAIL;
+		if (m_tUIInfo.strProtoTag == "skin_rifle_w")
+			strPrototag = L"skin_rifle_y";
+
+		if (m_tUIInfo.strProtoTag == "skin_shotgun_w")
+			strPrototag = L"skin_shotgun_y";
+
+		//! For.Com_Texture2 // 활성화
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+			TEXT("Com_Texture_SkillIcon_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
+			return E_FAIL;
+	}
+	else
+	{ // Weapon
+		m_bWeapon = true;
+		//! For.Com_Texture2 // 활성화
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+			TEXT("Com_Texture_SkillIcon_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
+			return E_FAIL;
+	}
+
 #pragma endregion
 
 	return S_OK;
 }
 
-HRESULT CUI_SkillIcon::Bind_ShaderResources()
+HRESULT CUI_WeaponIcon::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -377,9 +353,38 @@ HRESULT CUI_SkillIcon::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	/* UI_Level */
-	switch (m_eUI_Level)
+	if (m_bWeapon == true)
 	{
+		/* UI_Level */
+		switch (m_eUI_Level)
+		{
+		case Client::CUI::LEVEL0: /* => Lock/NonActive <= */
+			if (FAILED(m_pTextureCom[LOCK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+			break;
+		case Client::CUI::LEVEL1: /* => Unlock/Active <= */
+			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+			break;
+		case Client::CUI::LEVEL2:
+			break;
+		case Client::CUI::LEVEL3:
+			break;
+		case Client::CUI::LEVEL4:
+			break;
+		case Client::CUI::LEVEL5:
+			break;
+		case Client::CUI::LEVEL_END:
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		/* UI_Level */
+		switch (m_eUI_Level)
+		{
 		case Client::CUI::LEVEL0: /* => Lock/NonActive <= */
 			if (FAILED(m_pTextureCom[LOCK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
@@ -402,18 +407,20 @@ HRESULT CUI_SkillIcon::Bind_ShaderResources()
 			break;
 		default:
 			break;
+		}
 	}
+
 
 	return S_OK;
 }
 
-HRESULT CUI_SkillIcon::Set_ParentTransform(CTransform* pParentTransformCom)
+HRESULT CUI_WeaponIcon::Set_ParentTransform(CTransform* pParentTransformCom)
 {
 	m_tUIInfo.pParentTransformCom = pParentTransformCom;
 	return S_OK;
 }
 
-void CUI_SkillIcon::Compute_OwnerCamDistance()
+void CUI_WeaponIcon::Compute_OwnerCamDistance()
 {
 	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
 	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
@@ -421,13 +428,13 @@ void CUI_SkillIcon::Compute_OwnerCamDistance()
 	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
 }
 
-_bool CUI_SkillIcon::In_Frustum()
+_bool CUI_WeaponIcon::In_Frustum()
 {
 	return false;
 	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-json CUI_SkillIcon::Save_Desc(json& out_json)
+json CUI_WeaponIcon::Save_Desc(json& out_json)
 {
 	// Save error : 저장을 상위 부모에서 바꿨는데 이 클래스에는 적용안했음.
 	__super::Save_Desc(out_json);
@@ -454,43 +461,43 @@ json CUI_SkillIcon::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_SkillIcon::Load_Desc()
+void CUI_WeaponIcon::Load_Desc()
 {
 
 }
 
-CUI_SkillIcon* CUI_SkillIcon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_WeaponIcon* CUI_WeaponIcon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_SkillIcon* pInstance = new CUI_SkillIcon(pDevice, pContext, strPrototypeTag);
+	CUI_WeaponIcon* pInstance = new CUI_WeaponIcon(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_SkillIcon");
+		MSG_BOX("Failed to Created : CUI_WeaponIcon");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_SkillIcon::Clone(void* pArg)
+CGameObject* CUI_WeaponIcon::Clone(void* pArg)
 {
-	CUI_SkillIcon* pInstance = new CUI_SkillIcon(*this);
+	CUI_WeaponIcon* pInstance = new CUI_WeaponIcon(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_SkillIcon");
+		MSG_BOX("Failed to Cloned : CUI_WeaponIcon");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_SkillIcon::Pool()
+CGameObject* CUI_WeaponIcon::Pool()
 {
-	return new CUI_SkillIcon(*this);
+	return new CUI_WeaponIcon(*this);
 }
 
-void CUI_SkillIcon::Free()
+void CUI_WeaponIcon::Free()
 {
 	__super::Free();
 

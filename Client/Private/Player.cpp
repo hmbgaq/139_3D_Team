@@ -150,6 +150,12 @@ void CPlayer::Tick(_float fTimeDelta)
 	if(m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
 		KeyInput(fTimeDelta);
 	
+	
+
+	// Test Check (스킬 언락 테스트)
+	_bool bTestKick = m_pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::ELECTROCUTE);
+	_bool bTestDash = m_pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::ELECTRIC_DASH);
+
 	if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
 	{
 		if (m_pActor)
@@ -582,6 +588,7 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		if (m_bShowSkillWindow == true)
 		{
 			m_pUIManager->Active_SkillWindowBackground();
+			m_pUIManager->NonActive_PlayerHUD(); // PlayerHUD Off
 			m_pDataManager->Set_GameState(GAME_STATE::UI);
 		}
 		else
@@ -606,6 +613,17 @@ void CPlayer::KeyInput(_float fTimeDelta)
 			m_pUIManager->NonActive_DiedScreen();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
 		}
+	}
+
+	/* ! UI : TestText / Key : 6 */
+	if (m_pGameInstance->Key_Down(DIK_5))
+	{
+		m_pUIManager->Set_SkillLevel("ElectricCord", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
+	}
+	/* ! UI : TestText / Key : 7 */
+	if (m_pGameInstance->Key_Down(DIK_6))
+	{
+		m_pUIManager->Set_SkillLevel("ElectricDash", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
 	}
 
 	/* ! UI : TestText / Key : 7 */

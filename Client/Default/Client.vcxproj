@@ -1273,6 +1273,7 @@
     <ClInclude Include="..\Public\UI_Obtain_Button.h" />
     <ClInclude Include="..\Public\UI_Option_Button.h" />
     <ClInclude Include="..\Public\UI_Option_SubTitle_Button.h" />
+    <ClInclude Include="..\Public\UI_SelectIcon.h" />
     <ClInclude Include="..\Public\UI_SelectList.h" />
     <ClInclude Include="..\Public\UI_SkillActive.h" />
     <ClInclude Include="..\Public\UI_SkillFrame.h" />
@@ -1286,6 +1287,9 @@
     <ClInclude Include="..\Public\UI_Sprite.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
+    <ClInclude Include="..\Public\UI_WeaponActiveGuige.h" />
+    <ClInclude Include="..\Public\UI_WeaponFrame.h" />
+    <ClInclude Include="..\Public\UI_WeaponIcon.h" />
     <ClInclude Include="..\Public\VampireCommander.h" />
     <ClInclude Include="..\Public\VampireCommander_Attack.h" />
     <ClInclude Include="..\Public\VampireCommander_BloodRange_Loop.h" />
@@ -2312,6 +2316,7 @@
     <ClCompile Include="..\Private\UI_Obtain_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_SubTitle_Button.cpp" />
+    <ClCompile Include="..\Private\UI_SelectIcon.cpp" />
     <ClCompile Include="..\Private\UI_SelectList.cpp" />
     <ClCompile Include="..\Private\UI_SkillActive.cpp" />
     <ClCompile Include="..\Private\UI_SkillFrame.cpp" />
@@ -2325,6 +2330,9 @@
     <ClCompile Include="..\Private\UI_Sprite.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />
+    <ClCompile Include="..\Private\UI_WeaponActiveGuige.cpp" />
+    <ClCompile Include="..\Private\UI_WeaponFrame.cpp" />
+    <ClCompile Include="..\Private\UI_WeaponIcon.cpp" />
     <ClCompile Include="..\Private\VampireCommander.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Attack.cpp" />
     <ClCompile Include="..\Private\VampireCommander_BloodRange_Loop.cpp" />

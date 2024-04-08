@@ -2,15 +2,15 @@
 #include "Client_Defines.h"
 #include "UI.h"
 
-/* 체력 프레임 */
-class CUI_Player_Skill_Icon final : public CUI
+class CUI_WeaponFrame final : public CUI
 {
-	enum TEXTUREKIND { ICON_LOCK, ICON_COOLDOWN, ICON_ACTIVE, TEXTURE_END };
+public:
+	enum TEXTUREKIND { LOCK, NONACTIVE, ACTIVE, TEXTURE_END };
 
 private:
-	CUI_Player_Skill_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
-	CUI_Player_Skill_Icon(const CUI_Player_Skill_Icon& rhs);
-	virtual ~CUI_Player_Skill_Icon() = default;
+	CUI_WeaponFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	CUI_WeaponFrame(const CUI_WeaponFrame& rhs);
+	virtual ~CUI_WeaponFrame() = default;
 
 public:
 	virtual HRESULT			Initialize_Prototype() override; //! 원형객체의 초기화를 위한 함수.
@@ -26,26 +26,33 @@ public:
 	virtual void			UI_Loop(_float fTimeDelta);
 	virtual void			UI_Exit(_float fTimeDelta);
 
-public:
-	void					Set_SkillState(SKILLSTATE eState) { m_eSkillState = eState; }
-	void					Set_SkillUnlock(_bool bUnlock) { m_bUnlock = bUnlock; }
-	_bool					Get_SkillUnlock() { return m_bUnlock; }
-
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
+
+public:
+	virtual HRESULT			Set_ParentTransform(CTransform* pParentTransformCom) override;
+
+public:
+	void					Check_Picking(_float fTimeDelta);
+	void					Check_State(_float fTimeDelta);
+	void					Check_LevelChange(_float fTimeDelta);
+
+private:
+	void					Compute_OwnerCamDistance();
+	_bool					In_Frustum();
 
 public:
 	json					Save_Desc(json& out_json);
 	void					Load_Desc();
 
 private:
-	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
-	SKILLSTATE				m_eSkillState = SKILLSTATE::ACTIVE;
-	_bool					m_bUnlock = false/*true*/;
+	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	_bool					m_bFirstFrame = false;
+	UI_LEVEL				m_eUI_PreLevel = LEVEL0;
 
 public:
-	static CUI_Player_Skill_Icon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
+	static CUI_WeaponFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성
 	virtual CGameObject* Clone(void* pArg) override; //! 사본객체 생성
 	virtual CGameObject* Pool() override;
 	virtual void			Free() override;

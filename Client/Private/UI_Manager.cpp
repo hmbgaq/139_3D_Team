@@ -16,6 +16,8 @@
 #include "UI_Player_Skill_Guige.h"
 #include "UI_Interaction.h"
 #include "UI_SkillWindow_Button.h"
+#include "UI_Skill_Preview.h"
+#include "UI_SkillFrame.h"
 #pragma endregion
 #include "Data_Manager.h"
 
@@ -135,14 +137,34 @@ CUI_EnemyHUD_Shard* CUI_Manager::Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameOb
 	return Add_EnemyHUD_Shard(iLevelIndex, TEXT("Layer_EnemyHUDShard"), pOwner);;
 }
 
+void CUI_Manager::BasicUI_Off()
+{
+	NonActive_PlayerHUD();			// PlayerHUD Off
+	NonActive_SkillWindowAll();		// SkillWindow Off
+	NonActive_BossHUD_Bar();		// Boss1
+	NonActive_BossHUD_Shard();		// Boss2
+	NonActive_Crosshair();			// Crosshair
+	NonActive_DiedScreen();			// DiedScreen
+	NonActive_Distortion();			// Distortion
+	NonActive_EnemyHUD_Shard();		// EnemyHUD
+	NonActive_HitUI();				// Hit
+	NonActive_LevelUp();			// LevelUP
+	NonActive_Option();				// Option
+	NonActive_TutorialBox();		// TutorialBox
+}
+
 void CUI_Manager::NonActive_SkillWindowAll()
 {
 	NonActive_SkillWindowBackground();
 	NonActive_SkillWindow();
 	NonActive_SkillFrame();
 	NonActive_SkillIcon();
+	NonActive_WeaponFrame();
+	NonActive_WeaponIcon();
 	NonActive_SkillPreview();
 	NonActive_SkillWindowButton();
+	NonActive_SkillActiveGuige();
+	NonActive_WeaponActiveGuige();
 
 
 	m_bShowSkillWindow = false;
@@ -234,7 +256,11 @@ HRESULT CUI_Manager::Ready_SkillWindow(_uint iLevelIndex)
 	Add_SkillWindowBackground(iLevelIndex, TEXT("Layer_SkillWindowBacground"));
 	Add_SkillWindow(iLevelIndex, TEXT("Layer_SkillWindow"));
 	Add_SkillFrame(iLevelIndex, TEXT("Layer_SkillFrame"));
+	Add_WeaponFrame(iLevelIndex, TEXT("Layer_WeaponFrame"));
+	Add_SkillActiveGuige(iLevelIndex, TEXT("Layer_SkillActiveGuige"));
+	Add_WeaponActiveGuige(iLevelIndex, TEXT("Layer_WeaponActiveGuige"));
 	Add_SkillIcon(iLevelIndex, TEXT("Layer_SkillIcon"));
+	Add_WeaponIcon(iLevelIndex, TEXT("Layer_WeaponIcon"));
 	Add_SkillPreview(iLevelIndex, TEXT("Layer_SkillPreview"));
 	Add_SkillWindowButton(iLevelIndex, TEXT("Layer_SkillWindowButton"));
 
@@ -773,6 +799,22 @@ void CUI_Manager::Change_LeftHUD_SkillUnlock(const string& strUIName, _bool bUnl
 	}
 }
 
+_bool CUI_Manager::Get_LeftHUD_SkillState(const string& strUIName)
+{
+	if (m_vecLeftHUD.empty())
+		return false; // UI가 없음 (생성안됨)
+
+	for (auto& iter : m_vecLeftHUD)
+	{
+		if (iter->Get_UIDesc().strUIName == strUIName)
+		{
+			return dynamic_cast<CUI_Player_Skill_Icon*>(iter)->Get_SkillUnlock();
+		}
+	}
+
+	return false;
+}
+
 HRESULT CUI_Manager::Add_RightSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 	json json_in;
@@ -1103,6 +1145,22 @@ void CUI_Manager::Change_RightHUD_SkillUnlock(const string& strUIName, _bool bUn
 			return;
 		}
 	}
+}
+
+_bool CUI_Manager::Get_RightHUD_SkillState(const string& strUIName)
+{
+	if (m_vecRightHUD.empty())
+		return false; // UI가 없음 (생성안됨)
+
+	for (auto& iter : m_vecRightHUD)
+	{
+		if (iter->Get_UIDesc().strUIName == strUIName)
+		{
+			return dynamic_cast<CUI_Player_Skill_Icon*>(iter)->Get_SkillUnlock();
+		}
+	}
+
+	return false;
 }
 
 HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag)
@@ -4098,6 +4156,20 @@ void CUI_Manager::NonActive_SkillFrame()
 	}
 }
 
+void CUI_Manager::Set_SkillLevel(const string& strSkillFrame, _uint eLevel)
+{
+	if (m_vecSkillFrame.empty())
+		return;
+
+	for (auto& iter : m_vecSkillFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strSkillFrame)
+		{
+			iter->Set_UILevel(eLevel);
+		}
+	}
+}
+
 HRESULT CUI_Manager::Add_SkillPreview(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 	json json_in;
@@ -4226,9 +4298,9 @@ void CUI_Manager::Change_SkillPreview(const string& strUIName)
 
 	for (auto& iter : m_vecSkillPreview)
 	{
-		if (iter->Get_UIDesc().strUIName == strUIName)
+		if (iter->Get_UIDesc().strCloneTag == "Prototype_GameObject_UI_Skill_Preview")
 		{
-			//iter->Change_; //오늘할일
+			dynamic_cast<CUI_Skill_Preview*>(iter)->Change_Preview(strUIName);
 		}
 	}
 }
@@ -4492,12 +4564,506 @@ void CUI_Manager::Check_SkillWindowTrigger()
 		{
 			Active_SkillWindow(true);
 			Active_SkillIcon(true);
+			Active_SkillFrame(true);
 			Active_SkillWindowButton(true);
 			Active_SkillPreview(true);
+			Active_SkillActiveGuige();
 
 			m_bShowSkillWindow = true;
 		}
 	}
+}
+
+HRESULT CUI_Manager::Add_SkillActiveGuige(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/SkillWindow/SkillActiveGuige.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_pSkillActiveGuige = pUI_Object;
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_SkillActiveGuige()
+{
+	if (m_pSkillActiveGuige == nullptr)
+		return;
+
+	m_pSkillActiveGuige->Set_Alpha(0.f);		// UI 알파값 초기화
+	m_pSkillActiveGuige->Set_Active(true);		// UI 활성화
+	m_pSkillActiveGuige->Set_AnimPlay(true);	// UI Animation 재생
+	m_pSkillActiveGuige->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+	m_pSkillActiveGuige->Set_Disappear(false);	// UI 사라짐 Off
+}
+
+void CUI_Manager::NonActive_SkillActiveGuige()
+{
+	if (m_pSkillActiveGuige == nullptr)
+		return;
+
+	m_pSkillActiveGuige->Set_Alpha(1.f);			// UI 알파값 초기화
+	m_pSkillActiveGuige->Set_Active(false);		// UI 활성화
+	m_pSkillActiveGuige->Set_AnimPlay(false);		// UI Animation 재생
+	m_pSkillActiveGuige->Set_CurrTime(0.f);		// UI Animation 시간 초기화
+	m_pSkillActiveGuige->Set_Disappear(true);		// UI 사라짐 Off
+	m_pSkillActiveGuige->Set_AnimTrigger(false);	// UI 트리거 Off
+}
+
+HRESULT CUI_Manager::Add_WeaponIcon(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/SkillWindow/WeaponIcon.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecWeaponIcon.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_WeaponIcon(_bool bActive)
+{
+	if (m_vecWeaponIcon.empty())
+		return;
+
+	for (auto& iter : m_vecWeaponIcon)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(false);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::NonActive_WeaponIcon()
+{
+	if (m_vecWeaponIcon.empty())
+		return;
+
+	for (auto& iter : m_vecWeaponIcon)
+	{
+		iter->Set_Alpha(1.f);		// UI 알파값 초기화
+		iter->Set_Active(false);	// UI 활성화
+		iter->Set_AnimPlay(false);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(true);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::Change_WeaponIcon_Level(const string& strUIName, _uint iUILevel)
+{
+	if (m_vecWeaponIcon.empty())
+		return;
+
+	for (auto& iter : m_vecWeaponIcon)
+	{
+		if (iter->Get_UIDesc().strUIName == strUIName)
+		{
+			iter->Set_UILevel(iUILevel);
+		}
+	}
+}
+
+HRESULT CUI_Manager::Add_WeaponFrame(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/SkillWindow/WeaponFrame.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecWeaponFrame.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_WeaponFrame(_bool bActive)
+{
+	if (m_vecWeaponFrame.empty())
+		return;
+
+	for (auto& iter : m_vecWeaponFrame)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(false);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::NonActive_WeaponFrame()
+{
+	if (m_vecWeaponFrame.empty())
+		return;
+
+	for (auto& iter : m_vecWeaponFrame)
+	{
+		iter->Set_Alpha(1.f);		// UI 알파값 초기화
+		iter->Set_Active(false);	// UI 활성화
+		iter->Set_AnimPlay(false);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(true);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::Set_WeaponLevel(const string& strSkillFrame, _uint eLevel)
+{
+}
+
+HRESULT CUI_Manager::Add_WeaponActiveGuige(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/SkillWindow/WeaponActiveGuige.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_pWeaponActiveGuige = pUI_Object;
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_WeaponActiveGuige()
+{
+	if (m_pWeaponActiveGuige == nullptr)
+		return;
+
+	m_pWeaponActiveGuige->Set_Alpha(0.f);		// UI 알파값 초기화
+	m_pWeaponActiveGuige->Set_Active(true);		// UI 활성화
+	m_pWeaponActiveGuige->Set_AnimPlay(true);	// UI Animation 재생
+	m_pWeaponActiveGuige->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+	m_pWeaponActiveGuige->Set_Disappear(false);	// UI 사라짐 Off
+}
+
+void CUI_Manager::NonActive_WeaponActiveGuige()
+{
+	if (m_pWeaponActiveGuige == nullptr)
+		return;
+
+	m_pWeaponActiveGuige->Set_Alpha(1.f);			// UI 알파값 초기화
+	m_pWeaponActiveGuige->Set_Active(false);		// UI 활성화
+	m_pWeaponActiveGuige->Set_AnimPlay(false);		// UI Animation 재생
+	m_pWeaponActiveGuige->Set_CurrTime(0.f);		// UI Animation 시간 초기화
+	m_pWeaponActiveGuige->Set_Disappear(true);		// UI 사라짐 Off
+	m_pWeaponActiveGuige->Set_AnimTrigger(false);	// UI 트리거 Off
 }
 
 void CUI_Manager::Select_Skill(const string& strSelecSkill)
@@ -4510,6 +5076,20 @@ void CUI_Manager::Select_Skill(const string& strSelecSkill)
 		if (iter->Get_UIDesc().strUIName == strSelecSkill)
 		{
 			m_pUI_SelectSkill = iter;
+		}
+	}
+}
+
+void CUI_Manager::Select_Weapon(const string& strSelecSkill)
+{
+	if (m_vecWeaponFrame.empty())
+		return;
+
+	for (auto& iter : m_vecWeaponFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strSelecSkill)
+		{
+			m_pUI_SelectWeapon = iter;
 		}
 	}
 }

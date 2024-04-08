@@ -523,7 +523,10 @@ private:
 		"ConnectionLine",
 		"SkillScrew",
 		"SkillActive",
-		"SkillWindow_Button"
+		"SkillWindow_Button",
+		"WeaponFrame",
+		"WeaponIcon",
+		"WeaponActiveGuige"
 	};
 
 	// 클래스 목록을 저장하는 벡터

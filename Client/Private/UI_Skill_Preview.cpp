@@ -39,6 +39,8 @@ HRESULT CUI_Skill_Preview::Initialize(void* pArg)
 
 	Start_Setting();
 
+	m_iShaderNum = 0;
+
 	return S_OK;
 }
 
@@ -205,6 +207,33 @@ void CUI_Skill_Preview::Change_Preview(const string& strUIName)
 		{
 			m_eTextureKind = MAXHP;
 		}
+
+#pragma region Weapon
+		else if (strUIName == "Revolver")
+		{
+			m_eTextureKind = REVOLVER;
+		}
+		else if (strUIName == "Shotgun")
+		{
+			m_eTextureKind = SHOTGUN;
+		}
+		else if (strUIName == "Rifle")
+		{
+			m_eTextureKind = RIFLE;
+		}
+#pragma region WeaponSkill
+		else if (strUIName == "Revolver_Skill1")
+		{
+			m_eTextureKind = REVOLVER_SKILL1;
+		}
+		else if (strUIName == "Shotgun_Skill1")
+		{
+			m_eTextureKind = SHOTGUN_SKILL1;
+		}
+		else if (strUIName == "Rifle_Skill1")
+		{
+			m_eTextureKind = RIFLE_SKILL1;
+		}
 	}
 
 	m_strPreName = strUIName;
@@ -315,6 +344,38 @@ HRESULT CUI_Skill_Preview::Ready_Components()
 	//! For.Com_Texture // MainStart (LogoLevel)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Heal"),
 		TEXT("Com_Texture_Heal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HEAL]))))
+		return E_FAIL;
+
+	// Weapon
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Revolver"),
+		TEXT("Com_Texture_Revolver"), reinterpret_cast<CComponent**>(&m_pTextureCom[REVOLVER]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Shotgun"),
+		TEXT("Com_Texture_Shotgun"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHOTGUN]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Rifle"),
+		TEXT("Com_Texture_Rifle"), reinterpret_cast<CComponent**>(&m_pTextureCom[RIFLE]))))
+		return E_FAIL;
+
+	// Weapon Skill
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Revolver_Skill1"),
+		TEXT("Com_Texture_Revolver_Skill"), reinterpret_cast<CComponent**>(&m_pTextureCom[REVOLVER_SKILL1]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Shotgun_Skill1"),
+		TEXT("Com_Texture_Shotgun_Skill"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHOTGUN_SKILL1]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Rifle_Skill1"),
+		TEXT("Com_Texture_Rifle_Skill"), reinterpret_cast<CComponent**>(&m_pTextureCom[RIFLE_SKILL1]))))
 		return E_FAIL;
 
 	//! For.Com_Shader

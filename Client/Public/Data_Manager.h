@@ -70,7 +70,45 @@ public:
 	CNavigation* Get_Navigation() { return m_pNavigation; }
 	void		 Set_Navigation(CNavigation* pNavigation) { m_pNavigation = pNavigation; }
 
+public:
+	_bool Is_AdditionalSkill_Learned(Additional_Skill eAdditional_Skill) { return m_AdditionalSkills[ECast(eAdditional_Skill)]; }
+	void Set_AdditionalSkill(Additional_Skill eAdditional_Skill, _bool bValue) { m_AdditionalSkills[ECast(eAdditional_Skill)] = bValue; };
+
+	_float Get_Additional_ElectricDamage() { return m_fAdditional_ElectricDamage; }
+	void Activate_Additional_ElectricDamage() { m_fAdditional_ElectricDamage = 5.f; };
+
+	_float Get_Additional_MeleeDamage() { return m_fAdditional_MeleeDamage; }
+	void Activate_Additional_MeleeDamage() { m_fAdditional_MeleeDamage = 3.f; };
+
+	_float Get_HpRegen() { return m_fHpRegen; }
+	void Activate_HpRegen() { m_fHpRegen = 150.f; };
+
+	_float Get_Additional_MoveSpeed() { return m_fAdditional_MoveSpeed; }
+	void Activate_Additional_MoveSpeed() { m_fAdditional_MoveSpeed = 1.f; };
+
+
+private:
+	_bool   m_AdditionalSkills[ECast(Additional_Skill::Additional_Skill_End)];
+	//_bool   m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
+
+	_float   m_fAdditional_ElectricDamage = { 0.f };
+	_float   m_fAdditional_MeleeDamage = { 0.f };
+
+	_float  m_fHpRegen = { 100.f };
+	_float   m_fAdditional_MoveSpeed = { 0.f };
+
 // ! SH_Add
+public:
+	void	Set_MouseFix(_bool bFix) { m_bFix = bFix; }
+	_bool	Get_MouseFix() { return m_bFix; }
+
+	void	Set_MouseCenter(_bool bCenter) { m_bCenter = bCenter; }
+	_bool	Get_MouseCenter() { return m_bCenter; }
+
+private:
+	_bool	m_bCenter = false;
+	_bool	m_bFix = false;
+
 private: /* _float */
 	_float	m_fMaxHP = 100.f;
 	_float	m_fCurHP = 100.f;

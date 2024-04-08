@@ -222,6 +222,10 @@
 #include "UI_ConnectionLine.h"
 #include "UI_SkillActive.h"
 #include "UI_SkillWindow_Button.h"
+/* Weapon */
+#include "UI_WeaponIcon.h"
+#include "UI_WeaponFrame.h"
+#include "UI_WeaponActiveGuige.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -1227,6 +1231,10 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_ConnectionLine"), CUI_ConnectionLine::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_ConnectionLine"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillActive"), CUI_SkillActive::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillActive"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_SkillWindow_Button"), CUI_SkillWindow_Button::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_SkillWindow_Button"))));
+#pragma region Weapon
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_WeaponIcon"), CUI_WeaponIcon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_WeaponIcon"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_WeaponFrame"), CUI_WeaponFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_WeaponFrame"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_WeaponActiveGuige"), CUI_WeaponActiveGuige::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_WeaponActiveGuige"))));
 #pragma endregion End
 
 	return S_OK;

@@ -412,6 +412,8 @@ public: /* =========================== Animation ============================== 
 	void			Set_AnimationKeyframe(UIKEYFRAME tKeyframe);
 	// 애니메이션 값
 	std::vector<UIKEYFRAME> m_vecAnimation = {};
+	std::vector<UIKEYFRAME> m_vecChangAnimation = {};
+
 	_int			m_iTextureNum = 0;
 	_int			m_iLoopAnimIndex = 0;
 

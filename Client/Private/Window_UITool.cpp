@@ -945,6 +945,77 @@ void CWindow_UITool::Setting_Child()
 
 	if (m_pCurrSelectUI != nullptr)
 	{
+		ImGui::Text(ConverWStringtoC(ConvertToWideString(m_pCurrSelectUI->Get_UIDesc().strUIName)));
+	}
+
+	if (ImGui::Button("PlayAnim ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("StopAnim ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ResetAnim ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+	}
+
+	if (ImGui::Button("Play ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_Active(true);
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Stop ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_Active(false);
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+	}
+
+	if (ImGui::Button("STATE UI"))
+		CData_Manager::GetInstance()->Set_GameState(GAME_STATE::UI);
+	ImGui::SameLine();
+	if (ImGui::Button("STATE GAMEPLAY"))
+		CData_Manager::GetInstance()->Set_GameState(GAME_STATE::GAMEPLAY);
+
+	if (m_pCurrSelectUI != nullptr)
+	{
 		/*					Render				*/
 		/* Back == 9, Center == 10, Front == 11 */
 		ImGui::Text("RenderGroup");
@@ -974,58 +1045,6 @@ void CWindow_UITool::Setting_Child()
 			//m_pCurrSelectUI->Set_CharToStringUIName(m_cName);
 			//m_pGameInstance->WString_To_String(ConverCtoWC(), m_pCurrSelectUI->Get_UIDesc().strUIName.c_str());
 		}
-
-		if (ImGui::Button("PlayAnim ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("StopAnim ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("ResetAnim ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
-				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
-			}
-		}
-
-		if (ImGui::Button("Play ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_Active(true);
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
-				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Stop ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_Active(false);
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
-				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
-			}
-		}
-
-		if (ImGui::Button("SATE UI"))
-			CData_Manager::GetInstance()->Set_GameState(GAME_STATE::UI);
-		ImGui::SameLine();
-		if (ImGui::Button("SATE GAMEPLAY"))
-			CData_Manager::GetInstance()->Set_GameState(GAME_STATE::GAMEPLAY);
-
 		
 		if (ImGui::Button("ShowInterface"))
 			m_bShowInterface = !m_bShowInterface;
@@ -4252,6 +4271,14 @@ void CWindow_UITool::UI_Preset()
 	if (ImGui::Button("SkillWindowButtonActive"))
 	{
 		m_pUIManager->Active_SkillWindowButton(true);
+	}
+	if (ImGui::Button("SkillWindowAll"))
+	{
+		m_pUIManager->Ready_SkillWindow(true);
+	}
+	if (ImGui::Button("SkillWindowAllActive"))
+	{
+		m_pUIManager->Active_SkillWindowBackground();
 	}
 }
 

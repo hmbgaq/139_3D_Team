@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "UI_SkillActive.h"
+#include "UI_WeaponActiveGuige.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "UI_Manager.h"
 
-CUI_SkillActive::CUI_SkillActive(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_WeaponActiveGuige::CUI_WeaponActiveGuige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_SkillActive::CUI_SkillActive(const CUI_SkillActive& rhs)
+CUI_WeaponActiveGuige::CUI_WeaponActiveGuige(const CUI_WeaponActiveGuige& rhs)
 	: CUI(rhs)
 {
 }
 
-HRESULT CUI_SkillActive::Initialize_Prototype()
+HRESULT CUI_WeaponActiveGuige::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -24,7 +24,7 @@ HRESULT CUI_SkillActive::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_SkillActive::Initialize(void* pArg)
+HRESULT CUI_WeaponActiveGuige::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -52,12 +52,12 @@ HRESULT CUI_SkillActive::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_SkillActive::Priority_Tick(_float fTimeDelta)
+void CUI_WeaponActiveGuige::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_SkillActive::Tick(_float fTimeDelta)
+void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
@@ -82,9 +82,9 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 		{
 			// 활성화 (선택한 스킬이 있을 경우) [현재 레벨 1일 해금가능 상태일 때만]
 			if (m_pGameInstance->Key_Pressing(DIK_SPACE) &&
-				m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL_END &&
-				m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
-				m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL2)		// 최대
+				m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL_END &&
+				m_pUIManager->Get_Select_WeaponLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
+				m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2)		// 최대
 			{
 				if (m_bCoolDown == true &&
 					m_bMaxCoolDown == false)
@@ -93,12 +93,12 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					m_iShaderNum = 5; // 원형 게이지 pass
 				}
 
-				if (m_fCoolTime <= 0.f && 
-					m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL_END && // 예외
-					m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
-					m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL2)		// 최대
+				if (m_fCoolTime <= 0.f &&
+					m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL_END && // 예외
+					m_pUIManager->Get_Select_WeaponLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
+					m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2)		// 최대
 				{
-					m_pUIManager->Select_SkillLevelUP(); // 레벨업
+					m_pUIManager->Select_WeaponLevelUP(); // 레벨업
 					m_bCoolDown = false;
 					m_bMaxCoolDown = true;
 
@@ -139,7 +139,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 	}
 }
 
-void CUI_SkillActive::Late_Tick(_float fTimeDelta)
+void CUI_WeaponActiveGuige::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive == true)
 	{
@@ -148,7 +148,7 @@ void CUI_SkillActive::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CUI_SkillActive::Render()
+HRESULT CUI_WeaponActiveGuige::Render()
 {
 	if (m_bActive == true)
 	{
@@ -168,23 +168,23 @@ HRESULT CUI_SkillActive::Render()
 	return S_OK;
 }
 
-void CUI_SkillActive::UI_Ready(_float fTimeDelta)
+void CUI_WeaponActiveGuige::UI_Ready(_float fTimeDelta)
 {
 }
 
-void CUI_SkillActive::UI_Enter(_float fTimeDelta)
+void CUI_WeaponActiveGuige::UI_Enter(_float fTimeDelta)
 {
 }
 
-void CUI_SkillActive::UI_Loop(_float fTimeDelta)
+void CUI_WeaponActiveGuige::UI_Loop(_float fTimeDelta)
 {
 }
 
-void CUI_SkillActive::UI_Exit(_float fTimeDelta)
+void CUI_WeaponActiveGuige::UI_Exit(_float fTimeDelta)
 {
 }
 
-HRESULT CUI_SkillActive::Ready_Components()
+HRESULT CUI_WeaponActiveGuige::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -214,7 +214,7 @@ HRESULT CUI_SkillActive::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CUI_SkillActive::Bind_ShaderResources()
+HRESULT CUI_WeaponActiveGuige::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -255,57 +255,57 @@ HRESULT CUI_SkillActive::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CUI_SkillActive::Check_SkillActive(_float fTimeDelta, SKILLSTATE eState)
+void CUI_WeaponActiveGuige::Check_SkillActive(_float fTimeDelta, SKILLSTATE eState)
 {
 
 
 }
 
 
-json CUI_SkillActive::Save_Desc(json& out_json)
+json CUI_WeaponActiveGuige::Save_Desc(json& out_json)
 {
 	__super::Save_Desc(out_json);
 
 	return out_json;
 }
 
-void CUI_SkillActive::Load_Desc()
+void CUI_WeaponActiveGuige::Load_Desc()
 {
 
 }
 
-CUI_SkillActive* CUI_SkillActive::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_WeaponActiveGuige* CUI_WeaponActiveGuige::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_SkillActive* pInstance = new CUI_SkillActive(pDevice, pContext, strPrototypeTag);
+	CUI_WeaponActiveGuige* pInstance = new CUI_WeaponActiveGuige(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_SkillActive");
+		MSG_BOX("Failed to Created : CUI_WeaponActiveGuige");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_SkillActive::Pool()
+CGameObject* CUI_WeaponActiveGuige::Pool()
 {
-	return new CUI_SkillActive(*this);
+	return new CUI_WeaponActiveGuige(*this);
 }
 
-CGameObject* CUI_SkillActive::Clone(void* pArg)
+CGameObject* CUI_WeaponActiveGuige::Clone(void* pArg)
 {
-	CUI_SkillActive* pInstance = new CUI_SkillActive(*this);
+	CUI_WeaponActiveGuige* pInstance = new CUI_WeaponActiveGuige(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_SkillActive");
+		MSG_BOX("Failed to Cloned : CUI_WeaponActiveGuige");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CUI_SkillActive::Free()
+void CUI_WeaponActiveGuige::Free()
 {
 	__super::Free();
 
