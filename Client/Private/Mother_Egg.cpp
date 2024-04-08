@@ -70,6 +70,9 @@ void CMother_Egg::Priority_Tick(_float fTimeDelta)
 
 void CMother_Egg::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_fHp <= 0.f)

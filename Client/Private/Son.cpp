@@ -79,6 +79,9 @@ void CSon::Priority_Tick(_float fTimeDelta)
 
 void CSon::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 

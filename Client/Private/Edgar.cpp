@@ -58,6 +58,9 @@ void CEdgar::Tick(_float fTimeDelta)
 
 void CEdgar::Late_Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Late_Tick(fTimeDelta);
 }
 
