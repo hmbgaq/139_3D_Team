@@ -2,6 +2,7 @@
 #include "Loader.h"
 #include "GameInstance.h"
 #include <process.h>
+#include <thread>
 
 #pragma region GAMEOBJECT
 #include "Camera_Dynamic.h"
@@ -145,8 +146,6 @@
 #include "Weapon_Edgar.h"
 #pragma endregion
 
-
-
 #pragma region UI
 /* Anything */
 #include "UI_Anything.h"
@@ -262,6 +261,8 @@
 
 #include "Imgui_Manager.h" //! 승용 툴에 전달하기위한 모델 태그 셋팅위함
 
+using std::thread;
+
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
@@ -286,6 +287,17 @@ _uint APIENTRY LoadingThread(void* pArg)
 }
 
 
+_uint APIENTRY LoadingThread(void* pArg)
+{
+	CoInitializeEx(nullptr, 0);
+
+	CLoader* pLoader = (CLoader*)pArg;
+
+	pLoader->Loading_Environment();
+
+	return 0;
+}
+
 HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	/* 어떤 레벨의 자원을 로드해야하는지? */
@@ -297,8 +309,17 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 	/* LoadingThread : 생성한 스레드가 가장 먼저 호출해야할 함수 */
 	/* this : 위 함수를 호출하면서 인자로 전달할 데이터. */
 	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, LoadingThread, this, 0, nullptr);
-	if (0 == m_hThread)
+	if (0 == m_hThread) // 쓰레드 생성 실패
 		return E_FAIL;
+
+	/* 소영 추가 */
+	m_hThread2 = (HANDLE)_beginthreadex(nullptr, 0, LoadingThread2, this, 0, nullptr);
+	if (0 == m_hThread2)
+	{
+		// 두 번째 스레드 생성에 실패했으므로 첫 번째 스레드를 종료합니다.
+		CloseHandle(m_hThread1);
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -854,6 +875,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
+	//thread t1(Ready_Environment_Model(LEVEL_TOOL));
 	Ready_Environment_Model(LEVEL_TOOL);
 #pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
@@ -1236,7 +1258,7 @@ HRESULT CLoader::Ready_UI_Origin()
 }
 
 HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
-   {
+{
 	lstrcpy(m_szLoadingText, TEXT("환경모델을 로드하는 중입니다."));
 
 	if (eLevel == LEVEL_GAMEPLAY)
@@ -1287,8 +1309,8 @@ HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 		//wstring					strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/NonAnim/");
 		//wstring				strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/SnowMounTain/NonAnim/");
 		
-		wstring				strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1BossMap/NonAnim/");
-		//wstring				strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2BossTestMap/NonAnim/");
+		//wstring				strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1BossMap/NonAnim/");
+		wstring				strNonAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2BossTestMap/NonAnim/");
 
 		//! 로더에 원형
 		FAILED_CHECK(Read_FBXModelPath(strNonAnimModelPath.c_str(), eLevel, CModel::TYPE_NONANIM));
@@ -1296,9 +1318,9 @@ HRESULT CLoader::Ready_Environment_Model(LEVEL eLevel)
 		//wstring					strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage1/Anim/");
 		//wstring				strAnimModelPath = TEXT("../Bin/Resources/Models/Map/SnowMounTain/Anim/");
 		
-		//wstring				strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2BossTestMap/Anim/");
+		wstring				strAnimModelPath = TEXT("../Bin/Resources/Models/Map/Stage2BossTestMap/Anim/");
 		
-		//FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
+		FAILED_CHECK(Read_FBXModelPath(strAnimModelPath.c_str(), eLevel, CModel::TYPE_ANIM));
 	}
 
 	return S_OK;

@@ -27,7 +27,11 @@ public:
 	void	Print_LoadingText();
 
 public:
+	/* 스레드 진입점 */
 	HRESULT Loading();
+	HRESULT Loading_Environment();
+
+	/* 레벨별 로딩함수 */
 	HRESULT Loading_For_Logo_Level();
 	
 	HRESULT Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL);

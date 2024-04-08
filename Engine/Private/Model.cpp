@@ -768,6 +768,11 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 		MATERIAL_DESC			MaterialDesc = {  };
 
+		/* 초기화 */
+		m_bDiffuseExist = false;
+		m_bSpecularExist = false;
+		m_bEmissiveExist = false;
+		
 		for (size_t j = 1; j < (size_t)AI_TEXTURE_TYPE_MAX; j++)
 		{
 			_char		szDrive[MAX_PATH] = "";
@@ -777,8 +782,26 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 
 			string strPath = pAIMaterial.Get_Textures((_uint)j);
 			if (strPath == "")
-				continue;
+			{
+				if (j == (size_t)aiTextureType_DIFFUSE)
+					m_bDiffuseExist = false;
+				else if (j == (size_t)aiTextureType_SPECULAR)
+					m_bSpecularExist = false;
+				else if (j == (size_t)aiTextureType_EMISSIVE)
+					m_bEmissiveExist = false;
 
+				continue;
+			}
+			else
+			{
+				/* 텍스쳐가 만들어졌는지 체크 */
+				if (j == (size_t)aiTextureType_DIFFUSE)
+					m_bDiffuseExist = true;
+				if (j == (size_t)aiTextureType_SPECULAR)
+					m_bSpecularExist = true;
+				else if (j == (size_t)aiTextureType_EMISSIVE)
+					m_bEmissiveExist = true;
+			}
 			_char		szFileName[MAX_PATH] = "";
 			_char		szEXT[MAX_PATH] = "";
 
@@ -802,57 +825,43 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			if (nullptr == MaterialDesc.pMtrlTextures[j])	
 				return E_FAIL;
 
+			// == 여기서부터 추가 텍스쳐 추가 =======================================================================
+			if (false == m_bDiffuseExist)
+				return S_OK; // 입구컷 
+
 			// Diffuse 일때 한번 검사 + Normal일때 Diffuse에서 못만들었다면 추가 검사 
-			if ((j == (size_t)aiTextureType_DIFFUSE) || (j == (size_t)aiTextureType_NORMALS && false == m_bSpecularExist)) // Diffuse 있을때 ORM넣기 
+			if (j == (size_t)aiTextureType_DIFFUSE)
 			{
-				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT);
+				// Diffuse 이름 저장 
+				strcpy_s(szTempDiffuseFileName, sizeof(szFileName), szFileName); 
+			}
+			
+			/* Specular에 들어간게 없음 -> 전에 저장한 Diffuse 기준으로 만들기 */
+			if (j == (size_t)aiTextureType_NORMALS && false == m_bSpecularExist)
+			{
+				MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szTempDiffuseFileName, szDrive, szDirectory, szEXT);
 
 				if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR]) /* 1글자 뺴서 하는 ORM 실패 */
 				{
 					m_bSpecularExist = false;
-					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT, 2);
+					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szTempDiffuseFileName, szDrive, szDirectory, szEXT, 2);
 
 					if (nullptr != MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])/* 2글자 뺴서 하는 ORM 성공  */
 						m_bSpecularExist = true;
-					//else
-					//{
-					//	/* 뭘해도 Specular가 없다 : 다른텍스쳐로 대체 */
-					//	MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT);
-					//	if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS])
-					//		MaterialDesc.pMtrlTextures[(size_t)aiTextureType_METALNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_METALIC, szFileName, szDrive, szDirectory, szEXT, 2);
-					//	else
-					//		cout << "Metalic : " << szFileName << endl;
-					//	
-					//	MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT);
-					//	if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY])
-					//		MaterialDesc.pMtrlTextures[(size_t)aiTextureType_OPACITY] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_OPACITY, szFileName, szDrive, szDirectory, szEXT, 2);
-					//	else
-					//		cout << "Opacity : " << szFileName << endl;
-					//	
-					//	MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT);
-					//	if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS])
-					//		MaterialDesc.pMtrlTextures[(size_t)aiTextureType_DIFFUSE_ROUGHNESS] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ROUGHNESS, szFileName, szDrive, szDirectory, szEXT, 2);
-					//	else
-					//		cout << " Roughness: " << szFileName << endl;
-					//
-					//}
 				}
 				else
 					m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */
+
+				memset(szTempDiffuseFileName, 0, sizeof(szTempDiffuseFileName)); /* Diffuse 저장한거 초기화 */
+				//strcpy(szTempNormalFileName, szFileName); // Normal 이름 저장 
 			}
 
-			/* 안되서 강제 때려박기 - 1글자로 강제 셋팅모드  */
-			string TestfileName(szFileName);
-			Update_EmissiveTextures(TestfileName, MaterialDesc, szFileName, szDrive, szDirectory, szEXT);
-			
-			/* Stage1 */
-			
-			/* Stage2 */
-			
-			/* Stage1 - Boss  */
-
-			/* Stage2 - Boss  */
-			
+			/* Emissive에 들어간게 없음 -> 얘는 노말 기준으로 만들음  */
+			if (j == (size_t)aiTextureType_NORMALS && false == m_bEmissiveExist)
+			{
+				string TestfileName(szFileName);
+				Update_EmissiveTextures(TestfileName, MaterialDesc, szFileName, szDrive, szDirectory, szEXT);
+			}
 		}
 
 		m_Materials.push_back(MaterialDesc);
@@ -940,6 +949,13 @@ CTexture* CModel::Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* str
 {
 	/* Diffuse 기준, ORM텍스쳐는 아니지만 Roughness, Opacity, Metalic 으로도 읽지않아서 만들어줘야하는 텍스쳐 */
 	string PBRfileName(strOriginFileName);
+
+	if (PBRfileName == "")
+	{
+		MSG_BOX("Texture Make Failure / OMR OR EMISSIVE ");
+		cout << strOriginDirectory << endl;
+		return S_OK;
+	}
 
 	for (_int i = 0; i < iCnt; ++i)
 	{
@@ -1032,23 +1048,8 @@ CTexture* CModel::Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* str
 
 void CModel::Update_EmissiveTextures(const string& fileName, MATERIAL_DESC& materialDesc, const char* szFileName, const char* szDrive, const char* szDirectory, const char* szEXT)
 {
-	if (
-		/* Mother */
-		fileName == "T_Grand_Parasiter_NewUV_1_N" ||			// Stage2 - Boss 
-		fileName == "T_Grand_Parasiter_NewUV_2_N" ||			// Stage2 - Boss 
-		/* Infected */
-		fileName == "T_Turned_citizen_Body_N" ||				// Monster - Infected
-		fileName == "T_Grunt_Explouuding_Attachments_N" ||		// Monster - Infected
-		fileName == "T_Parasite_Master_addons_old_N" ||			// Monster - Infected
-		/* Bandit_Heavy */
-		fileName == "T_Bandit_Heavy_Zombie_Clothes_verC_N" // Bandit Heavy 
-		
-		) 
-	{
-		materialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = nullptr;
-		materialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT);
-	}
-
+	materialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = nullptr;
+	materialDesc.pMtrlTextures[(size_t)aiTextureType_EMISSIVE] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_EMISSIVE, szFileName, szDrive, szDirectory, szEXT);
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)
