@@ -83,10 +83,10 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
 	}
 
-	//if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
-	//{
-	//	m_pGameInstance->Get_Player()->Set_InitPosition(m_pTransformCom->Get_Position());
-	//}
+	if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
+	{
+		m_pGameInstance->Get_Player()->Set_InitPosition(m_pTransformCom->Get_Position());
+	}
 
 	__super::Tick(fTimeDelta);
 }
