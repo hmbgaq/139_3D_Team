@@ -125,6 +125,9 @@ HRESULT CEffect_Trail::Render()
 
 			if (m_tVoidDesc.bRender)
 			{
+				if (nullptr == m_pShaderCom)
+					return S_OK;
+
 				if (FAILED(Bind_ShaderResources()))
 					return E_FAIL;
 
@@ -190,6 +193,8 @@ HRESULT CEffect_Trail::Ready_Components()
 
 HRESULT CEffect_Trail::Bind_ShaderResources()
 {
+	if (nullptr == m_pShaderCom)
+		return S_OK;
 
 	/* Matrix ============================================================================================ */
 	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));

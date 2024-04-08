@@ -30,8 +30,12 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 			//m_pWeapon->Set_Enable(true);		// 무기콜라이더 활성화 = 자폭 콜라이더 
 
 			//pActor->Get_Weapon(TEXT("Weapon_Bomb"))->Set_Enable(true);
-			pActor->Explosion();
 
+			if (false == m_bFlags[0])
+			{
+				pActor->Explosion();
+				m_bFlags[0] = true;
+			}
 			
 			__super::Bomb_State(pActor, fTimeDelta, g_iAnimIndex);
 		}

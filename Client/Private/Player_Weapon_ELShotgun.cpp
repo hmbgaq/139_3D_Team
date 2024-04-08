@@ -91,7 +91,11 @@ HRESULT CPlayer_Weapon_ELShotgun::Ready_Components()
 
 void CPlayer_Weapon_ELShotgun::Fire(_float3 vTargetPos, CCharacter* pTarget)
 {
-	__super::Fire(L"Prototype_GameObject_Bullet_ELShotgun", LAYER_PLAYER_BULLET, vTargetPos, pTarget);
+	for (_uint i = 0; i < 4; ++i)
+	{
+		__super::Fire(L"Prototype_GameObject_Bullet_ELShotgun", LAYER_PLAYER_BULLET, vTargetPos, pTarget);
+	}
+
 } 
 
 CPlayer_Weapon_ELShotgun* CPlayer_Weapon_ELShotgun::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

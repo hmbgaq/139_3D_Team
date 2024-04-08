@@ -21,6 +21,9 @@ public:
 	virtual HRESULT Render_Shadow() override { return S_OK; }
 
 public:
+	virtual void		Set_Enable(_bool _Enable) override;
+
+public:
 	virtual void	OnCollisionEnter(CCollider* other);
 	virtual void	OnCollisionStay(CCollider* other);
 	virtual void	OnCollisionExit(CCollider* other);
