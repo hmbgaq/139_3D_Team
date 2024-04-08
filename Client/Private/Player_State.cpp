@@ -899,8 +899,16 @@ CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uin
 
 	if (m_pGameInstance->Key_Down(DIK_F))
 	{
+		_float fCost = -1.f;
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::SHOTGUN_UPGRADE)) 
+		{
+			fCost = SHOTGUN_MAXCOOLTIME / 2.f;
+			//fCost = 10.f;
+		}
+
 		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SHOTGUN);
-		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD, fCost);
 		if (true == bIsCooltimeEnd)
 		{
 			if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)

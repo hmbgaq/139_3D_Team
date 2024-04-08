@@ -123,15 +123,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Player(this);
 	m_pGameInstance->Set_Player(this);
 
-	Set_HUD_MaxCooltime(HUD::LEFT_TOP, 30.f);		//슈퍼차지
-	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT, 5.f);		//힐
-	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM, 6.f);		//리볼버
-	Set_HUD_MaxCooltime(HUD::LEFT_LEFT, 10.f);		//샷건
+	Set_HUD_MaxCooltime(HUD::LEFT_TOP,		30.f);		//슈퍼차지
+	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT,	5.f);		//힐
+	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	6.f);		//리볼버
+	Set_HUD_MaxCooltime(HUD::LEFT_LEFT,		SHOTGUN_MAXCOOLTIME);		//샷건
 
-	Set_HUD_MaxCooltime(HUD::RIGHT_TOP, 2.0f);		//라이플
-	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT, 10.f);	//내려찍기
-	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM, 1.f);	//발차기
-	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT, 1.f);		//전기 줄
+	Set_HUD_MaxCooltime(HUD::RIGHT_TOP,		2.0f);	//라이플
+	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT,	10.f);	//내려찍기
+	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM,	1.f);	//발차기
+	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT,	1.f);	//전기 줄
 
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Top", 5.f);
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f);

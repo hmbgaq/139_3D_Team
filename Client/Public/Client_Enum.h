@@ -191,6 +191,11 @@ namespace Client
 		REVOLVER,
 		RIFLE,
 		SHOTGUN,
+
+		REVOLVER_UPGRADE,
+		RIFLE_UPGRADE,
+		SHOTGUN_UPGRADE,
+
 		Additional_Weapon_End
 	};
 

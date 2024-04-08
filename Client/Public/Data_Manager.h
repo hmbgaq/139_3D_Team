@@ -118,6 +118,8 @@ public:
 	void Activate_ExpGain(_float _fExpGain) { m_fExpGain = 1.5f; };
 
 
+
+
 private:
 	_bool	m_AdditionalSkills[ECast(Additional_Skill::Additional_Skill_End)];
 	_bool	m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
@@ -131,9 +133,6 @@ private:
 	_float	m_fExpGain = { 1.f };
 
 	//쿨타임 감소은 UI 수정, 
-
-
-
 
 
 private: /* _int */

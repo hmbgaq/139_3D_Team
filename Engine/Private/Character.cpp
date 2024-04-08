@@ -812,10 +812,14 @@ void CCharacter::Free()
 {
 	__super::Free();
 
+	m_pBody->Set_Object_Owner(nullptr);
+	m_pBody->Collider_Off();
 	Safe_Release(m_pBody);
 
 	for (CWeapon* pWeapon : m_Weapons)
 	{
+		pWeapon->Set_Object_Owner(nullptr);
+		pWeapon->Set_Enable_Collisions(false);
 		Safe_Release(pWeapon);
 	}
 	m_Weapons.clear();

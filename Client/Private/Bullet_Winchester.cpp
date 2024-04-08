@@ -125,10 +125,19 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 		m_fForce = 0.f;
 		if (nullptr != pTarget_Character)
 		{
+			_float fDamage = m_fDamage;
+
+			CData_Manager* pDataManager = CData_Manager::GetInstance();
+			if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::RIFLE_UPGRADE))
+			{
+				fDamage += 5.f;
+			}
+
+
 			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
 			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+			pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 		}
 		
 

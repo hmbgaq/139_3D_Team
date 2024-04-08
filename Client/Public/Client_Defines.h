@@ -86,6 +86,7 @@ namespace Client
 
 	
 	#define	REVOLVER_DELAY					1.f
+	#define SHOTGUN_MAXCOOLTIME				10.f
 
 
 	#define INFECTED_EXP					15.f

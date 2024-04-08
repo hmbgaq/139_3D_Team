@@ -41,7 +41,7 @@ HRESULT CBullet_ELShotgun::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 20.f;
+	m_fDamage = 10.f;
 
 	m_fLifeTime = 0.5f;
 
@@ -112,9 +112,8 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 	}
 
 	//Set_Dead(true);
-
-
-	//m_pEffect->Set_Dead(true);
+	//if (nullptr != m_pEffect)
+	//	m_pEffect->Set_Dead(true);
 }
 
 void CBullet_ELShotgun::OnCollisionStay(CCollider* other)

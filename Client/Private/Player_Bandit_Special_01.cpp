@@ -1,5 +1,6 @@
 #include "..\Public\Player_Bandit_Special_01.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 #include "Player_IdleLoop.h"
 #include "Player_Revolver_WeaponHolster.h"
@@ -19,7 +20,12 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_STOP, true, false, 17);
 
-	Fire(pActor);
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
+	if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER_UPGRADE))
+	{
+		Fire(pActor);
+	}
+	
 	//Create_Bullet(pActor);
 }
 
@@ -186,5 +192,8 @@ void CPlayer_Bandit_Special_01::Fire(CPlayer* pActor)
 	}
 	pActor->Set_Target(nullptr);
 
-	pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER), REVOLVER_DELAY);
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
+	_float fDelay = (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER_UPGRADE)) ? REVOLVER_DELAY : 1.2f;
+
+	pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER), fDelay);
 }
