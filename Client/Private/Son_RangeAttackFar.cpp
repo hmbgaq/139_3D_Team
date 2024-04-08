@@ -8,6 +8,7 @@ void CSon_RangeAttackFar::Initialize(CSon* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_MonsterAttackState(true);
 }
 
 CState<CSon>* CSon_RangeAttackFar::Update(CSon* pActor, _float fTimeDelta)
