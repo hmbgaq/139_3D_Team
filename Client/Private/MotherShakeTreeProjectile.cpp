@@ -72,7 +72,7 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 	{
 		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
 		m_pMainEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherShakeTreeProjectile1.json", this);
-		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_04.json", m_pTransformCom->Get_Position());
+		
 		m_bFirst = false;
 	}
 
@@ -125,10 +125,10 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 
 	}
 	EFFECT_MANAGER->Return_ToPool(m_pEffect);
-	//this->Set_Enable(false);
+	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
-	Set_Dead(true);
+	//Set_Dead(true);
 
 }
 
@@ -205,5 +205,6 @@ void CMotherShakeTreeProjectile::Free()
 
 
 	Safe_Release(m_pEffect);	// 동그라미 삭제
+	Safe_Release(m_pMainEffect);	// 동그라미 삭제
 
 }
