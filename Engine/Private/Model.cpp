@@ -852,8 +852,26 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 				else
 					m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */
 
+				if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])
+				{
+					/* 노말로 맵핑해봄 - 1글자  */
+					MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT);
+					if (nullptr == MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR]) /* 1글자 뺴서 하는 ORM 실패 */
+					{
+						m_bSpecularExist = false;
+						MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR] = Add_NotIncludedTexture(ADD_TEXTURE_TYPE::TYPE_ORM, szFileName, szDrive, szDirectory, szEXT, 2);
+
+						if (nullptr != MaterialDesc.pMtrlTextures[(size_t)aiTextureType_SPECULAR])/* 2글자 뺴서 하는 ORM 성공  */
+							m_bSpecularExist = true;
+					}
+					else
+						m_bSpecularExist = true; /* 1글자 뺴서 하는 ORM 성공  */
+				}
+				else
+					m_bSpecularExist = true; /* Diffuse에서 성공함 */
+
+
 				memset(szTempDiffuseFileName, 0, sizeof(szTempDiffuseFileName)); /* Diffuse 저장한거 초기화 */
-				//strcpy(szTempNormalFileName, szFileName); // Normal 이름 저장 
 			}
 
 			/* Emissive에 들어간게 없음 -> 얘는 노말 기준으로 만들음  */

@@ -10,6 +10,7 @@
 #include "Environment_Object.h"
 #include "ShaderParsed_Object.h"
 #include "Environment_Instance.h"
+#include "Environment_LightObject.h"
 
 CWindow_ShaderTool::CWindow_ShaderTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -46,6 +47,8 @@ void CWindow_ShaderTool::Tick(_float fTimeDelta)
 	Choice_Level_N_Object(); /* 어느거 조정할지 선택 */
 	
 	FAILED(Control_Skybox());
+
+	FAILED(Load_SaveShader());
 
 	if (ImGui::CollapsingHeader("Level Light Control"))
 		Layer_Light_Control();
@@ -109,7 +112,6 @@ HRESULT CWindow_ShaderTool::Control_Skybox()
 	if (nullptr == m_pSky)
 		return S_OK;
 
-	_int iCurrentTexture = m_pSky->Get_SkyTextureCount();
 	_int iMaxTexture = m_pSky->Get_MaxTextureCnt();
 	// 스카이박스 텍스처 변경
 
@@ -142,6 +144,184 @@ HRESULT CWindow_ShaderTool::Control_Skybox()
 		else if (m_iSkyTextureIndex == 9)
 			m_pSky->Set_SkyType(CSky::SKYTYPE::SKY9);
 	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_ShaderTool::Load_SaveShader()
+{
+	if (ImGui::Button("Load Intro Shader"))	// 베이스 디퓨즈로 변경
+	{
+		MSG_BOX("아직 셰이더는 안만들었습니당 :) ");
+		m_iSkyTextureIndex = 0;
+		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1);
+		Load_Finished_Light(LEVEL::LEVEL_GAMEPLAY);
+		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(0);
+		//m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_GAMEPLAY), "../Bin/DataFiles/Data_Shader/Level/Level_Gameplay_Shader.json");
+	}
+	if (ImGui::Button("Load Intro Boss Shader"))	// 베이스 디퓨즈로 변경
+	{
+		m_iSkyTextureIndex = 1;
+		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1BOSS);
+		Load_Finished_Light(LEVEL::LEVEL_INTRO_BOSS);
+		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(1);
+		m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_INTRO_BOSS), "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
+	}
+	if (ImGui::Button("Load SnowMountain Shader"))	// 베이스 디퓨즈로 변경
+	{
+		MSG_BOX("아직 셰이더는 안만들었습니당 :) ");
+		m_iSkyTextureIndex = 8;
+		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2);
+		Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAIN);
+		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(2);
+		//m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
+	}
+	if (ImGui::Button("Load SnowMountain Boss Shader"))	// 베이스 디퓨즈로 변경
+	{
+		m_iSkyTextureIndex = 3; /* Skybox 셋팅 */
+		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2BOSS);
+		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(3); /* HDR 셋팅 */
+		Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAINBOSS); /* 빛 가져오기 */
+		m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), "../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json"); /* 셰이더 옵션 켜기 */ 
+	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_ShaderTool::Load_Finished_Light(LEVEL eLoadLevel)
+{
+	/* Shadow Light */
+	//m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+	//m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+	switch (eLoadLevel)
+	{
+	case Client::LEVEL_GAMEPLAY:
+		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+		break;
+	case Client::LEVEL_INTRO_BOSS:
+		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+		break;
+	case Client::LEVEL_SNOWMOUNTAIN:
+		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainTemp_MapData_MapData.json";
+		break;
+	case Client::LEVEL_SNOWMOUNTAINBOSS:
+		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData_MapData_MapData.json";
+		break;
+	}
+
+	/* Map Light */
+	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+
+	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
+	{
+		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
+	}
+	json MapJson = {};
+
+	if (FAILED(CJson_Utility::Load_Json(m_strShaderLoadPath.c_str(), MapJson)))
+	{
+		MSG_BOX("조명 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json LightJson = MapJson["Light_Json"];
+	_int iLightJsonSize = (_int)LightJson.size();
+
+	for (_int i = 0; i < iLightJsonSize; ++i)
+	{
+		LIGHT_DESC LightDesc = {};
+
+		LightDesc.iLightIndex = LightJson[i]["LightIndex"];
+		LightDesc.bEnable = LightJson[i]["LightEnable"];
+		LightDesc.fCutOff = LightJson[i]["CutOff"];
+		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+
+		LightDesc.eType = LightJson[i]["Type"];
+		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
+		LightDesc.fRange = LightJson[i]["Range"];
+		CJson_Utility::Load_Float4(LightJson[i]["Position"], LightDesc.vPosition);
+		CJson_Utility::Load_Float4(LightJson[i]["Diffuse"], LightDesc.vDiffuse);
+		CJson_Utility::Load_Float4(LightJson[i]["Specular"], LightDesc.vSpecular);
+		CJson_Utility::Load_Float4(LightJson[i]["Ambient"], LightDesc.vAmbient);
+
+
+		if (LightDesc.eType == tagLightDesc::TYPE_DIRECTIONAL)
+		{
+			CLight* pDirectionLight = m_pGameInstance->Get_DirectionLight();
+
+			if (pDirectionLight != nullptr)
+			{
+				m_pGameInstance->Remove_Light(pDirectionLight->Get_LightIndex());
+
+			}
+		}
+
+		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+
+		if (pLight == nullptr)
+		{
+			MSG_BOX("라이트 불러오기 실패");
+			return E_FAIL;
+		}
+
+	}
+
+	// 라이트 오브젝트 제외 Directional 때문에 불러오는거나 마찬가지임 
+	//json LightObjectJson = IntroBossMapJson["LightObject_Json"];
+	//_int iLightObjectJsonSize = (_int)LightObjectJson.size();
+
+	//for (_int i = 0; i < iLightObjectJsonSize; ++i)
+	//{
+	//	CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc = {};
+
+	//	LightObjectDesc.bAnimModel = LightObjectJson[i]["AnimType"];
+	//	LightObjectDesc.bEffect = LightObjectJson[i]["Effect"];
+	//	LightObjectDesc.eLightEffect = LightObjectJson[i]["EffectType"];
+	//	LightObjectDesc.iPlayAnimationIndex = LightObjectJson[i]["PlayAnimationIndex"];
+	//	LightObjectDesc.iShaderPassIndex = LightObjectJson[i]["ShaderPassIndex"];
+	//	LightObjectDesc.bPreview = false;
+
+	//	m_pGameInstance->String_To_WString((string)LightObjectJson[i]["ModelTag"], LightObjectDesc.strModelTag);
+
+	//	const json& TransformJson = LightObjectJson[i]["Component"]["Transform"];
+	//	_float4x4 WorldMatrix;
+
+	//	for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+	//	{
+	//		for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+	//		{
+	//			WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+	//		}
+	//	}
+
+	//	LightObjectDesc.WorldMatrix = WorldMatrix;
+
+	//	LIGHT_DESC LightDesc = {};
+
+	//	LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
+	//	LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
+	//	LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
+	//	LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+
+	//	LightDesc.eType = LightObjectJson[i]["LightType"];
+	//	CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
+	//	LightDesc.fRange = LightObjectJson[i]["Range"];
+	//	CJson_Utility::Load_Float4(LightObjectJson[i]["Position"], LightDesc.vPosition);
+	//	CJson_Utility::Load_Float4(LightObjectJson[i]["Diffuse"], LightDesc.vDiffuse);
+	//	CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
+	//	CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
+
+
+	//	LightObjectDesc.LightDesc = LightDesc;
+
+	//	CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO_BOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
+
+	//	if (pLightObject == nullptr)
+	//	{
+	//		MSG_BOX("라이트오브젝트 생성실패");
+	//		return E_FAIL;
+	//	}
+	//}
 
 	return S_OK;
 }

@@ -149,13 +149,14 @@ HRESULT CModel_Preview::Render()
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 			}
 
-			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
 			m_pShaderCom->Begin(m_tDesc.iShaderPassIndex);
 
 			m_pModelCom->Render((_uint)i);
 		}
-
 	}
 
 	return S_OK;
@@ -237,7 +238,7 @@ HRESULT CModel_Preview::Ready_Components()
 	/* For.Com_Shader */
 	if (CModel::TYPE_ANIM == m_tDesc.eType)
 	{
-		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Shader_AnimModel"),
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Component_Shader_Monster"),
 			TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 			return E_FAIL;
 	}

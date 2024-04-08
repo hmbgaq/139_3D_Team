@@ -45,6 +45,7 @@ private: /* UI */
 
 private:
 	_int			TempLightNumber = 0;
+	_int			m_iPBRTexture = 0;
 
 	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/IntroTest_MapData.json";
 	string			m_strShader_FilepPath = "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Shader.json";
