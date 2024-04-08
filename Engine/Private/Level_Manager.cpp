@@ -65,6 +65,13 @@ void CLevel_Manager::Set_CurrentLevel(_uint CurrentLevel)
 	m_iNextLevelIndex = CurrentLevel;
 }
 
+HRESULT CLevel_Manager::Set_ShaderOption(_uint CurrentLevel, string filePath)
+{
+	m_pCurrentLevel->Set_ShaderOption(filePath);
+
+	return S_OK;
+}
+
 CLevel_Manager * CLevel_Manager::Create()
 {
 	CLevel_Manager*		pInstance = new CLevel_Manager();

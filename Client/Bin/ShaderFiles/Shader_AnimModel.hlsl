@@ -243,9 +243,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
 	/* -1 ~ 1 */
     vPixelNormal = vPixelNormal * 2.f - 1.f;
-    
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    
     vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
     Out.vDiffuse = vMtrlDiffuse;
