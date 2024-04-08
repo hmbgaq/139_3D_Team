@@ -266,6 +266,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json"));
 		//Boss2 MotherShakeTreeProjectile
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherShakeTreeProjectile1.json"));
+		//SnowBoss Falling Leaves
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_04.json"));
 		//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json"));
 
 #pragma region 플레이어 이펙트
@@ -318,6 +320,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		/* Revolver */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json"));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json"));
+
+
 
 #pragma endregion
 

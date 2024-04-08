@@ -12,7 +12,7 @@
 CMotherVomit::CMotherVomit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = true;
+	//m_bIsPoolObject = true;
 }
 
 CMotherVomit::CMotherVomit(const CMotherVomit& rhs)

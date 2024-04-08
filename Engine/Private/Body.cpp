@@ -71,6 +71,8 @@ void CBody::Tick(_float fTimeDelta)
 
 void CBody::Late_Tick(_float fTimeDelta)
 {
+	__super::Late_Tick(fTimeDelta);
+
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * m_pParentTransform->Get_WorldMatrix());
 
 	Check_Frustum();
