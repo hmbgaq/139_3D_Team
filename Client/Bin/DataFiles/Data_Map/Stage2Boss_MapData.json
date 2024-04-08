@@ -737,16 +737,16 @@
   "LightObject_Json": null,
   "Light_Json": [
     {
-      "Ambient": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Ambient": [ 0.0, 0.0, 0.0, 0.0 ],
       "CutOff": 0.0,
-      "Diffuse": [ 0.1782919317483902, 0.48520606756210327, 0.8880308866500854, 0.0 ],
+      "Diffuse": [ 1.0, 1.0, 1.0, 0.0 ],
       "Direction": [ 1.0, -1.0, 1.0, 0.0 ],
       "LightEnable": true,
       "LightIndex": 0,
       "OuterCutOff": 0.0,
       "Position": [ 0.0, 0.0, 0.0, 0.0 ],
       "Range": 0.0,
-      "Specular": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Specular": [ 0.0, 0.0, 0.0, 0.0 ],
       "Type": 0
     }
   ],
