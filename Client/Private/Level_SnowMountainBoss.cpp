@@ -74,7 +74,7 @@ void CLevel_SnowMountainBoss::Tick(_float fTimeDelta)
 
 HRESULT CLevel_SnowMountainBoss::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("SnowMountain Boss 레벨입니다."));
 
 	return S_OK;
 }

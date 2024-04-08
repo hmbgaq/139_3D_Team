@@ -319,6 +319,7 @@ HRESULT CGameInstance::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)
 	if (nullptr == m_pLevel_Manager)
 		return E_FAIL;
 
+	Off_Shader();
 	return m_pLevel_Manager->Open_Level(iCurrentLevelIndex, pNewLevel);
 }
 

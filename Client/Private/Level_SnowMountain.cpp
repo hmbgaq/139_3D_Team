@@ -66,7 +66,7 @@ void CLevel_SnowMountain::Tick(_float fTimeDelta)
 
 HRESULT CLevel_SnowMountain::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("SnowMountain 레벨입니다."));
 
 	return S_OK;
 }
@@ -125,14 +125,13 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 			}
 		}
 
-		//CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+		CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
 
-		//if (pLight == nullptr)
-		//{
-		//	MSG_BOX("라이트 불러오기 실패");
-		//	return E_FAIL;
-		//}
-
+		if (pLight == nullptr)
+		{
+			MSG_BOX("라이트 불러오기 실패");
+			return E_FAIL;
+		}
 	}
 
 	json LightObjectJson = IntroBossMapJson["LightObject_Json"];
@@ -180,7 +179,6 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
 
-
 		LightObjectDesc.LightDesc = LightDesc;
 
 		CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
@@ -206,14 +204,12 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player")));
-
+	NULL_CHECK_RETURN(pPlayer, E_FAIL);
 	pPlayer->Set_InitPosition(_float3(14.87f, 0.f, -8.06f));
-	
-
 
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
- //   FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
 	//if (nullptr == pPlayer)
@@ -461,7 +457,6 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		else
 			continue;
 	}
-
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
 	_int InstanceJsonSize = (_int)InstanceJson.size();

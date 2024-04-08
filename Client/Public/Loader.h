@@ -30,8 +30,6 @@ public:
 public:
 	/* 스레드 진입점 */
 	HRESULT Loading();
-	HRESULT Loading_Environment();
-	HRESULT Loading_Effect();
 
 	/**/
 	HRESULT Loading_For_Logo_Level();
@@ -58,11 +56,11 @@ private:
 
 	/* For. LoadingThread */
 	HANDLE					m_hThread;
-	HANDLE					m_hThread_En;
-	HANDLE					m_hThread_Effect;
 	CRITICAL_SECTION		m_CriticalSection;
-	CRITICAL_SECTION		m_CriticalSection_En;
-	CRITICAL_SECTION		m_CriticalSection_Effect;
+	//HANDLE					m_hThread_En;
+	//HANDLE					m_hThread_Effect;
+	//CRITICAL_SECTION		m_CriticalSection_En;
+	//CRITICAL_SECTION		m_CriticalSection_Effect;
 
 private:
 	LEVEL					m_eNextLevelID				= { LEVEL_END };
