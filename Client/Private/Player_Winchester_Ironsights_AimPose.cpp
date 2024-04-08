@@ -53,7 +53,7 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 			CUI_Manager::GetInstance()->Trigger_Crosshair(true);
 			pActor->Activate_ShootingReaction();
 
-			EFFECT_MANAGER->Play_Effect("Revolver_13.json", pActor);
+			EFFECT_MANAGER->Play_Effect("Player/Revolver/", "Revolver_13.json", pActor);
 
 			return new CPlayer_Winchester_Ironsights_Reload_01();
 		}
