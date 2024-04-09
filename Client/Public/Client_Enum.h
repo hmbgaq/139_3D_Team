@@ -7,8 +7,8 @@ namespace Engine
 		MODEL_ORIGIN,				// 0 - 원래 모델 그래도 Render
 		MODEL_NODEOPTH,				// 1 - 깊이기록x -> SkyBox 같은것 용도 
 		MODEL_SHADOW,				// 2 - 그림자 그리기 
-		MODEL_WHITEBLINK,			// 3 - 흰색으로 깜빡거림 
-		MODEL_OUTLINE,				// 4
+		MODEL_CASCADE,				// 3 - CSM 
+		MODEL_WHITEBLINK,			// 4 - 흰색으로 깜빡거림 
 		MODEL_NONECULL_NONEDSS,		// 5
 		MODEL_INTROBOSS_BLOODPOOL,  // 6 - Intro보스맵 바닥렌더용
 		MODEL_NORMAL_MAPPING,		// 7 - 노말맵핑 한거 
@@ -16,6 +16,8 @@ namespace Engine
 		MODEL_ALPHA,				// 9 - AlphaTexture 바인딩 
 		MODEL_ICICLE,				// 10 - 고드름 얼음 모델들 렌더용
 		MODEL_FOLIAGECLIP,			// 11 - 
+		MODEL_OUTLINE_KEEP,			// 12 - OutLine 그대로 유지 
+		MODEL_OUTLINE_BLINK,		// 13 - OutLine 깜빡거림
 		MODEL_SHADER_END
 	};
 
@@ -23,17 +25,21 @@ namespace Engine
 		ANIM_ORIGIN,				// 0 - 기본형태
 		ANIM_WIREFRAME,				// 1 - 메시로 보기 
 		ANIM_SHADOW,				// 2 - 그림자
-		ANIM_INTRO_BOSS,			// 3 - INTRO STAGE 보스 
-		ANIM_EXAMPLE,				// 4 - Bloom , Rim 사용하는 예시
+		ANIM_CASCADE,				// 3 - CSM
+		ANIM_INTRO_BOSS,			// 4 - INTRO STAGE 보스 
+		ANIM_EXAMPLE,				// 5 - Bloom , Rim 사용하는 예시
 		ANIM_SHADER_END };
 
 	enum class MONSTER_SHADER {
 		COMMON_ORIGIN,				// 0 - 기본 그대로 그리기 
-		COMMON_WIREFRAME,			// 1 
+		COMMON_WIREFRAME,			// 1 - 빈깡통 
 		COMMON_SHADOW,				// 2 - 그림자 그리기 
-		INFECTED_PUNCH,				// 3 - Infected - Attack에서 주먹변하기 
+		COMMON_CASCADE,				// 3 - CSM
 		COMMON_DISSOLVE,			// 4 - 공통 : 디졸브로 사라지는효과 
 		COMMON_MESHCHECK,			// 5 - 공통 : 던지는 컬러로 해당하는 메시의 색을 바꿔서 메시가 몇번인덱스인지 체크하는용도 
+		COMMON_OUTLINE_BLINK,		// 6 - 외곽선 깜빡거림 
+		COMMON_OUTLINE_KEEP,		// 7 - 외곽선 계속 유지 
+		INFECTED_PUNCH,				// 8 - Infected - Attack에서 주먹변하기 
 		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};
@@ -152,6 +158,41 @@ namespace Client
 	};
 
 
+	enum class Additional_Skill 
+	{
+		KICK,
+		UPPER_CUT,
+		HERO_PUNCH,
+		HEAL,
+		ELECTRIC_DASH,
+		ELECTROCUTE,
+		ELECTRIC_WHIP,
+		QUAKE_PUNCH,
+		QUAKE_PUNCH2,
+		QUAKE_PUNCH3,
+		HIT_EIGHT,
+		SUPER_CHARGE,
+		TELEPORT_PUNCH,
+
+		//MAX_HP,
+		//REGEN_HP,
+		//ELECTRIC_DAMAGE_INCREASE,
+		//ELECTRIC_COOLTIME_DECREASE,
+		//MELEE_DAMAGE_INCREASE,
+		//MELEE_COOLTIME_DECREASE,
+		//HASTE,
+
+
+		Additional_Skill_End
+	};
+
+	enum class Additional_Weapon
+	{
+		REVOLVER,
+		RIFLE,
+		SHOTGUN,
+		Additional_Weapon_End
+	};
 
 }
 #endif // Client_Enum_h__

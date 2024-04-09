@@ -2477,6 +2477,9 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Egg_Mother"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
 
+						if (ImGui::Button("MotherShakeTreeProjectile"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
+
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
 					}
@@ -4376,22 +4379,21 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iDynamic_Color_Particle = 1;
 
 			m_fColor_Min_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.x;
-			m_fColor_Min_Particle[1] = m_pParticleBufferDesc->vMinMaxBlue.x;
-			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Particle[1] = m_pParticleBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.x;
 			m_fColor_Min_Particle[3] = m_pParticleBufferDesc->vMinMaxAlpha.x;
 
 			m_fColor_Max_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.y;
-			m_fColor_Max_Particle[1] = m_pParticleBufferDesc->vMinMaxBlue.y;
-			m_fColor_Max_Particle[2] = m_pParticleBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Particle[1] = m_pParticleBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.y;
 			m_fColor_Max_Particle[3] = m_pParticleBufferDesc->vMinMaxAlpha.y;
 
 			if (0 == m_iDynamic_Color_Particle)
 			{
-				m_fColor_Cur_Particle[0] = m_pParticleBufferDesc->vCurrentColor.y;
+				m_fColor_Cur_Particle[0] = m_pParticleBufferDesc->vCurrentColor.x;
 				m_fColor_Cur_Particle[1] = m_pParticleBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Particle[2] = m_pParticleBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.y;
-
+				m_fColor_Cur_Particle[2] = m_pParticleBufferDesc->vCurrentColor.z;
+				m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.w;
 			}
 			
 
@@ -4904,10 +4906,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			if (0 == m_iDynamic_Color_Mesh)
 			{
-				m_fColor_Cur_Mesh[0] = m_pMeshBufferDesc->vCurrentColor.y;
+				m_fColor_Cur_Mesh[0] = m_pMeshBufferDesc->vCurrentColor.x;
 				m_fColor_Cur_Mesh[1] = m_pMeshBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Mesh[2] = m_pMeshBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Mesh[3] = m_pMeshBufferDesc->vCurrentColor.y;
+				m_fColor_Cur_Mesh[2] = m_pMeshBufferDesc->vCurrentColor.z;
+				m_fColor_Cur_Mesh[3] = m_pMeshBufferDesc->vCurrentColor.w;
 
 			}
 
@@ -6256,6 +6258,12 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
 				}
+
+				if (ImGui::Button("MotherShakeTreeProjectile"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
+				}
+
 
 				ImGui::SeparatorText("");
 

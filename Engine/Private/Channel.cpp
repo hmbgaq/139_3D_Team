@@ -329,8 +329,6 @@ _float4x4& CChannel::Get_NowMatrix(_float fTrackPosition)
 
 	_float fRatio = Calc_Ratio(StartFrame.fTrackPosition, fTrackPosition, EndFrame.fTrackPosition);
 
-
-
 	_matrix matTemp = Make_TransformationMatrix(StartFrame, EndFrame, fRatio);
 
 	_float4x4 CalcMatrix;

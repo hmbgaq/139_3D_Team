@@ -33,6 +33,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
 
+public:
+	virtual void	Set_Enable(_bool _Enable) override;
+
 
 public:
 	//CCharacter* Get_Target_Character(CCollider * other);

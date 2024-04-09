@@ -1,5 +1,5 @@
 #include "..\Public\Player_InteractionGlamour_Activate.h"
-
+#include "Data_Manager.h"
 
 #include "Bone.h"
 #include "Effect.h"
@@ -23,7 +23,10 @@ void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 	EFFECT_MANAGER->Play_Effect("Player/Heal/", "Heal_Particle_07_Reverse.json", pActor);
 	EFFECT_MANAGER->Play_Effect("Player/Heal/", "Heal_Particle_07.json", pActor);
 
-	pActor->Activate_HUD_Skill(CPlayer::HUD::LEFT_RIGHT);
+
+	//pActor->Activate_HUD_Skill(CPlayer::HUD::LEFT_RIGHT);
+
+
 	//pActor->Set_HUD_Cooltime(CPlayer::HUD::LEFT_RIGHT, 5.f);
 	//pActor->Set_HUD_MaxCooltime(CPlayer::HUD::LEFT_RIGHT, 5.f);
 }
@@ -39,7 +42,7 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 		m_bFlags[0] = pActor->Is_Upper_Inputable_Front(24);
 		if (true == m_bFlags[0])
 		{		
-			pActor->Set_Hp(100.f);
+			pActor->Set_Hp(CData_Manager::GetInstance()->Get_HpRegen());
 		}
 	}
 	
@@ -51,7 +54,7 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 
-	return nullptr;
+	return nullptr;              
 }
 
 void CPlayer_InteractionGlamour_Activate::Release(CPlayer* pActor)

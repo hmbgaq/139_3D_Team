@@ -9,6 +9,7 @@ void CSon_CrossAttack::Initialize(CSon* pActor)
 	pActor->m_bLookAt = false;
 	pActor->Get_Weapon(L"Weapon_head")->Set_Enable_Collisions(true);
 
+	pActor->Set_MonsterAttackState(true);
 }
 
 CState<CSon>* CSon_CrossAttack::Update(CSon* pActor, _float fTimeDelta)

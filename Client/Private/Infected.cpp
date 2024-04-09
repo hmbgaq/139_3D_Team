@@ -88,6 +88,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	/* Target 설정 */
 	m_pTarget = m_pGameInstance->Get_Player();
 
+
 	return S_OK;
 }
 
@@ -98,6 +99,9 @@ void CInfected::Priority_Tick(_float fTimeDelta)
 
 void CInfected::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_pActor)
@@ -105,21 +109,31 @@ void CInfected::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+
 	if (true == m_bCntDead_Active)
 	{
-		fTimeAcc += fTimeDelta;
-		if (fTimeAcc >= m_fCntDead_Time)
+		if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
 		{
-			fTimeAcc = 0.f;
-			Set_Dead(true);
+			fTimeAcc += fTimeDelta;
+			if (fTimeAcc >= m_fCntDead_Time)
+			{
+				fTimeAcc = 0.f;
+				Set_Dead(true);
+			}
+		}
+		else
+		{
+
 		}
 	}
 }
 
 void CInfected::Late_Tick(_float fTimeDelta)
 {
-	__super::Late_Tick(fTimeDelta);
-
+	if (false == m_bCntDead_Active)
+		__super::Late_Tick(fTimeDelta);
 }
 
 HRESULT CInfected::Render()

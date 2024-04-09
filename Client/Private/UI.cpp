@@ -946,7 +946,7 @@ _bool CUI::Calculation_Direcion(_vector vTargetPos, _float4 vCurrentDir)
 {
 	_float fAngle = Target_Contained_Angle(vCurrentDir, vTargetPos);
 
-	cout << "Angle : " << fAngle << endl;
+	//cout << "Angle : " << fAngle << endl;
 
 	if (0 <= fAngle && fAngle <= 90)
 		return true;

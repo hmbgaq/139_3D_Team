@@ -338,6 +338,15 @@ void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
 	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);
 }
 
+HRESULT CGameInstance::Set_ShaderOption(_uint CurrentLevel, string filePath)
+{
+	NULL_CHECK_RETURN(m_pLevel_Manager, E_FAIL);
+
+	m_pLevel_Manager->Set_ShaderOption(CurrentLevel, filePath);
+
+	return S_OK;
+}
+
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pObject_Manager)
@@ -474,6 +483,13 @@ void CGameInstance::Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture)
 	return m_pRenderer->Set_ToolPBRTexture_InsteadLevel(iPBRTexture);
 }
 
+HRESULT CGameInstance::Add_CascadeObject(_uint iIndex, CGameObject* pObject)
+{
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
+
+	return m_pRenderer->Add_CascadeObject(iIndex, pObject);
+}
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {
@@ -565,12 +581,28 @@ _float CGameInstance::Get_CamFar()
 	return m_pPipeLine->Get_CamFar();
 }
 
-_float4x4 CGameInstance::Get_Shadow_Proj()
+_float4x4* CGameInstance::Get_Shadow_Proj()
 {
 	if (nullptr == m_pPipeLine)
-		return _float4x4();
+		return nullptr;
 
-	return m_pPipeLine->Get_Shadow_Proj();
+	return m_pPipeLine->Get_ShadowProj();
+}
+
+void CGameInstance::Set_ShadowProj(_float4x4* pMatrix)
+{
+	if (nullptr == m_pPipeLine)
+		return;
+
+	return m_pPipeLine->Set_ShadowProj(pMatrix);
+}
+
+void CGameInstance::Set_CascadeBoxes(BoundingOrientedBox* pBoxes)
+{
+	if (nullptr == m_pPipeLine)
+		return;
+
+	return m_pPipeLine->Set_CascadeBoxes(pBoxes);
 }
 
 
@@ -743,6 +775,7 @@ HRESULT CGameInstance::Add_MRT(const wstring & strMRTTag, const wstring & strTar
 HRESULT CGameInstance::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
 	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+
 	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, bClear);
 }
 
@@ -840,6 +873,20 @@ void CGameInstance::Get_AllLight(list<class CLight*>* pTemp)
 	NULL_CHECK_RETURN(m_pLight_Manager, );
 
 	return m_pLight_Manager->Get_AllLight(pTemp);
+}
+
+_float4x4 CGameInstance::Get_StaticLight()
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float4x4());
+
+	return m_pLight_Manager->Get_StaticLight();
+}
+
+HRESULT CGameInstance::Ready_StaticLightMatrix(_float3 vPos, _float3 vLook)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+
+	return m_pLight_Manager->Ready_StaticLightMatrix(vPos, vLook);
 }
 
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)

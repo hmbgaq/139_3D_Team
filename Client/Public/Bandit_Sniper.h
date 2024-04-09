@@ -32,15 +32,20 @@ public:
 	void Add_BulletCnt() { m_iBulletCnt += 1; }
 	void Sniping_Target(_float4 TargetPos);
 
+	/* Dead */
+	
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 	HRESULT Ready_Option();
 
+
 private:
-	_bool					m_bProtectExist		= {};
+	_bool					m_bProtectExist	= {false};
+	_bool					m_bDeadState = { false };
 	_bool					m_bTaunt = false;
 	_int					m_iBulletCnt = 0;
+	_float					m_fTimeAcc = 0.f;
 
 	CActor<CBandit_Sniper>* m_pActor			= { nullptr };
 	CWeapon*				m_pWeapon			= { nullptr };

@@ -23,10 +23,12 @@ void CTank_Charge_Loop::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_Charge_Loop::Update(CTank* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	m_fTime += fTimeDelta;
 
 	pActor->Go_Straight(fTimeDelta);
-	pActor->Look_At_Target_Lerp(fTimeDelta * 0.25f);
+	//pActor->Look_At_Target_Lerp(fTimeDelta * 0.25f);
 	
 	if (4.f <= m_fTime)
 	{

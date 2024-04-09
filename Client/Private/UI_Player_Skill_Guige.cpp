@@ -220,16 +220,16 @@ void CUI_Player_Skill_Guige::Check_SkillActive(_float fTimeDelta, SKILLSTATE eSt
 
 	/* Right */
 	if (m_tUIInfo.strUIName == "RightHUD_Top")
-		m_pUIManager->LeftSkillState("RightHUD_Top", eState);
+		m_pUIManager->RightSkillState("RightHUD_Top", eState);
 
 	if (m_tUIInfo.strUIName == "RightHUD_Right")
-		m_pUIManager->LeftSkillState("RightHUD_Right", eState);
+		m_pUIManager->RightSkillState("RightHUD_Right", eState);
 
 	if (m_tUIInfo.strUIName == "RightHUD_Bottom")
-		m_pUIManager->LeftSkillState("RightHUD_Bottom", eState);
+		m_pUIManager->RightSkillState("RightHUD_Bottom", eState);
 
 	if (m_tUIInfo.strUIName == "RightHUD_Left")
-		m_pUIManager->LeftSkillState("RightHUD_Left", eState);
+		m_pUIManager->RightSkillState("RightHUD_Left", eState);
 
 }
 

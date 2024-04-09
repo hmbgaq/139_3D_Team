@@ -13,6 +13,16 @@ CState<CPlayer>* CPlayer_DeathNormal_F_01::Update(CPlayer* pActor, _float fTimeD
 {
 	__super::Update(pActor, fTimeDelta);
 
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Animation_End();//Is_Inputable_Front(35)
+		if (true == m_bFlags[0])
+		{
+			pActor->Set_DiedScreen(true);
+			pActor->Set_Animation(CPlayer::Player_State::Player_IdleLoop, CModel::ANIM_STATE::ANIM_STATE_NORMAL, false, false, 0);
+		}
+	}
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

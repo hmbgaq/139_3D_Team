@@ -139,6 +139,13 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Render()
 	return S_OK;
 }
 
+HRESULT CWeapon_Heavy_Vampiric_Zombie::Render_Shadow()
+{
+	__super::Render_Shadow();
+	
+	return S_OK;
+}
+
 void CWeapon_Heavy_Vampiric_Zombie::Attack(CCollider* other)
 {
 	if (ECast(COLLISION_LAYER::PLAYER_PARRYING) == other->Get_Layer())

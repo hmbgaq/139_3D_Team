@@ -328,7 +328,7 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 
 	m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
 
-	_float vLocalPos;
+	//_float vLocalPos;
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 	
@@ -382,7 +382,7 @@ _bool CTransform::Rotation_LerpAxis(_float fRadian, _float fTimeDelta, ROTATION_
 	}
 	
 
-	_float vLocalPos;
+	//_float vLocalPos;
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 
@@ -434,7 +434,7 @@ _bool CTransform::Rotation_QuaternionLerpAxis(_float fRadian, _float fTimeDelta,
 		break;
 	}
 
-	_float vLocalPos;
+	//_float vLocalPos;
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 
@@ -524,7 +524,7 @@ _bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta,
 
 	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
 	//Look_At(vTargetPos);
-	Look_At_Lerp(vTargetPos, fTimeDelta, 0.2f);
+	Look_At_Lerp(vTargetPos, (_float)fTimeDelta, 0.2f);
 
 	if (fDistance >= fSpare)
 	{

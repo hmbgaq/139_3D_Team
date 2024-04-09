@@ -1,11 +1,11 @@
 #include "Shader_Defines.hlsli"
-/* -------------- 공 지 사 항 ------------------- */
-// 
-//
-//
-/* ----------------------------------------- */
+/*=============================================================
+ 
+                             Value
+                                
+==============================================================*/
 
-/* Base */
+/* =========== Common =========== */
 matrix    g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix    g_BoneMatrices[800];
 float4    g_vCamPosition;
@@ -16,6 +16,7 @@ float     g_TimeDelta;
 bool      g_bORM_Available;
 bool      g_bEmissive_Available;
 
+/* =========== Texture =========== */
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_SpecularTexture;
@@ -35,7 +36,12 @@ float3  g_vBloomPower   = { 0.f, 0.f, 0.f };        /* Bloom */
 float4  g_vRimColor     = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
 float   g_fRimPower     = 5.f;                      /* RimLight */
 
-/* ------------------- function ------------------- */ 
+matrix g_CascadeProj; /* Cascade */
+/*=============================================================
+ 
+                             Function 
+                                
+==============================================================*/
 float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
 {
     float fRimPower = 1.f - saturate(dot(In_Normal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
@@ -58,7 +64,11 @@ float4 Calculation_Brightness(float4 Out_Diffuse)
     return vBrightnessColor;
 }
 
-/* ------------------- ------------------- */ 
+/*=============================================================
+ 
+                             Struct
+                                
+==============================================================*/
 
 struct VS_IN
 {
@@ -81,6 +91,25 @@ struct VS_OUT
     float4 vBinormal        : BINORMAL;
 };
 
+struct VS_OUT_OUTLINE
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
+};
+
+struct VS_OUT_CASCADE_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
 struct PS_IN
 {
     float4 vPosition        : SV_POSITION;
@@ -90,6 +119,12 @@ struct PS_IN
     float4 vProjPos         : TEXCOORD2;
     float4 vTangent         : TANGENT;
     float4 vBinormal        : BINORMAL;
+};
+
+struct PS_IN_OUTLINE
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
 };
 
 struct PS_OUT
@@ -106,6 +141,12 @@ struct PS_OUT_SHADOW
 {
     vector vLightDepth : SV_TARGET0;
 };
+
+struct PS_OUT_OUTLINE
+{
+    vector vColor : SV_TARGET0;
+};
+
 
 /* ------------------- Base Vertex Shader -------------------*/
 
@@ -138,6 +179,54 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
+VS_OUT_SHADOW VS_SHADOW_DEPTH(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+    
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(vPosition, matWVP);
+    Out.vProjPos = Out.vPosition;
+	
+    return Out;
+}
+
+VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+
+    matrix matWVP;
+
+    matWVP = mul(g_WorldMatrix, g_CascadeProj);
+
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+    
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+
+    Out.vPosition = mul(vPosition, matWVP);
+    
+    return Out;
+}
+
 /* ------------------- Base Pixel Shader (0) -------------------*/
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -154,9 +243,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
 	/* -1 ~ 1 */
     vPixelNormal = vPixelNormal * 2.f - 1.f;
-    
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
-    
     vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
     Out.vDiffuse = vMtrlDiffuse;
@@ -182,7 +269,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
 
-PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
+PS_OUT_SHADOW PS_MAIN_SHADOW(VS_OUT_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 
@@ -191,7 +278,18 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(3) -------------------*/
+/* ------------------- Shadow Pixel Shader(3) -------------------*/
+PS_OUT_SHADOW PS_CASCADE_SHADOW(VS_OUT_SHADOW In)
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+
+    //Out.vLightDepth = (In.vProjPos.z, 0.f, 0.f, 0.f);
+	
+    Out.vLightDepth = In.vProjPos.z;
+    
+    return Out;
+}
+/* ------------------- Pixel Shader(4) -------------------*/
 PS_OUT PS_BOSS(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -222,7 +320,7 @@ PS_OUT PS_BOSS(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(4) -------------------*/
+/* ------------------- Pixel Shader(5) -------------------*/
 PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -251,7 +349,7 @@ PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
 }
-/* ------------------- Pixel Shader(5) -------------------*/
+/* ------------------- Pixel Shader(6) -------------------*/
 PS_OUT PS_MAIN_RIMBLOOM_B(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -280,7 +378,7 @@ PS_OUT PS_MAIN_RIMBLOOM_B(PS_IN In)
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
 }
-/* ------------------- Pixel Shader(6) -------------------*/
+/* ------------------- Pixel Shader(7) -------------------*/
 PS_OUT PS_MAIN_RIMBLOOM_C(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -310,7 +408,7 @@ PS_OUT PS_MAIN_RIMBLOOM_C(PS_IN In)
     // Out.vDiffuse += vRimColor; // 효과 약하게 하고싶으면 Bloom에 넣지말고 여기에 넣기 
     return Out;
 }
-/* ------------------- Pixel Shader(7) -------------------*/
+/* ------------------- Pixel Shader(8) -------------------*/
 PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -339,7 +437,11 @@ PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
     return Out;
 }
 
-/* ------------------- Technique -------------------*/ 
+/*=============================================================
+ 
+                          Technique
+                                
+==============================================================*/
 technique11 DefaultTechnique
 {
     pass Model // 0
@@ -372,14 +474,26 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_SHADOW_DEPTH();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 
-    pass BossModel // 3
+    pass Cascade // 3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CASCADE_SHADOW();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_CASCADE_SHADOW();
+
+    }
+    pass BossModel // 4
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -391,7 +505,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BOSS();
     }
 
-    pass RimBloom_A // 4
+    pass RimBloom_A // 5
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -403,7 +517,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_A();
     }
 
-    pass RimBloom_B // 4
+    pass RimBloom_B // 6
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -414,7 +528,7 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_B();
     }
-    pass RimBloom_C // 4
+    pass RimBloom_C // 7
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -425,7 +539,7 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_C();
     }
-    pass RimBloom_D // 4
+    pass RimBloom_D // 8
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -436,4 +550,5 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_D();
     }
+
 }

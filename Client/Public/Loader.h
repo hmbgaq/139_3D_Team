@@ -21,13 +21,17 @@ private:
 
 public:
 	_bool isFinished() const { return m_isFinished; }
+	_bool isEnvironmentFinished() const { return m_isEnvironmentFinished;	}
 
 public:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	void	Print_LoadingText();
 
 public:
+	/* 스레드 진입점 */
 	HRESULT Loading();
+
+	/**/
 	HRESULT Loading_For_Logo_Level();
 	
 	HRESULT Loading_For_GamePlay_Level_Origin(LEVEL eLEVEL);
@@ -53,11 +57,16 @@ private:
 	/* For. LoadingThread */
 	HANDLE					m_hThread;
 	CRITICAL_SECTION		m_CriticalSection;
+	//HANDLE					m_hThread_En;
+	//HANDLE					m_hThread_Effect;
+	//CRITICAL_SECTION		m_CriticalSection_En;
+	//CRITICAL_SECTION		m_CriticalSection_Effect;
 
 private:
 	LEVEL					m_eNextLevelID				= { LEVEL_END };
 	_tchar					m_szLoadingText[MAX_PATH]	= TEXT("");
 	_bool					m_isFinished				= { false };
+	_bool					m_isEnvironmentFinished 	= { false };
 
 private:
 	HRESULT	Ready_Origin();

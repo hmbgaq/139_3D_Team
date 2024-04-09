@@ -50,7 +50,7 @@ HRESULT CBody_Monster::Render()
 
 HRESULT CBody_Monster::Render_Shadow()
 {
-	FAILED_CHECK(__super::Render_Shadow());
+	//FAILED_CHECK(__super::Render_Shadow());
 
 	return S_OK;
 }

@@ -330,6 +330,10 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma endregion 테스트 이펙트 끝
 
 
+	/* Light */
+	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
+
+
 #pragma region Hit 이펙트 시작
 	/* Hit */
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json", 200));
@@ -337,13 +341,12 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma endregion Hit 이펙트 끝
 
 
-	/* Light */
-	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
 	
-
 #pragma region 보스1 이펙트 시작
 	/* Boos 1 */
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura.json")); 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
@@ -355,44 +358,51 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma region 보스2 이펙트 시작
 	/* Boos 2 */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json", 50));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_06.json", 50));
 
 	/* Boss2 MotherShakeTreeProjectile */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json", 200));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
+
+	/* Boss2 MotherShakeTreeProjectile */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherProjectileDead.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherShakeTreeProjectile1.json", 200));
+
+	/* SnowBoss Falling Leaves */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_04.json", 10));
 #pragma endregion 보스2 이펙트 끝
 
 
 #pragma region 플레이어 이펙트 시작
 		/* Heal */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json", 2));
 
 		/* Heal_Blue */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_08_Blue.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Reverse_Blue.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_07_Light_03_Blue.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Blue.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_08_Blue.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Reverse_Blue.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_07_Light_03_Blue.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Blue.json", 2));
 
 		/* EnergyWhip */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json", 2));
 
 		/* SlamDown */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json", 2));
 
 		/* DodgeBlink */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json", 2));
 
 		/* Roll */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 10));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
 
 		/* Revolver */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json", 10));

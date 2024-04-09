@@ -52,10 +52,8 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 
 	m_fDamage = 10.f;
 
-	Set_Enable(true);
-
+	//Set_Enable(true);
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_04.json", _float3(this->Get_Position().x,1.f, this->Get_Position().z));	// 주인 설정이 없으니 직접 풀에 반납해야합니다.
 
 
 	return S_OK;
@@ -70,17 +68,22 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
-	//if (m_pTransformCom->Get_Position().y >= 0.f)
-	m_pTransformCom->Rotation_Quaternion(_float3(1.f, 0.f, 0.f));
+	if (m_bFirst)
+	{
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
+		m_pMainEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherShakeTreeProjectile1.json", this);
+		
+		m_bFirst = false;
+	}
+
 
 	m_pTransformCom->Go_Down(fTimeDelta,nullptr);
 	if (m_pTransformCom->Get_Position().y <= 0.f)
 	{
 		//여기서 이펙트도 터트려야 함 돌튀는거 
-
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);	// 동그라미 돌려줌
-		Set_Enable(false);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherProjectileDead.json", m_pTransformCom->Get_Position());
+		Set_Dead(true);
 	}
 
 }
@@ -92,8 +95,8 @@ void CMotherShakeTreeProjectile::Late_Tick(_float fTimeDelta)
 
 HRESULT CMotherShakeTreeProjectile::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	//if (FAILED(__super::Render()))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -107,9 +110,9 @@ HRESULT CMotherShakeTreeProjectile::Render_Shadow()
 void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 {
 	//충돌 했을떄 카메라 쉐이킹 해줘야 함 ! 
-	//CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	//pSpringCam->Set_ShakeCameraTime(0.2f);
-	//pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	pSpringCam->Set_ShakeCameraTime(0.2f);
+	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
@@ -122,10 +125,11 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
-
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);	// 동그라미 돌려줌
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
+	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+	//Set_Dead(true);
 
 }
 
@@ -202,5 +206,6 @@ void CMotherShakeTreeProjectile::Free()
 
 
 	Safe_Release(m_pEffect);	// 동그라미 삭제
+	Safe_Release(m_pMainEffect);	// 동그라미 삭제
 
 }

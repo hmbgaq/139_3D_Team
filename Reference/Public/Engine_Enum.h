@@ -17,13 +17,16 @@ namespace Engine
 
 	/* Shader */
 	enum class DEFERRED_SHADER { 
-		DEBUG, 
-		DIRECTIONAL_LIGHT, 
-		POINT_LIGHT, 
-		SPOT_LIGHT, 
-		DEFERRED, 
-		PBR, 
-		MYPBR,
+		DEBUG,				 // 0 - 
+		DIRECTIONAL_LIGHT,	 // 1 - 빛 : 방향성 
+		POINT_LIGHT,		 // 2 - 빛 : 점광원
+		SPOT_LIGHT, 		 // 3 - 빛 : 스포트라이트 
+		DEFERRED, 			 // 4 - 디퍼드 (기본) : 1스테이지용 
+		PBR, 				 // 5 - PBR (128 참고)
+		MYPBR,				 // 6 - PBR (외부 참고)
+		VIEW_SHADOW,		 // 7 - 
+		FOG,				 // 8 -
+		TEST, 
 		SHADER_END };
 
 	enum class SSAO_SHADER {
@@ -41,15 +44,16 @@ namespace Engine
 	};
 
 	enum class POST_SHADER {
-		POST_ORIGIN,
+		POST_ORIGIN, 
 		POST_HDR, POST_RADIAL, POST_DOF, POST_EFFECT_MIX, POST_EFFECT_DISTORTION, //(1) ~ (5)
-		POST_VIGNETTE, POST_SSR, POST_CHROMA, POST_MOTIONBLUR, POST_LUMASHARPEN,
+		POST_VIGNETTE, POST_SSR, POST_CHROMA, POST_MOTIONBLUR, POST_LUMASHARPEN, POST_FOG,
 		POST_END
 	};
 
 	enum class FINAL_SHADER {
 		FINAL_DEFAULT, FINAL_HSV, FINAL_MIX, FINAL, FINAL_MIXEFFECT, 
 		FINAL_SCREEN_SEPHIA, FINAL_SCREEN_GRAY,
+		TEST,
 		FINAL_END
 	};
 

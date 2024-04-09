@@ -18,7 +18,9 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 	pActor->Set_Splitted(false);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_STOP, true, false, 17);
-	Create_Bullet(pActor);
+
+	Fire(pActor);
+	//Create_Bullet(pActor);
 }
 
 CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTimeDelta)
@@ -26,9 +28,13 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 	__super::Update(pActor, fTimeDelta);
 
 	fInputWaitTime += fTimeDelta;
-	if (0.7f <= fInputWaitTime)
+
+	CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER);
+	_bool bIsCooltimeEnd = pActor->Is_HUD_Cooltime_End(eSelectedHUD, REVOLVER_DELAY);
+	if (0.7f <= fInputWaitTime || false == bIsCooltimeEnd) // ||  
 	{
-		return new CPlayer_IdleLoop();
+		return new CPlayer_Revolver_Hip_ReloadFast_Alt03();
+		//return new CPlayer_IdleLoop();
 	}
 	
 
@@ -176,6 +182,9 @@ void CPlayer_Bandit_Special_01::Fire(CPlayer* pActor)
 	{
 		CWeapon* pRevolver = pActor->Get_Weapon(PLAYER_WEAPON_REVOLVER);
 		pRevolver->Fire(_float3(0.f, 0.f, 1.f), pActor->Get_Target());
+		m_pGameInstance->Set_RadialBlurTime(0.1f);
 	}
 	pActor->Set_Target(nullptr);
+
+	pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER), REVOLVER_DELAY);
 }

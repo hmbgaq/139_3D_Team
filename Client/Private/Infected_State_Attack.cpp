@@ -15,11 +15,15 @@ void CInfected_State_Attack::Initialize(CInfected* pActor)
 	dynamic_cast<CWeapon_Infected*>(m_pWeapon)->Play_Trail(true);	// 트레일 켜기
 
 	__super::Initialize(pActor);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::ATTACK);
+	pActor->Set_MonsterAttackState(true);
 }
 
 CState<CInfected>* CInfected_State_Attack::Update(CInfected* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
+	pActor->Set_MonsterAttackState(true);
 
 	return nullptr;
 }
@@ -33,8 +37,11 @@ void CInfected_State_Attack::Release(CInfected* pActor)
 
 		Safe_Release(m_pWeapon);
 	}
-		
+	
 	__super::Release(pActor);
+	pActor->Set_MonsterAttackState(false);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::Monster_State_End);
 }
 
 void CInfected_State_Attack::AttackState_Setting(CInfected* pActor)

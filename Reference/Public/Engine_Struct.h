@@ -34,17 +34,19 @@ namespace Engine
 
 		/* Point Light  */
 		_float4 vPosition = { 0.f, 0.f, 0.f, 0.f };
-		_float	 fRange = 0.f;
+		_float	fRange = 0.f;
+		_float  fIntensity = 0.f;
 
 		/* Spot Light  */
 		_float fCutOff = 0.f;
 		_float fOuterCutOff = 0.f;
-		_float fVolumetricStrength = 0.f;
 
 		/* Common */
 		_float4 vDiffuse = { 0.f, 0.f, 0.f, 0.f }; /* 반사될때 출력되는 주된 색 */
 		_float4 vAmbient = { 0.f, 0.f, 0.f, 0.f }; /* 광원의 확산위치와 무관하게 똑같은양으로 모든점에서 반사되는 색 */
 		_float4 vSpecular = { 0.f, 0.f, 0.f, 0.f }; /* 특정방향으로만 반사되는 색 */
+
+		_float4 vLightFlag = { 0.f, 0.f, 0.f, 0.f };
 
 	public:
 		unsigned int iLightIndex = unsigned int(-1);
@@ -373,11 +375,19 @@ namespace Engine
 		_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825f, 2.0f);
 		_float2 vScreenSunPosition = {};
 		_float2 Padding = {};
+
+		tagGodRay_Desc()
+			: vShaftValue(_float4(0.975f, 0.25f, 0.825f, 2.0f)), vScreenSunPosition(_float2(0.f, 0.f)) {}
 	}LIGHTSHAFT_DESC;
 
 	typedef struct ENGINE_DLL tagPBR_Desc
 	{
+		_float fSaturationOffset = 1.f;
+		_float fBrightnessOffset = 0.f;
 		_bool bPBR_ACTIVE = { false };
+
+		tagPBR_Desc()
+			: fSaturationOffset(1.f), fBrightnessOffset(0.f), bPBR_ACTIVE(false) {}
 	}PBR_DESC;
 
 	typedef struct ENGINE_DLL tagHBAO_Plus_Desc
@@ -387,6 +397,9 @@ namespace Engine
 		_float fBias				= 0.1f;
 		_float fPowerExponent		= 2.f;
 		_float fBlur_Sharpness		= 16.f;
+
+		tagHBAO_Plus_Desc()
+			: bHBAO_Active(false), fRadius(1.f), fBias(0.1f), fPowerExponent(2.f), fBlur_Sharpness(16.f) {}
 	}HBAO_PLUS_DESC;
 
 	typedef struct ENGINE_DLL tagSSR_Desc
@@ -394,12 +407,18 @@ namespace Engine
 		_float  fRayStep			= 0.005f;
 		_float  fStepCnt			= 75.f;
 		_bool	bSSR_Active			= { false };
+
+		tagSSR_Desc()
+			: fRayStep(0.005f), fStepCnt(75.f), bSSR_Active(false) {}
 	}SSR_DESC;
 
 	typedef struct ENGINE_DLL tagChroma_Desc
 	{
 		_float fChromaticIntensity	= 11.f; 
 		_bool bChroma_Active		= { false };
+
+		tagChroma_Desc()
+			: fChromaticIntensity(11.f), bChroma_Active(false) {}
 	}CHROMA_DESC;
 
 	typedef struct ENGINE_DLL tagBloomRim_Desc
@@ -407,7 +426,19 @@ namespace Engine
 		_bool	bRimBloom_Blur_Active		= { false };
 		_bool	bShadow_Active				= { false };
 		_float2 padding = {};
+
+		tagBloomRim_Desc()
+			: bRimBloom_Blur_Active(false), bShadow_Active(false) {}
 	}DEFERRED_DESC;
+
+	typedef struct ENGINE_DLL tagCSMDesc
+	{
+		_float fBias = 0.0000022f;
+		_float fStaticBias = 0.0012f;
+
+		tagCSMDesc()
+			: fBias(0.0000022f), fStaticBias(0.0012f) {}
+	}CSM_DESC;
 
 	typedef struct ENGINE_DLL tagFogDesc
 	{
@@ -420,17 +451,26 @@ namespace Engine
 		_float	fFogHeightDensity		= 0.05f;
 		_float	padding					= 0.f; //4 
 		_float4 vFogColor				= { 0.5f, 0.5f, 0.5f, 0.2f };
+
+		tagFogDesc()
+			: bFog_Active(false), fFogStartDepth(55.f), fFogStartDistance(0.1f), fFogDistanceValue(30.f), fFogHeightValue(50.f)
+			, fFogDistanceDensity(0.05f), fFogHeightDensity(0.05f), padding(0.05f), vFogColor(_float4(0.5f, 0.5f, 0.5f, 0.2f)) {}
 	} FOG_DESC;
 
 	typedef struct ENGINE_DLL tagHDRDesc
 	{
 		_bool  bHDR_Active			= false;
 		_float fmax_white			= 0.4f;
+
+		tagHDRDesc()
+			: bHDR_Active(false), fmax_white(0.4f) {}
 	}HDR_DESC;
 	
 	typedef struct ENGINE_DLL tagAnti_Aliasing
 	{
 		_bool  bFXAA_Active = false;
+		tagAnti_Aliasing()
+			: bFXAA_Active(false) {}
 	}ANTI_DESC;
 
 	typedef struct ENGINE_DLL tagScreenDesc
@@ -438,6 +478,9 @@ namespace Engine
 		_bool bScreen_Active = false;
 		_float fFinal_Saturation = 1.f;
 		_float fFinal_Brightness = 1.f;
+
+		tagScreenDesc()
+			: bScreen_Active(false), fFinal_Saturation(1.f), fFinal_Brightness(1.f) {}
 	}HSV_DESC;
 
 	typedef struct ENGINE_DLL tagRadialBlurDesc
@@ -445,18 +488,27 @@ namespace Engine
 		_float	fRadial_Quality = 8.f;
 		_float	fRadial_Power	= 0.1f;
 		_bool	bRadial_Active	= false;
+
+		tagRadialBlurDesc()
+			: fRadial_Quality(8.f), fRadial_Power(0.1f), bRadial_Active(false) {}
 	}RADIAL_DESC;
 
 	typedef struct ENGINE_DLL tagDOF
 	{
 		_float DOF_Distance		= 0.f;
 		_bool  bDOF_Active		= false;
+
+		tagDOF()
+			: DOF_Distance(0.f), bDOF_Active(false) {}
 	}DOF_DESC;
 
 	typedef struct ENGINE_DLL tagMotionBlur
 	{
 		_bool  bMotionBLur_Active		= false;
 		_float fMotionBlur_Intensity	= 0.f;
+
+		tagMotionBlur()
+			: bMotionBLur_Active(false), fMotionBlur_Intensity(0.f) {}
 	}MOTIONBLUR_DESC;
 
 	typedef struct ENGINE_DLL tagVignette
@@ -468,6 +520,10 @@ namespace Engine
 		_float fVignetteCenter_X = 0.5f;  //[0.000 to 1.000, 0.000 to 1.000] Center of effect for VignetteType 1. 2 and 3 do not obey this setting.
 		_float fVignetteCenter_Y = 0.5f;  //[0.000 to 1.000, 0.000 to 1.000] Center of effect for VignetteType 1. 2 and 3 do not obey this setting.
 		_bool   bVignette_Active = false;
+		
+		tagVignette()
+			: fVignetteRatio(1.f), fVignetteRadius(1.f), fVignetteAmount(1.f), fVignetteSlope(8.f), fVignetteCenter_X(0.5f),
+			fVignetteCenter_Y(0.5f), bVignette_Active(false) {}
 	}VIGNETTE_DESC;
 
 	typedef struct ENGINE_DLL tagLumaSharpen
@@ -477,6 +533,9 @@ namespace Engine
 		_float foffset_bias		= 1.f;		//[0.0 to 6.0] Offset bias adjusts the radius of the sampling pattern.
 		_bool  bLumaSharpen_Active = false;
 											//I designed the pattern for offset_bias 1.0, but feel free to experiment.
+
+		tagLumaSharpen()
+			: fsharp_strength(1.25f), fsharp_clamp(0.035f) , foffset_bias(1.f) , bLumaSharpen_Active(false) {}
 	}LUMASHARPEN_DESC;
 
 	typedef struct ENGINE_DLL tagScreenTone
@@ -485,6 +544,9 @@ namespace Engine
 		_bool bSephia_Active = false;
 		_float GreyPower = 0.11f;
 		_float SepiaPower = 0.58f;
+
+		tagScreenTone()
+			: bGrayScale_Active(false), bSephia_Active(false), GreyPower(0.11f), SepiaPower(0.58f) {}
 	}SCREENEFFECT_DESC;
 
 #pragma endregion

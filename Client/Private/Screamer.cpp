@@ -103,7 +103,7 @@ void CScreamer::Late_Tick(_float fTimeDelta)
 		m_pModelCom->Play_Animation(fTimeDelta, vPos);
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
 
 		m_pGameInstance->Add_DebugRender(m_pColliderCom);
 	}
@@ -125,7 +125,7 @@ HRESULT CScreamer::Render()
 		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 		
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+		m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
 		//m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_EXAMPLE));
 
 		m_pModelCom->Render(_uint(i));
@@ -195,22 +195,23 @@ HRESULT CScreamer::Ready_Components()
 
 	/* For.Com_Shader */
 	{
-		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Shader_AnimModel"),	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Shader_Monster"),	TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 
 	/* For.Com_Model */
 	{
 		//FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Screamer"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-		int a = SMath::Random(1, 5);
-
-		if (a > 3)
-		{
-			FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_LootCreate_Small"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-		}
-		else
-		{
-			FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_LootCreate"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
-		}
+		FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_Bull"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		//int a = SMath::Random(1, 5);
+		//
+		//if (a > 3)
+		//{
+		//	FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_LootCreate_Small"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		//}
+		//else
+		//{
+		//	FAILED_CHECK(__super::Add_Component(iCurrentLevel, TEXT("Prototype_Component_Model_LootCreate"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+		//}
 	}
 
 	/* For.Com_Collider */
