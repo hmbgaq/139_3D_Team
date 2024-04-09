@@ -44,7 +44,7 @@ HRESULT CProjectile_GroundWave::Initialize(void* pArg)
 	m_fDamage = 10.f;
 
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
 
 
 	return S_OK;
@@ -108,7 +108,7 @@ void CProjectile_GroundWave::OnCollisionEnter(CCollider* other)
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal", m_pTransformCom->Get_Position());
 	}
 
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);
+	//EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	Set_Dead(true);
 
 }
@@ -183,6 +183,6 @@ void CProjectile_GroundWave::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pEffect)
-		Safe_Release(m_pEffect);
+	Safe_Release(m_pEffect);
+
 }

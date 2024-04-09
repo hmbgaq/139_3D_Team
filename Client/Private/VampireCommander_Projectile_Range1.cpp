@@ -57,8 +57,10 @@ HRESULT CVampireCommander_Projectile_Range1::Initialize(void* pArg)
 	m_fDamage = 30.f;
 
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", this);
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", this);
 	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", this);
+
+	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", this);
 
 	return S_OK;
 }
@@ -75,6 +77,13 @@ void CVampireCommander_Projectile_Range1::Tick(_float fTimeDelta)
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
+
+	if (0 >= m_fLifeTime)
+		m_vEffectScaleAcc = { 0.01f, 0.01f, 0.01f };
+
+	//! 유정 : 두두두두 이펙트 생성
+	//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.1f, fTimeDelta, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", Get_Position(), true, m_vPlayerPos
+	//, true, &m_vEffectScaleAcc);
 	
 }
 
@@ -112,6 +121,7 @@ void CVampireCommander_Projectile_Range1::OnCollisionEnter(CCollider* other)
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 	//m_pCollider->Set_Enable(false);
+	m_vEffectScaleAcc = {0.01f, 0.01f, 0.01f };
 	this->Set_Dead(true);
 
 }
