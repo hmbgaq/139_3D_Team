@@ -41,7 +41,7 @@ public:
 	virtual void Hitted_Front(Power ePower) override;	
 	//virtual void Hitted_Knock(Power ePower) override;
 					
-	virtual void Hitted_Stun(Power ePower)	override;
+	//virtual void Hitted_Stun(Power ePower)	override;
 	virtual void Hitted_Finish() override;
 	virtual void Hitted_Dead(Power ePower)	override;	
 

@@ -68,8 +68,6 @@ void CVampireCommander_Weapon_Hand::Late_Tick(_float fTimeDelta)
 		//cout << "TrailX:" << m_pTrail->Get_Position().x << "TrailY:" << m_pTrail->Get_Position().y << "TrailZ:" << m_pTrail->Get_Position().z << endl;
 	}
 	
-	// m_pTrail->Set_Play(TRUE /*FALSE*/); //! 유정: 트레일 온오프
-
 }
 
 HRESULT CVampireCommander_Weapon_Hand::Render()
@@ -102,7 +100,8 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 
 
 	//! 유정: 트레일 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json",this);
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json");
+	m_pTrail->Set_Play(false);		// 시작은 끄기
 
 	return S_OK;
 }
@@ -120,7 +119,7 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
  		string Test = "Data_Animation/";
 		parent->Set_EventNotify(Test, "Test2_AnimationData.json");
 
-		EFFECT_MANAGER->Play_Effect(parent->Get_CharcterDesc().EffectFileName + ".json", this->Get_WorldPosition());
+		EFFECT_MANAGER->Play_Effect("Hit/", parent->Get_CharcterDesc().EffectFileName + ".json", this->Get_WorldPosition());
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, parent->Get_CharcterDesc().EffectFileName + ".json");
 		//_float3 vPos =this->Get_WorldPosition();
 		//pEffect->Set_Position(vPos);
@@ -208,7 +207,4 @@ void CVampireCommander_Weapon_Hand::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pTrail)
-		Safe_Release(m_pTrail);
-		//m_pTrail->Set_Dead(TRUE);
 }

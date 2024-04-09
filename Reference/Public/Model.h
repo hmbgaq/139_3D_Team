@@ -187,7 +187,6 @@ private:
 	_float					m_fModelHeight = 0.f;
 
 	// PBR
-	_bool					m_bSpecularExist = { false };
 
 public:
 	typedef vector<CBone*>	BONES;
@@ -213,7 +212,15 @@ public: /* Cascade */
 	HRESULT Render(CShader*& pShader, const _uint& iMeshIndex, const _uint& strPassName);
 
 	/* ORM Texture */
-	CTexture* Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* strOriginFileName, const char* strOriginDrive, const char* strOriginDirectory, const char* strOriginExt, _int iCnt = 1);
+	CTexture*	Add_NotIncludedTexture(ADD_TEXTURE_TYPE eType, const char* strOriginFileName, const char* strOriginDrive, const char* strOriginDirectory, const char* strOriginExt, _int iCnt = 1);
+	void		Update_EmissiveTextures(const string& fileName, MATERIAL_DESC& materialDesc, const char* szFileName, const char* szDrive, const char* szDirectory, const char* szEXT);
+	_char		szTempDiffuseFileName[MAX_PATH] = {};
+	_char		szTempNormalFileName[MAX_PATH] = {};
+
+	_bool					m_bDiffuseExist = { false };
+	_bool					m_bSpecularExist = { false };
+	_bool					m_bEmissiveExist = { false };
+
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const string& strModelFilePath, _fmatrix PivotMatrix);

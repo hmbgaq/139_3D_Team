@@ -60,6 +60,13 @@ HRESULT CWeapon_Edgar::Render()
 	return S_OK;
 }
 
+HRESULT CWeapon_Edgar::Render_Shadow()
+{
+	FAILED_CHECK(__super::Render_Shadow());
+
+	return S_OK;
+}
+
 void CWeapon_Edgar::Fire(_float3 vTargetPos, CCharacter* pTarget)
 {
 	__super::Fire(L"Prototype_GameObject_Bullet_Winchester", LAYER_PLAYER_BULLET, vTargetPos, pTarget);

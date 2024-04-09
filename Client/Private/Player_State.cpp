@@ -1,5 +1,6 @@
 #include "..\Public\Player_State.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 #pragma region 플레이어 상태 헤더
 
@@ -204,8 +205,11 @@ CState<CPlayer>* CPlayer_State::Dodge_State(CPlayer* pActor, _float fTimeDelta, 
 	//pState = Dodge(pActor, fTimeDelta, _iAnimIndex);
 	//if (pState)	return pState;
 
-	pState = Melee_Dynamic(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::HERO_PUNCH))
+	{
+		pState = Melee_Dynamic(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
 	pState = Roll(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -272,6 +276,12 @@ CState<CPlayer>* CPlayer_State::Winchester_State(CPlayer* pActor, _float fTimeDe
 		if (CPlayer_Winchester_LowerHolster::g_iAnimIndex != _iAnimIndex)
 		{
 			return new CPlayer_Winchester_LowerHolster();
+		}
+
+		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+		if (pSpringCam)
+		{
+			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
 		}
 	}
 
@@ -359,6 +369,7 @@ CState<CPlayer>* CPlayer_State::Death_State(CPlayer* pActor, _float fTimeDelta, 
 	//임시 코드
 	if (pActor->Is_Animation_End())
 	{
+		pActor->Set_Invincible(false);
 		return new CPlayer_IdleLoop();
 	}
 
@@ -409,9 +420,14 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 		//	return new CPlayer_CartRide_Loop();
 		//}
 
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
 
-		pState = Heal(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+		if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::HEAL))
+		{
+			pState = Heal(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
+
 
 		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
@@ -589,17 +605,32 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 {
 	CState<CPlayer>* pState = { nullptr };
 
-	pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
 
-	pState = OpenStateCombo_8hit(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::SUPER_CHARGE))
+	{
+		pState = TeleportPunch(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
+	
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::HIT_EIGHT))
+	{
+		pState = OpenStateCombo_8hit(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
-	pState = Slam(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::QUAKE_PUNCH))
+	{
+		pState = Slam(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
 
-	pState = Kick(pActor, fTimeDelta, _iAnimIndex);
-	if (pState)	return pState;
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::KICK))
+	{
+		pState = Kick(pActor, fTimeDelta, _iAnimIndex);
+		if (pState)	return pState;
+	}
+
 
 
 	pState = MeleeCombo(pActor, fTimeDelta, _iAnimIndex);
@@ -616,12 +647,16 @@ CState<CPlayer>* CPlayer_State::Attack(CPlayer* pActor, _float fTimeDelta, _uint
 
 CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-	if (0.3f <= pActor->Get_ChargingTime())
-	{
-		pActor->Set_ChargingTime(0.f);
-		return new CPlayer_MeleeUppercut_01v2();
-	}
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
 
+	if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::UPPER_CUT))
+	{
+		if (0.3f <= pActor->Get_ChargingTime())
+		{
+			pActor->Set_ChargingTime(0.f);
+			return new CPlayer_MeleeUppercut_01v2();
+		}
+	}
 
 	CPlayer::Player_State eState = (CPlayer::Player_State)_iAnimIndex;
 
@@ -780,6 +815,7 @@ CState<CPlayer>* CPlayer_State::Rifle(CPlayer* pActor, _float fTimeDelta, _uint 
 	{
 		if (CPlayer_Rifle_Ironsights_Fire::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Rifle_Ironsights_Fire();
+
 	}
 
 	return nullptr;
@@ -795,19 +831,19 @@ CState<CPlayer>* CPlayer_State::Winchester(CPlayer* pActor, _float fTimeDelta, _
 			pSpringCam->Set_CameraOffset(_float3(1.f, 0.3f, -1.7f));
 		}
 		
-
 		if (CPlayer_Winchester_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
 			return new CPlayer_Winchester_WeaponUnholster();
 
 	}
-	else
-	{
-		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-		if (pSpringCam)
-		{
-			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
-		}
-	}
+
+// 	else
+// 	{
+// 		CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+// 		if (pSpringCam)
+// 		{
+// 			pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
+// 		}
+// 	}
 
 	return nullptr;
 }
@@ -836,9 +872,13 @@ CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _ui
 		//if (CPlayer_Bandit_Special_01::g_iAnimIndex != _iAnimIndex)
 		//	return new CPlayer_Bandit_Special_01();
 
-
-		if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_Revolver_WeaponUnholster();
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER);
+		_bool bIsCooltimeEnd = pActor->Is_HUD_Cooltime_End(eSelectedHUD, REVOLVER_DELAY * 2.f);
+		if (true == bIsCooltimeEnd) 
+		{
+			if (CPlayer_Revolver_WeaponUnholster::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_Revolver_WeaponUnholster();
+		}
 	}
 
 	return nullptr;
@@ -846,10 +886,17 @@ CState<CPlayer>* CPlayer_State::Revolver(CPlayer* pActor, _float fTimeDelta, _ui
 
 CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+
 	if (m_pGameInstance->Key_Down(DIK_F))
 	{
-		if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_ShotgunElectric_Fire_ShortRange();
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SHOTGUN);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		if (true == bIsCooltimeEnd)
+		{
+			if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_ShotgunElectric_Fire_ShortRange();
+		}
+
 	}
 
 	return nullptr;
@@ -892,11 +939,26 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 {
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SUPER_CHARGE);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		if (true == bIsCooltimeEnd)
+		{
+			pActor->Activate_SuperCharge();
+		}
+	}
+
+	_bool bIsLearned = CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::TELEPORT_PUNCH);
+
+	if (
+		true == pActor->Is_SuperCharge() 
+		&& (m_pGameInstance->Mouse_Down(DIM_LB) || m_pGameInstance->Mouse_Up(DIM_LB)) 
+		&& true == bIsLearned
+		)
+	{
 		pActor->Search_Target(30.f);
 		CCharacter* pTarget = pActor->Get_Target();
 		if (nullptr == pTarget)
 			return nullptr;
-
 
 		CPlayer::TeleportPunch_State eState = pActor->Get_TeleportPunch_State();
 
@@ -934,7 +996,6 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 	{
 		return new CPlayer_IdleLoop();
 	}
-	
 
 	return nullptr;
 }
@@ -986,16 +1047,33 @@ CState<CPlayer>* CPlayer_State::Slam(CPlayer* pActor, _float fTimeDelta, _uint _
 
 	if (m_pGameInstance->Key_Down(DIK_X))
 	{
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
+
 		switch (eState)
 		{
 		case CPlayer::Player_SlamDown_v2:
-			return new CPlayer_SlamDown_v3();
+			if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::QUAKE_PUNCH2))
+			{
+				return new CPlayer_SlamDown_v3();
+			}
+			
+			break;
 		case CPlayer::Player_SlamDown_v3:
-			return new CPlayer_SlamTwoHand_TEMP();
+			if (true == pDataManager->Is_AdditionalSkill_Learned(Additional_Skill::QUAKE_PUNCH3))
+			{
+				return new CPlayer_SlamTwoHand_TEMP();
+			}
+			break;
 		case CPlayer::Player_SlamTwoHand_TEMP:
 			break;
 		default:
-			return new CPlayer_SlamDown_v2();
+			CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SLAM_DOWM);
+			_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+			if (true == bIsCooltimeEnd)
+			{
+				return new CPlayer_SlamDown_v2();
+			}
+			break;
 		}
 	}
 
@@ -1006,8 +1084,13 @@ CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _
 {
 	if (m_pGameInstance->Key_Down(DIK_R))
 	{
-		if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_MeleeKick();
+		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::KICK);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		if (true == bIsCooltimeEnd)
+		{
+			if (CPlayer_MeleeKick::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_MeleeKick();
+		}
 	}
 
 	return nullptr;
@@ -1015,10 +1098,15 @@ CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _
 
 CState<CPlayer>* CPlayer_State::Heal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+
 	if (m_pGameInstance->Key_Down(DIK_C))
 	{
-		if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
-			return new CPlayer_InteractionGlamour_Activate();
+		_bool bIsCootimeEnd = pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::HEAL)); //CPlayer::HUD::LEFT_RIGHT
+		if (true == bIsCootimeEnd)
+		{
+			if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
+				return new CPlayer_InteractionGlamour_Activate();
+		}
 	}
 
 	return nullptr;

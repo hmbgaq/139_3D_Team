@@ -11,6 +11,7 @@ class CEffect_Instance;
 class CEffect_Trail;
 
 class CSky;
+class CProjectile;
 
 class CWindow_EffectTool final : public CImgui_Window
 {
@@ -43,6 +44,10 @@ public:
 	virtual HRESULT		Load_Function(string strPath, string strFileName) override;
 
 
+	HRESULT		Save_Temp(string strPath);
+	HRESULT		Load_Temp(string strPath, TYPE_FILE eType_File);
+
+
 /* For.Level Setting (환경 세팅) */
 public:
 	void	Show_ImGui_WindowSize();	// ImGui 윈도우 창 크기 표시
@@ -62,6 +67,8 @@ public:
 /* For.Window Update (창 업데이트) */
 public:
 	void	Update_LevelSetting_Window();	// 레벨(환경) 세팅 창(카메라, 스카이박스, 크기비교용 모델 등...)
+
+	void	Update_SaveSlot_Window();		// 임시 저장 슬롯 창
 
 	void	Update_EffectList_Window();			// 이펙트 리스트박스 창
 	void	Update_EffectTrail_Window();		// 트레일 (왼쪽 창)
@@ -157,7 +164,7 @@ private:
 private:
 	_int m_iRenderGroup_Particle							= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Particle						= { 0 };
-	_int m_iMaxShaderPassIndex_Particle						= { 12 };
+	_int m_iMaxShaderPassIndex_Particle						= { 14 };
 	_int m_iTexIndex_Particle[CEffect_Void::TEXTURE_END]	= {};
 	_int m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_END] = { 26, 9, 173, 243, 24 };
 
@@ -243,7 +250,9 @@ private:
 	_int	m_iUseGravity_Particle		= { 0 };
 
 	_float	m_fGravity_Particle = { -9.8f };		// 중력 가속도
-	
+	_float	m_fGravity_X_Particle = { 0.f };		// 중력 가속도 X
+	_float	m_fGravity_Z_Particle = { 0.f };		// 중력 가속도 Z
+	 
 	//_float m_fFriction_Particle = { 0.1f };		// 마찰 계수
 	_float	m_vFrictionLerp_Pos_Particle[2] = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
 	_float	m_vStartEnd_Friction_Particle[2] = { 0.1f, 0.1f };
@@ -276,7 +285,10 @@ private:
 	/* For.Rotation */
 	_int	m_iUseRotAcc_Particle = { 1 };
 
-	_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
+	//_float	m_vRadian_Particle[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMinRadian_Particle[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxRadian_Particle[3] = { 0.f, 0.f, 0.f };
+
 
 	_float	m_vMinMaxRadianSpeed_X_Particle[2] = { 0.f, 0.f };
 	_float	m_vMinMaxRadianSpeed_Y_Particle[2] = { 0.f, 0.f };
@@ -415,7 +427,7 @@ private:
 
 	_float	m_vMinMaxLifeTime_Mesh[2] = { 0.f, 0.f };	// 라이프타임
 	_float	m_vMinMaxSpeed_Mesh[2] = { 1.f, 1.f };
-
+	_float	m_vMinMaxTornadoSpeed_Mesh[2] = { 1.f, 1.f };
 
 	/* Emitter */
 	_float	m_fEmissionTime_Mesh = { 0.f };			// 방출 시간 텀
@@ -432,6 +444,9 @@ private:
 	_int	m_iUseGravity_Mesh		= { 0 };
 
 	_float	m_fGravity_Mesh				= { -9.8f };	// 중력 가속도
+	_float	m_fGravity_X_Mesh = { 0.f };		// 중력 가속도 X
+	_float	m_fGravity_Z_Mesh = { 0.f };		// 중력 가속도 Z
+
 	_float	m_fMinMaxFriction_Mesh[2]	= { 0.1f, 0.1f };		// 마찰 계수
 	_float	m_fSleepThreshold_Mesh	= { 0.05f };	// 슬립 한계점(1이하로)
 
@@ -476,7 +491,9 @@ private:
 	/* Rotation_Mesh */
 	_int	m_iUseRotAcc_Mesh = { 1 }; // 1이 사용안함
 
-	_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
+	//_float	m_vRadian_Mesh[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMinRadian_Mesh[3] = { 0.f, 0.f, 0.f };
+	_float	m_vMaxRadian_Mesh[3] = { 0.f, 0.f, 0.f };
 
 	_float	m_vMinMaxRadianSpeed_X_Mesh[2] = { 0.f, 0.f };
 	_float	m_vMinMaxRadianSpeed_Y_Mesh[2] = { 0.f, 0.f };
@@ -575,7 +592,9 @@ private:
 	_float			m_vScale_Model[3] = { 0.f, 0.f, 0.f };			// 크기 비교용 모델 크기
 	_float			m_fModelRot = { 0.f };
 
-	CEffect* m_pTestEffect = { nullptr };
+	CEffect*		m_pTestEffect = { nullptr };
+
+	CGameObject*	m_pTestProjectile = { nullptr };
 #pragma endregion
 
 

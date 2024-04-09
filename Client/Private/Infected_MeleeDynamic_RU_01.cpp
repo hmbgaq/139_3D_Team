@@ -32,6 +32,8 @@ void CInfected_MeleeDynamic_RU_01::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_MeleeDynamic_RU_01::Update(CInfected* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	if (g_iAnimIndex != pActor->Get_CurrentAnimIndex())
 		return nullptr;
 

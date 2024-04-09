@@ -2,6 +2,7 @@
 #include "Body_Infected_A.h"
 #include "GameInstance.h"
 
+
 CBody_Infected_A::CBody_Infected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody_Infected(pDevice, pContext, strPrototypeTag)
 {
@@ -42,6 +43,7 @@ void CBody_Infected_A::Tick(_float fTimeDelta)
 void CBody_Infected_A::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
 }
 
 HRESULT CBody_Infected_A::Render()
@@ -54,6 +56,13 @@ HRESULT CBody_Infected_A::Render()
 HRESULT CBody_Infected_A::Render_Shadow()
 {
 	FAILED_CHECK(__super::Render_Shadow());
+
+	return S_OK;
+}
+
+HRESULT CBody_Infected_A::Render_CSM(_uint i)
+{
+	//FAILED_CHECK(__super::Render_CSM(i));
 
 	return S_OK;
 }

@@ -5,8 +5,8 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	static const unsigned int	g_iWinSizeY = 720;
 	static const unsigned int	g_iWinSizeX = 1280;
+	static const unsigned int	g_iWinSizeY = 720;
 	//static const unsigned int	g_iWinSizeX = 1600;
 	//static const unsigned int	g_iWinSizeY = 900;
 	//static const unsigned int	g_iWinSizeX = 1920;
@@ -66,7 +66,6 @@ namespace Client
 	#define LAYER_PLAYER_BULLET				TEXT("Layer_Player_Bullet")
 	#define LAYER_MONSTER_BULLET			TEXT("Layer_Monster_Bullet")
 
-
 	//Player_Weapon
 	#define PLAYER_WEAPON_PUNCH_L			TEXT("Weapon_Punch_L")
 	#define PLAYER_WEAPON_PUNCH_R			TEXT("Weapon_Punch_R")
@@ -78,8 +77,6 @@ namespace Client
 	#define PLAYER_WEAPON_DYNAMITE			TEXT("Weapon_Dynamite")
 	#define PLAYER_WEAPON_WHIP				TEXT("Weapon_Whip")
 
-
-
 	#define TANK_WEAPON_PUNCH_L				TEXT("Weapon_Punch_L")
 	#define TANK_WEAPON_PUNCH_R				TEXT("Weapon_Punch_R")
 
@@ -88,7 +85,7 @@ namespace Client
 	#define NPC_WEAPON_EDGAR				TEXT("Weapon_Edgar")
 
 	
-
+	#define	REVOLVER_DELAY					1.f
 
 
 
@@ -154,55 +151,6 @@ namespace Client
 		DEAD,
 		TALK,
 		GAME_STATE_END
-	};
-
-	enum class Additional_Skill
-	{
-		/* Active */
-		KICK,			// 발차기
-		UPPER_CUT,		// 어퍼컷
-		HERO_PUNCH,		// 영웅펀치 (앞으로 강공격)
-		HEAL,			// 회복 스킬
-		ELECTRIC_DASH,	// 전기대시
-		ELECTROCUTE,	// 대시 후 감전 (합선)
-		ELECTRIC_WHIP,	// 전기 끌어당기기
-		QUAKE_PUNCH,	// 내려찍기 1
-		QUAKE_PUNCH2,	// 내려찍기 2
-		QUAKE_PUNCH3,	// 내려찍기 3
-		HIT_EIGHT,		// E-콤보 (연속 펀치) [감전상태여야 사용가능]
-		SUPER_CHARGE,	// 슈퍼차지 모드
-		TELEPORT_PUNCH,	// 텔레포트 펀치
-
-		/* Passive */
-		MAX_HP,						// 최대 체력 증가 (10%)
-		REGEN_HP,					// 체력 재생 (체력이 서서히 회복되는 효과)
-		ELECTRIC_DAMAGE_INCREASE,	// 전기스킬 대미지 증가
-		ELECTRIC_COOLTIME_DECREASE,	// 전기스킬 쿨타임 감소
-		MELEE_DAMAGE_INCREASE,		// 물리스킬 대미지 증가
-		INCREASE_EXP,				// 경험치 획득량 증가
-		//MELEE_COOLTIME_DECREASE,	// 물리스킬 쿨타임 감소 => INCREASE_EXP !경험치 획득량 증가로 변경
-		HASTE,						// 이동속도 증가
-
-		/* Weapon */
-		RIFLE,						// 라이플
-		REVOLVER,					// 리볼버
-		SHOTGUN,					// 샷건
-
-		/* Weapon Passive */
-		RIFLE_SKILL1,				// 라이플 스킬1
-		REVOLVER_SKILL1,			// 리볼버 스킬1
-		SHOTGUN_SKILL1,				// 샷건 스킬1
-
-
-		Additional_Skill_End
-	};
-
-	enum class Additional_Weapon
-	{
-		REVOLVER,
-		RIFLE,
-		SHOTGUN,
-		Additional_Weapon_End
 	};
 
 /* Yoojeong_Add */

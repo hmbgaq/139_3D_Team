@@ -11,6 +11,8 @@
 
 #include "Bone.h"
 #include "Character.h"
+#include "Weapon.h"
+#include "Son_Projectile.h"
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -87,7 +89,7 @@ void CEffect::Tick(_float fTimeDelta)
 						m_tEffectDesc.bRender = true;
 
 						if (nullptr != m_pTrail)	// 트레일이 존재하면 이때 플레이 시작
-							m_pTrail->Set_Play(TRUE);
+							m_pTrail->Set_Play(true);
 					}					
 					else
 						return;
@@ -266,7 +268,7 @@ void CEffect::Load_FromJson(const json& In_Json)
 			m_pGameInstance->String_To_WString(strTag, tVoidDesc.strPartTag);
 		
 
-			for (_int k = 0; k < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); ++k)
+			for (_int k = 0; k < 2; ++k)
 			{
 				strTag = In_Json["Part"][i]["strModelTag"][k];
 				m_pGameInstance->String_To_WString(strTag, tVoidDesc.strModelTag[k]);
@@ -307,18 +309,18 @@ void CEffect::Update_PivotMat()
 {
 	if (nullptr != m_pOwner)	// 주인이 존재하고,
 	{
-		// 이펙트의 주인이 죽었다.
-		if (m_pOwner->Is_Dead())
+		// 이펙트의 주인이 죽었다. 또는 비활성화 상태다.
+		if (m_pOwner->Is_Dead() || !m_pOwner->Get_Enable())
 		{
 			if (nullptr != m_pTrail)	// 트레일을 갖고있던 이펙트면 트레일 멈춤
-				m_pTrail->Set_Play(FALSE);
+				m_pTrail->Set_Play(false);
 			
-
 			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
 			EFFECT_MANAGER->Return_ToPool(this);
 
 			return;
 		}
+
 
 		if (m_tEffectDesc.bParentPivot)
 		{	
@@ -327,24 +329,41 @@ void CEffect::Update_PivotMat()
 				// 소켓사용이 트루이면 밖에서 소켓에 대한 정보를 던져주고 이걸 사용함
 				m_tEffectDesc.matPivot = dynamic_cast<CCharacter*>(m_pOwner)->Get_Body()->Get_BonePtr(m_tEffectDesc.strBoneTag.c_str())->Get_CombinedTransformationMatrix();
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
+			
+			}
+			else if (m_tEffectDesc.bAttachStatic)
+			{
+				// 업데이트 안되는 월드랑 곱하기
+				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);	// 나 * 피봇월드
 			}
 			else
 			{
 				// 주인의 매트릭스를 사용할거면 받아오기
 				m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+				if (typeid(*m_pOwner) == typeid(CSon_Projectile))
+				{
+					_int i = 0;
+				}
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
 			}
 
 		}
+		else
+		{
+
+
+		}
+
 	}
+
 
 
 }
 
 void CEffect::ReSet_Effect()
 {
-	m_tEffectDesc.bFinished = FALSE;
-	//m_tEffectDesc.bRender	= FALSE;
+	m_tEffectDesc.bFinished = false;
+	//m_tEffectDesc.bRender	= false;
 
 	m_tEffectDesc.fSequenceAcc	 = 0.f;
 	m_tEffectDesc.fTimeAcc		 = 0.f;
@@ -369,7 +388,7 @@ void CEffect::Init_ReSet_Effect()
 
 void CEffect::End_Effect()
 {
-	m_tEffectDesc.bFinished = TRUE;
+	m_tEffectDesc.bFinished = true;
 
 	if (m_tEffectDesc.bLoop)
 	{	
@@ -387,16 +406,15 @@ void CEffect::End_Effect()
 #ifdef _DEBUG
 		if (LEVEL_TOOL == static_cast<LEVEL>(m_pGameInstance->Get_CurrentLevel()))
 		{
-			m_tEffectDesc.bActive_Tool = FALSE;
-			ReSet_Effect();	//bLoop가 False일 때, 툴 레벨이면 리셋, 아니면 죽이기
+			m_tEffectDesc.bActive_Tool = false;
+			ReSet_Effect();	//bLoop가 false일 때, 툴 레벨이면 리셋, 아니면 죽이기
 		}
 		else
 #endif // _DEBUG
 		{		
-			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면(파티클 등) 라이프 타임이 끝났을 때 죽이기.
+			if (DEAD_AUTO == m_tEffectDesc.eType_Dead)	// 루프가 아니고 자동으로 죽어야하는 이펙트면 라이프 타임이 끝났을 때 죽이기.
 			{
 				EFFECT_MANAGER->Return_ToPool(this);
-				//Set_Dead(TRUE);
 			}
 			else if (DEAD_OWNER == m_tEffectDesc.eType_Dead)	// 루프가 아니라도 죽음이 외부에서 정해진다면 라이프 타임이 끝났을 때 리셋만.
 			{
@@ -412,18 +430,17 @@ void CEffect::End_Effect()
 void CEffect::End_Effect_ForPool()
 {
 	if (nullptr != m_pTrail)
-		m_pTrail->Set_Play(FALSE);
+		m_pTrail->Set_Play(false);
 
-	m_tEffectDesc.bFinished = TRUE;	// 이펙트 종료
+	m_tEffectDesc.bFinished = true;	// 이펙트 종료
 
-	m_tEffectDesc.bPlay = FALSE;	// 재생 정지
-	m_bEnable = FALSE;				// 사용 끔
+	m_tEffectDesc.bPlay = false;	// 재생 정지
+	m_bEnable = false;				// 사용 끔
 
 	Init_ReSet_Effect();			// 리셋
 
 	// 주인이 존재하면 지워줌
-	if (nullptr != m_pOwner)
-		Delete_Object_Owner();
+	Delete_Object_Owner();
 
 	m_tEffectDesc.Reset_Pivot();
 }
@@ -476,7 +493,7 @@ void CEffect::Delete_PartObject(const wstring& strPartTag)
 	auto erase_iter = iter;
 	++erase_iter; // 삭제된 항목 이후의 첫 번째 항목
 
-	iter->second->Set_Dead(TRUE);		// 객체 삭제
+	iter->second->Set_Dead(true);		// 객체 삭제
 	m_PartObjects.erase(strPartTag);	// 맵컨테이너에서 삭제
 
 
@@ -508,8 +525,11 @@ HRESULT CEffect::Ready_PartObjects(const wstring& strPrototypeTag, const wstring
 	if (nullptr == pPartObject)
 		return E_FAIL;
 
-	pPartObject->Set_Object_Owner(this);	// 부모 설정
 	m_PartObjects.emplace(strPartTag, pPartObject);
+
+	pPartObject->Set_Object_Owner(this);	// 부모 설정
+
+	//Safe_AddRef(pPartObject);
 
 	return S_OK;
 }
@@ -551,16 +571,15 @@ void CEffect::Free()
 {
 	__super::Free();
 
+	Delete_Object_Owner();
+
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);
 
 	m_PartObjects.clear();
 
 
-	if (nullptr != m_pTrail)
-	{
-		Safe_Release(m_pTrail);
-	}	
+	Safe_Release(m_pTrail);	
 
 }
 

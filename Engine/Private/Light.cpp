@@ -37,8 +37,8 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	else if (LIGHT_DESC::TYPE_POINT == m_LightDesc.eType)
 	{
 		/* Frustum에 들어오지않은 빛은 Render안함 */
-		if (false == m_pGameInstance->isIn_WorldPlanes(XMLoadFloat4(&m_LightDesc.vPosition), m_LightDesc.fRange * 3.f))
-			return S_OK;
+		//if (false == m_pGameInstance->isIn_WorldPlanes(XMLoadFloat4(&m_LightDesc.vPosition), m_LightDesc.fRange * 3.f))
+		//	return S_OK;
 
 		FAILED_CHECK(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vPosition, sizeof(_float4)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)));
@@ -52,17 +52,16 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 		FAILED_CHECK(pShader->Bind_RawValue("g_fRange", &m_LightDesc.fRange, sizeof(_float)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fCutOff", &m_LightDesc.fCutOff, sizeof(_float)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fOuterCutOff", &m_LightDesc.fOuterCutOff, sizeof(_float)));
-		FAILED_CHECK(pShader->Bind_RawValue("g_fVolumetricStrength", &m_LightDesc.fVolumetricStrength, sizeof(_float)));
 
 		iPassIndex = ECast(DEFERRED_SHADER::SPOT_LIGHT);
 	}
 	else
 		return S_OK; /* 타입을 지정하지 않은 빛은 렌더하지않는다. */
-
 	
 	FAILED_CHECK(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4)));
 	FAILED_CHECK(pShader->Bind_RawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4)));
 	FAILED_CHECK(pShader->Bind_RawValue("g_vLightSpecular", &m_LightDesc.vSpecular, sizeof(_float4)));
+	FAILED_CHECK(pShader->Bind_RawValue("g_fLightIntensity", &m_LightDesc.fIntensity, sizeof(_float)));
 
 	pShader->Begin(iPassIndex);
 

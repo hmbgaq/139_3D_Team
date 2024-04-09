@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Body_VampireCommander.h"
 
+#include "VampireCommander_Weapon.h"
+
 void CVampireCommander_Ranged3::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
@@ -13,10 +15,21 @@ void CVampireCommander_Ranged3::Initialize(CVampireCommander* pActor)
 	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
 
 	pActor->m_bLookAt = false;
+
+
+	CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_R)->Play_Trail(true);	// 트레일 켜기
+
+	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(true);	// 트레일 켜기
+
 }
 
 CState<CVampireCommander>* CVampireCommander_Ranged3::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
+	CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+
 	if (m_bFlags[1] == false)
 	{
 		//pActor->m_bLookAt = true;
@@ -38,6 +51,9 @@ CState<CVampireCommander>* CVampireCommander_Ranged3::Update(CVampireCommander* 
 
 	if (pActor->Is_Animation_End())
 	{
+		dynamic_cast<CVampireCommander_Weapon*>(pWeapon_R)->Play_Trail(false);	// 트레일 끄기
+		dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(false);	// 트레일 끄기
+
 		return new CVampireCommander_Idle();
 	}
 

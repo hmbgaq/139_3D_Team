@@ -9,6 +9,7 @@ END
 
 
 BEGIN(Client)
+class CEnvironment_Interact;
 //class CUI_Manager;
 
 class CPlayer final : public CCharacter_Client
@@ -28,6 +29,34 @@ public:
 		Player_TeleportPunch_R03_Alt,
 
 		TeleportPunch_State_End
+	};
+
+	enum class HUD 
+	{
+		LEFT_TOP,
+		LEFT_RIGHT,
+		LEFT_BOTTOM,
+		LEFT_LEFT,
+
+		RIGHT_TOP,
+		RIGHT_RIGHT,
+		RIGHT_BOTTOM,
+		RIGHT_LEFT,
+
+		HUD_END
+	};
+
+	enum class Player_Skill 
+	{
+		SUPER_CHARGE,
+		HEAL,
+		REVOLVER,
+		SHOTGUN,
+		RIFLE,
+		SLAM_DOWM,
+		KICK,
+		ELECTRIC_WHIP,
+		Player_Skill_End
 	};
 
 private:
@@ -61,7 +90,23 @@ public:
 	void Aim_Walk(_float fTimeDelta);
 	void Activate_ShootingReaction(_float fHeight = 20.f);
 
+public:
+	string Get_HUD_Tag(HUD eHUD);
+	void Set_HUD_MaxCooltime(HUD eHUD, _float fCurrnetCooltime);
+	void Set_HUD_Cooltime(HUD eHUD, _float fCurrnetCooltime);
+	_float Get_HUD_Cooltime(HUD eHUD);
+	//_bool Activate_HUD_Skill(HUD eHUD);
+	_bool Activate_HUD_Skill(HUD eHUD, _float fCost = -1.f);
+	_bool Is_HUD_Cooltime_End(HUD eHUD, _float fCost = -1.f);
+
+	HUD Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill);
+	
+
 public://!For. Interact
+	CEnvironment_Interact* Get_InteractObject() { return m_pInteractObject; }
+	void				   Set_InteractObject(CEnvironment_Interact* pInteractObject) { m_pInteractObject = pInteractObject; }
+
+
 	void SetState_InteractJumpDown100();
 	void SetState_InteractJumpDown200();
 	void SetState_InteractJumpDown300();
@@ -73,6 +118,8 @@ public://!For. Interact
 
 	void SetState_InteractionPush_Rock_Idle();
 	void SetState_InteractionPull_Rock_Idle();
+	void SetState_InteractionPush_End();
+	void SetState_InteractionPull_End();
 
 
 	void SetState_InteractClimb100();
@@ -105,6 +152,7 @@ public:
 public:
 	void		 LeftHUDCoolDown(const string& strUIName, _float fCoolTime);
 	_float		 Get_LeftHUDMaxCoolTime(const string& strUIName);
+	void		 Set_DiedScreen(_bool _bShowDiedScreen);
 
 private:
 	void		 KeyInput(_float fTimeDelta);
@@ -145,6 +193,14 @@ public:
 	_bool Is_Interection() { return m_bIsInterection; }
 	void Set_Interection(_bool _bIsInterection) { m_bIsInterection = _bIsInterection; }
 
+public:
+	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
+	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
+	void Update_SuperCharge(_float fTimeDelta) { 
+		_float fTime = m_fSuperChargeTime - fTimeDelta;
+		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
+	};
+
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -157,26 +213,27 @@ protected:
 
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
+	CEnvironment_Interact* m_pInteractObject = { nullptr };
 	_bool	m_bRotate_In_CameraDir = { false };
 
 private:
 	_float	m_fChargingTime = { 0.f };
+	_uint m_iLadderCount = { 0 };
+	_bool m_bIsInterection = { false };
 
-private:
-	_bool m_bIsActivated_TeleportPunch = { false };
+	_float m_fSuperChargeTime = { 0.f };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
-private:
-	_uint m_iLadderCount = { 0 };
-
-private:
-	_bool m_bIsInterection = { false };
 
 public:
 	_bool	m_bPlayerCheck = true;
 
 private:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };
+
+private:
+	_float m_MaxCooltimes[ECast(HUD::HUD_END)];
+
 
 
 public:

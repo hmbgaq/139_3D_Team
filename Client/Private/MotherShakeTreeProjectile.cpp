@@ -52,9 +52,8 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 
 	m_fDamage = 10.f;
 
-	Set_Enable(true);
+	//Set_Enable(true);
 	// 이펙트 생성
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
 
 
 	return S_OK;
@@ -69,15 +68,22 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
-	//if (m_pTransformCom->Get_Position().y >= 0.f)
-	m_pTransformCom->Rotation_Quaternion(_float3(1.f, 0.f, 0.f));
+	if (m_bFirst)
+	{
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
+		m_pMainEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherShakeTreeProjectile1.json", this);
+		
+		m_bFirst = false;
+	}
+
 
 	m_pTransformCom->Go_Down(fTimeDelta,nullptr);
 	if (m_pTransformCom->Get_Position().y <= 0.f)
 	{
 		//여기서 이펙트도 터트려야 함 돌튀는거 
-		Set_Enable(false);
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherProjectileDead.json", m_pTransformCom->Get_Position());
+		Set_Dead(true);
 	}
 
 }
@@ -89,8 +95,8 @@ void CMotherShakeTreeProjectile::Late_Tick(_float fTimeDelta)
 
 HRESULT CMotherShakeTreeProjectile::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	//if (FAILED(__super::Render()))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -112,14 +118,19 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
-		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+		//pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		pTarget_Character->Get_Damaged(m_fDamage);
+
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
-	//this->Set_Enable(false);
+	EFFECT_MANAGER->Return_ToPool(m_pEffect);
+	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
+	//Set_Dead(true);
+
 }
 
 void CMotherShakeTreeProjectile::OnCollisionStay(CCollider* other)
@@ -193,7 +204,8 @@ void CMotherShakeTreeProjectile::Free()
 {
 	__super::Free();
 
-	//if(nullptr != m_pEffect)
-	//	Safe_Release(m_pEffect);
+
+	Safe_Release(m_pEffect);	// 동그라미 삭제
+	Safe_Release(m_pMainEffect);	// 동그라미 삭제
 
 }

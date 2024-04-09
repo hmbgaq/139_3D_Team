@@ -40,8 +40,11 @@ public:
 	void Set_Mother(CMother* _pMother);
 	CMother* Get_Mother();
 
-	void Set_Son(CSon* _pSon);
-	CSon* Get_Son();
+	void Set_Son(CGameObject* _pSon);
+	CGameObject* Get_Son();
+	void Set_Son2(CGameObject* _pSon);
+	CGameObject* Get_Son2();
+
 
 public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
@@ -86,10 +89,12 @@ public:
 	_float Get_Additional_MoveSpeed() { return m_fAdditional_MoveSpeed; }
 	void Activate_Additional_MoveSpeed() { m_fAdditional_MoveSpeed = 1.f; };
 
+	_bool Is_AdditionalWeapon_Acquired(Additional_Weapon eAdditional_Weapon) { return m_AdditionalWeapons[ECast(eAdditional_Weapon)]; }
+	void Set_AdditionalWeapon(Additional_Weapon eAdditional_Weapon, _bool bValue) { m_AdditionalWeapons[ECast(eAdditional_Weapon)] = bValue; };
 
 private:
 	_bool   m_AdditionalSkills[ECast(Additional_Skill::Additional_Skill_End)];
-	//_bool   m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
+	_bool   m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
 
 	_float   m_fAdditional_ElectricDamage = { 0.f };
 	_float   m_fAdditional_MeleeDamage = { 0.f };
@@ -263,7 +268,8 @@ private:
 	CMasterCamera* m_pMasterCamera = { nullptr };
 	CPlayer* m_pPlayer = { nullptr };
 	CMother* m_pMother = { nullptr };
-	CSon*	m_pSon = { nullptr };
+	CGameObject* m_pSon = { nullptr };
+	CGameObject* m_pSon2 = { nullptr };
 
 	CSky* m_pSky = { nullptr };
 	CNavigation* m_pNavigation = { nullptr };

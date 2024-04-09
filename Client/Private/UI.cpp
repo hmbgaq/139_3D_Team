@@ -165,8 +165,8 @@ void CUI::Tick(_float fTimeDelta)
 	Check_RectPos();
 
 #ifdef _DEBUG
-	m_bButtonUI = true;
 #endif // _DEBUG
+	m_bButtonUI = true;
 	Picking_UI();
 }
 
@@ -946,7 +946,7 @@ _bool CUI::Calculation_Direcion(_vector vTargetPos, _float4 vCurrentDir)
 {
 	_float fAngle = Target_Contained_Angle(vCurrentDir, vTargetPos);
 
-	cout << "Angle : " << fAngle << endl;
+	//cout << "Angle : " << fAngle << endl;
 
 	if (0 <= fAngle && fAngle <= 90)
 		return true;

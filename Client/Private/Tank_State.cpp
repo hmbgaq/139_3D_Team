@@ -76,6 +76,11 @@ CState<CTank>* CTank_State::Hit_State(CTank* pActor, _float fTimeDelta, _uint _i
 
 CState<CTank>* CTank_State::Death_State(CTank* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	if (pActor->Is_Animation_End())
+	{
+		pActor->Set_Dead(true);
+	}
+
 	return nullptr;
 }
 

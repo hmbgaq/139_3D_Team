@@ -8,6 +8,7 @@ void CSon_RangeAttackNear::Initialize(CSon* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_MonsterAttackState(true);
 }
 
 CState<CSon>* CSon_RangeAttackNear::Update(CSon* pActor, _float fTimeDelta)

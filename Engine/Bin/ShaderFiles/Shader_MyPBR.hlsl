@@ -203,7 +203,7 @@ in float3 N, in float3 V, in float3 L, in float3 H)
     kD = float3(1.f, 1.f, 1.f) -kS;
     kD *= 1.0 - fMetallic;
     
-    float3 Irradiance = g_Irradiance.Sample(ClampSampler, N).rgb;
+    float3 Irradiance = g_Irradiance.Sample(CubeSampler, N).rgb;
     
     float3 Diffuse = vAlbedo * Irradiance;
     //float3 ambient = (kD * Diffuse) * fAO;
@@ -212,7 +212,7 @@ in float3 N, in float3 V, in float3 L, in float3 H)
     
     float3 R = reflect(-V, N);
     
-    float3 prefiltered = g_PreFiltered.SampleLevel(ClampSampler, R, fRoughness * MAX_REF_LOD).rgb;
+    float3 prefiltered = g_PreFiltered.SampleLevel(CubeSampler, R, fRoughness * MAX_REF_LOD).rgb;
     float2 brdf = g_BRDF_Texture.Sample(ClampSampler, float2(max(dot(N, V), 0.0f), fRoughness)).rg;
     float3 specular = prefiltered * (kS * brdf.x + brdf.y);
 

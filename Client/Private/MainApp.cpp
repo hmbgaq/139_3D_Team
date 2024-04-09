@@ -44,7 +44,6 @@ HRESULT CMainApp::Initialize()
 #pragma endregion Imgui¿ë Rect ¼³Á¤
 #endif // _DEBUG
 
-
 	FAILED_CHECK(m_pGameInstance->Initialize_Engine(LEVEL_END, (_uint)(COLLISION_LAYER::LAYER_END), (_uint)(PHYSX_COLLISION_LAYER::LAYER_END), g_hInst, GraphicDesc, &m_pDevice, &m_pContext));
 
 	//Client Managers
@@ -61,6 +60,7 @@ HRESULT CMainApp::Initialize()
 
 	FAILED_CHECK(Ready_Prototype_Component_ForStaticLevel());
 
+	FAILED_CHECK(m_pGameInstance->Off_Shader());
 	FAILED_CHECK(Open_Level(LEVEL_LOGO));
 
 

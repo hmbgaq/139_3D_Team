@@ -30,8 +30,7 @@ public:
 
 public:
 	_vector				m_vTargetPos = {};
-	CEffect*			m_pEffect = { nullptr };
-
+	_bool				m_bFirst = true;
 
 private:
 	CEffect_Trail* m_pTrail = { nullptr };

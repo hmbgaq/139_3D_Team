@@ -54,7 +54,6 @@ HRESULT CLevel_GamePlay::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	//FAILED_CHECK(Ready_Shader());
 
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
@@ -76,7 +75,9 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 		//m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
 		//m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
 
-		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+
+		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+		//m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
 }
@@ -90,10 +91,11 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_LightDesc()
 {
-	/* For. Shadow */
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
-	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY),  60.f,  (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear,  Engine::g_fLightFar);
+	/* Shadow Light */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
+	/* Map Light */
 	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
 	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
@@ -239,12 +241,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const wstring & strLayerTag)
 
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
-	//pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper 앞 */
-	
-	CNavigation* pNavigation = pPlayer->Get_Navigation();
-
-	pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
+	pPlayer->Set_InitPosition(_float3(250.66f, 0.f, 2.38f));
+	//pPlayer->Set_Position(_float3(250.66f, 0.f, 2.38f));
+	////pPlayer->Set_Position(_float3(153.6f, 0.f, 150.55f)); /* Sniper 앞 */
+	//
+	//
+	//CNavigation* pNavigation = pPlayer->Get_Navigation();
+	//
+	//
+	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Rentier"));
 
@@ -416,8 +421,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 
 		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
 		_float4x4 WorldMatrix;
@@ -503,6 +508,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Shader()
 {
+	/* For. Shadow */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_GAMEPLAY), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
+	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_GAMEPLAY), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
+
 	/* 1. 셰이더 초기화 */
 	m_pGameInstance->Off_Shader(); 
 

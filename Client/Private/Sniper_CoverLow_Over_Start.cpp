@@ -6,6 +6,8 @@ void CSniper_CoverLow_Over_Start::Initialize(CBandit_Sniper* pActor)
 {
 	__super::Initialize(pActor);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::ATTACK);
 }
 
 CState<CBandit_Sniper>* CSniper_CoverLow_Over_Start::Update(CBandit_Sniper* pActor, _float fTimeDelta)
@@ -26,4 +28,6 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_Start::Update(CBandit_Sniper* pAct
 void CSniper_CoverLow_Over_Start::Release(CBandit_Sniper* pActor)
 {
 	__super::Release(pActor);
+
+	pActor->Set_Monster_State(CMonster_Character::Monster_State::Monster_State_End);
 }

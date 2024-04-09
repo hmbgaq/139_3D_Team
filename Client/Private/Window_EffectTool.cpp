@@ -25,6 +25,9 @@
 #include "Model_Preview.h"
 #include "Part_Preview.h"
 
+#include "Projectile.h"
+#include "Son_Projectile.h"
+
 #include "Player.h"
 #include "VampireCommander.h"
 
@@ -255,6 +258,22 @@ void CWindow_EffectTool::Tick(_float fTimeDelta)
 //
 //	__super::End();
 #pragma endregion
+
+
+
+#pragma region 임시 세이브 슬롯 창
+	SetUp_ImGuiDESC(u8"슬롯", ImVec2{ 400.f, 300.f }, ImGuiWindowFlags_NoDocking /*| ImGuiWindowFlags_NoCollapse */ /* | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove */ /* | ImGuiWindowFlags_NoBringToFrontOnFocus*/, ImVec4(0.f, 0.f, 0.f, 1.f));
+
+	__super::Begin();
+
+	Update_SaveSlot_Window();
+
+	// ImGui창 사이즈
+	Show_ImGui_WindowSize();
+
+	__super::End();
+#pragma endregion
+
 
 
 
@@ -1195,19 +1214,35 @@ void CWindow_EffectTool::Update_ParticleTab()
 							{
 								m_pParticleBufferDesc->fGravity = m_fGravity_Particle;
 							}
+
+
+							if (FORCE_MODE::FORCE == m_pParticleBufferDesc->eForce_Mode)
+							{
+								if (ImGui::DragFloat("Gravity_X_Particle", &m_fGravity_X_Particle, 0.5f, -100.f, 1000.f))
+								{
+									m_pParticleBufferDesc->fGravity_X = m_fGravity_X_Particle;
+								}
+
+								if (ImGui::DragFloat("Gravity_Z_Particle", &m_fGravity_Z_Particle, 0.5f, -100.f, 1000.f))
+								{
+									m_pParticleBufferDesc->fGravity_Z = m_fGravity_Z_Particle;
+								}
+
+							}
+
 						}
 
-						///* 리지드바디 : Force Mode */
-						//ImGui::SeparatorText("Force Mode");
-						//if (ImGui::Button(" FORCE "))
-						//{
-						//	m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
-						//}
-						//ImGui::SameLine();
-						//if (ImGui::Button(" IMPULSE "))
-						//{
-						//	m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
-						//}
+						/* 리지드바디 : Gravity Mode (Force Mode) */
+						ImGui::SeparatorText("Gravity Mode_Particle"); // ImGui::SeparatorText("Force Mode");
+						if (ImGui::Button(" XYZ_Gravity_Particle ")) // if (ImGui::Button(" FORCE "))
+						{
+							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button(" Y Onty_Gravity_Particle ")) //if (ImGui::Button(" IMPULSE "))
+						{
+							m_pParticleBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
+						}
 						//ImGui::SameLine();
 						//if (ImGui::Button(" ACCELERATION "))
 						//{
@@ -1434,14 +1469,28 @@ void CWindow_EffectTool::Update_ParticleTab()
 
 
 					ImGui::SeparatorText(u8"인스턴스 회전");
-					if (ImGui::DragFloat(" Radian_X_Particle ", &m_vRadian_Particle[0], 1.f, 0.f, 360.f))
-						m_pParticleBufferDesc->vRadian.x = m_vRadian_Particle[0];
+					if (ImGui::DragFloat3(" Min_Radian_Particle ", &m_vMinRadian_Particle[0], 0.5f, -360.f, 360.f))
+					{
+						m_pParticleBufferDesc->vMinRadian.x = m_vMinRadian_Particle[0];
+						m_pParticleBufferDesc->vMinRadian.y = m_vMinRadian_Particle[1];
+						m_pParticleBufferDesc->vMinRadian.z = m_vMinRadian_Particle[2];
+					}
 
-					if (ImGui::DragFloat(" Radian_Y_Particle ", &m_vRadian_Particle[1], 1.f, 0.f, 360.f))
-						m_pParticleBufferDesc->vRadian.y = m_vRadian_Particle[1];
+					if (ImGui::DragFloat3(" Max_Radian_Particle ", &m_vMaxRadian_Particle[0], 0.5f, -360.f, 360.f))
+					{
+						m_pParticleBufferDesc->vMaxRadian.x = m_vMaxRadian_Particle[0];
+						m_pParticleBufferDesc->vMaxRadian.y = m_vMaxRadian_Particle[1];
+						m_pParticleBufferDesc->vMaxRadian.z = m_vMaxRadian_Particle[2];
+					}
 
-					if (ImGui::DragFloat(" Radian_Z_Particle ", &m_vRadian_Particle[2], 1.f, 0.f, 360.f))
-						m_pParticleBufferDesc->vRadian.z = m_vRadian_Particle[2];
+					//if (ImGui::DragFloat(" Radian_X_Particle ", &m_vRadian_Particle[0], 1.f, 0.f, 360.f))
+					//	m_pParticleBufferDesc->vRadian.x = m_vRadian_Particle[0];
+
+					//if (ImGui::DragFloat(" Radian_Y_Particle ", &m_vRadian_Particle[1], 1.f, 0.f, 360.f))
+					//	m_pParticleBufferDesc->vRadian.y = m_vRadian_Particle[1];
+
+					//if (ImGui::DragFloat(" Radian_Z_Particle ", &m_vRadian_Particle[2], 1.f, 0.f, 360.f))
+					//	m_pParticleBufferDesc->vRadian.z = m_vRadian_Particle[2];
 
 
 
@@ -2317,6 +2366,8 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Twist"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Twist"));
 
+						if (ImGui::Button("Wind"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Wind"));
 
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
@@ -2372,6 +2423,24 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("LeafPlane"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_LeafPlane"));
 
+						if (ImGui::Button("Destro_00"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Destro_00"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Destro_01"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Destro_01"));
+
+						ImGui::SameLine();
+						if (ImGui::Button("Destro_02"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Destro_02"));
+
+						if (ImGui::Button("Nail_00"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Nail_00"));
+
+						if (ImGui::Button("Wood_00"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Wood_00"));
+
+
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
 					}
@@ -2407,6 +2476,9 @@ void CWindow_EffectTool::Update_MeshTab()
 
 						if (ImGui::Button("Egg_Mother"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
+
+						if (ImGui::Button("MotherShakeTreeProjectile"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
 
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
@@ -2916,6 +2988,20 @@ void CWindow_EffectTool::Update_MeshTab()
 					m_pMeshBufferDesc->vMinMaxSpeed.y = m_vMinMaxSpeed_Mesh[1];
 				}
 
+
+				/* 토네이도 스피드 */
+				if (CVIBuffer_Effect_Model_Instance::TORNADO == m_pMeshBufferDesc->eType_Action)
+				{
+					ImGui::SeparatorText(" Tornado Speed_Mesh ");
+					if (ImGui::DragFloat2("vMinMaxTornadoSpeed_Mesh", m_vMinMaxTornadoSpeed_Mesh, 0.1f, 0.f, 5000.f))
+					{
+						m_pMeshBufferDesc->vMinMaxTornadoSpeed.x = m_vMinMaxTornadoSpeed_Mesh[0];
+						m_pMeshBufferDesc->vMinMaxTornadoSpeed.y = m_vMinMaxTornadoSpeed_Mesh[1];
+					}
+				}
+
+
+
 				if (ImGui::TreeNode(" Speed_Easing Types_Mesh "))
 				{
 					ImGui::Text("Selected Type : %d", m_pMeshBufferDesc->eType_SpeedLerp);
@@ -3024,17 +3110,36 @@ void CWindow_EffectTool::Update_MeshTab()
 						{
 							m_pMeshBufferDesc->fGravity = m_fGravity_Mesh;
 						}
+
+
+						if (FORCE_MODE::FORCE == m_pMeshBufferDesc->eForce_Mode)
+						{
+							if (ImGui::DragFloat("Gravity_X_Mesh", &m_fGravity_X_Mesh, 0.5f, 0.f, 1000.f))
+							{
+								m_pMeshBufferDesc->fGravity_X = m_fGravity_X_Mesh;
+							}
+
+							if (ImGui::DragFloat("Gravity_Z_Mesh", &m_fGravity_Z_Mesh, 0.5f, 0.f, 1000.f))
+							{
+								m_pMeshBufferDesc->fGravity_Z = m_fGravity_Z_Mesh;
+							}
+
+						}
+
 					}
 
-					//if (ImGui::Button(" FORCE "))
-					//{
-					//	m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
-					//}
-					//ImGui::SameLine();
-					//if (ImGui::Button(" IMPULSE "))
-					//{
-					//	m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
-					//}
+					/* Gravity Mode (Force Mode_Mesh) */
+					ImGui::SeparatorText("Gravity Mode_Mesh"); // ImGui::SeparatorText("Force Mode_Mesh");
+					if (ImGui::Button(" XYZ_Gravity_Mesh ")) // if (ImGui::Button(" FORCE_Mesh "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::FORCE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Button(" Y Onty_Gravity_Mesh ")) //if (ImGui::Button(" IMPULSE_Mesh "))
+					{
+						m_pMeshBufferDesc->eForce_Mode = FORCE_MODE::IMPULSE;
+					}
+
 					//ImGui::SameLine();
 					//if (ImGui::Button(" ACCELERATION "))
 					//{
@@ -3287,14 +3392,28 @@ void CWindow_EffectTool::Update_MeshTab()
 
 
 						ImGui::SeparatorText(u8"인스턴스 회전");
-						if (ImGui::DragFloat(" Radian_X_Mesh ", &m_vRadian_Mesh[0], 1.f, 0.f, 360.f))
-							m_pMeshBufferDesc->vRadian.x = m_vRadian_Mesh[0];
+						if (ImGui::DragFloat3(" Min_Radian_Mesh ", &m_vMinRadian_Mesh[0], 0.5f, -360.f, 360.f))
+						{
+							m_pMeshBufferDesc->vMinRadian.x = m_vMinRadian_Mesh[0];
+							m_pMeshBufferDesc->vMinRadian.y = m_vMinRadian_Mesh[1];
+							m_pMeshBufferDesc->vMinRadian.z = m_vMinRadian_Mesh[2];
+						}
 
-						if (ImGui::DragFloat(" Radian_Y_Mesh ", &m_vRadian_Mesh[1], 1.f, 0.f, 360.f))
-							m_pMeshBufferDesc->vRadian.y = m_vRadian_Mesh[1];
+						if (ImGui::DragFloat3(" Max_Radian_Mesh ", &m_vMaxRadian_Mesh[0], 0.5f, -360.f, 360.f))
+						{
+							m_pMeshBufferDesc->vMaxRadian.x = m_vMaxRadian_Mesh[0];
+							m_pMeshBufferDesc->vMaxRadian.y = m_vMaxRadian_Mesh[1];
+							m_pMeshBufferDesc->vMaxRadian.z = m_vMaxRadian_Mesh[2];
+						}
 
-						if (ImGui::DragFloat(" Radian_Z_Mesh ", &m_vRadian_Mesh[2], 1.f, 0.f, 360.f))
-							m_pMeshBufferDesc->vRadian.z = m_vRadian_Mesh[2];
+						//if (ImGui::DragFloat(" Radian_X_Mesh ", &m_vRadian_Mesh[0], 1.f, 0.f, 360.f))
+						//	m_pMeshBufferDesc->vRadian.x = m_vRadian_Mesh[0];
+
+						//if (ImGui::DragFloat(" Radian_Y_Mesh ", &m_vRadian_Mesh[1], 1.f, 0.f, 360.f))
+						//	m_pMeshBufferDesc->vRadian.y = m_vRadian_Mesh[1];
+
+						//if (ImGui::DragFloat(" Radian_Z_Mesh ", &m_vRadian_Mesh[2], 1.f, 0.f, 360.f))
+						//	m_pMeshBufferDesc->vRadian.z = m_vRadian_Mesh[2];
 
 
 						ImGui::SeparatorText(u8"인스턴스 회전 스피드");
@@ -4061,6 +4180,8 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 				m_fGravity_Particle = m_pParticleBufferDesc->fGravity;	// 중력 가속도
+				m_fGravity_X_Particle = m_pParticleBufferDesc->fGravity_X;	// 중력 가속도 X
+				m_fGravity_Z_Particle = m_pParticleBufferDesc->fGravity_Z;	// 중력 가속도 Z
 
 				//m_fFriction_Particle = m_pParticleBufferDesc->fFriction;	// 마찰 계수
 				m_vFrictionLerp_Pos_Particle[0] = m_pParticleBufferDesc->vFrictionLerp_Pos.x;
@@ -4071,6 +4192,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 
 				m_fSleepThreshold_Particle = m_pParticleBufferDesc->fSleepThreshold;	// 슬립 한계점
+
+
+				/* Force Mode */
+
 
 
 				/* 파워 */
@@ -4170,9 +4295,20 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iUseRotAcc_Particle = 1;
 
 
-			m_vRadian_Particle[0] = m_pParticleBufferDesc->vRadian.x;
-			m_vRadian_Particle[1] = m_pParticleBufferDesc->vRadian.y;
-			m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
+			//m_vRadian_Particle[0] = m_pParticleBufferDesc->vRadian.x;
+			//m_vRadian_Particle[1] = m_pParticleBufferDesc->vRadian.y;
+			//m_vRadian_Particle[2] = m_pParticleBufferDesc->vRadian.z;
+
+
+			m_vMinRadian_Particle[0] = m_pParticleBufferDesc->vMinRadian.x;
+			m_vMinRadian_Particle[1] = m_pParticleBufferDesc->vMinRadian.y;
+			m_vMinRadian_Particle[2] = m_pParticleBufferDesc->vMinRadian.z;
+
+
+			m_vMaxRadian_Particle[0] = m_pParticleBufferDesc->vMaxRadian.x;
+			m_vMaxRadian_Particle[1] = m_pParticleBufferDesc->vMaxRadian.y;
+			m_vMaxRadian_Particle[2] = m_pParticleBufferDesc->vMaxRadian.z;
+
 
 
 			// 추가 자체회전
@@ -4243,22 +4379,21 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iDynamic_Color_Particle = 1;
 
 			m_fColor_Min_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.x;
-			m_fColor_Min_Particle[1] = m_pParticleBufferDesc->vMinMaxBlue.x;
-			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Particle[1] = m_pParticleBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.x;
 			m_fColor_Min_Particle[3] = m_pParticleBufferDesc->vMinMaxAlpha.x;
 
 			m_fColor_Max_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.y;
-			m_fColor_Max_Particle[1] = m_pParticleBufferDesc->vMinMaxBlue.y;
-			m_fColor_Max_Particle[2] = m_pParticleBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Particle[1] = m_pParticleBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.y;
 			m_fColor_Max_Particle[3] = m_pParticleBufferDesc->vMinMaxAlpha.y;
 
 			if (0 == m_iDynamic_Color_Particle)
 			{
-				m_fColor_Cur_Particle[0] = m_pParticleBufferDesc->vCurrentColor.y;
+				m_fColor_Cur_Particle[0] = m_pParticleBufferDesc->vCurrentColor.x;
 				m_fColor_Cur_Particle[1] = m_pParticleBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Particle[2] = m_pParticleBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.y;
-
+				m_fColor_Cur_Particle[2] = m_pParticleBufferDesc->vCurrentColor.z;
+				m_fColor_Cur_Particle[3] = m_pParticleBufferDesc->vCurrentColor.w;
 			}
 			
 
@@ -4285,6 +4420,10 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			else if (CVIBuffer_Particle::TYPE_FADE_TAKES::TYPE_FADE_TAKES_END == m_pParticleBufferDesc->eType_Fade_Takes)
 				m_iType_Fade_Takes_Particle = 5;
 
+
+			/* 알파 가중치 업데이트 */
+			m_fMinMaxAlpha_Particle[0] = m_pParticleBufferDesc->vMinMaxAlpha.x;
+			m_fMinMaxAlpha_Particle[1] = m_pParticleBufferDesc->vMinMaxAlpha.y;
 
 
 			/* 림 블룸 값 업데이트 */
@@ -4523,7 +4662,9 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 					m_iUseGravity_Mesh = 1;
 
 
-				m_fGravity_Mesh			= m_pMeshBufferDesc->fGravity;			// 중력 가속도
+				m_fGravity_Mesh		= m_pMeshBufferDesc->fGravity;		// 중력 가속도
+				m_fGravity_X_Mesh	= m_pMeshBufferDesc->fGravity_X;	// 중력 가속도 X
+				m_fGravity_Z_Mesh	= m_pMeshBufferDesc->fGravity_Z;	// 중력 가속도 Z
 
 
 				/* 파워 */
@@ -4643,9 +4784,15 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			else
 				m_iUseRotAcc_Mesh = 1;
 
-			m_vRadian_Mesh[0] = m_pMeshBufferDesc->vRadian.x;
-			m_vRadian_Mesh[1] = m_pMeshBufferDesc->vRadian.y;
-			m_vRadian_Mesh[2] = m_pMeshBufferDesc->vRadian.z;
+
+			m_vMinRadian_Mesh[0] = m_pMeshBufferDesc->vMinRadian.x;
+			m_vMinRadian_Mesh[1] = m_pMeshBufferDesc->vMinRadian.y;
+			m_vMinRadian_Mesh[2] = m_pMeshBufferDesc->vMinRadian.z;
+
+
+			m_vMaxRadian_Mesh[0] = m_pMeshBufferDesc->vMaxRadian.x;
+			m_vMaxRadian_Mesh[1] = m_pMeshBufferDesc->vMaxRadian.y;
+			m_vMaxRadian_Mesh[2] = m_pMeshBufferDesc->vMaxRadian.z;
 
 
 			/* 라업룩 어느 축을 진행방향으로 할건지 업데이트 */
@@ -4748,23 +4895,28 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iDynamic_Color_Mesh = 1;
 
 			m_fColor_Min_Mesh[0] = m_pMeshBufferDesc->vMinMaxRed.x;
-			m_fColor_Min_Mesh[1] = m_pMeshBufferDesc->vMinMaxBlue.x;
-			m_fColor_Min_Mesh[2] = m_pMeshBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Mesh[1] = m_pMeshBufferDesc->vMinMaxGreen.x;
+			m_fColor_Min_Mesh[2] = m_pMeshBufferDesc->vMinMaxBlue.x;
 			m_fColor_Min_Mesh[3] = m_pMeshBufferDesc->vMinMaxAlpha.x;
 
 			m_fColor_Max_Mesh[0] = m_pMeshBufferDesc->vMinMaxRed.y;
-			m_fColor_Max_Mesh[1] = m_pMeshBufferDesc->vMinMaxBlue.y;
-			m_fColor_Max_Mesh[2] = m_pMeshBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Mesh[1] = m_pMeshBufferDesc->vMinMaxGreen.y;
+			m_fColor_Max_Mesh[2] = m_pMeshBufferDesc->vMinMaxBlue.y;
 			m_fColor_Max_Mesh[3] = m_pMeshBufferDesc->vMinMaxAlpha.y;
 
 			if (0 == m_iDynamic_Color_Mesh)
 			{
-				m_fColor_Cur_Mesh[0] = m_pMeshBufferDesc->vCurrentColor.y;
+				m_fColor_Cur_Mesh[0] = m_pMeshBufferDesc->vCurrentColor.x;
 				m_fColor_Cur_Mesh[1] = m_pMeshBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Mesh[2] = m_pMeshBufferDesc->vCurrentColor.y;
-				m_fColor_Cur_Mesh[3] = m_pMeshBufferDesc->vCurrentColor.y;
+				m_fColor_Cur_Mesh[2] = m_pMeshBufferDesc->vCurrentColor.z;
+				m_fColor_Cur_Mesh[3] = m_pMeshBufferDesc->vCurrentColor.w;
 
 			}
+
+
+			/* 알파 가중치 업데이트 */
+			m_fMinMaxAlpha_Mesh[0] = m_pMeshBufferDesc->vMinMaxAlpha.x;
+			m_fMinMaxAlpha_Mesh[1] = m_pMeshBufferDesc->vMinMaxAlpha.y;
 
 
 			/* Rim Bloom 림블룸 관련 */
@@ -5363,7 +5515,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 			if (ImGui::Button(" Look_At "))
 			{
-				m_pCurEffect->Get_Transform()->Look_At(m_pModel_Preview->Get_Position());
+				m_pCurEffect->Get_Transform()->Look_At(m_pModel_Preview->Get_Position_Vector());
 			}
 
 		}
@@ -5429,6 +5581,23 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
 				}
 			}
+			ImGui::SameLine();
+			if (ImGui::Button("Aim_01"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Winchester_Ironsights_AimPose);
+				}
+			}
+
+			if (ImGui::Button("Revolver_01"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Bandit_Special_01);
+				}
+			}
+
 		}
 
 
@@ -5451,9 +5620,152 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 	}
 
 
+
+	// 테스트용 투사체 생성
+	if (nullptr == m_pTestProjectile)
+	{
+		if (ImGui::Button("Create Son_Projectile"))	// 모델 생성
+		{
+			m_pTestProjectile = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, LAYER_EFFECT, L"Prototype_GameObject_Son_Projectile");
+		}
+
+	}
+	else
+	{
+		if (m_pTestProjectile->Is_Dead())
+		{
+			// 투사체가 죽었으면
+			if (nullptr != m_pCurEffect)
+			{
+				if (nullptr != m_pCurEffect->Get_Object_Owner())
+				{
+					// 현재 이펙트의 오너가 nullptr이 아니면 오너 해제
+					m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+					m_pCurEffect->Delete_Object_Owner();
+				}
+			}
+			m_pTestProjectile = nullptr;
+		}
+
+		if (ImGui::Button("Delete Son_Projectile"))		// 투사체 삭제 버튼
+		{
+			if (nullptr != m_pCurEffect)
+			{
+				if (nullptr != m_pCurEffect->Get_Object_Owner())
+				{
+					// 현재 이펙트의 오너가 nullptr이 아니면 오너부터 해제 해주고 모델 삭제
+					m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+					m_pCurEffect->Delete_Object_Owner();
+				}
+			}
+
+			m_pTestProjectile->Set_Dead(TRUE);
+			m_pTestProjectile = nullptr;
+		}
+
+
+
+		if (nullptr != m_pCurEffect)
+		{
+			// 이펙트의주인 정해주기 테스트(투사체
+			if (ImGui::Button(u8" ON  Pivot_투사체 "))
+			{
+				m_pCurEffect->Set_Object_Owner(m_pTestProjectile);
+				m_pCurEffect->Get_Desc()->bParentPivot = TRUE;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button(u8" OFF Pivot_투사체 "))
+			{
+				m_pCurEffect->Get_Desc()->bParentPivot = FALSE;
+				m_pCurEffect->Delete_Object_Owner();
+			}
+
+		}
+	}
+
+
+
+
 	// 마우스 위치 표시
 	ImGui::SeparatorText("Mouse");
 	Show_MousePos();
+
+
+}
+
+void CWindow_EffectTool::Update_SaveSlot_Window()
+{
+	if (nullptr != m_pCurEffect)	// 현재 이펙트가 존재하고
+	{
+		if (nullptr != m_pCurPartEffect)	// 현재 파트이펙트도 존재하면
+		{
+			CEffect_Void::TYPE_EFFECT eType_Effect = m_pCurVoidDesc->eType_Effect;
+
+			if (CEffect_Void::PARTICLE == eType_Effect)
+			{
+				ImGui::SeparatorText(u8"임시 저장 슬롯_파티클");
+
+				// 파티클 임시저장 슬롯
+				if (ImGui::Button("Save_P_01"))
+					Save_Temp("Data_Particle/99_Temp_Save/Save_P_01.json");
+		
+				ImGui::SameLine();
+				if (ImGui::Button("Save_P_02"))
+					Save_Temp("Data_Particle/99_Temp_Save/Save_P_02.json");
+
+				ImGui::SameLine();
+				if (ImGui::Button("Save_P_03"))
+					Save_Temp("Data_Particle/99_Temp_Save/Save_P_03.json");
+
+
+				// 파티클 임시저장 로드 슬롯
+				if (ImGui::Button("Load_P_01"))
+					Load_Temp("Data_Particle/99_Temp_Save/Save_P_01.json", FILE_PART_PARTICLE);
+				
+				ImGui::SameLine();
+				if (ImGui::Button("Load_P_02"))
+					Load_Temp("Data_Particle/99_Temp_Save/Save_P_02.json", FILE_PART_PARTICLE);
+
+				ImGui::SameLine();
+				if (ImGui::Button("Load_P_03"))
+					Load_Temp("Data_Particle/99_Temp_Save/Save_P_03.json", FILE_PART_PARTICLE);
+
+			}
+			else if (CEffect_Void::MESH == eType_Effect)
+			{
+				ImGui::SeparatorText(u8"임시 저장 슬롯_메쉬");
+
+				// 메쉬 임시저장 슬롯
+				if (ImGui::Button("Save_M_01"))
+					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_01.json");
+
+				ImGui::SameLine();
+				if (ImGui::Button("Save_M_02"))
+					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_02.json");
+
+				ImGui::SameLine();
+				if (ImGui::Button("Save_M_03"))
+					Save_Temp("Data_Mesh/99_Temp_Save/Save_M_03.json");
+
+
+				// 메쉬 임시저장 로드 슬롯
+				if (ImGui::Button("Load_M_01"))
+					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_01.json", FILE_PART_MESH);
+
+				ImGui::SameLine();
+				if (ImGui::Button("Load_M_02"))
+					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_02.json", FILE_PART_MESH);
+
+				ImGui::SameLine();
+				if (ImGui::Button("Load_M_03"))
+					Load_Temp("Data_Mesh/99_Temp_Save/Save_M_03.json", FILE_PART_MESH);
+
+
+			}
+
+		}
+
+	}
 
 
 }
@@ -5522,26 +5834,26 @@ void CWindow_EffectTool::Update_EffectList_Window()
 	ImGui::PopID();
 
 
-	ImGui::SeparatorText("");
-	if (nullptr == m_pTestEffect)
-	{
-		if (ImGui::Button(" Test Create "))
-		{
-			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
-			//m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
-			m_pTestEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test.json");
-		}
-	}
-	else
-	{
-		if (ImGui::Button(" Test Delete "))
-		{
-			EFFECT_MANAGER->Return_ToPool(m_pTestEffect);
-			m_pTestEffect = nullptr;
+	//ImGui::SeparatorText("Test");
+	//if (nullptr == m_pTestEffect)
+	//{
+	//	if (ImGui::Button(" Test Create "))
+	//	{
+	//		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Hit/", "Hit_Distortion.json");
+	//		//m_pTestEffect = EFFECT_MANAGER->Create_Effect(LEVEL_TOOL, "Parasiter/", "Yellow_Blood_Test.json");
+	//		m_pTestEffect = EFFECT_MANAGER->Play_Effect("Yellow_Blood_Test.json");
+	//	}
+	//}
+	//else
+	//{
+	//	if (ImGui::Button(" Test Delete "))
+	//	{
+	//		EFFECT_MANAGER->Return_ToPool(m_pTestEffect);
+	//		m_pTestEffect = nullptr;
 
-			//m_pTestEffect->Set_Dead(TRUE);
-		}
-	}
+	//		//m_pTestEffect->Set_Dead(TRUE);
+	//	}
+	//}
 	
 
 
@@ -5791,7 +6103,8 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				if (ImGui::Button("Twist"))
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Twist"));
 
-
+				if (ImGui::Button("Wind"))
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Wind"));
 
 
 				ImGui::SeparatorText("");
@@ -5871,6 +6184,34 @@ void CWindow_EffectTool::Update_EffectList_Window()
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_LeafPlane"));
 				}
 
+				if (ImGui::Button("Destro_00"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Destro_00"));
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button("Destro_01"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Destro_01"));
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button("Destro_02"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Destro_02"));
+				}
+
+				if (ImGui::Button("Nail_00"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Nail_00"));
+				}
+
+				if (ImGui::Button("Wood_00"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Wood_00"));
+				}
+
+
 				ImGui::SeparatorText("");
 
 				ImGui::TreePop();
@@ -5917,6 +6258,12 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_Egg_Mother"));
 				}
+
+				if (ImGui::Button("MotherShakeTreeProjectile"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
+				}
+
 
 				ImGui::SeparatorText("");
 
@@ -6896,8 +7243,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh(wstring strModelTag)
 		tVoidDesc.bBillBoard = { FALSE };
 
 
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01] = strModelTag;
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02] = TEXT("");
+		tVoidDesc.strModelTag[0] = strModelTag;
+		//tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02] = TEXT("");
 
 
 		tVoidDesc.bPlay				= { TRUE };
@@ -7114,8 +7461,8 @@ HRESULT CWindow_EffectTool::Add_Part_Mesh_Morph(wstring strModelTag1, wstring st
 
 		tVoidDesc.bBillBoard = { FALSE };
 
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01] = strModelTag1;
-		tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02] = strModelTag2;
+		tVoidDesc.strModelTag[0] = strModelTag1;
+		tVoidDesc.strModelTag[1] = strModelTag2;
 
 		tVoidDesc.bPlay = { TRUE };
 		tVoidDesc.bUseRigidBody = { TRUE };
@@ -7281,6 +7628,7 @@ HRESULT CWindow_EffectTool::Delete_Trail()
 
 void CWindow_EffectTool::Delete_CurEffectObject()
 {
+	m_pCurEffect->Delete_Object_Owner();
 	m_pCurEffect->Set_Dead(TRUE);
 	m_pCurEffect = nullptr;
 	m_pCurPartEffect = nullptr;
@@ -7816,6 +8164,72 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 		}
 
 	}
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Save_Temp(string strPath)
+{
+	json Out_Json;
+
+	m_pCurPartEffect->Write_Json(Out_Json);
+
+	string strFrontName = "Part_000";
+	Out_Json["strPartTag"] = strFrontName;
+
+	string strSavePath = "../Bin/DataFiles/Data_Effect/" + strPath;
+	CJson_Utility::Save_Json(strSavePath.c_str(), Out_Json);
+
+	return S_OK;
+}
+
+HRESULT CWindow_EffectTool::Load_Temp(string strPath, TYPE_FILE eType_File)
+{
+	json In_Json;
+
+	string strLoadPath = "../Bin/DataFiles/Data_Effect/" + strPath;
+	CJson_Utility::Load_Json(strLoadPath.c_str(), In_Json);
+
+	wstring strCurName = m_pCurPartEffect->Get_Desc()->strPartTag;
+
+	m_pCurPartEffect->Load_FromJson(In_Json);
+	m_pCurPartEffect->Get_Desc()->strPartTag = strCurName;
+
+	_int iTextureIndex[CEffect_Void::TEXTURE_END];
+
+	for (_int i = 0; i < ECast(CEffect_Void::TEXTURE_END); ++i)
+	{
+		iTextureIndex[i] = m_pCurPartEffect->Get_Desc()->iTextureIndex[i];
+	}
+
+
+	if (FILE_PART_PARTICLE == eType_File)
+	{
+		// 텍스처 재설정
+		for (_int i = 0; i < ECast(CEffect_Void::TEXTURE_END); ++i)
+		{
+			dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(m_pCurPartEffect->Get_Desc()->strTextureTag[i]);
+			m_pCurPartEffect->Get_Desc()->iTextureIndex[i] = iTextureIndex[i];
+		}
+	}
+	else if (FILE_PART_MESH == eType_File)
+	{
+
+		// 텍스처 재설정
+		for (_int i = 0; i < ECast(CEffect_Void::TEXTURE_END); ++i)
+		{
+			dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(m_pCurPartEffect->Get_Desc()->strTextureTag[i]);
+			m_pCurPartEffect->Get_Desc()->iTextureIndex[i] = iTextureIndex[i];
+		}
+
+		// 모델 재설정
+		dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(m_pCurPartEffect->Get_Desc()->strModelTag[0]);
+	}
+
+
+	Update_CurParameters();
+	Update_CurParameters_Parts();
+
 
 	return S_OK;
 }

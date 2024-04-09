@@ -55,10 +55,14 @@ public: /* For.Timer_Manager */
 	_float		Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
+	HRESULT		Request_Level_Opening(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
+	HRESULT		Open_Requested_Level();
+
 	HRESULT		Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
 	_uint		Get_NextLevel();
 	_uint		Get_CurrentLevel();
-	void		Set_CurrentLevel(_uint CurrentLevel);
+	void		Set_CurrentLevel(_uint CurrentLevel); 
+	HRESULT		Set_ShaderOption(_uint CurrentLevel, string filePath);
 
 public: /* For.Object_Manager */
 	HRESULT				Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
@@ -85,6 +89,7 @@ public: /* For.Renderer */
 	CRenderer*	Get_Renderer(); /* 툴용 */
 	HRESULT		Off_Shader();
 	void		Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture);
+	HRESULT		Add_CascadeObject(_uint iIndex, CGameObject* pObject);
 
 #ifdef _DEBUG
 	void		Set_RenderDebugCom(_bool _bRenderDebug);
@@ -102,7 +107,9 @@ public: /* For.PipeLine */
 	_float4		Get_CamDirection();
 	_float4		Get_CamSetting();
 	_float		Get_CamFar();
-	_float4x4	Get_Shadow_Proj();
+	_float4x4*	Get_Shadow_Proj();
+	void		Set_ShadowProj(_float4x4 * pMatrix);
+	void		Set_CascadeBoxes(BoundingOrientedBox * pBoxes);
 
 	//!			레이캐스트
 	RAY			Get_MouseRayWorld(HWND g_hWnd, const unsigned int	g_iWinSizeX, const unsigned int	g_iWinSizeY);
@@ -142,6 +149,8 @@ public: /* For.Light_Manager */
 	class CLight*	Get_DirectionLight();
 	class CLight_Manager* Get_LightManager();
 	void			Get_AllLight(list<class CLight*>* pTemp);
+	_float4x4		Get_StaticLight();
+	HRESULT			Ready_StaticLightMatrix(_float3 vPos, _float3 vLook);
 
 
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -281,6 +290,11 @@ private:
 	_float m_fHitlag_Time = { 0.f };
 	_float m_fTimeDelta = { 0.f };
 	_float m_fRadialBlurTime = { 0.f };
+
+private:
+	_uint m_iCurrentLevelIndex = { 0 };
+	CLevel* m_pNewLevel = { nullptr };
+	_bool m_bIsRequestOpenLevel = { false };
 
 
 public:

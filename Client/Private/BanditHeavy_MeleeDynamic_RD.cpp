@@ -19,6 +19,8 @@ void CBanditHeavy_MeleeDynamic_RD::Initialize(CBandit_Heavy* pActor)
 
 CState<CBandit_Heavy>* CBanditHeavy_MeleeDynamic_RD::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(35);

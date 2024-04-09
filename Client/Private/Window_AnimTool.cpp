@@ -285,13 +285,13 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 						m_EffectPosition.y = BoneMatrix._42 + m_AddPositions[1];
 						m_EffectPosition.z = BoneMatrix._43 + m_AddPositions[2];
 
-						EFFECT_MANAGER->Play_Effect(m_vecEffectName[n] + ".json", m_EffectPosition);
+						EFFECT_MANAGER->Play_Effect("", m_vecEffectName[n] + ".json", m_EffectPosition);
 						//pEffect->Set_Position(m_EffectPosition);
 						m_bCreateEffect = false;
 					}
 					else // 만약 본이 선택되지 않고 없다라면 0값으로 초기화
 					{
-						EFFECT_MANAGER->Play_Effect(m_vecEffectName[n] + ".json", _float3(0.0f, 0.0f, 0.0f));
+						EFFECT_MANAGER->Play_Effect("", m_vecEffectName[n] + ".json", _float3(0.0f, 0.0f, 0.0f));
 						//pEffect->Set_Position({ 0.0f, 0.0f, 0.0f });
 					}
 					if (m_bAddEffectposition) // 값을 넣어서 위치를 수정하고 싶다면 조절하고 조절 값을 여기에 다시 늘린다.
@@ -300,7 +300,7 @@ void CWindow_AnimTool::Add_EffectKeyEvent()
 						m_EffectPosition.y = m_EffectPosition.y + m_AddPositions[1];
 						m_EffectPosition.z = m_EffectPosition.z + m_AddPositions[2];
 
-						EFFECT_MANAGER->Play_Effect(m_vecEffectName[n] + ".json", m_EffectPosition);
+						EFFECT_MANAGER->Play_Effect("", m_vecEffectName[n] + ".json", m_EffectPosition);
 						//pEffect->Set_Position(m_EffectPosition);
 					}
 				}

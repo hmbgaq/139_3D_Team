@@ -31,8 +31,10 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
-	// Level0으로 시작
+	// Level 0으로 시작
 	m_eUI_Level = UI_LEVEL::LEVEL0;
+	// Test 1로 시작
+	//m_eUI_Level = UI_LEVEL::LEVEL1;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -294,6 +296,9 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 				// 선택한 UI의 레벨
 				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
 					m_pUIManager->Change_SkillPreview("Kick");
+
+					_uint itest = m_pUIManager->Get_Select_SkillLevel();
+					int i = 10;
 			}
 			else if (m_tUIInfo.strUIName == "ElectricDash")
 			{

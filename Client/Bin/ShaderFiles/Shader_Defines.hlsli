@@ -81,6 +81,24 @@ sampler LinearBorderSampler = sampler_state
     AddressW = Border;
 };
 
+sampler CubeSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
+    AddressW = CLAMP;
+    ComparisonFunc = NEVER;
+};
+
+sampler ShadowSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+};
+
+sampler MIPSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+};
 /* ---------------- Rasterizer ---------------- */
 
 RasterizerState RS_Default
@@ -129,7 +147,6 @@ DepthStencilState DSS_Default
 	DepthFunc = less_equal;
 };
 
-
 DepthStencilState DSS_None
 {
 	DepthEnable = false;
@@ -169,9 +186,9 @@ BlendState BS_AlphaBlend_Add
 {
 	BlendEnable[0] = true;	
 
-	SrcBlend = SRC_ALPHA;
-	DestBlend = Inv_Src_Alpha;
-	BlendOp = add;
+	SrcBlend    = SRC_ALPHA;
+    DestBlend   = INV_SRC_ALPHA;
+    BlendOp     = Add;
 };
 
 BlendState BS_AlphaBlend_Effect
@@ -199,8 +216,6 @@ BlendState BS_Blend_Add
 	/* Src색상과 대상 색상을 더할 때 Add연산을 사용하도록 설정한다. */ 
 };
 
-
-
 BlendState BS_Blend_Max
 {
 	BlendEnable[0] = true;
@@ -222,5 +237,15 @@ BlendState AdditiveBlendState
     RenderTargetWriteMask[0] = 15;
 };
 
+BlendState BS_AlphaBlending
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+    BlendEnable[2] = true;
+
+    SrcBlend = one;
+    DestBlend = one;
+    BlendOp = add;
+};
 /* -------------------------------------------- */
 

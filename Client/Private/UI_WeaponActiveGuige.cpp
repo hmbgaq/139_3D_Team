@@ -76,8 +76,14 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 			if (m_pGameInstance->Key_Pressing(DIK_SPACE) &&
 				m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL_END &&
 				m_pUIManager->Get_Select_WeaponLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
-				m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2)		// 최대
+				m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2 ||
+				m_pUIManager->Get_Select_WeaponName() == "Inventory" &&
+				m_pUIManager->Get_Select_WeaponLevel() == UI_LEVEL::LEVEL0)		// 최대
 			{
+
+				if (m_pUIManager->Get_Select_WeaponName() == "Inventory" &&
+					m_pUIManager->Get_Select_WeaponLevel() == UI_LEVEL::LEVEL1)
+					return;
 
 				if (m_pGameInstance->Key_Up(DIK_SPACE))
 				{
@@ -100,6 +106,7 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 					m_pUIManager->Get_Select_WeaponLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
 					m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2)		// 최대
 				{
+
 					m_pUIManager->Select_WeaponLevelUP(); // 레벨업
 					m_bCoolDown = false;
 					m_bMaxCoolDown = true;

@@ -10,11 +10,11 @@ BEGIN(Engine)
 class CGameObject;
 END
 
-class CUI_Interaction;
-class CUI_EnemyHUD_Shard;
 
 BEGIN(Client)
 //class CUI;
+class CUI_EnemyHUD_Shard;
+class CUI_Interaction;
 class CData_Manager;
 
 class CUI_Manager : public CBase
@@ -503,6 +503,15 @@ public:
 			return m_pUI_SelectWeapon->Get_UILevel();
 		else
 			return CUI::UI_LEVEL::LEVEL_END;
+	}
+
+	// UI Weapon
+	string	Get_Select_WeaponName()
+	{
+		if (m_pUI_SelectWeapon != nullptr)
+			return m_pUI_SelectWeapon->Get_UIDesc().strProtoTag;
+		else
+			return "";
 	}
 
 	// UI Weapon

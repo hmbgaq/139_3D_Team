@@ -34,7 +34,7 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 	// Level 0으로 시작
 	m_eUI_Level = UI_LEVEL::LEVEL0;
 	// Test Level 1로 시작
-	m_eUI_Level = UI_LEVEL::LEVEL1;
+	//m_eUI_Level = UI_LEVEL::LEVEL1;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -69,7 +69,7 @@ void CUI_WeaponFrame::Tick(_float fTimeDelta)
 		Check_LevelChange(fTimeDelta);
 
 		/* Animation */
-		if (m_eUI_Level == UI_LEVEL::LEVEL2 && m_bFirstFrame == true)
+		if (m_eUI_Level >= UI_LEVEL::LEVEL1 && m_bFirstFrame == true)
 			m_pTransformCom->RotationZaxis(fTimeDelta * 0.4f);
 
 		m_eUI_PreLevel = m_eUI_Level;
@@ -413,31 +413,34 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 #pragma region 1
 		if (m_tUIInfo.strUIName == "Rifle")
 		{
-			m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+			if(m_eUI_Level < UI_LEVEL::LEVEL1)
+				m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
 
-			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			if (m_eUI_Level == UI_LEVEL::LEVEL1) // 스킬을 배웠을 경우
 			{
-				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::RIFLE, true); // 스킬 효과 활성화
+				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::RIFLE, true); // 스킬 효과 활성화
 				m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Top", true); // 해금
 			}
 		}
 		else if (m_tUIInfo.strUIName == "Revolver")
 		{
-			m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+			if (m_eUI_Level < UI_LEVEL::LEVEL1)
+				m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
 
-			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			if (m_eUI_Level == UI_LEVEL::LEVEL1) // 스킬을 배웠을 경우
 			{
-				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::REVOLVER, true); // 스킬 효과 활성화
+				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::REVOLVER, true); // 스킬 효과 활성화
 				m_pUIManager->Change_LeftHUD_SkillUnlock("LeftHUD_Bottom", true); // 해금
 			}
 		}
 		else if (m_tUIInfo.strUIName == "Shotgun")
 		{
-			m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+			if (m_eUI_Level < UI_LEVEL::LEVEL1)
+				m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
 
-			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			if (m_eUI_Level == UI_LEVEL::LEVEL1) // 스킬을 배웠을 경우
 			{
-				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::SHOTGUN, true); // 스킬 효과 활성화
+				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::SHOTGUN, true); // 스킬 효과 활성화
 				m_pUIManager->Change_LeftHUD_SkillUnlock("LeftHUD_Left", true); // 해금
 			}
 		}
@@ -447,7 +450,7 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 
 			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
 			{
-				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::RIFLE_SKILL1, true); // 스킬 효과 활성화
+				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::RIFLE_UPGRADE, true); // 스킬 효과 활성화
 			}
 		}
 		else if (m_tUIInfo.strUIName == "Revolver_Skill1")
@@ -456,7 +459,7 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 
 			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
 			{
-				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::REVOLVER_SKILL1, true); // 스킬 효과 활성화
+				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::REVOLVER_UPGRADE, true); // 스킬 효과 활성화
 			}
 		}
 		else if (m_tUIInfo.strUIName == "Shotgun_Skill1")
@@ -465,7 +468,7 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 
 			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
 			{
-				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::SHOTGUN_SKILL1, true); // 스킬 효과 활성화
+				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::SHOTGUN_UPGRADE, true); // 스킬 효과 활성화
 			}
 		}
 	}

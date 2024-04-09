@@ -169,8 +169,8 @@ public:
 		_float		fAlpha = 0.f;
 		_float		fAlphaTrue = 0.f;
 
-		_int		iLevel = 0.f;
-		_int		iMaxLevel = 0.f;
+		_int		iLevel = 0;
+		_int		iMaxLevel = 0;
 		_int		iObjectNum = 0;			// 몇번째 녀석인지
 		_int		iShaderNum = 0;			// 적용할 셰이더 넘버
 

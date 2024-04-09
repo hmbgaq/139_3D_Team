@@ -41,7 +41,9 @@ public:
 		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 		_float		fGravity = { -9.8f };			// 중력 가속도
-		
+		_float		fGravity_X = { 0.f };			// 중력 가속도 X
+		_float		fGravity_Z = { 0.f };			// 중력 가속도 Z
+
 		EASING_TYPE	eType_FrictionLerp = { EASING_TYPE::LINEAR };
 		_float2		vFrictionLerp_Pos = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
 		_float2		vStartEnd_Friction = { 0.1f, 0.1f };	// 시작과 끝 마찰 계수
@@ -71,7 +73,10 @@ public:
 		TYPE_DIRAXIS eType_Dir = { DIR_UP };
 
 		_bool		bRotAcc = { FALSE };
-		_float3		vRadian = { 0.f, 0.f, 0.f };
+		//_float3		vRadian = { 0.f, 0.f, 0.f };
+		_float3		vMinRadian = { 0.f, 0.f, 0.f };
+		_float3		vMaxRadian = { 0.f, 0.f, 0.f };
+
 		_float2		vMinMaxRadianSpeed_X = { 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_Y = { 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_Z = { 0.f, 0.f };
@@ -161,6 +166,7 @@ public:
 
 
 		// 회전
+		_float3	vRadian = { 0.f, 0.f, 0.f };
 		_float3	vCurRadian = { 0.f, 0.f, 0.f };
 		_float3	vAddRadianSpeed = { 0.f, 0.f, 0.f };
 

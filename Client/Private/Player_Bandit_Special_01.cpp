@@ -6,6 +6,8 @@
 #include "Player_Revolver_Hip_ReloadFast_Alt03.h"
 #include "Player_Bandit_Reload_02.h"
 
+#include "Effect_Manager.h"
+
 void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -16,7 +18,9 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 	pActor->Set_Splitted(false);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_STOP, true, false, 17);
-	Create_Bullet(pActor);
+
+	Fire(pActor);
+	//Create_Bullet(pActor);
 }
 
 CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTimeDelta)
@@ -24,9 +28,13 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 	__super::Update(pActor, fTimeDelta);
 
 	fInputWaitTime += fTimeDelta;
-	if (0.7f <= fInputWaitTime)
+
+	CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER);
+	_bool bIsCooltimeEnd = pActor->Is_HUD_Cooltime_End(eSelectedHUD, REVOLVER_DELAY);
+	if (0.7f <= fInputWaitTime || false == bIsCooltimeEnd) // ||  
 	{
-		return new CPlayer_IdleLoop();
+		return new CPlayer_Revolver_Hip_ReloadFast_Alt03();
+		//return new CPlayer_IdleLoop();
 	}
 	
 
@@ -42,6 +50,10 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[0] = pActor->Is_Inputable_Front(22);
 		if (true == m_bFlags[0])
 		{
+
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
+			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+
 			Fire(pActor);
 			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
@@ -52,6 +64,9 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[1] = pActor->Is_Inputable_Front(28);
 		if (true == m_bFlags[1])
 		{
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
+			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+
 			Fire(pActor);
 			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
@@ -62,6 +77,9 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[2] = pActor->Is_Inputable_Front(34);
 		if (true == m_bFlags[2])
 		{
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
+			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+
 			Fire(pActor);
 			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
@@ -72,6 +90,9 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[3] = pActor->Is_Inputable_Front(39);
 		if (true == m_bFlags[3])
 		{
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
+			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+
 			Fire(pActor);
 			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
@@ -82,6 +103,9 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[4] = pActor->Is_Inputable_Front(39);
 		if (true == m_bFlags[4])
 		{
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
+			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+
 			Fire(pActor);
 			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
@@ -92,6 +116,9 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		m_bFlags[5] = pActor->Is_Inputable_Front(45);
 		if (true == m_bFlags[5])
 		{
+			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
+			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+
 			Fire(pActor);
 			//Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
@@ -155,6 +182,9 @@ void CPlayer_Bandit_Special_01::Fire(CPlayer* pActor)
 	{
 		CWeapon* pRevolver = pActor->Get_Weapon(PLAYER_WEAPON_REVOLVER);
 		pRevolver->Fire(_float3(0.f, 0.f, 1.f), pActor->Get_Target());
+		m_pGameInstance->Set_RadialBlurTime(0.1f);
 	}
 	pActor->Set_Target(nullptr);
+
+	pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER), REVOLVER_DELAY);
 }

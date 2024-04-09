@@ -64,6 +64,7 @@ public:
 	_uint m_iLoopCount = 0;
 	_uint m_iShootingCount = 0;
 	_float m_fTimeDelta = 0.f;
+	_float m_fTimeDelta2 = 0.f;
 public:
 	/* 원형객체를 생성한다. */
 	static CMother* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

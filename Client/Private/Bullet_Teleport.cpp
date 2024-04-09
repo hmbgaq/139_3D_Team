@@ -44,6 +44,8 @@ HRESULT CBullet_Teleport::Initialize(void* pArg)
 	m_fDamage = 0.f;
 	m_fLifeTime = 3.f;
 
+	m_vLastPotision = CData_Manager::GetInstance()->Get_Player()->Get_Position();
+
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
 
@@ -220,7 +222,7 @@ void CBullet_Teleport::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 
 	if (m_pNavigationCom)
 		Safe_Release(m_pNavigationCom);

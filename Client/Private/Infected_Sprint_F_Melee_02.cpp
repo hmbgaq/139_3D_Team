@@ -33,6 +33,8 @@ void CInfected_Sprint_F_Melee_02::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_Sprint_F_Melee_02::Update(CInfected* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	if (g_iAnimIndex != pActor->Get_CurrentAnimIndex())
 		return nullptr;
 

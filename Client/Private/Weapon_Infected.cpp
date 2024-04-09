@@ -55,6 +55,13 @@ HRESULT CWeapon_Infected::Render()
 	return S_OK;
 }
 
+void CWeapon_Infected::Play_Trail(_bool bPlay)
+{
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Play(bPlay);
+}
+
+
 HRESULT CWeapon_Infected::Ready_Components()
 {
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
@@ -103,8 +110,7 @@ void CWeapon_Infected::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pTrail)
-		m_pTrail->Set_Dead(TRUE);
 
+	Safe_Release(m_pTrail);
 }
 

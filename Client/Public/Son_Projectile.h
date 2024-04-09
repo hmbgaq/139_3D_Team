@@ -31,6 +31,7 @@ public:
 	_vector				m_vMonsterPos = {};
 	_bool				m_bFirst = true;
 	_float				m_fRadian = 0.f;
+	_float				m_fEffectTimeAcc = 0.f;
 private:
 	CEffect* m_pEffect = { nullptr };
 	CSon* m_pSon = { nullptr };

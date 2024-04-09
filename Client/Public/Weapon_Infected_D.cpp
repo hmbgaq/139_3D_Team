@@ -57,10 +57,10 @@ void CWeapon_Infected_D::Late_Tick(_float fTimeDelta)
 	__super::Late_Tick(fTimeDelta);
 
 	//! 유정: 트레일 테스트
-	if (nullptr != m_pTrail)
-	{
-		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
-	}
+	//if (nullptr != m_pTrail)
+	//{
+	//	m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+	//}
 }
 
 HRESULT CWeapon_Infected_D::Render()
@@ -133,6 +133,8 @@ CGameObject* CWeapon_Infected_D::Pool()
 void CWeapon_Infected_D::Free()
 {
 	__super::Free();
+
+	//Safe_Release(m_pTrail);
 }
 
 

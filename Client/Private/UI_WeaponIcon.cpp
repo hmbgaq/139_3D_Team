@@ -42,6 +42,17 @@ HRESULT CUI_WeaponIcon::Initialize(void* pArg)
 	// Size Check
 	Check_IconSize();
 
+	//TEST
+	if (m_bWeapon == true)
+	{
+		m_eUI_Level = LEVEL0;
+	}
+	else
+	{
+		m_eUI_Level = LEVEL1;
+	}
+		
+
 	return S_OK;
 }
 
@@ -63,11 +74,6 @@ void CUI_WeaponIcon::Tick(_float fTimeDelta)
 
 		// Level
 		Check_LevelChange(fTimeDelta);
-
-		if (m_pGameInstance->Key_Down(DIK_X))
-			m_eUI_Level = LEVEL0;
-		if (m_pGameInstance->Key_Down(DIK_C))
-			m_eUI_Level = LEVEL1;
 
 		// Animation
 		//Check_Animation(fTimeDelta);
@@ -355,6 +361,10 @@ HRESULT CUI_WeaponIcon::Bind_ShaderResources()
 
 	if (m_bWeapon == true)
 	{
+		// 최대 레벨 제한
+		if (m_eUI_Level <= CUI::LEVEL2)
+			m_eUI_Level = CUI::LEVEL1;
+
 		/* UI_Level */
 		switch (m_eUI_Level)
 		{

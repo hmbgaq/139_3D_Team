@@ -52,7 +52,7 @@ HRESULT CLevel_SnowMountain::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	FAILED_CHECK(Ready_Shader());
+	//FAILED_CHECK(Ready_Shader());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
@@ -66,18 +66,18 @@ void CLevel_SnowMountain::Tick(_float fTimeDelta)
 
 HRESULT CLevel_SnowMountain::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("SnowMountain 레벨입니다."));
 
 	return S_OK;
 }
 
 HRESULT CLevel_SnowMountain::Ready_LightDesc()
 {
-	/* For. Shadow */
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightPos), _float4(0.f, 0.f, 0.f, 1.f), _float4(0.f, 1.f, 0.f, 0.f));
+	/* Shadow Light */
+	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-	/* For. Light */
+	/* Map Light */
 	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
 	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
@@ -132,7 +132,6 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 			MSG_BOX("라이트 불러오기 실패");
 			return E_FAIL;
 		}
-
 	}
 
 	json LightObjectJson = IntroBossMapJson["LightObject_Json"];
@@ -180,7 +179,6 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Ambient"], LightDesc.vAmbient);
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Specular"], LightDesc.vSpecular);
 
-
 		LightObjectDesc.LightDesc = LightDesc;
 
 		CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
@@ -206,13 +204,12 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player")));
-
+	NULL_CHECK_RETURN(pPlayer, E_FAIL);
 	pPlayer->Set_InitPosition(_float3(14.87f, 0.f, -8.06f));
-
 
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
- //   FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
+	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg));
 
 	//CGameObject* pPlayer = m_pGameInstance->Add_CloneObject_And_Get(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Player"), pArg);
 	//if (nullptr == pPlayer)
@@ -294,32 +291,57 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();
 
+
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
+
 		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
 
 		Desc.bAnimModel = InteractJson[i]["AnimType"];
 
 		wstring strLoadModelTag;
 		string strJsonModelTag = InteractJson[i]["ModelTag"];
-
 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
 		Desc.strModelTag = strLoadModelTag;
 		Desc.bPreview = false;
 		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
 		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
-		Desc.bLevelChange = InteractJson[i]["LevelChange"];
-		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 		Desc.eInteractState = InteractJson[i]["InteractState"];
 		Desc.eInteractType = InteractJson[i]["InteractType"];
-		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		//Desc.bLevelChange = false;
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+
 		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.bEnable = InteractJson[i]["Enable"];
+		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
+		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
+		Desc.bOffset = InteractJson[i]["Offset"];
+		Desc.bOwner = InteractJson[i]["Owner"];
+		Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
+		Desc.bRotate = InteractJson[i]["Rotate"];
+		Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
+		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+		Desc.eRotationState = InteractJson[i]["RotationType"];
+		Desc.bArrival = InteractJson[i]["Arrival"];
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 
-
-
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
+
+		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
+		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
+		CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
 
 		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
 		_float4x4 WorldMatrix;
@@ -335,15 +357,112 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 		Desc.WorldMatrix = WorldMatrix;
 
-		CEnvironment_Interact* pObject = { nullptr };
+		json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+		_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
 
-		pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
-		//TODO 추후 상호작용 오브젝트 클래스 작성  후 작업
-		//! L"Layer_Event"
-		if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+		for (_int i = 0; i < iUpdateCellJsonSize; ++i)
 		{
-			CData_Manager::GetInstance()->Set_SnowMountainWagon(pObject);
+			Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
 		}
+
+		if (Desc.bOwner == false)
+		{
+			CEnvironment_Interact* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+			if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+			{
+				CData_Manager::GetInstance()->Set_SnowMountainWagon(pObject);
+			}
+
+		}
+		else
+			continue;
+	}
+
+	for (_int i = 0; i < InteractJsonSize; ++i)
+	{
+
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
+
+		Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InteractJson[i]["ModelTag"];
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+		Desc.bPreview = false;
+		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.eInteractState = InteractJson[i]["InteractState"];
+		Desc.eInteractType = InteractJson[i]["InteractType"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		//Desc.bLevelChange = false;
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.bEnable = InteractJson[i]["Enable"];
+		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
+		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
+		Desc.bOffset = InteractJson[i]["Offset"];
+		Desc.bOwner = InteractJson[i]["Owner"];
+		Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
+		Desc.bRotate = InteractJson[i]["Rotate"];
+		Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
+		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+		Desc.eRotationState = InteractJson[i]["RotationType"];
+		Desc.bArrival = InteractJson[i]["Arrival"];
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
+
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
+
+		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
+		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
+		CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
+
+		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+		_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
+
+		for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+		{
+			Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+		}
+
+		if (Desc.bOwner == true)
+		{
+			CEnvironment_Interact* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+			
+		}
+		else
+			continue;
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];
@@ -630,109 +749,7 @@ HRESULT CLevel_SnowMountain::Ready_Shader()
 {
 	/* 1. 셰이더 초기화 */
 	m_pGameInstance->Off_Shader();
-
-	/* 2. 셰이더 옵션 조절 */
-	PBR_DESC Desc_PBR = {};
-	Desc_PBR.bPBR_ACTIVE = true;
-
-	DEFERRED_DESC Desc_Deferred = {};
-	Desc_Deferred.bRimBloom_Blur_Active = true;
-	Desc_Deferred.bShadow_Active = false;
-
-	HBAO_PLUS_DESC Desc_Hbao = {};
-	Desc_Hbao.bHBAO_Active = true;
-	Desc_Hbao.fRadius = 1.f;
-	Desc_Hbao.fBias = 0.1f;
-	Desc_Hbao.fBlur_Sharpness = 16.f;
-	Desc_Hbao.fPowerExponent = 2.f;
-
-	FOG_DESC Desc_Fog = {};
-	Desc_Fog.bFog_Active = false;
-	Desc_Fog.fFogStartDepth = {};
-	Desc_Fog.fFogStartDistance = {};
-	Desc_Fog.fFogDistanceValue = {};
-	Desc_Fog.fFogHeightValue = {};
-	Desc_Fog.fFogDistanceDensity = {};
-	Desc_Fog.fFogHeightDensity = {};
-	Desc_Fog.vFogColor.x = {};
-	Desc_Fog.vFogColor.y = {};
-	Desc_Fog.vFogColor.z = {};
-	Desc_Fog.vFogColor.w = {};
-
-	RADIAL_DESC Desc_Radial = {};
-	Desc_Radial.bRadial_Active = false;
-	Desc_Radial.fRadial_Quality = {};
-	Desc_Radial.fRadial_Power = {};
-
-	DOF_DESC Desc_Dof = {};
-	Desc_Dof.bDOF_Active = false;
-	Desc_Dof.DOF_Distance = {};
-
-	HDR_DESC Desc_HDR = {};
-	Desc_HDR.bHDR_Active = true;
-	Desc_HDR.fmax_white = 0.539f;
-
-	ANTI_DESC Desc_Anti = {};
-	Desc_Anti.bFXAA_Active = true;
-
-	HSV_DESC Desc_HSV = {};
-	Desc_HSV.bScreen_Active = true;
-	Desc_HSV.fFinal_Brightness = 1.284f;
-	Desc_HSV.fFinal_Saturation = 0.850f;
-
-	VIGNETTE_DESC Desc_Vignette = {};
-	Desc_Vignette.bVignette_Active = false;
-	Desc_Vignette.fVignetteAmount = {};
-	Desc_Vignette.fVignetteCenter_X = {};
-	Desc_Vignette.fVignetteCenter_Y = {};
-	Desc_Vignette.fVignetteRadius = {};
-	Desc_Vignette.fVignetteRatio = {};
-	Desc_Vignette.fVignetteSlope = {};
-
-	SSR_DESC Desc_SSR = {};
-	Desc_SSR.bSSR_Active = false;
-	Desc_SSR.fRayStep = {};
-	Desc_SSR.fStepCnt = {};
-
-	CHROMA_DESC   Desc_Chroma = {};
-	Desc_Chroma.bChroma_Active = false;
-	Desc_Chroma.fChromaticIntensity = false;
-
-	SCREENEFFECT_DESC Desc_ScreenEffect = {};
-	Desc_ScreenEffect.bGrayScale_Active = false;
-	Desc_ScreenEffect.bSephia_Active = false;
-	Desc_ScreenEffect.GreyPower = {};
-	Desc_ScreenEffect.SepiaPower = {};
-
-	m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
-	m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
-	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
-	m_pGameInstance->Get_Renderer()->Set_Fog_Option(Desc_Fog);
-	m_pGameInstance->Get_Renderer()->Set_SSR_Option(Desc_SSR);
-	m_pGameInstance->Get_Renderer()->Set_Chroma_Option(Desc_Chroma);
-	m_pGameInstance->Get_Renderer()->Set_RadialBlur_Option(Desc_Radial);
-	m_pGameInstance->Get_Renderer()->Set_DOF_Option(Desc_Dof);
-	m_pGameInstance->Get_Renderer()->Set_HDR_Option(Desc_HDR);
-	m_pGameInstance->Get_Renderer()->Set_FXAA_Option(Desc_Anti);
-	m_pGameInstance->Get_Renderer()->Set_HSV_Option(Desc_HSV);
-	m_pGameInstance->Get_Renderer()->Set_Vignette_Option(Desc_Vignette);
-	m_pGameInstance->Get_Renderer()->Set_ScreenEffect_Option(Desc_ScreenEffect);
-
-
-	//--------------
-
-	//pPlayer->Set_Position
-	LIGHT_DESC desc = {};
-	desc.bEnable = true;
-	desc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
-	desc.vPosition = _float4(60.5f, 0.f, 26.f, 0.f);
-	desc.fRange = 10.f;
-	desc.fCutOff = 0.5f;
-	desc.fOuterCutOff = 0.7f;
-	desc.vDiffuse = { 1.f, 1.f, 1.f, 1.f };
-	desc.vAmbient = { 1.f, 1.f, 1.f, 1.f };
-	desc.vSpecular = { 1.f, 1.f, 1.f, 1.f };
-	desc.fVolumetricStrength = 10.f;
+	
 
 	return S_OK;
 }

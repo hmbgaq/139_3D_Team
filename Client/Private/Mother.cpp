@@ -94,7 +94,14 @@ void CMother::Priority_Tick(_float fTimeDelta)
 
 void CMother::Tick(_float fTimeDelta)
 {
-	
+	m_fTimeDelta2 += fTimeDelta;
+
+	if (m_fTimeDelta2 >= 1.f)
+	{
+		cout << "MotherBossHP:" << m_fHp << endl;
+		m_fTimeDelta2 = 0.f;
+	}
+
 	__super::Tick(fTimeDelta);
 
 	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
@@ -108,7 +115,8 @@ void CMother::Tick(_float fTimeDelta)
 			m_pActor->Update_State(fTimeDelta);
 		}
 
-		//cout << "introBossHP:" << m_iHp << endl;
+	
+		
 		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 
 		//cout << "Mother : " << fAngle << endl;

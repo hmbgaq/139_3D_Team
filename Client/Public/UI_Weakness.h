@@ -1,6 +1,7 @@
 #pragma once
 #include "UI.h"
 
+BEGIN(Client)
 /* 체력 프레임 */
 class CUI_Weakness final : public CUI
 {
@@ -54,3 +55,4 @@ public:
 	virtual void			Free() override;
 };
 
+END

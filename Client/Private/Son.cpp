@@ -98,11 +98,11 @@ void CSon::Tick(_float fTimeDelta)
 		}
 		m_fTimeDelta += fTimeDelta;
 
-		//if (m_fTimeDelta >= 1.f)
-		//{
-		//	cout << "SonHP:" << m_fHp << endl;
-		//	m_fTimeDelta = 0.f;
-		//}
+		if (m_fTimeDelta >= 1.f)
+		{
+			cout << "SonHP:" << m_fHp << endl;
+			m_fTimeDelta = 0.f;
+		}
 		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 
 		//cout << "Son : " << fAngle << endl;

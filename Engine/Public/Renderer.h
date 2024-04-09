@@ -19,10 +19,9 @@ public:
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_CASCADE, RENDER_END
 	};
-	enum class POST_TYPE {
-		DEFERRED, FOG, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA,
-		MOTIONBLUR, LUMASHARPEN, FINAL, TYPE_END
-	};
+
+	enum class POST_TYPE { DEFERRED, FOG, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
+						   MOTIONBLUR, LUMASHARPEN, FINAL, TYPE_END};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -39,25 +38,28 @@ public:
 
 	HRESULT Add_RenderGroup(RENDERGROUP eGroupID, class CGameObject* pGameObject);
 	HRESULT Add_DebugRender(class CComponent* pDebugCom);
+	HRESULT Add_CascadeObject(_uint iIndex, CGameObject* pObject);
 	HRESULT Draw_RenderGroup();
 
 private:
+	HRESULT Render_Test();
+
 	HRESULT Render_Priority();
 	HRESULT Render_NonLight();
 	HRESULT Render_Fog();
-	HRESULT Render_Ice();
 
 	HRESULT Render_NonBlend();
-	HRESULT Render_Shadow();
+	HRESULT Render_ShadowDepth();
 	HRESULT Render_Cascade();
 	HRESULT Render_LightAcc();
+	HRESULT Bake_ViewShadow();
 	HRESULT Render_HBAO_PLUS();
 	HRESULT Render_RimBloom();
 	HRESULT Render_Deferred();
-	HRESULT Render_PBR();
 	HRESULT Render_MyPBR();
+	HRESULT Render_PBR();
 	HRESULT Render_SSR();
-	HRESULT Render_Chroma();
+	HRESULT Render_Chroma();			
 	HRESULT Render_LumaSharpen();
 
 	HRESULT Deferred_Effect();
@@ -94,15 +96,15 @@ private:
 	HRESULT	Render_Blur_Vertical(_int eVerticalPass);
 	HRESULT	Render_Blur_UpSample(const wstring& strFinalMrtTag, _bool bClear, _int eBlendType);
 
-	HRESULT Deferred_Shadow();
 	HRESULT Render_ShadowBlur();
 	HRESULT Render_Alphablend(const wstring& Begin_MRT_Tag, const wstring& Blend_Target_Tag);
-
+	HRESULT Ready_CascadeShadow();
 	wstring Current_Target(POST_TYPE eType);
 	
 public:
 	/* 렌더옵션 초기화 */
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
+	HRESULT Clear_RenderTarget(const wstring& RenderTag);
 
 	/* 활성화 */
 	void Set_PBR_Active(_bool _Pbr_active) { m_tPBR_Option.bPBR_ACTIVE = _Pbr_active; }
@@ -132,6 +134,7 @@ public:
 	//Temp
 	_float Get_MotionBlur_float() { return m_tMotionBlur_Desc.fMotionBlur_Intensity; }
 	void   Set_MotionBLur_float(_float fValue) {m_tMotionBlur_Desc.fMotionBlur_Intensity = fValue; }
+
 	/* 옵션조절 */
 	void Set_PBR_Option(PBR_DESC desc) { m_tPBR_Option = desc; }
 	void Set_Deferred_Option(DEFERRED_DESC desc) { m_tDeferred_Option = desc; }
@@ -206,9 +209,14 @@ private:
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();
 
+	vector<class CGameObject*>	m_CascadeObjects[3]			= {};
+	ID3D11DepthStencilView*		m_pCascadeShadowDSV[3]		= {};
+
 	/* For. Tool */
 	class CTexture* m_pTool_IrradianceTextureCom[10] = { nullptr };
+	class CTexture* m_pTool_2_IrradianceTextureCom[10] = { nullptr };
 	class CTexture* m_pTool_PreFilteredTextureCom[10] = { nullptr };
+	class CTexture* m_pTool_2_PreFilteredTextureCom[10] = { nullptr };
 
 public:
 	_bool			m_bUI_MRT = false;
@@ -227,7 +235,7 @@ private:
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
 	_bool			m_bDebugRenderTarget	= { false };
-	_bool			m_bDebugCom				= { true };
+	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
 
