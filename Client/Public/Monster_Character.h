@@ -73,6 +73,12 @@ public: // !성희 추가
 	// 몬스터 HUD를 삭제(비활성화)합니다. (몬스터가 죽을때 불러주세요)
 	void Set_EnemyHUD_Dead();
 
+	// 몬스터 HUD를 활성화 합니다.
+	void Set_EnemyHUD_Active();
+
+	// 몬스터 HUD를 비활성화 합니다.
+	void Set_EnemyHUD_NonActive();
+
 	CUI_EnemyHUD_Shard* m_pEnemyHUD = nullptr;
 
 protected:

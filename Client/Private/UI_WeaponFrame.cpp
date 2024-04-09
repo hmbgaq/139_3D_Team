@@ -31,15 +31,16 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
-	// Level0으로 시작
+	// Level 0으로 시작
 	m_eUI_Level = UI_LEVEL::LEVEL0;
+	// Test Level 1로 시작
+	m_eUI_Level = UI_LEVEL::LEVEL1;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
 	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
-
 
 
 	return S_OK;

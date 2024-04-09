@@ -69,6 +69,10 @@ HRESULT CSon::Initialize(void* pArg)
 	
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	CData_Manager::GetInstance()->Set_Son(this);
+
+	// !UI : HUD_Create
+	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+
 	return S_OK;
 }
 
@@ -81,6 +85,8 @@ void CSon::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	// !UI : HUD_Position									오프셋 조절
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, Offset*/);
 
 	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
 	{
@@ -126,6 +132,10 @@ void CSon::Tick(_float fTimeDelta)
 		{
 			m_fHp = m_fMaxHp;
 			++m_pMother->m_iSonDead;
+
+			// UI : HUD_Dead
+			Set_EnemyHUD_Dead();
+
 			//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
 			m_pActor->Set_State(new CSon_Dead);
 		}

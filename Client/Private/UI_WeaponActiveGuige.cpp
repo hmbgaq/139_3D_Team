@@ -68,15 +68,7 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 			m_fOriginScaleX = m_pTransformCom->Get_Scaled().x;
 			m_fOriginScaleY = m_pTransformCom->Get_Scaled().y;
 		}
-		if (m_pGameInstance->Key_Down(DIK_SPACE) || m_pGameInstance->Key_Up(DIK_SPACE))
-		{
-			m_fAlpha = 0.f;
-			m_fCoolTime = m_fMaxCoolTime;
-			m_bMaxCoolDown = false;
-			m_bCoolDown = true;
 
-			m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1);
-		}
 
 		if (m_bMaxCoolDown == false)
 		{
@@ -86,8 +78,18 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 				m_pUIManager->Get_Select_WeaponLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
 				m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2)		// 최대
 			{
-				if (m_bCoolDown == true &&
-					m_bMaxCoolDown == false)
+
+				if (m_pGameInstance->Key_Up(DIK_SPACE))
+				{
+					m_fAlpha = 0.f;
+					m_fCoolTime = m_fMaxCoolTime;
+					m_bMaxCoolDown = false;
+					m_bCoolDown = true;
+
+					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1);
+				}
+
+				if (m_bCoolDown == true && m_bMaxCoolDown == false)
 				{
 					m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
 					m_iShaderNum = 5; // 원형 게이지 pass
@@ -131,7 +133,12 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 
 				if (m_fAlpha >= 1.f)
 				{
+					m_fAlpha = 0.f;
+					m_fCoolTime = m_fMaxCoolTime;
+					m_bMaxCoolDown = false;
+					m_bCoolDown = true;
 
+					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1);
 				}
 			}
 		}
