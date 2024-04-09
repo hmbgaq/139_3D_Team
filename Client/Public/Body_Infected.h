@@ -32,6 +32,7 @@ public: /* For. RenderState */
 	HRESULT Set_StateHit();
 	HRESULT Set_StateDead();
 
+
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

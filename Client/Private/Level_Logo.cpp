@@ -41,7 +41,7 @@ HRESULT CLevel_Logo::Initialize()
 	ShowCursor(false);
 
 
-	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
+	//FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
 
 	return S_OK;
 }
@@ -183,6 +183,10 @@ void CLevel_Logo::Set_Filter()
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::OBSTACLE, (_uint)COLLISION_LAYER::PLAYER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::OBSTACLE, (_uint)COLLISION_LAYER::MONSTER);
 	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::OBSTACLE, (_uint)COLLISION_LAYER::PLAYER_ATTACK);
+
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERACT, (_uint)COLLISION_LAYER::INTERACT);
+	m_pGameInstance->Check_Group((_uint)COLLISION_LAYER::INTERACT, (_uint)COLLISION_LAYER::PLAYER);
+
 
 
 	//Obstacle

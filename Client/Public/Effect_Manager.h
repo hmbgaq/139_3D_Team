@@ -52,7 +52,7 @@ public:
 	// Pool ===========================================================================================================================================
 	HRESULT				Ready_EffectPool();
 
-	HRESULT				Add_ToPool(_uint iLevelIndex, string strAddPath, string strFileName, _bool bHasTrail = false, string strTrailFileName = "");
+	HRESULT				Add_ToPool(_uint iLevelIndex, string strAddPath, string strFileName, _uint iCount = 1, _bool bHasTrail = false, string strTrailFileName = "");
 	HRESULT				Return_ToPool(CEffect* pEffect);
 
 

@@ -37,7 +37,7 @@ public:
 	_int					Get_CellSize() { return (_int)m_Cells.size(); };
 	void					Set_CurrentIndex(_int iIndex) { m_iCurrentIndex = iIndex; }
 	_int					Get_CurrentCellIndex() { return m_iCurrentIndex;}
-	class CCell*			Get_CellForIndex(_int iIndex) { return m_Cells[iIndex]; }
+	class CCell*			Get_CellForIndex(_int iIndex) { if(iIndex == -1) return nullptr;  return m_Cells[iIndex]; }
 	void					SpawnCell_Setting(_float3 vPos);
 
 	void					AddCell(class CCell* pCell);
@@ -56,6 +56,10 @@ public:
 
 	_uint					Find_CurrentCellIndex(const _vector& vPos);
 
+public:
+	_bool					Get_InteractMoveMode() { return m_bInteractMoveMode;}
+	void					Set_InteractMoveMode(_bool bMoveMode) { m_bInteractMoveMode = bMoveMode;}
+
 private:
 	vector<class CCell*>			m_Cells;
 	static _float4x4				m_WorldMatrix;
@@ -63,6 +67,8 @@ private:
 
 	_int							m_iCellIndex = { 0 };
 	_int							m_iSelcetPointsSize = { 0 };
+
+	_bool							m_bInteractMoveMode = false; //! True일시 반드시  IsMove 류 함수들이 True 반환
 
 #ifdef _DEBUG
 private:

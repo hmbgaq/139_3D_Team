@@ -9,6 +9,7 @@ END
 
 
 BEGIN(Client)
+class CEnvironment_Interact;
 //class CUI_Manager;
 
 class CPlayer final : public CCharacter_Client
@@ -102,6 +103,10 @@ public:
 	
 
 public://!For. Interact
+	CEnvironment_Interact* Get_InteractObject() { return m_pInteractObject; }
+	void				   Set_InteractObject(CEnvironment_Interact* pInteractObject) { m_pInteractObject = pInteractObject; }
+
+
 	void SetState_InteractJumpDown100();
 	void SetState_InteractJumpDown200();
 	void SetState_InteractJumpDown300();
@@ -113,6 +118,8 @@ public://!For. Interact
 
 	void SetState_InteractionPush_Rock_Idle();
 	void SetState_InteractionPull_Rock_Idle();
+	void SetState_InteractionPush_End();
+	void SetState_InteractionPull_End();
 
 
 	void SetState_InteractClimb100();
@@ -206,6 +213,7 @@ protected:
 
 private:
 	CActor<CPlayer>* m_pActor = { nullptr };
+	CEnvironment_Interact* m_pInteractObject = { nullptr };
 	_bool	m_bRotate_In_CameraDir = { false };
 
 private:

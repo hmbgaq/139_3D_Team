@@ -996,7 +996,7 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     
     vector vShadow = g_ShadowResult.Sample(LinearSampler, In.vTexcoord);
     
-    float4 ColorCombine = float4(CT_BRDF + vEmissive+ vAlbedo.rgb, 1.f);
+    float4 ColorCombine = float4(CT_BRDF + vEmissive,  1.f);
     ColorCombine += vSpecular + vAmbientDesc;
     ColorCombine += vAmbientDesc;
     

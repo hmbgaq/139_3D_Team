@@ -160,7 +160,11 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 }
 
 _bool CNavigation::isMove(_fvector vPosition)
-{
+{	
+	if(m_bInteractMoveMode == true)
+		return true;
+	
+
 	if (true == m_Cells.empty())
 		return false;
 
@@ -200,13 +204,16 @@ _bool CNavigation::isMove(_fvector vPosition)
 		else
 			return false;
 	}
-	
-	//return false;
+
+	//return true;
 }
 
 _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4* vOutSlidingDir)
 {
 	/* 일단 이웃이 없다는 의미로 디폴트 -1로 셋팅해둔다. */
+	if (m_bInteractMoveMode == true)
+		return true;
+
 	_int      iNeighborIndex = { -1 };
 	
 	/* 이동한 지점의 결과가 현재 셀 내부에 있을경우 true반환
@@ -259,7 +266,7 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 		return true;
 	}
 
-	return false;
+	
 
 }
 
@@ -551,6 +558,9 @@ _uint CNavigation::Find_CurrentCellIndex(const _vector& vPos)
 	_uint iSize = (_uint)m_Cells.size();
 	for (_uint i = 0; i < iSize; ++i)
 	{
+		
+		//if (m_Cells[i]->IsIn_CurrentCell(vPos))
+		//	return i;
 		if (m_Cells[i]->Check_CurrentCell(vPos))
 			return i;
 	}

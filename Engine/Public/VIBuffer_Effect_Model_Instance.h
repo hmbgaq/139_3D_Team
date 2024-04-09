@@ -59,6 +59,8 @@ public:
 		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 		_float		fGravity		= { -9.8f };	// 중력 가속도
+		_float		fGravity_X = { 0.f };			// 중력 가속도 X
+		_float		fGravity_Z = { 0.f };			// 중력 가속도 Z
 
 		_float2		vMinMaxFriction = { 0.1f, 0.1f };		// 마찰 계수 범위
 

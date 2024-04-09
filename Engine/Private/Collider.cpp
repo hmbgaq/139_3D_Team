@@ -96,6 +96,9 @@ _bool CCollider::Is_Collision(CCollider* pTargetCollider)
 
 void CCollider::Collision(CCollider * pTargetCollider)
 {
+	if (m_bEnable == false)
+		return;
+
 	m_isCollision = true;
 
 	_bool bIs_SameColl = false;

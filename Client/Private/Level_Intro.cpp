@@ -258,10 +258,14 @@ HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 {
 
-	// 이펙트 테스트 (삭제처리 생각안함)
+	// 이펙트 테스트 (삭제처리 생각안함 파티클 누수 6개면 정상)
     EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));
     EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03_Solid.json", _float3(12.f, 0.f, 5.f));
     EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_04.json", _float3(19.f, 0.f, 5.f));
+
+
+    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05.json", _float3(5.f, 0.f, 10.f));
+    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05_Big.json", _float3(12.f, 0.f, 10.f));
 
 
     return S_OK;
@@ -430,8 +434,8 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
             Desc.bUseGravity = InteractJson[i]["UseGravity"];
 
             CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
-            CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-            CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+            CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+            CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 
             const json& TransformJson = InteractJson[i]["Component"]["Transform"];
             _float4x4 WorldMatrix;

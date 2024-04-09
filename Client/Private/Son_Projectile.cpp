@@ -61,7 +61,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	//m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_vMonsterPos);
 
 	m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.0f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
-
+	m_vPlayerPos.m128_f32[3] = 1.f;
 
 
 	m_fDamage = 10.f;
