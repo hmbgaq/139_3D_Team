@@ -360,7 +360,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json", 50));
 
 	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json", 200));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
@@ -370,7 +370,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherShakeTreeProjectile1.json", 200));
 
 	/* SnowBoss Falling Leaves */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_04.json", 10));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves.json", 30));
 #pragma endregion 보스2 이펙트 끝
 
 
@@ -412,6 +412,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
 		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
 #pragma endregion 플레이어 이펙트 끝
+
+		//Mother_Egg
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead2.json"));
 
 
 	return S_OK;

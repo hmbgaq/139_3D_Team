@@ -1141,6 +1141,60 @@ HRESULT CRenderer::Render_UI()
 
 	m_RenderObjects[RENDER_UI_FRONT].clear();
 
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_FIRST])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RENDER_UI_FIRST].clear();
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_SECOND])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RENDER_UI_SECOND].clear();
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_THIRD])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RENDER_UI_THIRD].clear();
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_FOURTH])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RENDER_UI_FOURTH].clear();
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_POPUP])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RENDER_UI_POPUP].clear();
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_CURSOR])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RENDER_CURSOR].clear();
+
 	return S_OK;
 }
 

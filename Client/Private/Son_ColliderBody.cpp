@@ -102,7 +102,7 @@ void CSon_ColliderBody::OnCollisionEnter(CCollider* other)
 	{
 		if (other->Get_Layer() == ECast(COLLISION_LAYER::PLAYER_ATTACK))
 		{
-			m_pMother->Get_Damaged(pAttackObject->Get_Damage());
+			m_pMother->Get_Damaged(pAttackObject->Get_Damage()*0.5f);
 		}
 	}
 

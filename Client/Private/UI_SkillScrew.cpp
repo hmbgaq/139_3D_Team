@@ -183,7 +183,7 @@ HRESULT CUI_SkillScrew::Bind_ShaderResources()
 		break;
 	case Client::CUI::LEVEL5:
 		break;
-	case Client::CUI::STAGE_END:
+	case Client::CUI::LEVEL_END:
 		break;
 	default:
 		break;

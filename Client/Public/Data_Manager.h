@@ -45,6 +45,7 @@ public:
 	void Set_Son2(CGameObject* _pSon);
 	CGameObject* Get_Son2();
 
+
 public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
 
@@ -72,7 +73,47 @@ public:
 	CNavigation* Get_Navigation() { return m_pNavigation; }
 	void		 Set_Navigation(CNavigation* pNavigation) { m_pNavigation = pNavigation; }
 
+public:
+	_bool Is_AdditionalSkill_Learned(Additional_Skill eAdditional_Skill) { return m_AdditionalSkills[ECast(eAdditional_Skill)]; }
+	void Set_AdditionalSkill(Additional_Skill eAdditional_Skill, _bool bValue) { m_AdditionalSkills[ECast(eAdditional_Skill)] = bValue; };
+
+	_float Get_Additional_ElectricDamage() { return m_fAdditional_ElectricDamage; }
+	void Activate_Additional_ElectricDamage() { m_fAdditional_ElectricDamage = 5.f; };
+
+	_float Get_Additional_MeleeDamage() { return m_fAdditional_MeleeDamage; }
+	void Activate_Additional_MeleeDamage() { m_fAdditional_MeleeDamage = 3.f; };
+
+	_float Get_HpRegen() { return m_fHpRegen; }
+	void Activate_HpRegen() { m_fHpRegen = 150.f; };
+
+	_float Get_Additional_MoveSpeed() { return m_fAdditional_MoveSpeed; }
+	void Activate_Additional_MoveSpeed() { m_fAdditional_MoveSpeed = 1.f; };
+
+	_bool Is_AdditionalWeapon_Acquired(Additional_Weapon eAdditional_Weapon) { return m_AdditionalWeapons[ECast(eAdditional_Weapon)]; }
+	void Set_AdditionalWeapon(Additional_Weapon eAdditional_Weapon, _bool bValue) { m_AdditionalWeapons[ECast(eAdditional_Weapon)] = bValue; };
+
+private:
+	_bool   m_AdditionalSkills[ECast(Additional_Skill::Additional_Skill_End)];
+	_bool   m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
+
+	_float   m_fAdditional_ElectricDamage = { 0.f };
+	_float   m_fAdditional_MeleeDamage = { 0.f };
+
+	_float  m_fHpRegen = { 100.f };
+	_float   m_fAdditional_MoveSpeed = { 0.f };
+
 // ! SH_Add
+public:
+	void	Set_MouseFix(_bool bFix) { m_bFix = bFix; }
+	_bool	Get_MouseFix() { return m_bFix; }
+
+	void	Set_MouseCenter(_bool bCenter) { m_bCenter = bCenter; }
+	_bool	Get_MouseCenter() { return m_bCenter; }
+
+private:
+	_bool	m_bCenter = false;
+	_bool	m_bFix = false;
+
 private: /* _float */
 	_float	m_fMaxHP = 100.f;
 	_float	m_fCurHP = 100.f;
@@ -91,49 +132,6 @@ private:
 public:
 	void	Set_SelectLevel(LEVEL eSelectLevel) { m_eSelectLevel = eSelectLevel; }
 	LEVEL	Get_SelectLevel() { return m_eSelectLevel; }
-
-
-public:
-	_bool Is_AdditionalSkill_Learned(Additional_Skill eAdditional_Skill) { return m_AdditionalSkills[ECast(eAdditional_Skill)]; }
-	void Set_AdditionalSkill(Additional_Skill eAdditional_Skill, _bool bValue) { m_AdditionalSkills[ECast(eAdditional_Skill)] = bValue; };
-
-	_bool Is_AdditionalWeapon_Acquired(Additional_Weapon eAdditional_Weapon) { return m_AdditionalWeapons[ECast(eAdditional_Weapon)]; }
-	void Set_AdditionalWeapon(Additional_Weapon eAdditional_Weapon, _bool bValue) { m_AdditionalWeapons[ECast(eAdditional_Weapon)] = bValue; };
-
-
-public:
-	_float Get_Additional_ElectricDamage() { return m_fAdditional_ElectricDamage; }
-	void Activate_Additional_ElectricDamage() { m_fAdditional_ElectricDamage = 5.f; };
-
-	_float Get_Additional_MeleeDamage() { return m_fAdditional_MeleeDamage; }
-	void Activate_Additional_MeleeDamage() { m_fAdditional_MeleeDamage = 3.f; };
-
-	_float Get_HpRegen() { return m_fHpRegen; }
-	void Activate_HpRegen() { m_fHpRegen = 150.f; };
-
-	_float Get_Additional_MoveSpeed() { return m_fAdditional_MoveSpeed; }
-	void Activate_Additional_MoveSpeed() { m_fAdditional_MoveSpeed = 1.f; };
-
-	_float Get_ExpGain() { return m_fExpGain; };
-	void Activate_ExpGain(_float _fExpGain) { m_fExpGain = 1.5f; };
-
-
-
-
-private:
-	_bool	m_AdditionalSkills[ECast(Additional_Skill::Additional_Skill_End)];
-	_bool	m_AdditionalWeapons[ECast(Additional_Weapon::Additional_Weapon_End)];
-
-	_float	m_fAdditional_ElectricDamage = { 0.f };
-	_float	m_fAdditional_MeleeDamage = { 0.f };
-
-	_float  m_fHpRegen = { 100.f };
-	_float	m_fAdditional_MoveSpeed = { 0.f };
-
-	_float	m_fExpGain = { 1.f };
-
-	//쿨타임 감소은 UI 수정, 
-
 
 private: /* _int */
 	_int	m_iCurLevel = 1;
@@ -197,7 +195,7 @@ public: /* ========================== Player Info ========================== */
 	// =>현재 경험치 Set함수
 	void	Set_CurEXP(_float fCurEXP) { m_fCurEXP = fCurEXP; }
 	// =>현재 경험치 Add함수
-	void	Add_CurEXP(_float fAddCurEXP) { m_fCurEXP += fAddCurEXP * m_fExpGain; }
+	void	Add_CurEXP(_float fAddCurEXP) { m_fCurEXP += fAddCurEXP; }
 
 #pragma region =========> MAX_ENERGYGUIGE <=========
 	// =>SkillGuige (Limit)
@@ -270,8 +268,8 @@ private:
 	CMasterCamera* m_pMasterCamera = { nullptr };
 	CPlayer* m_pPlayer = { nullptr };
 	CMother* m_pMother = { nullptr };
-	CGameObject*	m_pSon = { nullptr };
-	CGameObject*	m_pSon2 = { nullptr };
+	CGameObject* m_pSon = { nullptr };
+	CGameObject* m_pSon2 = { nullptr };
 
 	CSky* m_pSky = { nullptr };
 	CNavigation* m_pNavigation = { nullptr };

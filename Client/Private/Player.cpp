@@ -181,7 +181,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	
+
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
@@ -207,8 +207,10 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 
-	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) || true == Is_Splitted());
-	m_pDataManager->Set_ShowInterface(bIsNotIdle);
+	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
+	
+	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
+		m_pDataManager->Set_ShowInterface(bIsNotIdle);
 	
 
 	if (m_pNavigationCom != nullptr)
@@ -808,6 +810,24 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
+	/* ! UI : SkillWindow / Key : K */
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		m_bShowSkillWindow = !m_bShowSkillWindow;
+
+		if (m_bShowSkillWindow == true)
+		{
+			m_pUIManager->Active_SkillWindowBackground();
+			m_pUIManager->NonActive_PlayerHUD(); // PlayerHUD Off
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_SkillWindowAll();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
+
 	/* ! UI : DiedScreen / Key : I */
 	if (m_pGameInstance->Key_Down(DIK_I))
 	{
@@ -824,6 +844,17 @@ void CPlayer::KeyInput(_float fTimeDelta)
 			m_pUIManager->NonActive_DiedScreen();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
 		}
+	}
+
+	/* ! UI : TestText / Key : 6 */
+	if (m_pGameInstance->Key_Down(DIK_5))
+	{
+		m_pUIManager->Set_SkillLevel("ElectricCord", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
+	}
+	/* ! UI : TestText / Key : 7 */
+	if (m_pGameInstance->Key_Down(DIK_6))
+	{
+		m_pUIManager->Set_SkillLevel("ElectricDash", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
 	}
 
 	/* ! UI : TestText / Key : 7 */

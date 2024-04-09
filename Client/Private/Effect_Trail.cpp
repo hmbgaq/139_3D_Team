@@ -210,7 +210,6 @@ HRESULT CEffect_Trail::Ready_Components()
 		}
 	}
 
-
 	return S_OK;
 }
 

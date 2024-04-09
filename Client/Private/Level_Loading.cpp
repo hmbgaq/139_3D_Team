@@ -33,6 +33,9 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	/* 로딩용 자원을 로드한다. */
 	/* 로딩레벨에서 보여줘야할 객체들을 생성한다.(배경, 일러스트, 로딩바) */
 
+	// !SH Add
+	m_pUIManager->BasicUI_Off(); // BasicUI Off
+
 	/* 추가적인 스레드를 생성하여 eNextLevelID에 필요한 자원들을 로드한다. */
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevelID);
 

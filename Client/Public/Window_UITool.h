@@ -131,6 +131,7 @@ public:							/* Setting */
 public:							/* Create/Delete */
 	HRESULT						Create_Child(CUI::UI_DESC pUIDesc);
 	void						Delete_Child(_float fTimeDelta);
+	void						Delete_Child_All(_float fTimeDelta);
 	/* List */
 	void						Child_Class(_float fTimeDelta);
 	void						Child_Object(_float fTimeDelta);
@@ -521,7 +522,11 @@ private:
 		"SkillFrame",
 		"ConnectionLine",
 		"SkillScrew",
-		"SkillActive"
+		"SkillActive",
+		"SkillWindow_Button",
+		"WeaponFrame",
+		"WeaponIcon",
+		"WeaponActiveGuige"
 	};
 
 	// 클래스 목록을 저장하는 벡터
