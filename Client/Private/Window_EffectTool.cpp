@@ -3510,7 +3510,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pMeshBufferDesc->bDynamic_Color = FALSE;
 
 
-					/* Min 색 설정_파티클 */
+					/* Min 색 설정_메쉬 */
 					if (ImGui::ColorEdit4("Min_Color_Mesh", m_fColor_Min_Mesh, ImGuiColorEditFlags_None))
 					{
 						m_pMeshBufferDesc->vMinMaxRed.x = m_fColor_Min_Mesh[0];
@@ -3518,7 +3518,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pMeshBufferDesc->vMinMaxBlue.x = m_fColor_Min_Mesh[2];
 					}
 
-					/* Max 색 설정_파티클 */
+					/* Max 색 설정_메쉬 */
 					if (ImGui::ColorEdit4("Max_Color_Mesh", m_fColor_Max_Mesh, ImGuiColorEditFlags_None))
 					{
 						m_pMeshBufferDesc->vMinMaxRed.y = m_fColor_Max_Mesh[0];

@@ -45,6 +45,16 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 
 	CEffect* pEffect = EffectPool->front();
 
+
+	if (nullptr == pEffect)
+	{
+//#ifdef _DEBUG
+		MSG_BOX("CEffect_Manager :: 준비한 이펙트 개수를 초과했습니다.");
+		return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+//#endif // _DEBUG
+	}
+
+
 	//Safe_AddRef(pEffect);
 
 	if (nullptr != pOwner)
@@ -320,7 +330,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma region 테스트 이펙트 시작
 
 	/* Circle_Floor */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
 
 	/* Test Explosion */
@@ -352,6 +361,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", 50));
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json", 50));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_04.json", 50));
 #pragma endregion 보스1 이펙트 끝
 
 
@@ -360,7 +372,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json", 50));
 
 	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_04.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json", 200));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
