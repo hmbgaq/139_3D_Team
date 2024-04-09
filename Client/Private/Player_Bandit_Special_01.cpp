@@ -23,7 +23,8 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 	CData_Manager* pDataManager = CData_Manager::GetInstance();
 	if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER_UPGRADE))
 	{
-		Fire(pActor);
+		//Fire(pActor);
+		Create_Bullet(pActor);
 	}
 	
 	//Create_Bullet(pActor);
@@ -34,13 +35,17 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 	__super::Update(pActor, fTimeDelta);
 
 	fInputWaitTime += fTimeDelta;
+	if (0.7f <= fInputWaitTime) 
+	{
+		return new CPlayer_IdleLoop();
+	}
+
 
 	CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER);
 	_bool bIsCooltimeEnd = pActor->Is_HUD_Cooltime_End(eSelectedHUD, REVOLVER_DELAY);
-	if (0.7f <= fInputWaitTime || false == bIsCooltimeEnd) // ||  
+	if (false == bIsCooltimeEnd)
 	{
 		return new CPlayer_Revolver_Hip_ReloadFast_Alt03();
-		//return new CPlayer_IdleLoop();
 	}
 	
 
@@ -60,8 +65,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
-			Fire(pActor);
-			//Create_Bullet(pActor);
+			//Fire(pActor);
+			Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -73,8 +78,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
-			Fire(pActor);
-			//Create_Bullet(pActor);
+			//Fire(pActor);
+			Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -86,8 +91,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
-			Fire(pActor);
-			//Create_Bullet(pActor);
+			//Fire(pActor);
+			Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -99,8 +104,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
-			Fire(pActor);
-			//Create_Bullet(pActor);
+			//Fire(pActor);
+			Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -112,8 +117,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
-			Fire(pActor);
-			//Create_Bullet(pActor);
+			//Fire(pActor);
+			Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 		}
 	}
@@ -125,8 +130,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
 
-			Fire(pActor);
-			//Create_Bullet(pActor);
+			//Fire(pActor);
+			Create_Bullet(pActor);
 			pActor->Set_AnimState(CModel::ANIM_STATE_STOP);
 			
 		}
@@ -177,6 +182,11 @@ void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 		//pActor->Apply_Shake_And_Blur(Power::Light);
 	}
 	pActor->Set_Target(nullptr);
+
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
+	_float fDelay = (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER_UPGRADE)) ? REVOLVER_DELAY : 1.0f;
+
+	pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER), fDelay);
 
 }
 

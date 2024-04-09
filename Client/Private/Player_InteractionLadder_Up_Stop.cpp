@@ -11,7 +11,7 @@ void CPlayer_InteractionLadder_Up_Stop::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_InteractionLadder_Up_Stop::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }

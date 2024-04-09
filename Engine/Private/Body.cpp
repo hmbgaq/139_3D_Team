@@ -369,10 +369,10 @@ void CBody::Update_ShootingReaction(_float fTimeDelta)
 	m_fShootingReaction = max((1 - fTimeDelta * max(m_fShootingReaction / 2, 2)) * m_fShootingReaction, 0);
 }
 
-void CBody::Reset_UpperAngle(_float fPitch)
+void CBody::Reset_UpperAngle()//_float fPitch
 {
 	m_fRotateUpperX = { 0.f };
-	m_fRotateUpperY = { 2.6f + fPitch };
+	m_fRotateUpperY = { 3.0f }; //  + fPitch
 
 	//m_fShootingReaction = { 0.f };
 	//m_fShootingReactionTarget = { 0.f };

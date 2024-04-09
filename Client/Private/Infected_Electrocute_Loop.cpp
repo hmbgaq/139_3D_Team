@@ -34,6 +34,7 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 			if (false == m_bFlags[0])
 			{
 				pActor->Explosion();
+				pActor->Set_EnemyHUD_Dead();
 				m_bFlags[0] = true;
 			}
 			

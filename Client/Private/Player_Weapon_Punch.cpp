@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "Effect_Manager.h"
 
 CPlayer_Weapon_Punch::CPlayer_Weapon_Punch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
@@ -94,11 +95,23 @@ void CPlayer_Weapon_Punch::Attack(CCollider* other)
 		pTarget_Character->Set_Hitted(fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee, m_bKnockUp);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
-		CCharacter_Client* pOwnerCharacter = dynamic_cast<CCharacter_Client*>(Get_Object_Owner());
-		if (pOwnerCharacter)
+
+		//CCharacter_Client* pOwnerCharacter = dynamic_cast<CCharacter_Client*>(Get_Object_Owner());
+		//if (pOwnerCharacter)
+		//{
+		//	pOwnerCharacter->Create_Hitting_Effect(Get_WorldPosition(), m_eHitPower);
+		//}
+
 		{
-			pOwnerCharacter->Create_Hitting_Effect(Get_WorldPosition(), m_eHitPower);
+			_float3 vPos = Get_WorldPosition();
+			_float3 vTargetPos = pTarget_Character->Get_Position();
+			vTargetPos.y = vPos.y;
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos, true, vTargetPos);
+
+			//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", Get_WorldPosition(), true, pTarget_Character->Get_Position());
+			CData_Manager::GetInstance()->Apply_Shake_And_Blur(m_eHitPower);
 		}
+
 		Set_Enable_Collisions(false);
 	}
 }

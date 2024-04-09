@@ -128,7 +128,10 @@ HRESULT CExplosion_Infected_D::Ready_Components()
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
 	BoundingDesc.fRadius = { 3.f };
-	BoundingDesc.vCenter = _float3(0.f, -1.f * (BoundingDesc.fRadius / 2.f), 0.f);
+	BoundingDesc.vCenter = _float3(0.f, 0.f, -1.f * (BoundingDesc.fRadius / 2.f));
+	//BoundingDesc.vCenter = _float3(0.f, -1.f * (BoundingDesc.fRadius / 2.f), 0.f);
+
+
 
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pCollider), &BoundingDesc));
 	m_pCollider->Set_Enable(false);

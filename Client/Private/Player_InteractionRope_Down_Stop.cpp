@@ -11,7 +11,7 @@ void CPlayer_InteractionRope_Down_Stop::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_InteractionRope_Down_Stop::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }

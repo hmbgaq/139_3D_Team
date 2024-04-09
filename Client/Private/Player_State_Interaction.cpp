@@ -11,7 +11,7 @@ void CPlayer_State_Interaction::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_State_Interaction::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	return nullptr;
 }

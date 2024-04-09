@@ -133,17 +133,24 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 				fDamage += 5.f;
 			}
 
-
-			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
+			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+			_vector vPlayerPos = pPlayer->Get_Position_Vector();
 			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
 			pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+
+
+			_float3 vPos = m_pTransformCom->Get_Position();
+			_float3 vTargetPos = pPlayer->Get_Position();
+			vTargetPos.y = vPos.y;
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos, true, vTargetPos);
+
+			//EFFECT_MANAGER->Play_Effect("Hit/","Hit_Distortion.json", m_pTransformCom->Get_Position());
 		}
 		
 
-		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit/","Hit_Distortion.json", m_pTransformCom->Get_Position());
 
+		
 	}
 
 	m_pTrail->Set_Play(false);

@@ -194,8 +194,9 @@ CState<CInfected>* CInfected_State::Release_Summoning(CInfected* pActor, _float 
 	/* Death = 경험치 줌. <> Release Summoning = 경험치 안줌 */
 	if (false == m_bFlags[0])
 	{
-		pActor->Set_CntDead_Time(1.f);
-		pActor->Set_CntDead_Active(true);
+		//pActor->Set_CntDead_Time(1.f);
+		//pActor->Set_CntDead_Active(true);
+		pActor->Set_Dead(true);
 		m_bFlags[0] = true;
 	}
 

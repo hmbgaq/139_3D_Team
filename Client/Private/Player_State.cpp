@@ -903,8 +903,8 @@ CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uin
 		CData_Manager* pDataManager = CData_Manager::GetInstance();
 		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::SHOTGUN_UPGRADE)) 
 		{
-			fCost = SHOTGUN_MAXCOOLTIME / 2.f;
-			//fCost = 10.f;
+			fCost = 0.f;
+			//fCost = SHOTGUN_MAXCOOLTIME / 2.f;
 		}
 
 		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SHOTGUN);

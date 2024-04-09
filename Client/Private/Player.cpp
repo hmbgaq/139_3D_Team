@@ -129,7 +129,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Set_HUD_MaxCooltime(HUD::LEFT_TOP,		30.f);		//슈퍼차지
 	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT,	5.f);		//힐
-	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	6.f);		//리볼버
+	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	7.f);		//리볼버
 	Set_HUD_MaxCooltime(HUD::LEFT_LEFT,		SHOTGUN_MAXCOOLTIME);		//샷건
 
 	Set_HUD_MaxCooltime(HUD::RIGHT_TOP,		2.0f);	//라이플
