@@ -56,6 +56,7 @@ HRESULT CBullet_Bandit_Sniper::Ready_Components()
 
 	//! 유정: 트레일 추가
 	m_pTrail = EFFECT_MANAGER->Ready_Trail("Monster_Bullet_Trail.json", this);
+	m_pTrail->Set_Play(true); // 시작 때 트레일 켜기
 
 	return S_OK;
 }
@@ -108,7 +109,7 @@ void CBullet_Bandit_Sniper::OnCollisionEnter(CCollider* other)
 		//_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 		pTarget_Character->Set_Hitted(4.f, m_pTransformCom->Get_Look(), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 	}
-		
+	m_pTrail->Set_Play(false);
 	Set_Dead(true);
 }
 
@@ -161,8 +162,7 @@ void CBullet_Bandit_Sniper::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pTrail)
-		m_pTrail->Set_Dead(TRUE);
+	Safe_Release(m_pTrail);	// 트레일 삭제
 
 	//Safe_Release(m_pCollider);
 }

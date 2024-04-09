@@ -21,6 +21,8 @@ void CTank_MeleeDynamicShield_04::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_MeleeDynamicShield_04::Update(CTank* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(25);

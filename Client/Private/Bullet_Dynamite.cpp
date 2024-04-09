@@ -179,5 +179,5 @@ void CBullet_Dynamite::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 }

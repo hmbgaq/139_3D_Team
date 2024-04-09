@@ -31,17 +31,18 @@ Texture2D       g_ColorDiffuse;
 Texture2D       g_RADTexture;
 
 /* =========== Shader Value =========== */
-float   g_fDissolveWeight;                          /* Dissolve */
-                                                    
-float4  g_vLineColor = { 1.f, 1.f, 1.f, 1.f }; /* OutLine */
-float   g_LineThick = 1.f;                                /* OutLine */
-                                                    
-float3  g_vBloomPower = { 0.f, 0.f, 0.f };          /* Bloom */
-float4  g_vRimColor = { 0.f, 0.f, 0.f, 0.f };       /* RimLight */
-float   g_fRimPower = 5.f;
+float           g_fDissolveWeight;                          /* Dissolve */
+                                                            
+float4          g_vLineColor = { 1.f, 1.f, 1.f, 1.f };      /* OutLine */
+float           g_LineThick = 1.f;                          /* OutLine */
+                                                            
+float3          g_vBloomPower = { 0.f, 0.f, 0.f };          /* Bloom */
+float4          g_vRimColor = { 0.f, 0.f, 0.f, 0.f };       /* RimLight */
+float           g_fRimPower = 5.f;
 
-float   g_fReflectionScale = 0.05f;                 /* Icicle */ 
+float           g_fReflectionScale = 0.05f;                 /* Icicle */ 
 
+matrix          g_CascadeProj;                              /* Cascade */
 /*=============================================================
  
                              Function 
@@ -118,6 +119,19 @@ struct VS_OUT
 	float4		vBinormal       : BINORMAL;
 };
 
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
+};
+
+struct VS_OUT_CASCADE_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+
+};
 struct VS_OUT_OUTLINE
 {
     float4 vPosition : SV_POSITION;
@@ -219,6 +233,38 @@ VS_OUT VS_MAIN(VS_IN In)
 	return Out;
 }
 
+
+
+VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
+{
+    VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vProjPos = Out.vPosition;
+    
+    return Out;
+}
+
+VS_OUT_CASCADE_SHADOW VS_MAIN_CASCADE(VS_IN In)
+{
+    VS_OUT_CASCADE_SHADOW Out = (VS_OUT_CASCADE_SHADOW) 0;
+
+    float4 vPosition = float4(In.vPosition, 1.f);
+    vPosition = mul(vPosition, g_WorldMatrix);
+    vPosition = mul(vPosition, g_CascadeProj);
+
+    Out.vPosition = vPosition;
+    Out.vTexcoord = In.vTexcoord;
+
+    return Out;
+}
+
 VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
 {
     VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
@@ -230,6 +276,7 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
 
     float4 OutPos = vector(In.vPosition.xyz + In.vNormal.xyz * g_LineThick, 1);
     Out.vPosition = mul(OutPos, matWVP);
+    Out.vPosition.z -= 0.001f;
     Out.vTexcoord = In.vTexcoord;
     
     return Out;
@@ -272,7 +319,7 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.0f)
+    if (vMtrlDiffuse.a == 0.0f)
         discard;
     
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
@@ -312,9 +359,14 @@ PS_OUT PS_SKYBOX_MAIN(PS_IN In)
 }
 
 /* ------------------- Shadow Pixel Shader(2) -------------------*/
-PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
+PS_OUT_SHADOW PS_MAIN_SHADOW(VS_OUT_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+    
+    float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vColor.a == 0.0f)
+        discard;
 
     Out.vLightDepth = In.vProjPos.w / g_fLightFar;
 	
@@ -322,11 +374,29 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN In)
 }
 
 /* ------------------- Shadow Pixel Shader(3) -------------------*/
+
+PS_OUT_SHADOW PS_MAIN_CASCADE(VS_OUT_CASCADE_SHADOW In)
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+    
+    float4 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vColor.a == 0.0f)
+        discard;
+
+    Out.vLightDepth = float4(In.vPosition.z, 0.0f, 0.0f, 0.0f);
+    
+    return Out;
+}
+
+/* ------------------- Shadow Pixel Shader(4) -------------------*/
 PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.0f)
+        discard;
     vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     vector vColor;
     
@@ -340,7 +410,7 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    Out.vIndependence = vColor;
+    //Out.vIndependence = vColor;
     
     return Out;
 }
@@ -350,9 +420,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    float4 color = { 1.f, 1.f, 1.f, 1.f };
-    vector vColor = color + vMtrlDiffuse;
+    float4 vColor = lerp(g_vLineColor, mul(g_vLineColor, float4(0.f, 0.f, 0.f, 0.f)), g_fTimeDelta);
     
     Out.vColor = vColor;
    
@@ -530,7 +598,6 @@ PS_OUT PS_MAIN_ALPHACOLOR(PS_IN In)
  
     return Out;
 }
-
 /* ------------------- (10) Icicle -------------------*/
 PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
 {
@@ -549,7 +616,7 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     RefractTexCoord = RefractTexCoord + (vNormal.xy * g_fReflectionScale);
     
     float4 RefractionColor = g_NoiseTexture.Sample(LinearSampler, RefractTexCoord);    
-    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord);
+    vector vMtrlDiffuse = g_ColorDiffuse.Sample(LinearSampler, In.vTexcoord); /* Ice Diffuse Texture */ 
     
     Out.vDiffuse = lerp(RefractionColor, vMtrlDiffuse, 0.5f);
     
@@ -570,7 +637,7 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     vNormal = mul(vNormal, WorldMatrix);
     Out.vNormal = (vector(vNormal * 0.5f + 0.5f, 0.f)) * 0.2;
     
-    Out.vIndependence = Out.vDiffuse;
+    //Out.vIndependence = Out.vDiffuse;
     
     //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
     //Out.vDiffuse += vRimColor;
@@ -580,6 +647,7 @@ PS_OUT PS_MAIN_ICICLE(PS_IN_ICICLE In)
     
 }
 
+/* ------------------- (11) Clip -------------------*/
 PS_OUT PS_MAIN_CLIP(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -605,6 +673,19 @@ PS_OUT PS_MAIN_CLIP(PS_IN In)
     if (true == g_bEmissive_Available)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
+    return Out;
+}
+
+
+/* ------------------- (12) Outline Kepp Color  -------------------*/
+PS_OUT_OUTLINE PS_MAIN_OUTLINE_KEEP(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    float4 color = g_vLineColor;
+    
+    Out.vColor = color;
+   
     return Out;
 }
 
@@ -647,14 +728,27 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 
-    pass White_Blink // 3 - Interact Chain전용 
+    pass Cascade // 3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_CASCADE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_CASCADE();
+    }
+
+    pass White_Blink // 4 - Interact Chain전용 
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -665,22 +759,6 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_WHITE_BLINK();
-    }
-
-    pass OutLine // 4
-    {
-        //SetRasterizerState(RS_Cull_CW);
-        //SetDepthStencilState(DSS_Default, 0);
-        //SetBlendState(BS_AlphaBlend_Add, float4(0.0f, 0.0f, 0.0f, 0.1f), 0xffffffff);
-
-        SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
-        GeometryShader = NULL;
-        HullShader = NULL;
-        DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 
     pass Model_NoneCull_NoneDSS //5번 패스
@@ -766,5 +844,31 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_CLIP();
     }
+
+    pass OutLine_Keep // 12
+    {
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_KEEP();
+    }
+
+    pass OutLine_Blink // 4
+    {
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_Default, 0);
+        //SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
+    }
+
 
 }

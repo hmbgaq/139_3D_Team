@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "Character.h"
 
 CCamera_Dynamic::CCamera_Dynamic(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strPrototypeTag)
 	: CCamera(pDevice, pContext, strPrototypeTag)
@@ -76,10 +77,24 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 		}
 	}
 
-		if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		if (m_pGameInstance->Key_Down(DIK_F2))
+			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+	}
+
+		if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
 		{
-			if (m_pGameInstance->Key_Down(DIK_F2))
-				CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+			CCharacter* pCharacter = m_pGameInstance->Get_Player();
+
+			if (pCharacter != nullptr)
+			{
+				//pCharacter->Get_Navigation()->SpawnCell_Setting(m_pTransformCom->Get_Position());
+				pCharacter->Set_InitPosition(m_pTransformCom->Get_Position());
+
+			}
+			else
+				MSG_BOX("플레이어가 없서영");
 		}
 
 	__super::Tick(fTimeDelta);

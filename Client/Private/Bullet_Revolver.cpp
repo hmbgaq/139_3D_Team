@@ -97,6 +97,7 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 		m_eHitDirection = Direction::Front;
 		m_eHitPower = Power::Medium;
 		m_fForce = 0.f;
+		m_fDamage = 4.f;
 
 		_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
 		_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
@@ -105,7 +106,7 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 
 
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	if (CData_Manager::GetInstance()->Get_Mother() != nullptr)
@@ -189,5 +190,5 @@ void CBullet_Revolver::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 }

@@ -9,7 +9,7 @@
 CEffect_Trail::CEffect_Trail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = false;
 }
 
 CEffect_Trail::CEffect_Trail(const CEffect_Trail& rhs)
@@ -37,7 +37,7 @@ HRESULT CEffect_Trail::Initialize(void* pArg)
 		return E_FAIL;
 
 	// 트레일은 빌보드를 항상 끔
-	m_tVoidDesc.bBillBoard = FALSE;
+	m_tVoidDesc.bBillBoard = false;
 
 	return S_OK;
 }
@@ -66,15 +66,15 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 
 			//if (!m_pOwner->Is_Dead())
 			{
-				if (FALSE == m_tVoidDesc.bPlay)
+				if (false == m_tVoidDesc.bPlay)
 				{
-					m_tVoidDesc.bRender = FALSE;
+					m_tVoidDesc.bRender = false;
 					m_pVIBufferCom->Reset_Points(_ParentMatrix);
 					return;
 				}
 				else
 				{
-					m_tVoidDesc.bRender = TRUE;
+					m_tVoidDesc.bRender = true;
 
 					if (!m_bPause)	// 일시정지
 					{
@@ -100,6 +100,29 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 		//if (m_tVoidDesc.bActive_Tool)
 		{
 #endif // _DEBUG
+
+			//if (nullptr != m_pOwner)	// 주인이 존재하고,
+			//{
+			//	// 비활성화 상태다.
+			//	if (!m_pOwner->Get_Enable())
+			//	{
+			//		Set_Play(false);	// 재생 정지만
+
+			//		return;
+			//	}
+		
+			//	// 이펙트의 주인이 죽었다.
+			//	if (m_pOwner->Is_Dead())
+			//	{
+			//		Set_Play(false);	// 재생 정지
+			//	
+			//		Delete_Object_Owner();	// 오너 해제
+			//		Set_Dead(true);			// 트레일도 죽음
+
+			//		return;
+			//	}
+			//}
+
 
 			if (m_tVoidDesc.bRender)
 			{
@@ -419,11 +442,14 @@ void CEffect_Trail::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVIBufferCom);
+	Delete_Object_Owner();	// 오너 해제
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
 
+	Safe_Release(m_pVIBufferCom);
+
 	Safe_Release(m_pShaderCom);
+
 }
 

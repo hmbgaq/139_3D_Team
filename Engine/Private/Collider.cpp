@@ -96,6 +96,9 @@ _bool CCollider::Is_Collision(CCollider* pTargetCollider)
 
 void CCollider::Collision(CCollider * pTargetCollider)
 {
+	if (m_bEnable == false)
+		return;
+
 	m_isCollision = true;
 
 	_bool bIs_SameColl = false;
@@ -158,7 +161,7 @@ void CCollider::End_CollisionCheck()
 
 void CCollider::OnCollisionEnter(CCollider* other)
 {
-	if (false == m_bEnable || nullptr == m_pOwner)
+	if (false == m_bEnable || nullptr == m_pOwner || false == m_pOwner->Get_Enable() || true == m_pOwner->Is_Dead())
 		return;
 
 	if (true == m_pOwner->Get_Enable() && nullptr != m_pOwner)

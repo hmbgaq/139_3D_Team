@@ -26,26 +26,26 @@ CState<CMother>* CMother_ShakeTreeLoop::Update(CMother* pActor, _float fTimeDelt
 		pActor->Apply_Shake_And_Blur(Power::Medium);
 		//이떄 카메라 쉐이킹 하면서 맵에 전체 공격 패턴 추가하면 될 거같음 
 		CGameObject* pObjcet = { nullptr };
-		for (int i = 0; i < 3; ++i)
+		for (int i = 0; i < 2; ++i)
 		{
-			for (int j = 0; j < 3; ++j)
+			for (int j = 0; j < 2; ++j)
 			{
-				_float fRandom = SMath::Random(-5.f, 5.f);
-				_float fRandom2 = SMath::Random(-5.f, 5.f);
-
-
+				_float fRandom = SMath::fRandom(-5.f, 5.f);
+				_float fRandom2 = SMath::fRandom(-5.f, 5.f);
+				_float fRandom3 = SMath::fRandom(-5.f, 5.f);
+				_float fRandom4 = SMath::fRandom(-5.f, 5.f);
 				//++방향 1사분면
 				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
-				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3((j + 1) * 8.f, (15.f + fRandom), (i + 1) * 8.f));
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3((j + 1) * 10.f, (20.f + fRandom), (i + 1) * 10.f));
 				//-+방향 2사분면
 				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
-				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3(-j * 8.f, (15.f + fRandom), i * 8.f));
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3(-j * 10.f, (20.f + fRandom2), i * 10.f));
 				//--방향 3사분면
 				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
-				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3((-j - 1) * 8.f, (15.f + fRandom2), (-i - 1) * 8.f));
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3((-j - 1) * 10.f, (20.f + fRandom3), (-i - 1) * 10.f));
 				//+-방향 4사분면
 				pObjcet = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_GameObject_MotherShakeTreeProjectile");
-				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3(j * 8.f, (15.f + fRandom), -i * 8.f));
+				pObjcet->Set_Position(CData_Manager::GetInstance()->Get_Player()->Get_Position() + _float3(j * 10.f, (20.f + fRandom4), -i * 10.f));
 			}
 
 		}

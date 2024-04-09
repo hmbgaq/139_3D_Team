@@ -47,4 +47,5 @@ void CPlayer_Revolver_Hip_ReloadFast_Alt03::Release(CPlayer* pActor)
 	__super::Release(pActor);
 	pActor->Set_Splitted(false);
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, false);
+	pActor->Set_HUD_Cooltime(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::REVOLVER), 0.f);
 }

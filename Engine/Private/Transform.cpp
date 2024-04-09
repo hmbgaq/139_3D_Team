@@ -79,6 +79,11 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 
 		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &m_bIsGround);
 
+		if (isnan(fHeight) == true)
+		{
+			_int i = 0;
+		}
+
 		if (true == m_bIsGround)
 		{
 			vResult.y = fHeight;
@@ -142,7 +147,7 @@ void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTime
 		
 		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &m_bIsGround);
 
-		if (true == m_bIsGround)
+		if (true == m_bIsGround && pNavigation->Get_InteractMoveMode())
 		{
 			vResult.y = fHeight;
 		}
@@ -328,7 +333,7 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 
 	m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
 
-	_float vLocalPos;
+	//_float vLocalPos;
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 	
@@ -360,6 +365,127 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 	return false;
 
 }
+
+_bool CTransform::Rotation_LerpAxis(_float fRadian, _float fTimeDelta, ROTATION_LERP_STATE eLerpAxis, _float fMinRadian)
+{
+	_vector vAxis = {};
+
+	switch (eLerpAxis)
+	{
+		case Engine::LERP_X:
+			vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+			m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).x;
+			break;
+		case Engine::LERP_Y:
+			vAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+			m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
+			break;
+		case Engine::LERP_Z:
+			vAxis = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+			m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).z;
+			break;
+	}
+	
+
+	//_float vLocalPos;
+	_float fTargetAngle = XMConvertToDegrees(fRadian);
+	_float fAngle = XMConvertToDegrees(m_fRadian);
+
+
+	_float fDiff = max(abs(fTargetAngle - fAngle) / 20.f, 1.f);
+
+	if (fMinRadian > abs(fTargetAngle - fAngle))
+	{
+		Rotation(vAxis, fRadian);
+		return true;
+	}
+
+	_int iDir = abs(fTargetAngle - fAngle < 180) ? 1 : -1;
+	iDir *= (fTargetAngle > fAngle) ? 1 : -1;
+
+	_vector      vRight = Get_State(STATE_RIGHT);
+	_vector      vUp = Get_State(STATE_UP);
+	_vector      vLook = Get_State(STATE_LOOK);
+
+	_float fAdditionalRadian = m_fRotationPerSec * fTimeDelta * iDir * fDiff;
+	m_fRadian += fAdditionalRadian;
+
+	_matrix      RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
+
+	Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+	Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+	Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+
+	return false;
+}
+
+_bool CTransform::Rotation_QuaternionLerpAxis(_float fRadian, _float fTimeDelta, ROTATION_LERP_STATE eLerpAxis, _float fMinRadian)
+{
+	XMVECTOR vAxis = {};
+
+	switch (eLerpAxis)
+	{
+	case Engine::LERP_X:
+		vAxis = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+		m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).x;
+		break;
+	case Engine::LERP_Y:
+		vAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
+		break;
+	case Engine::LERP_Z:
+		vAxis = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+		m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).z;
+		break;
+	}
+
+	//_float vLocalPos;
+	_float fTargetAngle = XMConvertToDegrees(fRadian);
+	_float fAngle = XMConvertToDegrees(m_fRadian);
+
+	_float fDiff = max(std::abs(fTargetAngle - fAngle) / 20.f, 1.f);
+
+	if (fMinRadian > std::abs(fTargetAngle - fAngle))
+	{
+		_float3 vScale = Get_Scaled();
+
+		_vector vRight = XMVector3Normalize(Get_State(STATE_RIGHT)) * vScale.x;
+		_vector vUp = XMVector3Normalize(Get_State(STATE_UP)) * vScale.y;
+		_vector vLook = XMVector3Normalize(Get_State(STATE_LOOK)) * vScale.z;
+
+		_matrix RotationMatrix = XMMatrixRotationAxis(vRight, XMVectorGetX(vAxis) * fRadian) *
+		XMMatrixRotationAxis(vUp, XMVectorGetY(vAxis) * fRadian) *
+		XMMatrixRotationAxis(vLook, XMVectorGetZ(vAxis) * fRadian);
+
+		Set_State(STATE_RIGHT, XMVector3TransformNormal(vRight, RotationMatrix));
+		Set_State(STATE_UP, XMVector3TransformNormal(vUp, RotationMatrix));
+		Set_State(STATE_LOOK, XMVector3TransformNormal(vLook, RotationMatrix));
+		
+		return true;
+	}
+
+	_int iDir = std::abs(fTargetAngle - fAngle < 180) ? 1 : -1;
+	iDir *= (fTargetAngle > fAngle) ? 1 : -1;
+
+	XMVECTOR vRight = Get_State(STATE_RIGHT);
+	XMVECTOR vUp = Get_State(STATE_UP);
+	XMVECTOR vLook = Get_State(STATE_LOOK);
+
+	_float fAdditionalRadian = m_fRotationPerSec * fTimeDelta * iDir * fDiff;
+	m_fRadian += fAdditionalRadian;
+
+	XMMATRIX RotationMatrix = XMMatrixRotationAxis(vAxis, fAdditionalRadian);
+
+	XMVECTOR qRotation = XMQuaternionRotationMatrix(RotationMatrix);
+
+	Set_State(STATE_RIGHT, XMVector3Rotate(vRight, qRotation));
+	Set_State(STATE_UP, XMVector3Rotate(vUp, qRotation));
+	Set_State(STATE_LOOK, XMVector3Rotate(vLook, qRotation));
+
+	return false;
+}
+
+
 
 void CTransform::Rotation_Quaternion(_float3 vRotation)
 {
@@ -403,7 +529,7 @@ _bool CTransform::Go_TargetArrivalCheck(_fvector vTargetPos, _double fTimeDelta,
 
 	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
 	//Look_At(vTargetPos);
-	Look_At_Lerp(vTargetPos, fTimeDelta, 0.2f);
+	Look_At_Lerp(vTargetPos, (_float)fTimeDelta, 0.2f);
 
 	if (fDistance >= fSpare)
 	{

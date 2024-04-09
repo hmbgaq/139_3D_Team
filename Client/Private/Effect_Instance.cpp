@@ -140,34 +140,34 @@ HRESULT CEffect_Instance::Render()
 	FAILED_CHECK(Bind_ShaderResources());
 
 
-	if (m_pVIBufferCom->Get_Desc()->bMorph)	// 모프가 true이면 (박쥐 모델)
+	//if (m_pVIBufferCom->Get_Desc()->bMorph)	// 모프가 true이면 (박쥐 모델)
+	//{
+	//	_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
+
+	//	if (FALSE == m_tInstanceDesc.bUseCustomTex)
+	//	{
+	//		m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
+	//	}
+	//
+	//	m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
+	//	m_pVIBufferCom->Render((_uint)0);
+
+	//	return S_OK;
+	//}
+	//else
 	{
-		_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
-		if (FALSE == m_tInstanceDesc.bUseCustomTex)
+		for (size_t i = 0; i < iNumMeshes; i++)
 		{
-			m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
-		}
-	
-		m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
-		m_pVIBufferCom->Render((_uint)0);
-
-		return S_OK;
-	}
-	else
-	{
-		//_uint	iNumMeshes = m_pModelCom[0]->Get_NumMeshes();
-
-		//for (size_t i = 0; i < iNumMeshes; i++)
-		{
-			if (FALSE == m_tInstanceDesc.bUseCustomTex)
+			if (false == m_tInstanceDesc.bUseCustomTex)
 			{
-				m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
+				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 				//m_pModelCom[0]->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)0, aiTextureType_NORMALS);
 			}
 
 			m_pShaderCom->Begin(m_tVoidDesc.iShaderPassIndex);
-			m_pVIBufferCom->Render((_uint)0);
+			m_pVIBufferCom->Render((_uint)i);
 		}
 	}
 
@@ -191,7 +191,7 @@ void CEffect_Instance::ReSet_Effect()
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
 	{
-		m_tVoidDesc.bRender = FALSE;
+		//m_tVoidDesc.bRender = FALSE;
 		m_pVIBufferCom->ReSet(); // 버퍼 리셋
 	}
 		
@@ -334,17 +334,17 @@ HRESULT CEffect_Instance::Change_ModelCom(wstring strProtoModelTag)
 
 	//_uint iCurLevel = m_pGameInstance->Get_CurrentLevel();
 
-	if (nullptr != m_pModelCom[0])
+	if (nullptr != m_pModelCom)
 	{
-		Remove_Component(TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0]));
+		Remove_Component(TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom));
 	}
 
-	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoModelTag, TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[0])));
+	FAILED_CHECK(__super::Add_Component(LEVEL_STATIC, strProtoModelTag, TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 
-	if (nullptr != m_pModelCom[0])
+	if (nullptr != m_pModelCom)
 	{
-		m_pVIBufferCom->Change_Model(m_pModelCom[0]);
+		m_pVIBufferCom->Change_Model(m_pModelCom);
 	}
 
 	m_tVoidDesc.strModelTag[0] = strProtoModelTag;
@@ -414,16 +414,16 @@ HRESULT CEffect_Instance::Ready_Components()
 
 	/* For.Com_Model */
 	{
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_01],
-			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_01]))))
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strModelTag[0],
+			TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 			return E_FAIL;
 
-		if (TEXT("") != m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02])
-		{
-			if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02],
-				TEXT("Com_Model_Morph"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_02]))))
-				return E_FAIL;
-		}
+		//if (TEXT("") != m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02])
+		//{
+		//	if (FAILED(__super::Add_Component(LEVEL_STATIC, m_tVoidDesc.strModelTag[CVIBuffer_Effect_Model_Instance::MORPH_02],
+		//		TEXT("Com_Model_Morph"), reinterpret_cast<CComponent**>(&m_pModelCom[CVIBuffer_Effect_Model_Instance::MORPH_02]))))
+		//		return E_FAIL;
+		//}
 	}
 
 
@@ -440,11 +440,11 @@ HRESULT CEffect_Instance::Ready_Components()
 //		}
 //#endif // _DEBUG
 
-		for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
+		//for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MODE_END); ++i)
 		{
-			if (nullptr != m_pModelCom[i])
+			if (nullptr != m_pModelCom)
 			{
-				tBufferInfo.pModel[i] = m_pModelCom[i];
+				tBufferInfo.pModel = m_pModelCom;
 			}		
 		}
 
@@ -608,20 +608,17 @@ CGameObject* CEffect_Instance::Pool()
 void CEffect_Instance::Free()
 {
 	__super::Free();
-	
-	for (_int i = 0; i < ECast(CVIBuffer_Effect_Model_Instance::MORPH_END); i++)
-	{
-		if (nullptr != m_pModelCom[i])
-		{
-			Safe_Release(m_pModelCom[i]);
-		}	
-	}
-		
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pVIBufferCom);
+
+	Delete_Object_Owner();
+
+	Safe_Release(m_pModelCom);
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);
+
+	Safe_Release(m_pVIBufferCom);
+
+	Safe_Release(m_pShaderCom);
 
 }
 

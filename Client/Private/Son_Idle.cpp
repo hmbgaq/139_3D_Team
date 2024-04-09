@@ -9,6 +9,7 @@ void CSon_Idle::Initialize(CSon* pActor)
 
 	pActor->Get_Weapon(L"Weapon_head")->Set_Enable_Collisions(false);
 
+	pActor->Set_MonsterAttackState(false);
 }
 
 CState<CSon>* CSon_Idle::Update(CSon* pActor, _float fTimeDelta)

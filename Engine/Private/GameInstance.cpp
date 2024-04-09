@@ -119,6 +119,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Tick(m_fTimeDelta);
 
+
+
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -133,6 +135,8 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	//m_pRenderer->
 
 	/*m_pEvent_Manager->Clear();*/
 }
@@ -151,6 +155,7 @@ HRESULT CGameInstance::Render_Engine()
 
 	m_pInput_Device->LateTick();
 
+	Open_Requested_Level();
 	return S_OK;
 }
 
@@ -286,6 +291,32 @@ _float CGameInstance::Compute_TimeDelta(const wstring & strTimeTag)
 	return m_pTimer_Manager->Compute_TimeDelta(strTimeTag);
 }
 
+HRESULT CGameInstance::Request_Level_Opening(_uint iCurrentLevelIndex, CLevel* pNewLevel)
+{
+	if (nullptr == m_pLevel_Manager)
+		return E_FAIL;
+
+	m_iCurrentLevelIndex = iCurrentLevelIndex;
+	m_pNewLevel = pNewLevel;
+	m_bIsRequestOpenLevel = true;
+
+	return S_OK;
+}
+
+HRESULT CGameInstance::Open_Requested_Level()
+{
+	if (nullptr == m_pLevel_Manager)
+		return E_FAIL;
+
+	if (true == m_bIsRequestOpenLevel)
+	{
+		m_bIsRequestOpenLevel = false;
+		return m_pLevel_Manager->Open_Level(m_iCurrentLevelIndex, m_pNewLevel);
+	}
+
+	return S_OK;
+}
+
 HRESULT CGameInstance::Open_Level(_uint iCurrentLevelIndex, CLevel * pNewLevel)
 {
 	if (nullptr == m_pLevel_Manager)
@@ -308,6 +339,15 @@ _uint CGameInstance::Get_CurrentLevel()
 void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
 {
 	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);
+}
+
+HRESULT CGameInstance::Set_ShaderOption(_uint CurrentLevel, string filePath)
+{
+	NULL_CHECK_RETURN(m_pLevel_Manager, E_FAIL);
+
+	m_pLevel_Manager->Set_ShaderOption(CurrentLevel, filePath);
+
+	return S_OK;
 }
 
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)
@@ -446,6 +486,13 @@ void CGameInstance::Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture)
 	return m_pRenderer->Set_ToolPBRTexture_InsteadLevel(iPBRTexture);
 }
 
+HRESULT CGameInstance::Add_CascadeObject(_uint iIndex, CGameObject* pObject)
+{
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
+
+	return m_pRenderer->Add_CascadeObject(iIndex, pObject);
+}
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {
@@ -537,12 +584,28 @@ _float CGameInstance::Get_CamFar()
 	return m_pPipeLine->Get_CamFar();
 }
 
-_float4x4 CGameInstance::Get_Shadow_Proj()
+_float4x4* CGameInstance::Get_Shadow_Proj()
 {
 	if (nullptr == m_pPipeLine)
-		return _float4x4();
+		return nullptr;
 
-	return m_pPipeLine->Get_Shadow_Proj();
+	return m_pPipeLine->Get_ShadowProj();
+}
+
+void CGameInstance::Set_ShadowProj(_float4x4* pMatrix)
+{
+	if (nullptr == m_pPipeLine)
+		return;
+
+	return m_pPipeLine->Set_ShadowProj(pMatrix);
+}
+
+void CGameInstance::Set_CascadeBoxes(BoundingOrientedBox* pBoxes)
+{
+	if (nullptr == m_pPipeLine)
+		return;
+
+	return m_pPipeLine->Set_CascadeBoxes(pBoxes);
 }
 
 
@@ -715,6 +778,7 @@ HRESULT CGameInstance::Add_MRT(const wstring & strMRTTag, const wstring & strTar
 HRESULT CGameInstance::Begin_MRT(const wstring & strMRTTag, ID3D11DepthStencilView* pDSV, _bool bClear)
 {
 	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+
 	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, bClear);
 }
 
@@ -812,6 +876,20 @@ void CGameInstance::Get_AllLight(list<class CLight*>* pTemp)
 	NULL_CHECK_RETURN(m_pLight_Manager, );
 
 	return m_pLight_Manager->Get_AllLight(pTemp);
+}
+
+_float4x4 CGameInstance::Get_StaticLight()
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, _float4x4());
+
+	return m_pLight_Manager->Get_StaticLight();
+}
+
+HRESULT CGameInstance::Ready_StaticLightMatrix(_float3 vPos, _float3 vLook)
+{
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+
+	return m_pLight_Manager->Ready_StaticLightMatrix(vPos, vLook);
 }
 
 HRESULT CGameInstance::Render_Lights(CShader * pShader, CVIBuffer_Rect * pVIBuffer)

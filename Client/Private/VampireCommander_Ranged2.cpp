@@ -1,6 +1,9 @@
 #include "VampireCommander_Ranged2.h"
 #include "VampireCommander_Idle.h"
 #include "Body_VampireCommander.h"
+
+#include "VampireCommander_Weapon.h"
+
 void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
@@ -17,6 +20,10 @@ void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 
 	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
 	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
+
+
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(true);	// 트레일 켜기
+
 
 	pActor->m_bLookAt = false;
 }
@@ -41,6 +48,8 @@ CState<CVampireCommander>* CVampireCommander_Ranged2::Update(CVampireCommander* 
 	{
 		m_bFlags[1] = false;
 		m_bFlags[3] = true;
+
+		dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// 트레일 끄기
 		pWeapon->Set_Enable(false);
 
 	}

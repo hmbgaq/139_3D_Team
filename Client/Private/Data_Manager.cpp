@@ -41,6 +41,17 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 	//}
 
 
+	for (_uint i = 0; i < ECast(Additional_Skill::Additional_Skill_End); ++i)
+	{
+		m_AdditionalSkills[i] = true;
+	}
+
+	//for (_uint i = 0; i < ECast(Additional_Weapon::Additional_Weapon_End); ++i)
+	//{
+	//	m_AdditionalWeapons[i] = false;
+	//}
+	
+
 	return S_OK;
 }
 
@@ -98,14 +109,24 @@ CMother* CData_Manager::Get_Mother()
 	return m_pMother;
 }
 
-void CData_Manager::Set_Son(CSon* _pSon)
+void CData_Manager::Set_Son(CGameObject* _pSon)
 {
 	m_pSon = _pSon;
 }
 
-CSon* CData_Manager::Get_Son()
+CGameObject* CData_Manager::Get_Son()
 {
 	return m_pSon;
+}
+
+void CData_Manager::Set_Son2(CGameObject* _pSon)
+{
+	m_pSon2 = _pSon;
+}
+
+CGameObject* CData_Manager::Get_Son2()
+{
+	return m_pSon2;
 }
 
 void CData_Manager::Apply_Shake_And_Blur(Power ePower)

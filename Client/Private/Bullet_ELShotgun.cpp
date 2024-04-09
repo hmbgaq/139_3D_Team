@@ -94,17 +94,20 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 		m_eHitDirection = Direction::Front;
 		m_eHitPower = Power::Medium;
 		m_fForce = 0.f;
+
+		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
+
 		if (nullptr != pTarget_Character)
 		{
 			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
 			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee);
+			pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee);
 		}
 
 
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 
@@ -185,5 +188,5 @@ void CBullet_ELShotgun::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 }

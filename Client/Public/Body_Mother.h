@@ -34,6 +34,7 @@ public:
 
 public:
 	void SetUp_Animation(_uint iAnimIndex);
+
 public: /* For. RenderState */
 	void	Set_RenderState(RENDER_STATE _state) { m_eRender_State = _state; }
 private:

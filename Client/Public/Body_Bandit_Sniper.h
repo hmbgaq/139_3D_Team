@@ -23,14 +23,20 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Shadow() override;
+	virtual HRESULT Render_CSM(_uint i) override;
+	virtual HRESULT Render_OutLine() override;
+
+public:
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	HRESULT Ready_ShadeValue();
 
 private:
 	CTexture*	m_pDissolveTexture = { nullptr };
 	_bool		m_bDissolve = { false };
+	_bool		m_bOutLine = { false };
 
 	/* Dissolve */
 	_float		m_fDissolveWeight = 0.f;
@@ -40,6 +46,13 @@ private:
 	_float		m_fTimeAcc = 0.f;
 
 	_bool               m_bDeadState = { false };
+
+	/* OutLine */
+	_float4		m_vLineColor = {};
+	_float 		m_fLineThick = {};
+	_float		m_fLineThick_Ratio = {};
+	_float		m_fLineTimeAcc = {};
+	_bool		m_bIncrease = { true };
 
 public:
 	static CBody_Bandit_Sniper* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -12,6 +12,7 @@ void CTank_Charge_Fail_L::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_Charge_Fail_L::Update(CTank* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
 
 	if (pActor->Is_Animation_End())
 	{

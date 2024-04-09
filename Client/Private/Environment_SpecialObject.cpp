@@ -8,6 +8,7 @@
 #include "UI.h"
 #include "Cell.h"
 #include "SMath.h"
+#include "Player.h"
 ///#include "UI_Weakness.h"
 
 CEnvironment_SpecialObject::CEnvironment_SpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -62,7 +63,7 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 		if(FAILED(TrackLeverInit()))
 			return E_FAIL;
 	}
-	else if (m_tEnvironmentDesc.eElevatorType != CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_TYPEEND)
+	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
 	{
 		if(FAILED(ElevatorInit()))
 			return E_FAIL;
@@ -80,6 +81,16 @@ void CEnvironment_SpecialObject::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_SpecialObject::Tick(_float fTimeDelta)
 {
+	if (m_iCurrnetLevel == (_uint)LEVEL_TOOL && m_bFindPlayer == false)
+	{
+		CCharacter* pPlayer = m_pGameInstance->Get_Player();
+		if (nullptr != pPlayer)
+		{
+			m_pPlayer = dynamic_cast<CPlayer*>(pPlayer);
+			m_bFindPlayer = true;
+		}
+	}
+
 	m_fTimeAcc += fTimeDelta * 0.5f;
 
 	if(m_fTimeAcc >= 180.f)
@@ -93,8 +104,12 @@ void CEnvironment_SpecialObject::Tick(_float fTimeDelta)
 	{
 		TrackLeverFunction();
 	}
-	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR && m_bElevatorOn == true)
+	else if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
 	{
+		if(m_pElevatorColliderCom == nullptr)
+			return;
+
+		m_pElevatorColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 		ElevatorFunction(fTimeDelta);
 	}
 	
@@ -112,13 +127,14 @@ void CEnvironment_SpecialObject::Late_Tick(_float fTimeDelta)
 		m_pTransformCom->Add_RootBone_Position(vRootAnimPos);
 	}
 
-	if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-		return;
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 
-	//if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL)
-	//{
+	
+	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL && m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR && m_pElevatorColliderCom != nullptr)
+	{
+		m_pGameInstance->Add_DebugRender(m_pElevatorColliderCom);
 	//	m_pGameInstance->Add_DebugRender(m_pPickingCollider);
-	//}
+	}
 }
 
 HRESULT CEnvironment_SpecialObject::Render()
@@ -163,15 +179,16 @@ HRESULT CEnvironment_SpecialObject::Render()
 HRESULT CEnvironment_SpecialObject::Render_Shadow()
 {
 	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
-	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
 	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
 
+	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
 		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_SHADOW));
 		m_pModelCom->Render((_uint)i);
 	}
@@ -390,60 +407,292 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 	
 }
 
+
 HRESULT CEnvironment_SpecialObject::ElevatorInit()
 {
-	if(nullptr == m_pNavigationCom)
-		return E_FAIL;
-
-
-	_int iUpdateCellCount = m_vecUpdateCellIndexs.size();
-
-	for (_int i = 0; i < iUpdateCellCount; ++i)
+	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
 	{
-		m_vecUpdateCells.push_back(m_pNavigationCom->Get_CellForIndex(m_vecUpdateCellIndexs[i]));
+		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+		Safe_AddRef(m_pPlayer);
+		m_bFindPlayer = true;
 	}
 	
+	m_vInitPosition = Get_Position_Vector();
+	
+	Set_Speed(m_tEnvironmentDesc.fElevatorSpeed);
+	Set_RotationSpeed(m_tEnvironmentDesc.fElevatorRotationSpeed);
 
 	return S_OK;
 }
 
 void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 {
+
 	_float4 vPosition = m_pTransformCom->Get_State(CTransform::STATE::STATE_POSITION);
 
-	if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_UP)
+	if (m_bArrival == false && m_bElevatorOn == true)
 	{
-		if (m_fMaxY > vPosition.y)
+		if (m_pElevatorColliderCom == nullptr || m_pPlayer == nullptr)
+			return;
+
+		_float3 vPlayerPos = m_pPlayer->Get_Position();
+
+		if (true == m_pElevatorColliderCom->Is_Collision(m_pPlayer->Get_Collider())) //! 충돌 중이라면 플레이어  y값 고정
 		{
-			m_pTransformCom->Go_Up(fTimeDelta, nullptr);
+			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(true);
+
+			
+
+			switch (m_tEnvironmentDesc.eElevatorType)
+			{
+				case CEnvironment_SpecialObject::ELEVATOR_UP:
+				{
+					if (m_tEnvironmentDesc.fElevatorMaxHeight > vPosition.y)
+					{
+						m_pTransformCom->Go_Up(fTimeDelta, nullptr);
+					}
+					else
+					{
+						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
+						m_bArrival = true;
+						m_bElevatorOn = false;
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+					}
+
+					break;
+				}
+
+				case CEnvironment_SpecialObject::ELEVATOR_DOWN:
+				{
+					if (m_tEnvironmentDesc.fElevatorMinHeight < vPosition.y)
+					{
+						m_pTransformCom->Go_Down(fTimeDelta, nullptr);
+					}
+					else
+					{
+						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
+						m_bArrival = true;
+						m_bElevatorOn = false;
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+					}
+
+					break;
+				}
+
+				case CEnvironment_SpecialObject::ELEVATOR_TARGET:
+				{
+					if (false == SMath::Is_InRange(m_tEnvironmentDesc.vArrivalPosition, vPosition, 0.5f))
+					{
+						m_pTransformCom->Go_Target(m_tEnvironmentDesc.vArrivalPosition, fTimeDelta, 0.5f);
+					}
+					else
+					{
+						_float4 vSwapPosition = m_tEnvironmentDesc.vArrivalPosition;
+						m_tEnvironmentDesc.vArrivalPosition = m_vInitPosition;
+						m_vInitPosition = vSwapPosition;
+						m_bArrival = true;
+						
+						m_bElevatorOn = false;
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+					}
+
+					break;
+				}
+			}
+
+			_float3 vMinCorner = dynamic_cast<CBounding_AABB*>(m_pElevatorColliderCom->Get_Bounding())->Get_MinCorner();
+			_float3 vMaxCorner = dynamic_cast<CBounding_AABB*>(m_pElevatorColliderCom->Get_Bounding())->Get_MaxCorner();
+
+
+
+			vPlayerPos.y = vMinCorner.y;
+
+
+
+			if (vPlayerPos.x < vMinCorner.x)
+			{
+				vPlayerPos.x = vMinCorner.x;
+			}
+			else if (vPlayerPos.x > vMaxCorner.x)
+			{
+				vPlayerPos.x = vMaxCorner.x;
+			}
+
+
+			if (vPlayerPos.z < vMinCorner.z)
+			{
+				vPlayerPos.z = vMinCorner.z;
+			}
+			else if (vPlayerPos.z > vMaxCorner.z)
+			{
+				vPlayerPos.z = vMaxCorner.z;
+			}
+
+			m_pPlayer->Set_Position(vPlayerPos);
 		}
-	}
-	else if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_DOWN)
-	{
-		if (m_fMinY < vPosition.y)
+		else
 		{
-			m_pTransformCom->Go_Down(fTimeDelta, nullptr);
+			m_bElevatorOn = false;
+			m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 		}
-	}
-	else if (m_tEnvironmentDesc.eElevatorType == CEnvironment_SpecialObject::ELEVATOR_TARGET)
-	{
-		if (false == SMath::Is_InRange(m_vArrivalPosition, vPosition, 0.5f))
-		{
-			m_pTransformCom->Go_Target(m_vArrivalPosition, fTimeDelta, 0.5f);
-		}
-	}
+
+
 		
-	UpdateCell();
+
+		
+	}
+
+	
+	
 
 }
 
-void CEnvironment_SpecialObject::UpdateCell()
+void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 {
-	_int iUpdateCellCount = m_vecUpdateCells.size();
+	if (bElevatorOn == true)
+	{
+		switch (m_tEnvironmentDesc.eElevatorType)
+		{
+			case CEnvironment_SpecialObject::ELEVATOR_UP:
+			{
+				if (m_bArrival == true)
+				{
+					m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
+					m_bArrival = false;
+				}
+				
+
+				break;
+			}
+
+			case CEnvironment_SpecialObject::ELEVATOR_DOWN:
+			{
+				if (m_bArrival == true)
+				{
+					m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
+					m_bArrival = false;
+				}
+
+				break;
+			}
+
+			case CEnvironment_SpecialObject::ELEVATOR_TARGET:
+			{
+				if (m_bArrival == true) //! 이미 도착해있었다면
+				{
+					_float4 vSwapPosition = m_tEnvironmentDesc.vArrivalPosition;
+					m_tEnvironmentDesc.vArrivalPosition = m_vInitPosition;
+					m_vInitPosition = vSwapPosition;
+					m_bArrival = false;
+				}
+				
+			}
+		
+		}
+	}
+
+	m_bElevatorOn = bElevatorOn;
+	
+}
+
+void CEnvironment_SpecialObject::Set_Speed(_float fSpeed)
+{
+	m_tEnvironmentDesc.fElevatorSpeed = fSpeed;
+	m_pTransformCom->Set_Speed(fSpeed);
+}
+
+void CEnvironment_SpecialObject::Set_RotationSpeed(_float fRotationSpeed)
+{
+	m_tEnvironmentDesc.fElevatorRotationSpeed = XMConvertToRadians(fRotationSpeed);
+	m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(fRotationSpeed));
+}
+
+void CEnvironment_SpecialObject::Set_ElevatorColliderSize(_float3 vElevatorColliderSize)
+{
+	{
+		CBounding* pBounding = m_pElevatorColliderCom->Get_Bounding();
+
+		CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
+
+		if (pAABB == nullptr)
+			return;
+
+		BoundingBox* pBox = pAABB->Get_OriginBounding();
+
+		pBox->Extents = vElevatorColliderSize;
+		m_tEnvironmentDesc.vElevatorColliderSize = vElevatorColliderSize;
+	}
+}
+
+void CEnvironment_SpecialObject::Set_ElevatorColliderCenter(_float3 vElevatorColliderCenter)
+{
+	{
+		CBounding* pBounding = m_pElevatorColliderCom->Get_Bounding();
+
+
+		CBounding_AABB* pAABB = dynamic_cast<CBounding_AABB*>(pBounding);
+
+		if (pAABB == nullptr)
+			return;
+
+		BoundingBox* pBox = pAABB->Get_OriginBounding();
+
+		pBox->Center = vElevatorColliderCenter;
+		m_tEnvironmentDesc.vElevatorColliderCenter = vElevatorColliderCenter;
+	}
+}
+
+void CEnvironment_SpecialObject::Set_ElevatorInit()
+{
+	m_pTransformCom->Set_Position(_float3(m_vInitPosition.x, m_vInitPosition.y, m_vInitPosition.z));
+	m_bArrival = false;
+	m_bElevatorOn = false;
+}
+
+
+void CEnvironment_SpecialObject::Add_UpdateCellIndex(_int iCellIndex)
+{
+	m_tEnvironmentDesc.vecUpdateCellIndexs.push_back(iCellIndex);
+}
+
+void CEnvironment_SpecialObject::Enable_UpdateCells()
+{
+	if (m_pPlayer == nullptr)
+		return;
+
+	CNavigation* pNavigation = m_pPlayer->Get_Navigation();
+
+	if (pNavigation == nullptr)
+		return;
+
+
+	_int iUpdateCellCount = m_tEnvironmentDesc.vecUpdateCellIndexs.size();
 
 	for (_int i = 0; i < iUpdateCellCount; ++i)
 	{
-		m_vecUpdateCells[i]->Update(m_pTransformCom->Get_WorldMatrix());
+		pNavigation->Set_MoveEnableForCellIndex(m_tEnvironmentDesc.vecUpdateCellIndexs[i]);
+	}
+}
+
+void CEnvironment_SpecialObject::UnEnable_UpdateCells()
+{
+	if (m_pPlayer == nullptr)
+		return;
+
+	CNavigation* pNavigation = m_pPlayer->Get_Navigation();
+
+	if (pNavigation == nullptr)
+		return;
+
+	_int iUpdateCellCount = m_tEnvironmentDesc.vecUpdateCellIndexs.size();
+
+	for (_int i = 0; i < iUpdateCellCount; ++i)
+	{
+		pNavigation->Set_MoveUnEnableForCellIndex(m_tEnvironmentDesc.vecUpdateCellIndexs[i]);
 	}
 }
 
@@ -482,30 +731,21 @@ HRESULT CEnvironment_SpecialObject::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
-	//CBounding_Sphere::BOUNDING_SPHERE_DESC Test;
-	//
-	//m_pModelCom->Calculate_Sphere_Radius(&Test.vCenter, &Test.fRadius);
-	//Test.iLayer = (_uint)COLLISION_LAYER::PICKING_INSTANCE;
 
-		//!CBounding_AABB::BOUNDING_AABB_DESC Desc_AABB;
-		//!
-		//!Desc_AABB.iLayer = (_uint)COLLISION_LAYER::PICKING_MESH;
-		//!Desc_AABB.vExtents = m_pModelCom->Calculate_AABB_Extents_From_Model();
-		//Desc_AABB.vCenter = _float3(0.f, 0.f, 0.f);
+	if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
+	{
+		CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 
-	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Test)))
-	//{
-	//	MSG_BOX("ㅈ댐");
-	//	return E_FAIL;
-	//}
+		/* For.Com_Collider */
+		BoundingDesc.iLayer = ECast(COLLISION_LAYER::NONE);
+		BoundingDesc.vExtents = m_tEnvironmentDesc.vElevatorColliderSize;
+		BoundingDesc.vCenter = m_tEnvironmentDesc.vElevatorColliderCenter;
 
-	//!if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pPickingCollider), &Desc_AABB)))
-	//!{
-	//!	MSG_BOX("ㅈ댐");
-	//!	return E_FAIL;
-	//!}
 
-//	m_pPickingCollider
+		if (FAILED(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Collider_AABB"),
+			TEXT("Com_ElevatorCollider"), reinterpret_cast<CComponent**>(&m_pElevatorColliderCom), &BoundingDesc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -608,6 +848,9 @@ void CEnvironment_SpecialObject::Free()
 
 	if (m_iCurrnetLevel == (_uint)LEVEL_TOOL)
 		Safe_Release(m_pPickingCollider);
+
+	if(m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
+		Safe_Release(m_pPlayer);
 }
 
 

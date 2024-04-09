@@ -100,7 +100,7 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 
 
 	// 방출 초기화
-	m_tBufferDesc.bEmitFinished = FALSE;
+	m_tBufferDesc.bEmitFinished = false;
 	m_tBufferDesc.fEmissionTimeAcc = 0.f;
 	m_tBufferDesc.iEmitCount = 0;
 
@@ -201,7 +201,7 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 		}
 
 		// 방출 초기화
-		m_vecParticleInfoDesc[i].bEmit = FALSE;
+		m_vecParticleInfoDesc[i].bEmit = false;
 
 		// 랜덤 값 뽑기
 		ReSet_Info(i);
@@ -245,7 +245,7 @@ void CVIBuffer_Particle::ReSet()
 	m_tBufferDesc.Reset_Times();
 
 	// 방출 초기화
-	m_tBufferDesc.bEmitFinished = FALSE;
+	m_tBufferDesc.bEmitFinished = false;
 	m_tBufferDesc.fEmissionTimeAcc = 0.f;
 	m_tBufferDesc.iEmitCount = 0;
 
@@ -262,7 +262,7 @@ void CVIBuffer_Particle::ReSet()
 	{
 
 		// 방출 초기화
-		m_vecParticleInfoDesc[i].bEmit = FALSE;
+		m_vecParticleInfoDesc[i].bEmit = false;
 		
 
 		// 랜덤 값 뽑기
@@ -298,7 +298,7 @@ void CVIBuffer_Particle::ReSet()
 
 void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 {
-	m_vecParticleInfoDesc[iNum].bDie = FALSE;
+	m_vecParticleInfoDesc[iNum].bDie = false;
 
 
 	// 라이프타임
@@ -317,7 +317,14 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fCurTornadoSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxTornadoSpeed.x, m_tBufferDesc.vMinMaxTornadoSpeed.y);
 
 
-	m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+	//m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+
+	m_vecParticleInfoDesc[iNum].vRadian = _float3(SMath::fRandom(m_tBufferDesc.vMinRadian.x, m_tBufferDesc.vMaxRadian.x)
+		, SMath::fRandom(m_tBufferDesc.vMinRadian.y, m_tBufferDesc.vMaxRadian.y)
+		, SMath::fRandom(m_tBufferDesc.vMinRadian.z, m_tBufferDesc.vMaxRadian.z));
+
+	m_vecParticleInfoDesc[iNum].vCurRadian = m_vecParticleInfoDesc[iNum].vRadian;
+
 
 	// 자체회전 스피드
 	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_X.x, m_tBufferDesc.vMinMaxRadianSpeed_X.y);
@@ -376,7 +383,7 @@ void CVIBuffer_Particle::ReSet_Info(_uint iNum)
 	// 리지드 바디 사용이면
 	if (m_tBufferDesc.bUseRigidBody)
 	{
-		m_vecParticleRigidbodyDesc[iNum].bForced = FALSE; // 힘 안준걸로 초기화
+		m_vecParticleRigidbodyDesc[iNum].bForced = false; // 힘 안준걸로 초기화
 
 		Clear_Power(iNum);	// 파워 리셋
 		m_vecParticleRigidbodyDesc[iNum].fMass = SMath::fRandom(m_tBufferDesc.vMinMaxMass.x, m_tBufferDesc.vMinMaxMass.y);			// 질량 리셋
@@ -467,7 +474,7 @@ void CVIBuffer_Particle::Update_DirToAxis(_uint iNum)
 {
 	if (DIR_RIGHT == m_tBufferDesc.eType_Dir)
 	{
-	Make_DirToRight(iNum);
+		Make_DirToRight(iNum);
 	}
 	else if (DIR_UP == m_tBufferDesc.eType_Dir)
 	{
@@ -492,13 +499,13 @@ void CVIBuffer_Particle::Rotation_Instance(_uint iNum)
 
 	if (m_tBufferDesc.bRotAcc)	// 회전 업데이트 사용이면 회전각도 계속 누적
 	{
-		m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_tBufferDesc.vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
-		m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_tBufferDesc.vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
-		m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_tBufferDesc.vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
+		m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_vecParticleInfoDesc[iNum].vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
+		m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_vecParticleInfoDesc[iNum].vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
+		m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_vecParticleInfoDesc[iNum].vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
 	}
 	else
 	{
-		m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+		m_vecParticleInfoDesc[iNum].vCurRadian = m_vecParticleInfoDesc[iNum].vRadian;
 	}
 
 
@@ -607,7 +614,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			if (m_iNumInstance <= m_tBufferDesc.iEmitCount) // 방출 카운트가 인스턴스개수와 크거나 같아지면 방출 끝
 			{
 				m_tBufferDesc.iEmitCount = m_iNumInstance;
-				m_tBufferDesc.bEmitFinished = TRUE;
+				m_tBufferDesc.bEmitFinished = true;
 			}
 			else
 			{
@@ -617,7 +624,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					if (m_iNumInstance <= m_tBufferDesc.iEmitCount)	// 벡터 인덱스 맞추기용
 						m_tBufferDesc.iEmitCount = m_iNumInstance - 1;
 
-					m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = TRUE;
+					m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = true;
 					m_tBufferDesc.iEmitCount++;				
 				}
 				m_tBufferDesc.fEmissionTimeAcc = 0.f; // 초기화
@@ -662,7 +669,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 			if (m_tBufferDesc.bRecycle)	// 재사용이면 리셋
 			{
-				m_vecParticleInfoDesc[i].bDie = FALSE;
+				m_vecParticleInfoDesc[i].bDie = false;
 
 				// 랜덤 값 다시 뽑기
 				ReSet_Info(i);
@@ -722,7 +729,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							_vector vForce = m_vecParticleInfoDesc[i].vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 							Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
 
-							m_vecParticleRigidbodyDesc[i].bForced = TRUE; // 힘줬으면 true
+							m_vecParticleRigidbodyDesc[i].bForced = true; // 힘줬으면 true
 						}
 						else
 						{
@@ -774,7 +781,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 							if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
 							{
-								m_vecParticleInfoDesc[i].bDie = TRUE;
+								m_vecParticleInfoDesc[i].bDie = true;
 							}
 
 						}
@@ -804,7 +811,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 
 						if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
 						{
-							m_vecParticleInfoDesc[i].bDie = TRUE;
+							m_vecParticleInfoDesc[i].bDie = true;
 						}
 
 					}
@@ -815,7 +822,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 죽음 조건
 						if (m_vecParticleInfoDesc[i].fLifeTime <= m_vecParticleInfoDesc[i].fTimeAccs)	// 라이프 타임이 끝나면 초기화 or 죽음
 						{
-							m_vecParticleInfoDesc[i].bDie = TRUE;
+							m_vecParticleInfoDesc[i].bDie = true;
 						}
 
 					}
@@ -826,7 +833,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 죽음 조건
 						if (m_vecParticleInfoDesc[i].fMaxPosY >= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 작으면 초기화 or 죽음
 						{
-							m_vecParticleInfoDesc[i].bDie = TRUE;
+							m_vecParticleInfoDesc[i].bDie = true;
 						}
 
 					}
@@ -838,7 +845,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 죽음 조건
 						if (m_vecParticleInfoDesc[i].fMaxPosY <= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 						{
-							m_vecParticleInfoDesc[i].bDie = TRUE;
+							m_vecParticleInfoDesc[i].bDie = true;
 						}
 
 					}
@@ -864,7 +871,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						// 죽음 조건
 						if (m_vecParticleInfoDesc[i].fMaxPosY <= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 						{
-							m_vecParticleInfoDesc[i].bDie = TRUE;
+							m_vecParticleInfoDesc[i].bDie = true;
 						}
 
 
@@ -1119,7 +1126,21 @@ _float3 CVIBuffer_Particle::Update_Kinetic(_uint iNum, _float fTimeDelta)
 {
 	/* 중력 사용 시 아래로 떨어짐 */
 	if (m_tBufferDesc.bUseGravity)
+	{
+		if (FORCE_MODE::FORCE == m_tBufferDesc.eForce_Mode)
+		{
+			_float3 vGravityVelocity = XMVector3Normalize(m_vecParticleInfoDesc[iNum].vDir); // 단위벡터로
+			
+			vGravityVelocity.x *= abs(m_tBufferDesc.fGravity_X);
+			vGravityVelocity.z *= abs(m_tBufferDesc.fGravity_Z);
+
+			m_vecParticleRigidbodyDesc[iNum].vVelocity.x += vGravityVelocity.x * fTimeDelta;
+			m_vecParticleRigidbodyDesc[iNum].vVelocity.z += vGravityVelocity.z * fTimeDelta;
+		}
+
 		m_vecParticleRigidbodyDesc[iNum].vVelocity.y += m_tBufferDesc.fGravity * fTimeDelta;
+	}
+
 
 	/* V += A * TD */
 	/* m_vVelocity += m_vAccel * fTimeDelta; */
@@ -1165,7 +1186,9 @@ void CVIBuffer_Particle::Add_Force(_uint iNum, _fvector vForce, FORCE_MODE eMode
 	switch (eMode)
 	{
 	case FORCE_MODE::FORCE:
-		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
+		// 구멍막기. 중력 방향 타입 구분으로 사용함 (이름의 의도로 사용하지 않음)
+		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
+		//XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
 		break;
 
 	case FORCE_MODE::IMPULSE:
@@ -1223,7 +1246,7 @@ void CVIBuffer_Particle::Clear_Power(_uint iNum)
 const _bool CVIBuffer_Particle::Check_Sleep(_uint iNum)
 {
 	if (m_vecParticleRigidbodyDesc[iNum].bSleep)
-		return TRUE;
+		return true;
 
 	//if (m_tBufferDesc.bUseGravity)
 	//{
@@ -1235,7 +1258,7 @@ const _bool CVIBuffer_Particle::Check_Sleep(_uint iNum)
 	//		if (m_tBufferDesc.fSleepThreshold > fLengthXZ)
 	//		{
 	//			Sleep(iNum);
-	//			return TRUE;
+	//			return true;
 	//		}
 	//	}
 
@@ -1247,7 +1270,7 @@ const _bool CVIBuffer_Particle::Check_Sleep(_uint iNum)
 		if (m_tBufferDesc.fSleepThreshold > fLength)
 		{
 			Sleep(iNum);
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -1257,10 +1280,10 @@ const _bool CVIBuffer_Particle::Check_Sleep(_uint iNum)
 	//if (!m_tBufferDesc.bUseGravity && m_tBufferDesc.fSleepThreshold > fLength)
 	//{
 	//	Sleep(iNum);
-	//	return TRUE;
+	//	return true;
 	//}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -1290,6 +1313,9 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eForce_Mode"] = m_tBufferDesc.eForce_Mode;
 
 	Out_Json["Com_VIBuffer"]["fGravity"] = m_tBufferDesc.fGravity;
+	Out_Json["Com_VIBuffer"]["fGravity_X"] = m_tBufferDesc.fGravity_X;
+	Out_Json["Com_VIBuffer"]["fGravity_Z"] = m_tBufferDesc.fGravity_Z;
+
 	Out_Json["Com_VIBuffer"]["eType_FrictionLerp"] = m_tBufferDesc.eType_FrictionLerp;
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vFrictionLerp_Pos"], m_tBufferDesc.vFrictionLerp_Pos);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vStartEnd_Friction"], m_tBufferDesc.vStartEnd_Friction);
@@ -1317,7 +1343,10 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eType_Dir"] = m_tBufferDesc.eType_Dir;
 
 	Out_Json["Com_VIBuffer"]["bRotAcc"] = m_tBufferDesc.bRotAcc;
-	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	//CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMinRadian"], m_tBufferDesc.vMinRadian);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMaxRadian"], m_tBufferDesc.vMaxRadian);
+	
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_X"], m_tBufferDesc.vMinMaxRadianSpeed_X);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Y"], m_tBufferDesc.vMinMaxRadianSpeed_Y);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Z"], m_tBufferDesc.vMinMaxRadianSpeed_Z);
@@ -1384,6 +1413,13 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 	m_tBufferDesc.fGravity = In_Json["Com_VIBuffer"]["fGravity"];
 	//m_tBufferDesc.fFriction = In_Json["Com_VIBuffer"]["fFriction"];
 
+	if (In_Json["Com_VIBuffer"].contains("fGravity_X")) // 다시 저장 후 삭제
+	{
+		m_tBufferDesc.fGravity_X = In_Json["Com_VIBuffer"]["fGravity_X"];
+		m_tBufferDesc.fGravity_Z = In_Json["Com_VIBuffer"]["fGravity_Z"];
+	}
+
+
 	if (In_Json["Com_VIBuffer"].contains("eType_FrictionLerp")) // 다시 저장 후 삭제
 	{
 		m_tBufferDesc.eType_FrictionLerp = In_Json["Com_VIBuffer"]["eType_FrictionLerp"];
@@ -1432,8 +1468,15 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 		m_tBufferDesc.bRotAcc = In_Json["Com_VIBuffer"]["bRotAcc"];
 
 
-	if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제
-		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	//if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제
+	//	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
+	if (In_Json["Com_VIBuffer"].contains("vMinRadian")) // 다시 저장 후 삭제
+	{
+		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMinRadian"], m_tBufferDesc.vMinRadian);
+		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMaxRadian"], m_tBufferDesc.vMaxRadian);
+	}
+
 
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetX"], m_tBufferDesc.vMinMaxRotationOffsetX);
 	CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxRotationOffsetY"], m_tBufferDesc.vMinMaxRotationOffsetY);

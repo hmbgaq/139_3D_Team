@@ -82,8 +82,10 @@ void CPlayer_Weapon_Kick::OnCollisionEnter(CCollider* other)
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
 	{
+		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
+
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
-		pTarget_Character->Set_Hitted(m_fDamage, Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower, true);
+		pTarget_Character->Set_Hitted(fDamage, Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1, m_fForce, 1.f, m_eHitDirection, m_eHitPower, true);
 		//pTarget_Character->Set_Hitted(0, Get_Object_Owner()->Calc_Look_Dir(vTargetPos) * -1, 0.5f, 1.f, Direction::Front, Power::Light);
 
 		CCharacter_Client* pOwnerCharacter = dynamic_cast<CCharacter_Client*>(Get_Object_Owner());

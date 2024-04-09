@@ -4,13 +4,14 @@
 
 BEGIN(Engine)
 class CMesh;
+class CModel;
 
 class ENGINE_DLL CVIBuffer_Effect_Model_Instance : public CVIBuffer_Model_Instance
 {
 public:
 	enum TYPE_MODE		{ MODE_STATIC, MODE_PARTICLE, MODE_END };
 	enum TYPE_ACTION	{ SPARK, BLINK, FALL, RISE, TORNADO, TYPE_ACTION_END };
-	enum MODEL_MORPH	{ MORPH_01, MORPH_02, MORPH_END };
+	//enum MODEL_MORPH	{ MORPH_01, MORPH_02, MORPH_END };
 
 	enum TYPE_FADE			{ FADE_NONE, FADE_OUT, FADE_IN, TYPE_FADE_END };
 	enum TYPE_FADE_TAKES	{ LIFE, DIST, HEIGHT, SCALE, TYPE_FADE_TAKES_END };
@@ -21,8 +22,9 @@ public:
 		// 저장해야 하는 고정 정보들
 		_int			iCurNumInstance		= { 1000 };		// 초기화 값이 최대 개수가 됨	
 
-		class CModel*	pModel[MORPH_END]	= { nullptr };	// 저장 X
-		MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
+		CModel* pModel		= { nullptr };
+		//CModel*			pModel[MORPH_END]	= { nullptr };	// 저장 X
+		//MODEL_MORPH		eCurModelNum		= { MORPH_01 };	// 저장 X
 
 
 		/* States */
@@ -57,6 +59,8 @@ public:
 		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 		_float		fGravity		= { -9.8f };	// 중력 가속도
+		_float		fGravity_X = { 0.f };			// 중력 가속도 X
+		_float		fGravity_Z = { 0.f };			// 중력 가속도 Z
 
 		_float2		vMinMaxFriction = { 0.1f, 0.1f };		// 마찰 계수 범위
 
@@ -86,7 +90,11 @@ public:
 		TYPE_DIRAXIS eType_Dir = { DIR_LOOK };
 
 		_bool		bRotAcc = { FALSE };
-		_float3		vRadian = { 0.f, 0.f, 0.f };
+
+		//_float3		vRadian = { 0.f, 0.f, 0.f };
+		_float3		vMinRadian = { 0.f, 0.f, 0.f };
+		_float3		vMaxRadian = { 0.f, 0.f, 0.f };
+
 		_float2		vMinMaxRadianSpeed_X = { 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_Y = { 0.f, 0.f };
 		_float2		vMinMaxRadianSpeed_Z = { 0.f, 0.f };
@@ -173,6 +181,7 @@ public:
 		_float	fCurTornadoSpeed	= { 1.f };
 
 		// 회전
+		_float3	vRadian				= { 0.f, 0.f, 0.f };
 		_float3	vCurRadian			= { 0.f, 0.f, 0.f };
 		_float3	vAddRadianSpeed		= { 0.f, 0.f, 0.f };
 
@@ -301,7 +310,7 @@ private:
 
 
 
-	vector<CMesh*>		m_vecInstanceMeshs[MORPH_END] = {};
+	//vector<CMesh*>		m_vecInstanceMeshs[MORPH_END] = {};
 
 public:
 	static CVIBuffer_Effect_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

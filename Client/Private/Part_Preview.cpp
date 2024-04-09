@@ -104,7 +104,7 @@ HRESULT CPart_Preview::Render()
 
 HRESULT CPart_Preview::Ready_Trail(_uint iLevelIndex, string strFileName)
 {
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iLevelIndex, LAYER_EFFECT, strFileName);
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iLevelIndex, LAYER_EFFECT, strFileName, this);
 
 	return S_OK;
 }
