@@ -1,0 +1,14 @@
+2024_04_05
+Snowmountain\NonAnim\Interact\ 추가사항
+
+LocomotiveInteractDoor01Rotate90.fbx
+LocomotiveInteractDoorB01Rotate90.fbx
+LocomotiveInteractDoorB02Rotate90.fbx
+LocomotiveInteractDoor01MinXRotate90.fbx
+LocomotiveInteractDoorB01MinXRotate90.fbx
+LocomotiveInteractDoorB02MinXRotate90.fbx
+
+
+2024_04_06
+인트로맵(테스트맵) 추가사항
+NonAnim->Single->MotherBossTree

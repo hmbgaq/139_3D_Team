@@ -291,7 +291,6 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();
 
-	map<_int, CEnvironment_Interact*> mapOwnerTemp;
 
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
@@ -313,7 +312,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		//Desc.bLevelChange = false;
 		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 
-		//Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 		Desc.bEnable = InteractJson[i]["Enable"];
 		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
 		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
@@ -325,16 +324,20 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
 		Desc.eRotationState = InteractJson[i]["RotationType"];
 		Desc.bArrival = InteractJson[i]["Arrival"];
-
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 
 		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
 
 		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
 		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
@@ -398,7 +401,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		//Desc.bLevelChange = false;
 		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 
-		//Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 		Desc.bEnable = InteractJson[i]["Enable"];
 		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
 		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
@@ -410,16 +413,20 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
 		Desc.eRotationState = InteractJson[i]["RotationType"];
 		Desc.bArrival = InteractJson[i]["Arrival"];
-
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 
 		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
 
 		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
 		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);

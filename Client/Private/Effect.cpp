@@ -12,6 +12,7 @@
 #include "Bone.h"
 #include "Character.h"
 #include "Weapon.h"
+#include "Son_Projectile.h"
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -339,6 +340,10 @@ void CEffect::Update_PivotMat()
 			{
 				// 주인의 매트릭스를 사용할거면 받아오기
 				m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
+				if (typeid(*m_pOwner) == typeid(CSon_Projectile))
+				{
+					_int i = 0;
+				}
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
 			}
 

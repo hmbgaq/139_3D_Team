@@ -434,8 +434,8 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
             Desc.bUseGravity = InteractJson[i]["UseGravity"];
 
             CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
-            CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vColliderSize);
-            CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vColliderCenter);
+            CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+            CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 
             const json& TransformJson = InteractJson[i]["Component"]["Transform"];
             _float4x4 WorldMatrix;

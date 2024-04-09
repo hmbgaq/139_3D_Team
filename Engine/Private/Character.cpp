@@ -127,6 +127,10 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 				m_vAddRootPosition = {};
 			}
 		}
+		else
+		{
+			m_vAddRootPosition = {};
+		}
 		
 	}
 	else 
