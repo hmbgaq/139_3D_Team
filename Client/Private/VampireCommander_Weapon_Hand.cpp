@@ -68,8 +68,6 @@ void CVampireCommander_Weapon_Hand::Late_Tick(_float fTimeDelta)
 		//cout << "TrailX:" << m_pTrail->Get_Position().x << "TrailY:" << m_pTrail->Get_Position().y << "TrailZ:" << m_pTrail->Get_Position().z << endl;
 	}
 	
-	// m_pTrail->Set_Play(TRUE /*FALSE*/); //! 유정: 트레일 온오프
-
 }
 
 HRESULT CVampireCommander_Weapon_Hand::Render()
@@ -102,7 +100,8 @@ HRESULT CVampireCommander_Weapon_Hand::Ready_Components()
 
 
 	//! 유정: 트레일 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json",this);
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json");
+	m_pTrail->Set_Play(false);		// 시작은 끄기
 
 	return S_OK;
 }
@@ -207,7 +206,5 @@ CGameObject* CVampireCommander_Weapon_Hand::Pool()
 void CVampireCommander_Weapon_Hand::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pTrail);
 
 }

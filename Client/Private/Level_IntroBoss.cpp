@@ -72,7 +72,7 @@ void CLevel_IntroBoss::Tick(_float fTimeDelta)
 
 HRESULT CLevel_IntroBoss::Render()
 {
-    SetWindowText(g_hWnd, TEXT("Level Intro 입니다."));
+    SetWindowText(g_hWnd, TEXT("Level IntroBoss 입니다."));
 
     return S_OK;
 }

@@ -1,6 +1,7 @@
 #include "VampireCommander_Melee2.h"
 #include "VampireCommander_Idle.h"
 #include "Body_VampireCommander.h"
+#include "VampireCommander_Weapon.h"
 
 void CVampireCommander_Melee2::Initialize(CVampireCommander* pActor)
 {
@@ -15,6 +16,8 @@ void CVampireCommander_Melee2::Initialize(CVampireCommander* pActor)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
 		->Set_Force(0.f);
+
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(true);	// 트레일 켜기
 
 	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
 	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
@@ -40,6 +43,7 @@ CState<CVampireCommander>* CVampireCommander_Melee2::Update(CVampireCommander* p
 	else if (pActor->Is_Inputable_Front(45))
 	{
 		m_bFlags[1] = false;
+		dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// 트레일 끄기
 		pWeapon->Set_Enable(false);
 	}
 

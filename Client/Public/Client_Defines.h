@@ -5,12 +5,12 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	//static const unsigned int	g_iWinSizeY = 720;
-	//static const unsigned int	g_iWinSizeX = 1280;
+	static const unsigned int	g_iWinSizeX = 1280;
+	static const unsigned int	g_iWinSizeY = 720;
 	//static const unsigned int	g_iWinSizeX = 1600;
 	//static const unsigned int	g_iWinSizeY = 900;
-	static const unsigned int	g_iWinSizeX = 1920;
-	static const unsigned int	g_iWinSizeY = 1080;
+	//static const unsigned int	g_iWinSizeX = 1920;
+	//static const unsigned int	g_iWinSizeY = 1080;
 	//static const unsigned int	g_iWinSizeX = 2560;
 	//static const unsigned int	g_iWinSizeY = 1440;
 
@@ -66,7 +66,6 @@ namespace Client
 	#define LAYER_PLAYER_BULLET				TEXT("Layer_Player_Bullet")
 	#define LAYER_MONSTER_BULLET			TEXT("Layer_Monster_Bullet")
 
-
 	//Player_Weapon
 	#define PLAYER_WEAPON_PUNCH_L			TEXT("Weapon_Punch_L")
 	#define PLAYER_WEAPON_PUNCH_R			TEXT("Weapon_Punch_R")
@@ -77,8 +76,6 @@ namespace Client
 	#define PLAYER_WEAPON_SHOTGUN			TEXT("Weapon_Shotgun")
 	#define PLAYER_WEAPON_DYNAMITE			TEXT("Weapon_Dynamite")
 	#define PLAYER_WEAPON_WHIP				TEXT("Weapon_Whip")
-
-
 
 	#define TANK_WEAPON_PUNCH_L				TEXT("Weapon_Punch_L")
 	#define TANK_WEAPON_PUNCH_R				TEXT("Weapon_Punch_R")

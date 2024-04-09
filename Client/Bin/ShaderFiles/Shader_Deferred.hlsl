@@ -408,28 +408,6 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace, float fBias)
     return shadow;
 }
 
-/*=============================================================
- 
-                         Vertex Shader 
-                                
-==============================================================*/
-/* ----------------------------------------------- */ 
-VS_OUT VS_MAIN(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
-    
-    matrix matWV, matWVP;
-    
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-    
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-    Out.vTexcoord = In.vTexcoord;
-    
-    return Out;
-
-}
-
 inline bool IsSaturated(float value)
 {
     return value == saturate(value);
@@ -449,9 +427,30 @@ inline bool IsSaturated(float4 value)
 
 /*=============================================================
  
+                         Vertex Shader 
+                                
+==============================================================*/
+/* ----------------------------------------------- */ 
+VS_OUT VS_MAIN(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    
+    return Out;
+}
+/*=============================================================
+ 
                           Pixel Shader  
                                 
 ==============================================================*/
+
 /* ------------------ 0 - DEBUG ------------------ */
 
 PS_OUT PS_MAIN_DEBUG(PS_IN In)
@@ -541,25 +540,16 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     else
     { 
-        /* PBR안할때 기존코드 */ 
-        vector vResult = g_vLightDiffuse * saturate(saturate(dot(normalize(g_vLightDir) * -1.f, vNormal)) + (g_vLightAmbient * g_vMtrlAmbient));
-
-        if (vResult.r < 0.05f && vResult.g < 0.05f && vResult.b < 0.05f)
-            discard;
-
-        Out.vAmbient = vResult * g_fLightIntensity;
-        Out.vAmbient.a = 1.f;
-
+        
+        //Out.vShade = g_vLightDiffuse * min((max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f);
+        Out.vAmbient = g_vLightDiffuse * min((max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f);
+        
+        vector vLook = vWorldPos - g_vCamPosition;
         vector vReflect = reflect(normalize(g_vLightDir), vNormal);
 
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-
-        //Out.vShade = g_vLightDiffuse * min((max(dot(normalize(g_vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f);
     }
-    
-    //Out.vAmbient = pow(Out.vAmbient, 2.2f);
-    //Out.vSpecular = pow(Out.vSpecular, 2.2f);
-       
+      
     return Out;
 }
 
@@ -686,14 +676,12 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f) * fAtt;
     }
     
-   
     return Out;
 }
 
 /* ------------------ 3 - Spot  ------------------ */
 PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 {
-    
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
     
     vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
@@ -802,40 +790,41 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
     
     vector vDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
     if (vDiffuse.a == 0.f)
     {
         float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
-        if (vPriority.a == 0.f)
-            discard;
         
         Out.vColor = vPriority;
         return Out;
     }
-   
-    // Light - Specular  
-    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    vSpecular = saturate(vSpecular);
-	
-    // Light - Ambient 
+    
+    // MRT_LightAcc : Ambient  
     vector vAmbient = g_AmbientTexture.Sample(LinearSampler, In.vTexcoord);
     vAmbient = saturate(vAmbient);
-   
-    /* 그림자 Shadow */ 
-    vector vShadow = { 1.f, 1.f, 1.f, 1.f };
-    if (true == g_bShadow_Active)
-        vShadow = g_ShadowResult.Sample(LinearSampler, In.vTexcoord);
+	
+    // MRT_LightAcc : Specular 
+    vector vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    vSpecular = saturate(vSpecular);
+    
+    // MRT_GameObject : Emissive 
+    vector vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord);
     
     // Target_HBAO
     vector vSSAO = float4(1.f, 1.f, 1.f, 1.f);
     if (g_bSSAO_Active)
         vSSAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
-   
-    float gamma = 2.2f;
-    float4 vEmissive = g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord);
-    vEmissive = pow(vEmissive, gamma);
     
-    // Emissive -> 
-    Out.vColor = (vDiffuse * vShadow * vSSAO) + vEmissive;
+    Out.vColor = (vDiffuse * vAmbient * vSSAO) + vSpecular + vEmissive;
+    //Out.vColor = (vDiffuse * vSSAO) + vSpecular;
+    
+    if (true == g_bShadow_Active)
+    {
+        vector Shadow = g_ShadowResult.Sample(LinearSampler, In.vTexcoord);
+        
+        Out.vColor = Out.vColor * Shadow;
+    }
+    
     Out.vColor.a = 1.f;
     
     return Out;
@@ -950,6 +939,7 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     
     vector vAlbedo = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     vAlbedo = pow(vAlbedo, gamma);
+    
     if (vAlbedo.a == 0.f)
     {
         float4 vPriority = g_PriorityTarget.Sample(LinearSampler, In.vTexcoord);
@@ -1008,16 +998,21 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     
     float4 ColorCombine = float4(CT_BRDF + vEmissive, 1.f);
    // ColorCombine += vSpecular + vAmbientDesc;
-    ColorCombine += vAmbientDesc;
-   
-    if (vShadow.r > 0.f)
-    {
-        Out.vColor = ColorCombine * vShadow; // 그림자 효과 적용
-    }
-    else
-    {
-        Out.vColor = ColorCombine;
-    }
+    //ColorCombine += vAmbientDesc;
+    //
+    //if (vShadow.r > 0.f)
+    //{
+    //    Out.vColor = ColorCombine * vShadow; // 그림자 효과 적용
+    //}
+    //else
+    //{
+    //    Out.vColor = ColorCombine;
+    //}
+    //
+    Out.vColor = ColorCombine;
+    
+    if(Out.vColor.a == 0 )
+        discard;
     
     return Out;
 }
@@ -1118,12 +1113,26 @@ PS_OUT_FOG PS_MAIN_FOG(PS_IN In)
     //float fDistance = length(vFogDir);
     //float fAtt = saturate((g_fFogRange - fDistance) / g_fFogRange);    
     //Out.vFog = (g_vFogColor.a - (fAtt * fAtt));
-
+   
     Out.vFog = vector(vFinalColor.rgb, 1.f);
     
     return Out;
 }
 
+/* ------------------ 8 - Fog ------------------ */
+PS_OUT PS_MAIN_TEST(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+ 
+    vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    
+    if (vDiffuseColor.a == 0)
+        discard;
+    
+    Out.vColor = vDiffuseColor;
+    
+    return Out;
+}
 
 /*=============================================================
  
@@ -1229,6 +1238,18 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_FOG();
+    }
+
+    pass Test //9
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_TEST();
     }
 
 }

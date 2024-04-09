@@ -119,7 +119,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Tick(m_fTimeDelta);
 
-	Open_Requested_Level();
+
 
 }
 
@@ -135,6 +135,8 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 	/* 컴포넌트 매니져에 레벨별로 구분해 놓은 컴포넌트들 중 특정된 객체들을 지운다.  */
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	//m_pRenderer->
 
 	/*m_pEvent_Manager->Clear();*/
 }
@@ -153,6 +155,7 @@ HRESULT CGameInstance::Render_Engine()
 
 	m_pInput_Device->LateTick();
 
+	Open_Requested_Level();
 	return S_OK;
 }
 
@@ -336,6 +339,15 @@ _uint CGameInstance::Get_CurrentLevel()
 void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
 {
 	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);
+}
+
+HRESULT CGameInstance::Set_ShaderOption(_uint CurrentLevel, string filePath)
+{
+	NULL_CHECK_RETURN(m_pLevel_Manager, E_FAIL);
+
+	m_pLevel_Manager->Set_ShaderOption(CurrentLevel, filePath);
+
+	return S_OK;
 }
 
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)

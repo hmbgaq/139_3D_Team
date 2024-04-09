@@ -30,6 +30,13 @@ public:
 	virtual void	Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
+public:
+	void	Play_Trail(_bool bPlay);
+
+protected:
+	class CEffect_Trail* m_pTrail = { nullptr };	//! 유정 : 트레일 추가
+
 protected:
 	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
@@ -39,8 +46,7 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
-protected:
-	class CEffect_Trail* m_pTrail = { nullptr };	//! 유정 : 트레일 추가
+
 
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;

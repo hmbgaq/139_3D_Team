@@ -47,9 +47,9 @@ public:
 	//CWeapon* Set_Damage(_float _iDamage);
 	//CWeapon* Set_Direction(Direction _eHitDirection);
 	//CWeapon* Set_Power(Power _eHitPower);
-	
+
 	//CWeapon* Set_Force(_float _fForce);
-	
+
 	//CWeapon* Set_KnockUp(_bool _bKnockUp);
 
 	CWeapon* Activate_Collisions(_bool _bActivate);
@@ -74,8 +74,8 @@ public:
 	_float3 Calc_Front_Pos(_float3 vDiff = _float3(0.f, 0.f, 1.f));
 
 public:
-	void Fire(const wstring& strBulletTag, const wstring& strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter* pTarget = nullptr);
-	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter*pTarget = nullptr) {};
+	void Fire(const wstring & strBulletTag, const wstring & strLayerTag, _float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter * pTarget = nullptr);
+	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter * pTarget = nullptr) {};
 
 public:
 	void Set_Follow(_bool _bIsFollow) { m_bIsFollow = _bIsFollow; };

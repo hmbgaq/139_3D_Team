@@ -61,7 +61,8 @@ public: /* For.Level_Manager */
 	HRESULT		Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
 	_uint		Get_NextLevel();
 	_uint		Get_CurrentLevel();
-	void		Set_CurrentLevel(_uint CurrentLevel);
+	void		Set_CurrentLevel(_uint CurrentLevel); 
+	HRESULT		Set_ShaderOption(_uint CurrentLevel, string filePath);
 
 public: /* For.Object_Manager */
 	HRESULT				Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);

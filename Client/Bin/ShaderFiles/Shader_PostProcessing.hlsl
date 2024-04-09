@@ -617,13 +617,13 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
     
+    vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Diffuse = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
-    vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
     
+    vector Effect_Priority_Solid = g_Effect_Priority_Solid.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Priority_Diffuse = g_Effect_Priority_Diffuse.Sample(LinearSampler, In.vTexcoord);
     vector Effect_Priority_Blur = g_EffectBlur_Priority_Target.Sample(LinearSampler, In.vTexcoord);
-    vector Effect_Priority_Solid = g_Effect_Priority_Solid.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect_Distortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
     

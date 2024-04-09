@@ -35,21 +35,26 @@ private:
 	_bool bRenderCom_Active = true;
 	_bool m_bObjectCreateWindwo = { true };				/* 창 생성의 bool변수 */
 
+	/* Shader Load - 해당레벨에 대한 셰이더 로드하기 */
+	LEVEL				m_eShaderLoadLevel = {};
+	string				m_strShaderLoadPath = {};
+
 	/* Level Load - string도 바꿔야함 */
-	_bool		m_bCreate_Level_Button = false;
-	_int		m_iCurrLevel_Index = {};
-	LEVEL		m_eCurrLevel_Enum = {};
-	string		m_eCurrLevel_String = {};
-	wstring		m_wstrLayerTag = {};
+	_bool				m_bCreate_Level_Button = false;
+	_int				m_iCurrLevel_Index = {};
+	LEVEL				m_eCurrLevel_Enum = {};
+	string				m_eCurrLevel_String = {};
+	wstring				m_wstrLayerTag = {};
 	
 	/* Load Path */
-	string			m_strStage1MapLoadPath = {};
+	string				m_strStage1MapLoadPath = {};
+	string				m_strFinishedMapLoadPath = "";
 
 	/* Object Load - string으로 모델 키값 받아옴 */
-	vector<string>	m_vObjectModelTag;
-	_bool			m_bObject_Layer_Button = false; /* 오브젝트 생성을 위해 리스트 여는 버튼 */
-	string			m_strCurrentObjectTag = {};
-	_bool			m_bCreateObject_Button = false; /* 오브젝트 실제 생성하는 버튼 */
+	vector<string>		m_vObjectModelTag;
+	_bool				m_bObject_Layer_Button = false; /* 오브젝트 생성을 위해 리스트 여는 버튼 */
+	string				m_strCurrentObjectTag = {};
+	_bool				m_bCreateObject_Button = false; /* 오브젝트 실제 생성하는 버튼 */
 	class ShaderParsed_Object* pObject = nullptr;
 
 	/* Level Shader Struct */
@@ -69,17 +74,17 @@ private:
 	LUMASHARPEN_DESC	m_eLuma_Desc			= {};
 
 	/* Shader */
-	_bool m_bShaderSave = {false} ; // Save / Load
-	_bool m_bShaderLoad = {false} ; // Save / Load
-	_int  m_iPBRTextureNumber = { 0 };
+	_bool				m_bShaderSave = {false} ; // Save / Load
+	_bool				m_bShaderLoad = {false} ; // Save / Load
+	_int				m_iPBRTextureNumber = { 0 };
 
 	/* Level LightControl */
-	LEVEL			m_eLoadLevel = {};
-	string			strPath;
-	string			strFileName;
-	_bool			m_bSave = false;
-	_bool			m_bLoad = false;
-	_int			iType = 0;
+	LEVEL				m_eLoadLevel = {};
+	string				strPath;
+	string				strFileName;
+	_bool				m_bSave = false;
+	_bool				m_bLoad = false;
+	_int				iType = 0;
 
 	virtual	HRESULT		Save_Function(string strPath, string strFileName) override;
 	virtual	HRESULT		Load_Function(string strPath, string strFileName) override;
@@ -98,6 +103,8 @@ private:
 	void Top_Setting();
 	void Choice_Level_N_Object();
 	HRESULT Control_Skybox();
+	HRESULT Load_SaveShader();
+	HRESULT Load_Finished_Light(LEVEL eLoadLevel);
 
 	/* 레벨 불러오기 */
 	void Select_Level();

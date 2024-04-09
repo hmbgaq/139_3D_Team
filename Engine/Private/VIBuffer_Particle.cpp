@@ -474,7 +474,7 @@ void CVIBuffer_Particle::Update_DirToAxis(_uint iNum)
 {
 	if (DIR_RIGHT == m_tBufferDesc.eType_Dir)
 	{
-	Make_DirToRight(iNum);
+		Make_DirToRight(iNum);
 	}
 	else if (DIR_UP == m_tBufferDesc.eType_Dir)
 	{
@@ -1126,7 +1126,21 @@ _float3 CVIBuffer_Particle::Update_Kinetic(_uint iNum, _float fTimeDelta)
 {
 	/* 중력 사용 시 아래로 떨어짐 */
 	if (m_tBufferDesc.bUseGravity)
+	{
+		if (FORCE_MODE::FORCE == m_tBufferDesc.eForce_Mode)
+		{
+			_float3 vGravityVelocity = XMVector3Normalize(m_vecParticleInfoDesc[iNum].vDir); // 단위벡터로
+			
+			vGravityVelocity.x *= abs(m_tBufferDesc.fGravity_X);
+			vGravityVelocity.z *= abs(m_tBufferDesc.fGravity_Z);
+
+			m_vecParticleRigidbodyDesc[iNum].vVelocity.x += vGravityVelocity.x * fTimeDelta;
+			m_vecParticleRigidbodyDesc[iNum].vVelocity.z += vGravityVelocity.z * fTimeDelta;
+		}
+
 		m_vecParticleRigidbodyDesc[iNum].vVelocity.y += m_tBufferDesc.fGravity * fTimeDelta;
+	}
+
 
 	/* V += A * TD */
 	/* m_vVelocity += m_vAccel * fTimeDelta; */
@@ -1172,7 +1186,9 @@ void CVIBuffer_Particle::Add_Force(_uint iNum, _fvector vForce, FORCE_MODE eMode
 	switch (eMode)
 	{
 	case FORCE_MODE::FORCE:
-		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
+		// 구멍막기. 중력 방향 타입 구분으로 사용함 (이름의 의도로 사용하지 않음)
+		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
+		//XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
 		break;
 
 	case FORCE_MODE::IMPULSE:
@@ -1297,6 +1313,9 @@ _bool CVIBuffer_Particle::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eForce_Mode"] = m_tBufferDesc.eForce_Mode;
 
 	Out_Json["Com_VIBuffer"]["fGravity"] = m_tBufferDesc.fGravity;
+	Out_Json["Com_VIBuffer"]["fGravity_X"] = m_tBufferDesc.fGravity_X;
+	Out_Json["Com_VIBuffer"]["fGravity_Z"] = m_tBufferDesc.fGravity_Z;
+
 	Out_Json["Com_VIBuffer"]["eType_FrictionLerp"] = m_tBufferDesc.eType_FrictionLerp;
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vFrictionLerp_Pos"], m_tBufferDesc.vFrictionLerp_Pos);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vStartEnd_Friction"], m_tBufferDesc.vStartEnd_Friction);
@@ -1393,6 +1412,13 @@ void CVIBuffer_Particle::Load_FromJson(const json& In_Json)
 
 	m_tBufferDesc.fGravity = In_Json["Com_VIBuffer"]["fGravity"];
 	//m_tBufferDesc.fFriction = In_Json["Com_VIBuffer"]["fFriction"];
+
+	if (In_Json["Com_VIBuffer"].contains("fGravity_X")) // 다시 저장 후 삭제
+	{
+		m_tBufferDesc.fGravity_X = In_Json["Com_VIBuffer"]["fGravity_X"];
+		m_tBufferDesc.fGravity_Z = In_Json["Com_VIBuffer"]["fGravity_Z"];
+	}
+
 
 	if (In_Json["Com_VIBuffer"].contains("eType_FrictionLerp")) // 다시 저장 후 삭제
 	{
