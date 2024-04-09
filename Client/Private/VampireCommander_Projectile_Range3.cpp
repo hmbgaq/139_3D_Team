@@ -78,8 +78,8 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
-	//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json", Get_Position(), TRUE, m_vPlayerPos);
-	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.3f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_04.json", Get_Position(), TRUE, m_vPlayerPos);
+	//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json", Get_Position(), true, m_vPlayerPos);
+	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.32f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", Get_Position(), true, m_vPlayerPos);
 }
 
 void CVampireCommander_Projectile_Range3::Late_Tick(_float fTimeDelta)

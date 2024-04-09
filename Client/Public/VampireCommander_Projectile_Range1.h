@@ -32,6 +32,9 @@ public:
 private:
 	CEffect* m_pEffect = { nullptr };
 
+	_float				m_fEffectTimeAcc = { 0.f };
+	_float3				m_vEffectScaleAcc = { 0.01f, 0.01f, 0.01f };
+
 public:
 	static CVampireCommander_Projectile_Range1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg);
