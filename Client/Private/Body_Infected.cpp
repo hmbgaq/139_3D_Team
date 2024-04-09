@@ -173,4 +173,5 @@ void CBody_Infected::Free()
 	//m_vDiscardMesh.clear();
 
 	__super::Free();
+
 }

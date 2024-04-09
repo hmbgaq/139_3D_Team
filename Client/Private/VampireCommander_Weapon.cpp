@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Bone.h"
 
+#include "Effect_Trail.h"
 
 CVampireCommander_Weapon::CVampireCommander_Weapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -79,6 +80,12 @@ HRESULT CVampireCommander_Weapon::Render_Shadow()
 	return S_OK;
 }
 
+void CVampireCommander_Weapon::Play_Trail(_bool bPlay)
+{
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Play(bPlay);
+}
+
 
 HRESULT CVampireCommander_Weapon::Ready_Components()
 {
@@ -143,5 +150,7 @@ CGameObject* CVampireCommander_Weapon::Pool()
 void CVampireCommander_Weapon::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTrail);
 }
 

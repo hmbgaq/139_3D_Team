@@ -2,6 +2,8 @@
 #include "Client_Defines.h"
 #include "UI.h"
 
+BEGIN(Client)
+
 /* 체력 프레임 */
 class CUI_EnemyHUD_Shard final : public CUI
 {
@@ -67,3 +69,4 @@ public:
 	virtual void			Free() override;
 };
 
+END

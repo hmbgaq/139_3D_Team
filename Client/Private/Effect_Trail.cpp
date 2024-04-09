@@ -101,6 +101,29 @@ void CEffect_Trail::Late_Tick(_float fTimeDelta)
 		{
 #endif // _DEBUG
 
+			//if (nullptr != m_pOwner)	// 주인이 존재하고,
+			//{
+			//	// 비활성화 상태다.
+			//	if (!m_pOwner->Get_Enable())
+			//	{
+			//		Set_Play(false);	// 재생 정지만
+
+			//		return;
+			//	}
+		
+			//	// 이펙트의 주인이 죽었다.
+			//	if (m_pOwner->Is_Dead())
+			//	{
+			//		Set_Play(false);	// 재생 정지
+			//	
+			//		Delete_Object_Owner();	// 오너 해제
+			//		Set_Dead(true);			// 트레일도 죽음
+
+			//		return;
+			//	}
+			//}
+
+
 			if (m_tVoidDesc.bRender)
 			{
 				if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this)))
@@ -424,6 +447,8 @@ CGameObject* CEffect_Trail::Pool()
 void CEffect_Trail::Free()
 {
 	__super::Free();
+
+	Delete_Object_Owner();	// 오너 해제
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);

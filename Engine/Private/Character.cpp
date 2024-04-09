@@ -100,7 +100,7 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			Pair.second->Late_Tick(fTimeDelta);	
 	}
 
-
+	//Character_Client·Î ¿Å±è
 	
 }
 

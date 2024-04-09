@@ -1,11 +1,10 @@
 #include "..\Public\Player_InteractionClimb450.h"
-
+#include "Navigation.h"
 void CPlayer_InteractionClimb450::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
-
 	pActor->Set_UseGravity(false);
 }
 

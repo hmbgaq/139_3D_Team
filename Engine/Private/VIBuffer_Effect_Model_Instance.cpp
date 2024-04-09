@@ -867,8 +867,19 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 											// 최저 높이보다 클 때만 중력을 받아 아래로 떨어짐
 											if (pModelInstance[i].vTranslation.y >= m_vecParticleInfoDesc[i].fMaxPosY)
 											{
-												m_vecParticleRigidbodyDesc[i].vVelocity.y += m_tBufferDesc.fGravity * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
-											}									
+												if (FORCE_MODE::FORCE == m_tBufferDesc.eForce_Mode)
+												{
+													_float3 vGravityVelocity = XMVector3Normalize(m_vecParticleInfoDesc[i].vDir); // 단위벡터로
+
+													vGravityVelocity.x *= abs(m_tBufferDesc.fGravity_X);
+													vGravityVelocity.z *= abs(m_tBufferDesc.fGravity_Z);
+
+													m_vecParticleRigidbodyDesc[i].vVelocity.x += vGravityVelocity.x * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
+													m_vecParticleRigidbodyDesc[i].vVelocity.z += vGravityVelocity.z * (m_vecParticleInfoDesc[i].fCurSpeed * fTimeDelta);
+												}
+
+												m_vecParticleRigidbodyDesc[i].vVelocity.y += m_tBufferDesc.fGravity * (m_vecParticleInfoDesc[i].fCurSpeed *  fTimeDelta);
+											}
 										}
 
 										Update_Kinetic(i, fTimeDelta);	// 이동 속력 계산 업데이트
@@ -1205,6 +1216,8 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eForce_Mode"] = m_tBufferDesc.eForce_Mode;
 
 	Out_Json["Com_VIBuffer"]["fGravity"] = m_tBufferDesc.fGravity;
+	Out_Json["Com_VIBuffer"]["fGravity_X"] = m_tBufferDesc.fGravity_X;
+	Out_Json["Com_VIBuffer"]["fGravity_Z"] = m_tBufferDesc.fGravity_Z;
 
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxFriction"], m_tBufferDesc.vMinMaxFriction);
 	Out_Json["Com_VIBuffer"]["fSleepThreshold"] = m_tBufferDesc.fSleepThreshold;
@@ -1310,6 +1323,12 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 	m_tBufferDesc.eForce_Mode = In_Json["Com_VIBuffer"]["eForce_Mode"];
 
 	m_tBufferDesc.fGravity = In_Json["Com_VIBuffer"]["fGravity"];
+
+	if (In_Json["Com_VIBuffer"].contains("fGravity_X")) // 다시 저장 후 삭제
+	{
+		m_tBufferDesc.fGravity_X = In_Json["Com_VIBuffer"]["fGravity_X"];
+		m_tBufferDesc.fGravity_Z = In_Json["Com_VIBuffer"]["fGravity_Z"];
+	}
 
 	if (In_Json["Com_VIBuffer"].contains("vMinMaxFriction"))	// 다시 저장 후 삭제
 		CJson_Utility::Load_Float2(In_Json["Com_VIBuffer"]["vMinMaxFriction"], m_tBufferDesc.vMinMaxFriction);
@@ -1460,7 +1479,9 @@ void CVIBuffer_Effect_Model_Instance::Add_Force(_uint iNum, _fvector vForce, FOR
 	switch (eMode)
 	{
 	case FORCE_MODE::FORCE:
-		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
+		// 구멍막기. 중력 방향 타입 구분으로 사용함 (이름의 의도로 사용하지 않음)
+		XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
+		//XMStoreFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel, XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel) += vForce / m_vecParticleRigidbodyDesc[iNum].fMass);
 		break;
 
 	case FORCE_MODE::IMPULSE:
@@ -1538,7 +1559,9 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE
 	//else
 	{
 
-		if (FORCE_MODE::IMPULSE == eMode || FORCE_MODE::VELOCITY_CHANGE == eMode)
+
+
+		if (FORCE_MODE::IMPULSE == eMode || FORCE_MODE::VELOCITY_CHANGE == eMode || FORCE_MODE::FORCE == eMode)
 		{
 			_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vVelocity)));
 
@@ -1550,7 +1573,7 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE
 		}
 
 
-		if (FORCE_MODE::FORCE == eMode || FORCE_MODE::ACCELERATION == eMode)
+		if (/*FORCE_MODE::FORCE == eMode || */ FORCE_MODE::ACCELERATION == eMode)
 		{
 			_float fLength = XMVectorGetX(XMVector3Length(XMLoadFloat3(&m_vecParticleRigidbodyDesc[iNum].vAccel)));
 

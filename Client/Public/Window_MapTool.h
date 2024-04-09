@@ -101,7 +101,9 @@ private:
 		void			Interact_ArrivalMissonFunction();
 		void			Interact_ShowInfoWindow();
 		void			Interact_EnableFunction();
+		void			Interact_BodyColiderFunction();
 		void			Interact_MoveColiderFunction();
+		void			Interact_InteractMoveColiderFunction();
 		void			Interact_NavigationFunction();
 		
 
@@ -339,8 +341,15 @@ private: //!For.Interact //! 상호작용
 	_float							m_fMoveColliderSizeArray[3] = { 1.f, 1.f, 1.f };
 	_float							m_fMoveColliderCenterArray[3] = { 0.f, 1.f, 0.f };
 
+	_float							m_fBodyColliderSizeArray[3] = { 1.f, 1.f, 1.f };
+	_float							m_fBodyColliderCenterArray[3] = { 0.f, 1.f, 0.f };
+
 	_float							m_fSelectColliderSizeArray[3] = { 1.f, 1.f, 1.f}; //! 콜라이더 사이즈변경용
 	_float							m_fSelectColliderCenterArray[3] = { 0.f, 1.f, 0.f }; //! 콜라이더 센터변경용
+
+	_float							m_fInteractMoveColliderSizeArray[3] = { 1.f, 1.f, 1.f };
+	_float							m_fInteractMoveColliderCenterArray[3] = { 1.f, 1.f, 1.f };
+
 	_int							m_iInteractPlayAnimIndex = 0;
 	_float3							m_vInteractRootMoveRate = { 1.f, 1.f, 1.f };
 	_bool							m_bInteractUseGravity = false;
@@ -393,6 +402,15 @@ private: //!For. CreateSpecialObject
 	vector<string>						m_vecCreateSpecialObjectTag;
 	_int								m_iCreateSpecialObjectIndex = 0;
 	_int								m_iSelectSpecialObjectIndex = 0;
+
+	_int								m_eElevatorType = 0; //! 이넘 캐스팀용;
+	_float3								m_vElevatorColliderSize = {1.f, 1.f, 1.f};
+	_float3								m_vElevatorColliderCenter = {0.f, 1.f, 0.f};
+	_float4								m_vElevatorArrivalPosition = {};
+	_float								m_fElevatorMinHeight = 0.f;
+	_float								m_fElevatorMaxHeight = 10.f;
+	_float								m_fElevatorSpeed = 10.f;
+	_float								m_fElevatorRotationSpeed = 90.f;
 	
 private: //!For. CreateLightObject
 	vector<CEnvironment_LightObject*>	m_vecCreateLightObject;

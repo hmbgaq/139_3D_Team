@@ -13,7 +13,7 @@ void CPlayer_InteractionLadder_Up_Start::Initialize(CPlayer* pActor)
 	pActor->Set_Interection(true);
 
 	//Test
-	pActor->Set_Ladder_Count(4);
+	//pActor->Set_Ladder_Count(4);
 }
 
 CState<CPlayer>* CPlayer_InteractionLadder_Up_Start::Update(CPlayer* pActor, _float fTimeDelta)
