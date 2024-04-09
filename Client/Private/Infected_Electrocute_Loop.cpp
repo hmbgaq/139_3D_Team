@@ -2,6 +2,7 @@
 #include "Infected_Idle.h"
 #include "Body_Infected_D.h"
 #include "Weapon_Infected_D.h"
+#include "Effect_Manager.h"
 
 void CInfected_Electrocute_Loop::Initialize(CInfected* pActor)
 {
@@ -29,7 +30,8 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 			//CWeapon_Infected_D* m_pWeapon = dynamic_cast<CWeapon_Infected_D*>(pActor->Get_Weapon(TEXT("Weapon_Bomb"))); /* 이름 이걸로 공통사항으로 밀어야함 */
 			//m_pWeapon->Set_Enable(true);		// 무기콜라이더 활성화 = 자폭 콜라이더 
 			pActor->Get_Weapon(TEXT("Weapon_Bomb"))->Set_Enable(true);
-			
+			EFFECT_MANAGER->Play_Effect("Parasiter", "Explosion_05_Big.json", pActor->Get_Position());
+
 			__super::Bomb_State(pActor, fTimeDelta, g_iAnimIndex);
 		}
 	}

@@ -371,6 +371,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	/* SnowBoss Falling Leaves */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves.json", 30));
+	/*Boss2 Monster_Explosion*/
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Explosion_05_Big.json", 50));
+
 #pragma endregion 보스2 이펙트 끝
 
 

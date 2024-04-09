@@ -32,7 +32,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 25.f;
+	GameObjectDesc.fSpeedPerSec = 40.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -74,7 +74,7 @@ void CMotherVomit::Tick(_float fTimeDelta)
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
 	m_pTransformCom->Go_Straight(fTimeDelta);
-	if (m_pTransformCom->Get_Position().y <= -5.f)
+	if (m_pTransformCom->Get_Position().y <= -2.f)
 		Set_Enable(false);
 	//플레이어보다 높으면 브레스가 터지면 안될거 같기도 하고 
 
