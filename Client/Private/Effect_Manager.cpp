@@ -428,6 +428,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json"));
 		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json"));
 
+		//Mother_Egg
+		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead2.json"));
+
 
 #pragma endregion
 
