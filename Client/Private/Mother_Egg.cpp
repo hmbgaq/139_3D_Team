@@ -89,7 +89,7 @@ void CMother_Egg::Tick(_float fTimeDelta)
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
-	else if (m_pTransformCom->Get_Position().y <= 0.f && m_fTimeDelta >= 5.f)
+	else if (this->Get_Enable() == true && m_pTransformCom->Get_Position().y <= 0.f && m_fTimeDelta >= 5.f)
 	{
 		for (int i = 0; i < 3; ++i)
 		{
