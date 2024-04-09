@@ -13,6 +13,7 @@ BEGIN(Client)
 
 class CCrane : public CCharacter_Client
 {
+
 protected:
 	CCrane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CCrane(const CCrane& rhs);

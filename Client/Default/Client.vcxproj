@@ -324,6 +324,7 @@
     <ClInclude Include="..\Public\Body_Crane.h" />
     <ClInclude Include="..\Public\Cargo_Crane.h" />
     <ClInclude Include="..\Public\Explosion_Infected_D.h" />
+    <ClInclude Include="..\Public\Gimic.h" />
     <ClInclude Include="..\Public\HitPoint_Crane.h" />
     <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
