@@ -53,8 +53,10 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 	m_fDamage = 1.f;
 
 	Set_Enable(true);
+
+
 	// 이펙트 생성
-	//m_pEffect = EFFECT_MANAGER->Create_Effect(LEVEL_INTRO_BOSS, LAYER_EFFECT, "Test_Skull_04.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Son_Test_07.json", this);
 
 
 	return S_OK;
@@ -103,7 +105,7 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 	pSpringCam->Set_ShakeCameraTime(0.2f);
 	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
-
+	CData_Manager::GetInstance()->Get_Player()->Apply_Shake_And_Blur(Light);
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
 	if (nullptr != pTarget_Character)// 일반 타격 
@@ -112,15 +114,13 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 
 		pTarget_Character->Get_Damaged(m_fDamage);
 
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	this->Set_Enable(false);
 
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
-	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
 }
 
 void CMotherVomit::OnCollisionStay(CCollider* other)
@@ -194,7 +194,7 @@ void CMotherVomit::Free()
 {
 	__super::Free();
 
-	//if(nullptr != m_pEffect)
 
+	Safe_Release(m_pEffect);
 
 }

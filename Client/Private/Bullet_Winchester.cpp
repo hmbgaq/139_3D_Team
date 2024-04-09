@@ -41,9 +41,9 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 100.f;
+	m_fDamage = 10.f;
 
-	EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_13_Tail_01.json", this, Get_Transform()->Get_WorldFloat4x4());
+	EFFECT_MANAGER->Play_Effect_StaticPivot("Player/Revolver/", "Revolver_13_Tail_01.json", this, Get_Transform()->Get_WorldFloat4x4());
 
 	return S_OK;
 }
@@ -133,16 +133,18 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 		
 
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		//EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/","Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 
+	m_pTrail->Set_Play(false);
 	Set_Dead(true);
 
 }
 
 void CBullet_Winchester::OnCollisionStay(CCollider* other)
 {
+	Set_Dead(true);
 }
 
 void CBullet_Winchester::OnCollisionExit(CCollider* other)
@@ -212,7 +214,7 @@ void CBullet_Winchester::Free()
 {
 	__super::Free();
 
-	if (nullptr != m_pTrail)
-		m_pTrail->Set_Dead(TRUE);
+
+	Safe_Release(m_pTrail);
 
 }

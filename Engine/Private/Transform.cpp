@@ -333,7 +333,7 @@ _bool CTransform::Rotation_Lerp(_float fRadian, _float fTimeDelta, _float fMinRa
 
 	m_fRadian = SMath::Extract_PitchYawRollFromRotationMatrix(m_WorldMatrix).y;
 
-	_float vLocalPos;
+	//_float vLocalPos;
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 	
@@ -387,7 +387,7 @@ _bool CTransform::Rotation_LerpAxis(_float fRadian, _float fTimeDelta, ROTATION_
 	}
 	
 
-	_float vLocalPos;
+	//_float vLocalPos;
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 
@@ -439,7 +439,7 @@ _bool CTransform::Rotation_QuaternionLerpAxis(_float fRadian, _float fTimeDelta,
 		break;
 	}
 
-	_float vLocalPos;
+	//_float vLocalPos;
 	_float fTargetAngle = XMConvertToDegrees(fRadian);
 	_float fAngle = XMConvertToDegrees(m_fRadian);
 

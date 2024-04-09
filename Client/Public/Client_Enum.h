@@ -158,6 +158,41 @@ namespace Client
 	};
 
 
+	enum class Additional_Skill 
+	{
+		KICK,
+		UPPER_CUT,
+		HERO_PUNCH,
+		HEAL,
+		ELECTRIC_DASH,
+		ELECTROCUTE,
+		ELECTRIC_WHIP,
+		QUAKE_PUNCH,
+		QUAKE_PUNCH2,
+		QUAKE_PUNCH3,
+		HIT_EIGHT,
+		SUPER_CHARGE,
+		TELEPORT_PUNCH,
+
+		//MAX_HP,
+		//REGEN_HP,
+		//ELECTRIC_DAMAGE_INCREASE,
+		//ELECTRIC_COOLTIME_DECREASE,
+		//MELEE_DAMAGE_INCREASE,
+		//MELEE_COOLTIME_DECREASE,
+		//HASTE,
+
+
+		Additional_Skill_End
+	};
+
+	enum class Additional_Weapon
+	{
+		REVOLVER,
+		RIFLE,
+		SHOTGUN,
+		Additional_Weapon_End
+	};
 
 }
 #endif // Client_Enum_h__

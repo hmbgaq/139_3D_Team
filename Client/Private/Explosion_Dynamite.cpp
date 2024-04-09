@@ -103,13 +103,11 @@ void CExplosion_Dynamite::OnCollisionEnter(CCollider* other)
 		}
 
 
-		EFFECT_MANAGER->Play_Effect("Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 	}
 
 	//Set_Dead(true);
 
-
-	//m_pEffect->Set_Dead(true);
 }
 
 void CExplosion_Dynamite::OnCollisionStay(CCollider* other)
@@ -183,5 +181,5 @@ void CExplosion_Dynamite::Free()
 	__super::Free();
 
 	if (nullptr != m_pEffect)
-		m_pEffect->Set_Dead(true);
+		Safe_Release(m_pEffect);
 }

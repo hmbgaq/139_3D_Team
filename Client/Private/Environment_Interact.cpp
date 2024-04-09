@@ -79,9 +79,12 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 		m_bFindPlayer = true;
 	}
 
-
-	m_pTransformCom->Set_Speed(m_fSplineSpeed);
-	m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(m_tEnvironmentDesc.fRotationSpeed));
+	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+	{
+		m_pTransformCom->Set_Speed(m_fSplineSpeed);
+		m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(m_tEnvironmentDesc.fRotationSpeed));
+	}
+	
 	XMStoreFloat4x4(&m_InitMatrix, XMMatrixIdentity());
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)

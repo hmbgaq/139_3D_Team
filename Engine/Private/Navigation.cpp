@@ -204,6 +204,8 @@ _bool CNavigation::isMove(_fvector vPosition)
 		else
 			return false;
 	}
+
+	//return true;
 }
 
 _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4* vOutSlidingDir)
@@ -264,7 +266,7 @@ _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4*
 		return true;
 	}
 
-	return false;
+	
 
 }
 

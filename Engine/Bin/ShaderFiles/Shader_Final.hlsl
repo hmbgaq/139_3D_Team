@@ -240,6 +240,9 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     
     if (Out.vColor.a == 0)
         Out.vColor = MainObject;
+    
+    if(Out.vColor.a == 0)
+        discard;
        
     return Out;
 }
@@ -316,7 +319,28 @@ PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
     
     return Out;
 }
-/* ------------------ Technique ------------------ */
+
+/* ------------------- 6 - GrayScale ------------------ */
+PS_OUT PS_MAIN_TEST(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector Test = g_FinalTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    if (Test.a == 0)
+        discard;
+    
+    Out.vColor = Test;
+    
+    return Out;
+    
+}
+
+/*=============================================================
+ 
+                         Technique 
+                                
+==============================================================*/
 
 technique11 DefaultTechnique
 {
@@ -407,4 +431,15 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_FINAL_GRAY();
     }
 
+    pass TEST
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_TEST();
+    }
 }

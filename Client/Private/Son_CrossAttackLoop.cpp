@@ -6,6 +6,7 @@ void CSon_CrossAttackLoop::Initialize(CSon* pActor)
 	__super::Initialize(pActor);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	pActor->Get_Weapon(L"Weapon_head")->Set_Enable_Collisions(false);
+	pActor->Set_MonsterAttackState(true);
 
 }
 

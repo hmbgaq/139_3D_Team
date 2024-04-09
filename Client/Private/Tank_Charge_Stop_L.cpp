@@ -10,6 +10,8 @@ void CTank_Charge_Stop_L::Initialize(CTank* pActor)
 
 CState<CTank>* CTank_Charge_Stop_L::Update(CTank* pActor, _float fTimeDelta)
 {
+	__super::Update(pActor, fTimeDelta);
+
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

@@ -88,6 +88,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	/* Target 설정 */
 	m_pTarget = m_pGameInstance->Get_Player();
 
+
 	return S_OK;
 }
 
@@ -98,12 +99,18 @@ void CInfected::Priority_Tick(_float fTimeDelta)
 
 void CInfected::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_pActor)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
+
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 
 	if (true == m_bCntDead_Active)
 	{

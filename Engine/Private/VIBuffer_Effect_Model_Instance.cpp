@@ -4,6 +4,8 @@
 #include "SMath.h"
 #include "Easing_Utillity.h"
 
+#include "Model.h"
+
 CVIBuffer_Effect_Model_Instance::CVIBuffer_Effect_Model_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer_Model_Instance(pDevice,pContext)
 {
@@ -24,33 +26,24 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 	m_tBufferDesc = *(EFFECT_MODEL_INSTANCE_DESC*)pArg;
 
 
-	CModel* pModel[MORPH_END] = { nullptr };
-	for (_uint i = 0; i < ECast<_uint>(MORPH_END); ++i)
-	{	
-		if (nullptr != m_tBufferDesc.pModel[i])
-		{
-			Safe_AddRef(m_tBufferDesc.pModel[i]);
-			pModel[i] = m_tBufferDesc.pModel[i];
-		}
-	}
-	
-	vector<CMesh*> Meshes[MORPH_END];
-	for (_uint i = 0; i < ECast<_uint>(MORPH_END); ++i)
+	Safe_AddRef(m_tBufferDesc.pModel);
+
+	CModel* pModel = m_tBufferDesc.pModel;
+
+	vector<CMesh*> Meshes = pModel->Get_Meshes();
+	m_iNumMeshes = (_int)Meshes.size();
+
+	for (_int i = 0; i < m_iNumMeshes; ++i)
 	{
-		if (nullptr != pModel[i])
-		{
-			Meshes[i] = pModel[i]->Get_Meshes();
-			m_iNumMeshes = (_int)Meshes[i].size();
-
-			for (_int j = 0; j < m_iNumMeshes; ++j)
-			{
-				m_vecInstanceMesh.push_back(Meshes[i][j]);
-				Safe_AddRef(Meshes[i][j]);
-			}
-
-			m_iNumMaterials = pModel[i]->Get_NumMaterials();
-		}
+		m_vecInstanceMesh.push_back(Meshes[i]);
+		Safe_AddRef(Meshes[i]);
 	}
+
+	m_iNumMaterials = pModel->Get_NumMaterials();
+
+
+	//////////////////////////////////////////////////////////////
+
 
 
 	// 벡터 공간 예약(파티클모드일때만)
@@ -175,26 +168,30 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 HRESULT CVIBuffer_Effect_Model_Instance::Change_Model(CModel* pChangeModel)
 {
 
-	if (nullptr != m_tBufferDesc.pModel[0])
+	// 기존꺼 삭제
+	if (nullptr != m_tBufferDesc.pModel)
 	{
-		Safe_Release(m_tBufferDesc.pModel[0]);
-
-		m_tBufferDesc.pModel[0] = pChangeModel;
-		Safe_AddRef(m_tBufferDesc.pModel[0]);
-	}
-
-	if (nullptr != m_tBufferDesc.pModel[0])
-	{
-		if (!m_vecInstanceMesh.empty())
+		for (_int i = 0; i < m_iNumMeshes; ++i)
 		{
-			for (_int i = 0; i < m_iNumMeshes; ++i)
-			{
-				Safe_AddRef(m_vecInstanceMesh[i]);
-			}
-			m_vecInstanceMesh.clear();
+			Safe_Release(m_vecInstanceMesh[i]);
 		}
 
-		vector<CMesh*> Meshes = m_tBufferDesc.pModel[0]->Get_Meshes();
+		m_vecInstanceMesh.clear();
+		Safe_Release(m_tBufferDesc.pModel);
+	}
+
+
+	// 바꿀 모델로 바꿔주기
+	if (nullptr != pChangeModel)
+	{
+		m_tBufferDesc.pModel = pChangeModel;
+
+		Safe_AddRef(m_tBufferDesc.pModel);
+
+
+		CModel* pModel = m_tBufferDesc.pModel;
+
+		vector<CMesh*> Meshes = pModel->Get_Meshes();
 		m_iNumMeshes = (_int)Meshes.size();
 
 		for (_int i = 0; i < m_iNumMeshes; ++i)
@@ -203,7 +200,7 @@ HRESULT CVIBuffer_Effect_Model_Instance::Change_Model(CModel* pChangeModel)
 			Safe_AddRef(Meshes[i]);
 		}
 
-		m_iNumMaterials = m_tBufferDesc.pModel[0]->Get_NumMaterials();
+		m_iNumMaterials = pModel->Get_NumMaterials();
 	}
 
 
@@ -303,7 +300,14 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	m_vecParticleInfoDesc[iNum].fCurTornadoSpeed = SMath::fRandom(m_tBufferDesc.vMinMaxTornadoSpeed.x, m_tBufferDesc.vMinMaxTornadoSpeed.y);
 
 
-	m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+	//m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+
+	m_vecParticleInfoDesc[iNum].vRadian = _float3(SMath::fRandom(m_tBufferDesc.vMinRadian.x, m_tBufferDesc.vMaxRadian.x)
+													, SMath::fRandom(m_tBufferDesc.vMinRadian.y, m_tBufferDesc.vMaxRadian.y)
+													, SMath::fRandom(m_tBufferDesc.vMinRadian.z, m_tBufferDesc.vMaxRadian.z));
+
+
+	m_vecParticleInfoDesc[iNum].vCurRadian = m_vecParticleInfoDesc[iNum].vRadian;
 
 	// 자체회전 스피드
 	m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x = SMath::fRandom(m_tBufferDesc.vMinMaxRadianSpeed_X.x, m_tBufferDesc.vMinMaxRadianSpeed_X.y);
@@ -462,13 +466,13 @@ void CVIBuffer_Effect_Model_Instance::Rotation_Instance(_uint iNum)
 
 	if (m_tBufferDesc.bRotAcc)	// 회전 업데이트 사용이면 회전각도 계속 누적
 	{
-		m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_tBufferDesc.vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
-		m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_tBufferDesc.vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
-		m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_tBufferDesc.vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
+		m_vecParticleInfoDesc[iNum].vCurRadian.x += (m_vecParticleInfoDesc[iNum].vRadian.x + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.x);
+		m_vecParticleInfoDesc[iNum].vCurRadian.y += (m_vecParticleInfoDesc[iNum].vRadian.y + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.y);
+		m_vecParticleInfoDesc[iNum].vCurRadian.z += (m_vecParticleInfoDesc[iNum].vRadian.z + m_vecParticleInfoDesc[iNum].vAddRadianSpeed.z);
 	}
 	else
 	{
-		m_vecParticleInfoDesc[iNum].vCurRadian = m_tBufferDesc.vRadian;
+		m_vecParticleInfoDesc[iNum].vCurRadian = m_vecParticleInfoDesc[iNum].vRadian;
 	}
 
 
@@ -611,27 +615,27 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 
 
-#pragma region 모델 바꿔끼기 시작
-		// 모프가 True이면 
-		if (m_tBufferDesc.bMorph)
-		{
-			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
-
-			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
-			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
-			{
-				iNum += 1;
-				m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
-
-				if (m_tBufferDesc.eCurModelNum >= MORPH_END)
-				{
-					m_tBufferDesc.eCurModelNum = MORPH_01;
-				}
-
-				m_tBufferDesc.fMorphTimeAcc = 0.f;
-			}
-		}
-#pragma region 모델 바꿔끼기 끝
+//#pragma region 모델 바꿔끼기 시작
+//		// 모프가 True이면 
+//		if (m_tBufferDesc.bMorph)
+//		{
+//			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
+//
+//			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
+//			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
+//			{
+//				iNum += 1;
+//				m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
+//
+//				if (m_tBufferDesc.eCurModelNum >= MORPH_END)
+//				{
+//					m_tBufferDesc.eCurModelNum = MORPH_01;
+//				}
+//
+//				m_tBufferDesc.fMorphTimeAcc = 0.f;
+//			}
+//		}
+//#pragma region 모델 바꿔끼기 끝
 
 
 #pragma region 방출 시작
@@ -937,6 +941,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 						else if (BLINK == m_tBufferDesc.eType_Action)
 						{
 							// 이동 없음
+							_vector vMovePos = m_vecParticleInfoDesc[i].vCenterPositions + m_vecParticleInfoDesc[i].vDir * m_vecParticleInfoDesc[i].fMaxRange;
+							XMStoreFloat4(&pModelInstance[i].vTranslation, vMovePos);
 
 							// 죽음 조건
 							if (m_vecParticleInfoDesc[i].fLifeTime <= m_vecParticleInfoDesc[i].fTimeAccs)	// 라이프 타임이 끝나면 초기화 or 죽음
@@ -1144,14 +1150,18 @@ HRESULT CVIBuffer_Effect_Model_Instance::Bind_VIBuffers(_uint iMeshContainerInde
 HRESULT CVIBuffer_Effect_Model_Instance::Render(_int iMeshIndex)
 {
 
-	if (m_tBufferDesc.bMorph)	// 모프가 True이면 (박쥐 모델)
-	{
-		Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
-		m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[m_tBufferDesc.eCurModelNum]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+	if (nullptr == m_tBufferDesc.pModel)
+		return E_FAIL;
 
-		return S_OK;
-	}
-	else
+
+	//if (m_tBufferDesc.bMorph)	// 모프가 True이면 (박쥐 모델)
+	//{
+	//	Bind_VIBuffers(m_tBufferDesc.eCurModelNum);
+	//	m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[m_tBufferDesc.eCurModelNum]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
+
+	//	return S_OK;
+	//}
+	//else
 	{
 		Bind_VIBuffers(iMeshIndex);
 		m_pContext->DrawIndexedInstanced(m_vecInstanceMesh[iMeshIndex]->Get_NumIndices(), m_iNumInstance, 0, 0, 0);
@@ -1217,7 +1227,11 @@ _bool CVIBuffer_Effect_Model_Instance::Write_Json(json& Out_Json)
 	Out_Json["Com_VIBuffer"]["eType_Dir"] = m_tBufferDesc.eType_Dir;
 
 	Out_Json["Com_VIBuffer"]["bRotAcc"] = m_tBufferDesc.bRotAcc;
-	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
+	//CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMinRadian"], m_tBufferDesc.vMinRadian);
+	CJson_Utility::Write_Float3(Out_Json["Com_VIBuffer"]["vMaxRadian"], m_tBufferDesc.vMaxRadian);
+
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_X"], m_tBufferDesc.vMinMaxRadianSpeed_X);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Y"], m_tBufferDesc.vMinMaxRadianSpeed_Y);
 	CJson_Utility::Write_Float2(Out_Json["Com_VIBuffer"]["vMinMaxRadianSpeed_Z"], m_tBufferDesc.vMinMaxRadianSpeed_Z);
@@ -1328,8 +1342,14 @@ void CVIBuffer_Effect_Model_Instance::Load_FromJson(const json& In_Json)
 	if (In_Json["Com_VIBuffer"].contains("bRotAcc")) // 다시 저장 후 삭제
 		m_tBufferDesc.bRotAcc = In_Json["Com_VIBuffer"]["bRotAcc"];
 
-	if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제
-		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+	//if (In_Json["Com_VIBuffer"].contains("vRadian")) // 다시 저장 후 삭제
+	//	CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vRadian"], m_tBufferDesc.vRadian);
+
+	if (In_Json["Com_VIBuffer"].contains("vMinRadian")) // 다시 저장 후 삭제
+	{
+		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMinRadian"], m_tBufferDesc.vMinRadian);
+		CJson_Utility::Load_Float3(In_Json["Com_VIBuffer"]["vMaxRadian"], m_tBufferDesc.vMaxRadian);
+	}
 
 
 	if (In_Json["Com_VIBuffer"].contains("vMinMaxRadianSpeed_X")) // 다시 저장 후 삭제
@@ -1584,5 +1604,19 @@ CComponent* CVIBuffer_Effect_Model_Instance::Clone(void* pArg)
 void CVIBuffer_Effect_Model_Instance::Free()
 {
 	__super::Free();
+
+
+
+	if (nullptr != m_tBufferDesc.pModel)
+	{
+		for (_int i = 0; i < m_iNumMeshes; ++i)
+		{
+			Safe_Release(m_vecInstanceMesh[i]);
+		}
+
+		m_vecInstanceMesh.clear();
+		Safe_Release(m_tBufferDesc.pModel);
+	}
+
 
 }

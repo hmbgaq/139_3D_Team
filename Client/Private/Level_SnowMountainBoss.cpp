@@ -62,6 +62,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json");
 
 	return S_OK;
 }
@@ -73,7 +74,7 @@ void CLevel_SnowMountainBoss::Tick(_float fTimeDelta)
 
 HRESULT CLevel_SnowMountainBoss::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다."));
+	SetWindowText(g_hWnd, TEXT("SnowMountain Boss 레벨입니다."));
 
 	return S_OK;
 }
@@ -242,7 +243,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_Effect(const wstring& strLayerTag)
 
 HRESULT CLevel_SnowMountainBoss::Ready_Layer_Monster(const wstring& strLayerTag)
 {
-	CGameObject* pMonster = { nullptr };
+	//CGameObject* pMonster = { nullptr };
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Monster"), pArg));
 	////! Boss
 	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", TEXT("Prototype_GameObject_Mother"));
@@ -590,7 +591,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Event()
 }
 
 HRESULT CLevel_SnowMountainBoss::Ready_Shader()
-{  
+{
 	/* For. Shadow */
 	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);

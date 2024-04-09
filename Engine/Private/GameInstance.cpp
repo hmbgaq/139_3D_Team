@@ -341,6 +341,15 @@ void CGameInstance::Set_CurrentLevel(_uint CurrentLevel)
 	m_pLevel_Manager->Set_CurrentLevel(CurrentLevel);
 }
 
+HRESULT CGameInstance::Set_ShaderOption(_uint CurrentLevel, string filePath)
+{
+	NULL_CHECK_RETURN(m_pLevel_Manager, E_FAIL);
+
+	m_pLevel_Manager->Set_ShaderOption(CurrentLevel, filePath);
+
+	return S_OK;
+}
+
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)
 {
 	if (nullptr == m_pObject_Manager)

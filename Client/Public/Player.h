@@ -46,6 +46,19 @@ public:
 		HUD_END
 	};
 
+	enum class Player_Skill 
+	{
+		SUPER_CHARGE,
+		HEAL,
+		REVOLVER,
+		SHOTGUN,
+		RIFLE,
+		SLAM_DOWM,
+		KICK,
+		ELECTRIC_WHIP,
+		Player_Skill_End
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer(const CPlayer& rhs);
@@ -81,8 +94,12 @@ public:
 	string Get_HUD_Tag(HUD eHUD);
 	void Set_HUD_MaxCooltime(HUD eHUD, _float fCurrnetCooltime);
 	void Set_HUD_Cooltime(HUD eHUD, _float fCurrnetCooltime);
-	void Activate_HUD_Skill(HUD eHUD);
-	_bool Is_HUD_Cooltime_End(HUD eHUD);
+	_float Get_HUD_Cooltime(HUD eHUD);
+	//_bool Activate_HUD_Skill(HUD eHUD);
+	_bool Activate_HUD_Skill(HUD eHUD, _float fCost = -1.f);
+	_bool Is_HUD_Cooltime_End(HUD eHUD, _float fCost = -1.f);
+
+	HUD Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill);
 	
 
 public://!For. Interact
@@ -135,6 +152,7 @@ public:
 public:
 	void		 LeftHUDCoolDown(const string& strUIName, _float fCoolTime);
 	_float		 Get_LeftHUDMaxCoolTime(const string& strUIName);
+	void		 Set_DiedScreen(_bool _bShowDiedScreen);
 
 private:
 	void		 KeyInput(_float fTimeDelta);
@@ -175,6 +193,14 @@ public:
 	_bool Is_Interection() { return m_bIsInterection; }
 	void Set_Interection(_bool _bIsInterection) { m_bIsInterection = _bIsInterection; }
 
+public:
+	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
+	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
+	void Update_SuperCharge(_float fTimeDelta) { 
+		_float fTime = m_fSuperChargeTime - fTimeDelta;
+		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
+	};
+
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -195,7 +221,7 @@ private:
 	_uint m_iLadderCount = { 0 };
 	_bool m_bIsInterection = { false };
 
-	_bool m_bIsActivated_TeleportPunch = { false };
+	_float m_fSuperChargeTime = { 0.f };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
 

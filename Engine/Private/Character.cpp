@@ -521,7 +521,7 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 		}
 
 
-		if (true == m_bIsKnockUp)
+		if (true == m_bIsKnockUp && Power::Heavy == eHitPower)
 		{
 			Hitted_KnockUp();
 		}

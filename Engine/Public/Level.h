@@ -24,6 +24,7 @@ protected:
 
 public:
 	_uint					m_iNextLevel = 999;
+
 protected:
 	class CGameInstance*	m_pGameInstance = { nullptr };
 
