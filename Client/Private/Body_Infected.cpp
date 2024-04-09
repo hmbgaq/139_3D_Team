@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameInstance.h"
 #include "Body_Infected.h"
+#include "Data_Manager.h"
 
 CBody_Infected::CBody_Infected(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CBody_Monster(pDevice, pContext, strPrototypeTag)
@@ -38,6 +39,16 @@ void CBody_Infected::Tick(_float fTimeDelta)
 
 void CBody_Infected::Late_Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+	{
+		m_bIsPaused = true;
+	}
+	else 
+	{
+		m_bIsPaused = false;
+	}
+
+
 	__super::Late_Tick(fTimeDelta);
 }
 

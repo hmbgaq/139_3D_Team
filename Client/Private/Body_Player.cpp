@@ -2,6 +2,7 @@
 #include "..\Public\Body_Player.h"
 #include "GameInstance.h"
 #include "Character.h"
+#include "Data_Manager.h"
 
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -61,6 +62,15 @@ void CBody_Player::Tick(_float fTimeDelta)
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+	{
+		m_bIsPaused = true;
+	}
+	else
+	{
+		m_bIsPaused = false;
+	}
+
 	__super::Late_Tick(fTimeDelta);
 	
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );

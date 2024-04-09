@@ -109,8 +109,6 @@ void CInfected::Tick(_float fTimeDelta)
 		m_pActor->Update_State(fTimeDelta);
 	}
 
-	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
-	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 
 	if (true == m_bCntDead_Active)
 	{

@@ -151,8 +151,11 @@ protected: /* For. Shader*/
 protected:
 	_bool	m_bIsUseMouseMove = { false };
 	_bool	m_bIsInFrustum = { false };
+	_bool	m_bIsPaused = { false };
+
 protected:
 	_bool	m_bIsNotUseMovePos = { false };
+
 
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };

@@ -64,7 +64,7 @@ HRESULT CLevel_Intro::Initialize()
     //FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
 
-    FAILED_CHECK(Ready_Shader());
+    //FAILED_CHECK(Ready_Shader());
 
     return S_OK;
 }
@@ -117,7 +117,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
 
     _bool bSpawnSniper = false;
     _bool bSpawnTanker = true;
-    _bool bSpawnInfected = false;
+    _bool bSpawnInfected = true;
     _bool bSpawnZenuGiant = false;
     
 

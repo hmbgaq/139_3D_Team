@@ -114,6 +114,10 @@ private:
 	_float CameraMoveSpeedtest = 0.1f;//카메라 보간용 이동속도
 private:
 	_float				m_fMouseSensor = { 0.0f };
+
+private:
+	_bool	m_bIsGamePlay = { true };
+
 public:
 	static CSpringCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

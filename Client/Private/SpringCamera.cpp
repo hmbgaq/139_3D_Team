@@ -136,7 +136,24 @@ void CSpringCamera::Tick(_float fTimeDelta)
 		int i = 0;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_TAB))
+	CData_Manager* pDataManager = CData_Manager::GetInstance();
+	GAME_STATE eGameState = pDataManager->Get_GameState();
+
+	if (GAME_STATE::GAMEPLAY != eGameState)
+	{
+		m_bFix = false;
+		m_bCheck = false;
+
+		m_bIsGamePlay = false;
+	}
+	else if (false == m_bIsGamePlay && GAME_STATE::GAMEPLAY == eGameState)
+	{
+		m_bFix = true;
+		m_bCheck = true;
+
+		m_bIsGamePlay = true;
+	}
+	else if (true == m_bIsGamePlay && true == m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		if (m_bFix)
 		{	

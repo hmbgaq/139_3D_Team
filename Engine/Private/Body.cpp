@@ -79,7 +79,11 @@ void CBody::Late_Tick(_float fTimeDelta)
 
 	if (true == m_bIsInFrustum)
 	{
-		m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
+		if (false == m_bIsPaused)
+		{
+			m_pModelCom->Play_Animation(fTimeDelta, m_vMovePos);
+		}
+		
 
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
