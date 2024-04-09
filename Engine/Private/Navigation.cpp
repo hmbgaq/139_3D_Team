@@ -200,8 +200,8 @@ _bool CNavigation::isMove(_fvector vPosition)
 		else
 			return false;
 	}
-
-	return false;
+	
+	//return false;
 }
 
 _bool CNavigation::isMove_ForSliding(_fvector vPosition, _fvector vLook, float4* vOutSlidingDir)
