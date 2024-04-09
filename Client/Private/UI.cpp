@@ -114,7 +114,7 @@ void CUI::Tick(_float fTimeDelta)
 	//	return;
 	
 	/* World or Orthogonal */
-	//Check_Change_WorldUI(fTimeDelta);
+	Check_Change_WorldUI(fTimeDelta);
 
 	/* Check_MouseInput */
 	if(m_pData_Manager->Get_GameState() == GAME_STATE::UI)
@@ -148,7 +148,6 @@ void CUI::Tick(_float fTimeDelta)
 			Player_HUD(fTimeDelta);
 			break;
 		case Client::UISTATE::TUTORIAL_BOX:
-
 			break;
 		case Client::UISTATE::STATE_END:
 			break;

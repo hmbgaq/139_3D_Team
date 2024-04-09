@@ -362,7 +362,7 @@ HRESULT CUI_WeaponIcon::Bind_ShaderResources()
 	if (m_bWeapon == true)
 	{
 		// 최대 레벨 제한
-		if (m_eUI_Level <= CUI::LEVEL2)
+		if (m_eUI_Level >= CUI::LEVEL2)
 			m_eUI_Level = CUI::LEVEL1;
 
 		/* UI_Level */

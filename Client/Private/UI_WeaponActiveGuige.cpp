@@ -46,8 +46,8 @@ HRESULT CUI_WeaponActiveGuige::Initialize(void* pArg)
 	m_fCoolTime = m_fMaxCoolTime;
 	m_bCoolDown = true;
 
-	m_fOriginScaleX = m_pTransformCom->Get_Scaled().x;
-	m_fOriginScaleY = m_pTransformCom->Get_Scaled().y;
+	m_fOriginScaleX = 50.f;
+	m_fOriginScaleY = 50.f;
 
 	return S_OK;
 }
@@ -76,14 +76,14 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 			if (m_pGameInstance->Key_Pressing(DIK_SPACE) &&
 				m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL_END &&
 				m_pUIManager->Get_Select_WeaponLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
-				m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2 ||
+				m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2/* ||
 				m_pUIManager->Get_Select_WeaponName() == "Inventory" &&
-				m_pUIManager->Get_Select_WeaponLevel() == UI_LEVEL::LEVEL0)		// 최대
+				m_pUIManager->Get_Select_WeaponLevel() == UI_LEVEL::LEVEL0*/)		// 최대
 			{
 
-				if (m_pUIManager->Get_Select_WeaponName() == "Inventory" &&
-					m_pUIManager->Get_Select_WeaponLevel() == UI_LEVEL::LEVEL1)
-					return;
+				//if (m_pUIManager->Get_Select_WeaponName() == "Inventory" &&
+				//	m_pUIManager->Get_Select_WeaponLevel() == UI_LEVEL::LEVEL1)
+				//	return;
 
 				if (m_pGameInstance->Key_Up(DIK_SPACE))
 				{

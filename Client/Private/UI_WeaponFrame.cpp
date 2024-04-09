@@ -169,7 +169,7 @@ HRESULT CUI_WeaponFrame::Ready_Components()
 		m_bFirstFrame = true;
 
 		// 첫번째 기본 스킬들은 Level1로  시작 (바로 배울 수 있게)
-		m_eUI_Level = UI_LEVEL::LEVEL1;
+		//m_eUI_Level = UI_LEVEL::LEVEL1;
 
 		//! For.Com_Texture // 잠김
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_perks_empowered_slot"),

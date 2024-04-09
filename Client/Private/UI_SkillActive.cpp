@@ -46,8 +46,8 @@ HRESULT CUI_SkillActive::Initialize(void* pArg)
 	m_fCoolTime = m_fMaxCoolTime;
 	m_bCoolDown = true;
 
-	m_fOriginScaleX = m_pTransformCom->Get_Scaled().x;
-	m_fOriginScaleY = m_pTransformCom->Get_Scaled().y;
+	m_fOriginScaleX = 50.f;
+	m_fOriginScaleY = 50.f;
 
 	return S_OK;
 }
@@ -68,7 +68,6 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 			m_fOriginScaleX = m_pTransformCom->Get_Scaled().x;
 			m_fOriginScaleY = m_pTransformCom->Get_Scaled().y;
 		}
-
 
 		if (m_bMaxCoolDown == false)
 		{

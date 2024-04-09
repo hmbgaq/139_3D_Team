@@ -1265,6 +1265,7 @@
     <ClInclude Include="..\Public\UI_EnemyHUD_Bar.h" />
     <ClInclude Include="..\Public\UI_EnemyHUD_Shard.h" />
     <ClInclude Include="..\Public\UI_EnemyState_Shard.h" />
+    <ClInclude Include="..\Public\UI_Icon_SelectAnim.h" />
     <ClInclude Include="..\Public\UI_Interaction.h" />
     <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_MainMenuList.h" />
@@ -2308,6 +2309,7 @@
     <ClCompile Include="..\Private\UI_EnemyHP_Shard.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHUD_Bar.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp" />
+    <ClCompile Include="..\Private\UI_Icon_SelectAnim.cpp" />
     <ClCompile Include="..\Private\UI_Interaction.cpp" />
     <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_MainMenuList.cpp" />

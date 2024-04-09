@@ -3982,9 +3982,6 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\1. Parts">
       <UniqueIdentifier>{f7dc8737-b5b3-45ac-9bf1-1a3d9f086c52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\06. Option\04. SelectUI">
-      <UniqueIdentifier>{ae5162ca-d990-4819-bc69-298197f6d565}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\01. WeaponFrame">
       <UniqueIdentifier>{7c6ff70a-8bb9-4713-8820-4cb353d13404}</UniqueIdentifier>
     </Filter>
@@ -3999,6 +3996,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\03. WeaponActiveGuige">
       <UniqueIdentifier>{83406e86-50eb-4381-851c-fc20fe69f0c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\07. SelectUI">
+      <UniqueIdentifier>{0071f72a-4a37-4dcc-9bfa-eb283593c91f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7860,6 +7860,9 @@
     <ClInclude Include="..\Public\UI_WeaponActiveGuige.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\03. WeaponActiveGuige</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Icon_SelectAnim.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\07. SelectUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11190,6 +11193,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_WeaponActiveGuige.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\03. WeaponActiveGuige</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Icon_SelectAnim.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\07. SelectUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
