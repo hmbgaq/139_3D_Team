@@ -749,7 +749,7 @@ void CEnvironment_Interact::Set_LevelChangeType(_bool bLevelChange, LEVEL eLevel
 	m_tEnvironmentDesc.eChangeLevel = eLevel;
 }
 
-
+#endif
 
 void CEnvironment_Interact::Rope_ChainFunction(const _float fTimeDelta)
 {
@@ -771,6 +771,8 @@ void CEnvironment_Interact::Rope_ChainFunction(const _float fTimeDelta)
 		}
 	}
 }
+
+#ifdef _DEBUG
 
 _bool CEnvironment_Interact::Picking(_float3* vPickedPos)
 {
