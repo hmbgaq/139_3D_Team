@@ -129,7 +129,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					Change_SizeY((+m_fChangeScale * 1.5f));
 
 				if (m_fAlpha < 1.f)
-					m_fAlpha += fTimeDelta * 1.5f;
+					m_fAlpha += fTimeDelta * 2.0f;
 
 				if (m_fAlpha >= 1.f)
 				{

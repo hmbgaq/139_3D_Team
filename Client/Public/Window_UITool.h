@@ -526,7 +526,8 @@ private:
 		"SkillWindow_Button",
 		"WeaponFrame",
 		"WeaponIcon",
-		"WeaponActiveGuige"
+		"WeaponActiveGuige",
+		"Icon_SelectAnim"
 	};
 
 	// 클래스 목록을 저장하는 벡터

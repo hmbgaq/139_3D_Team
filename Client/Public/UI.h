@@ -496,6 +496,7 @@ protected:
 
 protected:
 	_bool				Alpha_Minus(_float fTimeDelta);
+	_bool				Alpha_Minus_Control(_float fTimeDelta, _float fAlpha);
 	_bool				Alpha_Plus(_float fTimeDelta);
 	_bool				Alpha_Plus_Control(_float fTimeDelta, _float fAlpha);
 	_float				m_fAlphaSpeed = 1.f;

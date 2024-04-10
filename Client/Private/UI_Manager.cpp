@@ -58,6 +58,7 @@ void CUI_Manager::Tick(_float fTimeDelta)
 
 	// Check SkillWindow
 	Check_SkillWindowTrigger();
+	Check_SkillCollTime(fTimeDelta);
 
 }
 
@@ -165,7 +166,9 @@ void CUI_Manager::NonActive_SkillWindowAll()
 	NonActive_SkillWindowButton();
 	NonActive_SkillActiveGuige();
 	NonActive_WeaponActiveGuige();
-
+	Skill_NotPicking();
+	Weapon_NotPicking();
+	NonActive_IconSelectUI();
 
 	m_bShowSkillWindow = false;
 }
@@ -263,9 +266,17 @@ HRESULT CUI_Manager::Ready_SkillWindow(_uint iLevelIndex)
 	Add_WeaponIcon(iLevelIndex, TEXT("Layer_WeaponIcon"));
 	Add_SkillPreview(iLevelIndex, TEXT("Layer_SkillPreview"));
 	Add_SkillWindowButton(iLevelIndex, TEXT("Layer_SkillWindowButton"));
+	//Add_IconSelectUI(iLevelIndex, TEXT("Layer_IconSelectUI"));
 
 	/* FirstFrame NonActive */
 	NonActive_SkillWindowAll();
+
+	return S_OK;
+}
+
+HRESULT CUI_Manager::Ready_LetterBox(_uint iLevelIndex)
+{
+	Add_LetterBox(iLevelIndex, TEXT("Layer_LetterBox"));
 
 	return S_OK;
 }
@@ -813,6 +824,27 @@ _bool CUI_Manager::Get_LeftHUD_SkillState(const string& strUIName)
 	}
 
 	return false;
+}
+
+void CUI_Manager::Check_SkillCollTime(_float fTimeDelta)
+{
+	if (!m_vecLeftSkill.empty())
+	{
+		for (auto& iter : m_vecLeftSkill)
+		{
+			if(iter->Get_UIDesc().strCloneTag == "Prototype_GameObject_UI_Player_Skill_Guige")
+				dynamic_cast<CUI_Player_Skill_Guige*>(iter)->Check_SkillGuige(fTimeDelta);
+		}
+	}
+
+	if (!m_vecRightSkill.empty())
+	{
+		for (auto& iter : m_vecRightSkill)
+		{
+			if (iter->Get_UIDesc().strCloneTag == "Prototype_GameObject_UI_Player_Skill_Guige")
+				dynamic_cast<CUI_Player_Skill_Guige*>(iter)->Check_SkillGuige(fTimeDelta);
+		}
+	}
 }
 
 HRESULT CUI_Manager::Add_RightSkill(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
@@ -3617,6 +3649,7 @@ HRESULT CUI_Manager::Add_MouseCursor(_uint iLevelIndex, const wstring& strLayerT
 	if (pUI_Object == nullptr)
 		return E_FAIL;
 
+	//pUI_Object->Set_Active(false);
 	m_pMouseCursor = pUI_Object;
 
 	return S_OK;
@@ -4567,7 +4600,8 @@ void CUI_Manager::Check_SkillWindowTrigger()
 			Active_SkillFrame(true);
 			Active_SkillWindowButton(true);
 			Active_SkillPreview(true);
-			Active_SkillActiveGuige();
+			//Active_SkillActiveGuige();
+			Active_MouseCursor(); // MouseCursor
 
 			m_bShowSkillWindow = true;
 		}
@@ -5066,6 +5100,166 @@ void CUI_Manager::NonActive_WeaponActiveGuige()
 	m_pWeaponActiveGuige->Set_AnimTrigger(false);	// UI 트리거 Off
 }
 
+HRESULT CUI_Manager::Add_IconSelectUI(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_UI_Icon_SelectAnim"));
+	if (pGameObject == nullptr)
+		return E_FAIL;
+
+	CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+	if (pUI_Object == nullptr)
+		return E_FAIL;
+
+	m_pIconSelectUI = pUI_Object;
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_IconSelectUI()
+{
+	if (m_pIconSelectUI == nullptr)
+		return;
+
+	m_pIconSelectUI->Set_Alpha(0.f);		// UI 알파값 초기화
+	m_pIconSelectUI->Set_Active(true);		// UI 활성화
+	m_pIconSelectUI->Set_AnimPlay(true);	// UI Animation 재생
+	m_pIconSelectUI->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+	m_pIconSelectUI->Set_Disappear(false);	// UI 사라짐 Off
+}
+
+void CUI_Manager::NonActive_IconSelectUI()
+{
+	if (m_pIconSelectUI == nullptr)
+		return;
+
+	m_pIconSelectUI->Set_Alpha(1.f);			// UI 알파값 초기화
+	m_pIconSelectUI->Set_Active(false);		// UI 활성화
+	m_pIconSelectUI->Set_AnimPlay(false);		// UI Animation 재생
+	m_pIconSelectUI->Set_CurrTime(0.f);		// UI Animation 시간 초기화
+	m_pIconSelectUI->Set_Disappear(true);		// UI 사라짐 Off
+}
+
+HRESULT CUI_Manager::Add_LetterBox(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/Animation/LetterBox.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecLetterBox.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_LetterBox()
+{
+	if (m_vecLetterBox.empty())
+		return;
+
+	for (auto& iter : m_vecLetterBox)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(false);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::NonActive_LetterBox()
+{
+	if (m_vecLetterBox.empty())
+		return;
+
+	for (auto& iter : m_vecLetterBox)
+	{
+		iter->Set_Alpha(1.f);			// UI 알파값 초기화
+		iter->Set_Active(false);		// UI 활성화
+		iter->Set_AnimPlay(false);		// UI Animation 재생
+		iter->Set_CurrTime(0.f);		// UI Animation 시간 초기화
+		iter->Set_Disappear(true);		// UI 사라짐 Off
+	}
+}
+
 void CUI_Manager::Select_Skill(const string& strSelecSkill)
 {
 	if (m_vecSkillFrame.empty())
@@ -5076,7 +5270,10 @@ void CUI_Manager::Select_Skill(const string& strSelecSkill)
 		if (iter->Get_UIDesc().strUIName == strSelecSkill)
 		{
 			m_pUI_SelectSkill = iter;
+			return;
 		}
+
+		m_pUI_SelectSkill = nullptr;
 	}
 }
 
@@ -5090,6 +5287,7 @@ void CUI_Manager::Select_Weapon(const string& strSelecSkill)
 		if (iter->Get_UIDesc().strUIName == strSelecSkill)
 		{
 			m_pUI_SelectWeapon = iter;
+			return;
 		}
 	}
 }
@@ -5162,6 +5360,38 @@ void CUI_Manager::NonActive_UI()
 	NonActive_DiedScreen();
 	NonActive_Option();
 	NonActive_BossHUD_Bar();
+}
+
+void CUI_Manager::ActiveSkill()
+{
+	Active_SkillFrame(true);
+	Active_SkillIcon(true);
+	Active_SkillActiveGuige();
+}
+
+void CUI_Manager::NonActiveSkill()
+{
+	NonActive_SkillFrame();
+	NonActive_SkillIcon();
+	NonActive_SkillActiveGuige();
+	Skill_NotPicking();
+	//NonActive_IconSelectUI();
+}
+
+void CUI_Manager::ActiveWeapon()
+{
+	Active_WeaponFrame(true);
+	Active_WeaponIcon(true);
+	Active_WeaponActiveGuige();
+}
+
+void CUI_Manager::NonActiveWeapon()
+{
+	NonActive_WeaponFrame();
+	NonActive_WeaponIcon();
+	NonActive_WeaponActiveGuige();
+	Weapon_NotPicking();
+	//NonActive_IconSelectUI();
 }
 
 void CUI_Manager::Check_UIPicking(_float fTimeDelta)

@@ -103,7 +103,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Top", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Top"));
+				//m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Top", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Top"));
 			}
 		}
 		else if (m_tUIInfo.strUIName == "LeftHUD_Right")
@@ -118,7 +118,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Right", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Right"));
+				//m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Right", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Right"));
 			}
 		}
 		else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
@@ -133,7 +133,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Bottom", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Bottom"));
+				//m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Bottom", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Bottom"));
 			}
 		}
 		else if (m_tUIInfo.strUIName == "LeftHUD_Left")
@@ -148,7 +148,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Left", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Left"));
+				//m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Left", m_pUIManager->Get_LeftHUD_MaxCoolTime("LeftHUD_Left"));
 			}
 		}
 
@@ -165,7 +165,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Top", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Top"));
+				//m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Top", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Top"));
 			}
 		}
 		else if (m_tUIInfo.strUIName == "RightHUD_Right")
@@ -180,7 +180,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Right", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Right") + 3.f);
+				//m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Right", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Right") + 3.f);
 			}
 		}
 		else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
@@ -195,7 +195,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Bottom", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Bottom"));
+				//m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Bottom", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Bottom"));
 			}
 		}
 		else if (m_tUIInfo.strUIName == "RightHUD_Left")
@@ -210,7 +210,7 @@ void CUI_Player_Skill_Icon::Tick(_float fTimeDelta)
 			else // 해금 안됐을 경우
 			{
 				// 현재 쿨타임 0으로 만들기
-				m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Left", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Left"));
+				//m_pUIManager->Change_RightHUD_CurrentCoolTime("RightHUD_Left", m_pUIManager->Get_RightHUD_MaxCoolTime("RightHUD_Left"));
 			}
 		}
 	}

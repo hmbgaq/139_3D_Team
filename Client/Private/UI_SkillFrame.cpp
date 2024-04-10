@@ -59,6 +59,8 @@ void CUI_SkillFrame::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
+		//m_pUIManager->Active_SkillActiveGuige();
+
 		if (m_pGameInstance->Key_Down(DIK_7))
 			m_eUI_Level = LEVEL0;
 		if (m_pGameInstance->Key_Down(DIK_8))
@@ -72,7 +74,10 @@ void CUI_SkillFrame::Tick(_float fTimeDelta)
 
 		m_eUI_PreLevel = m_eUI_Level;
 	}
-
+	else
+	{
+		//m_pUIManager->NonActive_SkillActiveGuige();
+	}
 
 }
 
@@ -296,13 +301,11 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 				// 선택한 UI의 레벨
 				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
 					m_pUIManager->Change_SkillPreview("Kick");
-
-					_uint itest = m_pUIManager->Get_Select_SkillLevel();
-					int i = 10;
 			}
 			else if (m_tUIInfo.strUIName == "ElectricDash")
 			{
 				m_pUIManager->Select_Skill("ElectricDash");
+
 				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
 					m_pUIManager->Change_SkillPreview("ElectricDash");
 			}
@@ -435,8 +438,14 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
 					m_pUIManager->Change_SkillPreview("MaxHP");
 			}
+			else
+			{
+				//if (g_UIMouseDownLB == true)
+				//	m_pUIManager->Skill_NotPicking();
+			}
 		}
 	}
+
 }
 
 void CUI_SkillFrame::Check_State(_float fTimeDelta)

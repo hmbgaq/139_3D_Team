@@ -807,6 +807,15 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
+	if (m_pGameInstance->Key_Down(DIK_P))
+	{
+		m_pUIManager->Active_LetterBox();
+	}
+	if (m_pGameInstance->Key_Down(DIK_O))
+	{
+		m_pUIManager->NonActive_LetterBox();
+	}
+
 	/* ! UI : SkillWindow / Key : K */
 	if (m_pGameInstance->Key_Down(DIK_K))
 	{
@@ -816,11 +825,14 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		{
 			m_pUIManager->Active_SkillWindowBackground();
 			m_pUIManager->NonActive_PlayerHUD(); // PlayerHUD Off
+			m_pUIManager->NonActive_MouseCursor(); // MouseCursor Off
+			m_pUIManager->NonActive_Crosshair(); // Crosshair Off
 			m_pDataManager->Set_GameState(GAME_STATE::UI);
 		}
 		else
 		{
 			m_pUIManager->NonActive_SkillWindowAll();
+			m_pUIManager->Active_Crosshair(true); // Crosshair On
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
 		}
 	}

@@ -2,6 +2,7 @@
 #include "UI_Icon_SelectAnim.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
+#include "UI_Manager.h"
 
 CUI_Icon_SelectAnim::CUI_Icon_SelectAnim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -55,15 +56,76 @@ void CUI_Icon_SelectAnim::Tick(_float fTimeDelta)
 
 	//Check_Disappear(fTimeDelta);
 
-	// Rotation
-	m_pTransformCom->RotationZaxis(fTimeDelta);
-
 	// Picking -> Pos Update
-	//m_pTransformCom->Set_Position(m_pUIManager->Get_SelectUI_Position());
+	CUI* pTargetUI = m_pUIManager->Get_Select_Frame();
+
+	_float3 vNotTarget = { -1.0f, -1.0f, -1.0f };
+
+	if (pTargetUI != nullptr)
+	{
+		m_bActive = true;
+
+		if (pTargetUI->Get_UIDesc().strUIName == "Kick")
+		{
+			_float3 vTargetPos = { pTargetUI->Get_Position().x + 5.f, pTargetUI->Get_Position().y, pTargetUI->Get_Position().z };
+			m_pTransformCom->Set_Position(vTargetPos);
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+		else if (pTargetUI->Get_UIDesc().strUIName == "UpperCut")
+		{
+			_float3 vTargetPos = { pTargetUI->Get_Position().x + 5.f, pTargetUI->Get_Position().y, pTargetUI->Get_Position().z };
+			m_pTransformCom->Set_Position(vTargetPos);
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+		else if (pTargetUI->Get_UIDesc().strUIName == "Punch")
+		{
+			_float3 vTargetPos = { pTargetUI->Get_Position().x + 5.f, pTargetUI->Get_Position().y, pTargetUI->Get_Position().z };
+			m_pTransformCom->Set_Position(vTargetPos);
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+		else if (pTargetUI->Get_UIDesc().strUIName == "Heal")
+		{
+			_float3 vTargetPos = { pTargetUI->Get_Position().x + 5.f, pTargetUI->Get_Position().y, pTargetUI->Get_Position().z };
+			m_pTransformCom->Set_Position(vTargetPos);
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+		else if (pTargetUI->Get_UIDesc().strUIName == "Revolver")
+		{
+			_float3 vTargetPos = { pTargetUI->Get_Position().x, pTargetUI->Get_Position().y, pTargetUI->Get_Position().z };
+			m_pTransformCom->Set_Position(vTargetPos);
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+		else if (pTargetUI->Get_UIDesc().strUIName == "Rifle")
+		{
+			_float3 vTargetPos = { pTargetUI->Get_Position().x, pTargetUI->Get_Position().y, pTargetUI->Get_Position().z };
+			m_pTransformCom->Set_Position(vTargetPos);
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+		else if (pTargetUI->Get_UIDesc().strUIName == "Shotgun")
+		{
+			_float3 vTargetPos = { pTargetUI->Get_Position().x, pTargetUI->Get_Position().y, pTargetUI->Get_Position().z };
+			m_pTransformCom->Set_Position(vTargetPos);
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+		else
+		{
+			m_pTransformCom->Set_Position(pTargetUI->Get_Position());
+			m_pTransformCom->Set_Scaling(pTargetUI->Get_Transform()->Get_Scaled().x, pTargetUI->Get_Transform()->Get_Scaled().y, pTargetUI->Get_Transform()->Get_Scaled().z);
+		}
+
+		
+	}
+	else
+	{
+		m_bActive = false;
+	}
+
+
 
 	if (m_bActive == true)
 	{
-
+		// Rotation
+		m_pTransformCom->RotationZaxis(fTimeDelta);
 	}
 }
 
@@ -141,23 +203,11 @@ HRESULT CUI_Icon_SelectAnim::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
-	//	return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
 
-	for (_int i = (_int)0; i < (_int)TEXTURE_END; ++i)
-	{
-		switch (i)
-		{
-		case CUI_Icon_SelectAnim::SELECT:
-		{
-			if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-				return E_FAIL;
-			break;
-		}
-		default:
-			break;
-		}
-	}
+	if (FAILED(m_pTextureCom[SELECT]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+		return E_FAIL;
 
 	return S_OK;
 }

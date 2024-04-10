@@ -1467,8 +1467,11 @@ json CUI::Save_Animation(json& out_json)
 
 void CUI::Change_Animation(const string& strAnimPath)
 {
-	if (!m_vecChangAnimation.empty()) // 기존 애니메이션이 있는 경우
-		m_vecChangAnimation.clear();
+	//if (!m_vecChangAnimation.empty()) // 기존 애니메이션이 있는 경우
+	//	m_vecChangAnimation.clear();
+
+	if (!m_vecAnimation.empty()) // 기존 애니메이션이 있는 경우
+		m_vecAnimation.clear();
 
 	json In_Json;
 	string strFile;
@@ -1563,7 +1566,8 @@ void CUI::Change_Animation(const string& strAnimPath)
 			if (object["Keyframe"].contains("NoiseNum")) // 키가 있으면
 				m_tUIInfo.tKeyframe.iNoiseNum = object["Distortion"][i]["NoiseNum"];
 
-			m_vecChangAnimation.push_back(m_tUIInfo.tKeyframe);
+			//m_vecChangAnimation.push_back(m_tUIInfo.tKeyframe);
+			m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 		}
 	}
 }
@@ -1956,6 +1960,21 @@ _bool CUI::Alpha_Minus(_float fTimeDelta)
 	else
 	{
 		m_fAlpha = 0.f;
+		return true;
+	}
+
+	return false;
+}
+
+_bool CUI::Alpha_Minus_Control(_float fTimeDelta, _float fAlpha)
+{
+	if (m_fAlpha > fAlpha)
+	{
+		m_fAlpha -= m_fAlphaSpeed * fTimeDelta;
+	}
+	else
+	{
+		m_fAlpha = fAlpha;
 		return true;
 	}
 

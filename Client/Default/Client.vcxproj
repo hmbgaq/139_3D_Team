@@ -1267,9 +1267,12 @@
     <ClInclude Include="..\Public\UI_EnemyState_Shard.h" />
     <ClInclude Include="..\Public\UI_Icon_SelectAnim.h" />
     <ClInclude Include="..\Public\UI_Interaction.h" />
+    <ClInclude Include="..\Public\UI_LetterBox.h" />
+    <ClInclude Include="..\Public\UI_LevelFont.h" />
     <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_MainMenuList.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\Public\UI_MoneyFont.h" />
     <ClInclude Include="..\Public\UI_MoveEffect.h" />
     <ClInclude Include="..\Public\UI_Obtain_Button.h" />
     <ClInclude Include="..\Public\UI_Option_Button.h" />
@@ -2311,9 +2314,12 @@
     <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp" />
     <ClCompile Include="..\Private\UI_Icon_SelectAnim.cpp" />
     <ClCompile Include="..\Private\UI_Interaction.cpp" />
+    <ClCompile Include="..\Private\UI_LetterBox.cpp" />
+    <ClCompile Include="..\Private\UI_LevelFont.cpp" />
     <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_MainMenuList.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\Private\UI_MoneyFont.cpp" />
     <ClCompile Include="..\Private\UI_MoveEffect.cpp" />
     <ClCompile Include="..\Private\UI_Obtain_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_Button.cpp" />

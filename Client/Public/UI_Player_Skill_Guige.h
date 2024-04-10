@@ -35,6 +35,8 @@ public:
 	void					Set_CurCoolTime(_float fCoolTime) { m_fCoolTime = fCoolTime; }
 	_float					Get_CurCoolTime() { return m_fCoolTime; }
 
+	void					Check_SkillGuige(_float fTimeDelta);
+
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
@@ -42,6 +44,7 @@ private:
 private:
 	void					Check_SkillActive(_float fTimeDelta, SKILLSTATE eState);
 	void					Check_GuigeActive(_float fTimeDelta);
+	void					Check_CoolTime(_float fTimeDelta);
 
 public:
 	json					Save_Desc(json& out_json);
@@ -51,7 +54,7 @@ private:
 	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
 	_float2					m_vCenter = { 0.f, 0.f };
 	_float					m_fRadius = 0.f;
-	_float					m_fCoolTime = 10.f;
+	_float					m_fCoolTime = 0.f;
 	_float					m_fMaxCoolTime = 10.f;
 	_int					m_iShaderNum = 0;
 	_bool					m_bGuigeOff = false;

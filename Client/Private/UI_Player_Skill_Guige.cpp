@@ -63,24 +63,12 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
+	m_iShaderNum = 5; // 원형 게이지 pass
+
 	if (m_bActive == true)
 	{
-		m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
-		m_iShaderNum = 5; // 원형 게이지 pass
 
-		Check_GuigeActive(fTimeDelta); // 스킬 해금 Check
-
-		if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
-		{
-			// 활성화
-			Check_SkillActive(fTimeDelta, SKILLSTATE::ACTIVE);
-			m_fCoolTime = 0.f;
-		}
-		else
-		{
-			// 비활성화
-			Check_SkillActive(fTimeDelta, SKILLSTATE::COOLDOWN);
-		}
 	}
 
 }
@@ -99,21 +87,23 @@ void CUI_Player_Skill_Guige::Late_Tick(_float fTimeDelta)
 
 HRESULT CUI_Player_Skill_Guige::Render()
 {
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
+	//! 이 셰이더에 0번째 패스로 그릴거야.
+	m_pShaderCom->Begin(5); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+
+	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+	m_pVIBufferCom->Bind_VIBuffers();
+
+	//! 바인딩된 정점, 인덱스를 그려
+	m_pVIBufferCom->Render();
+
 	if (m_bActive == true)
 	{
 		if (m_bGuigeOff == true)
 		{
-			if (FAILED(Bind_ShaderResources()))
-				return E_FAIL;
 
-			//! 이 셰이더에 0번째 패스로 그릴거야.
-			m_pShaderCom->Begin(5); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
-
-			//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-			m_pVIBufferCom->Bind_VIBuffers();
-
-			//! 바인딩된 정점, 인덱스를 그려
-			m_pVIBufferCom->Render();
 		}
 	}
 	return S_OK;
@@ -133,6 +123,12 @@ void CUI_Player_Skill_Guige::UI_Loop(_float fTimeDelta)
 
 void CUI_Player_Skill_Guige::UI_Exit(_float fTimeDelta)
 {
+}
+
+void CUI_Player_Skill_Guige::Check_SkillGuige(_float fTimeDelta)
+{
+	Check_GuigeActive(fTimeDelta);	// Unlock Check
+	Check_CoolTime(fTimeDelta);		// CoolTime Check
 }
 
 HRESULT CUI_Player_Skill_Guige::Ready_Components()
@@ -311,6 +307,21 @@ void CUI_Player_Skill_Guige::Check_GuigeActive(_float fTimeDelta)
 	}
 
 	
+}
+
+void CUI_Player_Skill_Guige::Check_CoolTime(_float fTimeDelta)
+{
+	if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
+	{
+		// 활성화
+		Check_SkillActive(fTimeDelta, SKILLSTATE::ACTIVE);
+		m_fCoolTime = 0.f;
+	}
+	else
+	{
+		// 비활성화
+		Check_SkillActive(fTimeDelta, SKILLSTATE::COOLDOWN);
+	}
 }
 
 json CUI_Player_Skill_Guige::Save_Desc(json& out_json)

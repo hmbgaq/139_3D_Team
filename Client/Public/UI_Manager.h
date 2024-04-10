@@ -66,6 +66,7 @@ public: /* Ready_Preset */
 	HRESULT Ready_HitUI(_uint iLevelIndex);
 	HRESULT Ready_SkillWindowButton(_uint iLevelIndex);
 	HRESULT Ready_SkillWindow(_uint iLevelIndex);
+	HRESULT Ready_LetterBox(_uint iLevelIndex);
 
 	/* EnemyShard */
 	CUI_EnemyHUD_Shard* Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
@@ -120,7 +121,10 @@ public:
 	_float			Get_LeftHUD_MaxCoolTime(const string& strUIName);
 	// 스킬 해금
 	void			Change_LeftHUD_SkillUnlock(const string& strUIName, _bool bUnlock);
+	// 스킬 상태
 	_bool			Get_LeftHUD_SkillState(const string& strUIName);
+	// 스킬 쿨타임
+	void			Check_SkillCollTime(_float fTimeDelta);
 private:
 	vector<CUI*>	m_vecLeftSkill;
 
@@ -142,6 +146,7 @@ public:
 	_float			Get_RightHUD_MaxCoolTime(const string& strUIName);
 	// 스킬 해금
 	void			Change_RightHUD_SkillUnlock(const string& strUIName, _bool bUnlock);
+	// 스킬 상태
 	_bool			Get_RightHUD_SkillState(const string& strUIName);
 private:
 	vector<CUI*>	m_vecRightSkill;
@@ -375,6 +380,7 @@ public:
 	void			Active_SkillWindowButton(_bool bActive);
 	void			NonActive_SkillWindowButton();
 	void			Select_SkillWindowButton(const string& strUIName, _bool bSelect);
+
 private:
 	vector<CUI*>	m_vecSkillWindowButton;
 
@@ -421,6 +427,21 @@ public:
 private:
 	CUI*			m_pWeaponActiveGuige = nullptr;
 
+public:
+	/* SelectAnim */
+	HRESULT			Add_IconSelectUI(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_IconSelectUI();
+	void			NonActive_IconSelectUI();
+private:
+	CUI*			m_pIconSelectUI = nullptr;
+
+public:
+	/* LetterBox */
+	HRESULT			Add_LetterBox(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_LetterBox();
+	void			NonActive_LetterBox();
+private:
+	vector<CUI*>	m_vecLetterBox;
 
 public:
 	void			Select_Skill(const string& strSelecSkill);
@@ -429,6 +450,11 @@ public:
 	void			Load_Json_BasicInfo(const json& Out_Json, CUI::UI_DESC* tUI_Info);
 	void			Active_UI();
 	void			NonActive_UI();
+
+	void			ActiveSkill();
+	void			NonActiveSkill();
+	void			ActiveWeapon();
+	void			NonActiveWeapon();
 
 private:
 	CUI*			m_pMainLogo = nullptr;
@@ -450,6 +476,7 @@ private:
 	CUI*				m_pUI = nullptr;
 	CUI*				m_pUI_SelectSkill = nullptr;
 	CUI*				m_pUI_SelectWeapon = nullptr;
+	CUI*				m_pUI_Select = nullptr;
 	//CUI_Interaction*	m_pInteraction = nullptr;
 	vector<CUI_Interaction*> m_vecInterraction;
 
@@ -496,6 +523,8 @@ public:
 			m_pUI_SelectSkill->UILevelUP();
 	}
 
+	void			Skill_NotPicking() { m_pUI_SelectSkill = nullptr; }
+
 	// UI Weapon
 	CUI::UI_LEVEL	Get_Select_WeaponLevel()
 	{
@@ -514,6 +543,8 @@ public:
 			return "";
 	}
 
+	void			Weapon_NotPicking() { m_pUI_SelectWeapon = nullptr; }
+
 	// UI Weapon
 	void			Select_WeaponLevelUP()
 	{
@@ -521,6 +552,24 @@ public:
 			m_pUI_SelectWeapon->UILevelUP();
 	}
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
+
+		// UI 
+	CUI*	Get_Select_Frame()
+	{
+		if (m_pUI_SelectSkill != nullptr)
+		{
+			m_pUI_Select = m_pUI_SelectSkill;
+		}
+		else if (m_pUI_SelectWeapon != nullptr)
+		{
+			m_pUI_Select = m_pUI_SelectWeapon;
+		}
+
+		if (m_pUI_SelectSkill == nullptr && m_pUI_SelectWeapon == nullptr)
+			return nullptr;
+
+		return m_pUI_Select;
+	}
 
 #ifdef _DEBUG
 	CUI*			Add_Tool(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg);

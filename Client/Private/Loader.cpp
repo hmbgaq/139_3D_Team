@@ -225,6 +225,7 @@
 #include "UI_WeaponIcon.h"
 #include "UI_WeaponFrame.h"
 #include "UI_WeaponActiveGuige.h"
+#include "UI_Icon_SelectAnim.h"
 #pragma endregion UI_END
 
 #pragma region Test
@@ -1273,6 +1274,7 @@ HRESULT CLoader::Ready_UI_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_WeaponIcon"), CUI_WeaponIcon::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_WeaponIcon"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_WeaponFrame"), CUI_WeaponFrame::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_WeaponFrame"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_WeaponActiveGuige"), CUI_WeaponActiveGuige::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_WeaponActiveGuige"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_UI_Icon_SelectAnim"), CUI_Icon_SelectAnim::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_UI_Icon_SelectAnim"))));
 #pragma endregion End
 
 	return S_OK;
