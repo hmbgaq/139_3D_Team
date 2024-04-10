@@ -1,4 +1,5 @@
 #include "..\Public\Player_InteractionJumpDown300.h"
+#include "GameInstance.h"
 
 void CPlayer_InteractionJumpDown300::Initialize(CPlayer* pActor)
 {
@@ -27,6 +28,8 @@ CState<CPlayer>* CPlayer_InteractionJumpDown300::Update(CPlayer* pActor, _float 
 
 void CPlayer_InteractionJumpDown300::Release(CPlayer* pActor)
 {
-	pActor->Set_InitPosition(pActor->Get_Position());
+	if(m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_SNOWMOUNTAINBOSS)
+		pActor->Set_InitPosition(pActor->Get_Position());
+
 	__super::Release(pActor);
 }

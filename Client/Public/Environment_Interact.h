@@ -46,8 +46,11 @@ public:
 							INTERACT_WHIPSWING,			//20
 							INTERACT_WHIPPULL,			//21
 							INTERACT_ROTATIONVALVE,		//22
-							INTERACT_NONE,				//23
-							INTERACT_END 				//24
+							INTERACT_ZIPLINE,			//23
+							INTERACT_CROUCHUNDER,		//24
+							INTERACT_CROUCHUNDERGATE,   //25
+							INTERACT_NONE,				//26
+							INTERACT_END 				//27
 					    };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
 
@@ -68,6 +71,7 @@ public:
 		_float3			vInteractColliderSize = { 1.f, 1.f, 1.f};
 		_float3			vInteractColliderCenter = { 0.f, 1.f, 0.f };
 		_float3			vPlayerRootMoveRate = { 1.f, 1.f, 1.f};
+		_float3			vPlayerReverseRootMoveRate = { 1.f, 1.f, 1.f};
 		_int			iPlayAnimationIndex = { 0 };
 
 		_bool			bAnimModel = { false };
@@ -108,6 +112,8 @@ public:
 
 		_bool			bWeakNessUI = false;
 		
+		_int			iLadderCount = 4; //! 래더카운트
+		_int			iReverseLadderCount = 4; 
 
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
@@ -152,7 +158,10 @@ public:
 	void								Set_InteractColliderCenter(_float3 vInteractColliderCenter);
 	void								Set_InteractType(INTERACT_TYPE eInteractType) { m_tEnvironmentDesc.eInteractType = eInteractType; }
 	void								Set_InteractState(INTERACT_STATE eInteractState) { m_tEnvironmentDesc.eInteractState = eInteractState; }
+
 	void								Set_PlayerRootMoveRate(_float3 vRootMoveRate) { m_tEnvironmentDesc.vPlayerRootMoveRate = vRootMoveRate;}
+	void								Set_PlayerReverseRootMoveRate(_float3 vReverseRootMoveRate) { m_tEnvironmentDesc.vPlayerReverseRootMoveRate = vReverseRootMoveRate; }
+
 	void								Set_UseGravity(_bool bUseGravity) { m_tEnvironmentDesc.bUseGravity = bUseGravity; }
 	
 
@@ -254,6 +263,10 @@ public: //! For ToolTest
 
 
 	void								Set_DescWorldMatrix() { m_tEnvironmentDesc.WorldMatrix = m_pTransformCom->Get_WorldMatrix();}
+
+	void								Set_LadderCount(_int iLadderCount) { m_tEnvironmentDesc.iLadderCount = iLadderCount;}
+	void								Set_ReverseLadderCount(_int iReverseLadderCount) { m_tEnvironmentDesc.iReverseLadderCount = iReverseLadderCount; }
+
 
 	void								Set_Rotate(_bool bRotate) { m_tEnvironmentDesc.bRotate = bRotate; }
 	void								Set_RotationAngle(_float fAngle) { m_tEnvironmentDesc.fRotationAngle = fAngle;}

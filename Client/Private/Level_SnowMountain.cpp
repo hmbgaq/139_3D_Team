@@ -325,9 +325,13 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.eRotationState = InteractJson[i]["RotationType"];
 		Desc.bArrival = InteractJson[i]["Arrival"];
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
+		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
+		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
 
 		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
@@ -415,8 +419,12 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bArrival = InteractJson[i]["Arrival"];
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 
+		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
+		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
 
 		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
@@ -539,61 +547,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 	json SpecialJson = Stage1MapJson["Special_Json"];
 	_int iSpecialJsonSize = (_int)SpecialJson.size();
 
-	for (_int i = 0; i < iSpecialJsonSize; ++i)
-	{
-		CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc = {};
-
-		SpecialDesc.iShaderPassIndex = SpecialJson[i]["iShaderPassIndex"];
-		SpecialDesc.bAnimModel = SpecialJson[i]["AnimType"];
-		SpecialDesc.iPlayAnimationIndex = SpecialJson[i]["PlayAnimationIndex"];
-		SpecialDesc.iSpecialGroupIndex = SpecialJson[i]["SpecialGroupIndex"];
-		SpecialDesc.eSpecialType = SpecialJson[i]["SpecialType"];
-		//TODOSpecialDesc.iBloomMeshIndex =      SpecialJson[i]["BloomMeshIndex"];
-		SpecialDesc.bPreview = false;
-		SpecialDesc.eElevatorType = SpecialJson[i]["ElevatorType"];
-		SpecialDesc.fElevatorMinHeight = SpecialJson[i]["ElevatorMinHeight"];
-		SpecialDesc.fElevatorMaxHeight = SpecialJson[i]["ElevatorMaxHeight"];
-		SpecialDesc.fElevatorSpeed = SpecialJson[i]["ElevatorSpeed"];
-		SpecialDesc.fElevatorRotationSpeed = SpecialJson[i]["ElevatorRotationSpeed"];
-		SpecialDesc.iArrivalCellIndex = SpecialJson[i]["ElevatorArrivalCellIndex"];
-		SpecialDesc.bLeverForElevator = SpecialJson[i]["ElevatorLever"];
-
-		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderSize"], SpecialDesc.vElevatorColliderSize);
-		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
-		CJson_Utility::Load_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
-
-		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
-
-		if (SpecialDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
-		{
-			const json& TransformJson = SpecialJson[i]["Component"]["Transform"];
-			_float4x4 WorldMatrix;
-
-			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-			{
-				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-				{
-					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-				}
-			}
-
-			SpecialDesc.WorldMatrix = WorldMatrix;
-
-			CEnvironment_SpecialObject* pSpecialObject = dynamic_cast<CEnvironment_SpecialObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_SpecialObject", &SpecialDesc));
-
-			if (pSpecialObject == nullptr)
-			{
-				MSG_BOX("스페셜오브젝트 생성실패");
-				return E_FAIL;
-			}
-
-		}
-		else
-			continue;
-	}
-
 	
-
 	for (_int i = 0; i < iSpecialJsonSize; ++i)
 	{
 		CEnvironment_SpecialObject::ENVIRONMENT_SPECIALOBJECT_DESC SpecialDesc = {};
@@ -612,10 +566,12 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		SpecialDesc.fElevatorRotationSpeed = SpecialJson[i]["ElevatorRotationSpeed"];
 		SpecialDesc.iArrivalCellIndex = SpecialJson[i]["ElevatorArrivalCellIndex"];
 		SpecialDesc.bLeverForElevator = SpecialJson[i]["ElevatorLever"];
+		SpecialDesc.bOffset = SpecialJson[i]["OffsetFunction"];
 
 		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderSize"], SpecialDesc.vElevatorColliderSize);
 		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
 		CJson_Utility::Load_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
+		CJson_Utility::Load_Float4(SpecialJson[i]["OffsetPosition"], SpecialDesc.vOffset);
 
 		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
 
@@ -665,11 +621,14 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		SpecialDesc.fElevatorRotationSpeed = SpecialJson[i]["ElevatorRotationSpeed"];
 		SpecialDesc.iArrivalCellIndex = SpecialJson[i]["ElevatorArrivalCellIndex"];
 		SpecialDesc.bLeverForElevator = SpecialJson[i]["ElevatorLever"];
+		SpecialDesc.bOffset = SpecialJson[i]["OffsetFunction"];
+
 
 
 		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderSize"], SpecialDesc.vElevatorColliderSize);
 		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
 		CJson_Utility::Load_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
+		CJson_Utility::Load_Float4(SpecialJson[i]["OffsetPosition"], SpecialDesc.vOffset);
 
 
 		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
@@ -720,9 +679,15 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		SpecialDesc.fElevatorRotationSpeed = SpecialJson[i]["ElevatorRotationSpeed"];
 		SpecialDesc.iArrivalCellIndex = SpecialJson[i]["ElevatorArrivalCellIndex"];
 		SpecialDesc.bLeverForElevator = SpecialJson[i]["ElevatorLever"];
+		SpecialDesc.bOffset = SpecialJson[i]["OffsetFunction"];
 
-
+		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderSize"], SpecialDesc.vElevatorColliderSize);
+		CJson_Utility::Load_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
+		CJson_Utility::Load_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
+		CJson_Utility::Load_Float4(SpecialJson[i]["OffsetPosition"], SpecialDesc.vOffset);
+		
 		m_pGameInstance->String_To_WString((string)SpecialJson[i]["ModelTag"], SpecialDesc.strModelTag);
+
 
 		if (SpecialDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
 		{

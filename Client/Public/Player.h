@@ -142,6 +142,9 @@ public://!For. Interact
 	void SetState_InteractWhipPull();
 
 	void SetState_InteractRotationValve();
+	void SetState_InteractZipLine();
+	void SetState_CrouchUnder();
+	void SetState_CrouchUnderGate();
 
 
 public:

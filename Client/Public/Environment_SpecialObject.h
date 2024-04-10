@@ -69,6 +69,8 @@ public:
 		_int			iArrivalCellIndex = -1;
 
 		_float4			vArrivalPosition = {};
+		_float4			vOffset = {};
+		_bool			bOffset = false;
 	}ENVIRONMENT_SPECIALOBJECT_DESC;
 
 
@@ -136,7 +138,12 @@ public:
 	void				TrackLeverFunction();
 	CUI*				Get_LeverWeakUI() { return m_pLeverWeaknessUI; }
 
+	void				Move_ForOffset();
 	void				Set_ForElevator(_bool bLeverForElevator) { m_tEnvironmentDesc.bLeverForElevator = bLeverForElevator;}
+	void				Set_LeverOffset(_float4 vOffset) { m_tEnvironmentDesc.vOffset = vOffset;}
+	void				Set_OffsetFunction(_bool bOffset) { m_tEnvironmentDesc.bOffset = bOffset;}
+
+	void				Set_TargetObject(CEnvironment_SpecialObject* pTargetObject) { m_pTargetObject = pTargetObject;}
 
 public: //!For Elevator
 	HRESULT				ElevatorInit();
@@ -156,6 +163,9 @@ public: //!For Elevator
 	_bool				Get_ElevatorOn() { return m_bElevatorOn;}
 	void				Set_ElevatorOn(_bool bElevatorOn);
 	void				Set_ElevatorInit();
+
+	
+	
 	
 	
 	
@@ -215,6 +225,7 @@ private: //!For. Elevator
 	CCollider*						m_pElevatorColliderCom = { nullptr };
 	_int							m_iInitCellIndex = -1;
 	_bool							m_bFirstCollision = false;
+	
 
 private:
 	HRESULT				Ready_Components();

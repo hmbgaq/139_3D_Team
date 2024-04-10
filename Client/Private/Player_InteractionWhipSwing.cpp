@@ -43,7 +43,7 @@ CState<CPlayer>* CPlayer_InteractionWhipSwing::Update(CPlayer* pActor, _float fT
 	else if (false == m_bFlags[3])
 	{
 	
-		m_bFlags[3] = pActor->Is_Inputable_Front(60);
+		m_bFlags[3] = pActor->Is_Inputable_Front(58);
 		if (true == m_bFlags[3])
 		{
 			pActor->Set_UseGravity(true);
