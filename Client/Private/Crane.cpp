@@ -33,6 +33,12 @@ HRESULT CCrane::Initialize(void* pArg)
 
 	m_bIsFixed = true;
 
+	if (nullptr != pArg)
+	{
+		m_tCraneDesc = *(CRANE_DESC*)pArg;
+		m_pTransformCom->Set_WorldMatrix(m_tCraneDesc.WorldMatrix);
+	}
+
 
 	return S_OK;
 }

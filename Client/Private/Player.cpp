@@ -160,17 +160,17 @@ void CPlayer::Priority_Tick(_float fTimeDelta)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_H))
-	{
-		if (GAME_STATE::UI == m_pDataManager->Get_GameState())
-		{
-			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
-		}
-		else if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
-		{
-			m_pDataManager->Set_GameState(GAME_STATE::UI);
-		}
-	}
+	//if (m_pGameInstance->Key_Down(DIK_H))
+	//{
+	//	if (GAME_STATE::UI == m_pDataManager->Get_GameState())
+	//	{
+	//		m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+	//	}
+	//	else if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
+	//	{
+	//		m_pDataManager->Set_GameState(GAME_STATE::UI);
+	//	}
+	//}
 
 	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
 	if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
@@ -207,7 +207,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 
-	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
+	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) && (false == Is_Splitted()));
 	
 	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		m_pDataManager->Set_ShowInterface(bIsNotIdle);

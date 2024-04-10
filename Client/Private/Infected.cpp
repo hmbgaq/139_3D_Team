@@ -218,28 +218,13 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
-	if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
+	//if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
+	//{
+	//	
+	//	m_pActor->Set_State(new CInfected_Electrocute_Loop());
+	//}
+	//else
 	{
-		
-		m_pActor->Set_State(new CInfected_Electrocute_Loop());
-	}
-	else
-	{
-		// switch (ePower)
-		// {
-		// case Engine::Light:
-		// 	m_pActor->Set_State(new CInfected_DeathLight_F_01_NEW());
-		// 	break;
-		// case Engine::Medium:
-		// 	m_pActor->Set_State(new CInfected_DeathLight_B_01_NEW());
-		// 	break;
-		// case Engine::Heavy:
-		// 	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
-		// 	break;
-
-		// default:
-		// 	break;
-		// }
 		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
 	}
 }
