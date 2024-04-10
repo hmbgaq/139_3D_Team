@@ -73,7 +73,7 @@ void CMonster_Character::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	if (true == m_bDead)
+	if (true == m_bDead || false == m_bEnable)
 	{
 		Set_EnemyHUD_Dead();
 	}
@@ -94,6 +94,8 @@ void CMonster_Character::Search_Target(const _float fSearchDistance)
 
 CPlayer* CMonster_Character::Set_Player_Finisher_Pos(_float3 vPlayerPos)
 {
+	m_pBody->Collider_Off();
+
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	_float3 vPos = m_pTransformCom->Calc_Front_Pos(vPlayerPos);
 	pPlayer->Set_Position(vPos);
@@ -104,6 +106,8 @@ CPlayer* CMonster_Character::Set_Player_Finisher_Pos(_float3 vPlayerPos)
 
 CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 {
+	m_pBody->Collider_Off();
+
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	_float3 vTargetPos = pPlayer->Calc_Front_Pos(vPos);
@@ -121,7 +125,7 @@ void CMonster_Character::Check_Frustum()
 // 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
 void CMonster_Character::Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner)
 {
-		m_pEnemyHUD = m_pUIManager->Ready_EnemyHUD_Shard(iLevelIndex, pOwner);
+	m_pEnemyHUD = m_pUIManager->Ready_EnemyHUD_Shard(iLevelIndex, pOwner);
 }
 
 // 몬스터 HUD의 위치를 잡아줍니다. (매 틱마다 불러주세요. | 몬스터의 World매트릭스를 넣어주세요. | Offset만큼 위치를 움직일 수 있습니다. [Defualt (오프셋 안줬을 경우) : 0, 2, 0]
@@ -131,7 +135,7 @@ void CMonster_Character::Check_EnemyHUD_World(_matrix matWorld, _float3 vOffsetP
 		m_pEnemyHUD->Set_EnemyHUD_World(matWorld, vOffsetPos);
 }
 
-// 몬스터 HUD를 삭제(비활성화)합니다. (몬스터가 죽을때 불러주세요)
+// 몬스터 HUD를 삭제 합니다. (몬스터가 죽을 때 불러주세요. [주의! : 몬스터가 죽기전에 먼저 이 함수를 부르고 몬스터를 죽여야합니다])
 void CMonster_Character::Set_EnemyHUD_Dead()
 {
 	if (m_pEnemyHUD != nullptr) 
@@ -140,6 +144,20 @@ void CMonster_Character::Set_EnemyHUD_Dead()
 		m_pEnemyHUD = nullptr;
 	}
 		
+}
+
+// 몬스터 HUD를 활성화 합니다.
+void CMonster_Character::Set_EnemyHUD_Active()
+{
+	if (m_pEnemyHUD != nullptr)
+		m_pEnemyHUD->ActiveEnemyHUD();
+}
+
+// 몬스터 HUD를 비활성화 합니다.
+void CMonster_Character::Set_EnemyHUD_NonActive()
+{
+	if (m_pEnemyHUD != nullptr)
+		m_pEnemyHUD->NonActiveEnemyHUD();
 }
 
 void CMonster_Character::Free()

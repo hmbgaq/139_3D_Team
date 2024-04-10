@@ -118,7 +118,7 @@ public:	//!For Animation Split
 	void Activate_ShootingReaction(_float fHeight = 20.f);
 	void Update_ShootingReaction(_float fTimeDelta);
 
-	void Reset_UpperAngle(_float fPitch = 0.f);
+	void Reset_UpperAngle(); //_float fPitch = 0.f
 	void Set_UseMouseMove(_bool _bIsUseMouseMove) { m_bIsUseMouseMove = _bIsUseMouseMove; };
 
 public:
@@ -140,7 +140,7 @@ protected:
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
 
 	_float		m_fRotateUpperX = { 0.0f };
-	_float		m_fRotateUpperY = { 2.6f };
+	_float		m_fRotateUpperY = { 3.0f }; //2.6f
 
 	_float		m_fShootingReaction = { 0.f };
 	_float		m_fShootingReactionTarget = { 0.f };
@@ -152,8 +152,11 @@ protected: /* For. Shader*/
 protected:
 	_bool	m_bIsUseMouseMove = { false };
 	_bool	m_bIsInFrustum = { false };
+	_bool	m_bIsPaused = { false };
+
 protected:
 	_bool	m_bIsNotUseMovePos = { false };
+
 
 protected:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };

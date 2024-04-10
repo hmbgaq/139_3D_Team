@@ -69,6 +69,9 @@ void CMotherVomit::Priority_Tick(_float fTimeDelta)
 
 void CMotherVomit::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 

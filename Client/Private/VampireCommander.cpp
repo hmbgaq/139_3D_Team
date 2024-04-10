@@ -98,6 +98,9 @@ void CVampireCommander::Priority_Tick(_float fTimeDelta)
 
 void CVampireCommander::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	

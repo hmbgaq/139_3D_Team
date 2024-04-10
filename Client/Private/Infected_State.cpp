@@ -176,7 +176,7 @@ CState<CInfected>* CInfected_State::Death_State(CInfected* pActor, _float fTimeD
 			{
 				// 플레이어 15 경험치 얻음 - A, B, C 해당
 				// D는 무조건 Release Summoning임. 다른곳에서 안나타나므로 
-				CData_Manager::GetInstance()->Add_CurEXP(15); 
+				CData_Manager::GetInstance()->Add_CurEXP(INFECTED_EXP);
 			}
 			
 			m_bFlags[0] = true;
@@ -194,8 +194,9 @@ CState<CInfected>* CInfected_State::Release_Summoning(CInfected* pActor, _float 
 	/* Death = 경험치 줌. <> Release Summoning = 경험치 안줌 */
 	if (false == m_bFlags[0])
 	{
-		pActor->Set_CntDead_Time(1.f);
-		pActor->Set_CntDead_Active(true);
+		//pActor->Set_CntDead_Time(1.f);
+		//pActor->Set_CntDead_Active(true);
+		pActor->Set_Dead(true);
 		m_bFlags[0] = true;
 	}
 

@@ -13,7 +13,7 @@ void CPlayer_InteractionClimbRope_IdlePose_02::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_InteractionClimbRope_IdlePose_02::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	if (false == m_bFlags[0])
 	{

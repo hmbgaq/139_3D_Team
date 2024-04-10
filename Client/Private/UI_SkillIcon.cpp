@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Texture.h"
+#include "UI_Manager.h"
 
 CUI_SkillIcon::CUI_SkillIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -35,6 +36,12 @@ HRESULT CUI_SkillIcon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	//Check_Animation("");
+	Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconJump.json");
+
+	// Size Check
+	Check_IconSize();
+
 	return S_OK;
 }
 
@@ -52,109 +59,15 @@ void CUI_SkillIcon::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		if (m_bAnimChange == true)
-		{
-			switch (m_eAnimType)
-			{
-				case CUI_SkillIcon::UNLOCK:
-					Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconUnlock.json");
-					break;
-				case CUI_SkillIcon::JUMP:
-					Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconJump.json");
-					break;
-				case CUI_SkillIcon::UIANIM_END:
-					break;
-				default:
-					break;
-			}
+		Check_IconSize();
 
-			m_bAnimChange = false;
-		}
-#pragma region 1
-		if (m_tUIInfo.strUIName == "Kick")
-		{
+		// Level
+		Check_LevelChange(fTimeDelta);
 
-		}
-		else if(m_tUIInfo.strUIName == "ElectricDash")
-		{
+		// Animation
+		//Check_Animation(fTimeDelta);
 
-		}
-		else if(m_tUIInfo.strUIName == "DashShock")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "ElectricCord")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "PowerUP")
-		{
-
-		}
-#pragma region 2
-		else if(m_tUIInfo.strUIName == "UpperCut")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "OneTouch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "TwoTouch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "ThreeTouch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "ComboPunch")
-		{
-
-		}
-#pragma region 3
-		else if(m_tUIInfo.strUIName == "Punch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "SuperChargeMod")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "TeleportPunch")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "IncreaseEXP")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "NPCPowerUP")
-		{
-
-		}
-#pragma region 4
-		else if(m_tUIInfo.strUIName == "Heal")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "RecoveryEnergy")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "IncreaseHP")
-		{
-
-		}
-		else if(m_tUIInfo.strUIName == "IncreaseEnergy")
-		{
-
-		}
-		else if (m_tUIInfo.strUIName == "MaxHP")
-		{
-
-		}
-
+		m_eUI_PreLevel = m_eUI_Level;
 	}
 }
 
@@ -234,6 +147,184 @@ void CUI_SkillIcon::UI_Exit(_float fTimeDelta)
 {
 }
 
+void CUI_SkillIcon::Check_LevelChange(_float fTimeDelta)
+{
+	if (m_eUI_PreLevel != m_eUI_Level)
+	{
+		// Size Check
+		Check_IconSize();
+
+		m_bAnimChange = true;
+
+		if (m_eUI_Level == LEVEL1)
+			m_eAnimType = UNLOCK;
+
+#pragma region 1
+		if (m_tUIInfo.strUIName == "Kick")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ElectricDash")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "DashShock")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ElectricCord")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "PowerUP")
+		{
+
+		}
+#pragma region 2
+		else if (m_tUIInfo.strUIName == "UpperCut")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "OneTouch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "TwoTouch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ThreeTouch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "ComboPunch")
+		{
+
+		}
+#pragma region 3
+		else if (m_tUIInfo.strUIName == "Punch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "SuperChargeMod")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "TeleportPunch")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEXP")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "NPCPowerUP")
+		{
+
+		}
+#pragma region 4
+		else if (m_tUIInfo.strUIName == "Heal")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseHP")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "MaxHP")
+		{
+
+		}
+#pragma region 4
+		else if (m_tUIInfo.strUIName == "Heal")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseHP")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+		{
+
+		}
+		else if (m_tUIInfo.strUIName == "MaxHP")
+		{
+
+		}
+	}
+	else
+	{
+		m_eAnimType = JUMP;
+	}
+}
+
+void CUI_SkillIcon::Check_Animation(_float fTimeDelta)
+{
+	if (m_bAnimChange == true)
+	{
+		// Animation Name
+		m_strChangeAnim = "../Bin/DataFiles/Data_UI/Animation/" + m_tUIInfo.strUIName + ".json";
+
+		switch (m_eAnimType)
+		{
+		case CUI_SkillIcon::UNLOCK:
+			Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconUnlock.json");
+			//Change_Animation(m_strChangeAnim);
+			break;
+		case CUI_SkillIcon::JUMP:
+			Change_Animation("../Bin/DataFiles/Data_UI/Animation/IconJump.json");
+			break;
+		case CUI_SkillIcon::UIANIM_END:
+			break;
+		default:
+			break;
+		}
+
+		m_pUIManager->Active_SkillIcon(true);
+
+		m_bAnimChange = false;
+	}
+}
+
+void CUI_SkillIcon::Check_IconSize()
+{
+	switch (m_eUI_Level)
+	{
+	case Client::CUI::LEVEL0:
+		m_pTransformCom->Set_Scaling(45.f, 45.f, 0.1f);
+		break;
+	case Client::CUI::LEVEL1:
+		m_pTransformCom->Set_Scaling(85.f, 85.f, 0.1f);
+		break;
+	case Client::CUI::LEVEL2:
+		m_pTransformCom->Set_Scaling(85.f, 85.f, 0.1f);
+		break;
+	case Client::CUI::LEVEL3:
+		break;
+	case Client::CUI::LEVEL4:
+		break;
+	case Client::CUI::LEVEL5:
+		break;
+	case Client::CUI::LEVEL_END:
+		break;
+	default:
+		break;
+	}
+}
+
 HRESULT CUI_SkillIcon::Ready_Components()
 {
 	//! For.Com_Shader
@@ -251,15 +342,22 @@ HRESULT CUI_SkillIcon::Ready_Components()
 	wstring strPrototag;
 	m_pGameInstance->String_To_WString(m_tUIInfo.strProtoTag, strPrototag);
 
+	wstring strActive;
+
+	//! For.Com_Texture2 // 비활성화
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("lock_icon_g"), // error : 테그도 잘맞고 내부 함수에서 텍스처도 잘 찾는데 nullptr로 터짐 -> m_pTextureCom을 사용은 배열식으로 사용했는데, 멤버변수로 선언할때 배열로 선언 안했음.. 
+		TEXT("Com_Texture_SkillIcon_Lock"), reinterpret_cast<CComponent**>(&m_pTextureCom[LOCK]))))
+		return E_FAIL;
+
 	//! For.Com_Texture2 // 비활성화
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag, // error : 테그도 잘맞고 내부 함수에서 텍스처도 잘 찾는데 nullptr로 터짐 -> m_pTextureCom을 사용은 배열식으로 사용했는데, 멤버변수로 선언할때 배열로 선언 안했음.. 
 		TEXT("Com_Texture_SkillIcon_NonActive"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
 		return E_FAIL;
 
-	strPrototag = strPrototag + L"_active";
+	strActive = strPrototag + L"_active";
 
 	//! For.Com_Texture2 // 활성화
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, strActive,
 		TEXT("Com_Texture_SkillIcon_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
 		return E_FAIL;
 #pragma endregion
@@ -279,19 +377,20 @@ HRESULT CUI_SkillIcon::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-
 	/* UI_Level */
 	switch (m_eUI_Level)
 	{
 		case Client::CUI::LEVEL0: /* => Lock/NonActive <= */
-			if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			if (FAILED(m_pTextureCom[LOCK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 			break;
 		case Client::CUI::LEVEL1: /* => Unlock/Active <= */
-			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 			break;
 		case Client::CUI::LEVEL2:
+			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
 			break;
 		case Client::CUI::LEVEL3:
 			break;
@@ -299,7 +398,7 @@ HRESULT CUI_SkillIcon::Bind_ShaderResources()
 			break;
 		case Client::CUI::LEVEL5:
 			break;
-		case Client::CUI::STAGE_END:
+		case Client::CUI::LEVEL_END:
 			break;
 		default:
 			break;

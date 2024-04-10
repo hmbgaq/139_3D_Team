@@ -29,10 +29,15 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 
 			//CWeapon_Infected_D* m_pWeapon = dynamic_cast<CWeapon_Infected_D*>(pActor->Get_Weapon(TEXT("Weapon_Bomb"))); /* 이름 이걸로 공통사항으로 밀어야함 */
 			//m_pWeapon->Set_Enable(true);		// 무기콜라이더 활성화 = 자폭 콜라이더 
-			pActor->Get_Weapon(TEXT("Weapon_Bomb"))->Set_Enable(true);
-			if (m_bFlags[0] == false)
+
+			//pActor->Get_Weapon(TEXT("Weapon_Bomb"))->Set_Enable(true);
+
+			if (false == m_bFlags[0])
 			{
+				pActor->Explosion();
+				pActor->Set_EnemyHUD_Dead();
 				EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", pActor->Get_Position());
+
 				m_bFlags[0] = true;
 			}
 

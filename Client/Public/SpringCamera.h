@@ -12,6 +12,7 @@ END
 BEGIN(Client)
 
 class CPlayer;
+class CData_Manager;
 
 class CSpringCamera final : public CCamera
 {
@@ -96,8 +97,8 @@ private:
 	_float	m_fAngle = 0.f;
 	_float  m_fPitch = 0.f;
 	_matrix cameraMatrix;//최종 카메라 행렬
-	_bool m_bCheck = false;//마우스 가운데 모으기 
-	_bool m_bFix = true;//마우스 가운데 모으기 
+	//_bool m_bCheck = false;//마우스 가운데 모으기 
+	//_bool m_bFix = true;//마우스 가운데 모으기
 	_bool m_bPlayerCheck = false; // 카메라 타겟이 플레이어 인지 아닌지  확인 하기 위 한 용도  
 	_bool m_bChangeOffset = false;
 
@@ -106,6 +107,9 @@ private:
 	_float m_fShakeTime = 0.2f;
 	_float2 m_fShakeMinMax = { 0.3f ,0.3f};
 	//_float m_fTimeDelta = 0.f;
+
+	// !SH Add
+	CData_Manager* m_pDataManager = nullptr;
 private:
 	//카메라 X,Y,Z
 	_float3 m_CameraOffset = {};
@@ -114,6 +118,10 @@ private:
 	_float CameraMoveSpeedtest = 0.1f;//카메라 보간용 이동속도
 private:
 	_float				m_fMouseSensor = { 0.0f };
+
+private:
+	_bool	m_bIsGamePlay = { true };
+
 public:
 	static CSpringCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

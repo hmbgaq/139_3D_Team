@@ -66,6 +66,9 @@ void CMotherShakeTreeProjectile::Priority_Tick(_float fTimeDelta)
 
 void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_bFirst)

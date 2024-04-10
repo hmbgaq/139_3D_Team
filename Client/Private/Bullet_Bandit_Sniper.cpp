@@ -96,6 +96,13 @@ HRESULT CBullet_Bandit_Sniper::Render()
 	return S_OK;
 }
 
+void CBullet_Bandit_Sniper::Set_Enable(_bool _Enable)
+{
+	__super::Set_Enable(_Enable);
+
+	Safe_Release(m_pTrail);
+}
+
 void CBullet_Bandit_Sniper::OnCollisionEnter(CCollider* other)
 {
 	CCharacter* pTarget_Character = Get_Target_Character(other);

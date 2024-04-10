@@ -945,6 +945,77 @@ void CWindow_UITool::Setting_Child()
 
 	if (m_pCurrSelectUI != nullptr)
 	{
+		ImGui::Text(ConverWStringtoC(ConvertToWideString(m_pCurrSelectUI->Get_UIDesc().strUIName)));
+	}
+
+	if (ImGui::Button("PlayAnim ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("StopAnim ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ResetAnim ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+	}
+
+	if (ImGui::Button("Play ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_Active(true);
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Stop ALL"))
+	{
+		if (!m_vecChildObject.empty())
+		{
+			for (auto& iter : m_vecChildObject)
+			{
+				dynamic_cast<CUI*>(iter)->Set_Active(false);
+				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
+				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
+			}
+		}
+	}
+
+	if (ImGui::Button("STATE UI"))
+		CData_Manager::GetInstance()->Set_GameState(GAME_STATE::UI);
+	ImGui::SameLine();
+	if (ImGui::Button("STATE GAMEPLAY"))
+		CData_Manager::GetInstance()->Set_GameState(GAME_STATE::GAMEPLAY);
+
+	if (m_pCurrSelectUI != nullptr)
+	{
 		/*					Render				*/
 		/* Back == 9, Center == 10, Front == 11 */
 		ImGui::Text("RenderGroup");
@@ -953,6 +1024,16 @@ void CWindow_UITool::Setting_Child()
 		ImGui::RadioButton("Center", m_pCurrSelectUI->Get_RenderGroup(), 10);
 		ImGui::SameLine();
 		ImGui::RadioButton("Front", m_pCurrSelectUI->Get_RenderGroup(), 11);
+
+		ImGui::RadioButton("First", m_pCurrSelectUI->Get_RenderGroup(), 12);
+		ImGui::SameLine();
+		ImGui::RadioButton("Second", m_pCurrSelectUI->Get_RenderGroup(), 13);
+		ImGui::SameLine();
+		ImGui::RadioButton("Third", m_pCurrSelectUI->Get_RenderGroup(), 14);
+		ImGui::SameLine();
+		ImGui::RadioButton("Fourth", m_pCurrSelectUI->Get_RenderGroup(), 15);
+		ImGui::SameLine();
+		ImGui::RadioButton("PopUP", m_pCurrSelectUI->Get_RenderGroup(), 16);
 
 		if (ImGui::InputText("UI_NAME", m_cName, sizeof(m_cName))) // 문자열 저장해야함
 		{
@@ -964,58 +1045,6 @@ void CWindow_UITool::Setting_Child()
 			//m_pCurrSelectUI->Set_CharToStringUIName(m_cName);
 			//m_pGameInstance->WString_To_String(ConverCtoWC(), m_pCurrSelectUI->Get_UIDesc().strUIName.c_str());
 		}
-
-		if (ImGui::Button("PlayAnim ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("StopAnim ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("ResetAnim ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
-				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
-			}
-		}
-
-		if (ImGui::Button("Play ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_Active(true);
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(true);
-				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
-			}
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Stop ALL"))
-		{
-			for (auto& iter : m_vecChildObject)
-			{
-				dynamic_cast<CUI*>(iter)->Set_Active(false);
-				dynamic_cast<CUI*>(iter)->Set_AnimPlay(false);
-				dynamic_cast<CUI*>(iter)->Set_CurrTime(0.f);
-			}
-		}
-
-		if (ImGui::Button("SATE UI"))
-			CData_Manager::GetInstance()->Set_GameState(GAME_STATE::UI);
-		ImGui::SameLine();
-		if (ImGui::Button("SATE GAMEPLAY"))
-			CData_Manager::GetInstance()->Set_GameState(GAME_STATE::GAMEPLAY);
-
 		
 		if (ImGui::Button("ShowInterface"))
 			m_bShowInterface = !m_bShowInterface;
@@ -1219,6 +1248,11 @@ void CWindow_UITool::Child_Object(_float fTimeDelta)
 	if (ImGui::Button("Delete_Child"))
 	{
 		Delete_Child(fTimeDelta);
+	}
+
+	if (ImGui::Button("Delete_All"))
+	{
+		Delete_Child_All(fTimeDelta);
 	}
 #pragma endregion End
 
@@ -1705,6 +1739,27 @@ void CWindow_UITool::Delete_Child(_float fTimeDelta)
 
 
 	m_iSelected_ChildObjectIndex = m_iSelected_ChildObjectIndex - 1; // 현재 선택한 인덱스번째의 오브젝트를 삭제했으니, 선택된 인덱스도 뒤로 한칸 돌려주자.
+}
+
+void CWindow_UITool::Delete_Child_All(_float fTimeDelta)
+{
+	if (m_vecChildObject.empty())
+		return;
+
+	// 오브젝트 선택 해제
+	m_pCurrSelectUI = nullptr;
+	m_iSelected_ChildObjectIndex = 0;
+
+	// 오브젝트 삭제
+	for (auto& iter : m_vecChildObject)
+		iter->Set_Dead(true);
+
+	/* Set_Dead를 요청하면 매니저에게 알아서 해당 객체를 지워달라고 한거니까 그 객체에 대한 삭제처리는 내가 따로 또 하면 안된다. (근데 왜 됐지?) */
+	//Safe_Release(m_vecChildObject[m_iSelected_ChildObjectIndex]);
+
+	if (!m_vecChildObject.empty())
+		m_vecChildObject.clear();
+
 }
 
 void CWindow_UITool::Add_ParentIndexNumber(PATHINFO& UI_Info)
@@ -4207,6 +4262,23 @@ void CWindow_UITool::UI_Preset()
 	if (ImGui::Button("LevelListPlay"))
 	{
 		m_pUIManager->Active_LevelList();
+	}
+	if (ImGui::Button("SkillWindowButton"))
+	{
+		m_pUIManager->Ready_SkillWindowButton(LEVEL_STATIC);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("SkillWindowButtonActive"))
+	{
+		m_pUIManager->Active_SkillWindowButton(true);
+	}
+	if (ImGui::Button("SkillWindowAll"))
+	{
+		m_pUIManager->Ready_SkillWindow(true);
+	}
+	if (ImGui::Button("SkillWindowAllActive"))
+	{
+		m_pUIManager->Active_SkillWindowBackground();
 	}
 }
 

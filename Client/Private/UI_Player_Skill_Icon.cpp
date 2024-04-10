@@ -41,38 +41,38 @@ HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 	/* Left */
 	if (m_tUIInfo.strUIName == "LeftHUD_Top")
 	{
-		m_bUnlock = true;
+		m_bUnlock = false;
 	}
 	else if (m_tUIInfo.strUIName == "LeftHUD_Right")
 	{
 		// Test
-		m_bUnlock = /*false*/true;
+		m_bUnlock = false/*true*/;
 	}
 	else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
 	{
-		m_bUnlock = true;
+		m_bUnlock = false;
 	}
 	else if (m_tUIInfo.strUIName == "LeftHUD_Left")
 	{
-		m_bUnlock = true;
+		m_bUnlock = false;
 	}
 
 	/* Right */
 	if (m_tUIInfo.strUIName == "RightHUD_Top")
 	{
-		m_bUnlock = true;
+		m_bUnlock = false;
 	}
 	else if (m_tUIInfo.strUIName == "RightHUD_Right")
 	{
-		m_bUnlock = true;
+		m_bUnlock = false;
 	}
 	else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
 	{
-		m_bUnlock = true;
+		m_bUnlock = false;
 	}
 	else if (m_tUIInfo.strUIName == "RightHUD_Left")
 	{
-		m_bUnlock = true;
+		m_bUnlock = false;
 	}
 
 
@@ -291,25 +291,45 @@ HRESULT CUI_Player_Skill_Icon::Ready_Components()
 	// 부분 문자열 검색
 	size_t found = strPrototag.find(L"ui_icon");
 
-	// 발견된 경우
-	if (found != std::wstring::npos) 
+	if (strPrototag != L"ui_icons_kick" &&
+		strPrototag != L"ui_icons_amped_post_combo_blast"&&
+		strPrototag != L"ui_icons_zappem_all")
 	{
-		strPrototagCooldown = strPrototag + L"_cooldown";
+		// 발견된 경우
+		if (found != std::wstring::npos)
+		{
+			strPrototagCooldown = strPrototag + L"_cooldown";
 
-		//! For.Com_Texture2 // 쿨타임	
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototagCooldown,
-			TEXT("Com_Texture_Cooldown"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_COOLDOWN]))))
+			//! For.Com_Texture2 // 쿨타임	
+			if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototagCooldown,
+				TEXT("Com_Texture_Cooldown"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_COOLDOWN]))))
+				return E_FAIL;
+		}
+		else // 발견되지 않은 경우
+		{
+
+		}
+		//! For.Com_Texture2 // 활성화
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+			TEXT("Com_Texture_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_ACTIVE]))))
 			return E_FAIL;
 	}
-	else // 발견되지 않은 경우
+	else
 	{
+		//! For.Com_Texture1 // 쿨타임
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+			TEXT("Com_Texture_Cooldown"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_COOLDOWN]))))
+			return E_FAIL;
 
+		strPrototag = strPrototag + L"_active";
+
+		//! For.Com_Texture2 // 활성화
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
+			TEXT("Com_Texture_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_ACTIVE]))))
+			return E_FAIL;
 	}
 	
-	//! For.Com_Texture2 // 활성화
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
-		TEXT("Com_Texture_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ICON_ACTIVE]))))
-		return E_FAIL;
+
 #pragma endregion
 
 	return S_OK;

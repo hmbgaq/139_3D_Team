@@ -59,6 +59,9 @@ public:
 	void	Set_CntDead_Time(_float CountDown) { m_fCntDead_Time = CountDown; }
 	void	Set_CntDead_Active(_bool bActive) { m_bCntDead_Active = bActive; }
 
+public:
+	virtual void Explosion() {};
+
 protected:
 	HRESULT Ready_Components();
 	_bool	m_bCntDead_Active = { false };

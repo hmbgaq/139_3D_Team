@@ -76,13 +76,13 @@ void CUI_EnemyHP_Shard::Tick(_float fTimeDelta)
 	if (m_fPreHP < m_fCurHP)
 		m_fPreHP = m_fCurHP;
 
-	if (m_pGameInstance->Key_Down(DIK_J))
-		m_fCurHP -= 10.f;
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		m_fCurHP += 10.f;
-		//m_fPreHP = m_fCurHP;
-	}
+	//if (m_pGameInstance->Key_Down(DIK_J))
+	//	m_fCurHP -= 10.f;
+	//if (m_pGameInstance->Key_Down(DIK_K))
+	//{
+	//	m_fCurHP += 10.f;
+	//	//m_fPreHP = m_fCurHP;
+	//}
 
 	//m_pData_Manager->Limit_HP();
 

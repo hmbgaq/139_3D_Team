@@ -33,6 +33,11 @@ private:
 public:
 	virtual HRESULT			Set_ParentTransform(CTransform* pParentTransformCom) override;
 
+public:
+	void					Check_Picking(_float fTimeDelta);
+	void					Check_State(_float fTimeDelta);
+	void					Check_LevelChange(_float fTimeDelta);
+
 private:
 	void					Compute_OwnerCamDistance();
 	_bool					In_Frustum();
@@ -44,6 +49,7 @@ public:
 private:
 	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
 	_bool					m_bFirstFrame = false;
+	UI_LEVEL				m_eUI_PreLevel = LEVEL0;
 
 public:
 	static CUI_SkillFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

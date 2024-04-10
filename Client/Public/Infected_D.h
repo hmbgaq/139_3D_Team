@@ -22,12 +22,16 @@ public:
 	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Update_RenderState(_int CurrentHP) override;
 
+public:
+	virtual void Explosion() override;
+
 protected:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 	HRESULT Ready_Option();
 
 	virtual void Check_Frustum() override;
+
 
 private:
 	CActor<CInfected>* m_pActor = { nullptr };

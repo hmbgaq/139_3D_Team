@@ -573,6 +573,11 @@ void CEnvironment_Interact::Set_AnimationIndex(_uint iAnimIndex)
 	m_pModelCom->Set_Animation(iAnimIndex);
 }
 
+void CEnvironment_Interact::Set_Animation(_uint iAnimIndex, CModel::ANIM_STATE _eAnimState, _uint iTargetKeyFrameIndex)
+{
+	m_pModelCom->Set_Animation(iAnimIndex, _eAnimState, false, m_pModelCom->Get_TickPerSecond() / 10.f, iTargetKeyFrameIndex);
+}
+
 void CEnvironment_Interact::Set_ColliderSize(_float3 vColliderSize)
 {
 	{

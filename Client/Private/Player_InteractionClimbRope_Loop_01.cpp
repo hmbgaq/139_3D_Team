@@ -14,7 +14,7 @@ void CPlayer_InteractionClimbRope_Loop_01::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_InteractionClimbRope_Loop_01::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 
 	if (false == m_bFlags[0])

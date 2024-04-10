@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Texture.h"
+#include "UI_Manager.h"
+#include "Data_Manager.h"
 
 CUI_SkillFrame::CUI_SkillFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -29,11 +31,18 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
+	// Level 0으로 시작
+	m_eUI_Level = UI_LEVEL::LEVEL0;
+	// Test 1로 시작
+	//m_eUI_Level = UI_LEVEL::LEVEL1;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
 	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -57,97 +66,11 @@ void CUI_SkillFrame::Tick(_float fTimeDelta)
 		if (m_pGameInstance->Key_Down(DIK_9))
 			m_eUI_Level = LEVEL2;
 
+		Check_Picking(fTimeDelta);
+		Check_State(fTimeDelta);
+		Check_LevelChange(fTimeDelta);
 
-		if (m_bPick == true)
-		{
-			//m_pUIManager->Set_SelectSkill(m_tUIInfo.strUIName);
-		}
-#pragma region 1
-			if (m_tUIInfo.strUIName == "Kick")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ElectricDash")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "DashShock")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ElectricCord")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "PowerUP")
-			{
-
-			}
-#pragma region 2
-			else if (m_tUIInfo.strUIName == "UpperCut")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "OneTouch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "TwoTouch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ThreeTouch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "ComboPunch")
-			{
-
-			}
-#pragma region 3
-			else if (m_tUIInfo.strUIName == "Punch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "SuperChargeMod")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "TeleportPunch")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "IncreaseEXP")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "NPCPowerUP")
-			{
-
-			}
-#pragma region 4
-			else if (m_tUIInfo.strUIName == "Heal")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "RecoveryEnergy")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "IncreaseHP")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "IncreaseEnergy")
-			{
-
-			}
-			else if (m_tUIInfo.strUIName == "MaxHP")
-			{
-
-			}
-
-
+		m_eUI_PreLevel = m_eUI_Level;
 	}
 
 
@@ -245,6 +168,9 @@ HRESULT CUI_SkillFrame::Ready_Components()
 	{
 		m_bFirstFrame = true;
 
+		// 첫번째 기본 스킬들은 Level1로  시작 (바로 배울 수 있게)
+		m_eUI_Level = UI_LEVEL::LEVEL1;
+
 		//! For.Com_Texture // 비활성화
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_perks_star_slot_inactive"),
 			TEXT("Com_Texture_SkillIcon_NonActive"), reinterpret_cast<CComponent**>(&m_pTextureCom[NONACTIVE]))))
@@ -312,7 +238,7 @@ HRESULT CUI_SkillFrame::Bind_ShaderResources()
 			break;
 		case Client::CUI::LEVEL5:
 			break;
-		case Client::CUI::STAGE_END:
+		case Client::CUI::LEVEL_END:
 			break;
 		default:
 			break;
@@ -324,14 +250,14 @@ HRESULT CUI_SkillFrame::Bind_ShaderResources()
 		switch (m_eUI_Level)
 		{
 		case Client::CUI::LEVEL0: /* => Lock/NonActive <= */
+			break;
+		case Client::CUI::LEVEL1: /* => Unlock/Active <= */
 			if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 			break;
-		case Client::CUI::LEVEL1: /* => Unlock/Active <= */
+		case Client::CUI::LEVEL2:
 			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
-			break;
-		case Client::CUI::LEVEL2:
 			break;
 		case Client::CUI::LEVEL3:
 			break;
@@ -339,7 +265,7 @@ HRESULT CUI_SkillFrame::Bind_ShaderResources()
 			break;
 		case Client::CUI::LEVEL5:
 			break;
-		case Client::CUI::STAGE_END:
+		case Client::CUI::LEVEL_END:
 			break;
 		default:
 			break;
@@ -353,6 +279,448 @@ HRESULT CUI_SkillFrame::Set_ParentTransform(CTransform* pParentTransformCom)
 {
 	m_tUIInfo.pParentTransformCom = pParentTransformCom;
 	return S_OK;
+}
+
+void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
+{
+	if (m_bPick == true)
+	{
+		if (g_UIMouseDownLB == true)
+		{
+#pragma region 1
+			if (m_tUIInfo.strUIName == "Kick")
+			{
+				// UI 선택
+				m_pUIManager->Select_Skill("Kick");
+
+				// 선택한 UI의 레벨
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("Kick");
+
+					_uint itest = m_pUIManager->Get_Select_SkillLevel();
+					int i = 10;
+			}
+			else if (m_tUIInfo.strUIName == "ElectricDash")
+			{
+				m_pUIManager->Select_Skill("ElectricDash");
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("ElectricDash");
+			}
+			else if (m_tUIInfo.strUIName == "DashShock")
+			{
+				m_pUIManager->Select_Skill("DashShock");
+				
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("DashShock");
+			}
+			else if (m_tUIInfo.strUIName == "ElectricCord")
+			{
+				m_pUIManager->Select_Skill("ElectricCord");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("ElectricCord");
+			}
+			else if (m_tUIInfo.strUIName == "PowerUP")
+			{
+				m_pUIManager->Select_Skill("PowerUP");
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("PowerUP");
+			}
+#pragma region 2
+			else if (m_tUIInfo.strUIName == "UpperCut")
+			{
+				m_pUIManager->Select_Skill("UpperCut");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("UpperCut");
+			}
+			else if (m_tUIInfo.strUIName == "OneTouch")
+			{
+				m_pUIManager->Select_Skill("OneTouch");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("OneTouch");
+			}
+			else if (m_tUIInfo.strUIName == "TwoTouch")
+			{
+				m_pUIManager->Select_Skill("TwoTouch");
+				
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("TwoTouch");
+			}
+			else if (m_tUIInfo.strUIName == "ThreeTouch")
+			{
+				m_pUIManager->Select_Skill("ThreeTouch");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("ThreeTouch");
+			}
+			else if (m_tUIInfo.strUIName == "ComboPunch")
+			{
+				m_pUIManager->Select_Skill("ComboPunch");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("ComboPunch");
+			}
+#pragma region 3
+			else if (m_tUIInfo.strUIName == "Punch")
+			{
+				m_pUIManager->Select_Skill("Punch");
+				
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("Punch");
+				
+			}
+			else if (m_tUIInfo.strUIName == "SuperChargeMod")
+			{
+				m_pUIManager->Select_Skill("SuperChargeMod");
+				
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("SuperChargeMod");
+			}
+			else if (m_tUIInfo.strUIName == "TeleportPunch")
+			{
+				m_pUIManager->Select_Skill("TeleportPunch");
+				
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("TeleportPunch");
+			}
+			else if (m_tUIInfo.strUIName == "IncreaseEXP")
+			{
+				m_pUIManager->Select_Skill("IncreaseEXP");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("IncreaseEXP");
+			}
+			else if (m_tUIInfo.strUIName == "NPCPowerUP")
+			{
+				m_pUIManager->Select_Skill("NPCPowerUP");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("NPCPowerUP");
+			}
+#pragma region 4
+			else if (m_tUIInfo.strUIName == "Heal")
+			{
+				m_pUIManager->Select_Skill("Heal");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("Heal");
+			}
+			else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+			{
+				m_pUIManager->Select_Skill("RecoveryEnergy");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("RecoveryEnergy");
+			}
+			else if (m_tUIInfo.strUIName == "IncreaseHP")
+			{
+				m_pUIManager->Select_Skill("IncreaseHP");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("IncreaseHP");
+			}
+			else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+			{
+				m_pUIManager->Select_Skill("IncreaseEnergy");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("IncreaseEnergy");
+			}
+			else if (m_tUIInfo.strUIName == "MaxHP")
+			{
+				m_pUIManager->Select_Skill("MaxHP");
+
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+					m_pUIManager->Change_SkillPreview("MaxHP");
+			}
+		}
+	}
+}
+
+void CUI_SkillFrame::Check_State(_float fTimeDelta)
+{
+#pragma region 1
+	if (m_tUIInfo.strUIName == "Kick")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ElectricDash")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "DashShock")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ElectricCord")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "PowerUP")
+	{
+
+	}
+#pragma region 2
+	else if (m_tUIInfo.strUIName == "UpperCut")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "OneTouch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "TwoTouch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ThreeTouch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "ComboPunch")
+	{
+
+	}
+#pragma region 3
+	else if (m_tUIInfo.strUIName == "Punch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "SuperChargeMod")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "TeleportPunch")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseEXP")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "NPCPowerUP")
+	{
+
+	}
+#pragma region 4
+	else if (m_tUIInfo.strUIName == "Heal")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseHP")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+	{
+
+	}
+	else if (m_tUIInfo.strUIName == "MaxHP")
+	{
+
+	}
+}
+
+void CUI_SkillFrame::Check_LevelChange(_float fTimeDelta)
+{
+	if (m_eUI_PreLevel != m_eUI_Level)
+	{
+#pragma region 1
+		if (m_tUIInfo.strUIName == "Kick")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::KICK, true); // 스킬 효과 활성화
+				m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Bottom", true); // 해금
+			}
+		}
+		else if (m_tUIInfo.strUIName == "ElectricDash")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::ELECTRIC_DASH, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "DashShock")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::ELECTROCUTE, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "ElectricCord")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::ELECTRIC_WHIP, true); // 스킬 효과 활성화
+				m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Left", true); // 해금
+			}
+		}
+		else if (m_tUIInfo.strUIName == "PowerUP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::MELEE_DAMAGE_INCREASE, true); // 스킬 효과 활성화
+			}
+		}
+#pragma region 2
+		else if (m_tUIInfo.strUIName == "UpperCut")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::UPPER_CUT, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "OneTouch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::QUAKE_PUNCH, true); // 스킬 효과 활성화
+				m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Right", true); // 해금
+			}
+		}
+		else if (m_tUIInfo.strUIName == "TwoTouch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::QUAKE_PUNCH2, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "ThreeTouch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::QUAKE_PUNCH3, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "ComboPunch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::HIT_EIGHT, true); // 스킬 효과 활성화
+			}
+		}
+#pragma region 3
+		else if (m_tUIInfo.strUIName == "Punch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::HERO_PUNCH, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "SuperChargeMod")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::SUPER_CHARGE, true); // 스킬 효과 활성화
+				m_pUIManager->Change_LeftHUD_SkillUnlock("LeftHUD_Top", true); // 해금
+			}
+		}
+		else if (m_tUIInfo.strUIName == "TeleportPunch")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::TELEPORT_PUNCH, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEXP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::INCREASE_EXP, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "NPCPowerUP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::HASTE, true); // 스킬 효과 활성화
+			}
+		}
+#pragma region 4
+		else if (m_tUIInfo.strUIName == "Heal")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::HEAL, true); // 스킬 효과 활성화
+				m_pUIManager->Change_LeftHUD_SkillUnlock("LeftHUD_Right", true); // 해금
+			}
+		}
+		else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::ELECTRIC_DAMAGE_INCREASE, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseHP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::REGEN_HP, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::ELECTRIC_COOLTIME_DECREASE, true); // 스킬 효과 활성화
+			}
+		}
+		else if (m_tUIInfo.strUIName == "MaxHP")
+		{
+			m_pUIManager->Change_SkillIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
+			{
+				m_pData_Manager->Set_AdditionalSkill(Additional_Skill::MAX_HP, true); // 스킬 효과 활성화
+			}
+		}
+	}
 }
 
 void CUI_SkillFrame::Compute_OwnerCamDistance()

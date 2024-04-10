@@ -94,6 +94,9 @@ void CMother::Priority_Tick(_float fTimeDelta)
 
 void CMother::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+	
 	m_fTimeDelta2 += fTimeDelta;
 
 	if (m_fTimeDelta2 >= 1.f)
