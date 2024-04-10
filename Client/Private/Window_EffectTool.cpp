@@ -4383,7 +4383,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_fColor_Min_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.x;
 			m_fColor_Min_Particle[1] = m_pParticleBufferDesc->vMinMaxGreen.x;
-			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.x;
+			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.x; 
 			m_fColor_Min_Particle[3] = m_pParticleBufferDesc->vMinMaxAlpha.x;
 
 			m_fColor_Max_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.y;

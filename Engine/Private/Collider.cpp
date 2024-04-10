@@ -118,7 +118,6 @@ void CCollider::Collision(CCollider * pTargetCollider)
 	}
 
 	m_OtherColliders.push_back(pTargetCollider);
-
 }
 
 void CCollider::End_CollisionCheck()

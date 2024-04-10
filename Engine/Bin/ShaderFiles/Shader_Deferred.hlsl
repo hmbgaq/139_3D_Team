@@ -996,19 +996,19 @@ PS_OUT PS_MAIN_NEW_PBR(PS_IN In)
     
     vector vShadow = g_ShadowResult.Sample(LinearSampler, In.vTexcoord);
     
-    float4 ColorCombine = float4(CT_BRDF + vEmissive, 1.f);
-   // ColorCombine += vSpecular + vAmbientDesc;
-    //ColorCombine += vAmbientDesc;
-    //
-    //if (vShadow.r > 0.f)
-    //{
-    //    Out.vColor = ColorCombine * vShadow; // 그림자 효과 적용
-    //}
-    //else
-    //{
-    //    Out.vColor = ColorCombine;
-    //}
-    //
+    float4 ColorCombine = float4(CT_BRDF + vEmissive,  1.f);
+    ColorCombine += vSpecular + vAmbientDesc;
+    ColorCombine += vAmbientDesc;
+    
+    if (vShadow.r > 0.f)
+    {
+        Out.vColor = ColorCombine * vShadow; // 그림자 효과 적용
+    }
+    else
+    {
+        Out.vColor = ColorCombine;
+    }
+    
     Out.vColor = ColorCombine;
     
     if(Out.vColor.a == 0 )
