@@ -5,7 +5,7 @@ void CPlayer_InteractionWhipSwing::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 12);
-
+	pActor->Set_UseGravity(false);
 }
 
 CState<CPlayer>* CPlayer_InteractionWhipSwing::Update(CPlayer* pActor, _float fTimeDelta)
@@ -40,6 +40,16 @@ CState<CPlayer>* CPlayer_InteractionWhipSwing::Update(CPlayer* pActor, _float fT
 			pWeapon->Set_Enable(false);
 		}
 	}
+	else if (false == m_bFlags[3])
+	{
+	
+		m_bFlags[3] = pActor->Is_Inputable_Front(60);
+		if (true == m_bFlags[3])
+		{
+			pActor->Set_UseGravity(true);
+		}
+	}
+
 
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
@@ -47,7 +57,5 @@ CState<CPlayer>* CPlayer_InteractionWhipSwing::Update(CPlayer* pActor, _float fT
 void CPlayer_InteractionWhipSwing::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
-	pActor->Set_InitPosition(pActor->Get_Position_Vector());
-	pActor->Set_Animation((_uint)CPlayer::Player_State::Player_InteractionJumpDown300, CModel::ANIM_STATE::ANIM_STATE_NORMAL, 30);
 	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_WHIP, false);
 }

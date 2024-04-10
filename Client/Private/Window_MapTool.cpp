@@ -692,11 +692,14 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				SpecialJson[i].emplace("PlayAnimationIndex", SpecialDesc.iPlayAnimationIndex);
 				SpecialJson[i].emplace("SpecialGroupIndex", SpecialDesc.iSpecialGroupIndex);
 				SpecialJson[i].emplace("BloomMeshIndex", SpecialDesc.iBloomMeshIndex);
+
 				SpecialJson[i].emplace("ElevatorType", SpecialDesc.eElevatorType);
 				SpecialJson[i].emplace("ElevatorMinHeight", SpecialDesc.fElevatorMinHeight);
 				SpecialJson[i].emplace("ElevatorMaxHeight", SpecialDesc.fElevatorMaxHeight);
 				SpecialJson[i].emplace("ElevatorSpeed", SpecialDesc.fElevatorSpeed);
 				SpecialJson[i].emplace("ElevatorRotationSpeed", SpecialDesc.fElevatorRotationSpeed);
+				SpecialJson[i].emplace("ElevatorArrivalCellIndex", SpecialDesc.iArrivalCellIndex);
+				SpecialJson[i].emplace("ElevatorLever", SpecialDesc.bLeverForElevator);
 
 				CJson_Utility::Write_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
 				CJson_Utility::Write_Float3(SpecialJson[i]["ColliderSize"], SpecialDesc.vElevatorColliderSize);
@@ -890,12 +893,12 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
 			CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"],		Desc.vInteractColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"],	Desc.vInteractColliderCenter);
-
+			//
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
 			CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
 			CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
-			
+			//
 			CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
 			CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
 			CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
@@ -1251,6 +1254,8 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			SpecialDesc.fElevatorMaxHeight =	 SpecialJson[i]["ElevatorMaxHeight"];
 			SpecialDesc.fElevatorSpeed =		 SpecialJson[i]["ElevatorSpeed"];
 			SpecialDesc.fElevatorRotationSpeed = SpecialJson[i]["ElevatorRotationSpeed"];
+			SpecialDesc.iArrivalCellIndex =		 SpecialJson[i]["ElevatorArrivalCellIndex"];
+			//SpecialDesc.bLeverForElevator =		 SpecialJson[i]["ElevatorLever"];
 			
 			
 			CJson_Utility::Load_Float4(SpecialJson[i]["ArrivalPosition"], SpecialDesc.vArrivalPosition);
@@ -5175,7 +5180,11 @@ void CWindow_MapTool::Special_SelectTab()
 						m_fElevatorMaxHeight = Desc.fElevatorMaxHeight;
 						m_fElevatorSpeed = Desc.fElevatorSpeed;
 						m_fElevatorRotationSpeed = XMConvertToDegrees(Desc.fElevatorRotationSpeed);
-						
+						m_iElevatorArrivalCellIndex = Desc.iArrivalCellIndex;	
+					}
+					else if (Desc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
+					{
+						m_bLeverForElevator = Desc.bLeverForElevator;
 					}
 					if (isSelected)
 					{
@@ -5216,6 +5225,11 @@ void CWindow_MapTool::Special_SelectTab()
 				if (ImGui::Button(u8"레버 리셋"))
 				{
 					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->TrackLeverInit();
+				}
+
+				if (ImGui::Checkbox(u8"엘리베이터 레버", &m_bLeverForElevator))
+				{
+					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ForElevator(m_bLeverForElevator);
 				}
 			}
 			else if (m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Get_SpecialType() == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
@@ -5294,12 +5308,9 @@ void CWindow_MapTool::Special_SelectTab()
 
 				ImGui::NewLine();
 				
-				ImGui::SeparatorText(u8"엘리베이터 도착지점 셋팅");
+				
 
-				if (ImGui::InputFloat4(u8"도착 지점", &m_vElevatorArrivalPosition.x))
-				{
-					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalPosition(m_vElevatorArrivalPosition);
-				}
+				
 
 				if (ImGui::InputFloat(u8"엘리베이터 속도", &m_fElevatorSpeed))
 				{
@@ -5312,7 +5323,11 @@ void CWindow_MapTool::Special_SelectTab()
 					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_RotationSpeed(m_fElevatorRotationSpeed);
 				}
 
-				static _bool bArrivalPosPicking = false;
+				if (ImGui::InputInt(u8"도착 네비게이션 셀 인덱스", &m_iElevatorArrivalCellIndex))
+				{
+					m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalCellIndex(m_iElevatorArrivalCellIndex);
+				}
+				
 
 				ImGui::NewLine();
 
@@ -5333,6 +5348,15 @@ void CWindow_MapTool::Special_SelectTab()
 				}
 				else if (m_eElevatorType == (_uint)CEnvironment_SpecialObject::ELEVATORTYPE::ELEVATOR_TARGET)
 				{
+					static _bool bArrivalPosPicking = false;
+
+					ImGui::SeparatorText(u8"엘리베이터 도착지점 셋팅");
+
+					if (ImGui::InputFloat4(u8"도착 지점", &m_vElevatorArrivalPosition.x))
+					{
+						m_vecCreateSpecialObject[m_iSelectSpecialObjectIndex]->Set_ArrivalPosition(m_vElevatorArrivalPosition);
+					}
+
 					ImGui::Checkbox(u8"도착 지점 픽킹 모드", &bArrivalPosPicking);
 
 					if (bArrivalPosPicking == true)
@@ -6479,12 +6503,15 @@ void CWindow_MapTool::Navigation_SelectTab()
 
 					if (isSelected)
 						ImGui::SetItemDefaultFocus();
-				}
 
-				if (i == m_iCellIndex)
-					continue;
-				else
-					m_vecCells[i]->Set_Picking(false);
+					for (_int j = 0; j < iCellSize; ++j)
+					{
+						if(j == m_iCellIndex)
+							continue;
+
+						m_vecCells[j]->Set_Picking(false);
+					}
+				}
 
 
 			}

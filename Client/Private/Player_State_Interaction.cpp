@@ -25,8 +25,7 @@ void CPlayer_State_Interaction::Release(CPlayer* pActor)
 
 	CNavigation* pNavigation = pActor->Get_Navigation();
 
-	if(m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_GAMEPLAY)
-		pNavigation->Find_CurrentCellIndex(pActor->Get_Position_Vector());
+	
 
 	//pNavigation->Set_InteractMoveMode(false);
 

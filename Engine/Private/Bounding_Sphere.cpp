@@ -19,6 +19,11 @@ void CBounding_Sphere::Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ)
 	m_pSphere->Center = _float3(_sizeX, _sizeY, _sizeZ);
 }
 
+void CBounding_Sphere::Set_Radius(_float fRadius)
+{
+	m_pOriginalSphere->Radius = fRadius;
+}
+
 HRESULT CBounding_Sphere::Initialize(BOUNDING_DESC * pBoundingDesc)
 {
 	BOUNDING_SPHERE_DESC* pDesc = (BOUNDING_SPHERE_DESC*)pBoundingDesc;

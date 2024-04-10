@@ -31,6 +31,8 @@ public:
 	void Set_ColliderSize(_float _sizeX, _float _sizeY, _float _sizeZ);
 	void Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ);
 
+	void  Set_Radius(_float fRadius = 70.f);
+
 public:
 	virtual HRESULT Initialize_Prototype(TYPE eType);
 	virtual HRESULT Initialize(void* pArg);

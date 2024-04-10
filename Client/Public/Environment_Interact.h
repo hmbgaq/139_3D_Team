@@ -23,31 +23,31 @@ class CEnvironment_Interact final : public CGameObject
 {
 public:
 	enum INTERACT_TYPE { 
-							INTERACT_JUMP100, 
-							INTERACT_JUMP200, 
-							INTERACT_JUMP300, 
-							INTERACT_VAULT100, 
-							INTERACT_VAULT200, 
-							INTERACT_WAGONPUSH, 
-							INTERACT_WAGONJUMP, 
-							INTERACT_WAGONEVENT, 
-							INTEARCT_WAGONROPEJUMP, 
-							INTERACT_CLIMB100, 
-							INTERACT_CLIMB200, 
-							INTERACT_CLIMB300, 
-							INTERACT_CLIMB450,
-							INTERACT_SLIDE,
-							INTERACT_LEVER,
-							INTERACT_PLANK,
-							INTERACT_ROPECLIMB,
-							INTERACT_ROPEDOWN,
-							INTERACT_DOOROPEN,
-							INTERACT_LADDERUP,
-							INTERACT_WHIPSWING,
-							INTERACT_WHIPPULL,
-							INTERACT_ROTATIONVALVE,
-							INTERACT_NONE,
-							INTERACT_END 
+							INTERACT_JUMP100,			//0
+							INTERACT_JUMP200, 			//1
+							INTERACT_JUMP300, 			//2
+							INTERACT_VAULT100, 			//3
+							INTERACT_VAULT200, 			//4
+							INTERACT_WAGONPUSH, 		//5
+							INTERACT_WAGONJUMP, 		//6
+							INTERACT_WAGONEVENT, 		//7
+							INTEARCT_WAGONROPEJUMP, 	//8
+							INTERACT_CLIMB100, 			//9
+							INTERACT_CLIMB200, 			//10
+							INTERACT_CLIMB300, 			//11
+							INTERACT_CLIMB450,			//12
+							INTERACT_SLIDE,				//13
+							INTERACT_LEVER,				//14
+							INTERACT_PLANK,				//15
+							INTERACT_ROPECLIMB,			//16
+							INTERACT_ROPEDOWN,			//17
+							INTERACT_DOOROPEN,			//18
+							INTERACT_LADDERUP,			//19
+							INTERACT_WHIPSWING,			//20
+							INTERACT_WHIPPULL,			//21
+							INTERACT_ROTATIONVALVE,		//22
+							INTERACT_NONE,				//23
+							INTERACT_END 				//24
 					    };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
 
@@ -105,6 +105,8 @@ public:
 		_bool			bInteractMoveMode = false; //! 플레이어를 강제로 이동시켜야할 경우
 
 		vector<_int>	vecUpdateCellIndex; //! 활성화, 비활성화 시킬 셀들의 인덱스
+
+		_bool			bWeakNessUI = false;
 		
 
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
@@ -183,6 +185,7 @@ public: //! For Public
 	void								Set_Interact(_bool bInteract) { m_bInteract = bInteract;}
 	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex; }
 	void								Set_InteractGroupIndex(_int iGroupIndex) { m_tEnvironmentDesc.iInteractGroupIndex = iGroupIndex; }
+	
 
 
 	_bool								Is_OwnerInteract() { return m_bInteract;}
@@ -373,7 +376,7 @@ private:
 	_bool								m_bMove = true;
 	
 	_bool								m_bExit = false; 
-
+	_bool								m_bChainEnable = false;
 
 
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;

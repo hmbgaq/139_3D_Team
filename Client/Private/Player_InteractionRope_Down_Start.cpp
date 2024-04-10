@@ -10,7 +10,7 @@ void CPlayer_InteractionRope_Down_Start::Initialize(CPlayer* pActor)
 
 	pActor->Set_Interection(true);
 
-	//pActor->Set_Ladder_Count(6);
+	pActor->Set_Ladder_Count(6);
 
 }
 

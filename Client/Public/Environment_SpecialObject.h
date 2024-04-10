@@ -54,6 +54,7 @@ public:
 		_int		iSpecialGroupIndex = -1;
 		_int		iBloomMeshIndex = 0;
 
+		_bool			bLeverForElevator = false;
 
 		//!For Elevator
 		ELEVATORTYPE	eElevatorType = ELEVATOR_TYPEEND;
@@ -65,6 +66,7 @@ public:
 		_float			fElevatorMaxHeight = 10.f;
 		_float			fElevatorSpeed = 10.f;
 		_float			fElevatorRotationSpeed = XMConvertToRadians(90.f);
+		_int			iArrivalCellIndex = -1;
 
 		_float4			vArrivalPosition = {};
 	}ENVIRONMENT_SPECIALOBJECT_DESC;
@@ -130,8 +132,11 @@ public:
 public:
 	HRESULT				TrackLeverInit();
 	HRESULT				Find_SignalBox_AndLightObject();
+	HRESULT				Find_ElevatorObject();
 	void				TrackLeverFunction();
 	CUI*				Get_LeverWeakUI() { return m_pLeverWeaknessUI; }
+
+	void				Set_ForElevator(_bool bLeverForElevator) { m_tEnvironmentDesc.bLeverForElevator = bLeverForElevator;}
 
 public: //!For Elevator
 	HRESULT				ElevatorInit();
@@ -146,9 +151,12 @@ public: //!For Elevator
 	void				Set_ElevatorColliderSize(_float3 vElevatorColliderSize);
 	void				Set_ElevatorColliderCenter(_float3 vElevatorColliderCenter);
 
+	void				Set_ArrivalCellIndex(_uint iArrivalCellIndex) { m_tEnvironmentDesc.iArrivalCellIndex = iArrivalCellIndex;}
+
 	_bool				Get_ElevatorOn() { return m_bElevatorOn;}
 	void				Set_ElevatorOn(_bool bElevatorOn);
 	void				Set_ElevatorInit();
+	
 	
 	
 public:
@@ -192,8 +200,9 @@ private: //!For. Signal
 	_bool							m_bChangeLerp = false;
 
 private: //! For. TrackLever
-	CEnvironment_SpecialObject*		m_pSignalObject = { nullptr }; 
+	CEnvironment_SpecialObject*		m_pTargetObject = { nullptr }; 
 	CUI*							m_pLeverWeaknessUI = { nullptr }; 
+
 	CEnvironment_LightObject*		m_pLightObject = { nullptr };
 	_bool							m_bLeverOn = false;
 
@@ -204,7 +213,8 @@ private: //!For. Elevator
 	_bool							m_bElevatorOn = false;
 	_bool							m_bArrival = false;
 	CCollider*						m_pElevatorColliderCom = { nullptr };
-	
+	_int							m_iInitCellIndex = -1;
+	_bool							m_bFirstCollision = false;
 
 private:
 	HRESULT				Ready_Components();
