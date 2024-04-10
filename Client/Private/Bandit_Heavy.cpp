@@ -13,6 +13,7 @@
 #include "BanditHeavy_HitNormal_R_01.h"
 #include "BanditHeavy_HitHeavy_F_01.h"
 #include "BanditHeavy_DeathHeavy_F_01.h"
+#include "BanditHeavy_Taunt_01.h"
 
 
 CBandit_Heavy::CBandit_Heavy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -160,6 +161,11 @@ void CBandit_Heavy::Hitted_Front(Power ePower)
 void CBandit_Heavy::Hitted_Dead(Power ePower)
 {
 	m_pActor->Set_State(new CBanditHeavy_DeathHeavy_F_01());
+}
+
+void CBandit_Heavy::Set_Taunt()
+{
+	m_pActor->Set_State(new CBanditHeavy_Taunt_01());
 }
 
 HRESULT CBandit_Heavy::Ready_Components()

@@ -56,6 +56,19 @@ void CBody::Tick(_float fTimeDelta)
 
 	m_pColliderCom->Update(m_WorldMatrix);
 
+
+	//if (m_pGameInstance->Key_Down(DIK_O)) 
+	//{
+	//	m_fTest += 0.1f;
+	//}
+	//if (m_pGameInstance->Key_Down(DIK_P))
+	//{
+	//	m_fTest -= 0.1f;
+	//}
+	
+
+	
+
 	//if (m_pGameInstance->Key_Down(DIK_9)) 
 	//{
 	//	m_fRotateUpperY -= 0.1f;
@@ -372,7 +385,7 @@ void CBody::Update_ShootingReaction(_float fTimeDelta)
 void CBody::Reset_UpperAngle()//_float fPitch
 {
 	m_fRotateUpperX = { 0.f };
-	m_fRotateUpperY = { 3.0f }; //  + fPitch
+	m_fRotateUpperY = { 0.5f }; //  + fPitch
 
 	//m_fShootingReaction = { 0.f };
 	//m_fShootingReactionTarget = { 0.f };

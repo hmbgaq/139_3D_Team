@@ -27,6 +27,8 @@ public:
 	virtual void Hitted_Front(Power ePower) override;
 	virtual void Hitted_Dead(Power ePower)	override;
 
+	virtual void Set_Taunt() override;
+
 
 protected:
 	HRESULT Ready_Components();

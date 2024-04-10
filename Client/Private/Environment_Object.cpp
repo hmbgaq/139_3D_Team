@@ -2,6 +2,7 @@
 #include "..\Public\Environment_Object.h"
 
 #include "GameInstance.h"
+#include "UI_Weakness.h"
 
 CEnvironment_Object::CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)

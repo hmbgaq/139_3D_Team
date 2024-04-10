@@ -9,7 +9,7 @@
 #include "Cell.h"
 #include "SMath.h"
 #include "Player.h"
-///#include "UI_Weakness.h"
+#include "UI_Weakness.h"
 
 CEnvironment_SpecialObject::CEnvironment_SpecialObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -72,6 +72,7 @@ HRESULT CEnvironment_SpecialObject::Initialize(void* pArg)
 	
 	m_pSnowMountainWagon = CData_Manager::GetInstance()->Get_SnowMountainWagon();
 
+	m_tEnvironmentDesc.vArrivalPosition.w = 1.f;
 	return S_OK;
 }
 
@@ -157,13 +158,13 @@ HRESULT CEnvironment_SpecialObject::Render()
 		if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
 		{
 			if (m_bLeverOn == true)
-			{
-		
 				m_pShaderCom->Begin(m_iSignalMeshShaderPass);
-		 
-			}
 			else
 				m_pShaderCom->Begin(8);
+		}
+		else if(m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
+		{
+			m_pShaderCom->Begin(0);
 		}
 		else
 		{
@@ -305,27 +306,43 @@ void CEnvironment_SpecialObject::Set_SignalChange(_bool bChange)
 HRESULT CEnvironment_SpecialObject::TrackLeverInit()
 {
 	m_pLeverWeaknessUI = dynamic_cast<CUI*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_STATIC, TEXT("Layer_UI"), TEXT("Prototype_GameObject_UI_Weakness")));
-	
 
 	m_pLeverWeaknessUI->Set_Active(true);
+
+	dynamic_cast<CUI_Weakness*>(m_pLeverWeaknessUI)->Set_ColliderRadius(3.f);
 
 	if(nullptr == m_pLeverWeaknessUI)
 		return E_FAIL;
 
-	m_pLeverWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 1.f, 0.f));
+	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+
+	m_pLeverWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 0.f, 0.f));
 
 	if (nullptr != m_pLightObject)
 		m_pLightObject->Set_Enable(false);
 
-	m_pTransformCom->Set_WorldMatrix(m_tEnvironmentDesc.WorldMatrix);
+	
 
 	m_bLeverOn = false;
 	m_bSignalChange = false;
 
 	if (m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
-		return Find_SignalBox_AndLightObject();
+		if (m_tEnvironmentDesc.bLeverForElevator == true)
+		{
+			return Find_ElevatorObject();
+		}
+		else
+		{
+			return Find_SignalBox_AndLightObject();
+		}
 	}
+	
+
+	
+
+	
+
 
 	return S_OK;
 
@@ -351,7 +368,7 @@ HRESULT CEnvironment_SpecialObject::Find_SignalBox_AndLightObject()
 			{
 				if (pSpecialObject->Get_SpecialType() == CEnvironment_SpecialObject::SPECIAL_SIGNAL && pSpecialObject->Get_SpecialGroupIndex() == m_tEnvironmentDesc.iSpecialGroupIndex)
 				{
-					m_pSignalObject = pSpecialObject;
+					m_pTargetObject = pSpecialObject;
 				}
 				else 
 					continue;
@@ -379,32 +396,119 @@ HRESULT CEnvironment_SpecialObject::Find_SignalBox_AndLightObject()
 	return S_OK;
 }
 
+HRESULT CEnvironment_SpecialObject::Find_ElevatorObject()
+{
+	list<CGameObject*> BackGroundObjects = *m_pGameInstance->Get_GameObjects(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround");
+
+	if (true == BackGroundObjects.empty())
+		return E_FAIL;
+
+	for (auto& iter : BackGroundObjects)
+	{
+		if (typeid(*iter) == typeid(CEnvironment_SpecialObject))
+		{
+			CEnvironment_SpecialObject* pSpecialObject = dynamic_cast<CEnvironment_SpecialObject*>(iter);
+
+			if (pSpecialObject == nullptr)
+				return E_FAIL;
+			else
+			{
+				if (pSpecialObject->Get_SpecialType() == CEnvironment_SpecialObject::SPECIAL_ELEVATOR && pSpecialObject->Get_SpecialGroupIndex() == m_tEnvironmentDesc.iSpecialGroupIndex)
+				{
+					m_pTargetObject = pSpecialObject;
+				}
+				else
+					continue;
+			}
+		}
+		else if (typeid(*iter) == typeid(CEnvironment_LightObject))
+		{
+			CEnvironment_LightObject* pLightObject = dynamic_cast<CEnvironment_LightObject*>(iter);
+
+			if (pLightObject == nullptr)
+				return E_FAIL;
+			else
+			{
+				if (pLightObject->Get_SpecialGroupIndex() == m_tEnvironmentDesc.iSpecialGroupIndex)
+				{
+					m_pLightObject = pLightObject;
+				}
+				else
+					continue;
+			}
+		}
+	}
+
+	return S_OK;
+}
+
 void CEnvironment_SpecialObject::TrackLeverFunction()
 {
 	if (m_pLeverWeaknessUI != nullptr)
 	{
-		if (m_pLeverWeaknessUI->Get_Enable() == false)
+		if (m_pLeverWeaknessUI->Get_Enable() == false) 
 		{
-			if(m_pSignalObject != nullptr)
-				m_pSignalObject->Set_SignalChange(true);
+			if (m_pTargetObject != nullptr)
+			{
+				if (m_tEnvironmentDesc.bLeverForElevator == true)
+				{	
+					if (m_pTargetObject->Get_ElevatorOn() == false)
+					{
+						m_pTargetObject->Set_ElevatorOn(true);
+						m_bLeverOn = true;
 
-			m_pLeverWeaknessUI->Set_Dead(true);
-			m_pLeverWeaknessUI = nullptr;
+						if(m_pLightObject != nullptr)
+							m_pLightObject->Set_Enable(true);
+					}
+					else
+					{
+						m_pLeverWeaknessUI->Set_Enable(true);
 
-			if (nullptr != m_pLightObject)
-				m_pLightObject->Set_Enable(true);
+						if (m_pLightObject != nullptr)
+							m_pLightObject->Set_Enable(false);
 
+					}
+					
+				}
+				else if(m_pSnowMountainWagon != nullptr)
+				{
+					m_pTargetObject->Set_SignalChange(true);
+					m_pLeverWeaknessUI->Set_Dead(true);
+					m_pLeverWeaknessUI = nullptr;
+
+					if (nullptr != m_pLightObject)
+						m_pLightObject->Set_Enable(true);
+
+					m_pSnowMountainWagon->Set_SplineCheck(m_tEnvironmentDesc.iSpecialGroupIndex, true);
+					m_bLeverOn = true;
+				}
+			}
 
 			
-			m_bLeverOn = true;
-			m_pSnowMountainWagon->Set_SplineCheck(m_tEnvironmentDesc.iSpecialGroupIndex, true);
 		}
 		else
 		{
 			m_pLeverWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 1.f, 0.f));
 		}
 	}
-	
+
+	if (m_tEnvironmentDesc.bOffset == true)
+	{
+		Move_ForOffset();
+	}
+}
+
+void CEnvironment_SpecialObject::Move_ForOffset()
+{
+		if (m_pTargetObject == nullptr)
+			return;
+
+		_float4 vOwnerPosition = m_pTargetObject->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+
+		_vector vCalcPosition = XMLoadFloat4(&vOwnerPosition) + XMLoadFloat4(&m_tEnvironmentDesc.vOffset);
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCalcPosition);
+
 }
 
 
@@ -415,13 +519,16 @@ HRESULT CEnvironment_SpecialObject::ElevatorInit()
 		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
 		Safe_AddRef(m_pPlayer);
 		m_bFindPlayer = true;
+		m_bElevatorOn = false;
 	}
 	
-	m_vInitPosition = Get_Position_Vector();
+	
 	
 	Set_Speed(m_tEnvironmentDesc.fElevatorSpeed);
 	Set_RotationSpeed(m_tEnvironmentDesc.fElevatorRotationSpeed);
-
+	
+	m_vInitPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
+	m_iInitCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
 	return S_OK;
 }
 
@@ -440,7 +547,12 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 		if (true == m_pElevatorColliderCom->Is_Collision(m_pPlayer->Get_Collider())) //! 충돌 중이라면 플레이어  y값 고정
 		{
 			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(true);
-
+			
+			if (m_bFirstCollision == false)
+			{
+				m_bFirstCollision = true;
+				m_iInitCellIndex = m_pPlayer->Get_Navigation()->Get_CurrentCellIndex();
+			}
 			
 
 			switch (m_tEnvironmentDesc.eElevatorType)
@@ -453,11 +565,13 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 					}
 					else
 					{
-						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
 						m_bArrival = true;
 						m_bElevatorOn = false;
-						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+						m_pPlayer->Set_UseGravity(true);
+						m_bFirstCollision = false;
+						
 					}
 
 					break;
@@ -471,11 +585,12 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 					}
 					else
 					{
-						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
 						m_bArrival = true;
 						m_bElevatorOn = false;
-						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+						m_pPlayer->Set_UseGravity(true);
+						m_bFirstCollision = false;
 					}
 
 					break;
@@ -489,14 +604,14 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 					}
 					else
 					{
-						_float4 vSwapPosition = m_tEnvironmentDesc.vArrivalPosition;
-						m_tEnvironmentDesc.vArrivalPosition = m_vInitPosition;
-						m_vInitPosition = vSwapPosition;
+						
 						m_bArrival = true;
 						
 						m_bElevatorOn = false;
-						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
+						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+						m_pPlayer->Set_UseGravity(true);
+						m_bFirstCollision = false;
 					}
 
 					break;
@@ -536,18 +651,8 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 		else
 		{
 			m_bElevatorOn = false;
-			m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
-			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 		}
-
-
-		
-
-		
 	}
-
-	
-	
 
 }
 
@@ -563,6 +668,9 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 				{
 					m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
 					m_bArrival = false;
+					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
+					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
+					m_iInitCellIndex = iSwapCellIndex;
 				}
 				
 
@@ -575,6 +683,9 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 				{
 					m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
 					m_bArrival = false;
+					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
+					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
+					m_iInitCellIndex = iSwapCellIndex;
 				}
 
 				break;
@@ -588,7 +699,13 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 					m_tEnvironmentDesc.vArrivalPosition = m_vInitPosition;
 					m_vInitPosition = vSwapPosition;
 					m_bArrival = false;
+
+					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
+					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
+					m_iInitCellIndex = iSwapCellIndex;
 				}
+				
+				
 				
 			}
 		
@@ -596,6 +713,7 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 	}
 
 	m_bElevatorOn = bElevatorOn;
+
 	
 }
 
@@ -768,6 +886,7 @@ HRESULT CEnvironment_SpecialObject::Bind_ShaderResources()
 	if(FAILED(m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float))))
 		return E_FAIL;
 
+	
 	if (nullptr != m_pDiffuseTexture)
 	{
 		if (FAILED(m_pDiffuseTexture->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse")))
@@ -785,6 +904,7 @@ HRESULT CEnvironment_SpecialObject::Bind_ShaderResources()
 		if (FAILED(m_pNoiseTexture->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture")))
 			return E_FAIL;
 	}
+	
 
 	if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_SIGNAL)
 	{

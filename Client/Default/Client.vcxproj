@@ -296,6 +296,7 @@
     <ClInclude Include="..\Public\BanditHeavy_Run_FR.h" />
     <ClInclude Include="..\Public\BanditHeavy_StrongKick.h" />
     <ClInclude Include="..\Public\BanditHeavy_StrongSlamDouble.h" />
+    <ClInclude Include="..\Public\BanditHeavy_Taunt_01.h" />
     <ClInclude Include="..\Public\BanditHeavy_Walk_B.h" />
     <ClInclude Include="..\Public\BanditHeavy_Walk_BL.h" />
     <ClInclude Include="..\Public\BanditHeavy_Walk_BR.h" />
@@ -324,6 +325,7 @@
     <ClInclude Include="..\Public\Body_Crane.h" />
     <ClInclude Include="..\Public\Cargo_Crane.h" />
     <ClInclude Include="..\Public\Explosion_Infected_D.h" />
+    <ClInclude Include="..\Public\Gimic.h" />
     <ClInclude Include="..\Public\HitPoint_Crane.h" />
     <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
@@ -1239,6 +1241,7 @@
     <ClInclude Include="..\Public\Tank_Stun_Start.h" />
     <ClInclude Include="..\Public\Tank_Taunt_01.h" />
     <ClInclude Include="..\Public\Tank_Taunt_02.h" />
+    <ClInclude Include="..\Public\Tank_Taunt_03.h" />
     <ClInclude Include="..\Public\Tank_Turn_L180.h" />
     <ClInclude Include="..\Public\Tank_Turn_L90.h" />
     <ClInclude Include="..\Public\Tank_Turn_R180.h" />
@@ -1512,6 +1515,7 @@
     <ClCompile Include="..\Private\BanditHeavy_Run_FR.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_StrongKick.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_StrongSlamDouble.cpp" />
+    <ClCompile Include="..\Private\BanditHeavy_Taunt_01.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Walk_B.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Walk_BL.cpp" />
     <ClCompile Include="..\Private\BanditHeavy_Walk_BR.cpp" />
@@ -2288,6 +2292,7 @@
     <ClCompile Include="..\Private\Tank_Stun_Get_Up.cpp" />
     <ClCompile Include="..\Private\Tank_Stun_Loop.cpp" />
     <ClCompile Include="..\Private\Tank_Stun_Start.cpp" />
+    <ClCompile Include="..\Private\Tank_Taunt_03.cpp" />
     <ClCompile Include="..\Private\Tank_VortexGrenade_Loop.cpp" />
     <ClCompile Include="..\Private\Tank_VortexGrenade_Stop.cpp" />
     <ClCompile Include="..\Private\Tank_Walk_B.cpp" />

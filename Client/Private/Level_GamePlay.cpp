@@ -50,7 +50,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
@@ -58,6 +59,8 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
+	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+	//pPlayer->Set_InitPosition(_float3(250.66f, 0.f, 2.38f));
 
 	return S_OK;
 }
@@ -387,13 +390,32 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
  				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
  			}
  		}
+
  
  		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
  		Desc.WorldMatrix = WorldMatrix;
+
+
+		string strJsonObjectTag = BasicJson[i]["ObjectTag"];
+
+		if ("Prototype_Component_Model_TNTCrate" == strJsonModelTag || "TNTCrate" == strJsonObjectTag)
+		{
+			CGameObject* pObject =  m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_DestructableProps_TNTCrate");
+			pObject->Set_WorldMatrix(WorldMatrix);
+		}
+		else if ("Prototype_Component_Model_Crane" == strJsonModelTag || "Crane" == strJsonObjectTag)
+		{
+			CGameObject* pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Crane");
+			pObject->Set_WorldMatrix(WorldMatrix);
+		}
+		else 
+		{
+			CEnvironment_Object* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+
+		}
  
- 		CEnvironment_Object* pObject = { nullptr };
- 
- 		pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
  	}
  
  

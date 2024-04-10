@@ -140,7 +140,7 @@ protected:
 	_float3		m_vMovePos = { 0.f, 0.f, 0.f };
 
 	_float		m_fRotateUpperX = { 0.0f };
-	_float		m_fRotateUpperY = { 3.0f }; //2.6f
+	_float		m_fRotateUpperY = { 0.5f }; //2.6f
 
 	_float		m_fShootingReaction = { 0.f };
 	_float		m_fShootingReactionTarget = { 0.f };

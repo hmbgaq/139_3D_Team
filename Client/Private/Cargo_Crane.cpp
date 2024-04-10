@@ -101,7 +101,7 @@ void CCargo_Crane::Push(CCollider* other)
 
 void CCargo_Crane::OnCollisionEnter(CCollider* other)
 {
-	Push(other);
+	//Push(other);
 }
 
 void CCargo_Crane::OnCollisionStay(CCollider* other)

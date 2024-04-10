@@ -326,6 +326,7 @@ private: //! For PriviewObject //미리보기용 오브젝트
 	CEnvironment_Interact*			m_pPreviewInteract = {}; //! 상호작용용 미리보기 오브젝트
 	CEnvironment_LightObject*		m_pPreviewLightObject = {};
 	CEnvironment_SpecialObject*		m_pPreviewSpecialObject = { nullptr };
+	
 	_bool							m_bChange = false;
 	
 private: //!For.Interact //! 상호작용
@@ -352,6 +353,10 @@ private: //!For.Interact //! 상호작용
 
 	_int							m_iInteractPlayAnimIndex = 0;
 	_float3							m_vInteractRootMoveRate = { 1.f, 1.f, 1.f };
+	_float3							m_vInteractReverseRootMoveRate = { 1.f, 1.f, 1.f};
+	_int							m_iInteractLadderCount = 4;
+	_int							m_iInteractReverseLadderCount = 4;
+	
 	_bool							m_bInteractUseGravity = false;
 	_bool							m_bInteractUseSpline = false;
 	_bool							m_bInteractUseGroup = false;
@@ -396,6 +401,7 @@ private:  //!For.Special 스페셜오브젝트
 	_int							m_eSpecialType = 0; //! 이넘 캐스팅용;
 	_int							m_iSpecialGroupIndex = 0;
 	_int							m_iSpecialBloonMeshIndex = 0;
+	
 
 private: //!For. CreateSpecialObject
 	vector<CEnvironment_SpecialObject*> m_vecCreateSpecialObject;
@@ -411,7 +417,13 @@ private: //!For. CreateSpecialObject
 	_float								m_fElevatorMaxHeight = 10.f;
 	_float								m_fElevatorSpeed = 10.f;
 	_float								m_fElevatorRotationSpeed = 90.f;
+	_int								m_iElevatorArrivalCellIndex = 0;
+	_bool								m_bLeverForElevator = false;
+	_bool								m_bLeverForOffset = false;
 	
+	CEnvironment_SpecialObject*			m_pTargetSpecialObject = nullptr;
+
+	_float4								m_vLeverOffset = {};
 private: //!For. CreateLightObject
 	vector<CEnvironment_LightObject*>	m_vecCreateLightObject;
 	vector<string>						m_vecCreateLightObjectTag = {};

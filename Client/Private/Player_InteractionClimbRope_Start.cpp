@@ -9,7 +9,8 @@ void CPlayer_InteractionClimbRope_Start::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	pActor->Set_Ladder_Count(6);
+
+	//pActor->Set_Ladder_Count(6);
 
 	pActor->Set_Interection(true);
 }
