@@ -250,7 +250,9 @@ private:
 	_int	m_iUseGravity_Particle		= { 0 };
 
 	_float	m_fGravity_Particle = { -9.8f };		// 중력 가속도
-	
+	_float	m_fGravity_X_Particle = { 0.f };		// 중력 가속도 X
+	_float	m_fGravity_Z_Particle = { 0.f };		// 중력 가속도 Z
+	 
 	//_float m_fFriction_Particle = { 0.1f };		// 마찰 계수
 	_float	m_vFrictionLerp_Pos_Particle[2] = { 0.f, 0.f };		// 어디서부터 러프를 시작하고, 끝낼건지
 	_float	m_vStartEnd_Friction_Particle[2] = { 0.1f, 0.1f };
@@ -442,6 +444,9 @@ private:
 	_int	m_iUseGravity_Mesh		= { 0 };
 
 	_float	m_fGravity_Mesh				= { -9.8f };	// 중력 가속도
+	_float	m_fGravity_X_Mesh = { 0.f };		// 중력 가속도 X
+	_float	m_fGravity_Z_Mesh = { 0.f };		// 중력 가속도 Z
+
 	_float	m_fMinMaxFriction_Mesh[2]	= { 0.1f, 0.1f };		// 마찰 계수
 	_float	m_fSleepThreshold_Mesh	= { 0.05f };	// 슬립 한계점(1이하로)
 

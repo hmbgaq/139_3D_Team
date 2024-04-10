@@ -162,6 +162,7 @@ public:
 #endif // _DEBUG
 	_int								Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
 	void								Set_AnimationIndex(_uint iAnimIndex);
+	void								Set_Animation(_uint iAnimIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL, _uint iTargetKeyFrameIndex = 0);
 	void								Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex; }
 
 

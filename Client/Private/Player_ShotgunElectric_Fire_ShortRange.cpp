@@ -1,5 +1,6 @@
 #include "..\Public\Player_ShotgunElectric_Fire_ShortRange.h"
 #include "GameInstance.h"
+#include "Data_Manager.h"
 
 void CPlayer_ShotgunElectric_Fire_ShortRange::Initialize(CPlayer* pActor)
 {
@@ -36,7 +37,20 @@ CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor
 	else if (false == m_bFlags[1]) 
 	{
 		pActor->Aim_Walk(fTimeDelta);
-		m_bFlags[1] = pActor->Is_UpperAnimation_End();
+		m_bFlags[1] = pActor->Is_Upper_Inputable_Front(12);
+	}
+	else if (false == m_bFlags[2])
+	{
+		pActor->Aim_Walk(fTimeDelta);
+
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::SHOTGUN_UPGRADE))
+		{
+			CState<CPlayer>* pState = Shotgun(pActor, fTimeDelta, -1);
+			if (pState)	return pState;
+		}
+
+		m_bFlags[2] = pActor->Is_UpperAnimation_End();
 	}
 	else 
 	{

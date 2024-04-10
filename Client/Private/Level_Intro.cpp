@@ -61,10 +61,10 @@ HRESULT CLevel_Intro::Initialize()
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 
-    FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+    //FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
 
-    FAILED_CHECK(Ready_Shader());
+    //FAILED_CHECK(Ready_Shader());
 
     return S_OK;
 }
@@ -93,6 +93,26 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
+
+
+
+    if (m_pGameInstance->Key_Down(DIK_N))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pMonster = { nullptr };
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+        pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+        pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+        pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
+        
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
+        pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+    }
 }
 
 HRESULT CLevel_Intro::Render()
@@ -116,7 +136,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     }
 
     _bool bSpawnSniper = false;
-    _bool bSpawnTanker = true;
+    _bool bSpawnTanker = false;
     _bool bSpawnInfected = false;
     _bool bSpawnZenuGiant = false;
     
@@ -258,10 +278,14 @@ HRESULT CLevel_Intro::Ready_Layer_Camera(const wstring& strLayerTag)
 HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 {
 
-	// 이펙트 테스트 (삭제처리 생각안함)
+	// 이펙트 테스트 (삭제처리 생각안함 파티클 누수 6개면 정상)
     EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));
     EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03_Solid.json", _float3(12.f, 0.f, 5.f));
     EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_04.json", _float3(19.f, 0.f, 5.f));
+
+
+    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05.json", _float3(5.f, 0.f, 10.f));
+    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05_Big.json", _float3(12.f, 0.f, 10.f));
 
 
     return S_OK;

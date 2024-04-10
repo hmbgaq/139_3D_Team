@@ -15,14 +15,20 @@ class CUI abstract : public CGameObject
 public:
 	enum DISTORTIONKIND { MASK, NOISE, DISTORTION_END };
 	enum UI_KIND { NORMAL, TEXT, KIND_END };
-	enum UI_LEVEL { LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, STAGE_END };
+	enum UI_LEVEL { LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL_END };
 
 public:
 	void		Set_UILevel(_uint eLevel) { m_eUI_Level = (UI_LEVEL)eLevel; }
+	void		UILevelUP() 
+	{ 
+		if (m_eUI_Level < (UI_LEVEL)(LEVEL_END - LEVEL1) && m_eUI_Level >= LEVEL0)
+			m_eUI_Level = (UI_LEVEL)(m_eUI_Level + (UI_LEVEL)LEVEL1);
+	}
 	UI_LEVEL	Get_UILevel() { return m_eUI_Level; }
 
 protected:
 	UI_LEVEL	m_eUI_Level = LEVEL0;
+	UI_LEVEL	m_eUI_PreLevel = LEVEL0;
 
 public:
 	// 키프레임 구조체
@@ -253,6 +259,10 @@ public: /* ============================== Get / Set ============================
 	void			Set_Active(_bool bActive) { m_bActive = bActive; }
 	_bool			Get_Active() { return m_bActive; }
 
+	_int			Get_AnimCurrentIndex() { return iFrameIndex; }
+	_bool			Get_AnimTrigger() { return m_bTrigger; }
+	void			Set_AnimTrigger(_bool bTrigger) { m_bTrigger = bTrigger; }
+
 	/* Debug */
 	void			Set_Tool(_bool bTool) { m_bTool = bTool; }
 	_bool			m_bTool = false;
@@ -402,6 +412,8 @@ public: /* =========================== Animation ============================== 
 	void			Set_AnimationKeyframe(UIKEYFRAME tKeyframe);
 	// 애니메이션 값
 	std::vector<UIKEYFRAME> m_vecAnimation = {};
+	std::vector<UIKEYFRAME> m_vecChangAnimation = {};
+
 	_int			m_iTextureNum = 0;
 	_int			m_iLoopAnimIndex = 0;
 

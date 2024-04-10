@@ -72,6 +72,9 @@ void CSon_RotationProjectile::Priority_Tick(_float fTimeDelta)
 
 void CSon_RotationProjectile::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	m_pTransformCom->RotationXaxis(fTimeDelta);

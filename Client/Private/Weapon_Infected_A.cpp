@@ -6,6 +6,7 @@
 #include "Effect_Manager.h"
 #include "Effect_Trail.h"
 
+
 CWeapon_Infected_A::CWeapon_Infected_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon_Infected(pDevice, pContext, strPrototypeTag)
 {
@@ -44,11 +45,13 @@ void CWeapon_Infected_A::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	//! 유정: 트레일 테스트
+
 	if (nullptr != m_pTrail)
 	{
+		//! 유정: 트레일 테스트
 		m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
 	}
+
 }
 
 HRESULT CWeapon_Infected_A::Render()
@@ -57,6 +60,7 @@ HRESULT CWeapon_Infected_A::Render()
 
 	return S_OK;
 }
+
 
 HRESULT CWeapon_Infected_A::Ready_Components()
 {
@@ -77,7 +81,8 @@ HRESULT CWeapon_Infected_A::Ready_Components()
 
 
 	//! 유정: 트레일 테스트
-	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json", this);
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, "Test_Trail.json");
+	m_pTrail->Set_Play(false);		// 시작은 끄기
 
 	return S_OK;
 }
@@ -124,7 +129,6 @@ void CWeapon_Infected_A::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTrail);
 }
 
 

@@ -53,6 +53,51 @@ void CCharacter_Client::Tick(_float fTimeDelta)
 void CCharacter_Client::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
+	Check_Frustum();
+	if (true == m_bIsInFrustum)
+	{
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), ); //m_bIsInFrustum
+
+		if (false == m_bRootMoveEnd)
+		{
+			_float3 vBodyMovePos = m_pBody->Get_MovePos();
+
+			_float fDiff = abs(vBodyMovePos.x) + abs(vBodyMovePos.y) + abs(vBodyMovePos.z);
+
+			if (0.0001f < fDiff)
+			{
+				m_vAddRootPosition = vBodyMovePos;
+
+				//_float3 vResult = vBodyMovePos;
+				m_vAddRootPosition.x *= m_vRootMoveRate.x;
+				m_vAddRootPosition.y *= m_vRootMoveRate.y;
+				m_vAddRootPosition.z *= m_vRootMoveRate.z;
+				//m_pTransformCom->Add_RootBone_Position(vResult, m_pNavigationCom);
+				m_pTransformCom->Add_RootBone_Position(m_vAddRootPosition, fTimeDelta, m_pNavigationCom);
+			}
+			else
+			{
+				m_vAddRootPosition = {};
+			}
+		}
+
+	}
+	else
+	{
+		_uint i = 0;
+	}
+
+	m_pRigidBody->Late_Tick(fTimeDelta);
+
+#ifdef _DEBUG
+	//m_pGameInstance->Add_DebugRender(m_pNavigationCom);
+#endif	
+
+	Set_WeaknessPos();
 }
 
 HRESULT CCharacter_Client::Render()

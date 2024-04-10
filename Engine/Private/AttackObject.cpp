@@ -52,10 +52,35 @@ HRESULT CAttackObject::Render()
 
 CCharacter* CAttackObject::Get_Target_Character(CCollider* other)
 {
-	CGameObject* pObjectOwner = other->Get_Owner()->Get_Object_Owner();
-	if (nullptr == other || false == other->Get_Enable()
-		|| nullptr == other->Get_Owner() || false == other->Get_Owner()->Get_Enable() || true == other->Get_Owner()->Is_Dead()
-		|| nullptr == pObjectOwner || false == pObjectOwner->Get_Enable() || true == pObjectOwner->Is_Dead())
+	_bool bEnable = true;
+	_bool bIsDead = false;
+	_bool bResult = false;
+
+	if (nullptr == other)
+		return nullptr;
+
+	bEnable = other->Get_Enable();
+	if (false == bEnable)
+		return nullptr;
+	
+	CGameObject* pOwner = other->Get_Owner();
+	if (nullptr == pOwner)
+		return nullptr;
+
+	bEnable = pOwner->Get_Enable();
+	bIsDead = pOwner->Is_Dead();
+	bResult = (false == bEnable || true == bIsDead);
+	if (true == bResult)
+		return nullptr;
+
+	CGameObject* pObjectOwner = pOwner->Get_Object_Owner();
+	if (nullptr == pObjectOwner)
+		return nullptr;
+
+	bEnable = pObjectOwner->Get_Enable();
+	bIsDead = pObjectOwner->Is_Dead();
+	bResult = (false == bEnable || true == bIsDead);
+	if (true == bResult)
 		return nullptr;
 
 	CCharacter* pTarget_Character = dynamic_cast<CCharacter*>(pObjectOwner);

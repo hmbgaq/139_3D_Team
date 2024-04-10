@@ -118,6 +118,9 @@ void CTank::Priority_Tick(_float fTimeDelta)
 
 void CTank::Tick(_float fTimeDelta)
 {
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+
 	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
 		return;
 
@@ -139,9 +142,6 @@ void CTank::Tick(_float fTimeDelta)
 	{
 		Search_Target(10.f);
 	}
-
-	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
-	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
 
 	//if (nullptr == m_pTarget && m_pGameInstance->Key_Pressing(DIK_V))
 	//{

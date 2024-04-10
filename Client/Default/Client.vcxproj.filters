@@ -1633,12 +1633,6 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option\99. Background">
       <UniqueIdentifier>{2f928b10-3a53-4ae8-89af-264499fde245}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button">
-      <UniqueIdentifier>{58a8a07c-7a12-4c50-81ea-72c8e472342f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button\0. SelectBox">
-      <UniqueIdentifier>{3c259b30-8ade-415f-a8a2-f5c586e20a64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\1. TitleButton">
       <UniqueIdentifier>{2d550b6e-9b41-4ec2-8915-8349a4154dc5}</UniqueIdentifier>
     </Filter>
@@ -3987,6 +3981,27 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\1. Parts">
       <UniqueIdentifier>{f7dc8737-b5b3-45ac-9bf1-1a3d9f086c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon\Projectile">
+      <UniqueIdentifier>{e06b24fb-8f39-4a37-acc7-9a7116730f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\04. SelectUI">
+      <UniqueIdentifier>{ae5162ca-d990-4819-bc69-298197f6d565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\01. WeaponFrame">
+      <UniqueIdentifier>{7c6ff70a-8bb9-4713-8820-4cb353d13404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\00. Button">
+      <UniqueIdentifier>{58a8a07c-7a12-4c50-81ea-72c8e472342f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\00. Button\0. SelectBox">
+      <UniqueIdentifier>{3c259b30-8ade-415f-a8a2-f5c586e20a64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\02. WeaponIcon">
+      <UniqueIdentifier>{54a4314b-2503-4d70-940d-19eade7aa2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\03. WeaponActiveGuige">
+      <UniqueIdentifier>{83406e86-50eb-4381-851c-fc20fe69f0c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -6898,7 +6913,7 @@
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\0. SelectBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Collection_Button.h">
-      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button</Filter>
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\00. Button</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Option_SubTitle_Button.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\2. SubTitleButton</Filter>
@@ -7835,6 +7850,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_SkillWindow_Button.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\06. SkillWindowButton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Explosion_Infected_D.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_WeaponFrame.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\01. WeaponFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_WeaponIcon.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\02. WeaponIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SelectIcon.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\00. Button\0. SelectBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_WeaponActiveGuige.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\03. WeaponActiveGuige</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -10328,7 +10358,7 @@
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\0. SelectBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Collection_Button.cpp">
-      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\0. Button</Filter>
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\00. Button</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Option_SubTitle_Button.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\2. SubTitleButton</Filter>
@@ -11154,6 +11184,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SkillWindow_Button.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\06. SkillWindowButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion_Infected_D.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\1. Child\3. Waster\Weapon\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_WeaponFrame.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\01. WeaponFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_WeaponIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\02. WeaponIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SelectIcon.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\00. Button\0. SelectBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_WeaponActiveGuige.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\03. CollectionWindow\03. WeaponActiveGuige</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

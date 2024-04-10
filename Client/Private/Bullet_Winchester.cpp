@@ -41,7 +41,7 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 10.f;
+	m_fDamage = 100.f;
 
 	EFFECT_MANAGER->Play_Effect_StaticPivot("Player/Revolver/", "Revolver_13_Tail_01.json", this, Get_Transform()->Get_WorldFloat4x4());
 
@@ -125,16 +125,32 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 		m_fForce = 0.f;
 		if (nullptr != pTarget_Character)
 		{
-			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
+			_float fDamage = m_fDamage;
+
+			CData_Manager* pDataManager = CData_Manager::GetInstance();
+			if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::RIFLE_UPGRADE))
+			{
+				fDamage += 5.f;
+			}
+
+			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+			_vector vPlayerPos = pPlayer->Get_Position_Vector();
 			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-			pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+			pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+
+
+			_float3 vPos = m_pTransformCom->Get_Position();
+			_float3 vTargetPos = pPlayer->Get_Position();
+			vTargetPos.y = vPos.y;
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos, true, vTargetPos);
+
+			//EFFECT_MANAGER->Play_Effect("Hit/","Hit_Distortion.json", m_pTransformCom->Get_Position());
 		}
 		
 
-		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit/","Hit_Distortion.json", m_pTransformCom->Get_Position());
 
+		
 	}
 
 	m_pTrail->Set_Play(false);

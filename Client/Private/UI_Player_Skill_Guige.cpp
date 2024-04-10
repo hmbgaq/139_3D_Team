@@ -68,6 +68,8 @@ void CUI_Player_Skill_Guige::Tick(_float fTimeDelta)
 		m_fCoolTime -= fTimeDelta; // 감소시킬수록 게이지가 증가됨 (텍스처가 씌워짐)
 		m_iShaderNum = 5; // 원형 게이지 pass
 
+		Check_GuigeActive(fTimeDelta); // 스킬 해금 Check
+
 		if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
 		{
 			// 활성화
@@ -87,8 +89,11 @@ void CUI_Player_Skill_Guige::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive == true)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-			return;
+		if (m_bGuigeOff == true)
+		{
+			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+				return;
+		}
 	}
 }
 
@@ -96,17 +101,20 @@ HRESULT CUI_Player_Skill_Guige::Render()
 {
 	if (m_bActive == true)
 	{
-		if (FAILED(Bind_ShaderResources()))
-			return E_FAIL;
+		if (m_bGuigeOff == true)
+		{
+			if (FAILED(Bind_ShaderResources()))
+				return E_FAIL;
 
-		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(5); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+			//! 이 셰이더에 0번째 패스로 그릴거야.
+			m_pShaderCom->Begin(5); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-		m_pVIBufferCom->Bind_VIBuffers();
+			//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+			m_pVIBufferCom->Bind_VIBuffers();
 
-		//! 바인딩된 정점, 인덱스를 그려
-		m_pVIBufferCom->Render();
+			//! 바인딩된 정점, 인덱스를 그려
+			m_pVIBufferCom->Render();
+		}
 	}
 	return S_OK;
 }
@@ -233,6 +241,77 @@ void CUI_Player_Skill_Guige::Check_SkillActive(_float fTimeDelta, SKILLSTATE eSt
 
 }
 
+void CUI_Player_Skill_Guige::Check_GuigeActive(_float fTimeDelta)
+{
+	/* Left */
+	if (m_tUIInfo.strUIName == "LeftHUD_Top" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_LeftHUD_SkillState("LeftHUD_Top") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+		
+
+	if (m_tUIInfo.strUIName == "LeftHUD_Right" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_LeftHUD_SkillState("LeftHUD_Right") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+
+	if (m_tUIInfo.strUIName == "LeftHUD_Bottom" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_LeftHUD_SkillState("LeftHUD_Bottom") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+
+	if (m_tUIInfo.strUIName == "LeftHUD_Left" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_LeftHUD_SkillState("LeftHUD_Left") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+
+	/* Right */
+	if (m_tUIInfo.strUIName == "RightHUD_Top" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_RightHUD_SkillState("RightHUD_Top") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+
+	if (m_tUIInfo.strUIName == "RightHUD_Right" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_RightHUD_SkillState("RightHUD_Right") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+
+	if (m_tUIInfo.strUIName == "RightHUD_Bottom" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_RightHUD_SkillState("RightHUD_Bottom") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+
+	if (m_tUIInfo.strUIName == "RightHUD_Left" && m_bGuigeOff == false)
+	{
+		if (m_pUIManager->Get_RightHUD_SkillState("RightHUD_Left") == false)
+			m_bGuigeOff = false;
+		else
+			m_bGuigeOff = true;
+	}
+
+	
+}
 
 json CUI_Player_Skill_Guige::Save_Desc(json& out_json)
 {

@@ -16,7 +16,7 @@ void CPlayer_InteractionRope_Down_Start::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_InteractionRope_Down_Start::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	if (false == m_bFlags[0])
 	{

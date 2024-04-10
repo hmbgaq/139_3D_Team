@@ -80,7 +80,6 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
 	 
-	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
 	m_pMapEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
 	m_pAuraEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/","VampireCommanderAura.json", this);
 
@@ -99,6 +98,9 @@ void CVampireCommander::Priority_Tick(_float fTimeDelta)
 
 void CVampireCommander::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	

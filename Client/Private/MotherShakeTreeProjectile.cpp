@@ -66,6 +66,9 @@ void CMotherShakeTreeProjectile::Priority_Tick(_float fTimeDelta)
 
 void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_bFirst)
@@ -110,9 +113,9 @@ HRESULT CMotherShakeTreeProjectile::Render_Shadow()
 void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 {
 	//충돌 했을떄 카메라 쉐이킹 해줘야 함 ! 
-	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	pSpringCam->Set_ShakeCameraTime(0.2f);
-	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
+	//CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	//pSpringCam->Set_ShakeCameraTime(0.2f);
+	//pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.1f));
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
