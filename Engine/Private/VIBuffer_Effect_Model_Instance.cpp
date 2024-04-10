@@ -62,7 +62,7 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 
 
 	// 방출 초기화
-	m_tBufferDesc.bEmitFinished = FALSE;
+	m_tBufferDesc.bEmitFinished = false;
 	m_tBufferDesc.fEmissionTimeAcc = 0.f;
 	m_tBufferDesc.iEmitCount = 0;
 
@@ -116,7 +116,7 @@ void CVIBuffer_Effect_Model_Instance::Init_Instance(_int iNumInstance)
 
 
 			// 방출 초기화
-			m_vecParticleInfoDesc[i].bEmit = FALSE;
+			m_vecParticleInfoDesc[i].bEmit = false;
 
 
 			// 랜덤 값 뽑기
@@ -213,7 +213,7 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 	m_tBufferDesc.Reset_Times();
 
 	// 방출 초기화
-	m_tBufferDesc.bEmitFinished = FALSE;
+	m_tBufferDesc.bEmitFinished = false;
 	m_tBufferDesc.fEmissionTimeAcc = 0.f;
 	m_tBufferDesc.iEmitCount = 0;
 
@@ -233,12 +233,10 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 		if (MODE_PARTICLE == m_tBufferDesc.eType_Mode)
 		{
 			// 방출 초기화
-			m_vecParticleInfoDesc[i].bEmit = FALSE;
-
+			m_vecParticleInfoDesc[i].bEmit = false;
 
 			// 랜덤 값 뽑기
 			ReSet_ParticleInfo(i);
-
 
 			// 안보이게
 			{
@@ -253,7 +251,6 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 
 				// 초기 위치 세팅
 				XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions));
-
 			}
 
 		}
@@ -281,7 +278,7 @@ void CVIBuffer_Effect_Model_Instance::ReSet()
 
 void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 {
-	m_vecParticleInfoDesc[iNum].bDie = FALSE;
+	m_vecParticleInfoDesc[iNum].bDie = false;
 
 
 	// 라이프타임
@@ -369,7 +366,7 @@ void CVIBuffer_Effect_Model_Instance::ReSet_ParticleInfo(_uint iNum)
 	// 리지드 바디 사용이면
 	if (m_tBufferDesc.bUseRigidBody)
 	{
-		m_vecParticleRigidbodyDesc[iNum].bForced = FALSE; // 힘 안준걸로 초기화
+		m_vecParticleRigidbodyDesc[iNum].bForced = false; // 힘 안준걸로 초기화
 		m_vecParticleRigidbodyDesc[iNum].fMass = SMath::fRandom(m_tBufferDesc.vMinMaxMass.x, m_tBufferDesc.vMinMaxMass.y);						// 질량 리셋
 		m_vecParticleRigidbodyDesc[iNum].fFriction = SMath::fRandom(m_tBufferDesc.vMinMaxFriction.x, m_tBufferDesc.vMinMaxFriction.y);			// 마찰계수 리셋
 
@@ -648,7 +645,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 				if (m_iNumInstance <= m_tBufferDesc.iEmitCount) // 방출 카운트가 인스턴스개수와 크거나 같아지면 방출 끝
 				{
 					m_tBufferDesc.iEmitCount = m_iNumInstance;
-					m_tBufferDesc.bEmitFinished = TRUE;
+					m_tBufferDesc.bEmitFinished = true;
 				}
 				else
 				{
@@ -658,7 +655,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 						if (m_iNumInstance <= m_tBufferDesc.iEmitCount)	// 벡터 인덱스 맞추기용
 							m_tBufferDesc.iEmitCount = m_iNumInstance - 1;
 
-						m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = TRUE;
+						m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = true;
 						m_tBufferDesc.iEmitCount++;
 					}
 					m_tBufferDesc.fEmissionTimeAcc = 0.f; // 초기화
@@ -705,7 +702,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 				if (m_tBufferDesc.bRecycle)	// 재사용이면 리셋
 				{
-					m_vecParticleInfoDesc[i].bDie = FALSE;
+					m_vecParticleInfoDesc[i].bDie = false;
 
 					// 랜덤 값 다시 뽑기
 					ReSet_ParticleInfo(i);
@@ -848,7 +845,7 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 								_vector vForce = m_vecParticleInfoDesc[i].vDir * SMath::fRandom(m_tBufferDesc.vMinMaxPower.x, m_tBufferDesc.vMinMaxPower.y);
 								Add_Force(i, vForce, m_tBufferDesc.eForce_Mode);
 
-								m_vecParticleRigidbodyDesc[i].bForced = TRUE; // 힘줬으면 true
+								m_vecParticleRigidbodyDesc[i].bForced = true; // 힘줬으면 true
 							}
 							else
 							{
@@ -904,7 +901,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 								{
 									if (m_vecParticleInfoDesc[i].fLifeTime <= m_vecParticleInfoDesc[i].fTimeAccs)
 									{
-										m_vecParticleInfoDesc[i].bDie = TRUE;
+										m_vecParticleInfoDesc[i].bDie = true;
+										continue;
 									}
 								}
 								else if (DIST == m_tBufferDesc.eType_Fade_Takes)
@@ -915,7 +913,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 									if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
 									{
-										m_vecParticleInfoDesc[i].bDie = TRUE;
+										m_vecParticleInfoDesc[i].bDie = true;
+										continue;
 									}
 								}
 
@@ -945,7 +944,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 
 							if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
 							{
-								m_vecParticleInfoDesc[i].bDie = TRUE;
+								m_vecParticleInfoDesc[i].bDie = true;
+								continue;
 							}
 
 						}
@@ -958,7 +958,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 							// 죽음 조건
 							if (m_vecParticleInfoDesc[i].fLifeTime <= m_vecParticleInfoDesc[i].fTimeAccs)	// 라이프 타임이 끝나면 초기화 or 죽음
 							{
-								m_vecParticleInfoDesc[i].bDie = TRUE;
+								m_vecParticleInfoDesc[i].bDie = true;
+								continue;
 							}
 
 						}
@@ -969,7 +970,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 							// 죽음 조건
 							if (m_vecParticleInfoDesc[i].fMaxPosY >= pModelInstance[i].vTranslation.y)	// 현재 y위치가 최대 범위보다 작으면 초기화 or 죽음
 							{
-								m_vecParticleInfoDesc[i].bDie = TRUE;
+								m_vecParticleInfoDesc[i].bDie = true;
+								continue;
 							}
 
 						}
@@ -981,7 +983,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 							// 죽음 조건
 							if (m_vecParticleInfoDesc[i].fMaxPosY <= pModelInstance[i].vTranslation.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 							{
-								m_vecParticleInfoDesc[i].bDie = TRUE;
+								m_vecParticleInfoDesc[i].bDie = true;
+								continue;
 							}
 
 						}
@@ -1007,7 +1010,8 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 							// 죽음 조건
 							if (m_vecParticleInfoDesc[i].fMaxPosY <= pModelInstance[i].vTranslation.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 							{
-								m_vecParticleInfoDesc[i].bDie = TRUE;
+								m_vecParticleInfoDesc[i].bDie = true;
+								continue;
 							}
 
 
@@ -1539,7 +1543,7 @@ void CVIBuffer_Effect_Model_Instance::Clear_Power(_uint iNum)
 const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE_MODE& eMode)
 {
 	if (m_vecParticleRigidbodyDesc[iNum].bSleep)
-		return TRUE;
+		return true;
 
 	//if (m_tBufferDesc.bUseGravity)
 	//{
@@ -1551,7 +1555,7 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE
 	//		if (m_tBufferDesc.fSleepThreshold > fLengthXZ)
 	//		{
 	//			Sleep(iNum);
-	//			return TRUE;
+	//			return true;
 	//		}
 	//	}
 
@@ -1568,7 +1572,7 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE
 			if (m_tBufferDesc.fSleepThreshold > fLength)
 			{
 				Sleep(iNum);
-				return TRUE;
+				return true;
 			}
 		}
 
@@ -1580,7 +1584,7 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE
 			if (m_tBufferDesc.fSleepThreshold > fLength)
 			{
 				Sleep(iNum);
-				return TRUE;
+				return true;
 			}
 		}
 
@@ -1592,10 +1596,10 @@ const _bool CVIBuffer_Effect_Model_Instance::Check_Sleep(_uint iNum, const FORCE
 	//if (!m_tBufferDesc.bUseGravity && m_tBufferDesc.fSleepThreshold > fLength)
 	//{
 	//	Sleep(iNum);
-	//	return TRUE;
+	//	return true;
 	//}
 
-	return FALSE;
+	return false;
 }
 
 CVIBuffer_Effect_Model_Instance* CVIBuffer_Effect_Model_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

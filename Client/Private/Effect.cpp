@@ -17,7 +17,7 @@
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = false;
 }
 
 CEffect::CEffect(const CEffect & rhs)
@@ -119,6 +119,16 @@ void CEffect::Tick(_float fTimeDelta)
 				}
 
 
+				/* 파트 이펙트들 Tick */
+				for (auto& Pair : m_PartObjects)
+				{
+					if (nullptr != Pair.second)
+					{
+						//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
+						Pair.second->Tick(fTimeDelta);
+					}
+				}
+
 				/* ======================= 라이프 타임 동작 끝  ======================= */
 
 				if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime)
@@ -128,22 +138,12 @@ void CEffect::Tick(_float fTimeDelta)
 
 					if (m_tEffectDesc.fRemainAcc >= m_tEffectDesc.fRemainTime)
 					{
+						// 이펙트 끝
 						End_Effect();
 						return;
 					}
 				}
 
-
-				/* 파트 이펙트들 Tick */
-				for (auto& Pair : m_PartObjects)
-				{
-					if (nullptr != Pair.second)
-					{
-						//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
-						Pair.second->Tick(fTimeDelta);
-					}
-
-				}
 
 			}
 #ifdef _DEBUG

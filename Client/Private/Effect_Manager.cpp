@@ -38,8 +38,9 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
-		return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+		//MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
+		//return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -49,8 +50,9 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -67,8 +69,8 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 		pEffect->Get_Desc()->strBoneTag = strBoneTag;
 	}
 
-	pEffect->Get_Desc()->bPlay = TRUE;
-	pEffect->Set_Enable(TRUE);
+	pEffect->Get_Desc()->bPlay = true;
+	pEffect->Set_Enable(true);
 
 	EffectPool->pop();
 
@@ -85,8 +87,9 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
-		return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		//MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
+		//return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -97,6 +100,7 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 //#ifdef _DEBUG
 		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -129,8 +133,9 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
-		return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
+		//MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
+		//return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -140,8 +145,9 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -179,11 +185,11 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 
 		CEffect* pEffect = Play_Effect(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
 
-
 		if (nullptr == pEffect)
 		{
 //#ifdef _DEBUG
-			MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+			//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+			//return S_OK;
 			return S_OK;
 //#endif // _DEBUG
 		}
