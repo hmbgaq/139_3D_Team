@@ -12,7 +12,7 @@ public:
 	virtual void Release(CTank* pActor) override;
 
 public:
-	static const _uint g_iAnimIndex = CTank::Tank_State::Tank_Taunt_03;
+	static const _uint g_iAnimIndex = CTank::Tank_State::Tank_Taunt_02;
 
 
 };

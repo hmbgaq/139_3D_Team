@@ -411,6 +411,8 @@ private: //!For. CreateSpecialObject
 	_float								m_fElevatorMaxHeight = 10.f;
 	_float								m_fElevatorSpeed = 10.f;
 	_float								m_fElevatorRotationSpeed = 90.f;
+	_int								m_iElevatorArrivalCellIndex = 0;
+	_bool								m_bLeverForElevator = false;
 	
 private: //!For. CreateLightObject
 	vector<CEnvironment_LightObject*>	m_vecCreateLightObject;

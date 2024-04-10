@@ -1,6 +1,6 @@
-#include "..\Public\Tank_Idle.h"
+#include "..\Public\Tank_Taunt_03.h"
 
-void CTank_Idle::Initialize(CTank* pActor)
+void CTank_Taunt_03::Initialize(CTank* pActor)
 {
 	__super::Initialize(pActor);
 
@@ -10,7 +10,7 @@ void CTank_Idle::Initialize(CTank* pActor)
 
 }
 
-CState<CTank>* CTank_Idle::Update(CTank* pActor, _float fTimeDelta)
+CState<CTank>* CTank_Taunt_03::Update(CTank* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
@@ -23,7 +23,7 @@ CState<CTank>* CTank_Idle::Update(CTank* pActor, _float fTimeDelta)
 
 }
 
-void CTank_Idle::Release(CTank* pActor)
+void CTank_Taunt_03::Release(CTank* pActor)
 {
 	__super::Release(pActor);
 }

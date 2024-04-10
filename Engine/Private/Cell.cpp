@@ -149,6 +149,8 @@ _bool CCell::Is_Out(_fvector vWorldPos, _fvector vLook, _fmatrix WorldMatrix, _i
 HRESULT CCell::Initialize(const _float3 * pPoints, _uint iIndex)
 {
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * POINT_END);
+	memcpy(m_vOriginPoints, pPoints, sizeof(_float3) * POINT_END);
+
 
 	m_iIndex = iIndex;
 
@@ -172,6 +174,7 @@ HRESULT CCell::Initialize(const _float3 * pPoints, _uint iIndex)
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
 #endif
+
 
 	return S_OK;
 }
@@ -291,6 +294,19 @@ void CCell::Update(_fmatrix WorldMatrix)
 #ifdef _DEBUG
 HRESULT CCell::Render(class CShader* pShader)
 {
+	if (m_bPicking == true)
+	{
+		_float4 vColor = { 0.f, 0.f, 1.f, 0.f };
+		pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
+		
+	}
+	else
+	{
+		_float4 vColor = { 0.f, 1.f, 0.f, 0.f };
+		pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
+	}
+	
+	pShader->Begin(0);
 	m_pVIBuffer->Bind_VIBuffers();
 
 	m_pVIBuffer->Render();

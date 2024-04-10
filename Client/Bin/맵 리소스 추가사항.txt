@@ -12,3 +12,8 @@ LocomotiveInteractDoorB02MinXRotate90.fbx
 2024_04_06
 인트로맵(테스트맵) 추가사항
 NonAnim->Single->MotherBossTree
+
+
+2024_04_10
+설산맵(보스아님) 추가사항
+NonAnim->Single->ZipLineBase

@@ -9,6 +9,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CUI_Weakness;
 
 class CEnvironment_Object final : public CGameObject
 {
@@ -78,6 +79,7 @@ private:
 	CShader*					m_pShaderCom = { nullptr };	
 	CModel*						m_pModelCom = { nullptr };
 	CCollider*					m_pPickingCollider = nullptr;
+	CUI_Weakness*				m_pWeaknessUI = { nullptr };
 
 private:
 	ENVIRONMENT_OBJECT_DESC		m_tEnvironmentDesc = {};

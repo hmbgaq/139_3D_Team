@@ -38,6 +38,15 @@ void CCollider::Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ)
 	m_pBounding->Set_Center(_sizeX, _sizeY, _sizeZ);
 }
 
+void CCollider::Set_Radius(_float fRadius)
+{
+	if(m_eType != CCollider::TYPE_SPHERE)
+		return;
+
+	dynamic_cast<CBounding_Sphere*>(m_pBounding)->Set_Radius(fRadius);
+	
+}
+
 HRESULT CCollider::Initialize_Prototype(TYPE eType)
 {
 	m_eType = eType;
