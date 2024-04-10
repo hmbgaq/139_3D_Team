@@ -1241,6 +1241,7 @@
     <ClInclude Include="..\Public\Tank_Stun_Start.h" />
     <ClInclude Include="..\Public\Tank_Taunt_01.h" />
     <ClInclude Include="..\Public\Tank_Taunt_02.h" />
+    <ClInclude Include="..\Public\Tank_Taunt_03.h" />
     <ClInclude Include="..\Public\Tank_Turn_L180.h" />
     <ClInclude Include="..\Public\Tank_Turn_L90.h" />
     <ClInclude Include="..\Public\Tank_Turn_R180.h" />
@@ -2291,6 +2292,7 @@
     <ClCompile Include="..\Private\Tank_Stun_Get_Up.cpp" />
     <ClCompile Include="..\Private\Tank_Stun_Loop.cpp" />
     <ClCompile Include="..\Private\Tank_Stun_Start.cpp" />
+    <ClCompile Include="..\Private\Tank_Taunt_03.cpp" />
     <ClCompile Include="..\Private\Tank_VortexGrenade_Loop.cpp" />
     <ClCompile Include="..\Private\Tank_VortexGrenade_Stop.cpp" />
     <ClCompile Include="..\Private\Tank_Walk_B.cpp" />

@@ -4012,6 +4012,9 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\8. Taunt">
       <UniqueIdentifier>{cb63db7f-738f-4add-b87b-bb3072b432dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt">
+      <UniqueIdentifier>{1b871775-93ff-4649-98d5-bb2ce11be509}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7881,6 +7884,9 @@
     <ClInclude Include="..\Public\BanditHeavy_Taunt_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\8. Taunt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Tank_Taunt_03.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11217,6 +11223,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BanditHeavy_Taunt_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\8. Taunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tank_Taunt_03.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
