@@ -10,7 +10,7 @@
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = false;
 }
 
 CEffect_Instance::CEffect_Instance(const CEffect_Instance & rhs)
@@ -62,7 +62,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 				if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
 				{
-					m_tVoidDesc.bRender = TRUE;
+					m_tVoidDesc.bRender = true;
 				}
 				else
 					return;
@@ -76,32 +76,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 
 
-
-			/* ======================= 라이프 타임 동작 끝  ======================= */
-
-
-			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
-			{
-				// 삭제 대기시간 누적 시작
-				m_tVoidDesc.fRemainAcc += fTimeDelta;
-
-				// 디졸브 시작
-				m_tVoidDesc.bDissolve = TRUE;
-				if (m_tVoidDesc.bDissolve)
-				{			
-					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
-				}
-
-				// 이 이펙트의 타임라인 종료
-				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
-				{
-					m_tVoidDesc.fDissolveAmount = 1.f;
-					m_tVoidDesc.bRender = TRUE;
-					return;
-				}
-			}
-
-			if (m_tVoidDesc.bRender)
+			if (m_tVoidDesc.bRender)	 // 파티클 버퍼 업데이트
 			{
 				if (CVIBuffer_Effect_Model_Instance::MODE_PARTICLE == m_pVIBufferCom->Get_Desc()->eType_Mode)
 				{
@@ -113,6 +88,34 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				}
 
 			}
+
+
+			/* ======================= 라이프 타임 동작 끝  ======================= */
+
+
+			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
+			{
+				// 삭제 대기시간 누적 시작
+				m_tVoidDesc.fRemainAcc += fTimeDelta;
+
+				// 디졸브 시작
+				m_tVoidDesc.bDissolve = true;
+				if (m_tVoidDesc.bDissolve)
+				{			
+					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
+				}
+
+				// 이 이펙트의 타임라인 종료
+				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
+				{
+					m_tVoidDesc.fDissolveAmount = 1.f;
+					m_pVIBufferCom->Set_Finish(true);
+					m_tVoidDesc.bRender = true;
+					return;
+				}
+			}
+
+
 		}
 	}
 
@@ -144,7 +147,7 @@ HRESULT CEffect_Instance::Render()
 	//{
 	//	_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
 
-	//	if (FALSE == m_tInstanceDesc.bUseCustomTex)
+	//	if (false == m_tInstanceDesc.bUseCustomTex)
 	//	{
 	//		m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
 	//	}
@@ -181,7 +184,7 @@ void CEffect_Instance::ReSet_Effect()
 	__super::ReSet_Effect(); // 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
-	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bDissolve = false;
 
 
 	if (m_tVoidDesc.bUseSpriteAnim)
@@ -191,7 +194,7 @@ void CEffect_Instance::ReSet_Effect()
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
 	{
-		//m_tVoidDesc.bRender = FALSE;
+		//m_tVoidDesc.bRender = false;
 		m_pVIBufferCom->ReSet(); // 버퍼 리셋
 	}
 		
@@ -203,7 +206,7 @@ void CEffect_Instance::Init_ReSet_Effect()
 	__super::ReSet_Effect(); // 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
-	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bDissolve = false;
 
 
 	if (m_tVoidDesc.bUseSpriteAnim)
@@ -212,7 +215,7 @@ void CEffect_Instance::Init_ReSet_Effect()
 	}
 
 
-	m_tVoidDesc.bRender = FALSE;
+	m_tVoidDesc.bRender = false;
 	m_pVIBufferCom->ReSet(); // 버퍼 리셋
 
 
@@ -497,7 +500,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 
-	if (TRUE == m_tInstanceDesc.bUseCustomTex)	// 텍스처를 내가 정해줄거면 
+	if (true == m_tInstanceDesc.bUseCustomTex)	// 텍스처를 내가 정해줄거면 
 	{
 
 		// 기본은 디퓨즈만 바인드

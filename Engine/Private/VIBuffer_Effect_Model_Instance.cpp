@@ -57,6 +57,9 @@ HRESULT CVIBuffer_Effect_Model_Instance::Initialize(void* pArg)
 	}
 
 
+	// 끝 아님
+	m_bFinished = false;
+
 	// 시간 초기화
 	m_tBufferDesc.Reset_Times();
 
@@ -209,6 +212,9 @@ HRESULT CVIBuffer_Effect_Model_Instance::Change_Model(CModel* pChangeModel)
 
 void CVIBuffer_Effect_Model_Instance::ReSet()
 {
+	// 끝 아님
+	m_bFinished = false;
+
 	// 시간 초기화
 	m_tBufferDesc.Reset_Times();
 
@@ -594,76 +600,84 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 		// 누적 시간이 최대 라이프타임보다 커지면 시간 누적 안함 & 탈출
 		if (m_tBufferDesc.fTimeAcc > m_tBufferDesc.vMinMaxLifeTime.y)
 		{
+			m_bFinished = true;
+
 			if (!m_tBufferDesc.bRecycle) // 리사이클이 아니면 값 고정 & 탈출
 			{
 				m_tBufferDesc.fTimeAcc = m_tBufferDesc.vMinMaxLifeTime.y;
 				m_tBufferDesc.fLifeTimeRatio = 1.f;
-				return;
+				//return;
 			}
 			else
 			{
+				m_bFinished = false;
 				m_tBufferDesc.Reset_Times();
 			}
 		}
+		else
+		{
+			// 라이프 타임중이면 ~ 
 
-		// 시간 누적(전체)
-		m_tBufferDesc.fTimeAcc += fTimeDelta;
-		m_tBufferDesc.fLifeTimeRatio = min(1.0f, m_tBufferDesc.fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y);
+			// 시간 누적(전체)
+			m_tBufferDesc.fTimeAcc += fTimeDelta;
+			m_tBufferDesc.fLifeTimeRatio = min(1.0f, m_tBufferDesc.fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y);
 
 
 
-//#pragma region 모델 바꿔끼기 시작
-//		// 모프가 True이면 
-//		if (m_tBufferDesc.bMorph)
-//		{
-//			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
-//
-//			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
-//			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
-//			{
-//				iNum += 1;
-//				m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
-//
-//				if (m_tBufferDesc.eCurModelNum >= MORPH_END)
-//				{
-//					m_tBufferDesc.eCurModelNum = MORPH_01;
-//				}
-//
-//				m_tBufferDesc.fMorphTimeAcc = 0.f;
-//			}
-//		}
-//#pragma region 모델 바꿔끼기 끝
+			//#pragma region 모델 바꿔끼기 시작
+			//		// 모프가 True이면 
+			//		if (m_tBufferDesc.bMorph)
+			//		{
+			//			m_tBufferDesc.fMorphTimeAcc += fTimeDelta;
+			//
+			//			_int iNum = ECast(m_tBufferDesc.eCurModelNum);
+			//			if (m_tBufferDesc.fMorphTimeAcc >= m_tBufferDesc.fMorphTimeTerm)
+			//			{
+			//				iNum += 1;
+			//				m_tBufferDesc.eCurModelNum = (MODEL_MORPH)iNum;
+			//
+			//				if (m_tBufferDesc.eCurModelNum >= MORPH_END)
+			//				{
+			//					m_tBufferDesc.eCurModelNum = MORPH_01;
+			//				}
+			//
+			//				m_tBufferDesc.fMorphTimeAcc = 0.f;
+			//			}
+			//		}
+			//#pragma region 모델 바꿔끼기 끝
 
 
 #pragma region 방출 시작
-		if (!m_tBufferDesc.bEmitFinished) // 방출이 끝이 아니면 
-		{
-			m_tBufferDesc.fEmissionTimeAcc += fTimeDelta; // 시간누적
-
-			if (m_tBufferDesc.fEmissionTimeAcc >= m_tBufferDesc.fEmissionTime) // 하나씩 방출
+			if (!m_tBufferDesc.bEmitFinished) // 방출이 끝이 아니면 
 			{
-				if (m_iNumInstance <= m_tBufferDesc.iEmitCount) // 방출 카운트가 인스턴스개수와 크거나 같아지면 방출 끝
+				m_tBufferDesc.fEmissionTimeAcc += fTimeDelta; // 시간누적
+
+				if (m_tBufferDesc.fEmissionTimeAcc >= m_tBufferDesc.fEmissionTime) // 하나씩 방출
 				{
-					m_tBufferDesc.iEmitCount = m_iNumInstance;
-					m_tBufferDesc.bEmitFinished = true;
-				}
-				else
-				{
-					// 아니면 방출
-					for (_uint i = 0; i <= m_tBufferDesc.iAddEmitCount; i++)
+					if (m_iNumInstance <= m_tBufferDesc.iEmitCount) // 방출 카운트가 인스턴스개수와 크거나 같아지면 방출 끝
 					{
-						if (m_iNumInstance <= m_tBufferDesc.iEmitCount)	// 벡터 인덱스 맞추기용
-							m_tBufferDesc.iEmitCount = m_iNumInstance - 1;
-
-						m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = true;
-						m_tBufferDesc.iEmitCount++;
+						m_tBufferDesc.iEmitCount = m_iNumInstance;
+						m_tBufferDesc.bEmitFinished = true;
 					}
-					m_tBufferDesc.fEmissionTimeAcc = 0.f; // 초기화
-				}
+					else
+					{
+						// 아니면 방출
+						for (_uint i = 0; i <= m_tBufferDesc.iAddEmitCount; i++)
+						{
+							if (m_iNumInstance <= m_tBufferDesc.iEmitCount)	// 벡터 인덱스 맞추기용
+								m_tBufferDesc.iEmitCount = m_iNumInstance - 1;
 
+							m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = true;
+							m_tBufferDesc.iEmitCount++;
+						}
+						m_tBufferDesc.fEmissionTimeAcc = 0.f; // 초기화
+					}
+
+				}
 			}
-		}
 #pragma region 방출 끝
+		}
+
 
 
 #pragma region Map UnMap 전 조건 체크 끝
@@ -679,6 +693,10 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 #endif // _DEBUG
 		for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 		{
+			if (m_bFinished) // 끝이면 전부 죽이기
+			{
+				m_vecParticleInfoDesc[i].bDie = true;
+			}
 
 			if (m_vecParticleInfoDesc[i].bDie) // 죽었으면
 			{

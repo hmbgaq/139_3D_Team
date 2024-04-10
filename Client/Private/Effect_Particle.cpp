@@ -574,7 +574,6 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 		m_tVoidDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
 								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
-
 	}
 
 	/* UV ============================================================================================ */

@@ -95,6 +95,9 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 		m_vecParticleRigidbodyDesc.reserve(m_tBufferDesc.iCurNumInstance);
 
 
+	// 끝 아님
+	m_bFinished = false;
+
 	// 시간 초기화
 	m_tBufferDesc.Reset_Times();
 

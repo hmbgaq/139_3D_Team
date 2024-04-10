@@ -2682,6 +2682,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pCurVoidDesc->fUV_RotDegree = m_fUV_RotDegree_Mesh;
 					}
 
+
 					ImGui::SeparatorText("");
 				}
 
@@ -2749,6 +2750,10 @@ void CWindow_EffectTool::Update_MeshTab()
 						strCurPassTag = TEXT("Distortion_Solid");
 					else if (5 == m_iShaderPassIndex_Mesh)
 						strCurPassTag = TEXT("Distortion_Post");
+					else if (6 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion_NotPri");
+					else if (7 == m_iShaderPassIndex_Mesh)
+						strCurPassTag = TEXT("Distortion_Solid_NotPri");
 					
 					ImGui::Text(u8"현재 패스 : %s", m_pGameInstance->ConverWStringtoC(strCurPassTag));
 

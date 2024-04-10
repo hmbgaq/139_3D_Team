@@ -252,6 +252,8 @@ public:
 public:
 	void ReSet();
 	void ReSet_Info(_uint iNum);
+
+	_bool Get_Finished() { return m_bFinished; }
 	void Set_Finish(_bool bFinished) { m_bFinished = bFinished; }
 
 

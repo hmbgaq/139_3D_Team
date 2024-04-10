@@ -178,7 +178,7 @@ private:
 
 	_int m_iRenderGroup_Mesh								= { ECast(CRenderer::RENDER_EFFECT) };
 	_int m_iShaderPassIndex_Mesh							= { 0 };
-	_int m_iMaxShaderPassIndex_Mesh							= { 6 };
+	_int m_iMaxShaderPassIndex_Mesh							= { 7 };
 	_int m_iTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= {};
 	_int m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_END]		= { 29, 9, 175, 244, 24 };
 
