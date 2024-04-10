@@ -96,7 +96,7 @@ void CTNTCrate::OnCollisionEnter(CCollider* other)
 
 void CTNTCrate::OnCollisionStay(CCollider* other)
 {
-	OnCollision(other);
+	//OnCollision(other);
 }
 
 void CTNTCrate::OnCollisionExit(CCollider* other)

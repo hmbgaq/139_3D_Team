@@ -4009,6 +4009,9 @@
     <Filter Include="02.GameObjects\96. Test\Gimic\Crane\Parts\Weapon\Cargo">
       <UniqueIdentifier>{3f62b169-75d8-4d0f-b6f8-b0e3dacb23d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\8. Taunt">
+      <UniqueIdentifier>{cb63db7f-738f-4add-b87b-bb3072b432dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7875,6 +7878,9 @@
     <ClInclude Include="..\Public\Gimic.h">
       <Filter>02.GameObjects\96. Test\Gimic</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BanditHeavy_Taunt_01.h">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\8. Taunt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11208,6 +11214,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Crane.cpp">
       <Filter>02.GameObjects\96. Test\Gimic\Crane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BanditHeavy_Taunt_01.cpp">
+      <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Heavy\2. State\8. Taunt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

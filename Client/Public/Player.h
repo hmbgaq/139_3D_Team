@@ -201,6 +201,15 @@ public:
 		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
 	};
 
+public:
+	void Search_LockOn_Target();
+	CCharacter* Get_LockOn_Target() { return m_pLockOnTarget; };
+	_float3 Get_LockOn_Target_Position() { 
+		if (nullptr !=  m_pLockOnTarget && nullptr != m_pLockOnTarget->Get_Transform())
+			return m_pLockOnTarget->Get_Position();
+		return _float3();
+	}
+	
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -223,6 +232,9 @@ private:
 
 	_float m_fSuperChargeTime = { 0.f };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
+
+private:
+	CCharacter* m_pLockOnTarget = { nullptr };
 
 
 public:

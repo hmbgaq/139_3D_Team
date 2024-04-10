@@ -871,34 +871,34 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 			Desc.bEnable = InteractJson[i]["Enable"];
 			Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
-			Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
-			Desc.bOffset = InteractJson[i]["Offset"];
-			Desc.bOwner = InteractJson[i]["Owner"];
-			Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
-			Desc.bRotate = InteractJson[i]["Rotate"];
-			Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
-			Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
-			Desc.eRotationState = InteractJson[i]["RotationType"];
-			Desc.bArrival = InteractJson[i]["Arrival"];
-			Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
+			//Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
+			//Desc.bOffset = InteractJson[i]["Offset"];
+			//Desc.bOwner = InteractJson[i]["Owner"];
+			//Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
+			//Desc.bRotate = InteractJson[i]["Rotate"];
+			//Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
+			//Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+			//Desc.eRotationState = InteractJson[i]["RotationType"];
+			//Desc.bArrival = InteractJson[i]["Arrival"];
+			//Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 			
 
 			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
 			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 
-			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);	
-			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
-			CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"],		Desc.vInteractColliderSize);
-			CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"],	Desc.vInteractColliderCenter);
-
-			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
-			CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
-			CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
-			CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
+			//CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);	
+			//CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
+			//CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"],		Desc.vInteractColliderSize);
+			//CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"],	Desc.vInteractColliderCenter);
+			//
+			//CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+			//CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+			//CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+			//CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
 			
-			CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
-			CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
-			CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
+			//CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
+			//CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
+			//CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
 				
 			const json& TransformJson = InteractJson[i]["Component"]["Transform"];
 			_float4x4 WorldMatrix;
@@ -914,13 +914,13 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 			Desc.WorldMatrix = WorldMatrix;
 			//
-			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-			_int iUpdateCellJsonSize = UpdateCellJson.size();
-			
-			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
-			{
-				Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
-			}
+			//json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+			//_int iUpdateCellJsonSize = UpdateCellJson.size();
+			//
+			//for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+			//{
+			//	Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+			//}
 			
 			
 			CEnvironment_Interact* pObject = { nullptr };

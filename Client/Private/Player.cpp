@@ -999,6 +999,11 @@ void CPlayer::Teleport()
 	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
 }
 
+void CPlayer::Search_LockOn_Target()
+{
+	m_pLockOnTarget = Select_The_Nearest_Enemy(LAYER_MONSTER);
+}
+
 void CPlayer::Hitted_Left(Power ePower)
 {
 	switch (ePower)
