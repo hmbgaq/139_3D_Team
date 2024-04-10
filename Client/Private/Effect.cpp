@@ -336,6 +336,14 @@ void CEffect::Update_PivotMat()
 				// 업데이트 안되는 월드랑 곱하기
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);	// 나 * 피봇월드
 			}
+#ifdef _DEBUG
+			else if (m_tEffectDesc.bAttachTool)
+			{
+				// 툴에서 뼈에 붙이기 테스트
+				m_tEffectDesc.matPivot = m_tEffectDesc.matPivot_Tool;
+				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
+			}
+#endif // _DEBUG
 			else
 			{
 				// 주인의 매트릭스를 사용할거면 받아오기

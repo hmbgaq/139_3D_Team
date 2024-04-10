@@ -549,7 +549,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
-
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSoft", &m_tVoidDesc.bSoft, sizeof(_bool)));
 
 	/* Color & Discard ===============================================================================*/
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tVoidDesc.eMode_Color, sizeof(_int)));

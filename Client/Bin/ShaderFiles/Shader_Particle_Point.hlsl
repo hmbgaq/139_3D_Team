@@ -24,6 +24,8 @@ float2		g_UVScale;
 
 
 bool        g_bBillBoard;
+bool        g_bSoft;
+
 float		g_fDegree;
 
 float       g_fAlpha_Discard;
@@ -614,7 +616,23 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     
 	// ÄÃ·¯ È¥ÇÕ
     Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
-    Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
+    
+    if (g_bSoft)
+    {
+        float2 vDepthTexcoord;
+        vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+        vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+        float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
+        
+        Out.vColor.a = g_DiffuseTexture.Sample(LinearSampler, vDistortedCoord.xy).a;
+        Out.vColor.a = In.vColor.a * (vDepthDesc.y * g_fCamFar - In.vProjPos.w) * 2.f;
+    }else
+    {
+        Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
+    }
+
+
 		
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
     
@@ -625,7 +643,10 @@ PS_OUT PS_MAIN_PARTICLE(PS_IN In, uniform bool bSolid)
     //Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * Out.vColor.a; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
     Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
     
-      
+    
+
+  
+
     
     if (bSolid)
         Out.vSolid = Out.vColor;
@@ -680,8 +701,23 @@ PS_OUT_PRIORITY PS_MAIN_PARTICLE_PRIORITY(PS_IN In, uniform bool bSolid)
     
 	// ÄÃ·¯ È¥ÇÕ
     Out.vColor.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
-    Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
-		
+    
+    if (g_bSoft)
+    {
+        float2 vDepthTexcoord;
+        vDepthTexcoord.x = (In.vProjPos.x / In.vProjPos.w) * 0.5f + 0.5f;
+        vDepthTexcoord.y = (In.vProjPos.y / In.vProjPos.w) * -0.5f + 0.5f;
+
+        float4 vDepthDesc = g_DepthTexture.Sample(PointSampler, vDepthTexcoord);
+        
+        Out.vColor.a = g_DiffuseTexture.Sample(LinearSampler, vDistortedCoord.xy).a;
+        Out.vColor.a = In.vColor.a * (vDepthDesc.y * g_fCamFar - In.vProjPos.w) * 2.f;
+    }
+    else
+    {
+        Out.vColor.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
+    }
+    		
     
     /* RimBloom ================================================================ */
     //float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
@@ -689,7 +725,7 @@ PS_OUT_PRIORITY PS_MAIN_PARTICLE_PRIORITY(PS_IN In, uniform bool bSolid)
     //Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * Out.vColor.a; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
     Out.vRimBloom = float4(g_vBloomPower, Out.vColor.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
     
-   
+    
     
     if (bSolid)
         Out.vSolid = Out.vColor;

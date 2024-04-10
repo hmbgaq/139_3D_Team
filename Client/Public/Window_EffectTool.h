@@ -229,6 +229,7 @@ private:
 	_int	m_iMaxNumInstance_Particle	= { 1000 };
 
 	_int	m_iBillBoard				= { 0 };
+	_int	m_iSoft						= { 0 };
 
 	/* 파티클만의 속성 */
 	_int	m_iRecycle_Particle			= { 0 };
