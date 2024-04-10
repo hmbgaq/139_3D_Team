@@ -149,7 +149,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Right", 5.f);
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Bottom", 5.f);
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Left", 5.f);
-
+	
 
 	return S_OK;
 }
@@ -215,7 +215,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	//}
 
 
-	_bool bIsNotIdle = m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop);
+	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) && (false == Is_Splitted()));
 	
 	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		m_pDataManager->Set_ShowInterface(bIsNotIdle);
@@ -1020,6 +1020,11 @@ void CPlayer::Teleport()
 
 	pTeleport->Set_InitPosition(vSpawnPos);
 	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
+}
+
+void CPlayer::Search_LockOn_Target()
+{
+	m_pLockOnTarget = Select_The_Nearest_Enemy(LAYER_MONSTER);
 }
 
 void CPlayer::Hitted_Left(Power ePower)

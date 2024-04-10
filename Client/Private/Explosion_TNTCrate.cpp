@@ -43,7 +43,7 @@ HRESULT CExplosion_TNTCrate::Initialize(void* pArg)
 
 	m_fDamage = 50.f;
 
-	m_fLifeTime = 2.f;
+	m_fLifeTime = 0.1f;
 
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);

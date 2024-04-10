@@ -23,6 +23,8 @@ private:
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag);
 	HRESULT Ready_Layer_NPC(const wstring& strLayerTag);
+	HRESULT Ready_Layer_Gimic(const wstring& strLayerTag);
+
 
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
 	HRESULT Ready_Shader_Json();

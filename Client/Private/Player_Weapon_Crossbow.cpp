@@ -46,15 +46,15 @@ void CPlayer_Weapon_Crossbow::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_pGameInstance->Key_Down(DIK_F))
-	{
-		string path = "../Bin/DataFiles/Data_Weapon/Player/Crossbow/Crossbow.json";
-		{
-			json Out_Json;
-			m_pTransformCom->Write_Json(Out_Json);
-			CJson_Utility::Save_Json(path.c_str(), Out_Json);
-		}
-	}
+	//if (m_pGameInstance->Key_Down(DIK_F))
+	//{
+	//	string path = "../Bin/DataFiles/Data_Weapon/Player/Crossbow/Crossbow.json";
+	//	{
+	//		json Out_Json;
+	//		m_pTransformCom->Write_Json(Out_Json);
+	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
+	//	}
+	//}
 }
 
 void CPlayer_Weapon_Crossbow::Late_Tick(_float fTimeDelta)

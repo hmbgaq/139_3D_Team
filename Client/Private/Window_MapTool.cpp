@@ -929,13 +929,13 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 			Desc.WorldMatrix = WorldMatrix;
 			//
-			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-			_int iUpdateCellJsonSize = UpdateCellJson.size();
-			
-			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
-			{
-				Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
-			}
+			//json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+			//_int iUpdateCellJsonSize = UpdateCellJson.size();
+			//
+			//for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+			//{
+			//	Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+			//}
 			
 			
 			CEnvironment_Interact* pObject = { nullptr };

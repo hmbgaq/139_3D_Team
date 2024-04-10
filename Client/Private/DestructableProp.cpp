@@ -26,6 +26,13 @@ HRESULT CDestructableProp::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	if (nullptr != pArg)
+	{
+		m_tDestructablePropDesc = *(DESTRUCTABLE_PROP_DESC*)pArg;
+		m_pTransformCom->Set_WorldMatrix(m_tDestructablePropDesc.WorldMatrix);
+	}
+
+
 	Ready_Components();
 
 	return S_OK;

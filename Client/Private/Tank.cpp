@@ -13,6 +13,7 @@
 #include "Tank_HitNormalShield_FL_01.h"
 #include "Tank_HitNormalShield_FR_01.h"
 #include "Tank_HitNormalShield_F_01.h"
+#include "Tank_Taunt_03.h"
 
 #include "Tank_Stun_Start.h"
 #include "Tank_DeathNormal_F_01.h"
@@ -20,6 +21,7 @@
 
 #include "Player.h"
 #include "Player_Finisher_Tank.h"
+
 
 
 CTank::CTank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -224,6 +226,11 @@ void CTank::Hitted_Finish()
 void CTank::Hitted_Dead(Power ePower)
 {
 	m_pActor->Set_State(new CTank_DeathNormal_F_01());
+}
+
+void CTank::Set_Taunt()
+{
+	m_pActor->Set_State(new CTank_Taunt_03());
 }
 
 void CTank::Create_GroundWave()
