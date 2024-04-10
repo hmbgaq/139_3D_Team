@@ -1,5 +1,7 @@
 #include "..\Public\Player_ZipLine_Start.h"
 #include "Player_ZipLine_Start_to_Loop.h"
+#include "Environment_Interact.h"
+#include "Transform.h"
 
 void CPlayer_ZipLine_Start::Initialize(CPlayer* pActor)
 {
@@ -9,6 +11,7 @@ void CPlayer_ZipLine_Start::Initialize(CPlayer* pActor)
 
 	pActor->Set_Interection(true);
 
+	pActor->Get_Transform()->Set_Look(pActor->Get_InteractObject()->Get_Look());
 	//pActor->Set_Ladder_Count(6);
 
 }

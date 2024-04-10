@@ -442,7 +442,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractMove", Desc.bInteractMoveMode);
 				InteractJson[i].emplace("InteractLadderCount", Desc.iLadderCount);
 				InteractJson[i].emplace("InteractReverseLadderCount", Desc.iReverseLadderCount);
-				
+				InteractJson[i].emplace("LeverSwitchIndex", Desc.iSwitchIndex);
 				
 
 				CJson_Utility::Write_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
@@ -890,7 +890,8 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 			Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 			Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-
+			Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+			
 
 			
 
@@ -9478,6 +9479,11 @@ void CWindow_MapTool::Interact_SelectTab()
 					{
 						ImGui::SetItemDefaultFocus();
 					}
+
+					if (InteractDesc.eInteractType == CEnvironment_Interact::INTERACT_LEVER)
+					{
+						m_iInteractSwitchIndex = InteractDesc.iSwitchIndex;
+					}
 				}
 			}
 			ImGui::EndListBox();
@@ -9616,6 +9622,19 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_UseGravity(m_tSelectInteractDesc.bUseGravity);
 				#endif // _DEBUG
 			}
+
+			if (m_tSelectInteractDesc.eInteractType == CEnvironment_Interact::INTERACT_LEVER)
+			{
+				ImGui::SameLine();
+
+				if (ImGui::InputInt(u8"스위치 인덱스", &m_iInteractSwitchIndex))
+				{
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_SwitchIndex(m_iInteractSwitchIndex);
+				}
+			}
+
+
+			
 
 			
 			ImGui::Checkbox(u8"스플라인 이벤트", &m_bInteractUseSpline);

@@ -328,7 +328,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
 
-
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
@@ -421,6 +421,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);

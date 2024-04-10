@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_ZipLine_Loop;
 
+private:
+	_float4x4 ZipLineMatrix = {};
+
 };
 
 END
