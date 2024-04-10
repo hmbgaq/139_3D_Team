@@ -670,7 +670,7 @@ void CEnvironment_SpecialObject::Enable_UpdateCells()
 		return;
 
 
-	_int iUpdateCellCount = m_tEnvironmentDesc.vecUpdateCellIndexs.size();
+	_int iUpdateCellCount = (_int)m_tEnvironmentDesc.vecUpdateCellIndexs.size();
 
 	for (_int i = 0; i < iUpdateCellCount; ++i)
 	{
@@ -688,7 +688,7 @@ void CEnvironment_SpecialObject::UnEnable_UpdateCells()
 	if (pNavigation == nullptr)
 		return;
 
-	_int iUpdateCellCount = m_tEnvironmentDesc.vecUpdateCellIndexs.size();
+	_int iUpdateCellCount = (_int)m_tEnvironmentDesc.vecUpdateCellIndexs.size();
 
 	for (_int i = 0; i < iUpdateCellCount; ++i)
 	{

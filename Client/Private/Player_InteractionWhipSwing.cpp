@@ -48,6 +48,6 @@ void CPlayer_InteractionWhipSwing::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 	pActor->Set_InitPosition(pActor->Get_Position_Vector());
-	pActor->Set_Animation((_uint)CPlayer::Player_State::Player_InteractionJumpDown300, CModel::ANIM_STATE::ANIM_STATE_NORMAL, 30);
+	pActor->Set_Animation((_uint)ECast(CPlayer::Player_State::Player_InteractionJumpDown300), CModel::ANIM_STATE::ANIM_STATE_NORMAL, 30);
 	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_WHIP, false);
 }

@@ -739,8 +739,8 @@
     {
       "Ambient": [ 0.0, 0.0, 0.0, 0.0 ],
       "CutOff": 0.0,
-      "Diffuse": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Direction": [ 1.0, 0.0, 0.0, 0.0 ],
+      "Diffuse": [ 0.3, 0.3, 0.3, 0.0 ],
+      "Direction": [ 1.0, 0.1, 0.1, 0.0 ],
       "LightEnable": true,
       "LightIndex": 0,
       "OuterCutOff": 0.0,
@@ -776,15 +776,14 @@
             [ 1.0, 0.0, 0.0, 0.0 ],
             [ 0.0, 1.0, 0.0, 0.0 ],
             [ 0.0, 0.0, 1.0, 0.0 ],
-            [ 107.16552734375, 10.878019332885742, 73.57027435302734, 1.0 ]
+            [ 107.16552734375, 10.878019332885742, 73.57027313232422, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\Jusin\\0_SourceTree\\3D_Team\\Client\\Bin\\DataFiles\\Data_Map/Test_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage2Boss_Test.json",
         "NameTag": "MonsterSpawn",
         "OnTrigger": false,
         "SpawnGroupIndex": 0
       }
     ]
   }
-
 }

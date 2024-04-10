@@ -329,7 +329,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma endregion 테스트 이펙트 끝
 
-
 	/* Light */
 	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
 
@@ -339,7 +338,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json", 200));
 #pragma endregion Hit 이펙트 끝
-
 
 	
 #pragma region 보스1 이펙트 시작
@@ -375,6 +373,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 
 #pragma region 플레이어 이펙트 시작
+		/* Breath */
+		FAILED_CHECK(Add_ToPool(iLevel, "Player/Breath/", "SY_Player_Breath02.json", 1));
+
 		/* Heal */
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json", 2));
 		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json", 2));
@@ -416,6 +417,11 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		//Mother_Egg
 		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead2.json"));
 
+#pragma region 맵에 전역으로 깔리는 이펙트
+
+		FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
+
+#pragma endregion // 맵에 전역으로 깔리는 이펙트
 
 	return S_OK;
 }

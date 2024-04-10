@@ -4,6 +4,9 @@
 #include "Weapon_Player.h"
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
+
 // Add_UIManager
 #include "UI_Manager.h"
 
@@ -163,7 +166,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	__super::Tick(fTimeDelta);
 
 	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
-	if(m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
+	if(m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 		KeyInput(fTimeDelta);
 	
 	if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
@@ -856,6 +859,9 @@ void CPlayer::KeyInput(_float fTimeDelta)
 
 HRESULT CPlayer::Ready_Components()
 {
+	/* 숨쉬는 이펙트 추가 */
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath02.json", this, TRUE, "lips_H_close_upnode");
+
 	return S_OK;
 }
 
@@ -1087,6 +1093,6 @@ void CPlayer::Free()
 		Safe_Delete(m_pActor);
 	}
 
-
+	//Safe_Release(m_pEffect);
 	
 }

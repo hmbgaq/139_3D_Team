@@ -2620,24 +2620,6 @@
     <Filter Include="02.GameObjects\05. DestructableProps\2. TNTPack\Projectile">
       <UniqueIdentifier>{437efaea-e026-4097-aa98-038f08ebcc19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\96. Test">
-      <UniqueIdentifier>{15ac04d5-eb01-420f-bca6-ee3ee75a9d55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\96. Test\Parts">
-      <UniqueIdentifier>{8d88110b-9015-4b72-8895-420d991ffc62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\96. Test\Parts\Body">
-      <UniqueIdentifier>{ae085884-d382-4d38-a786-6f8b07e5917a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\96. Test\Parts\Weapon">
-      <UniqueIdentifier>{7ba9e593-aec6-45c0-9cd6-e3c5bfc6be59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\96. Test\Parts\Weapon\HitPoint">
-      <UniqueIdentifier>{6d013c84-03fb-41f6-9676-662b25b97c04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\96. Test\Parts\Weapon\Cargo">
-      <UniqueIdentifier>{3f62b169-75d8-4d0f-b6f8-b0e3dacb23d4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\00. SkillIcon">
       <UniqueIdentifier>{e2046d16-712c-4726-a069-ab5e7a33750b}</UniqueIdentifier>
     </Filter>
@@ -3987,6 +3969,24 @@
     </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\1. Parts">
       <UniqueIdentifier>{f7dc8737-b5b3-45ac-9bf1-1a3d9f086c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera\96. Test">
+      <UniqueIdentifier>{15ac04d5-eb01-420f-bca6-ee3ee75a9d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera\96. Test\Parts">
+      <UniqueIdentifier>{8d88110b-9015-4b72-8895-420d991ffc62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera\96. Test\Parts\Body">
+      <UniqueIdentifier>{ae085884-d382-4d38-a786-6f8b07e5917a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera\96. Test\Parts\Weapon">
+      <UniqueIdentifier>{7ba9e593-aec6-45c0-9cd6-e3c5bfc6be59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera\96. Test\Parts\Weapon\HitPoint">
+      <UniqueIdentifier>{6d013c84-03fb-41f6-9676-662b25b97c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\97. Camera\96. Test\Parts\Weapon\Cargo">
+      <UniqueIdentifier>{3f62b169-75d8-4d0f-b6f8-b0e3dacb23d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7819,16 +7819,16 @@
       <Filter>02.GameObjects\05. DestructableProps\2. TNTPack\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Crane.h">
-      <Filter>02.GameObjects\96. Test</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HitPoint_Crane.h">
-      <Filter>02.GameObjects\96. Test\Parts\Weapon\HitPoint</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test\Parts\Weapon\HitPoint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Cargo_Crane.h">
-      <Filter>02.GameObjects\96. Test\Parts\Weapon\Cargo</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test\Parts\Weapon\Cargo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body_Crane.h">
-      <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test\Parts\Body</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Son_RotationProjectile.h">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
@@ -11138,16 +11138,16 @@
       <Filter>02.GameObjects\05. DestructableProps\2. TNTPack\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Crane.cpp">
-      <Filter>02.GameObjects\96. Test</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\HitPoint_Crane.cpp">
-      <Filter>02.GameObjects\96. Test\Parts\Weapon\HitPoint</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test\Parts\Weapon\HitPoint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Cargo_Crane.cpp">
-      <Filter>02.GameObjects\96. Test\Parts\Weapon\Cargo</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test\Parts\Weapon\Cargo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body_Crane.cpp">
-      <Filter>02.GameObjects\96. Test\Parts\Body</Filter>
+      <Filter>02.GameObjects\97. Camera\96. Test\Parts\Body</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Son_RotationProjectile.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\SecondBoss\Son\Projectile</Filter>
