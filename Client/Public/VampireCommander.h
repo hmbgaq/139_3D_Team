@@ -44,7 +44,7 @@ public:
 private:
 	CActor<CVampireCommander>* m_pActor = { nullptr };
 
-private:
+public:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
 	CEffect* m_pAuraEffect = { nullptr }; // TEST
 public://»À 13°³ 

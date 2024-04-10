@@ -134,6 +134,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 		{
 			Set_Dead(true);
 			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
+			m_bCntDead_Active = false;
 		}
 	}
 	
@@ -293,7 +294,7 @@ void CVampireCommander::Free()
 		Safe_Delete(m_pActor);
 	}
 
-
-	Safe_Release(m_pMapEffect);
-	Safe_Release(m_pAuraEffect);
+	if(nullptr != m_pMapEffect)
+		Safe_Release(m_pMapEffect);
+	//Safe_Release(m_pAuraEffect);
 }

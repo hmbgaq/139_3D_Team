@@ -6,6 +6,8 @@ void CVampireCommander_Stun_Start::Initialize(CVampireCommander* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	Safe_Release(pActor->m_pAuraEffect);
+
 }
 
 CState<CVampireCommander>* CVampireCommander_Stun_Start::Update(CVampireCommander* pActor, _float fTimeDelta)
