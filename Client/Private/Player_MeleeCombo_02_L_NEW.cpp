@@ -6,7 +6,7 @@ void CPlayer_MeleeCombo_02_L_NEW::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 8);
 
 	CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_R);
 
@@ -24,27 +24,58 @@ CState<CPlayer>* CPlayer_MeleeCombo_02_L_NEW::Update(CPlayer* pActor, _float fTi
 {
 	__super::Update(pActor, fTimeDelta);
 
-	if (false == m_bFlags[0] && pActor->Is_Inputable_Front(11))
+	if (false == m_bFlags[0])
 	{
-		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
-		m_bFlags[0] = true;
+		m_bFlags[0] = pActor->Is_Inputable_Front(11);
+		if (true == m_bFlags[0])
+		{
+			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
+		}
 	}
-
-	if (true == m_bFlags[0] && false == m_bFlags[1])
+	else if (false == m_bFlags[1])
 	{
 		pActor->Chasing_Attack(fTimeDelta);
+		m_bFlags[1] = pActor->Is_Inputable_Front(18);
+		if (true == m_bFlags[1])
+		{
+			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, false);
+		}
 	}
-
-	if (false == m_bFlags[1] && pActor->Is_Inputable_Front(18))
+	else if (false == m_bFlags[2])
 	{
-		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, false);
-		m_bFlags[1] = true;
-	}
+		m_bFlags[2] = pActor->Is_Inputable_Front(24);
+		//if (true == m_bFlags[2])
+		//{
 
-	if (pActor->Is_Inputable_Front(24 - 3))
+		//}
+	}
+	else 
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
+
+
+	//if (false == m_bFlags[0] && pActor->Is_Inputable_Front(11))
+	//{
+	//	CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
+	//	m_bFlags[0] = true;
+	//}
+
+	//if (true == m_bFlags[0] && false == m_bFlags[1])
+	//{
+	//	pActor->Chasing_Attack(fTimeDelta);
+	//}
+
+	//if (false == m_bFlags[1] && pActor->Is_Inputable_Front(18))
+	//{
+	//	CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, false);
+	//	m_bFlags[1] = true;
+	//}
+
+	//if (pActor->Is_Inputable_Front(24 - 3))
+	//{
+	//	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	//}
 	return nullptr;
 }
 
