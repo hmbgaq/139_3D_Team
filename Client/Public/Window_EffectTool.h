@@ -149,6 +149,7 @@ private:
 	/* Instance(Mesh) Desc */
 	CEffect_Instance::EFFECT_INSTANCE_DESC*							m_pInstanceDesc		= {};	// Instance(Mesh)만의 Desc
 	CVIBuffer_Effect_Model_Instance::EFFECT_MODEL_INSTANCE_DESC*	m_pMeshBufferDesc	= {};	// Instance(Mesh) 버퍼 Desc
+	CEffect_Void::UVSPRITE_DESC*									m_pSpriteDesc_Mesh = {};	// 메시가 사용할 Void의 스프라이트 Desc
 
 
 /* Trail */
@@ -229,7 +230,8 @@ private:
 	_int	m_iMaxNumInstance_Particle	= { 1000 };
 
 	_int	m_iBillBoard				= { 0 };
-	_int	m_iSoft						= { 0 };
+	_int	m_iSoft						= { 1 };
+	_int	m_iUseMask					= { 0 };	// 0이 true	
 
 	/* 파티클만의 속성 */
 	_int	m_iRecycle_Particle			= { 0 };
@@ -364,6 +366,8 @@ private:
 	/* 파티클 Rim & Bloom */
 	_float	m_fRimColor_Particle[4] = { 1.f, 1.f, 1.f, 1.f };
 	_float	m_vBloomPower_Particle[3] = { 1.f, 1.f, 1.f };
+
+
 
 #pragma endregion Particle 옵션 끝 =====================================================
 
@@ -519,6 +523,18 @@ private:
 
 	/* Dissolve */
 	_float	m_DissolveAmount = { 0.f };
+
+
+	/* For.Sprite_Mesh ======================================== */
+	_int	m_iSprite_Mesh = { 0 };	// 1이 True
+	_int	m_iSpriteLoop_Mesh = { 0 };
+	_int	m_vUV_MaxTileCount_Mesh[2] = { 7, 7 };
+	_float	m_fSequenceTerm_Mesh = { 0.05f };
+
+	CEffect_Void::TEXTURE m_eType_Sprite_Mesh = { CEffect_Void::TEXTURE_END };
+	/* For.Sprite_Mesh ======================================== */
+
+
 
 
 	/* Distortion ============================================== */

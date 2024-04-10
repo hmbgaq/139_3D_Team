@@ -74,6 +74,44 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
 
+			if (m_tVoidDesc.bUseSpriteAnim)
+			{
+				if (!m_tSpriteDesc.bSpriteFinish)
+				{
+					if (m_tVoidDesc.fSpriteTimeAcc > m_tSpriteDesc.fSequenceTerm)
+					{
+						(m_tSpriteDesc.vUV_CurTileIndex.x)++;	// 가로 인덱스 증가
+
+						if (m_tSpriteDesc.vUV_CurTileIndex.x == m_tSpriteDesc.vUV_MaxTileCount.x)
+						{
+							(m_tSpriteDesc.vUV_CurTileIndex.y)++;									// 세로 인덱스 증가
+							m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;	// 가로 인덱스 초기화
+
+							if (m_tSpriteDesc.vUV_CurTileIndex.y == m_tSpriteDesc.vUV_MaxTileCount.y)	// 세로 인덱스도 끝까지 왔다면
+							{
+								m_tSpriteDesc.bSpriteFinish = true;										// 스프라이트 애님 끝	
+							}
+						}
+						m_tVoidDesc.fSpriteTimeAcc = 0.f;	// 시간 초기화
+					}
+				}
+
+				if (m_tSpriteDesc.bSpriteFinish)
+				{
+					// 스프라이트 재생이 끝났고,
+					if (m_tSpriteDesc.bSpriteLoop)	// 스프라이트의 루프가 true이면
+					{
+						// 스프라이트 초기화
+						m_tSpriteDesc.Reset_Sprite();
+					}
+					else
+					{
+						// 아니면 렌더 끄기
+						m_tVoidDesc.bRender = false;
+						//m_tSpriteDesc.Reset_Sprite(); // 초기화
+					}
+				}
+			}
 
 
 			if (m_tVoidDesc.bRender)	 // 파티클 버퍼 업데이트
@@ -189,7 +227,9 @@ void CEffect_Instance::ReSet_Effect()
 
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-
+		m_tSpriteDesc.bSpriteFinish = false;
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
@@ -211,8 +251,11 @@ void CEffect_Instance::Init_ReSet_Effect()
 
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-
+		m_tSpriteDesc.bSpriteFinish = false;
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
+
 
 
 	m_tVoidDesc.bRender = false;
@@ -364,6 +407,17 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
 
+	/* Sprite Desc */
+	Out_Json["bSpriteLoop"] = m_tSpriteDesc.bSpriteLoop;
+	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
+
+	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
+	CJson_Utility::Write_Float2(Out_Json["vTileSize"], m_tSpriteDesc.vTileSize);
+
+	CJson_Utility::Write_Float2(Out_Json["vUV_MinTileCount"], m_tSpriteDesc.vUV_MinTileCount);
+	CJson_Utility::Write_Float2(Out_Json["vUV_MaxTileCount"], m_tSpriteDesc.vUV_MaxTileCount);
+
+
 	/* Distortion */
 	Out_Json["eType_Scroll"] = m_tDistortionDesc.eType_Scroll;
 
@@ -387,6 +441,21 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
+
+
+	/* Sprite Desc */
+	if (In_Json.contains("bSpriteLoop")) // 다시 저장 후 삭제
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bSpriteLoop"];
+		m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
+
+		CJson_Utility::Load_Float2(In_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
+		CJson_Utility::Load_Float2(In_Json["vTileSize"], m_tSpriteDesc.vTileSize);
+
+		CJson_Utility::Load_Float2(In_Json["vUV_MinTileCount"], m_tSpriteDesc.vUV_MinTileCount);
+		CJson_Utility::Load_Float2(In_Json["vUV_MaxTileCount"], m_tSpriteDesc.vUV_MaxTileCount);
+	}
+
 
 
 	/* Distortion */
@@ -516,6 +585,19 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])	// 노이즈 텍스처 있으면 바인드
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
 	}
+
+
+
+	// 스프라이트
+	if (m_tVoidDesc.bUseSpriteAnim)
+	{
+		m_tVoidDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
+									, (_float)(m_tSpriteDesc.vUV_CurTileIndex.y * m_tSpriteDesc.vTileSize.y) / m_tSpriteDesc.vTextureSize.y };
+
+		m_tVoidDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
+								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
+	}
+
 
 	/* UV ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));

@@ -46,6 +46,7 @@ public:
 
 		_float		fUV_RotDegree	= { 0.f };
 
+		_bool		bUseMask		= { true };
 		_bool		bUV_Wave		= { false };
 		_float2		vUV_WaveSpeed	= { 1.f, 1.f };
 		_float2		vUV_Offset_Mask = { 0.f, 0.f };
@@ -125,7 +126,7 @@ public:
 	{
 		_bool	bSpriteFinish   = { false };
 
-		_bool	bLoop = { true };				// 历厘
+		_bool	bSpriteLoop = { true };				// 历厘
 		_float	fSequenceTerm	= { 0.05f };	// 历厘
 
 		_float2 vTextureSize	 = { 1792.f, 1792.f };  // 历厘

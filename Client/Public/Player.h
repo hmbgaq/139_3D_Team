@@ -224,6 +224,8 @@ private:
 	_float m_fSuperChargeTime = { 0.f };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
+private:
+	CEffect* m_pEffect = { nullptr };
 
 public:
 	_bool	m_bPlayerCheck = true;

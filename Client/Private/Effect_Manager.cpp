@@ -439,6 +439,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 
 #pragma region 플레이어 이펙트 시작
+	/* Breath */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Breath/", "SY_Player_Breath04.json", 2));
+
 	/* Heal */
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json", 2));
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json", 2));

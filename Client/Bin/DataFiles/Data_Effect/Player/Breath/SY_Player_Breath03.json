@@ -90,7 +90,7 @@
       },
       "bBillBoard": true,
       "bDissolve": false,
-      "bLoop": false,
+      "bLoop": true,
       "bParentPivot": true,
       "bPlay": true,
       "bRender": false,

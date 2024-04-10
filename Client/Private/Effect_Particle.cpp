@@ -102,7 +102,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 					if (m_tSpriteDesc.bSpriteFinish)
 					{
 						// 스프라이트 재생이 끝났고,
-						if (m_tSpriteDesc.bLoop)	// 스프라이트의 루프가 true이면
+						if (m_tSpriteDesc.bSpriteLoop)	// 스프라이트의 루프가 true이면
 						{	
 							// 스프라이트 초기화
 							m_tSpriteDesc.Reset_Sprite();
@@ -273,7 +273,7 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 
 
 	/* Sprite Desc */
-	Out_Json["bLoop"] = m_tSpriteDesc.bLoop;
+	Out_Json["bSpriteLoop"] = m_tSpriteDesc.bSpriteLoop;
 	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
 
 	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
@@ -314,7 +314,14 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 
 	/* Sprite Desc */
-	m_tSpriteDesc.bLoop = In_Json["bLoop"]; 
+	if (In_Json.contains("bSpriteLoop")) // 다시 저장 후 if문 삭제
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bSpriteLoop"];
+	}
+	else
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bLoop"];
+	}
 	m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
 
 	CJson_Utility::Load_Float2(In_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
@@ -550,6 +557,7 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSoft", &m_tVoidDesc.bSoft, sizeof(_bool)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bUseMask", &m_tVoidDesc.bUseMask, sizeof(_bool)));
 
 	/* Color & Discard ===============================================================================*/
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tVoidDesc.eMode_Color, sizeof(_int)));

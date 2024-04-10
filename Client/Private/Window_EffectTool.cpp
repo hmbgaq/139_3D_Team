@@ -497,6 +497,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 				ImGui::Text(m_szPartNames[m_iCurPartIndex]);
 
 
+
 				/* 파트 루프 키고 끄기 */
 				ImGui::SeparatorText("Loop_Part");
 				ImGui::RadioButton("Loop_Part", &m_iLoop_Part, 0);
@@ -751,8 +752,6 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->bBillBoard = true;
 				else if (1 == m_iBillBoard)
 					m_pCurVoidDesc->bBillBoard = false;
-				ImGui::SeparatorText("");
-
 
 
 				/* 소프트 키고 끄기 */
@@ -763,6 +762,16 @@ void CWindow_EffectTool::Update_ParticleTab()
 					m_pCurVoidDesc->bSoft = true;
 				else if (1 == m_iSoft)
 					m_pCurVoidDesc->bSoft = false;
+
+
+				/* 마스크텍스처 사용 키고 끄기 */
+				ImGui::SeparatorText("Use Mask");
+				ImGui::RadioButton("Use Mask", &m_iUseMask, 0);
+				ImGui::RadioButton("UnUse Mask", &m_iUseMask, 1);
+				if (0 == m_iUseMask)
+					m_pCurVoidDesc->bUseMask = true;
+				else if (1 == m_iUseMask)
+					m_pCurVoidDesc->bUseMask = false;
 				ImGui::SeparatorText("");
 
 
@@ -793,12 +802,12 @@ void CWindow_EffectTool::Update_ParticleTab()
 						ImGui::RadioButton("None Loop Sprite_Particle", &m_iSpriteLoop, 1);
 						if (0 == m_iSpriteLoop)
 						{
-							m_pSpriteDesc_Particle->bLoop = true;
+							m_pSpriteDesc_Particle->bSpriteLoop = true;
 							//m_pSpriteDesc_Particle->Reset_Sprite();
 						}
 						else if (1 == m_iSpriteLoop)
 						{
-							m_pSpriteDesc_Particle->bLoop = false;
+							m_pSpriteDesc_Particle->bSpriteLoop = false;
 							//m_pSpriteDesc_Particle->Reset_Sprite();
 						}
 
@@ -2157,11 +2166,11 @@ void CWindow_EffectTool::Update_RectTab()
 					ImGui::RadioButton("None Loop Sprite_Rect", &m_iSpriteLoop, 1);
 					if (0 == m_iSpriteLoop)
 					{
-						pSpriteDesc->bLoop = true;
+						pSpriteDesc->bSpriteLoop = true;
 					}
 					else if (1 == m_iSpriteLoop)
 					{
-						pSpriteDesc->bLoop = false;
+						pSpriteDesc->bSpriteLoop = false;
 					}
 
 				}
@@ -2539,6 +2548,34 @@ void CWindow_EffectTool::Update_MeshTab()
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 
+						// 스프라이트 텍스처 시작_Mesh
+						if (ImGui::Button("Sprite_Base_Mesh"))	// 베이스 스프라이트로 변경_Mesh
+						{
+							m_eType_Sprite_Mesh = CEffect_Void::TEXTURE_DIFFUSE;
+
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite"));
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 25;
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						}
+						if (ImGui::Button("Sprite_Blood_Mesh"))	// 피 스프라이트로 변경_Mesh
+						{
+							m_eType_Sprite_Mesh = CEffect_Void::TEXTURE_DIFFUSE;
+
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite_Blood"));
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 29;
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						}
+						ImGui::SameLine();
+						if (ImGui::Button("Sprite_Smokes_Mesh"))	// 스모크 스프라이트로 변경_Mesh
+						{
+							m_eType_Sprite_Mesh = CEffect_Void::TEXTURE_DIFFUSE;
+
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse_Sprite_Smokes"));
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 35;
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
+						}
+						// 스프라이트 텍스처 끝_Mesh
+
 
 						if (ImGui::InputInt("Diffuse_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE], 1))
 						{
@@ -2551,6 +2588,7 @@ void CWindow_EffectTool::Update_MeshTab()
 							m_pCurVoidDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE] = m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE];
 						}
 
+						// 디퓨즈 텍스처 삭제_Mesh
 						if (ImGui::Button(" Remove Diffuse_Mesh ", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 25)))
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Remove_TextureCom(CEffect_Void::TEXTURE_DIFFUSE);
@@ -2610,6 +2648,15 @@ void CWindow_EffectTool::Update_MeshTab()
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 						}
 
+
+						if (ImGui::Button("Mask_Sprites_Mesh"))	// 스프라이트 마스크로 변경_Mesh
+						{
+							m_eType_Sprite_Mesh = CEffect_Void::TEXTURE_MASK;
+
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask_Sprite"));
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 28;
+							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
+						}
 
 
 						if (ImGui::InputInt("Mask_Mesh", &m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK], 1))
@@ -2842,6 +2889,89 @@ void CWindow_EffectTool::Update_MeshTab()
 					ImGui::SeparatorText("");
 				}
 
+
+#pragma region 스프라이트 설정_메쉬
+				if (ImGui::CollapsingHeader("Sprite_Mesh"))
+				{
+					/* 스프라이트 키고 끄기 */
+					ImGui::RadioButton("Off Sprite_Mesh", &m_iSprite_Mesh, 0);
+					ImGui::RadioButton("On Sprite_Mesh", &m_iSprite_Mesh, 1);
+					if (0 == m_iSprite_Mesh)
+					{
+						m_pCurVoidDesc->bUseSpriteAnim = false;
+					}
+					else if (1 == m_iSprite_Mesh)
+					{
+						// 1이 킨거.
+						m_pCurVoidDesc->bUseSpriteAnim = true;
+					}
+
+
+					if (m_pCurVoidDesc->bUseSpriteAnim)
+					{
+						m_pSpriteDesc_Mesh = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Sprite_Desc();
+
+						// 스프라이트의 루프를 키고 끄기_메쉬
+						ImGui::SeparatorText("Loop Sprite_Mesh");
+						ImGui::RadioButton("Loop Sprite_Mesh", &m_iSpriteLoop_Mesh, 0);
+						ImGui::RadioButton("None Loop Sprite_Mesh", &m_iSpriteLoop_Mesh, 1);
+						if (0 == m_iSpriteLoop_Mesh)
+						{
+							m_pSpriteDesc_Mesh->bSpriteLoop = true;
+							//m_pSpriteDesc_Mesh->Reset_Sprite();
+						}
+						else if (1 == m_iSpriteLoop_Mesh)
+						{
+							m_pSpriteDesc_Mesh->bSpriteLoop = false;
+							//m_pSpriteDesc_Mesh->Reset_Sprite();
+						}
+
+
+						/* 스프라이트 재생 속도_메쉬 */
+						ImGui::SeparatorText("Sprite Term");
+						if (ImGui::DragFloat("Sprite Term_Mesh", &m_fSequenceTerm_Mesh, 1, 1))
+						{
+							m_pSpriteDesc_Mesh->fSequenceTerm = m_fSequenceTerm_Mesh;
+							//m_pSpriteDesc_Mesh->Reset_Sprite();
+						}
+
+
+						/* 스프라이트 최대 가로 세로 지정_메쉬 */
+						if (CEffect_Void::TEXTURE_END != m_eType_Sprite_Mesh)
+						{
+							ImGui::SeparatorText("Max_TileCoun");
+							if (ImGui::InputInt2("Max_TileCount_Mesh", m_vUV_MaxTileCount_Mesh, 1))
+							{
+								_uint iX, iY;
+								dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_TextureCom(m_eType_Sprite_Mesh)->Get_TextureSize(&iX, &iY, m_iTexIndex_Mesh[m_eType_Sprite_Mesh]);
+								m_pSpriteDesc_Mesh->vTextureSize.x = (_float)iX;
+								m_pSpriteDesc_Mesh->vTextureSize.y = (_float)iY;
+
+								_float fTileX, fTileY;
+								fTileX = (_float)iX / m_vUV_MaxTileCount_Mesh[0];
+								fTileY = (_float)iY / m_vUV_MaxTileCount_Mesh[1];
+
+								m_pSpriteDesc_Mesh->vTileSize.x = fTileX;
+								m_pSpriteDesc_Mesh->vTileSize.y = fTileY;
+
+								m_pSpriteDesc_Mesh->vUV_MaxTileCount.x = (_float)m_vUV_MaxTileCount_Mesh[0];
+								m_pSpriteDesc_Mesh->vUV_MaxTileCount.y = (_float)m_vUV_MaxTileCount_Mesh[1];
+
+								m_pSpriteDesc_Mesh->Reset_Sprite();
+								m_pCurPartEffect->ReSet_Effect();
+							}
+
+							ImGui::Text("Current Index : %d, %d", m_pSpriteDesc_Mesh->vUV_CurTileIndex.x, m_pSpriteDesc_Mesh->vUV_CurTileIndex.y);
+						}
+					}
+					else
+					{
+						m_eType_Sprite_Mesh = CEffect_Void::TEXTURE_END;
+					}
+
+					ImGui::SeparatorText("");
+				}
+#pragma endregion
 
 
 				//if (ImGui::CollapsingHeader(" Morp_Mesh (Bat Test) "))
@@ -4110,13 +4240,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				m_iBillBoard = 1;
 
 
-			/* 소프트 여부 */
-			if (m_pCurVoidDesc->bSoft)
-				m_iSoft = 0;
-			else
-				m_iSoft = 1;
-
-
 			/* Z소팅 여부 */
 			if (dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Get_SortZ())
 				m_iSortZ = 0;
@@ -4129,7 +4252,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			else
 				m_iSprite_Particle = 0;
 
-			if (m_pSpriteDesc_Particle->bLoop)
+			if (m_pSpriteDesc_Particle->bSpriteLoop)
 				m_iSpriteLoop = 0;
 			else
 				m_iSpriteLoop = 1;
@@ -4184,6 +4307,12 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_fUV_RotDegree_Particle = m_pCurVoidDesc->fUV_RotDegree;
 
 
+			/* 마스크 사용 여부 */
+			if (m_pCurVoidDesc->bUseMask)
+				m_iUseMask = 0;
+			else
+				m_iUseMask = 1;
+
 
 			// 리지드바디 업데이트 =============================================================================================================
 			
@@ -4227,7 +4356,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				/* Force Mode */
 
 
-
 				/* 파워 */
 				m_vMinMaxPower_Particle[0] = m_pParticleBufferDesc->vMinMaxPower.x;
 				m_vMinMaxPower_Particle[1] = m_pParticleBufferDesc->vMinMaxPower.y;
@@ -4236,8 +4364,6 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 				/* 질량(Mass) */
 				m_vMinMaxMass_Particle[0] = m_pParticleBufferDesc->vMinMaxMass.x;
 				m_vMinMaxMass_Particle[1] = m_pParticleBufferDesc->vMinMaxMass.y;
-
-	
 
 			}
 			// 리지드바디 업데이트 =============================================================================================================
@@ -4615,6 +4741,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 		{
 #pragma region 메쉬(+버퍼) 디스크립션 얻어오기 시작
 			m_pCurVoidDesc = m_pCurPartEffect->Get_Desc();	// 이펙트_보이드 Desc
+			m_pSpriteDesc_Mesh = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Sprite_Desc();	// 메쉬(인스턴스)의 스프라이트 Desc 얻어오기
 			CEffect_Void::DISTORTION_DESC* pDistortionDesc = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_Distortion_Desc();	// 메쉬(인스턴스)의 디스토션 Desc 얻어오기
 			CVIBuffer_Effect_Model_Instance* pVIBuffer = dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Get_VIBufferCom();	// 메쉬(인스턴스)버퍼 얻어오기
 			m_pMeshBufferDesc = pVIBuffer->Get_Desc(); // 버퍼의 Desc 얻어오기
@@ -4635,6 +4762,25 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 			m_iShaderPassIndex_Mesh = m_pCurVoidDesc->iShaderPassIndex;
 
 			m_iRenderGroup_Mesh = m_pCurVoidDesc->iRenderGroup;
+
+
+
+			/* 스프라이트 애니메이션 사용여부_메쉬 */
+			if (m_pCurVoidDesc->bUseSpriteAnim)
+				m_iSprite_Mesh = 1;
+			else
+				m_iSprite_Mesh = 0;
+
+			if (m_pSpriteDesc_Mesh->bSpriteLoop)
+				m_iSpriteLoop_Mesh = 0;
+			else
+				m_iSpriteLoop_Mesh = 1;
+
+
+			m_vUV_MaxTileCount_Mesh[0] = (_int)m_pSpriteDesc_Mesh->vUV_MaxTileCount.x;
+			m_vUV_MaxTileCount_Mesh[1] = (_int)m_pSpriteDesc_Mesh->vUV_MaxTileCount.y;
+
+			m_fSequenceTerm_Mesh = m_pSpriteDesc_Mesh->fSequenceTerm;
 
 
 			/* UV 조정 값 업데이트 */

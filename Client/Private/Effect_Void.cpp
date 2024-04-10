@@ -196,6 +196,7 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 	Out_Json["bBillBoard"] = m_tVoidDesc.bBillBoard;
 	Out_Json["bDissolve"] = m_tVoidDesc.bDissolve;
 	Out_Json["bSoft"] = m_tVoidDesc.bSoft;
+	Out_Json["bUseMask"] = m_tVoidDesc.bUseMask;
 
 	CJson_Utility::Write_Float2(Out_Json["vUV_Offset"], m_tVoidDesc.vUV_Offset);
 	CJson_Utility::Write_Float2(Out_Json["vUV_Scale"], m_tVoidDesc.vUV_Scale);
@@ -286,6 +287,11 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 	if (In_Json.contains("bSoft")) // 다시 저장 후 if문 삭제
 	{
 		m_tVoidDesc.bSoft = (_bool)In_Json["bSoft"];
+	}
+
+	if (In_Json.contains("bUseMask")) // 다시 저장 후 if문 삭제
+	{
+		m_tVoidDesc.bUseMask = (_bool)In_Json["bUseMask"];
 	}
 
 
