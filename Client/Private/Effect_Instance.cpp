@@ -70,6 +70,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 			// 라이프타임 누적 시작
 			m_tVoidDesc.fTimeAcc += fTimeDelta;
+			m_tVoidDesc.fSpriteTimeAcc += fTimeDelta;
 			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */

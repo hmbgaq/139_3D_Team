@@ -105,7 +105,7 @@ void CProjectile_GroundWave::OnCollisionEnter(CCollider* other)
 		}
 
 
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 	}
 
 	//EFFECT_MANAGER->Return_ToPool(m_pEffect);
