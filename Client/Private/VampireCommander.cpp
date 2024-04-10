@@ -133,7 +133,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 		if (fTimeAcc >= 3.f)
 		{
 			Set_Dead(true);
-			m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
+			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
 		}
 	}
 	

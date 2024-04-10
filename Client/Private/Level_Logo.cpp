@@ -21,13 +21,13 @@ CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	//FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
 	Set_Filter();
 	
 	m_pDataManager = CData_Manager::GetInstance();
 
-	//FAILED_CHECK(Ready_Static_UI());
+	FAILED_CHECK(Ready_Static_UI());
 
 	FAILED_CHECK(m_pUIManager->Ready_MainMenu(LEVEL_LOGO));
 	m_pUIManager->Active_MainMenu();

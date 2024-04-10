@@ -57,7 +57,7 @@ HRESULT CMainApp::Initialize()
 	FAILED_CHECK(Ready_Font());
 
 	// FAILED_CHECK(Ready_Gara());
-
+	
 	FAILED_CHECK(Ready_Prototype_Component_ForStaticLevel());
 
 	FAILED_CHECK(m_pGameInstance->Off_Shader());

@@ -62,7 +62,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
-	//Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json");
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json");
 
 	PBR_DESC Desc_PBR = {};
 	Desc_PBR.bPBR_ACTIVE = true ;
