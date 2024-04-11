@@ -1,6 +1,9 @@
 #pragma once
 #include "Player_State_Normal.h"
 
+BEGIN(Engine)
+class CNavigation;
+END
 
 BEGIN(Client)
 
@@ -15,8 +18,12 @@ public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_ZipLine_Loop;
 
 private:
-	_float4x4 ZipLineMatrix = {};
-
+	_float3	  m_vZipLineDir = {};
+	CNavigation* m_pActorNavigation = { nullptr};
+	_float    m_fZipLineSpeed = 0.f;
+	_float	  m_fTimeAcc = 0.f;
+	_float4	  m_vArrivalPosition = {};
+	
 };
 
 END

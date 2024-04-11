@@ -126,6 +126,9 @@ public:
 	_float					Calc_Cooltime_Percent();
 	_float					Calc_Upper_Cooltime_Percent();
 
+	_vector					Get_BonePosForMyPos(const char* pBoneName, _fmatrix WorldMatrix);
+	
+
 
 	void					Set_Speed(_int iSpeed);
 

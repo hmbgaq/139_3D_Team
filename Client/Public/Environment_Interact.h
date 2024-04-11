@@ -118,6 +118,8 @@ public:
 		
 		_int			iSwitchIndex = -1;
 
+		_int			iArrivalCellIndex = -1;
+
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
 private:
@@ -155,7 +157,8 @@ public:
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	string&								Get_StringModelTag() { return m_pGameInstance->Convert_WString_To_String(m_tEnvironmentDesc.strModelTag);}
 	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
-	
+	CModel*								Get_ModelCom() { return m_pModelCom;}
+
 #ifdef _DEBUG
 	void								Set_InteractColliderSize(_float3 vInteractColliderSize);
 	void								Set_InteractColliderCenter(_float3 vInteractColliderCenter);
@@ -215,6 +218,7 @@ public: //!For SwitchFunction
 public: //!For ZipLineFunction				
 	void								ZipLine_Function();
 	_float4x4							Get_ZipLineBoneMatrix();
+	void								Set_ArrivalCellIndex(_int iArrivalCellIndex) { m_tEnvironmentDesc.iArrivalCellIndex = iArrivalCellIndex;}
 
 
 #ifdef _DEBUG

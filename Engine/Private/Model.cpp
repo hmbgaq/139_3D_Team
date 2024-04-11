@@ -708,6 +708,11 @@ _float CModel::Calc_Upper_Cooltime_Percent()
 	return Calc_Cooltime_Percent(m_iUpperAnimIndex);
 }
 
+_vector CModel::Get_BonePosForMyPos(const char* pBoneName, _fmatrix WorldMatrix)
+{
+	return Get_BonePtr(pBoneName)->Get_CombinedPosition(WorldMatrix);
+}
+
 void CModel::Set_Speed(_int iSpeed)
 {
 	//return m_Animations

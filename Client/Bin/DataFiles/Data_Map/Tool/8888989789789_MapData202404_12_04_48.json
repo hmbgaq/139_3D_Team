@@ -3752,10 +3752,208 @@
           [ 9.099629210140847e-07, 1.6560627652192905e-12, -1.0, 0.0 ],
           [ -3.3651303965598345e-11, 1.0, 1.6560321907180264e-12, 0.0 ],
           [ 1.0, 3.3651303965598345e-11, 9.099629210140847e-07, 0.0 ],
-          [ 54.04957962036133, 8.564148902893066, -60.22381591796875, 1.0 ]
+          [ 54.04957962036133, 7.994497776031494, -60.22381591796875, 1.0 ]
         ]
       },
       "Index": 208,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_ZipLineBase1",
+      "ObjectTag": "ZipLineBase1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 2.4236581325531006, 0.0, -0.613091230392456, 0.0 ],
+          [ 0.0, 2.5, 0.0, 0.0 ],
+          [ 0.613091230392456, 0.0, 2.4236581325531006, 0.0 ],
+          [ 43.871864318847656, 1.2834471464157104, -96.30415344238281, 1.0 ]
+        ]
+      },
+      "Index": 209,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentEntrance",
+      "ObjectTag": "MedievalDynastyCaveBentEntrance",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.1153503954410553, -3.620137022153358e-06, -0.4865124225616455, 0.0 ],
+          [ -1.4672349379907246e-06, 0.4999999701976776, -3.372621449670987e-06, 0.0 ],
+          [ 0.4865124225616455, 6.495893671853992e-07, -0.1153503954410553, 0.0 ],
+          [ 93.64039611816406, -43.17243957519531, -116.79348754882813, 1.0 ]
+        ]
+      },
+      "Index": 210,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.1916118860244751, -1.1267155059613287e-05, -0.4618275463581085, 0.0 ],
+          [ -9.621860044717323e-06, 0.4999999701976776, -8.206340680771973e-06, 0.0 ],
+          [ 0.4618275463581085, 5.742414487031056e-06, -0.1916118860244751, 0.0 ],
+          [ -10.692941665649414, -43.172550201416016, -115.77806854248047, 1.0 ]
+        ]
+      },
+      "Index": 211,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -2.442291736602783, -4.444790192792425e-06, 0.5340511202812195, 0.0 ],
+          [ -5.521747880266048e-06, 2.5, -4.444790192792425e-06, 0.0 ],
+          [ -0.5340511202812195, -5.521747880266048e-06, -2.442291736602783, 0.0 ],
+          [ 30.517086029052734, -19.115991592407227, -154.51673889160156, 1.0 ]
+        ]
+      },
+      "Index": 212,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
+      "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.0, 0.0, 0.0, 1.0 ]
+        ]
+      },
+      "Index": 213,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_Rock1",
+      "ObjectTag": "Rock1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 53.050899505615234, 4.76837158203125e-07, -93.38851928710938, 1.0 ]
+        ]
+      },
+      "Index": 214,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_RockIce1",
+      "ObjectTag": "RockIce1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 19.689298629760742, 0.0, -92.08252716064453, 1.0 ]
+        ]
+      },
+      "Index": 215,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_RockIce2",
+      "ObjectTag": "RockIce2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.5, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.5, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.5, 0.0 ],
+          [ 53.337921142578125, 6.449319362640381, -102.80191802978516, 1.0 ]
+        ]
+      },
+      "Index": 216,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockD",
+      "ObjectTag": "MedievalDynastyCaveRockD",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.527343213558197, 9.597255257176585e-07, 2.9532880783081055, 0.0 ],
+          [ 8.501240245095687e-08, 3.0, -9.597254120308207e-07, 0.0 ],
+          [ -2.9532880783081055, -8.501240955638423e-08, -0.527343213558197, 0.0 ],
+          [ 29.923507690429688, 6.449319362640381, -98.3723373413086, 1.0 ]
+        ]
+      },
+      "Index": 217,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockD",
+      "ObjectTag": "MedievalDynastyCaveRockD",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.9601902961730957, 0.0, -0.3970567286014557, 0.0 ],
+          [ 0.0, 4.0, 0.0, 0.0 ],
+          [ 0.3970567286014557, 0.0, 1.9601902961730957, 0.0 ],
+          [ 42.51253890991211, -1.361519694328308, -100.7852554321289, 1.0 ]
+        ]
+      },
+      "Index": 218,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveFootBridge1",
+      "ObjectTag": "InstanceLocomotiveFootBridge1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.06441463530063629, 1.1722986670292812e-07, -0.9979211688041687, 0.0 ],
+          [ 3.77962239284102e-09, 0.9999973177909851, 1.1722978854322719e-07, 0.0 ],
+          [ 0.9979211688041687, 3.779625057376279e-09, -0.06441463530063629, 0.0 ],
+          [ 45.20651626586914, 0.007069034967571497, -98.43150329589844, 1.0 ]
+        ]
+      },
+      "Index": 219,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ZipLineBase1",
       "ObjectTag": "ZipLineBase1",
@@ -16393,8 +16591,8 @@
         {
           "Instance_Center": [ 7.000335693359375, -0.017016559839248657, 50.329742431640625, 0.0 ],
           "Instance_Index": 3,
-          "Instance_Rotation": [ -0.07110273092985153, -0.22814908623695374, 0.016708621755242348, 0.9708827137947083 ],
-          "Instance_Scale": [ 0.9999971985816956, 0.9999972581863403, 0.9999989867210388, 0.0 ],
+          "Instance_Rotation": [ -0.07110275328159332, -0.22814910113811493, 0.0167086124420166, 0.9708827137947083 ],
+          "Instance_Scale": [ 0.9999967217445374, 0.9999971985816956, 0.9999985694885254, 0.0 ],
           "Instance_Translation": [ 7.000335693359375, -0.017016559839248657, 50.329742431640625, 0.0 ]
         },
         {
@@ -16407,8 +16605,8 @@
         {
           "Instance_Center": [ 14.065910339355469, -0.017019957304000854, -15.9036865234375, 0.0 ],
           "Instance_Index": 5,
-          "Instance_Rotation": [ 0.006280731409788132, 0.2606596350669861, 0.023254862055182457, 0.9651302099227905 ],
-          "Instance_Scale": [ 0.9999997615814209, 0.9999922513961792, 0.9999971389770508, 0.0 ],
+          "Instance_Rotation": [ 0.00628075934946537, 0.2606596350669861, 0.02325485460460186, 0.9651302099227905 ],
+          "Instance_Scale": [ 0.9999997615814209, 0.9999897480010986, 0.9999971389770508, 0.0 ],
           "Instance_Translation": [ 14.065910339355469, -0.017019957304000854, -15.9036865234375, 0.0 ]
         },
         {
@@ -16421,8 +16619,8 @@
         {
           "Instance_Center": [ 34.56605529785156, -0.01701769232749939, 42.239898681640625, 0.0 ],
           "Instance_Index": 7,
-          "Instance_Rotation": [ -0.3289763629436493, 0.19842128455638885, 0.1632915884256363, 0.90870201587677 ],
-          "Instance_Scale": [ 0.999998927116394, 0.9999988079071045, 0.9999973177909851, 0.0 ],
+          "Instance_Rotation": [ -0.3289763629436493, 0.19842129945755005, 0.1632915884256363, 0.9087020754814148 ],
+          "Instance_Scale": [ 0.9999988675117493, 0.9999988079071045, 0.9999973177909851, 0.0 ],
           "Instance_Translation": [ 34.56605529785156, -0.01701769232749939, 42.239898681640625, 0.0 ]
         },
         {
@@ -16458,13 +16656,13 @@
           "Instance_Index": 12,
           "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
           "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
-          "Instance_Translation": [ 74.48226928710938, -0.017021089792251587, -2.287109375, 0.0 ]
+          "Instance_Translation": [ 75.68556213378906, -0.017021089792251587, -0.7922219038009644, 0.0 ]
         },
         {
           "Instance_Center": [ 55.346771240234375, -0.017021089792251587, 3.923065185546875, 0.0 ],
           "Instance_Index": 13,
           "Instance_Rotation": [ -0.0, -0.6669583320617676, -0.0, 0.7450950145721436 ],
-          "Instance_Scale": [ 0.9999984502792358, 1.0, 0.9999984502792358, 0.0 ],
+          "Instance_Scale": [ 0.999997615814209, 1.0, 0.999997615814209, 0.0 ],
           "Instance_Translation": [ 55.346771240234375, -0.017021089792251587, 3.923065185546875, 0.0 ]
         },
         {
@@ -16479,20 +16677,20 @@
           "Instance_Index": 15,
           "Instance_Rotation": [ -0.0, -0.35267680883407593, -0.0, 0.9357451796531677 ],
           "Instance_Scale": [ 0.9999994039535522, 1.0, 0.9999994039535522, 0.0 ],
-          "Instance_Translation": [ 71.6896743774414, -0.01702052354812622, -12.605224609375, 0.0 ]
+          "Instance_Translation": [ 72.70257568359375, -0.01702052354812622, -13.758072853088379, 0.0 ]
         },
         {
           "Instance_Center": [ 55.421958923339844, -0.01702222228050232, -42.48046875, 0.0 ],
           "Instance_Index": 16,
-          "Instance_Rotation": [ -0.0, -0.14028654992580414, -0.0, 0.9901109337806702 ],
-          "Instance_Scale": [ 0.9999992847442627, 1.0, 0.9999992847442627, 0.0 ],
+          "Instance_Rotation": [ -0.0, -0.14028653502464294, -0.0, 0.9901109337806702 ],
+          "Instance_Scale": [ 0.9999992251396179, 1.0, 0.9999992251396179, 0.0 ],
           "Instance_Translation": [ 55.421958923339844, -0.01702222228050232, -42.48046875, 0.0 ]
         },
         {
           "Instance_Center": [ 30.523452758789063, -0.017021089792251587, -39.966583251953125, 0.0 ],
           "Instance_Index": 17,
-          "Instance_Rotation": [ -4.73823718039057e-07, 0.9177847504615784, -4.73823718039057e-07, 0.39707815647125244 ],
-          "Instance_Scale": [ 0.9999994039535522, 1.0, 0.9999994039535522, 0.0 ],
+          "Instance_Rotation": [ -4.738237464607664e-07, 0.9177847504615784, -4.73823718039057e-07, 0.39707818627357483 ],
+          "Instance_Scale": [ 0.9999953508377075, 1.0, 0.9999953508377075, 0.0 ],
           "Instance_Translation": [ 30.523452758789063, -0.017021089792251587, -39.966583251953125, 0.0 ]
         },
         {
@@ -16852,6 +17050,88 @@
       "ObjectTag": "TeslaEmbankment8",
       "ShaderPassIndex": 0,
       "Type": "Instance"
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.0, 0.0, 0.0, 1.0 ]
+        ]
+      },
+      "Index": 22,
+      "InstanceCount": 9,
+      "InstanceInfo_Json": [
+        {
+          "Instance_Center": [ 33.09136962890625, 0.0, -92.49794006347656, 0.0 ],
+          "Instance_Index": 0,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 33.09136962890625, 0.0, -92.49794006347656, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 26.112789154052734, -1.9073486328125e-06, -87.76372528076172, 0.0 ],
+          "Instance_Index": 1,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 26.112789154052734, -1.9073486328125e-06, -87.76372528076172, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 31.647083282470703, 0.0, -86.10211181640625, 0.0 ],
+          "Instance_Index": 2,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 31.647083282470703, 0.0, -86.10211181640625, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 26.178775787353516, 0.0, -83.45419311523438, 0.0 ],
+          "Instance_Index": 3,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 26.178775787353516, 0.0, -83.45419311523438, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 69.57250213623047, -1.9073486328125e-06, -81.80067443847656, 0.0 ],
+          "Instance_Index": 4,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 69.57250213623047, -1.9073486328125e-06, -81.80067443847656, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 66.49055480957031, -1.9073486328125e-06, -76.94866943359375, 0.0 ],
+          "Instance_Index": 5,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 66.49055480957031, -1.9073486328125e-06, -76.94866943359375, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 62.24717330932617, 0.0, -71.09159851074219, 0.0 ],
+          "Instance_Index": 6,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 62.24717330932617, 0.0, -71.09159851074219, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 67.77383422851563, -1.9073486328125e-06, -71.50104522705078, 0.0 ],
+          "Instance_Index": 7,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 67.77383422851563, -1.9073486328125e-06, -71.50104522705078, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 58.331687927246094, 0.0, -66.44854736328125, 0.0 ],
+          "Instance_Index": 8,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 58.331687927246094, 0.0, -66.44854736328125, 0.0 ]
+        }
+      ],
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TreeSnowOzSpruceWind",
+      "ObjectTag": "TreeSnowOzSpruceWind",
+      "ShaderPassIndex": 1,
+      "Type": "Instance"
     }
   ],
   "Interact_Json": [
@@ -16906,7 +17186,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16919,7 +17200,7 @@
           [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
           [ 0.0, 0.9999987483024597, -1.656062982059725e-12, 0.0 ],
           [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 66.17658996582031, 1.4469779330283927e-07, -6.607514381408691, 1.0 ]
+          [ 73.99967193603516, 1.4469779330283927e-07, -6.7266035079956055, 1.0 ]
         ]
       },
       "Enable": false,
@@ -16959,7 +17240,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16972,14 +17254,14 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 66.17658996582031, -2.3999998569488525, -5.407514572143555, 1.0 ]
+          [ 73.99967193603516, -2.3999998569488525, -5.526603698730469, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 2,
-      "InteractColliderCenter": [ 0.0, 4.0, 0.30000001192092896, 0.0 ],
+      "InteractColliderCenter": [ 0.0, 4.0, 0.800000011920929, 0.0 ],
       "InteractColliderSize": [ 0.30000001192092896, 1.0, 0.25, 0.0 ],
       "InteractGroupIndex": 0,
       "InteractLadderCount": 4,
@@ -16988,7 +17270,7 @@
       "InteractMoveColliderCenter": [ 0.0, 6.0, -1.2000000476837158, 0.0 ],
       "InteractMoveColliderSize": [ 2.200000047683716, 1.0, 1.2000000476837158, 0.0 ],
       "InteractReverseLadderCount": 4,
-      "InteractState": 1,
+      "InteractState": 0,
       "InteractType": 10,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
@@ -17002,7 +17284,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.5, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2999999523162842, 0.8500000238418579, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 90.0,
@@ -17012,7 +17294,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17025,14 +17308,14 @@
           [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
           [ -1.8199259557150071e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
           [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
-          [ 66.17658996582031, -2.3999998569488525, -7.807514190673828, 1.0 ]
+          [ 73.99967193603516, -2.3999998569488525, -7.926603317260742, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 3,
-      "InteractColliderCenter": [ 0.0, 4.0, -0.30000001192092896, 0.0 ],
+      "InteractColliderCenter": [ 0.0, 4.0, -0.800000011920929, 0.0 ],
       "InteractColliderSize": [ 0.30000001192092896, 1.0, 0.25, 0.0 ],
       "InteractGroupIndex": 0,
       "InteractLadderCount": 4,
@@ -17041,7 +17324,7 @@
       "InteractMoveColliderCenter": [ 0.0, 6.0, 1.2000000476837158, 0.0 ],
       "InteractMoveColliderSize": [ 2.200000047683716, 1.0, 1.2000000476837158, 0.0 ],
       "InteractReverseLadderCount": 4,
-      "InteractState": 1,
+      "InteractState": 0,
       "InteractType": 10,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
@@ -17055,7 +17338,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.5, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2999999523162842, 0.8500000238418579, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 90.0,
@@ -17065,7 +17348,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17118,7 +17402,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17171,7 +17456,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17224,7 +17510,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17277,7 +17564,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17330,7 +17618,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17383,7 +17672,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17436,7 +17726,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17489,7 +17780,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17542,7 +17834,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17595,7 +17888,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17648,7 +17942,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17661,14 +17956,14 @@
           [ 1.0, 1.8199233409177396e-06, 0.0, 0.0 ],
           [ -1.8199233409177396e-06, 1.0, 1.819902763600112e-06, 0.0 ],
           [ 3.3120834633942886e-12, -1.819902763600112e-06, 1.0, 0.0 ],
-          [ 75.04328918457031, 4.420855522155762, -21.77427101135254, 1.0 ]
+          [ 75.04328918457031, 4.420855522155762, -21.593177795410156, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 15,
-      "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractColliderCenter": [ 0.20000000298023224, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": 1,
       "InteractLadderCount": 4,
@@ -17701,7 +17996,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": true,
@@ -17754,7 +18050,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17807,7 +18104,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17860,7 +18158,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17913,7 +18212,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -17966,7 +18266,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": true,
@@ -17976,10 +18277,10 @@
       "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
-          [ 0.32351699471473694, 0.4034385681152344, 1.3009895086288452, 0.0 ],
-          [ -0.21584263443946838, 0.9465136528015137, -0.2398415505886078, 0.0 ],
-          [ -0.9486903548240662, -0.14515450596809387, 0.28092339634895325, 0.0 ],
-          [ 52.220516204833984, 15.220341682434082, -59.86998748779297, 1.0 ]
+          [ 0.4407384395599365, 0.40189284086227417, 1.9089871644973755, 0.0 ],
+          [ -0.045205648988485336, 0.9796028733253479, -0.1957957148551941, 0.0 ],
+          [ -0.9743741154670715, -1.1324948445690097e-06, 0.2249593883752823, 0.0 ],
+          [ 52.157169342041016, 14.649983406066895, -60.144412994384766, 1.0 ]
         ]
       },
       "Enable": false,
@@ -17989,13 +18290,13 @@
       "InteractColliderCenter": [ 0.0, -2.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 0.5, 2.0, 1.100000023841858, 0.0 ],
       "InteractGroupIndex": -1,
-      "InteractLadderCount": 8,
+      "InteractLadderCount": 3,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.5, -0.5, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "InteractReverseLadderCount": 8,
-      "InteractState": 0,
+      "InteractReverseLadderCount": 3,
+      "InteractState": 1,
       "InteractType": 23,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
@@ -18008,8 +18309,67 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.4500000476837158, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.4500000476837158, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": [
+        { "UpdateCellIndex": 638 },
+        { "UpdateCellIndex": 637 },
+        { "UpdateCellIndex": 631 },
+        { "UpdateCellIndex": 630 }
+      ],
+      "UseGravity": true,
+      "iArrivalCellIndex": 655
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 0.18162786960601807, 0.0, 0.9833667278289795, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ -0.9833667278289795, 0.0, 0.18162786960601807, 0.0 ],
+          [ 43.32474899291992, 4.330756187438965, -99.95539093017578, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 22,
+      "InteractColliderCenter": [ -0.6000000238418579, 1.0, -0.4000000059604645, 0.0 ],
+      "InteractColliderSize": [ 0.75, 1.0, 0.75, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 5,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 1,
+      "InteractType": 2,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": true,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_ChainJumpDown1",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainJumpDown1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 0.8999999761581421, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -18019,7 +18379,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     }
   ],
   "LightObject_Json": [
@@ -18039,8 +18400,9 @@
       "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
       "Effect": true,
       "EffectType": 0,
+      "Intensity": 0.0,
       "LightEnable": true,
-      "LightIndex": 1,
+      "LightIndex": 3,
       "LightType": 1,
       "ModelTag": "Prototype_Component_Model_Lamp2",
       "OuterCutOff": 0.0,
@@ -18067,8 +18429,9 @@
       "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
       "Effect": true,
       "EffectType": 0,
+      "Intensity": 0.0,
       "LightEnable": true,
-      "LightIndex": 2,
+      "LightIndex": 4,
       "LightType": 1,
       "ModelTag": "Prototype_Component_Model_Lamp4",
       "OuterCutOff": 0.0,
@@ -18086,8 +18449,9 @@
       "CutOff": 0.0,
       "Diffuse": [ 1.0, 1.0, 1.0, 1.0 ],
       "Direction": [ 1.0, -1.0, 1.0, 0.0 ],
+      "Intensity": 0.0,
       "LightEnable": true,
-      "LightIndex": 0,
+      "LightIndex": 2,
       "OuterCutOff": 0.0,
       "Position": [ -222.13111877441406, -48.08638000488281, -452.5732727050781, 1.0 ],
       "Range": 0.0,
@@ -18115,7 +18479,7 @@
       "ElevatorLever": false,
       "ElevatorMaxHeight": 10.0,
       "ElevatorMinHeight": 0.0,
-      "ElevatorRotationSpeed": 1.1645490502070918e-28,
+      "ElevatorRotationSpeed": 2.0325215151706473e-30,
       "ElevatorSpeed": 2.0,
       "ElevatorType": 2,
       "ModelTag": "Prototype_Component_Model_Elevator1",
@@ -18175,7 +18539,7 @@
       "ElevatorLever": false,
       "ElevatorMaxHeight": 17.152999877929688,
       "ElevatorMinHeight": 2.0,
-      "ElevatorRotationSpeed": 6.672374277493868e-27,
+      "ElevatorRotationSpeed": 1.003329700456569e-42,
       "ElevatorSpeed": 2.0,
       "ElevatorType": 1,
       "ModelTag": "Prototype_Component_Model_Elevator1",

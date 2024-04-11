@@ -41,7 +41,7 @@ private:
 	_int			TempLightNumber = 0;
 	
 	//string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountain_MapData.json";
-	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/W111111_MapData202404_11_04_04.json";
+	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountain_MapData.json";
 
 public:
 	static CLevel_SnowMountain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

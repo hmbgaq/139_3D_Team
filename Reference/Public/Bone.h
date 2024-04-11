@@ -21,6 +21,8 @@ public:
 
 	_float4x4& Get_CombinedTransformationFloat4x4()  { return m_CombinedTransformationMatrix; }
 
+	_vector&   Get_CombinedPosition(_fmatrix WorldMatrix);
+
 public:
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix) {
 		XMStoreFloat4x4(&m_TransformationMatrix, TransformationMatrix);

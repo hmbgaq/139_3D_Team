@@ -152,10 +152,10 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 {
 	if (ImGui::Button("Load Intro Shader"))	// 베이스 디퓨즈로 변경
 	{
-		MSG_BOX("아직 셰이더는 안만들었습니당 :) ");
+		MSG_BOX("아직 셰이더는 안만들었습니당 :) >_<");
 		m_iSkyTextureIndex = 0;
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1);
-		Load_Finished_Light(LEVEL::LEVEL_GAMEPLAY);
+		//Load_Finished_Light(LEVEL::LEVEL_GAMEPLAY);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(0);
 		//m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_GAMEPLAY), "../Bin/DataFiles/Data_Shader/Level/Level_Gameplay_Shader.json");
 	}
@@ -163,16 +163,16 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 	{
 		m_iSkyTextureIndex = 1;
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1BOSS);
-		Load_Finished_Light(LEVEL::LEVEL_INTRO_BOSS);
+		//Load_Finished_Light(LEVEL::LEVEL_INTRO_BOSS);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(1);
 		m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_INTRO_BOSS), "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
 	}
 	if (ImGui::Button("Load SnowMountain Shader"))	// 베이스 디퓨즈로 변경
 	{
-		MSG_BOX("아직 셰이더는 안만들었습니당 :) ");
+		MSG_BOX("아직 셰이더는 안만들었습니당 :) >_< ");
 		m_iSkyTextureIndex = 8;
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2);
-		Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAIN);
+		//Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAIN);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(2);
 		//m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
 	}
@@ -181,7 +181,7 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 		m_iSkyTextureIndex = 3; /* Skybox 셋팅 */
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2BOSS);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(3); /* HDR 셋팅 */
-		Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAINBOSS); /* 빛 가져오기 */
+		//Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAINBOSS); /* 빛 가져오기 */
 		m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), "../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json"); /* 셰이더 옵션 켜기 */ 
 	}
 
