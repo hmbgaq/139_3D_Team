@@ -223,7 +223,8 @@ void CSon_Projectile::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pEffect);
+	if(nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 
 }

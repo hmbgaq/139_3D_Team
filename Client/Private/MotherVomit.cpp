@@ -56,7 +56,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath3.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath4.json", this);
 
 
 	return S_OK;
@@ -218,7 +218,7 @@ void CMotherVomit::Free()
 {
 	__super::Free();
 
-
-	Safe_Release(m_pEffect);
+	if(nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 }
