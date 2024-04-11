@@ -44,7 +44,7 @@ HRESULT CUI_MouseCursor::Initialize(void* pArg)
 	m_bActive = true;
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 0.f, 1.f, 0.f), 0.35f);
 
-	m_tUIInfo.iRenderGroup = 11;
+	m_tUIInfo.iRenderGroup = 17;
 
 	return S_OK;
 }

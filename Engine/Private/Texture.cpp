@@ -105,7 +105,7 @@ HRESULT CTexture::Bind_ShaderResource(CShader * pShader, const _char * pConstant
 	if (nullptr == this)
 		return S_OK;
 
-	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
+		return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 
 HRESULT CTexture::Bind_ShaderResources(CShader * pShader, const _char * pConstantName)

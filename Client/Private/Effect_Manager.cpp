@@ -35,6 +35,7 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
 
+
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
@@ -44,12 +45,15 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 //#endif // _DEBUG
 	}
 
+	if(0 >= EffectPool->size())
+		return nullptr;
+
 	CEffect* pEffect = EffectPool->front();
 
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
+		//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
 		return nullptr;
 //#endif // _DEBUG
@@ -92,12 +96,15 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 //#endif // _DEBUG
 	}
 
+	if (0 >= EffectPool->size())
+		return nullptr;
+
 	CEffect* pEffect = EffectPool->front();
 
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
+		//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
 		return nullptr;
 //#endif // _DEBUG
@@ -138,13 +145,17 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 //#endif // _DEBUG
 	}
 
+
+	if (0 >= EffectPool->size())
+		return nullptr;
+
 	CEffect* pEffect = EffectPool->front();
 
 
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
+		//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
 		return nullptr;
 //#endif // _DEBUG
@@ -388,7 +399,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma endregion 테스트 이펙트 끝
 
-
 	/* Light */
 	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
 
@@ -399,11 +409,10 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json", 200));
 #pragma endregion Hit 이펙트 끝
 
-
 	
 #pragma region 보스1 이펙트 시작
 	/* Boos 1 */
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_08.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_02.json")); 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
@@ -421,26 +430,31 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma region 보스2 이펙트 시작
 	/* Boos 2 */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_Map_05.json", 2));
 
-	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json", 200));
+	/* SnowBoss Falling Leaves */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_02.json", 30));
+
+	/* Boss2 Monster_Explosion */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_ExplosionNonLoop.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_Blood3.json", 50));
+
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
-
+	
 	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherProjectileDead.json", 200));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherShakeTreeProjectile1.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "Circle_Floor_04.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherProjectileDead_05.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherShakeTreeProjectile1.json", 200));
 
-	/* SnowBoss Falling Leaves */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_04.json", 10));
-
+	//Mother_Egg
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead3.json", 10));
 
 	/* Mother Breath */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_02.json", 300));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Mini_Circle_02.json", 300));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_01.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_06.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_03.json", 2));
 
 #pragma endregion 보스2 이펙트 끝
 
@@ -487,6 +501,13 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
 #pragma endregion 플레이어 이펙트 끝
 
+	
+
+#pragma region 맵에 전역으로 깔리는 이펙트
+
+		FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
+
+#pragma endregion // 맵에 전역으로 깔리는 이펙트
 
 	return S_OK;
 }

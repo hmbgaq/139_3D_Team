@@ -29,6 +29,7 @@ public:
 public:
 	void					Set_SkillState(SKILLSTATE eState) { m_eSkillState = eState; }
 	void					Set_SkillUnlock(_bool bUnlock) { m_bUnlock = bUnlock; }
+	_bool					Get_SkillUnlock() { return m_bUnlock; }
 
 private:
 	virtual HRESULT			Ready_Components() override;

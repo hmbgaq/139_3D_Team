@@ -29,12 +29,12 @@ public:
 public:
 	_vector				m_vPlayerPos = {};
 	_vector				m_vMonsterPos = {};
+	_bool				m_bFirst = true;
+	_float				m_fEffectTimeAcc = 0.f;
 
 private:
-	CEffect* m_pEffect			= { nullptr };
-	CEffect* m_pCircleEffect	= { nullptr };
-
 	CMother* m_pMother = { nullptr };
+
 public:
 	static CMotherVomit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg);

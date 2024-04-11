@@ -39,6 +39,8 @@ HRESULT CUI_Skill_Preview::Initialize(void* pArg)
 
 	Start_Setting();
 
+	m_iShaderNum = 0;
+
 	return S_OK;
 }
 
@@ -51,42 +53,44 @@ void CUI_Skill_Preview::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	if (m_Time + m_fFrameChangeTime < GetTickCount64())
+	if (m_bActive == true)
 	{
-		++m_iCurrentFrame;
 
-		if (m_iCurrentFrame >= m_iMaxFrame && m_bFinish == false)
-		{// Loop
-
-			if(m_bLoop == true)
-				m_iCurrentFrame = 0;
-
-			m_bFinish = true;
-		}
-
-		m_Time = (DWORD)GetTickCount64();
 	}
+
 }
 
 void CUI_Skill_Preview::Late_Tick(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-		return;
+	if (m_bActive == true)
+	{
+		if (m_eTextureKind != TEXTURE_END)
+		{
+			if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+				return;
+		}
+	}
 }
 
 HRESULT CUI_Skill_Preview::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
+	if (m_bActive == true)
+	{
+		if (m_eTextureKind != TEXTURE_END)
+		{
+			if (FAILED(Bind_ShaderResources()))
+				return E_FAIL;
 
-	//! 이 셰이더에 0번째 패스로 그린다.
-	m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+			//! 이 셰이더에 0번째 패스로 그린다.
+			m_pShaderCom->Begin(m_iShaderNum); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-	//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-	m_pVIBufferCom->Bind_VIBuffers();
+			//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+			m_pVIBufferCom->Bind_VIBuffers();
 
-	//! 바인딩된 정점, 인덱스를 그려
-	m_pVIBufferCom->Render();
+			//! 바인딩된 정점, 인덱스를 그려
+			m_pVIBufferCom->Render();
+		}
+	}
 
 	return S_OK;
 }
@@ -112,149 +116,123 @@ void CUI_Skill_Preview::Start_Setting()
 	//m_pTransformCom->Set_Scaling(g_iWinSizeX, g_iWinSizeY, 0.1f); // Window Size
 	//m_pTransformCom->Set_Position(XMVectorSet(0.0f, 0.0f, 0.5f, 1.0f)); // Center Position
 
-	m_bFinish = false;			 // Start -> Go
-	m_bSkip = false;			 // Skip
-
-	m_iShaderNum = 0;			 // Defualt
-
-	m_iMaxFrame = 0; // Max
-
-	// 20으로 여태 속도 잘 맞춰서 쓰고있었는데, 왜 인지 모르겠지만 갑자기 속도가 늦음 (갑자기 20으로 잘됨)
-	m_fFrameChangeTime = 20.f;	 // FrameSpeed
-	m_iCurrentFrame = 0;		 // Frame
 }
 
-void CUI_Skill_Preview::Change_Priview(const string& strUIName)
+// 스킬 미리보기 변경
+void CUI_Skill_Preview::Change_Preview(const string& strUIName)
 {
 	if (m_strPreName != strUIName)
 	{
 #pragma region 1
 		if (strUIName == "Kick")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = KICK;
 		}
 		else if (strUIName == "ElectricDash")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = ELECTRICDASH;
 		}
 		else if (strUIName == "DashShock")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = DASHSHOCK;
 		}
 		else if (strUIName == "ElectricCord")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = ELECTRICCORD;
 		}
 		else if (strUIName == "PowerUP")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = POWERUP;
 		}
 #pragma region 2
 		else if (strUIName == "UpperCut")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = UPPERCUT;
 		}
 		else if (strUIName == "OneTouch")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = ONETOUCH;
 		}
 		else if (strUIName == "TwoTouch")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = TWOTOUCH;
 		}
 		else if (strUIName == "ThreeTouch")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = THREETOUCH;
 		}
 		else if (strUIName == "ComboPunch")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = COMBOPUNCH;
 		}
 #pragma region 3
 		else if (strUIName == "Punch")
 		{
-			m_bLoop = true;
-			m_bSkip = false;
-			m_bFinish = false;
-			m_iMaxFrame = 0;
-			m_iCurrentFrame = 0;		 // Frame
+			m_eTextureKind = PUNCH;
 		}
 		else if (strUIName == "SuperChargeMod")
 		{
-
+			m_eTextureKind = SUPERCHARGEMOD;
 		}
 		else if (strUIName == "TeleportPunch")
 		{
-
+			m_eTextureKind = TELEPORTPUNCH;
 		}
 		else if (strUIName == "IncreaseEXP")
 		{
-
+			m_eTextureKind = INCREASEEXP;
 		}
 		else if (strUIName == "NPCPowerUP")
 		{
-
+			m_eTextureKind = NPCPOWERUP;
 		}
 #pragma region 4
 		else if (strUIName == "Heal")
 		{
-
+			m_eTextureKind = HEAL;
 		}
 		else if (strUIName == "RecoveryEnergy")
 		{
-
+			m_eTextureKind = RECOVERYENERGY;
 		}
 		else if (strUIName == "IncreaseHP")
 		{
-
+			m_eTextureKind = INCREASEHP;
 		}
 		else if (strUIName == "IncreaseEnergy")
 		{
-
+			m_eTextureKind = INCREASEENERGY;
 		}
 		else if (strUIName == "MaxHP")
 		{
+			m_eTextureKind = MAXHP;
+		}
 
+#pragma region Weapon
+		else if (strUIName == "Revolver")
+		{
+			m_eTextureKind = REVOLVER;
+		}
+		else if (strUIName == "Shotgun")
+		{
+			m_eTextureKind = SHOTGUN;
+		}
+		else if (strUIName == "Rifle")
+		{
+			m_eTextureKind = RIFLE;
+		}
+#pragma region WeaponSkill
+		else if (strUIName == "Revolver_Skill1")
+		{
+			m_eTextureKind = REVOLVER_SKILL1;
+		}
+		else if (strUIName == "Shotgun_Skill1")
+		{
+			m_eTextureKind = SHOTGUN_SKILL1;
+		}
+		else if (strUIName == "Rifle_Skill1")
+		{
+			m_eTextureKind = RIFLE_SKILL1;
 		}
 	}
 
@@ -263,9 +241,141 @@ void CUI_Skill_Preview::Change_Priview(const string& strUIName)
 
 HRESULT CUI_Skill_Preview::Ready_Components()
 {
+	////! For.Com_Texture // MainStart (LogoLevel)
+	//if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Inventory_Background"),
+	//	TEXT("Com_Texture_PreView"), reinterpret_cast<CComponent**>(&m_pTextureCom[SKILLPREVIEW]))))
+	//	return E_FAIL;
+
 	//! For.Com_Texture // MainStart (LogoLevel)
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Inventory_Background"),
-		TEXT("Com_Texture_PreView"), reinterpret_cast<CComponent**>(&m_pTextureCom[SKILLPREVIEW]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Kick"),
+		TEXT("Com_Texture_Kick"), reinterpret_cast<CComponent**>(&m_pTextureCom[KICK]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ComboPunch"),
+		TEXT("Com_Texture_ComboPunch"), reinterpret_cast<CComponent**>(&m_pTextureCom[COMBOPUNCH]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("DashShock"),
+		TEXT("Com_Texture_DashShock"), reinterpret_cast<CComponent**>(&m_pTextureCom[DASHSHOCK]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ElectricCord"),
+		TEXT("Com_Texture_ElectricCord"), reinterpret_cast<CComponent**>(&m_pTextureCom[ELECTRICCORD]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ElectricDash"),
+		TEXT("Com_Texture_ElectricDash"), reinterpret_cast<CComponent**>(&m_pTextureCom[ELECTRICDASH]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("IncreaseEnergy"),
+		TEXT("Com_Texture_IncreaseEnergy"), reinterpret_cast<CComponent**>(&m_pTextureCom[INCREASEENERGY]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("IncreaseEXP"),
+		TEXT("Com_Texture_IncreaseEXP"), reinterpret_cast<CComponent**>(&m_pTextureCom[INCREASEEXP]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("IncreaseHP"),
+		TEXT("Com_Texture_IncreaseHP"), reinterpret_cast<CComponent**>(&m_pTextureCom[INCREASEHP]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("MaxHP"),
+		TEXT("Com_Texture_MaxHP"), reinterpret_cast<CComponent**>(&m_pTextureCom[MAXHP]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("NPCPowerUP"),
+		TEXT("Com_Texture_NPCPowerUP"), reinterpret_cast<CComponent**>(&m_pTextureCom[NPCPOWERUP]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("OneTouch"),
+		TEXT("Com_Texture_OneTouch"), reinterpret_cast<CComponent**>(&m_pTextureCom[ONETOUCH]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("PowerUP"),
+		TEXT("Com_Texture_PowerUP"), reinterpret_cast<CComponent**>(&m_pTextureCom[POWERUP]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Punch"),
+		TEXT("Com_Texture_Punch"), reinterpret_cast<CComponent**>(&m_pTextureCom[PUNCH]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("RecoveryEnergy"),
+		TEXT("Com_Texture_RecoveryEnergy"), reinterpret_cast<CComponent**>(&m_pTextureCom[RECOVERYENERGY]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("SuperChargeMod"),
+		TEXT("Com_Texture_SuperChargeMod"), reinterpret_cast<CComponent**>(&m_pTextureCom[SUPERCHARGEMOD]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("TeleportPunch"),
+		TEXT("Com_Texture_TeleportPunch"), reinterpret_cast<CComponent**>(&m_pTextureCom[TELEPORTPUNCH]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ThreeTouch"),
+		TEXT("Com_Texture_ThreeTouch"), reinterpret_cast<CComponent**>(&m_pTextureCom[THREETOUCH]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("TwoTouch"),
+		TEXT("Com_Texture_TwoTouch"), reinterpret_cast<CComponent**>(&m_pTextureCom[TWOTOUCH]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("UpperCut"),
+		TEXT("Com_Texture_UpperCut"), reinterpret_cast<CComponent**>(&m_pTextureCom[UPPERCUT]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Heal"),
+		TEXT("Com_Texture_Heal"), reinterpret_cast<CComponent**>(&m_pTextureCom[HEAL]))))
+		return E_FAIL;
+
+	// Weapon
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Revolver"),
+		TEXT("Com_Texture_Revolver"), reinterpret_cast<CComponent**>(&m_pTextureCom[REVOLVER]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Shotgun"),
+		TEXT("Com_Texture_Shotgun"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHOTGUN]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Rifle"),
+		TEXT("Com_Texture_Rifle"), reinterpret_cast<CComponent**>(&m_pTextureCom[RIFLE]))))
+		return E_FAIL;
+
+	// Weapon Skill
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Revolver_Skill1"),
+		TEXT("Com_Texture_Revolver_Skill"), reinterpret_cast<CComponent**>(&m_pTextureCom[REVOLVER_SKILL1]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Shotgun_Skill1"),
+		TEXT("Com_Texture_Shotgun_Skill"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHOTGUN_SKILL1]))))
+		return E_FAIL;
+
+	//! For.Com_Texture // MainStart (LogoLevel)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Rifle_Skill1"),
+		TEXT("Com_Texture_Rifle_Skill"), reinterpret_cast<CComponent**>(&m_pTextureCom[RIFLE_SKILL1]))))
 		return E_FAIL;
 
 	//! For.Com_Shader
@@ -291,7 +401,7 @@ HRESULT CUI_Skill_Preview::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[SKILLPREVIEW]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture"/*, m_iCurrentFrame*/)))	// MainStart
+	if (FAILED(m_pTextureCom[m_eTextureKind]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture"/*, m_iCurrentFrame*/)))	// MainStart
 		return E_FAIL;
 
 	return S_OK;

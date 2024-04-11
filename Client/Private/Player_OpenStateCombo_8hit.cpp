@@ -30,7 +30,7 @@ void CPlayer_OpenStateCombo_8hit::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
-	//pActor->Set_Invincible(true);
+	pActor->Set_Invincible(true);
 
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget)
@@ -123,7 +123,7 @@ void CPlayer_OpenStateCombo_8hit::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 	pActor->Set_Target(nullptr);
-	//pActor->Set_Invincible(false);
+	pActor->Set_Invincible(false);
 
 }
 

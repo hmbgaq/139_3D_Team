@@ -611,6 +611,18 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 			else
 			{
 				m_bFinished = false;
+
+
+				// 방출초기화
+				m_tBufferDesc.bEmitFinished = false;
+				m_tBufferDesc.iEmitCount = 0;
+
+				for (_uint i = 0; i < m_iNumInstance; i++)	// 방출안한걸로 초기화
+				{
+					m_vecParticleInfoDesc[i].bEmit = false;
+				}
+
+
 				m_tBufferDesc.Reset_Times();
 			}
 		}
@@ -932,7 +944,47 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 									if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
 									{
 										m_vecParticleInfoDesc[i].bDie = true;
-										continue;
+
+
+										// 죽었으면 안보이게 & 다음 반복으로
+										m_vecParticleShaderInfoDesc[i].vRight = { 0.f, 0.f, 0.f, 0.f };
+										m_vecParticleShaderInfoDesc[i].vUp = { 0.f, 0.f, 0.f, 0.f };
+										m_vecParticleShaderInfoDesc[i].vLook = { 0.f, 0.f, 0.f, 0.f };
+
+
+										pModelInstance[i].vRight = _float4{ m_vecParticleShaderInfoDesc[i].vRight.x, m_vecParticleShaderInfoDesc[i].vRight.y, m_vecParticleShaderInfoDesc[i].vRight.z, 0.f };
+										pModelInstance[i].vUp = _float4{ m_vecParticleShaderInfoDesc[i].vUp.x, m_vecParticleShaderInfoDesc[i].vUp.y, m_vecParticleShaderInfoDesc[i].vUp.z, 0.f };
+										pModelInstance[i].vLook = _float4{ m_vecParticleShaderInfoDesc[i].vLook.x, m_vecParticleShaderInfoDesc[i].vLook.y, m_vecParticleShaderInfoDesc[i].vLook.z, 0.f };
+
+										m_vecParticleShaderInfoDesc[i].vCurrentColors.w = { 0.f };
+
+
+										// 시간 정지
+										m_vecParticleInfoDesc[i].fTimeAccs = m_vecParticleInfoDesc[i].fLifeTime;
+										m_vecParticleInfoDesc[i].fLifeTimeRatios = 1.f;
+
+
+										if (m_tBufferDesc.bRecycle)	// 재사용이면 리셋
+										{
+											m_vecParticleInfoDesc[i].bDie = false;
+
+											// 랜덤 값 다시 뽑기
+											ReSet_ParticleInfo(i);
+
+
+											// 초기 위치 세팅
+											XMStoreFloat4(&pModelInstance[i].vTranslation, XMLoadFloat4(&m_vecParticleInfoDesc[i].vCenterPositions));
+
+
+											m_vecParticleInfoDesc[i].Reset_ParticleTimes();		// 시간 초기화
+										}
+										else
+										{
+											continue; // 죽었고, 재사용도 아니면 다음 반복으로
+										}
+
+
+										//continue;
 									}
 								}
 
@@ -1029,6 +1081,9 @@ void CVIBuffer_Effect_Model_Instance::Update_Particle(_float fTimeDelta)
 							if (m_vecParticleInfoDesc[i].fMaxPosY <= pModelInstance[i].vTranslation.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 							{
 								m_vecParticleInfoDesc[i].bDie = true;
+
+
+
 								continue;
 							}
 

@@ -21,13 +21,13 @@ CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	//FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
 	Set_Filter();
 	
 	m_pDataManager = CData_Manager::GetInstance();
 
-	//FAILED_CHECK(Ready_Static_UI());
+	FAILED_CHECK(Ready_Static_UI());
 
 	FAILED_CHECK(m_pUIManager->Ready_MainMenu(LEVEL_LOGO));
 	m_pUIManager->Active_MainMenu();
@@ -41,7 +41,7 @@ HRESULT CLevel_Logo::Initialize()
 	ShowCursor(false);
 
 
-	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
+	//FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
 
 	return S_OK;
 }
@@ -126,14 +126,15 @@ HRESULT CLevel_Logo::Ready_Static_UI()
 		// Ready MouseCursor
 		//FAILED_CHECK(m_pUIManager->Ready_MouseCursor(LEVEL_STATIC));
 		// Ready SkillWindow
-		//FAILED_CHECK(CUI_Manager::GetInstance()->Ready_SkillWindow(LEVEL_STATIC));
+		FAILED_CHECK(CUI_Manager::GetInstance()->Ready_SkillWindow(LEVEL_STATIC));
+		m_pUIManager->NonActive_SkillWindowAll();
 		// Ready OptionWindow
 		FAILED_CHECK(m_pUIManager->Ready_Option(LEVEL_STATIC));
 		// Ready HitUI
 		FAILED_CHECK(m_pUIManager->Ready_HitUI(LEVEL_STATIC));
 		m_pUIManager->NonActive_HitUI();
 
-		m_pUIManager->NonActive_UI();
+		m_pUIManager->NonActive_UI(); // Basic UI All
 		//m_pUIManager->Active_MouseCursor();
 		m_bUI_ReadyOK = true;
 	}

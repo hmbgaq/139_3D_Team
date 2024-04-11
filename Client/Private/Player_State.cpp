@@ -432,17 +432,27 @@ CState<CPlayer>* CPlayer_State::Normal(CPlayer* pActor, _float fTimeDelta, _uint
 		pState = EnergyWhip(pActor, fTimeDelta, _iAnimIndex);
 		if (pState)	return pState;
 
-		pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::RIFLE))
+		{
+			pState = Winchester(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
 
 		//pState = Crossbow(pActor, fTimeDelta, _iAnimIndex);
 		//if (pState)	return pState;
 
-		pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER))
+		{
+			pState = Revolver(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
 
-		pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
-		if (pState)	return pState;
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::SHOTGUN))
+		{
+			pState = Shotgun(pActor, fTimeDelta, _iAnimIndex);
+			if (pState)	return pState;
+		}
 
 		//pState = Gatilng(pActor, fTimeDelta, _iAnimIndex);
 		//if (pState)	return pState;
@@ -889,8 +899,16 @@ CState<CPlayer>* CPlayer_State::Shotgun(CPlayer* pActor, _float fTimeDelta, _uin
 
 	if (m_pGameInstance->Key_Down(DIK_F))
 	{
+		_float fCost = -1.f;
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::SHOTGUN_UPGRADE)) 
+		{
+			fCost = 0.f;
+			//fCost = SHOTGUN_MAXCOOLTIME / 2.f;
+		}
+
 		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SHOTGUN);
-		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD, fCost);
 		if (true == bIsCooltimeEnd)
 		{
 			if (CPlayer_ShotgunElectric_Fire_ShortRange::g_iAnimIndex != _iAnimIndex)

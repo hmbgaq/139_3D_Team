@@ -314,7 +314,7 @@ void CEffect::Update_PivotMat()
 		{
 			if (nullptr != m_pTrail)	// Æ®·¹ÀÏÀ» °®°íÀÖ´ø ÀÌÆåÆ®¸é Æ®·¹ÀÏ ¸ØÃã
 				m_pTrail->Set_Play(false);
-			
+
 			// ÀÌÆåÆ®ÀÇ ÁÖÀÎÀÌ Á×¾úÀ¸¸é ÀÌÆåÆ® Ç®¿¡ ¹Ý³³
 			EFFECT_MANAGER->Return_ToPool(this);
 

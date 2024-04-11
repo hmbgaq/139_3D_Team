@@ -23,7 +23,7 @@ CState<CMother>* CMother_ShakeTreeStart::Update(CMother* pActor, _float fTimeDel
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
 		pActor->Apply_Shake_And_Blur(Power::Medium);
 
-		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_04.json", CData_Manager::GetInstance()->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_02.json", CData_Manager::GetInstance()->Get_Player()->Get_Position());
 
 		CGameObject* pObjcet = { nullptr };
 		for (int i = 0; i <2; ++i)

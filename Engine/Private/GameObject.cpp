@@ -290,6 +290,7 @@ void CGameObject::Free()
 	for (auto& Pair : m_Components)
 	{
 		Pair.second->Set_Enable(false);
+		Pair.second->Set_Owner(false);
 		Safe_Release(Pair.second);
 	}
 

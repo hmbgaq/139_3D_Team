@@ -46,8 +46,8 @@ HRESULT CUI_SkillActive::Initialize(void* pArg)
 	m_fCoolTime = m_fMaxCoolTime;
 	m_bCoolDown = true;
 
-	m_fOriginScaleX = m_tUIInfo.fScaleX;
-	m_fOriginScaleY = m_tUIInfo.fScaleY;
+	m_fOriginScaleX = m_pTransformCom->Get_Scaled().x;
+	m_fOriginScaleY = m_pTransformCom->Get_Scaled().y;
 
 	return S_OK;
 }
@@ -65,24 +65,30 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Key_Down(DIK_G))
 		{
-			m_fOriginScaleX = m_tUIInfo.fScaleX;
-			m_fOriginScaleY = m_tUIInfo.fScaleY;
+			m_fOriginScaleX = m_pTransformCom->Get_Scaled().x;
+			m_fOriginScaleY = m_pTransformCom->Get_Scaled().y;
 		}
-		if (m_pGameInstance->Key_Down(DIK_SPACE))
-		{
-			m_fAlpha = 0.f;
-			m_fCoolTime = m_fMaxCoolTime;
-			m_bMaxCoolDown = false;
-			m_bCoolDown = true;
 
-			m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1f);
-		}
 
 		if (m_bMaxCoolDown == false)
 		{
-			// 활성화
-			if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+			// 활성화 (선택한 스킬이 있을 경우) [현재 레벨 1일 해금가능 상태일 때만]
+			if (m_pGameInstance->Key_Pressing(DIK_SPACE) &&
+				m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL_END &&
+				m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
+				m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL2)		// 최대
 			{
+
+				if (m_pGameInstance->Key_Up(DIK_SPACE))
+				{
+					m_fAlpha = 0.f;
+					m_fCoolTime = m_fMaxCoolTime;
+					m_bMaxCoolDown = false;
+					m_bCoolDown = true;
+
+					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1f);
+				}
+
 				if (m_bCoolDown == true &&
 					m_bMaxCoolDown == false)
 				{
@@ -90,8 +96,12 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					m_iShaderNum = 5; // 원형 게이지 pass
 				}
 
-				if (m_fCoolTime <= 0.f) // 전부 찼을 때 (0)
+				if (m_fCoolTime <= 0.f && 
+					m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL_END && // 예외
+					m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
+					m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL2)		// 최대
 				{
+					m_pUIManager->Select_SkillLevelUP(); // 레벨업
 					m_bCoolDown = false;
 					m_bMaxCoolDown = true;
 
@@ -124,7 +134,12 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 
 				if (m_fAlpha >= 1.f)
 				{
+					m_fAlpha = 0.f;
+					m_fCoolTime = m_fMaxCoolTime;
+					m_bMaxCoolDown = false;
+					m_bCoolDown = true;
 
+					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1f);
 				}
 			}
 		}

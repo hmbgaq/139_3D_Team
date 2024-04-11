@@ -43,21 +43,6 @@ void CPlayer_Weapon_ELShotgun::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//if (m_pGameInstance->Key_Down(DIK_F))
-	//{
-	//	string path = "../Bin/DataFiles/Data_Weapon/Player/ELShotgun/ELShotgun.json";
-	//	{
-	//		json Out_Json;
-	//		m_pTransformCom->Write_Json(Out_Json);
-	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
-	//	}
-	//	//{
-	//	//   json In_Json;
-	//	//   CJson_Utility::Load_Json(path.c_str(), In_Json);
-	//	//   m_pTransformCom->Load_FromJson(In_Json);
-	//	//}
-	//}
-
 }
 
 void CPlayer_Weapon_ELShotgun::Late_Tick(_float fTimeDelta)
@@ -91,7 +76,11 @@ HRESULT CPlayer_Weapon_ELShotgun::Ready_Components()
 
 void CPlayer_Weapon_ELShotgun::Fire(_float3 vTargetPos, CCharacter* pTarget)
 {
-	__super::Fire(L"Prototype_GameObject_Bullet_ELShotgun", LAYER_PLAYER_BULLET, vTargetPos, pTarget);
+	for (_uint i = 0; i < 4; ++i)
+	{
+		__super::Fire(L"Prototype_GameObject_Bullet_ELShotgun", LAYER_PLAYER_BULLET, vTargetPos, pTarget);
+	}
+
 } 
 
 CPlayer_Weapon_ELShotgun* CPlayer_Weapon_ELShotgun::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

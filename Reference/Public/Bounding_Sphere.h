@@ -17,17 +17,22 @@ private:
 
 public:
 	BoundingSphere* Get_Bounding() { return m_pSphere; }
+	BoundingSphere* Get_OriginBounding() { return m_pOriginalSphere; }
 
 	void Set_Bounding(BoundingSphere* pSphere) { m_pSphere = pSphere; }
 	virtual void Set_matScale(_matrix _matScale) override { m_matScale = _matScale; }
 	virtual void Set_Test(_vector _vTest) override { m_vTest = _vTest ; }
 	virtual void Set_Scale(_float _sizeX, _float _sizeY, _float _sizeZ);
 	virtual void Set_Center(_float _sizeX, _float _sizeY, _float _sizeZ);
+	
+public:
+	void		 Set_Radius(_float fRadius = 70.f);
 
 public:
 	HRESULT Initialize(BOUNDING_DESC* pBoundingDesc);
 	virtual void Update(_fmatrix TransformMatrix);
 	virtual _bool Collision(class CCollider* pTargetCollider, _bool* pisCollision) override;
+	
 
 private:
 	BoundingSphere*			m_pOriginalSphere	= { nullptr };

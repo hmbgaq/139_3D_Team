@@ -9,14 +9,15 @@ void CPlayer_InteractionClimbRope_Start::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	pActor->Set_Ladder_Count(6);
+
+	//pActor->Set_Ladder_Count(6);
 
 	pActor->Set_Interection(true);
 }
 
 CState<CPlayer>* CPlayer_InteractionClimbRope_Start::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	if (false == m_bFlags[0])
 	{

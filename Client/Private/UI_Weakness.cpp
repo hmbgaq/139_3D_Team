@@ -190,6 +190,11 @@ void CUI_Weakness::Check_TargetWorld()
 	}
 }
 
+void CUI_Weakness::Set_ColliderRadius(_float fRadius)
+{
+	m_pColliderCom->Set_Radius(fRadius);
+}
+
 HRESULT CUI_Weakness::Ready_Components()
 {
 	//! For.Com_Shader

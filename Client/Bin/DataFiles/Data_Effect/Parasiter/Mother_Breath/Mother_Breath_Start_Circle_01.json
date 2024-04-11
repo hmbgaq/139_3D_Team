@@ -11,7 +11,7 @@
   "Effect": {
     "bFinished": false,
     "bLoop": false,
-    "bParentPivot": false,
+    "bParentPivot": true,
     "bPlay": true,
     "bRender": true,
     "bReverse": false,

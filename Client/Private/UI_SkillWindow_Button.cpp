@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Renderer.h"
+#include "UI_Manager.h"
 
 CUI_SkillWindow_Button::CUI_SkillWindow_Button(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -38,6 +39,13 @@ HRESULT CUI_SkillWindow_Button::Initialize(void* pArg)
 	m_bButtonUI = true;
 
 	m_fWithProgress = -1.f;
+	m_fChangeScale = 2.f;
+
+	m_fScaleX = 140.f;
+	m_fScaleY = 70.f;
+
+	if (m_tUIInfo.strProtoTag == "SkillButton")
+		m_bSelectButton = true;
 
 	return S_OK;
 }
@@ -51,14 +59,16 @@ void CUI_SkillWindow_Button::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	Check_Picking(fTimeDelta);
-
 	if (m_bActive == true)
 	{
 		if (m_fWithProgress < 1.f)
 			m_fWithProgress += fTimeDelta;
 		else
 			m_fWithProgress = -1.f;
+
+		Check_Picking(fTimeDelta);
+		Check_State(fTimeDelta);
+		
 	}
 }
 
@@ -113,19 +123,78 @@ void CUI_SkillWindow_Button::UI_Exit(_float fTimeDelta)
 
 void CUI_SkillWindow_Button::Check_Picking(_float fTimeDelta)
 {
-	if (m_bPick == false)
-		return;
-
-	if (g_UIMouseDownLB == true)
+	if (m_bPick == true)
 	{
-		//if (m_tUIInfo.strUIName == "WeaponButton")
-		//{
-		//	m_pUIManager->Change_Preview(m_bWeaponWindow_Active);
-		//}
-		//else if (m_tUIInfo.strUIName == "SkillButton")
-		//{
-		//	m_pUIManager->Change_Preview(m_bSkillWindow_Active);
-		//}
+		if (g_UIMouseDownLB == true)
+		{
+			if (m_tUIInfo.strProtoTag == "WeaponButton" ||
+				m_tUIInfo.strProtoTag == "WeaponButtonActive")
+			{
+				m_bSelectButton = true;
+				m_pUIManager->Select_SkillWindowButton("WeaponButton", false); // 선택한 버튼을 제외하고 모두 꺼준다.
+				m_pUIManager->Active_WeaponIcon(true);
+				m_pUIManager->Active_WeaponFrame(true);
+				m_pUIManager->Active_WeaponActiveGuige();
+				m_pUIManager->NonActive_SkillIcon();
+				m_pUIManager->NonActive_SkillFrame();
+				m_pUIManager->NonActive_SkillActiveGuige();
+			}
+			else if (m_tUIInfo.strProtoTag == "SkillButton" ||
+				m_tUIInfo.strProtoTag == "SkillButtonActive")
+			{
+				m_bSelectButton = true;
+				m_pUIManager->Select_SkillWindowButton("SkillButton", false); // 선택한 버튼을 제외하고 모두 꺼준다.
+				m_pUIManager->Active_SkillIcon(true);
+				m_pUIManager->Active_SkillFrame(true);
+				m_pUIManager->Active_SkillActiveGuige();
+				m_pUIManager->NonActive_WeaponIcon();
+				m_pUIManager->NonActive_WeaponFrame();
+				m_pUIManager->NonActive_WeaponActiveGuige();
+			}
+		}
+	}
+}
+
+void CUI_SkillWindow_Button::Check_State(_float fTimeDelta)
+{
+	if (m_tUIInfo.strProtoTag == "WeaponButton" || m_tUIInfo.strProtoTag == "WeaponButtonActive")
+	{
+		if (m_bSelectButton == true)
+		{
+			if (m_fScaleX < 170.f)
+				Change_SizeX((+m_fChangeScale * 1.5f));
+
+			if (m_fScaleY < 90.f)
+				Change_SizeY((+m_fChangeScale * 1.5f));
+		}
+		else
+		{
+			if (m_fScaleX > 140.f)
+				Change_SizeX((-m_fChangeScale * 1.5f));
+
+			if (m_fScaleY > 70.f)
+				Change_SizeY((-m_fChangeScale * 1.5f));
+		}
+
+	}
+	if (m_tUIInfo.strProtoTag == "SkillButton" || m_tUIInfo.strProtoTag == "SkillButtonActive")
+	{
+		if (m_bSelectButton == true)
+		{
+			if (m_fScaleX < 170.f)
+				Change_SizeX((+m_fChangeScale * 1.5f));
+
+			if (m_fScaleY < 90.f)
+				Change_SizeY((+m_fChangeScale * 1.5f));
+		}
+		else
+		{
+			if (m_fScaleX > 140.f)
+				Change_SizeX((-m_fChangeScale * 1.5f));
+
+			if (m_fScaleY > 70.f)
+				Change_SizeY((-m_fChangeScale * 1.5f));
+		}
 	}
 }
 
@@ -156,7 +225,7 @@ HRESULT CUI_SkillWindow_Button::Ready_Components()
 			return E_FAIL;
 	}
 	else if (m_tUIInfo.strProtoTag == "SkillButton" ||
-		m_tUIInfo.strProtoTag == "SkillButtonActive")
+			 m_tUIInfo.strProtoTag == "SkillButtonActive")
 	{
 		//! For.Com_Texture2 // NonActive
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("SkillButton"),
@@ -187,16 +256,40 @@ HRESULT CUI_SkillWindow_Button::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_WithProgress", &m_fWithProgress, sizeof(_float))))
 		return E_FAIL;
 
-	if (m_bPick == true)
+	if (m_tUIInfo.strProtoTag == "WeaponButton")
 	{
-		if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+		if (m_bSelectButton == true || m_bPick == true)
+		{
+			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+	}
+
+
+	if (m_tUIInfo.strProtoTag == "SkillButton")
+	{
+		if (m_bSelectButton == true || m_bPick == true)
+		{
+			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
+		}
+
 	}
 	else
 	{
-		if (FAILED(m_pTextureCom[NONACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-			return E_FAIL;
+
 	}
+
 	return S_OK;
 }
 

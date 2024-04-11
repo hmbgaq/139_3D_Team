@@ -30,27 +30,45 @@ CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelt
 {
 	__super::Update(pActor, fTimeDelta);
 
-	if (false == m_bFlags[0] && pActor->Is_Inputable_Front(16))
+	if (false == m_bFlags[0])
 	{
-		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
-		m_bFlags[0] = true;
+		m_bFlags[0] = pActor->Is_Inputable_Front(16);
+		if (true == m_bFlags[0])
+		{
+			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
+		}
 	}
-
-	if (true == m_bFlags[0] && false == m_bFlags[1]) 
+	else if (false == m_bFlags[1])
 	{
 		pActor->Chasing_Attack(fTimeDelta);
-	}
+		m_bFlags[1] = pActor->Is_Inputable_Front(24);
+		if (true == m_bFlags[1])
+		{
+			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, false);
+		}
 
-	if (false == m_bFlags[1] && pActor->Is_Inputable_Front(23)) 
-	{
-		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, false);
-		m_bFlags[1] = true;
 	}
-
-	if (pActor->Is_Inputable_Front(23))
+	else
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
+
+
+	//if (true == m_bFlags[0] && false == m_bFlags[1]) 
+	//{
+	//	pActor->Chasing_Attack(fTimeDelta);
+	//}
+
+	//if (false == m_bFlags[1] && pActor->Is_Inputable_Front(23)) 
+	//{
+	//	CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, false);
+	//	m_bFlags[1] = true;
+	//}
+
+	//if (pActor->Is_Inputable_Front(23))
+	//{
+	//	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	//}
 
 	return nullptr;
 }

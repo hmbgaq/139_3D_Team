@@ -18,7 +18,7 @@ void CPlayer_InteractionLadder_Up_Start::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_InteractionLadder_Up_Start::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	if (false == m_bFlags[0])
 	{

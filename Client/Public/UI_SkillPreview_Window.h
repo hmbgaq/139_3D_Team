@@ -41,6 +41,7 @@ public:
 
 private:
 	CTexture*				m_pTextureCom = nullptr;
+	CTexture*				m_pTextureCom_Description = nullptr;
 
 public:
 	static CUI_SkillPreview_Window* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

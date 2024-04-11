@@ -13,6 +13,14 @@ BEGIN(Client)
 
 class CCrane : public CCharacter_Client
 {
+public:
+	typedef struct tagCraneDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+		//_float4		vPos = { 0.f, 0.f, 0.f, 0.f };
+		_float4x4	WorldMatrix;
+
+	}CRANE_DESC;
+
 protected:
 	CCrane(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CCrane(const CCrane& rhs);
@@ -33,6 +41,8 @@ protected:
 	HRESULT				Ready_Components();
 	HRESULT				Ready_PartObjects();
 
+
+
 	//virtual HRESULT			Bind_ShaderResources();
 
 protected:
@@ -40,8 +50,13 @@ protected:
 	CModel* m_pModelCom = { nullptr };
 	//CCollider* m_pColliderCom = { nullptr };
 
+
 private:
+	CRANE_DESC m_tCraneDesc = {};
+
 	_bool	m_bIsActivated = { false };
+
+	
 
 
 public:

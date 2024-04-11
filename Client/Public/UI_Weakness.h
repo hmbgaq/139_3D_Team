@@ -30,6 +30,10 @@ public:
 	void					Set_TargetPosition(_vector vTargetPosition);
 	void					Check_TargetWorld();
 
+public:
+	CCollider*				Get_Collider() { return m_pColliderCom;}
+	void					Set_ColliderRadius(_float fRadius = 70.f);
+
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;

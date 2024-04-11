@@ -63,6 +63,7 @@ public:
 
 	HRESULT Ready_Model_Preview(wstring strModelTag);	// 크기비교용 모델 생성
 
+	void	Attach_Tool(string strBoneTag);
 
 /* For.Window Update (창 업데이트) */
 public:
@@ -198,6 +199,7 @@ private:
 private:
 	_int	m_iLoop = { 0 };
 	_int	m_iType_Dead = { 0 };
+	_int	m_iParentPivot = { 0 };
 
 	_float	m_vTimes_Effect[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain
 	_float	m_vTimes_Part[3]	= { 0.f, 5.f, 0.f };	// Wait, LifeTime, Remain

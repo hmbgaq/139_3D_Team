@@ -78,8 +78,9 @@ HRESULT CMother::Initialize(void* pArg)
 
 	CData_Manager::GetInstance()->Set_Mother(this);
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
-	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
-	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
+
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_Map_05.json", m_pTransformCom->Get_Position());
+
 	Search_Target(200.f);
 
 
@@ -94,7 +95,17 @@ void CMother::Priority_Tick(_float fTimeDelta)
 
 void CMother::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
 	
+	m_fTimeDelta2 += fTimeDelta;
+
+	if (m_fTimeDelta2 >= 1.f)
+	{
+		cout << "MotherBossHP:" << m_fHp << endl;
+		m_fTimeDelta2 = 0.f;
+	}
+
 	__super::Tick(fTimeDelta);
 
 	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
@@ -108,11 +119,7 @@ void CMother::Tick(_float fTimeDelta)
 			m_pActor->Update_State(fTimeDelta);
 		}
 
-		if (m_fTimeDelta >= 1.f)
-		{
-			cout << "MotherBossHP:" << m_fHp << endl;
-			m_fTimeDelta = 0.f;
-		}
+	
 		
 		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 
@@ -266,7 +273,5 @@ void CMother::Free()
 	}
 
 	if (nullptr != m_pMapEffect)
-	{
-		m_pMapEffect->Set_Dead(TRUE);
-	}
+		Safe_Release(m_pMapEffect);
 }

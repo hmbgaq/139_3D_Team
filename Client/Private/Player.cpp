@@ -4,6 +4,9 @@
 #include "Weapon_Player.h"
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
+
 // Add_UIManager
 #include "UI_Manager.h"
 
@@ -63,6 +66,9 @@
 
 #include "Player_InteractionClimbRope_Start.h"
 #include "Player_InteractionRope_Down_Start.h"
+#include "Player_ZipLine_Start.h"
+#include "Player_CrouchUnder_Start.h"
+#include "Player_CrouchUnder_Gate.h"
 
 #include "Environment_Interact.h"
 
@@ -127,15 +133,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Player(this);
 	m_pGameInstance->Set_Player(this);
 
-	Set_HUD_MaxCooltime(HUD::LEFT_TOP, 30.f);		//슈퍼차지
-	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT, 5.f);		//힐
-	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM, 6.f);		//리볼버
-	Set_HUD_MaxCooltime(HUD::LEFT_LEFT, 10.f);		//샷건
+	Set_HUD_MaxCooltime(HUD::LEFT_TOP,		30.f);		//슈퍼차지
+	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT,	5.f);		//힐
+	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	7.f);		//리볼버
+	Set_HUD_MaxCooltime(HUD::LEFT_LEFT,		SHOTGUN_MAXCOOLTIME);		//샷건
 
-	Set_HUD_MaxCooltime(HUD::RIGHT_TOP, 2.0f);		//라이플
-	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT, 10.f);	//내려찍기
-	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM, 1.f);	//발차기
-	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT, 1.f);		//전기 줄
+	Set_HUD_MaxCooltime(HUD::RIGHT_TOP,		2.0f);	//라이플
+	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT,	10.f);	//내려찍기
+	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM,	1.f);	//발차기
+	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT,	1.f);	//전기 줄
 
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Top", 5.f);
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f);
@@ -146,7 +152,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Right", 5.f);
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Bottom", 5.f);
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Left", 5.f);
-
+	
 
 	return S_OK;
 }
@@ -160,45 +166,62 @@ void CPlayer::Priority_Tick(_float fTimeDelta)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);
+	//!if (m_pGameInstance->Key_Down(DIK_H))
+	//!{
+	//!	if (GAME_STATE::UI == m_pDataManager->Get_GameState())
+	//!	{
+	//!		m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+	//!	}
+	//!	else if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
+	//!	{
+	//!		m_pDataManager->Set_GameState(GAME_STATE::UI);
+	//!	}
+	//!}
+
+	if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
+	{
+		m_pActor->Set_State(new CPlayer_IdleLoop());
+	}
 
 	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
-	if(m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
+	if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
 		KeyInput(fTimeDelta);
-	
-	if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
+
+	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
+		return;
+
+	__super::Tick(fTimeDelta);
+
+
+	if (m_pActor)
 	{
-		if (m_pActor)
-		{
-			m_pActor->Update_State(fTimeDelta);
-		}
+		m_pActor->Update_State(fTimeDelta);
+	}
 		
-		Update_ChargingTime(fTimeDelta);
+	Update_ChargingTime(fTimeDelta);
 
-		Update_SuperCharge(fTimeDelta);
+	Update_SuperCharge(fTimeDelta);
 
-		CData_Manager::GetInstance()->Set_CurHP(m_fHp);
-
-		//if (m_pGameInstance->Key_Down(DIK_C))
-		//	m_fHp = 100;
+	m_pDataManager->Set_CurHP(m_fHp);
 
 
-		if (m_pGameInstance->Key_Down(DIK_T))
-		{
-			Teleport();
-		}
 
-		//if (m_pGameInstance->Key_Down(DIK_V)) 
-		//{
-		//	SetState_InteractWhipSwing();
-		//	//SetState_InteractCartRideWagonJump();
-		//}
-
+	if (m_pGameInstance->Key_Down(DIK_T))
+	{
+		Teleport();
 	}
 
 
-	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) || true == Is_Splitted());
-	m_pDataManager->Set_ShowInterface(bIsNotIdle);
+	//if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
+	//{
+	//	m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+	//}
+
+
+	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) && (false == Is_Splitted()));
+	
+	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
+		m_pDataManager->Set_ShowInterface(bIsNotIdle);
 	
 
 	if (m_pNavigationCom != nullptr)
@@ -209,7 +232,6 @@ void CPlayer::Tick(_float fTimeDelta)
 void CPlayer::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
-
 }
 	
 HRESULT CPlayer::Render()
@@ -720,6 +742,21 @@ void CPlayer::SetState_InteractRotationValve()
 	m_pActor->Set_State(new CPlayer_InteractionRotateValve_01());
 }
 
+void CPlayer::SetState_InteractZipLine()
+{
+	m_pActor->Set_State(new CPlayer_ZipLine_Start());
+}
+
+void CPlayer::SetState_CrouchUnder()
+{
+	m_pActor->Set_State(new CPlayer_CrouchUnder_Start());
+}
+
+void CPlayer::SetState_CrouchUnderGate()
+{
+	m_pActor->Set_State(new CPlayer_CrouchUnder_Gate());
+}
+
 
 #pragma endregion 상호작용
 
@@ -799,6 +836,24 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
+	/* ! UI : SkillWindow / Key : K */
+	if (m_pGameInstance->Key_Down(DIK_K))
+	{
+		m_bShowSkillWindow = !m_bShowSkillWindow;
+
+		if (m_bShowSkillWindow == true)
+		{
+			m_pUIManager->Active_SkillWindowBackground();
+			m_pUIManager->NonActive_PlayerHUD(); // PlayerHUD Off
+			m_pDataManager->Set_GameState(GAME_STATE::UI);
+		}
+		else
+		{
+			m_pUIManager->NonActive_SkillWindowAll();
+			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+		}
+	}
+
 	/* ! UI : DiedScreen / Key : I */
 	if (m_pGameInstance->Key_Down(DIK_I))
 	{
@@ -815,6 +870,17 @@ void CPlayer::KeyInput(_float fTimeDelta)
 			m_pUIManager->NonActive_DiedScreen();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
 		}
+	}
+
+	/* ! UI : TestText / Key : 6 */
+	if (m_pGameInstance->Key_Down(DIK_5))
+	{
+		m_pUIManager->Set_SkillLevel("ElectricCord", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
+	}
+	/* ! UI : TestText / Key : 7 */
+	if (m_pGameInstance->Key_Down(DIK_6))
+	{
+		m_pUIManager->Set_SkillLevel("ElectricDash", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
 	}
 
 	/* ! UI : TestText / Key : 7 */
@@ -856,7 +922,11 @@ void CPlayer::KeyInput(_float fTimeDelta)
 
 HRESULT CPlayer::Ready_Components()
 {
+	/* 숨쉬는 이펙트 추가 */
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath02.json", this, TRUE, "lips_H_close_upnode");
 	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
+
+	EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_Breath_02.json", this);
 
 	return S_OK;
 }
@@ -907,7 +977,6 @@ HRESULT CPlayer::Ready_PartObjects()
 	//m_pWeapon_Zapper->Set_Enable(false);
 
 	
-
 
 	
 	return S_OK;
@@ -961,6 +1030,11 @@ void CPlayer::Teleport()
 
 	pTeleport->Set_InitPosition(vSpawnPos);
 	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
+}
+
+void CPlayer::Search_LockOn_Target()
+{
+	m_pLockOnTarget = Select_The_Nearest_Enemy(LAYER_MONSTER);
 }
 
 void CPlayer::Hitted_Left(Power ePower)

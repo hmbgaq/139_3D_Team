@@ -11,7 +11,7 @@ void CMother_VomitStart::Initialize(CMother* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 
-	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_01.json", pActor, true, "Jaws_Center");
+	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_03.json", pActor, true, "Jaws_Center");
 }
 
 CState<CMother>* CMother_VomitStart::Update(CMother* pActor, _float fTimeDelta)

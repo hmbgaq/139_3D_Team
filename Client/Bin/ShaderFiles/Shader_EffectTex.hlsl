@@ -641,8 +641,6 @@ PS_OUT PS_MAIN_SY(PS_IN In)
     return Out;
 }
 
-
-
 technique11 DefaultTechnique
 {
 	/* 위와 다른 형태에 내가 원하는 특정 셰이더들을 그리는 모델에 적용한다. */

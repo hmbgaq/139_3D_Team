@@ -32,7 +32,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 25.f;
+	GameObjectDesc.fSpeedPerSec = 40.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -56,8 +56,9 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_02.json", this);
-	m_pCircleEffect = EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_Mini_Circle_02.json", this);
+	//EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath4.json", this);
+	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_06.json", this);
+
 
 	return S_OK;
 }
@@ -66,17 +67,41 @@ void CMotherVomit::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
 
+
+
+	//if (m_bFirst == true)
+	//{
+	//	_float4x4 MotherMatrix = m_pMother->Get_Transform()->Get_WorldMatrix();
+	//
+	//	m_pTransformCom->Set_WorldMatrix(MotherMatrix);
+	//
+	//	m_pTransformCom->Set_State(CTransform::STATE_POSITION, m_pTransformCom->Get_State(CTransform::STATE_POSITION) - 4.3f * m_pTransformCom->Get_State(CTransform::STATE_RIGHT) + 10.f * m_pTransformCom->Get_State(CTransform::STATE_UP) + 8.5f * m_pTransformCom->Get_State(CTransform::STATE_LOOK));
+	//
+	//	//m_vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 1.0f * CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_State(CTransform::STATE_UP);
+	//
+	//	m_pTransformCom->Look_At(m_vPlayerPos);
+	//
+	//	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath2.json", this);
+	//
+	//	m_bFirst = false;
+	//}
 }
 
 void CMotherVomit::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
 	m_pTransformCom->Go_Straight(fTimeDelta);
-	if (m_pTransformCom->Get_Position().y <= -5.f)
+	if (m_pTransformCom->Get_Position().y <= -2.f)
+	{
 		Set_Enable(false);
+		
+	}
 	//플레이어보다 높으면 브레스가 터지면 안될거 같기도 하고 
 
 }
@@ -115,7 +140,7 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 
 		pTarget_Character->Get_Damaged(m_fDamage);
 
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	this->Set_Enable(false);
@@ -150,7 +175,7 @@ HRESULT CMotherVomit::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 100.f };
+	BoundingDesc.fRadius = { 70.f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -195,8 +220,5 @@ void CMotherVomit::Free()
 {
 	__super::Free();
 
-
-	Safe_Release(m_pEffect);
-	Safe_Release(m_pCircleEffect);
 
 }

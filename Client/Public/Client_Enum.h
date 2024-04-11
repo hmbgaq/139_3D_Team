@@ -40,6 +40,7 @@ namespace Engine
 		COMMON_OUTLINE_BLINK,		// 6 - 외곽선 깜빡거림 
 		COMMON_OUTLINE_KEEP,		// 7 - 외곽선 계속 유지 
 		INFECTED_PUNCH,				// 8 - Infected - Attack에서 주먹변하기 
+		COMMON_EMPHASIS,			// 9 - Emissive에 Diffuse더넣어서 강조하기
 		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};
@@ -158,29 +159,42 @@ namespace Client
 	};
 
 
-	enum class Additional_Skill 
+	enum class Additional_Skill
 	{
-		KICK,
-		UPPER_CUT,
-		HERO_PUNCH,
-		HEAL,
-		ELECTRIC_DASH,
-		ELECTROCUTE,
-		ELECTRIC_WHIP,
-		QUAKE_PUNCH,
-		QUAKE_PUNCH2,
-		QUAKE_PUNCH3,
-		HIT_EIGHT,
-		SUPER_CHARGE,
-		TELEPORT_PUNCH,
+		/* Active */
+		KICK,			// 발차기
+		UPPER_CUT,		// 어퍼컷
+		HERO_PUNCH,		// 영웅펀치 (앞으로 강공격)
+		HEAL,			// 회복 스킬
+		ELECTRIC_DASH,	// 전기대시
+		ELECTROCUTE,	// 대시 후 감전 (합선)
+		ELECTRIC_WHIP,	// 전기 끌어당기기
+		QUAKE_PUNCH,	// 내려찍기 1
+		QUAKE_PUNCH2,	// 내려찍기 2
+		QUAKE_PUNCH3,	// 내려찍기 3
+		HIT_EIGHT,		// E-콤보 (연속 펀치) [감전상태여야 사용가능]
+		SUPER_CHARGE,	// 슈퍼차지 모드
+		TELEPORT_PUNCH,	// 텔레포트 펀치
 
-		//MAX_HP,
-		//REGEN_HP,
-		//ELECTRIC_DAMAGE_INCREASE,
-		//ELECTRIC_COOLTIME_DECREASE,
-		//MELEE_DAMAGE_INCREASE,
-		//MELEE_COOLTIME_DECREASE,
-		//HASTE,
+		/* Passive */
+		MAX_HP,						// 최대 체력 증가 (10%)
+		REGEN_HP,					// 체력 재생 (체력이 서서히 회복되는 효과)
+		ELECTRIC_DAMAGE_INCREASE,	// 전기스킬 대미지 증가
+		ELECTRIC_COOLTIME_DECREASE,	// 전기스킬 쿨타임 감소
+		MELEE_DAMAGE_INCREASE,		// 물리스킬 대미지 증가
+		INCREASE_EXP,				// 경험치 획득량 증가
+		//MELEE_COOLTIME_DECREASE,	// 물리스킬 쿨타임 감소 => INCREASE_EXP !경험치 획득량 증가로 변경
+		HASTE,						// 이동속도 증가
+
+		/* Weapon */
+		RIFLE,						// 라이플
+		REVOLVER,					// 리볼버
+		SHOTGUN,					// 샷건
+
+		/* Weapon Passive */
+		RIFLE_SKILL1,				// 라이플 스킬1
+		REVOLVER_SKILL1,			// 리볼버 스킬1
+		SHOTGUN_SKILL1,				// 샷건 스킬1
 
 
 		Additional_Skill_End
@@ -191,6 +205,11 @@ namespace Client
 		REVOLVER,
 		RIFLE,
 		SHOTGUN,
+
+		REVOLVER_UPGRADE,
+		RIFLE_UPGRADE,
+		SHOTGUN_UPGRADE,
+
 		Additional_Weapon_End
 	};
 

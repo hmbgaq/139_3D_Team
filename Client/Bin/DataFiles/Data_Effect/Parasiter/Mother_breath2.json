@@ -2,9 +2,9 @@
   
   "Component": {
     "Transform": [
-      [ 2.0, 0.0, 0.0, 0.0 ],
-      [ 0.0, 2.0, 0.0, 0.0 ],
-      [ 0.0, 0.0, 2.0, 0.0 ],
+      [ 200.999999761581421, 0.0, 0.0, 0.0 ],
+      [ 0.0, 200.1920927533992653e-07, 200.9999995231628418, 0.0 ],
+      [ 0.0, -200.999999761581421, 200.1920928955078125e-07, 0.0 ],
       [ 0.0, 0.0, 0.0, 1.0 ]
     ]
   },
@@ -94,6 +94,7 @@
       "bPlay": true,
       "bRender": true,
       "bReverse": false,
+      "bSoft": false,
       "bUV_Wave": true,
       "bUseCustomTex": true,
       "bUseRigidBody": false,
@@ -205,6 +206,7 @@
       "bPlay": true,
       "bRender": true,
       "bReverse": false,
+      "bSoft": false,
       "bUV_Wave": true,
       "bUseCustomTex": true,
       "bUseRigidBody": false,
@@ -316,6 +318,7 @@
       "bPlay": true,
       "bRender": true,
       "bReverse": false,
+      "bSoft": false,
       "bUV_Wave": true,
       "bUseCustomTex": true,
       "bUseRigidBody": false,
@@ -428,6 +431,7 @@
       "bPlay": true,
       "bRender": true,
       "bReverse": false,
+      "bSoft": false,
       "bUV_Wave": false,
       "bUseRigidBody": false,
       "bUseSpriteAnim": false,
@@ -544,6 +548,7 @@
       "bPlay": true,
       "bRender": true,
       "bReverse": false,
+      "bSoft": false,
       "bUV_Wave": false,
       "bUseRigidBody": false,
       "bUseSpriteAnim": false,

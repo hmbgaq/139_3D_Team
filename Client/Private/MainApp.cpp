@@ -57,7 +57,7 @@ HRESULT CMainApp::Initialize()
 	FAILED_CHECK(Ready_Font());
 
 	// FAILED_CHECK(Ready_Gara());
-
+	
 	FAILED_CHECK(Ready_Prototype_Component_ForStaticLevel());
 
 	FAILED_CHECK(m_pGameInstance->Off_Shader());
@@ -219,11 +219,47 @@ HRESULT CMainApp::Ready_UITexture()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("EnemyHUD_Shard_Hp_Pre"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/EnemyHUD/Large/EnemyHUD_Shard_Hp_Pre.dds"))));
 	
 	/* SkillWindow */
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButton.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButtonActive.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButton.dds"))));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButtonActive.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButton.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("WeaponButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponButtonActive.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButton"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButton.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SkillButtonActive"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillButtonActive.dds"))));
 	
+	/* SkillDescription */
+	// 10
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Kick"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/Kick.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ComboPunch"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/ComboPunch.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("DashShock"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/DashShock.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ElectricCord"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/ElectricCord.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ElectricDash"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/ElectricDash.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("IncreaseEnergy"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/IncreaseEnergy.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("IncreaseEXP"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/IncreaseEXP.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("IncreaseHP"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/IncreaseHP.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("MaxHP"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/MaxHP.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("NPCPowerUP"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/NPCPowerUP.dds"))));
+	
+	// 10
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("OneTouch"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/OneTouch.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("PowerUP"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/PowerUP.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Punch"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/Punch.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("RecoveryEnergy"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/RecoveryEnergy.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("SuperChargeMod"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/SuperChargeMod.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TeleportPunch"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/TeleportPunch.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ThreeTouch"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/ThreeTouch.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("TwoTouch"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/TwoTouch.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("UpperCut"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/UpperCut.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Heal"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/SkillDescription/Heal.dds"))));
+	
+	
+	// Weapon
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Revolver"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Revolver.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shotgun"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Shotgun.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rifle"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Rifle.dds"))));
+	
+	// Weapon Skill
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Revolver_Skill1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Revolver_Skill1.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shotgun_Skill1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Shotgun_Skill1.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rifle_Skill1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Rifle_Skill1.dds"))));
+
 	return S_OK;
 }
 
@@ -266,10 +302,10 @@ HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
 
 HRESULT CMainApp::Ready_Prototype_Component_ForStaticLevel()
 {
-	/* For.Prototype_Component_VIBuffer_Rect*/
+	/* For.Prototype_Component_VIBuffer_Rect */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), CVIBuffer_Rect::Create(m_pDevice, m_pContext)));
 
-	/* For.Prototype_Component_Shader_VtxPosTex*/
+	/* For.Prototype_Component_Shader_VtxPosTex */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"), CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)));
 	//
 	/* For.Prototype_Component_Shader_UI */ // + SH_Add

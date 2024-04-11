@@ -2,16 +2,16 @@
   
   "Component": {
     "Transform": [
-      [ 200.0, 0.0, 0.0, 0.0 ],
-      [ 0.0, 200.0, 0.0, 0.0 ],
-      [ 0.0, 0.0, 200.0, 0.0 ],
+      [ 1.0, 0.0, 0.0, 0.0 ],
+      [ 0.0, 1.0, 0.0, 0.0 ],
+      [ 0.0, 0.0, 1.0, 0.0 ],
       [ 0.0, 0.0, 0.0, 1.0 ]
     ]
   },
   "Effect": {
     "bFinished": false,
     "bLoop": true,
-    "bParentPivot": false,
+    "bParentPivot": true,
     "bPlay": true,
     "bRender": true,
     "bReverse": false,

@@ -165,8 +165,8 @@ void CUI::Tick(_float fTimeDelta)
 	Check_RectPos();
 
 #ifdef _DEBUG
-	m_bButtonUI = true;
 #endif // _DEBUG
+	m_bButtonUI = true;
 	Picking_UI();
 }
 
@@ -1468,8 +1468,8 @@ json CUI::Save_Animation(json& out_json)
 
 void CUI::Change_Animation(const string& strAnimPath)
 {
-	if (!m_vecAnimation.empty()) // 기존 애니메이션이 있는 경우
-		m_vecAnimation.clear();
+	if (!m_vecChangAnimation.empty()) // 기존 애니메이션이 있는 경우
+		m_vecChangAnimation.clear();
 
 	json In_Json;
 	string strFile;
@@ -1564,7 +1564,7 @@ void CUI::Change_Animation(const string& strAnimPath)
 			if (object["Keyframe"].contains("NoiseNum")) // 키가 있으면
 				m_tUIInfo.tKeyframe.iNoiseNum = object["Distortion"][i]["NoiseNum"];
 
-			m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
+			m_vecChangAnimation.push_back(m_tUIInfo.tKeyframe);
 		}
 	}
 }
@@ -1578,7 +1578,6 @@ void CUI::Play_Animation(_float fTimeDelta)
 		if (m_vecAnimation[iFrameIndex].bStopPlay == true &&
 			m_bStopPlay == true)
 		{
-
 			//m_bStopPlay = true; // 두개의 bool변수를 두고, StopPlay 변수의 값과 조합하여 stop여부를 결정한다.
 		}
 
@@ -1940,10 +1939,7 @@ void CUI::Play_Animation(_float fTimeDelta)
 
 				m_iTextureNum = m_vecAnimation[iFrameIndex].iTexureframe;
 			}
-
 		}
-		//}
-
 	}
 }
 

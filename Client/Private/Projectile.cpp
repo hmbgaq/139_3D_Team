@@ -265,12 +265,13 @@ HRESULT CProjectile::Bind_ShaderResources()
 
 void CProjectile::Free()
 {
-	Set_Enable(false);
+	if (m_pCollider)
+	{
+		m_pCollider->Set_Owner(nullptr);
+		m_pCollider->Set_Enable(false);
+	}
 
-	//if (m_pCollider)
-	//{
-	//	m_pCollider->Set_Enable(false);
-	//}
+	Set_Enable(false);
 
 	__super::Free();
 

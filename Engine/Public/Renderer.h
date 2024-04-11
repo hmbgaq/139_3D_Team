@@ -8,14 +8,14 @@ class CRenderer final : public CBase
 {
 public:
 	enum RENDERGROUP
-	{	/* Priority */
+	{   /* Priority */
 		RENDER_PRIORITY, RENDER_NONLIGHT, RENDER_OUTLINE,
 		/* Post Processing  */
-		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL, 
+		RENDER_NONBLEND, RENDER_SHADOW, RENDER_DECAL,
 		/* EFFECT */
 		RENDER_EFFECT, RENDER_EFFECT_PRIORITY, RENDER_EFFECT_MESH,
 		/* UI */
-		RENDER_UI_BACK, RENDER_UI, RENDER_UI_FRONT, RENDER_CURSOR,
+		RENDER_UI_BACK, RENDER_UI, RENDER_UI_FRONT, RENDER_UI_FIRST, RENDER_UI_SECOND, RENDER_UI_THIRD, RENDER_UI_FOURTH, RENDER_UI_POPUP, RENDER_CURSOR,
 		/* RenderGroup*/
 		RENDER_BLEND, RENDER_CASCADE, RENDER_END
 	};
@@ -174,8 +174,9 @@ private:
 	SSR_DESC					m_tSSR_Option				= {};
 	CHROMA_DESC					m_tChroma_Option			= {};
 	SCREENEFFECT_DESC			m_tScreenDEffect_Desc		= {};
-	MOTIONBLUR_DESC				m_tMotionBlur_Desc			= {};
 	LUMASHARPEN_DESC			m_tLumaSharpen_Desc			= {};
+
+	MOTIONBLUR_DESC				m_tMotionBlur_Desc			= {};
 
 private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
@@ -234,7 +235,7 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { false };
+	_bool			m_bDebugRenderTarget	= { true };
 	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

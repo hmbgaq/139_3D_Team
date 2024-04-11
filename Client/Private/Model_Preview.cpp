@@ -47,8 +47,12 @@ HRESULT CModel_Preview::Initialize(void* pArg)
 
 	if (CModel::TYPE_ANIM == m_tDesc.eType)
 	{
-		if (FAILED(Ready_PartObjects()))
-			return E_FAIL;
+		if (TEXT("Prototype_Component_Model_Rentier") == m_tDesc.strModelTag)
+		{
+			if (FAILED(Ready_PartObjects()))
+				return E_FAIL;
+		}
+
 
 		m_pModelCom->Set_Animation(m_tDesc.iAnimIndex);
 	}

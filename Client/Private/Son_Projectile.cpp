@@ -99,6 +99,9 @@ void CSon_Projectile::Priority_Tick(_float fTimeDelta)
 
 void CSon_Projectile::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.018f, fTimeDelta,"Parasiter/", "Son_ProjectilcTail.json", Get_Position(), TRUE, m_vPlayerPos);

@@ -30,6 +30,11 @@ public:
 
 public:
 	void			Check_Picking(_float fTimeDelta);
+	void			Check_State(_float fTimeDelta);
+
+public:
+	void			Set_SelectButton(_bool bSelect) { m_bSelectButton = bSelect; }
+	_bool			Get_SelectButton() { return  m_bSelectButton; }
 
 private:
 	virtual HRESULT			Ready_Components() override;
@@ -41,8 +46,8 @@ public:
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
-	_bool		m_bSkillWindow_Active = false;
-	_bool		m_bWeaponWindow_Active = false;
+	_bool		m_bSelectButton = false;
+	_float		m_fChangeScale = 1.f;
 
 public:
 	static CUI_SkillWindow_Button* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

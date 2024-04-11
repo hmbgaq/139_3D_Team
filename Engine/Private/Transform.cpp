@@ -84,7 +84,7 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 			_int i = 0;
 		}
 
-		if (true == m_bIsGround)
+		if (true == m_bIsGround && pNavigation->Get_InteractMoveMode() == false)
 		{
 			vResult.y = fHeight;
 		}
@@ -147,7 +147,7 @@ void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTime
 		
 		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &m_bIsGround);
 
-		if (true == m_bIsGround && pNavigation->Get_InteractMoveMode())
+		if (true == m_bIsGround && pNavigation->Get_InteractMoveMode() == false)
 		{
 			vResult.y = fHeight;
 		}

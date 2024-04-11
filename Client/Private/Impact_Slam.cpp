@@ -87,8 +87,16 @@ void CImpact_Slam::OnCollisionEnter(CCollider* other)
 		pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 
+		_float3 vPos = m_pTransformCom->Get_Position();
+		_float3 vTargetPos = pTarget_Character->Get_WeaknessPos();
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos, true, vTargetPos);
+
 		// Å¸°Ý ÀÌÆåÆ®
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), true, pTarget_Character->Get_Position());
+
+		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+
+
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
 

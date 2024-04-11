@@ -49,7 +49,7 @@ HRESULT CMother_Egg::Initialize(void* pArg)
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 5.f;
+	//m_fDamage = 5.f;
 
 	m_fMaxHp = 20.f;
 	m_fHp = m_fMaxHp;
@@ -70,11 +70,14 @@ void CMother_Egg::Priority_Tick(_float fTimeDelta)
 
 void CMother_Egg::Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+		return;
+
 	__super::Tick(fTimeDelta);
 
 	if (m_fHp <= 0.f)
 	{
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "Egg_Dead2.json", (m_pTransformCom->Get_Position()+_float3(0.f,1.5f,0.f)));
 		this->Set_Enable(false);
 
 	}
@@ -89,7 +92,7 @@ void CMother_Egg::Tick(_float fTimeDelta)
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
-	else if (m_pTransformCom->Get_Position().y <= 0.f && m_fTimeDelta >= 5.f)
+	else if (this->Get_Enable() == true && m_pTransformCom->Get_Position().y <= 0.f && m_fTimeDelta >= 5.f)
 	{
 		for (int i = 0; i < 3; ++i)
 		{
@@ -112,7 +115,8 @@ void CMother_Egg::Tick(_float fTimeDelta)
 // 
 // 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_Component_Model_Infected_D");
 // 		pMonster->Set_Position(this->Get_Transform()->Get_State(CTransform::STATE_POSITION) - this->Get_Transform()->Get_State(CTransform::STATE_RIGHT));
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "Egg_Dead3.json", (m_pTransformCom->Get_Position() + _float3(0.f, 1.5f, 0.f)));
+
 
 		//EFFECT_MANAGER->Return_ToPool(m_pEffect);
  		Set_Enable(false);
@@ -142,15 +146,15 @@ HRESULT CMother_Egg::Render_Shadow()
 void CMother_Egg::OnCollisionEnter(CCollider* other)
 {
 
-	CCharacter* pTarget_Character = Get_Target_Character(other);
-
-	if (nullptr != pTarget_Character)// 일반 타격 
-	{
-		pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
-
-
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-	}
+	//CCharacter* pTarget_Character = Get_Target_Character(other);
+	//
+	//if (nullptr != pTarget_Character)// 일반 타격 
+	//{
+	//	pTarget_Character->Set_Hitted(m_fDamage, pTarget_Character->Calc_Look_Dir_XZ(m_pTransformCom->Get_Position()), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+	//
+	//
+	//	EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+	//}
 	
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
@@ -158,7 +162,18 @@ void CMother_Egg::OnCollisionEnter(CCollider* other)
 
 void CMother_Egg::OnCollisionStay(CCollider* other)
 {
+	
+	CCharacter* pTarget_Character = Get_Target_Character(other);
+	if (nullptr != pTarget_Character)
+	{
+		if (other->m_iLayer == (_uint)COLLISION_LAYER::PLAYER)
+		{
+			_vector vTargetPos = pTarget_Character->Get_Position_Vector();
 
+			pTarget_Character->Add_Force(Get_Object_Owner()->Calc_Look_Dir_XZ(vTargetPos) * -1, 9.f * m_pGameInstance->Get_TimeDelta());
+		}
+		
+	}
 }
 
 void CMother_Egg::OnCollisionExit(CCollider* other)

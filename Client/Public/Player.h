@@ -142,6 +142,9 @@ public://!For. Interact
 	void SetState_InteractWhipPull();
 
 	void SetState_InteractRotationValve();
+	void SetState_InteractZipLine();
+	void SetState_CrouchUnder();
+	void SetState_CrouchUnderGate();
 
 
 public:
@@ -160,6 +163,10 @@ private:
 	_bool		 m_bShowOption = false;
 	_bool		 m_bShowSkillWindow = false;
 	_bool		 m_bShowDiedScreen = false;
+
+	/* Effect Ãß°¡ */
+private:
+	class CEffect* m_pEffect = { nullptr };
 
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
@@ -201,6 +208,15 @@ public:
 		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
 	};
 
+public:
+	void Search_LockOn_Target();
+	CCharacter* Get_LockOn_Target() { return m_pLockOnTarget; };
+	_float3 Get_LockOn_Target_Position() { 
+		if (nullptr !=  m_pLockOnTarget && nullptr != m_pLockOnTarget->Get_Transform())
+			return m_pLockOnTarget->Get_Position();
+		return _float3();
+	}
+	
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -225,7 +241,7 @@ private:
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
 private:
-	CEffect* m_pEffect = { nullptr };
+	CCharacter* m_pLockOnTarget = { nullptr };
 
 public:
 	_bool	m_bPlayerCheck = true;

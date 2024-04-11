@@ -10,12 +10,16 @@
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CCamera(pDevice, pContext, strPrototypeTag)
+	, m_pDataManager(CData_Manager::GetInstance()) 			// !SH Add
 {
+	Safe_AddRef(m_pDataManager);
 }
 
 CSpringCamera::CSpringCamera(const CSpringCamera& rhs)
 	: CCamera(rhs)
+	, m_pDataManager(rhs.m_pDataManager) 			// !SH Add
 {
+	Safe_AddRef(m_pDataManager);
 }
 
 HRESULT CSpringCamera::Initialize_Prototype()
@@ -73,7 +77,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 
 	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
 		ShowCursor(true);
-	else 
+	else
 		ShowCursor(false);
 
 	return S_OK;
@@ -88,7 +92,26 @@ void CSpringCamera::Tick(_float fTimeDelta)
 {
 	PreActualPosition = m_TargetPosition;
 
-	
+	// !SH Add
+	if (m_pGameInstance != nullptr)
+	{
+		if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
+		{
+			if (m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
+			{
+				m_pDataManager->Set_MouseFix(true);
+				m_pDataManager->Set_MouseCenter(true);
+			}
+			else
+			{
+				m_pDataManager->Set_MouseFix(false);
+				m_pDataManager->Set_MouseCenter(false);
+			}
+		}
+	}
+
+
+
 	if(true == m_pPlayer->m_bPlayerCheck && m_pPlayer != nullptr)
 	{// 뼈에 붙인 카메라 
 		_float4x4 BoneMatrix = {};
@@ -138,15 +161,21 @@ void CSpringCamera::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
-		if (m_bFix)
-		{	
-			m_bFix = false;
-			m_bCheck = false;
-		}
-		else
+		if (m_pDataManager != nullptr)
 		{
-			m_bFix = true;
-			m_bCheck = true;
+			// !SH Add
+			if (m_pDataManager->Get_MouseFix() == true)
+			{
+				// !SH Add
+				m_pDataManager->Set_MouseFix(false);
+				m_pDataManager->Set_MouseCenter(false);
+			}
+			else
+			{
+				// !SH Add
+				m_pDataManager->Set_MouseFix(true);
+				m_pDataManager->Set_MouseCenter(true);
+			}
 		}
 	}
 
@@ -157,17 +186,17 @@ void CSpringCamera::Tick(_float fTimeDelta)
 	}
 
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
-	if (iCurrentLevel != (_uint)LEVEL_TOOL)
-	{
-		if (m_bCheck == false)
-			ShowCursor(FALSE);
-		else
-			ShowCursor(TRUE);
-	}
+	//if (iCurrentLevel != (_uint)LEVEL_TOOL)
+	//{
+	//	if (m_pDataManager->Get_MouseCenter() == false)
+	//		ShowCursor(FALSE);
+	//	else
+	//		ShowCursor(TRUE);
+	//}
 
-	if (false == m_bFix)
+	if (false == m_pDataManager->Get_MouseFix())
 		return;
-	if (true == m_bFix)
+	if (true == m_pDataManager->Get_MouseFix())
 	{
 		Mouse_Fix();
 	}
@@ -422,6 +451,9 @@ CGameObject* CSpringCamera::Clone(void* pArg)
 void CSpringCamera::Free()
 {
 	__super::Free();
+
+	if(m_pDataManager != nullptr)
+		Safe_Release(m_pDataManager);
 }
 
 Engine::CGameObject* CSpringCamera::Pool()
