@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "UI_Manager.h"
+#include "Data_Manager.h"
 
 CUI_SkillActive::CUI_SkillActive(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -77,6 +78,12 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 				m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
 				m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL2)		// 최대
 			{
+				if (m_pUIManager->Get_Select_SkillPoint() > m_pData_Manager->Get_SkillPoint()) // 요구포인트 > 가진포인트
+				{
+					// 습득불가
+					return;
+				}
+
 
 				if (m_pGameInstance->Key_Up(DIK_SPACE))
 				{
@@ -133,6 +140,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 
 				if (m_fAlpha >= 1.f)
 				{
+					m_pData_Manager->Add_SkillPoint(-m_pUIManager->Get_Select_SkillPoint()); // 스킬포인트 차감
 					m_fAlpha = 0.f;
 					m_fCoolTime = m_fMaxCoolTime;
 					m_bMaxCoolDown = false;

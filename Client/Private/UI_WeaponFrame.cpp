@@ -32,9 +32,9 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
 	// Level 0으로 시작
-	m_eUI_Level = UI_LEVEL::LEVEL0;
+	//m_eUI_Level = UI_LEVEL::LEVEL0;
 	// Test Level 1로 시작
-	//m_eUI_Level = UI_LEVEL::LEVEL1;
+	m_eUI_Level = UI_LEVEL::LEVEL2;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -43,6 +43,8 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 		return E_FAIL;
 
 	//m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Top", true); // 해금
+
+	Check_State();
 
 	return S_OK;
 }
@@ -68,7 +70,6 @@ void CUI_WeaponFrame::Tick(_float fTimeDelta)
 			m_eUI_Level = LEVEL2;
 
 		Check_Picking(fTimeDelta);
-		Check_State(fTimeDelta);
 		Check_LevelChange(fTimeDelta);
 
 		/* Animation */
@@ -325,21 +326,21 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 				_int test = m_pUIManager->Get_Select_WeaponLevel();
 
 				// 선택한 UI의 레벨
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Rifle");
 			}
 			else if (m_tUIInfo.strUIName == "Revolver")
 			{
 				m_pUIManager->Select_Weapon("Revolver");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Revolver");
 			}
 			else if (m_tUIInfo.strUIName == "Shotgun")
 			{
 				m_pUIManager->Select_Weapon("Shotgun");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Shotgun");
 			}
 #pragma region 2
@@ -347,21 +348,21 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Weapon("Rifle_Skill1");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Rifle_Skill1");
 			}
 			else if (m_tUIInfo.strUIName == "Revolver_Skill1")
 			{
 				m_pUIManager->Select_Weapon("Revolver_Skill1");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Revolver_Skill1");
 			}
 			else if (m_tUIInfo.strUIName == "Shotgun_Skill1")
 			{
 				m_pUIManager->Select_Weapon("Shotgun_Skill1");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Shotgun_Skill1");
 			}
 			else
@@ -373,50 +374,39 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 	}
 }
 
-void CUI_WeaponFrame::Check_State(_float fTimeDelta)
+void CUI_WeaponFrame::Check_State()
 {
 #pragma region 1
-	if (m_tUIInfo.strUIName == "Kick")
+	if (m_tUIInfo.strUIName == "Revolver")
 	{
-		
-
+		m_iPrice = 1000;
+		m_iSkillPoint =  1;
 	}
-	else if (m_tUIInfo.strUIName == "ElectricDash")
+	else if (m_tUIInfo.strUIName == "Rifle")
 	{
-
+		m_iPrice = 1000;
+		m_iSkillPoint = 0;
 	}
-	else if (m_tUIInfo.strUIName == "DashShock")
+	else if (m_tUIInfo.strUIName == "Shotgun")
 	{
-
-	}
-	else if (m_tUIInfo.strUIName == "ElectricCord")
-	{
-
-	}
-	else if (m_tUIInfo.strUIName == "PowerUP")
-	{
-
+		m_iPrice = 1000;
+		m_iSkillPoint = 0;
 	}
 #pragma region 2
-	else if (m_tUIInfo.strUIName == "UpperCut")
+	else if (m_tUIInfo.strUIName == "Revolver_Skill1")
 	{
-
+		m_iPrice = 0;
+		m_iSkillPoint = 500;
 	}
-	else if (m_tUIInfo.strUIName == "OneTouch")
+	else if (m_tUIInfo.strUIName == "Rifle_skill1")
 	{
-
+		m_iPrice = 0;
+		m_iSkillPoint = 500;
 	}
-	else if (m_tUIInfo.strUIName == "TwoTouch")
+	else if (m_tUIInfo.strUIName == "Shotgun_Skill1")
 	{
-
-	}
-	else if (m_tUIInfo.strUIName == "ThreeTouch")
-	{
-
-	}
-	else if (m_tUIInfo.strUIName == "ComboPunch")
-	{
-
+		m_iPrice = 0;
+		m_iSkillPoint = 500;
 	}
 }
 

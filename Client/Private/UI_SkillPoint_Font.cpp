@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "UI_LevelFont.h"
+#include "UI_SkillPoint_Font.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "Data_Manager.h"
 
-CUI_LevelFont::CUI_LevelFont(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_SkillPoint_Font::CUI_SkillPoint_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CUI_Text(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_LevelFont::CUI_LevelFont(const CUI_LevelFont& rhs)
+CUI_SkillPoint_Font::CUI_SkillPoint_Font(const CUI_SkillPoint_Font& rhs)
 	: CUI_Text(rhs)
 {
 }
 
-HRESULT CUI_LevelFont::Initialize_Prototype()
+HRESULT CUI_SkillPoint_Font::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -24,7 +24,7 @@ HRESULT CUI_LevelFont::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_LevelFont::Initialize(void* pArg)
+HRESULT CUI_SkillPoint_Font::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -40,7 +40,7 @@ HRESULT CUI_LevelFont::Initialize(void* pArg)
 	if (FAILED(Ready_Text())) //! 텍스트 세팅
 		return E_FAIL;
 
-	if (FAILED(Find_Change("PlayerLevel"))) //! 텍스트 세팅
+	if (FAILED(Find_Change("SkillPoint"))) //! 텍스트 세팅
 		return E_FAIL;
 
 	m_fScaleX = m_tUIInfo.fScaleX;
@@ -59,16 +59,16 @@ HRESULT CUI_LevelFont::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_LevelFont::Priority_Tick(_float fTimeDelta)
+void CUI_SkillPoint_Font::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_LevelFont::Tick(_float fTimeDelta)
+void CUI_SkillPoint_Font::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	//Check_Disappear(fTimeDelta);
+	Check_Disappear(fTimeDelta);
 
 	if (m_bActive == true)
 	{
@@ -76,7 +76,7 @@ void CUI_LevelFont::Tick(_float fTimeDelta)
 	}
 }
 
-void CUI_LevelFont::Late_Tick(_float fTimeDelta)
+void CUI_SkillPoint_Font::Late_Tick(_float fTimeDelta)
 {
 	if (m_bActive == true)
 	{
@@ -85,7 +85,7 @@ void CUI_LevelFont::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CUI_LevelFont::Render()
+HRESULT CUI_SkillPoint_Font::Render()
 {
 	if (m_bActive == true)
 	{
@@ -101,11 +101,10 @@ HRESULT CUI_LevelFont::Render()
 		//! 바인딩된 정점, 인덱스를 그려
 		m_pVIBufferCom->Render();
 
-		//if (m_bTrigger == true)
+		if (m_bTrigger == true)
 		{
-			m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
+			m_strText = to_wstring(m_pData_Manager->Get_Money());
 			//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-			//m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
 			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2((m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) - 10.f, (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) - 30.f), m_vColor, m_fScale, m_vOrigin, m_fRotation);
 		}
 	}
@@ -113,23 +112,23 @@ HRESULT CUI_LevelFont::Render()
 	return S_OK;
 }
 
-void CUI_LevelFont::UI_Ready(_float fTimeDelta)
+void CUI_SkillPoint_Font::UI_Ready(_float fTimeDelta)
 {
 }
 
-void CUI_LevelFont::UI_Enter(_float fTimeDelta)
+void CUI_SkillPoint_Font::UI_Enter(_float fTimeDelta)
 {
 }
 
-void CUI_LevelFont::UI_Loop(_float fTimeDelta)
+void CUI_SkillPoint_Font::UI_Loop(_float fTimeDelta)
 {
 }
 
-void CUI_LevelFont::UI_Exit(_float fTimeDelta)
+void CUI_SkillPoint_Font::UI_Exit(_float fTimeDelta)
 {
 }
 
-HRESULT CUI_LevelFont::Ready_Components()
+HRESULT CUI_SkillPoint_Font::Ready_Components()
 {
 	//! For.Com_Shader
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Component_Shader_UI"),
@@ -142,14 +141,14 @@ HRESULT CUI_LevelFont::Ready_Components()
 		return E_FAIL;
 
 	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_level_body"),
-		TEXT("Com_Texture_Shield"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHIELD_FRAME]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("level_shield"),
+		TEXT("Com_Texture_LevShield"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHIELD_FRAME]))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CUI_LevelFont::Bind_ShaderResources()
+HRESULT CUI_SkillPoint_Font::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -168,7 +167,7 @@ HRESULT CUI_LevelFont::Bind_ShaderResources()
 	return S_OK;
 }
 
-json CUI_LevelFont::Save_Desc(json& out_json)
+json CUI_SkillPoint_Font::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
@@ -176,23 +175,23 @@ json CUI_LevelFont::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_LevelFont::Load_Desc()
+void CUI_SkillPoint_Font::Load_Desc()
 {
 
 }
 
-void CUI_LevelFont::Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
+void CUI_SkillPoint_Font::Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
 {
 	__super::Add_Text(strTextKey, strFontTag, strText, fPosX, fPosY, vColor, fScale, vOrigin, fRotation);
 }
 
-HRESULT CUI_LevelFont::Find_Change(const string& strTextTag)
+HRESULT CUI_SkillPoint_Font::Find_Change(const string& strTextTag)
 {
 	__super::Find_Change(strTextTag);
 	return S_OK;
 }
 
-void CUI_LevelFont::Check_Disappear(_float fTimeDelta)
+void CUI_SkillPoint_Font::Check_Disappear(_float fTimeDelta)
 {
 	if (m_bDisappear == true)
 	{
@@ -200,7 +199,7 @@ void CUI_LevelFont::Check_Disappear(_float fTimeDelta)
 	}
 }
 
-HRESULT CUI_LevelFont::Ready_Text()
+HRESULT CUI_SkillPoint_Font::Ready_Text()
 {
 	/* 파싱 정보 받기 */
 	TEXTINFO* LoadInfo = new TEXTINFO;
@@ -212,7 +211,7 @@ HRESULT CUI_LevelFont::Ready_Text()
 	LoadInfo->vOrigin.x = 0.f;
 	LoadInfo->vOrigin.y = 0.f;
 	LoadInfo->fRotation = 0.f;
-	LoadInfo->strTextKey = "PlayerLevel";
+	LoadInfo->strTextKey = "SkillPoint";
 	LoadInfo->strFontTag = "Font_EvilWest";
 	LoadInfo->strText = to_string(1);
 	LoadInfo->vColor.m128_f32[0] = 1.f;
@@ -227,38 +226,38 @@ HRESULT CUI_LevelFont::Ready_Text()
 	return S_OK;
 }
 
-CUI_LevelFont* CUI_LevelFont::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_SkillPoint_Font* CUI_SkillPoint_Font::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_LevelFont* pInstance = new CUI_LevelFont(pDevice, pContext, strPrototypeTag);
+	CUI_SkillPoint_Font* pInstance = new CUI_SkillPoint_Font(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_LevelFont");
+		MSG_BOX("Failed to Created : CUI_SkillPoint_Font");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_LevelFont::Pool()
+CGameObject* CUI_SkillPoint_Font::Pool()
 {
-	return new CUI_LevelFont(*this);
+	return new CUI_SkillPoint_Font(*this);
 }
 
-CGameObject* CUI_LevelFont::Clone(void* pArg)
+CGameObject* CUI_SkillPoint_Font::Clone(void* pArg)
 {
-	CUI_LevelFont* pInstance = new CUI_LevelFont(*this);
+	CUI_SkillPoint_Font* pInstance = new CUI_SkillPoint_Font(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_LevelFont");
+		MSG_BOX("Failed to Cloned : CUI_SkillPoint_Font");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CUI_LevelFont::Free()
+void CUI_SkillPoint_Font::Free()
 {
 	__super::Free();
 

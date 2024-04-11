@@ -527,7 +527,10 @@ private:
 		"WeaponFrame",
 		"WeaponIcon",
 		"WeaponActiveGuige",
-		"Icon_SelectAnim"
+		"Icon_SelectAnim",
+		"LevelFont",
+		"MoneyFont",
+		"SkillPoint_Font"
 	};
 
 	// 클래스 목록을 저장하는 벡터

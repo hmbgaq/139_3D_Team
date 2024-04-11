@@ -4012,6 +4012,9 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\01. Money">
       <UniqueIdentifier>{d05a7727-4c84-4cf6-8ff6-0e31249d5528}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint">
+      <UniqueIdentifier>{642cf3b7-25bb-4636-a4cc-51f157d3d511}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7884,6 +7887,9 @@
     <ClInclude Include="..\Public\UI_MoneyFont.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\01. Money</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillPoint_Font.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11226,6 +11232,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_MoneyFont.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\01. Money</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillPoint_Font.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

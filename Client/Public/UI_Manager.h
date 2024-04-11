@@ -362,6 +362,8 @@ public:
 	void			Active_SkillFrame(_bool bActive);
 	void			NonActive_SkillFrame();
 	void			Set_SkillLevel(const string& strSkillFrame, _uint eLevel);
+	_int			Get_SkillPrice(const string& strSkillFrame);
+	_int			Get_SkillPoint(const string& strSkillFrame);
 private:
 	vector<CUI*>	m_vecSkillFrame;
 
@@ -415,7 +417,10 @@ public:
 	HRESULT			Add_WeaponFrame(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner = nullptr);
 	void			Active_WeaponFrame(_bool bActive);
 	void			NonActive_WeaponFrame();
-	void			Set_WeaponLevel(const string& strSkillFrame, _uint eLevel);
+	void			Set_WeaponLevel(const string& strWeaponFrame, _uint eLevel);
+	_int			Get_WeaponPrice(const string& strWeaponFrame);
+	_int			Get_WeaponSkillPoint(const string& strWeaponFrame);
+
 private:
 	vector<CUI*>	m_vecWeaponFrame;
 
@@ -553,7 +558,7 @@ public:
 	}
 	//CUI* Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 
-		// UI 
+	// UI 
 	CUI*	Get_Select_Frame()
 	{
 		if (m_pUI_SelectSkill != nullptr)
@@ -569,6 +574,42 @@ public:
 			return nullptr;
 
 		return m_pUI_Select;
+	}
+
+	// UI 
+	_int Get_Select_Price()
+	{
+		if (m_pUI_SelectSkill != nullptr)
+		{
+			m_pUI_Select = m_pUI_SelectSkill;
+		}
+		else if (m_pUI_SelectWeapon != nullptr)
+		{
+			m_pUI_Select = m_pUI_SelectWeapon;
+		}
+
+		if (m_pUI_SelectSkill == nullptr && m_pUI_SelectWeapon == nullptr)
+			return 99;
+
+		return m_pUI_Select->Get_Price();
+	}
+
+	// UI 
+	_int Get_Select_SkillPoint()
+	{
+		if (m_pUI_SelectSkill != nullptr)
+		{
+			m_pUI_Select = m_pUI_SelectSkill;
+		}
+		else if (m_pUI_SelectWeapon != nullptr)
+		{
+			m_pUI_Select = m_pUI_SelectWeapon;
+		}
+
+		if (m_pUI_SelectSkill == nullptr && m_pUI_SelectWeapon == nullptr)
+			return 99;
+
+		return m_pUI_Select->Get_SkillPoint();
 	}
 
 #ifdef _DEBUG

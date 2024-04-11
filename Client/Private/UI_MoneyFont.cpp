@@ -51,10 +51,12 @@ HRESULT CUI_MoneyFont::Initialize(void* pArg)
 
 	//m_strText = m_pData_Manager->Get_CurLevel();
 
-	m_fChangeScale = 4.f;
+	//m_fChangeScale = 4.f;
 	m_fAlpha = 0.f;
-	m_fLifeTime = 8000.f;
-	m_fTime = (_float)GetTickCount64();
+	//m_fLifeTime = 8000.f;
+	//m_fTime = (_float)GetTickCount64();
+
+	m_strFontTag = L"Font_EvilWest";
 
 	return S_OK;
 }
@@ -68,7 +70,7 @@ void CUI_MoneyFont::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	Check_Disappear(fTimeDelta);
+	//Check_Disappear(fTimeDelta);
 
 	if (m_bActive == true)
 	{
@@ -101,11 +103,16 @@ HRESULT CUI_MoneyFont::Render()
 		//! 바인딩된 정점, 인덱스를 그려
 		m_pVIBufferCom->Render();
 
-		if (m_bTrigger == true)
+		//if (m_bTrigger == true)
 		{
-			m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
+			if(m_tUIInfo.strUIName == "SkillPoint")
+				m_strText = to_wstring(m_pData_Manager->Get_SkillPoint());
+			if(m_tUIInfo.strUIName == "Money")
+				m_strText = to_wstring(m_pData_Manager->Get_Money());
+
+			//m_strText = L"Test";
 			//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2((m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) - 10.f, (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) - 30.f), m_vColor, m_fScale, m_vOrigin, m_fRotation);
 		}
 	}
 
@@ -142,7 +149,7 @@ HRESULT CUI_MoneyFont::Ready_Components()
 
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("level_shield"),
-		TEXT("Com_Texture_LevelUp_Shield"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHIELD_FRAME]))))
+		TEXT("Com_Texture_LeShield"), reinterpret_cast<CComponent**>(&m_pTextureCom[SHIELD_FRAME]))))
 		return E_FAIL;
 
 	return S_OK;
@@ -161,8 +168,8 @@ HRESULT CUI_MoneyFont::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[SHIELD_FRAME]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-		return E_FAIL;
+	//if (FAILED(m_pTextureCom[SHIELD_FRAME]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -207,7 +214,7 @@ HRESULT CUI_MoneyFont::Ready_Text()
 	/* 임의 값 (추 후 로드해서 받기) */
 	LoadInfo->fPosX = 625.5f;
 	LoadInfo->fPosY = 176.f;
-	LoadInfo->fScale = 1.f;
+	LoadInfo->fScale = 0.7f;
 	LoadInfo->vOrigin.x = 0.f;
 	LoadInfo->vOrigin.y = 0.f;
 	LoadInfo->fRotation = 0.f;

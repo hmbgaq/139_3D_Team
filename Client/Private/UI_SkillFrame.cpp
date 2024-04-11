@@ -32,9 +32,9 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
 	// Level 0으로 시작
-	m_eUI_Level = UI_LEVEL::LEVEL0;
+	//m_eUI_Level = UI_LEVEL::LEVEL0;
 	// Test 1로 시작
-	//m_eUI_Level = UI_LEVEL::LEVEL1;
+	m_eUI_Level = UI_LEVEL::LEVEL2;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -42,7 +42,7 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-
+	Check_State();
 
 	return S_OK;
 }
@@ -69,7 +69,7 @@ void CUI_SkillFrame::Tick(_float fTimeDelta)
 			m_eUI_Level = LEVEL2;
 
 		Check_Picking(fTimeDelta);
-		Check_State(fTimeDelta);
+		//Check_State();
 		Check_LevelChange(fTimeDelta);
 
 		m_eUI_PreLevel = m_eUI_Level;
@@ -448,91 +448,90 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 
 }
 
-void CUI_SkillFrame::Check_State(_float fTimeDelta)
+void CUI_SkillFrame::Check_State()
 {
 #pragma region 1
 	if (m_tUIInfo.strUIName == "Kick")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "ElectricDash")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "DashShock")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "ElectricCord")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "PowerUP")
 	{
-
+		m_iSkillPoint = 1;
 	}
 #pragma region 2
 	else if (m_tUIInfo.strUIName == "UpperCut")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "OneTouch")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "TwoTouch")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "ThreeTouch")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "ComboPunch")
 	{
-
+		m_iSkillPoint = 1;
 	}
 #pragma region 3
 	else if (m_tUIInfo.strUIName == "Punch")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "SuperChargeMod")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "TeleportPunch")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "IncreaseEXP")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "NPCPowerUP")
 	{
-
+		m_iSkillPoint = 1;
 	}
 #pragma region 4
 	else if (m_tUIInfo.strUIName == "Heal")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "RecoveryEnergy")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "IncreaseHP")
 	{
-
+		m_iSkillPoint = 1;
 	}
 	else if (m_tUIInfo.strUIName == "IncreaseEnergy")
 	{
-
 	}
 	else if (m_tUIInfo.strUIName == "MaxHP")
 	{
-
+		m_iSkillPoint = 1;
 	}
 }
 

@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Json_Utility.h"
 #include "UI_Manager.h"
+#include "Data_Manager.h"
 
 CUI_WeaponActiveGuige::CUI_WeaponActiveGuige(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI(pDevice, pContext, strPrototypeTag)
@@ -85,6 +86,12 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 				//	m_pUIManager->Get_Select_WeaponLevel() == UI_LEVEL::LEVEL1)
 				//	return;
 
+				if (m_pUIManager->Get_Select_Price() > m_pData_Manager->Get_Money()) // 가격 > 돈
+				{
+					// 습득불가
+					return;
+				}
+
 				if (m_pGameInstance->Key_Up(DIK_SPACE))
 				{
 					m_fAlpha = 0.f;
@@ -106,7 +113,7 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 					m_pUIManager->Get_Select_WeaponLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
 					m_pUIManager->Get_Select_WeaponLevel() < UI_LEVEL::LEVEL2)		// 최대
 				{
-
+					m_pData_Manager->Add_Money(-m_pUIManager->Get_Select_Price()); // 스킬포인트 차감
 					m_pUIManager->Select_WeaponLevelUP(); // 레벨업
 					m_bCoolDown = false;
 					m_bMaxCoolDown = true;

@@ -18,6 +18,7 @@
 #include "UI_SkillWindow_Button.h"
 #include "UI_Skill_Preview.h"
 #include "UI_SkillFrame.h"
+#include "UI_WeaponFrame.h"
 #pragma endregion
 #include "Data_Manager.h"
 
@@ -4203,6 +4204,38 @@ void CUI_Manager::Set_SkillLevel(const string& strSkillFrame, _uint eLevel)
 	}
 }
 
+_int CUI_Manager::Get_SkillPrice(const string& strWeaponFrame)
+{
+	if (m_vecSkillFrame.empty())
+		return 99;
+
+	for (auto& iter : m_vecSkillFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strWeaponFrame)
+		{
+			return iter->Get_Price();		// SkillPoint
+		}
+	}
+
+	return 99;
+}
+
+_int CUI_Manager::Get_SkillPoint(const string& strWeaponFrame)
+{
+	if (m_vecSkillFrame.empty())
+		return 99;
+
+	for (auto& iter : m_vecSkillFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strWeaponFrame)
+		{
+			return iter->Get_SkillPoint();		// SkillPoint
+		}
+	}
+
+	return 99;
+}
+
 HRESULT CUI_Manager::Add_SkillPreview(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 	json json_in;
@@ -4980,8 +5013,50 @@ void CUI_Manager::NonActive_WeaponFrame()
 	}
 }
 
-void CUI_Manager::Set_WeaponLevel(const string& strSkillFrame, _uint eLevel)
+void CUI_Manager::Set_WeaponLevel(const string& strWeaponFrame, _uint eLevel)
 {
+	if (m_vecWeaponFrame.empty())
+		return;
+
+	for (auto& iter : m_vecWeaponFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strWeaponFrame)
+		{
+			iter->Set_UILevel(eLevel);		// Level
+		}
+	}
+}
+
+_int CUI_Manager::Get_WeaponPrice(const string& strWeaponFrame)
+{
+	if (m_vecWeaponFrame.empty())
+		return 99;
+
+	for (auto& iter : m_vecWeaponFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strWeaponFrame)
+		{
+			return iter->Get_Price();		// Price
+		}
+	}
+
+	return 99;
+}
+
+_int CUI_Manager::Get_WeaponSkillPoint(const string& strWeaponFrame)
+{
+	if (m_vecWeaponFrame.empty())
+		return 99;
+
+	for (auto& iter : m_vecWeaponFrame)
+	{
+		if (iter->Get_UIDesc().strUIName == strWeaponFrame)
+		{
+			return iter->Get_SkillPoint();		// SkillPoint
+		}
+	}
+
+	return 99;
 }
 
 HRESULT CUI_Manager::Add_WeaponActiveGuige(_uint iLevelIndex, const wstring& strLayerTag)

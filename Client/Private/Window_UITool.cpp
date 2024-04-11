@@ -1703,8 +1703,8 @@ HRESULT CWindow_UITool::Create_Child(CUI::UI_DESC pUIDesc)
 	m_vecChildObject.push_back(pCurrObject);
 	m_pCurrChild = pCurrObject;
 
-	if(m_pCurrChild->Get_Kind() == CUI::TEXT)
-		m_tTextInfo = dynamic_cast<CUI_Text*>(m_pCurrChild)->Get_TextInfo();
+	//if(m_pCurrChild->Get_Kind() == CUI::TEXT)
+	//	m_tTextInfo = dynamic_cast<CUI_Text*>(m_pCurrChild)->Get_TextInfo();
 
 	return S_OK;
 }

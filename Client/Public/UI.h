@@ -437,6 +437,16 @@ public: /* =========================== Animation ============================== 
 	_float			Get_Alpha() { return m_fAlpha; }
 	_float*			Get_PointAlpha() { return &m_tUIInfo.fAlpha; }
 
+	void			Set_SkillPoint(_int iSkillPoint) { m_iSkillPoint = iSkillPoint; }
+	_int			Get_SkillPoint() { return m_iSkillPoint; }
+	void			Set_Price(_int iPrice) { m_iPrice = iPrice; }
+	_int			Get_Price() { return m_iPrice; }
+
+protected:
+	_int			m_iPrice = 0;
+	_int			m_iSkillPoint = 0;
+
+private:
 	// dt 값
 	_float			fFrameTimeDelta, fCurFrameTimeDelta;
 
@@ -479,6 +489,7 @@ public: /* =========================== Animation ============================== 
 	// 디스토션 Bias
 	_float			fDistortionBias_Delta = 0.f;
 
+protected:
 	_bool			m_bAnimChange = false;
 
 public:

@@ -1282,6 +1282,7 @@
     <ClInclude Include="..\Public\UI_SkillActive.h" />
     <ClInclude Include="..\Public\UI_SkillFrame.h" />
     <ClInclude Include="..\Public\UI_SkillIcon.h" />
+    <ClInclude Include="..\Public\UI_SkillPoint_Font.h" />
     <ClInclude Include="..\Public\UI_SkillPreview_Window.h" />
     <ClInclude Include="..\Public\UI_SkillScrew.h" />
     <ClInclude Include="..\Public\UI_SkillWindow_Button.h" />
@@ -2329,6 +2330,7 @@
     <ClCompile Include="..\Private\UI_SkillActive.cpp" />
     <ClCompile Include="..\Private\UI_SkillFrame.cpp" />
     <ClCompile Include="..\Private\UI_SkillIcon.cpp" />
+    <ClCompile Include="..\Private\UI_SkillPoint_Font.cpp" />
     <ClCompile Include="..\Private\UI_SkillPreview_Window.cpp" />
     <ClCompile Include="..\Private\UI_SkillScrew.cpp" />
     <ClCompile Include="..\Private\UI_SkillWindow_Button.cpp" />
