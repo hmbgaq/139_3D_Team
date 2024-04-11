@@ -86,7 +86,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					m_bMaxCoolDown = false;
 					m_bCoolDown = true;
 
-					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1);
+					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1f);
 				}
 
 				if (m_bCoolDown == true &&
@@ -139,7 +139,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					m_bMaxCoolDown = false;
 					m_bCoolDown = true;
 
-					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1);
+					m_pTransformCom->Set_Scaling(m_fOriginScaleX, m_fOriginScaleY, 0.1f);
 				}
 			}
 		}

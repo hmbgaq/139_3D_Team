@@ -4,6 +4,9 @@
 #include "Weapon_Player.h"
 #include "Player_IdleLoop.h"
 #include "Data_Manager.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
+
 // Add_UIManager
 #include "UI_Manager.h"
 
@@ -919,6 +922,10 @@ void CPlayer::KeyInput(_float fTimeDelta)
 
 HRESULT CPlayer::Ready_Components()
 {
+	/* ¼û½¬´Â ÀÌÆåÆ® Ãß°¡ */
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath02.json", this, TRUE, "lips_H_close_upnode");
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
+
 	return S_OK;
 }
 
@@ -968,7 +975,6 @@ HRESULT CPlayer::Ready_PartObjects()
 	//m_pWeapon_Zapper->Set_Enable(false);
 
 	
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
 
 	
 	return S_OK;

@@ -710,7 +710,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				CJson_Utility::Write_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
 
 				vector<_uint> vecUpdateCellIndexs = m_vecCreateSpecialObject[i]->Get_UpdateCellIndexs();
-				_int iUpdateCellSize = vecUpdateCellIndexs.size();
+				_int iUpdateCellSize = (_int)vecUpdateCellIndexs.size();
 
 				for (_int i = 0; i < iUpdateCellSize; ++i)
 				{
@@ -1277,7 +1277,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			CJson_Utility::Load_Float3(SpecialJson[i]["ColliderCenter"], SpecialDesc.vElevatorColliderCenter);
 
 			json UpdateCellJson = SpecialJson[i]["UpdateCellJson"];
-			_int iUpdateCellJsonSize = UpdateCellJson.size();
+			_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
 
 			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
 			{
@@ -6466,7 +6466,7 @@ void CWindow_MapTool::Navigation_CreateTab()
 
 			Set_CCW(points);
 
-			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, m_vecCells.size());
+			CCell* pCell = CCell::Create(m_pDevice, m_pContext, points, (_uint)m_vecCells.size());
 
 			m_pNavigation->AddCell(pCell);
 			m_vecCells.push_back(pCell);

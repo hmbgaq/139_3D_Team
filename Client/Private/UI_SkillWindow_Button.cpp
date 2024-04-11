@@ -44,7 +44,7 @@ HRESULT CUI_SkillWindow_Button::Initialize(void* pArg)
 	m_fScaleX = 140.f;
 	m_fScaleY = 70.f;
 
-	if (m_tUIInfo.strProtoTag == "SkillButton");
+	if (m_tUIInfo.strProtoTag == "SkillButton")
 		m_bSelectButton = true;
 
 	return S_OK;
