@@ -1,0 +1,81 @@
+{
+  "Anti": { "bFXAA_Active": true },
+  "Chroma": {
+    "bFinal_Active": false,
+    "fFinal_Intensity": 10.741000175476074
+  },
+  "DOF": {
+    "bDOF_Active": false,
+    "fDOF_Distance": 0.0
+  },
+  "Deferred": {
+    "bRimBloom_Blur_Active": true,
+    "bShadow_Active": true
+  },
+  "Fog": {
+    "bFog_Active": true,
+    "fFogDistanceDensity": 0.05999999865889549,
+    "fFogDistanceValue": 20.0,
+    "fFogHeightDensity": 0.054999999701976776,
+    "fFogHeightValue": 50.0,
+    "fFogStartDepth": 115.88099670410156,
+    "fFogStartDistance": 4.353000164031982,
+    "vFogColor_w": 1.0,
+    "vFogColor_x": 0.3553614020347595,
+    "vFogColor_y": 0.43042996525764465,
+    "vFogColor_z": 0.5289574861526489
+  },
+  "HBAO": {
+    "bHBAO_Active": true,
+    "fBias": 0.10000000149011612,
+    "fBlur_Sharpness": 16.0,
+    "fPowerExponent": 3.0,
+    "fRadius": 5.0
+  },
+  "HDR": {
+    "bHDR_Active": true,
+    "fmax_white": 0.7099999785423279
+  },
+  "HSV": {
+    "bScreen_Active": true,
+    "fFinal_Brightness": 1.0,
+    "fFinal_Saturation": 1.1139999628067017
+  },
+  "Luma": {
+    "bLuma_Active": true,
+    "fLuma_bias": 1.062000036239624,
+    "fLuma_clamp": 0.03500000014901161,
+    "fLuma_strength": 1.25
+  },
+  "PBR": {
+    "bPBR_Active": true,
+    "fPBR_Brightness": 0.0,
+    "fPBR_Saturation": 1.0
+  },
+  "Radial": {
+    "bRadial_Active": false,
+    "fRadial_Power": 0.10000000149011612,
+    "fRadial_Quality": 8.0
+  },
+  "SSR": {
+    "bFinal_Active": false,
+    "fFinal_RayStep": 0.004999999888241291,
+    "fFinal_StepCnt": 75.0
+  },
+  "Screen": {
+    "GrayActive": false,
+    "GreyPower": 0.10999999940395355,
+    "SephiaActive": false,
+    "SepiaPower": 0.5799999833106995
+  },
+  "Vignette": {
+    "bFinal_Active": true,
+    "fFinal_Amount": -0.057,
+    "fFinal_CenterX": 0.5,
+    "fFinal_CenterY": 0.5,
+    "fFinal_Radius": 0.9490000009536743,
+    "fFinal_Ratio": 2.436,
+    "fFinal_Slope": 8.0
+  }
+
+}

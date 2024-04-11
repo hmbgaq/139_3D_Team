@@ -79,23 +79,30 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
-		if (m_pGameInstance->Key_Down(DIK_F2))
-			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+		CCharacter* pCharacter = m_pGameInstance->Get_Player();
+
+		if (pCharacter != nullptr)
+		{
+			if (m_pGameInstance->Key_Down(DIK_F2))
+				CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::SpringCamera);
+		}
+		else
+			MSG_BOX("플레이어없슴. 보안코드 넣었음. 하 내가 살렸다 진짜 ");
 	}
 
-		if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
+	if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
+	{
+		CCharacter* pCharacter = m_pGameInstance->Get_Player();
+
+		if (pCharacter != nullptr)
 		{
-			CCharacter* pCharacter = m_pGameInstance->Get_Player();
+			//pCharacter->Get_Navigation()->SpawnCell_Setting(m_pTransformCom->Get_Position());
+			pCharacter->Set_InitPosition(m_pTransformCom->Get_Position());
 
-			if (pCharacter != nullptr)
-			{
-				//pCharacter->Get_Navigation()->SpawnCell_Setting(m_pTransformCom->Get_Position());
-				pCharacter->Set_InitPosition(m_pTransformCom->Get_Position());
-
-			}
-			else
-				MSG_BOX("플레이어가 없서영");
 		}
+		else
+			MSG_BOX("플레이어가 없서영");
+	}
 
 	__super::Tick(fTimeDelta);
 }

@@ -739,7 +739,7 @@
     {
       "Ambient": [ 0.0, 0.0, 0.0, 0.0 ],
       "CutOff": 0.0,
-      "Diffuse": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Diffuse": [ 0.3, 0.3, 0.3, 0.0 ],
       "Direction": [ 1.0, 0.1, 0.1, 0.0 ],
       "LightEnable": true,
       "LightIndex": 0,
