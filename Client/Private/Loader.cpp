@@ -933,8 +933,6 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_PhysXCharacterController"), CPhysXCharacterController::Create(m_pDevice, m_pContext)));
 
-	Ready_UI_Tool_Texture(LEVEL_TOOL);
-
 	m_isFinished = true;
 	return S_OK;
 }
