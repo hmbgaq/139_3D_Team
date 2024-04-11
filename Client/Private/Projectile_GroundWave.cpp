@@ -88,7 +88,7 @@ void CProjectile_GroundWave::OnCollisionEnter(CCollider* other)
 	if (other->m_iLayer == (_uint)COLLISION_LAYER::WEAKNESS)
 	{
 		other->Get_Owner()->Set_Enable(false);
-	}
+	} 
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
