@@ -226,7 +226,7 @@ CState<CVampireCommander>* CVampireCommander_State::Normal(CVampireCommander* pA
 		pActor->m_bTurn = false;
 	}
 
-	if (8 == iRandomTaunt)
+	if (/*8 == */iRandomTaunt)
 	{
 		pActor->m_bLookAt = true;
 		return Taunt_State(pActor, fTimeDelta, _iAnimIndex);

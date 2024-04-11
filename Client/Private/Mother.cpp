@@ -99,9 +99,10 @@ void CMother::Tick(_float fTimeDelta)
 	
 	m_fTimeDelta2 += fTimeDelta;
 
-	if (m_fTimeDelta2 >= 1.f)
+	if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
 	{
-		cout << "MotherBossHP:" << m_fHp << endl;
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood3.json", this, true, "Jaws_Center");
+		//cout << "MotherBossHP:" << m_fHp << endl;
 		m_fTimeDelta2 = 0.f;
 	}
 
@@ -149,6 +150,7 @@ void CMother::Tick(_float fTimeDelta)
 		Look_At_Target();
 		//m_pTransformCom->m_fRadian += 90.f;
 
+		
 		
 	}
 
@@ -275,4 +277,7 @@ void CMother::Free()
 	{
 		m_pMapEffect->Set_Dead(TRUE);
 	}
+
+	if (nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 }
