@@ -58,7 +58,7 @@ HRESULT CSon::Initialize(void* pArg)
 		m_pActor->Set_State(new CSon_Spawn);
 	}
 	//HP
-	m_fMaxHp = 150;
+	m_fMaxHp = 1;
 	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;

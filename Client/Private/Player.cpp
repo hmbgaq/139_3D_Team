@@ -856,6 +856,8 @@ void CPlayer::KeyInput(_float fTimeDelta)
 
 HRESULT CPlayer::Ready_Components()
 {
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
+
 	return S_OK;
 }
 
@@ -905,7 +907,7 @@ HRESULT CPlayer::Ready_PartObjects()
 	//m_pWeapon_Zapper->Set_Enable(false);
 
 	
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
+
 
 	
 	return S_OK;

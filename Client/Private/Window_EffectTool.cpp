@@ -5798,11 +5798,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				}
 			}
 
-			if (ImGui::Button("Revolver_01"))
+			if (ImGui::Button("TeleportPunch_01"))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Bandit_Special_01);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_TeleportPunch_L01_Alt);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)

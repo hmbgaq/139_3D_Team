@@ -31,7 +31,9 @@ public:
 	_vector				m_vMonsterPos = {};
 
 private:
-	CEffect* m_pEffect = { nullptr };
+	CEffect* m_pEffect			= { nullptr };
+	CEffect* m_pCircleEffect	= { nullptr };
+
 	CMother* m_pMother = { nullptr };
 public:
 	static CMotherVomit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

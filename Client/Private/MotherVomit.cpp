@@ -56,8 +56,8 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Son_Test_07.json", this);
-
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_02.json", this);
+	m_pCircleEffect = EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_Mini_Circle_02.json", this);
 
 	return S_OK;
 }
@@ -65,6 +65,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 void CMotherVomit::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
 }
 
 void CMotherVomit::Tick(_float fTimeDelta)
@@ -87,8 +88,8 @@ void CMotherVomit::Late_Tick(_float fTimeDelta)
 
 HRESULT CMotherVomit::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	//if (FAILED(__super::Render()))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -196,5 +197,6 @@ void CMotherVomit::Free()
 
 
 	Safe_Release(m_pEffect);
+	Safe_Release(m_pCircleEffect);
 
 }

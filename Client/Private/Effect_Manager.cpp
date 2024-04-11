@@ -435,6 +435,13 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	/* SnowBoss Falling Leaves */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_04.json", 10));
+
+
+	/* Mother Breath */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_02.json", 300));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Mini_Circle_02.json", 300));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_01.json", 2));
+
 #pragma endregion 보스2 이펙트 끝
 
 
