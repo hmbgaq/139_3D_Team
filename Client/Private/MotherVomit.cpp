@@ -56,7 +56,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// ÀÌÆåÆ® »ı¼º
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath3.json", this);
+	//m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath3.json", this);
 
 
 	return S_OK;
@@ -143,7 +143,6 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 
 	}
 	this->Set_Enable(false);
-
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
 }
