@@ -21,8 +21,6 @@ private:
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
 	HRESULT Ready_Layer_BackGround(const wstring& strLayerTag);
-
-	
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
@@ -34,9 +32,6 @@ private: /* UI */
 
 private: /* Map*/
 	HRESULT Ready_Event();
-
-private: /* Shader */
-	HRESULT Ready_Shader();
 
 private:
 	_int			TempLightNumber = 0;

@@ -50,6 +50,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 {
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json");
 
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
@@ -58,32 +59,8 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	FAILED_CHECK(Ready_Shader());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
-
-	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json");
-
-	PBR_DESC Desc_PBR = {};
-	Desc_PBR.bPBR_ACTIVE = true ;
-	Desc_PBR.fBrightnessOffset = 1.f;
-	Desc_PBR.fSaturationOffset = 1.f;
-
-	DEFERRED_DESC Desc_Deferred = {};
-	Desc_Deferred.bRimBloom_Blur_Active = true;
-	Desc_Deferred.bShadow_Active = true;
-
-	HBAO_PLUS_DESC Desc_Hbao = {};
-	Desc_Hbao.bHBAO_Active = true;
-	Desc_Hbao.fBias = 0.10000000149011612;
-	Desc_Hbao.fBlur_Sharpness = 16.0;
-	Desc_Hbao.fPowerExponent = 2.0;
-	Desc_Hbao.fRadius = 1.0;
-
-
-	m_pGameInstance->Get_Renderer()->Set_PBR_Option(Desc_PBR);
-	m_pGameInstance->Get_Renderer()->Set_Deferred_Option(Desc_Deferred);
-	m_pGameInstance->Get_Renderer()->Set_HBAO_Option(Desc_Hbao);
 
 	return S_OK;
 }
@@ -609,15 +586,6 @@ HRESULT CLevel_SnowMountainBoss::Ready_Event()
 
 	return S_OK;
 
-}
-
-HRESULT CLevel_SnowMountainBoss::Ready_Shader()
-{
-	/* For. Shadow */
-	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
-	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
-
-	return S_OK;
 }
 
 CLevel_SnowMountainBoss* CLevel_SnowMountainBoss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

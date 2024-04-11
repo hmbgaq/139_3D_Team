@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "..\Public\Environment_Object.h"
-
+#include "Environment_Object.h"
 #include "GameInstance.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
 #include "UI_Weakness.h"
 
 CEnvironment_Object::CEnvironment_Object(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -295,6 +296,13 @@ HRESULT CEnvironment_Object::Ready_Components()
 		bIcarusTexture = true;
 		bRenderIce = false;
 	}
+	else if (TEXT("Prototype_Component_Model_TeslaCircuitCoil") == strTemp)
+	{
+		if(m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
+			m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", this);
+
+		cout << "snowmap effect on " << endl;
+	}
 	else
 	{
 		bRenderIce = false;
@@ -363,8 +371,11 @@ void CEnvironment_Object::Free()
 
 	//m_pGameInstance->Add_Light()
 
-	if(m_iCurrentLevel == (_uint)LEVEL_TOOL)
+	if(m_iCurrnetLevel == (_uint)LEVEL_TOOL)
 		Safe_Release(m_pPickingCollider);
+
+	if(nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 }
 
 

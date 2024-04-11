@@ -368,7 +368,7 @@ PS_OUT PS_MAIN_CHECK(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(7) : OutLine Blink  -------------------*/
+/* ------------------- Pixel Shader(6) : OutLine Blink  -------------------*/
 PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
@@ -382,7 +382,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     
     return Out;
 }
-/* ------------------- Pixel Shader(8) : OutLine : Keep Color  -------------------*/
+/* ------------------- Pixel Shader(7) : OutLine : Keep Color  -------------------*/
 PS_OUT_OUTLINE PS_MAIN_OUTLINE_Keep(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
@@ -394,7 +394,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_Keep(PS_IN_OUTLINE In)
     return Out;
 }
 
-/* ------------------- Pixel Shader() : Infected -------------------*/
+/* ------------------- Pixel Shader(8) : Infected -------------------*/
 PS_OUT PS_INFECTED_WEAPON(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -422,6 +422,35 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
     return Out;
 }
 
+/* ------------------- Pixel Shader(9) : Infected -------------------*/
+PS_OUT PS_MAIN_EMPHASIS(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vEmissive += Out.vDiffuse;
+    
+    return Out;
+}
 /*=============================================================
  
                           Technique
@@ -537,6 +566,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_INFECTED_WEAPON();
+    }
+
+    pass EMPHASIS_DIFFUSE // 9
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EMPHASIS();
     }
 
 }
