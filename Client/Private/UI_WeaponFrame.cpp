@@ -316,21 +316,21 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 				m_pUIManager->Select_Weapon("Rifle");
 
 				// 선택한 UI의 레벨
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Rifle");
 			}
 			else if (m_tUIInfo.strUIName == "Revolver")
 			{
 				m_pUIManager->Select_Weapon("Revolver");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Revolver");
 			}
 			else if (m_tUIInfo.strUIName == "Shotgun")
 			{
 				m_pUIManager->Select_Weapon("Shotgun");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Shotgun");
 			}
 #pragma region 2
@@ -338,21 +338,21 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Weapon("Rifle_Skill1");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Rifle_Skill1");
 			}
 			else if (m_tUIInfo.strUIName == "Revolver_Skill1")
 			{
 				m_pUIManager->Select_Weapon("Revolver_Skill1");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Revolver_Skill1");
 			}
 			else if (m_tUIInfo.strUIName == "Shotgun_Skill1")
 			{
 				m_pUIManager->Select_Weapon("Shotgun_Skill1");
 
-				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Shotgun_Skill1");
 			}
 		}
