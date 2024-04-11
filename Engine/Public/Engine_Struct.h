@@ -372,12 +372,14 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagGodRay_Desc
 	{
-		_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825f, 2.0f);
+		//_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825f, 2.0f);
+		_float godraysDensity;
+		_float godraysWeight;
+		_float godraysDecay;
+		_float godraysExposure;
 		_float2 vScreenSunPosition = {};
-		_float2 Padding = {};
+		_float2 padding = {};
 
-		tagGodRay_Desc()
-			: vShaftValue(_float4(0.975f, 0.25f, 0.825f, 2.0f)), vScreenSunPosition(_float2(0.f, 0.f)) {}
 	}LIGHTSHAFT_DESC;
 
 	typedef struct ENGINE_DLL tagPBR_Desc
@@ -404,12 +406,12 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagSSR_Desc
 	{
-		_float  fRayStep			= 0.005f;
-		_float  fStepCnt			= 75.f;
+		_float  fRayStep			= 1.60f;
+		_float  fStepCnt			= 2.00f; // thredhold ÀÎµ¥ ±ÍÂú¾È¹Ù²Þ
 		_bool	bSSR_Active			= { false };
 
 		tagSSR_Desc()
-			: fRayStep(0.005f), fStepCnt(75.f), bSSR_Active(false) {}
+			: fRayStep(1.60f), fStepCnt(2.00f), bSSR_Active(false) {}
 	}SSR_DESC;
 
 	typedef struct ENGINE_DLL tagChroma_Desc

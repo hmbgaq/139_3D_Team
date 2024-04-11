@@ -2408,6 +2408,16 @@ void CWindow_MapTool::Light_CreateTab()
 					m_pPreviewLightObject->Set_LightDesc(OriginDesc);
 
 				}
+				
+				ImGui::SameLine();
+
+				if (ImGui::InputFloat(u8"라이트 감쇄강도", &m_tEditLightDesc.fIntensity))
+				{
+					LIGHT_DESC OriginDesc = m_pPreviewLightObject->Get_LightDesc();
+					OriginDesc.fIntensity = m_tEditLightDesc.fIntensity;
+
+					m_pPreviewLightObject->Set_LightDesc(OriginDesc);
+				}
 			}
 
 			ImGui::InputFloat("Light Intensity", &m_tEditLightDesc.fIntensity); // ◀ 여기 추가됨 

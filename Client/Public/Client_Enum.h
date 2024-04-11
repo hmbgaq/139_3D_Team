@@ -40,7 +40,6 @@ namespace Engine
 		COMMON_OUTLINE_BLINK,		// 6 - 외곽선 깜빡거림 
 		COMMON_OUTLINE_KEEP,		// 7 - 외곽선 계속 유지 
 		INFECTED_PUNCH,				// 8 - Infected - Attack에서 주먹변하기 
-		COMMON_EMPHASIS,			// 9 - Emissive에 Diffuse더넣어서 강조하기
 		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};

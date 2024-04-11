@@ -5,6 +5,9 @@
 //#pragma multi_compile _ HF_FOG_ENABLED HF_LIGHT_ATTEN
 
 #define NUM_SAMPLES 4
+#ifndef SUNLIGHT_RM_STEPS
+#define SUNLIGHT_RM_STEPS 16
+#endif
 /*=============================================================
  
                              Struct 
@@ -118,6 +121,13 @@ Texture2D g_CascadeTarget1;
 Texture2D g_CascadeTarget2;
 Texture2D g_CascadeTarget3;
 
+/* ========== Light ============= */
+Texture2D<float> DepthTx : register(t2);
+Texture2D<float> ShadowMap : register(t4);
+
+float   NB_STEPS = 3.0f;
+int     NB_STEPS_INT = 3;
+float   G_SCATTERING = 0.7f;
 
 /*=============================================================
  
@@ -444,6 +454,13 @@ VS_OUT VS_MAIN(VS_IN In)
     
     return Out;
 }
+float ComputeScattering(float lightDotView)
+{
+    float result = 1.0f - G_SCATTERING * G_SCATTERING;
+    result /= (4.0f * PI * pow(1.0f + G_SCATTERING * G_SCATTERING - (2.0f * G_SCATTERING) * lightDotView, 1.5f));
+    return result;
+}
+
 /*=============================================================
  
                           Pixel Shader  
@@ -595,9 +612,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
    
     float fRoughness = vORMDesc.y;
     float fMetalness = vORMDesc.z;
-    float fOcclusion = vHBAO.x;
+    float fOcclusion = vHBAO.r;
     
-    if (false)
+    if (g_bPBR)
     {
         fRoughness = max(fRoughness, 0.001f);
         fMetalness = max(fMetalness, 0.001f);
@@ -676,18 +693,18 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
     vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
     vector vHBAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
-    
+ 
     float fViewZ = vDepthDesc.y * g_CamFar;
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
     vector vWorldPos;
 
-	/* 투영스페이스 상의 위치르 ㄹ구한다. */
-	/* 뷰스페이스 상 * 투영행렬 / w 까지 위치를 구한다. */
+    /* 투영스페이스 상의 위치르 ㄹ구한다. */
+    /* 뷰스페이스 상 * 투영행렬 / w 까지 위치를 구한다. */
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
     vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
     vWorldPos.z = vDepthDesc.x;
     vWorldPos.w = 1.0f;
-    
+ 
     vWorldPos *= fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
@@ -699,17 +716,17 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float fAtt = 1.f / (1.f + fDenom * fDenom);
     clip(fAtt - 0.01f);
     fAtt *= g_fLightIntensity;
-    
+ 
     float fTheta = dot(normalize(vLightDir), normalize(g_vLightDir));
-    
+ 
     float fEpsilon = max(0.f, g_fCutOff - g_fOuterCutOff);
     float fCutoffIntensity = (fTheta - g_fOuterCutOff) / fEpsilon;
     clip(fCutoffIntensity);
-   
+
     fAtt *= fCutoffIntensity;
-   
+
     vector vLook = normalize(g_vCamPosition - vWorldPos);
-    
+ 
     //Out.vShade = vShadeDesc;
     float fRoughness = vORMDesc.y;
     float fMetalness = vORMDesc.z;
@@ -720,14 +737,14 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         fRoughness = max(fRoughness, 0.001f);
         fMetalness = max(fMetalness, 0.001f);
         fOcclusion = max(fOcclusion, 0.001f);
-    
+ 
         vector vHalfVec = normalize(vLook + normalize(g_vLightDir) * -1.f);
 
         float NdotL = max(dot(vNormal, normalize(g_vLightDir) * -1.f), 0.0);
         float NdotH = max(dot(vNormal, vHalfVec), 0.0);
         float NdotV = max(dot(vNormal, vLook), 0.0);
         float HdotV = max(dot(vHalfVec, vLook), 0.0);
-    
+ 
         float3 vMetalic = lerp(float3(0.04f, 0.04f, 0.04f), vDiffuseColor.xyz, fMetalness);
 
         float NDF = trowbridgeReitzNDF(NdotH, fRoughness);
@@ -743,15 +760,20 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vector vSpecular = vNumerator / max(fDenominator, 0.001f);
 
         vector vSpecularAcc = vSpecular * NdotL * g_vLightDiffuse * fAtt;
-        vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * NdotL * g_vLightDiffuse * fAtt;
+      
+        // Lambertian 모델을 사용하여 빛의 각도에 따른 볼류메트릭을 계산합니다.
+        //float fLambertian = max(dot(normalize(vNormal), normalize(g_vLightDir)), 0.0);
+        // 앰비언트 렌더링 부분
+        //vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * fLambertian * g_vLightDiffuse * fAtt;
 
+        vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * NdotL * g_vLightDiffuse * fAtt;
 
         Out.vSpecular = vSpecularAcc;
         Out.vSpecular.a = 0.f;
-        
+      
         Out.vAmbient = vAmbientColor;
         Out.vAmbient.a = 1.f;
-      
+    
     }
     else
     {
@@ -764,7 +786,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         Out.vAmbient.a = 1.f;
 
         vector vReflect = reflect(normalize(g_vLightDir), vNormal);
-   
+
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vReflect) * -1.f, vLook)), 20.f) * fAtt;
         Out.vSpecular.a = 0.f;
     }
@@ -1107,7 +1129,7 @@ PS_OUT_FOG PS_MAIN_FOG(PS_IN In)
     return Out;
 }
 
-/* ------------------ 8 - Fog ------------------ */
+/* ------------------ 9 - SPOT_TEST ------------------ */
 PS_OUT PS_MAIN_TEST(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -1122,6 +1144,45 @@ PS_OUT PS_MAIN_TEST(PS_IN In)
     return Out;
 }
 
+/* ------------------ 10 - Volumetric Spot ------------------ */
+
+PS_OUT_LIGHT PS_MAIN_SPOT_TEST(PS_IN In)
+{
+    PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
+
+//    float2 texCoord = vec2(gl_FragCoord.x / width, gl_FragCoord.y / height);
+//    vec3 worldPosition = 
+//    texture2D( positionMap, texCoord).
+//    xyz;
+
+//vec3    startPosition = ViewPos;
+
+//    vec3 rayVector = worldPosition.xyz - startPosition;
+//    float rayLength = length(rayVector);
+//    vec3 rayDirection = normalize(rayVector);
+//    float stepLength = rayLength / NB_STEPS;
+//    vec3 step = rayDirection * stepLength;
+
+//    vec3 currentPosition = startPosition;
+
+//    vec3 accumFog = vec3(0.0f);
+//    for (int i = 0; i < NB_STEPS_INT; i++)
+//    {
+//        bool shadow = ShadowCalculation(currentPosition);
+//        if (!shadow)
+//        {
+//            accumFog += ComputeScattering(dot(rayDirection, light.position)) * light.diffuse;
+//    //accumFog +=  light.diffuse;
+//        }
+//        currentPosition += step;
+//    }
+
+//    accumFog /= NB_STEPS;
+
+//    fragColor = vec4(accumFog, 1);
+
+    return Out;
+}
 /*=============================================================
  
                          Technique 
@@ -1238,6 +1299,16 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_TEST();
+    }
+
+    pass SpotTest // 10
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlending, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SPOT_TEST();
     }
 
 }

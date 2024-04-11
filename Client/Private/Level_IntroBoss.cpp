@@ -210,7 +210,7 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
     LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
     LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
     LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
-    LightDesc.fIntensity = 1.f;
+    LightDesc.fIntensity = 0.5f;
     
     CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
 
@@ -479,7 +479,7 @@ HRESULT CLevel_IntroBoss::Ready_LandObjects()
     LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-    //FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
 
     FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 
