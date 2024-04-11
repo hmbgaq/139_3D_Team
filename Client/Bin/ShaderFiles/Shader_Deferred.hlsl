@@ -1,4 +1,3 @@
-//#include "Shader_PBR.hlsl"
 #include "Shader_MyPBR.hlsl"
 #include "DitherUtil.hlsli"
 //#include "Shader_Defines.hlsli"
@@ -20,7 +19,7 @@ struct FOG_DESC
     float   fFogHeightValue;
     float   fFogDistanceDensity;
     float   fFogHeightDensity;
-    float   padding;              // 4 
+    float   padding;            
     float4  vFogColor;
 };
 
@@ -557,232 +556,217 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
-    
-    vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
-    vector vORMDesc = g_ORMTexture.Sample(PointSampler, In.vTexcoord);
-    
-	/* 0, 1 -> -1, 1 */
-    float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
-    float fViewZ = vDepthDesc.y * g_CamFar;
 
+	/* 방향성광원의 정보와 노멀 타겟에 담겨있는 노멀과의 빛연산을 수행한다. */
+    vector vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vHBAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
+   // vLightFlagDesc *= g_vLightFlag;
+	
+    float fViewZ = vDepthDesc.y * g_CamFar;
+	vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
     vector vWorldPos;
 
-	/* 투영스페이스 상의 위치. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬* 투영행렬 / View.z */
-    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
-    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
-    vWorldPos.z = vDepthDesc.x;     
-    vWorldPos.w = 1.f;
-
-	/* 뷰스페이스 상의 위치를 구하자. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬 */
-    vWorldPos = vWorldPos * fViewZ;
-    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-    
-    // 원본
-    //float4 vLightDir = g_vLightPos - vWorldPos;
-    //float fDistance = length(vLightDir);
-    //float fAtt = max((g_fLightRange - fDistance) / g_fLightRange, 0.f);
-
-    // 티메시아 
-    vector vLightDir = vWorldPos - g_vLightPos;
-    float fDistance = length(vLightDir);
-    
-    float fDenom = fDistance / g_fRange;
-    float fAtt = 1.f / (1.f + fDenom * fDenom);
-    
-    clip(fAtt - 0.01f);
-    
-    fAtt *= g_fLightIntensity;
-    
-    
-    // int 
-    //float fAtt = 1.0f / (fDistance * fDistance);
-    
-    vector vLook = g_vCamPosition - vWorldPos;
-    
-    if (false)
-    {
-        float3 N = vNormal.xyz * 2.f - 1.f;
-        /* PBR 하는경우 */ 
-        vector vHBAO = g_SSAOTexture.Sample(PointSampler, In.vTexcoord);
-        
-        float fAmbient_Occlusion = vORMDesc.r;
-        float fRoughness = vORMDesc.g;
-        float fMetallic = vORMDesc.b;
-        float fAO;
-        fAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord).r; // Ambient Occulusion은 HBAO+로 
-        
-        // F0
-
-        float3 F0 = 0.04f; //  F0 : reflectance ratio - 0.04 looks visually correct for non-metallic sufaces
-        F0 = lerp(F0, vDiffuseColor.rgb, fMetallic); // 슈레넬에서 쓸 R0 반사율 
-        
-        // N(위에), V, L, H
-        vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
-        vector vWorldPos;
-        vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
-        vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
-        vWorldPos.z = vNormal.w;
-        vWorldPos.w = 1.f;
-
-        float fViewZ = vDepthDesc.w * g_CamFar;
-        vWorldPos = vWorldPos * fViewZ;
-        vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-        vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-
-        float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
-        float3 L = normalize(-g_vLightDir.xyz);
-        float3 H = normalize(V + L);
-        
-        float NdotL = max(dot(N, L), 0.0);
-        const float HdotV = saturate(dot(H, V));
-    
-        float D = My_NormalDistributionGGXTR(N, H, fRoughness); // roughness값에 의한 반사분포
-        float G = My_GeometrySmith(N, V, L, fRoughness); // 미세면 그림자
-        float3 F = My_fresnelSchlick(HdotV, F0); // 다른 각도로 봤을 떄 달라지는 반사정도 - 금석성과 관련이 크다.  costheta는 (half way 벡터 * view벡터)로 쓰이는값이다. 
-    
-        float3 nominator = D * G * F;
-
-        //  Wo : View Direction
-        //  Wi : Light Direction
-        float WoDotN = saturate(dot(V, N));
-        float WiDotN = saturate(dot(L, N));
-        float denominator = (4 * WoDotN * WiDotN);
-
-        // 0.001f just in case product is 0
-        //float3 specular_factor = nominator / (denominator + 0.001f);
-        float3 specular_factor = nominator / (denominator + 0.001f); //max(denominator, 0.001);
-
-        //  Energy Conservation
-        float3 kS = F; //  reflection energy
-        float3 kD = 1.0f - kS; //  refraction energy
-        kD *= 1.0 - fMetallic; //  if metallic nullify kD
-
-        //  Calculate Cook-Torrance Reflectance Equation 
-        Out.vSpecular.rgb = specular_factor * NdotL * g_vLightDiffuse.rgb * fAtt;
-        Out.vSpecular.a = 0.f;
-        
-        Out.vAmbient.rgb = (((kD * vDiffuseColor.rgb / PI) + specular_factor) * fAmbient_Occlusion * WiDotN * g_vLightDiffuse.rgb);
-        Out.vAmbient.a = 1.f;
-    }
-    else
-    {
-        /* 안하는경우 */
-        Out.vAmbient = g_vLightDiffuse * min((max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f) * fAtt;
-
-        vector vLook = vWorldPos - g_vCamPosition;
-        vector vReflect = reflect(normalize(vLightDir), vNormal);
-
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f) * fAtt;
-    }
-    
-    return Out;
-}
-
-/* ------------------ 3 - Spot  ------------------ */
-PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
-{
-    PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
-    
-    vector vDiffuseColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
-    vector vORMDesc = g_ORMTexture.Sample(PointSampler, In.vTexcoord);
-    
-	/* 0, 1 -> -1, 1 */
-    float4 vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
-    float fViewZ = vDepthDesc.y * g_CamFar;
-
-    vector vWorldPos;
-
-	/* 투영스페이스 상의 위치. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬* 투영행렬 / View.z */
+	/* 투영스페이스 상의 위치르 ㄹ구한다. */
+	/* 뷰스페이스 상 * 투영행렬 / w 까지 위치를 구한다. */
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
     vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
     vWorldPos.z = vDepthDesc.x;
-    vWorldPos.w = 1.f;
+    vWorldPos.w = 1.0f;
 
-	/* 뷰스페이스 상의 위치를 구하자. */
-	/* 로컬위치 * 월드행렬 * 뷰행렬 */
-    vWorldPos = vWorldPos * fViewZ;
+	/* 뷰스페이스 상 * 투영행렬까지 곱해놓은 위치를 구한다. */
+    vWorldPos *= fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-    
-    // 원본
-    //float4 vLightDir = vWorldPos - g_vLightPos;
-    //float fDistance = length(vLightDir);
-    //
-    //float fAtt = max((g_fLightRange - fDistance) / g_fLightRange, 0.f);
-    
-    float4 vLightDir = vWorldPos - g_vLightPos;
+
+    // Att
+    vector vLightDir = vWorldPos - g_vLightPos;
     float fDistance = length(vLightDir);
     float fDenom = fDistance / g_fLightRange;
     float fAtt = 1.f / (1.f + fDenom * fDenom);
-    
     clip(fAtt - 0.01f);
-    
     fAtt *= g_fLightIntensity;
     
-    if (g_bPBR)
+    //float fAtt = max((g_fLightRange - fDistance) / g_fLightRange, 0.f);
+    
+    vector vLook = normalize(g_vCamPosition - vWorldPos);
+   
+    float fRoughness = vORMDesc.y;
+    float fMetalness = vORMDesc.z;
+    float fOcclusion = vHBAO.x;
+    
+    if (false)
     {
-        /* PBR 하는경우 */ 
-        vector vHBAO = g_SSAOTexture.Sample(PointSampler, In.vTexcoord);
-        
-        float fOcclusion = vHBAO.r;
-        float fRoughness = vORMDesc.y;
-        float fMetalness = vORMDesc.z;
-        
         fRoughness = max(fRoughness, 0.001f);
         fMetalness = max(fMetalness, 0.001f);
         fOcclusion = max(fOcclusion, 0.001f);
-        
-        float3 N = vNormal.xyz * 2.f - 1.f;
-
-        float3 F0 = 0.04f; //  F0 : reflectance ratio - 0.04 looks visually correct for non-metallic sufaces
-        F0 = lerp(F0, vDiffuseColor.rgb, fMetalness); // 슈레넬에서 쓸 R0 반사율 
-
-        float3 V = normalize(g_vCamPosition.xyz - vWorldPos.xyz);
-        float3 L = normalize(-vLightDir.xyz);
-        float3 H = normalize(V + L);
-        
-        const float HdotV = saturate(dot(H, V));
-        float NdotV = saturate(dot(N, V));
-        float NdotL = saturate(dot(N, L));
-        
-        float NDF = My_NormalDistributionGGXTR(N, H, fRoughness); // roughness값에 의한 반사분포
-        float G = My_GeometrySmith(N, V, L, fRoughness); // 미세면 그림자
-        float3 F = My_fresnelSchlick(HdotV, F0); // 다른 각도로 봤을 떄 달라지는 반사정도 - 금석성과 관련이 크다.  costheta는 (half way 벡터 * view벡터)로 쓰이는값이다. 
     
-        //  Energy Conservation
-        vector kS = vector(F, 0.f); //  reflection energy
-        vector kD = vector(1.f, 1.f, 1.f, 0.f) - kS; //  refraction energy
-        kD *= 1.f - fMetalness; //  if metallic nullify kD
-     
+        vector vHalfVec = normalize(vLook + normalize(vLightDir) * -1.f);
+
+        float NdotL = max(dot(vNormal, normalize(vLightDir) * -1.f), 0.0);
+        float NdotH = max(dot(vNormal, vHalfVec), 0.0);
+        float NdotV = max(dot(vNormal, vLook), 0.0);
+        float HdotV = max(dot(vHalfVec, vLook), 0.0);
+    
+        float3 vMetalic = lerp(float3(0.04f, 0.04f, 0.04f), vDiffuseColor.xyz, fMetalness);
+
+        float NDF = trowbridgeReitzNDF(NdotH, fRoughness);
+        float3 F = fresnel(vMetalic, HdotV, fRoughness);
+        float G = schlickBeckmannGAF(NdotV, fRoughness) * schlickBeckmannGAF(NdotL, fRoughness);
+
+        vector kS = vector(F, 0.f);
+        vector kD = vector(1.f, 1.f, 1.f, 0.f) - kS;
+        kD *= 1.f - fMetalness;
+
         vector vNumerator = kS * NDF * G;
         float fDenominator = 4.f * NdotV * NdotL;
         vector vSpecular = vNumerator / max(fDenominator, 0.001f);
 
         vector vSpecularAcc = vSpecular * NdotL * g_vLightDiffuse * fAtt /** fOcclusion*/;
         vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * NdotL * g_vLightDiffuse * fAtt;
-        
+
         Out.vSpecular = vSpecularAcc;
         Out.vSpecular.a = 0.f;
 
         Out.vAmbient = vAmbientColor;
         Out.vAmbient.a = 1.f;
+      
     }
     else
     {
-        /* 안하는경우 */
-        vector vLook = vWorldPos - g_vCamPosition;
+        vector vResult = g_vLightDiffuse * saturate(saturate(dot(normalize(vLightDir) * -1.f, vNormal)) + (g_vLightAmbient * g_vMtrlAmbient)) * fAtt;
+        
+        if (vResult.r < 0.05f && vResult.g < 0.05f && vResult.b < 0.05f)
+            discard;
+        
+        Out.vAmbient = vResult * fAtt;
+        Out.vAmbient.a = 1.f;
+        
         vector vReflect = reflect(normalize(vLightDir), vNormal);
         
-        Out.vAmbient = g_vLightDiffuse * min((max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f) * fAtt;
-        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f) * fAtt;
+        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vReflect) * -1.f, vLook)), 20.f) * fAtt;
+        Out.vSpecular.a = 0.f;
+        
+        /* 안하는경우 */
+        //Out.vAmbient = g_vLightDiffuse * min((max(dot(normalize(vLightDir) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)), 1.f) * fAtt;
+        //
+        //vector vLook = vWorldPos - g_vCamPosition;
+        //vector vReflect = reflect(normalize(vLightDir), vNormal);
+        //
+        //Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f) * fAtt;
+
+    }
+   
+    //Out.vAmbient = pow(Out.vAmbient, 2.2f);
+    //Out.vSpecular = pow(Out.vSpecular, 2.2f);
+   
+    return Out;
+}
+
+/* ------------------ 3 - Spot  ------------------ */
+PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
+{
+    PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 1;
+    
+	/* 방향성광원의 정보와 노멀 타겟에 담겨있는 노멀과의 빛연산을 수행한다. */
+    vector vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vHBAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float fViewZ = vDepthDesc.y * g_CamFar;
+    vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+    vector vWorldPos;
+
+	/* 투영스페이스 상의 위치르 ㄹ구한다. */
+	/* 뷰스페이스 상 * 투영행렬 / w 까지 위치를 구한다. */
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepthDesc.x;
+    vWorldPos.w = 1.0f;
+    
+    vWorldPos *= fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+    // Att
+    vector vLightDir = vWorldPos - g_vLightPos;
+    float fDistance = length(vLightDir);
+    float fDenom = fDistance / g_fLightRange;
+    float fAtt = 1.f / (1.f + fDenom * fDenom);
+    clip(fAtt - 0.01f);
+    fAtt *= g_fLightIntensity;
+    
+    float fTheta = dot(normalize(vLightDir), normalize(g_vLightDir));
+    
+    float fEpsilon = max(0.f, g_fCutOff - g_fOuterCutOff);
+    float fCutoffIntensity = (fTheta - g_fOuterCutOff) / fEpsilon;
+    clip(fCutoffIntensity);
+   
+    fAtt *= fCutoffIntensity;
+   
+    vector vLook = normalize(g_vCamPosition - vWorldPos);
+    
+    //Out.vShade = vShadeDesc;
+    float fRoughness = vORMDesc.y;
+    float fMetalness = vORMDesc.z;
+    float fOcclusion = vHBAO.x;
+
+    if (g_bPBR)
+    {
+        fRoughness = max(fRoughness, 0.001f);
+        fMetalness = max(fMetalness, 0.001f);
+        fOcclusion = max(fOcclusion, 0.001f);
+    
+        vector vHalfVec = normalize(vLook + normalize(g_vLightDir) * -1.f);
+
+        float NdotL = max(dot(vNormal, normalize(g_vLightDir) * -1.f), 0.0);
+        float NdotH = max(dot(vNormal, vHalfVec), 0.0);
+        float NdotV = max(dot(vNormal, vLook), 0.0);
+        float HdotV = max(dot(vHalfVec, vLook), 0.0);
+    
+        float3 vMetalic = lerp(float3(0.04f, 0.04f, 0.04f), vDiffuseColor.xyz, fMetalness);
+
+        float NDF = trowbridgeReitzNDF(NdotH, fRoughness);
+        float3 F = fresnel(vMetalic, HdotV, fRoughness);
+        float G = schlickBeckmannGAF(NdotV, fRoughness) * schlickBeckmannGAF(NdotL, fRoughness);
+
+        vector kS = vector(F, 0.f);
+        vector kD = vector(1.f, 1.f, 1.f, 0.f) - kS;
+        kD *= 1.f - fMetalness;
+
+        vector vNumerator = kS * NDF * G;
+        float fDenominator = 4.f * NdotV * NdotL;
+        vector vSpecular = vNumerator / max(fDenominator, 0.001f);
+
+        vector vSpecularAcc = vSpecular * NdotL * g_vLightDiffuse * fAtt;
+        vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * NdotL * g_vLightDiffuse * fAtt;
+
+
+        Out.vSpecular = vSpecularAcc;
+        Out.vSpecular.a = 0.f;
+        
+        Out.vAmbient = vAmbientColor;
+        Out.vAmbient.a = 1.f;
+      
+    }
+    else
+    {
+        vector vResult = g_vLightDiffuse * saturate(saturate(dot(normalize(g_vLightDir) * -1.f, vNormal)) + (g_vLightAmbient * g_vMtrlAmbient)) * fAtt;
+
+        if (vResult.r < 0.05f && vResult.g < 0.05f && vResult.b < 0.05f)
+            discard;
+
+        Out.vAmbient = vResult * fAtt;
+        Out.vAmbient.a = 1.f;
+
+        vector vReflect = reflect(normalize(g_vLightDir), vNormal);
+   
+        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vReflect) * -1.f, vLook)), 20.f) * fAtt;
+        Out.vSpecular.a = 0.f;
     }
     
     return Out;

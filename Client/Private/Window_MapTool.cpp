@@ -62,9 +62,7 @@ static bool TriggeruseSnapUI(false);
 CWindow_MapTool::CWindow_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
 {
-	
 }
-
 
 HRESULT CWindow_MapTool::Initialize()
 {
@@ -73,7 +71,6 @@ HRESULT CWindow_MapTool::Initialize()
 	FAILED_CHECK(Ready_ModelTags());
 	FAILED_CHECK(Ready_PrototypeTags());
 	
-
 	_int iEnvironModelTagSize = (_int)m_vecEnviroModelTag.size();
 	for (int i = 0; i < iEnvironModelTagSize; ++i) //! 인스턴싱용 깡통맵
 	{
@@ -113,8 +110,6 @@ HRESULT CWindow_MapTool::Initialize()
 	FAILED_CHECK(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
 		VertexPositionColor::InputElementCount, pShaderByteCode, iShaderCodeLength, &m_pInputLayOut));
 
-
-
 	LIGHT_DESC			LightDesc{};
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
@@ -130,19 +125,15 @@ HRESULT CWindow_MapTool::Initialize()
 	m_vecCreateLight.push_back(pLight);
 	m_vecCreateLightTag.push_back("Light" + pLight->Get_LightIndex());
 	
-	
 	return S_OK;
 }
 
 void CWindow_MapTool::Tick(_float fTimeDelta)
 {
-	
-
 	__super::Tick(fTimeDelta);
 
 	__super::Begin();
 	
-
 	//TODO ImGuiTabBarFlags_
 	//!	ImGuiTabBarFlags_None = 0,
 	
@@ -157,15 +148,25 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	//!	ImGuiTabBarFlags_FittingPolicyMask_ = ImGuiTabBarFlags_FittingPolicyResizeDown | ImGuiTabBarFlags_FittingPolicyScroll,
 	//!	ImGuiTabBarFlags_FittingPolicyDefault_ = ImGuiTabBarFlags_FittingPolicyResizeDown,
 
-	
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 	
 	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 120), ImGuiChildFlags_Border, WindowFlag);
 	
 	ImGui::SeparatorText(u8"세이브 / 로드");
 	{
+		if (ImGui::Button(u8"저장하기")) 
+		{ 
+			m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DataFiles/Data_Map/"; 
+			OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); 
+		} 
+
+		ImGui::SameLine();
 		
-		if (ImGui::Button(u8"저장하기")) { m_eDialogType = DIALOG_TYPE::SAVE_DIALOG; m_strDialogPath = "../Bin/DataFiles/Data_Map/"; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); } ImGui::SameLine(); if (ImGui::Button(u8"불러오기")) { m_strDialogPath = "../Bin/DataFiles/Data_Map/";  m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); }
+		if (ImGui::Button(u8"불러오기")) 
+		{ 
+			m_strDialogPath = "../Bin/DataFiles/Data_Map/";  
+			m_eDialogType = CImgui_Window::LOAD_DIALOG; OpenDialog(CImgui_Window::IMGUI_MAPTOOL_WINDOW); 
+		}
 	}ImGui::Separator(); 
 
 	ImGui::EndChild();
@@ -587,6 +588,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				LightJson[i].emplace("LightEnable", LightDesc.bEnable);
 				LightJson[i].emplace("CutOff", LightDesc.fCutOff);
 				LightJson[i].emplace("OuterCutOff", LightDesc.fOuterCutOff);
+				LightJson[i].emplace("Intensity", LightDesc.fIntensity); // ◀ 여기 추가됨 
 				
 				LightJson[i].emplace("Type", LightDesc.eType);
 				CJson_Utility::Write_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -630,6 +632,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 					LightObjectJson[i].emplace("LightEnable", LightDesc.bEnable);
 					LightObjectJson[i].emplace("CutOff", LightDesc.fCutOff);
 					LightObjectJson[i].emplace("OuterCutOff", LightDesc.fOuterCutOff);
+					LightObjectJson[i].emplace("Intensity", LightDesc.fIntensity); // ◀ 여기 추가됨 
 
 					LightObjectJson[i].emplace("LightType", LightDesc.eType);
 					CJson_Utility::Write_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -1088,19 +1091,18 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 		for (_int i = 0; i < iLightJsonSize; ++i)
 		{
-			
-
 			LIGHT_DESC LightDesc = {};
 
 			LightDesc.iLightIndex = LightJson[i]["LightIndex"];
 			LightDesc.bEnable = LightJson[i]["LightEnable"];
 			LightDesc.fCutOff = LightJson[i]["CutOff"];
 			LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
-			
+			LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 			LightDesc.eType = LightJson[i]["Type"];
 			CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
 			LightDesc.fRange = LightJson[i]["Range"];
 			CJson_Utility::Load_Float4(LightJson[i]["Position"], LightDesc.vPosition);
+
 			CJson_Utility::Load_Float4(LightJson[i]["Diffuse"], LightDesc.vDiffuse);
 			CJson_Utility::Load_Float4(LightJson[i]["Specular"], LightDesc.vSpecular);
 			CJson_Utility::Load_Float4(LightJson[i]["Ambient"], LightDesc.vAmbient);
@@ -1170,6 +1172,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 			LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 			LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+			LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 		
 			LightDesc.eType = LightObjectJson[i]["LightType"];
 			CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -2406,6 +2409,9 @@ void CWindow_MapTool::Light_CreateTab()
 
 				}
 			}
+
+			ImGui::InputFloat("Light Intensity", &m_tEditLightDesc.fIntensity); // ◀ 여기 추가됨 
+			ImGui::SameLine();
 
 			ImGui::Checkbox(u8"활성화", &m_tEditLightDesc.bEnable);
 
@@ -8602,6 +8608,7 @@ void CWindow_MapTool::Light_CreateFunction()
 				OriginDesc.vSpecular = m_tEditLightDesc.vSpecular;
 				OriginDesc.vAmbient = m_tEditLightDesc.vAmbient;
 				OriginDesc.vPosition = m_tEditLightDesc.vPosition;
+				OriginDesc.fIntensity = m_tEditLightDesc.fIntensity; // ◀ 여기 추가됨 
 
 				pLight->Set_LightDesc(OriginDesc);
 

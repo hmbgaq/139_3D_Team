@@ -51,16 +51,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
-
-	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-	//pPlayer->Set_InitPosition(_float3(250.66f, 0.f, 2.38f));
 
 	return S_OK;
 }
@@ -125,6 +119,7 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		LightDesc.bEnable = LightJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightJson[i]["Intensity"]; // ¢¸ ¿©±â Ãß°¡µÊ 
 
 		LightDesc.eType = LightJson[i]["Type"];
 		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -185,14 +180,13 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 
 		LightObjectDesc.WorldMatrix = WorldMatrix;
 
-
-
 		LIGHT_DESC LightDesc = {};
 
 		LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
 		LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ¢¸ ¿©±â Ãß°¡µÊ 
 
 		LightDesc.eType = LightObjectJson[i]["LightType"];
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);

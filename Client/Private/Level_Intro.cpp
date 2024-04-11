@@ -57,17 +57,12 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
-
     FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
     
-
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 
-    //FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
-
-    //FAILED_CHECK(Ready_Shader());
 
     return S_OK;
 }
@@ -80,8 +75,8 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 
         if (m_iPBRTexture < 0)
             m_iPBRTexture = 0;
-        if (m_iPBRTexture >= 8)
-            m_iPBRTexture = 8;
+        if (m_iPBRTexture >= 9)
+            m_iPBRTexture = 9;
 
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
@@ -91,8 +86,8 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 
         if (m_iPBRTexture < 0)
             m_iPBRTexture = 0;
-        if (m_iPBRTexture >= 8)
-            m_iPBRTexture = 8;
+        if (m_iPBRTexture >= 9)
+            m_iPBRTexture = 9;
 
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
@@ -1143,6 +1138,7 @@ HRESULT CLevel_Intro::Ready_LightDesc()
         LightDesc.bEnable = LightJson[i]["LightEnable"];
         LightDesc.fCutOff = LightJson[i]["CutOff"];
         LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+        LightDesc.fIntensity = LightJson[i]["Intensity"]; // ¢¸ ¿©±â Ãß°¡µÊ 
 
         LightDesc.eType = LightJson[i]["Type"];
         CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -1206,14 +1202,13 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 
         LightObjectDesc.WorldMatrix = WorldMatrix;
 
-
-
         LIGHT_DESC LightDesc = {};
 
         LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
         LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
         LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
         LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+        LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ¢¸ ¿©±â Ãß°¡µÊ 
 
         LightDesc.eType = LightObjectJson[i]["LightType"];
         CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);

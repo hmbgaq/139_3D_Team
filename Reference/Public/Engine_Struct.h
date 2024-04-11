@@ -46,7 +46,7 @@ namespace Engine
 		_float4 vAmbient = { 0.f, 0.f, 0.f, 0.f }; /* 광원의 확산위치와 무관하게 똑같은양으로 모든점에서 반사되는 색 */
 		_float4 vSpecular = { 0.f, 0.f, 0.f, 0.f }; /* 특정방향으로만 반사되는 색 */
 
-		_float4 vLightFlag = { 0.f, 0.f, 0.f, 0.f };
+		_float4 vLightFlag = { 0.f, 0.f, 0.f, 0.f }; // 안쓰긴함 
 
 	public:
 		unsigned int iLightIndex = unsigned int(-1);

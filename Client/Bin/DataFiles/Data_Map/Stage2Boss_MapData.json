@@ -741,6 +741,7 @@
       "CutOff": 0.0,
       "Diffuse": [ 0.3, 0.3, 0.3, 0.0 ],
       "Direction": [ 1.0, 0.1, 0.1, 0.0 ],
+      "Intensity": 0.5,
       "LightEnable": true,
       "LightIndex": 0,
       "OuterCutOff": 0.0,
