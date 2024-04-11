@@ -103,6 +103,11 @@ void CVampireCommander::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
+	if (m_bAuraDead == false && m_fHp <= 0.f)
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pAuraEffect);
+		m_bAuraDead = true;
+	}
 	
 	if (m_iCurrnetLevel != (_uint)LEVEL_TOOL)
 	{
