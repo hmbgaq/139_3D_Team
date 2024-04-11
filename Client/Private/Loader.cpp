@@ -147,6 +147,13 @@
 #include "Weapon_Edgar.h"
 #pragma endregion
 
+#pragma region ANIMAL
+#include "Hawk.h"
+#include "Body_Hawk.h"
+
+
+#pragma endregion
+
 #pragma region UI
 /* Anything */
 #include "UI_Anything.h"
@@ -1128,6 +1135,12 @@ HRESULT CLoader::Ready_Origin()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Cargo_Crane"), CCargo_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Cargo_Crane"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HitPoint_Crane"), CHitPoint_Crane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_HitPoint_Crane"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Crane"), CCrane::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Crane"))));
+
+	//! µ¿¹°
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Body_Hawk"), CBody_Hawk::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Body_Hawk"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Hawk"), CHawk::Create(m_pDevice, m_pContext, TEXT("Prototype_GameObject_Hawk"))));
+
+
 
 	//!¼ºÈñ
 	Ready_UI_Origin();
