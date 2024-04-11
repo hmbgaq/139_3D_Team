@@ -239,6 +239,8 @@ private:
 private:
 	CCharacter* m_pLockOnTarget = { nullptr };
 
+private:
+	CEffect* m_pEffect = { nullptr };
 
 public:
 	_bool	m_bPlayerCheck = true;

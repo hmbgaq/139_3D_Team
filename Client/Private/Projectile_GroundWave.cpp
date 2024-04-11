@@ -88,7 +88,7 @@ void CProjectile_GroundWave::OnCollisionEnter(CCollider* other)
 	if (other->m_iLayer == (_uint)COLLISION_LAYER::WEAKNESS)
 	{
 		other->Get_Owner()->Set_Enable(false);
-	}
+	} 
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
@@ -105,7 +105,7 @@ void CProjectile_GroundWave::OnCollisionEnter(CCollider* other)
 		}
 
 
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 	}
 
 	//EFFECT_MANAGER->Return_ToPool(m_pEffect);

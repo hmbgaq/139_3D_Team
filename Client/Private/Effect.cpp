@@ -17,7 +17,7 @@
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = false;
 }
 
 CEffect::CEffect(const CEffect & rhs)
@@ -119,6 +119,16 @@ void CEffect::Tick(_float fTimeDelta)
 				}
 
 
+				/* 파트 이펙트들 Tick */
+				for (auto& Pair : m_PartObjects)
+				{
+					if (nullptr != Pair.second)
+					{
+						//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
+						Pair.second->Tick(fTimeDelta);
+					}
+				}
+
 				/* ======================= 라이프 타임 동작 끝  ======================= */
 
 				if (m_tEffectDesc.fTimeAcc >= m_tEffectDesc.fLifeTime)
@@ -128,22 +138,12 @@ void CEffect::Tick(_float fTimeDelta)
 
 					if (m_tEffectDesc.fRemainAcc >= m_tEffectDesc.fRemainTime)
 					{
+						// 이펙트 끝
 						End_Effect();
 						return;
 					}
 				}
 
-
-				/* 파트 이펙트들 Tick */
-				for (auto& Pair : m_PartObjects)
-				{
-					if (nullptr != Pair.second)
-					{
-						//dynamic_cast<CEffect_Void*>(Pair.second)->Set_TimeAcc(m_fEasingTimeAcc);
-						Pair.second->Tick(fTimeDelta);
-					}
-
-				}
 
 			}
 #ifdef _DEBUG
@@ -336,6 +336,14 @@ void CEffect::Update_PivotMat()
 				// 업데이트 안되는 월드랑 곱하기
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);	// 나 * 피봇월드
 			}
+#ifdef _DEBUG
+			else if (m_tEffectDesc.bAttachTool)
+			{
+				// 툴에서 뼈에 붙이기 테스트
+				m_tEffectDesc.matPivot = m_tEffectDesc.matPivot_Tool;
+				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
+			}
+#endif // _DEBUG
 			else
 			{
 				// 주인의 매트릭스를 사용할거면 받아오기

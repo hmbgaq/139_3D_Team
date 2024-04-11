@@ -38,19 +38,20 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
-		return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+		//MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
+		//return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
 	CEffect* pEffect = EffectPool->front();
 
-
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -67,8 +68,8 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 		pEffect->Get_Desc()->strBoneTag = strBoneTag;
 	}
 
-	pEffect->Get_Desc()->bPlay = TRUE;
-	pEffect->Set_Enable(TRUE);
+	pEffect->Get_Desc()->bPlay = true;
+	pEffect->Set_Enable(true);
 
 	EffectPool->pop();
 
@@ -85,8 +86,9 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
-		return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		//MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
+		//return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -95,8 +97,9 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -129,8 +132,9 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
-		return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
+		//MSG_BOX("CEffect_Manager :: Please Check Ready_EffectPool()");
+		//return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -140,8 +144,9 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 	if (nullptr == pEffect)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 준비한 이펙트 개수를 초과했습니다.");
 		//return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
+		return nullptr;
 //#endif // _DEBUG
 	}
 
@@ -179,11 +184,11 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 
 		CEffect* pEffect = Play_Effect(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
 
-
 		if (nullptr == pEffect)
 		{
 //#ifdef _DEBUG
-			MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+			//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+			//return S_OK;
 			return S_OK;
 //#endif // _DEBUG
 		}
@@ -400,7 +405,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	/* Boos 1 */
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_08.json"));
 
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura.json")); 
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_02.json")); 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
 
 	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
@@ -444,42 +449,45 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 
 #pragma region 플레이어 이펙트 시작
-		/* Heal */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json", 2));
+	/* Breath */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Breath/", "SY_Player_Breath04.json", 2));
 
-		/* Heal_Blue */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_08_Blue.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Reverse_Blue.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_07_Light_03_Blue.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Blue.json", 2));
+	/* Heal */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_08.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07_Reverse.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_07_Light_03.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal/", "Heal_Particle_07.json", 2));
 
-		/* EnergyWhip */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json", 2));
+	/* Heal_Blue */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_08_Blue.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Reverse_Blue.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_07_Light_03_Blue.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Heal_Blue/", "Heal_Particle_07_Blue.json", 2));
 
-		/* SlamDown */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json", 2));
+	/* EnergyWhip */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json", 2));
 
-		/* DodgeBlink */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json", 2));
+	/* SlamDown */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json", 2));
 
-		/* Roll */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
+	/* DodgeBlink */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json", 2));
 
-		/* Revolver */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json", 10));
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json", 10));
+	/* Roll */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
 
-		/* Revolver_Fire */
-		FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
-		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
+	/* Revolver */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json", 10));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json", 10));
+
+	/* Revolver_Fire */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
 #pragma endregion 플레이어 이펙트 끝
 
 	

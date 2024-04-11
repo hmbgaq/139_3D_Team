@@ -51,8 +51,8 @@ public:
 	/* For.Desc */
 public:
 	//PARTICLE_DESC* Get_Desc() { return &m_tParticleDesc; }
-	UVSPRITE_DESC* Get_Sprite_Desc() { return &m_tSpriteDesc; }
-	DISTORTION_DESC* Get_Distortion_Desc() { return &m_tDistortionDesc; }
+	UVSPRITE_DESC*		Get_Sprite_Desc() { return &m_tSpriteDesc; }
+	DISTORTION_DESC*	Get_Distortion_Desc() { return &m_tDistortionDesc; }
 
 
 // Åø ¿ë
