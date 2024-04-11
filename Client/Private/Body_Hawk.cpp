@@ -2,6 +2,7 @@
 #include "..\Public\Body_Hawk.h"
 #include "GameInstance.h"
 #include "Character.h"
+#include "Hawk.h"
 
 
 CBody_Hawk::CBody_Hawk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -79,11 +80,24 @@ HRESULT CBody_Hawk::Render_Shadow()
 
 void CBody_Hawk::OnCollisionEnter(CCollider* other)
 {
-	
+
 }
 
 void CBody_Hawk::OnCollisionStay(CCollider* other)
 {
+	CGameObject* pOwner = Get_Object_Owner();
+
+	if (nullptr == pOwner || false == pOwner->Get_Enable() || true == pOwner->Is_Dead())
+		return;
+
+	CHawk* pHawk = dynamic_cast<CHawk*>(pOwner);
+	if (nullptr == pHawk)
+		return;
+
+	pHawk->FlyAway();
+
+	Collider_Off();
+
 	
 }
 
@@ -108,8 +122,8 @@ HRESULT CBody_Hawk::Ready_Components()
 
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER);
-	BoundingDesc.fRadius = 1.f;
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::OBSTACLE);
+	BoundingDesc.fRadius = 5.f;
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))

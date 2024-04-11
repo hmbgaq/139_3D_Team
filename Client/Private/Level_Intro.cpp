@@ -214,6 +214,8 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pMonster, E_FAIL);
     pMonster->Set_Position(_float3(10.f, 0.f, 25.f));
 
+
+
     //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
     //NULL_CHECK_RETURN(pMonster, E_FAIL);
     //pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
@@ -268,13 +270,16 @@ HRESULT CLevel_Intro::Ready_Layer_NPC(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pNPC, E_FAIL);
     pNPC->Set_InitPosition(_float3(10.f, 0.f, 35.f));
 
+    pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Hawk"));
+    NULL_CHECK_RETURN(pNPC, E_FAIL);
+    pNPC->Set_InitPosition(_float3(5.f, 0.f, 15.f));
+
+
     return S_OK;
 }
 
 HRESULT CLevel_Intro::Ready_Layer_Gimic(const wstring& strLayerTag)
 {
-
-
     return S_OK;
 }
 

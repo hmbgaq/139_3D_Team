@@ -2,40 +2,40 @@
 #include "GameInstance.h"
 
 
-void CHawk_State::Initialize(CEdgar* pActor)
+void CHawk_State::Initialize(CHawk* pActor)
 {
 	m_pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(m_pGameInstance);
 
 }
 
-CState<CEdgar>* CHawk_State::Update(CEdgar* pActor, _float fTimeDelta)
+CState<CHawk>* CHawk_State::Update(CHawk* pActor, _float fTimeDelta)
 {
 	return nullptr;
 }
 
-void CHawk_State::Release(CEdgar* pActor)
+void CHawk_State::Release(CHawk* pActor)
 {
 	Safe_Release(m_pGameInstance);
 }
 
-CState<CEdgar>* CHawk_State::Normal_State(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return Normal(pActor, fTimeDelta, _iAnimIndex);
-}
-
-
-CState<CEdgar>* CHawk_State::Normal(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return nullptr;
-}
-
-CState<CEdgar>* CHawk_State::Walk(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return nullptr;
-}
-
-CState<CEdgar>* CHawk_State::Run(CEdgar* pActor, _float fTimeDelta, _uint _iAnimIndex)
-{
-	return nullptr;
-}
+//CState<CHawk>* CHawk_State::Normal_State(CHawk* pActor, _float fTimeDelta, _uint _iAnimIndex)
+//{
+//	return Normal(pActor, fTimeDelta, _iAnimIndex);
+//}
+//
+//
+//CState<CHawk>* CHawk_State::Normal(CHawk* pActor, _float fTimeDelta, _uint _iAnimIndex)
+//{
+//	return nullptr;
+//}
+//
+//CState<CHawk>* CHawk_State::Walk(CHawk* pActor, _float fTimeDelta, _uint _iAnimIndex)
+//{
+//	return nullptr;
+//}
+//
+//CState<CHawk>* CHawk_State::Run(CHawk* pActor, _float fTimeDelta, _uint _iAnimIndex)
+//{
+//	return nullptr;
+//}
