@@ -45,6 +45,16 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 
 	CEffect* pEffect = EffectPool->front();
 
+
+	if (nullptr == pEffect)
+	{
+//#ifdef _DEBUG
+		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		//return Create_Effect_ForDebug(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+//#endif // _DEBUG
+	}
+
+
 	//Safe_AddRef(pEffect);
 
 	if (nullptr != pOwner)
@@ -82,6 +92,15 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 
 	CEffect* pEffect = EffectPool->front();
 
+	if (nullptr == pEffect)
+	{
+//#ifdef _DEBUG
+		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		//return Create_Effect_ForDebug(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+//#endif // _DEBUG
+	}
+
+
 	//Safe_AddRef(pEffect);
 
 	// 위치 설정
@@ -117,6 +136,16 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 
 	CEffect* pEffect = EffectPool->front();
 
+
+	if (nullptr == pEffect)
+	{
+//#ifdef _DEBUG
+		MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+		//return Create_Effect_ForDebug_StaticPivot(strAddPath, strFileName, pOwner, matPivot);
+//#endif // _DEBUG
+	}
+
+
 	//Safe_AddRef(pEffect);
 
 	if (nullptr != pOwner)
@@ -139,7 +168,8 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 // Tick 돌면서 두두두 생성되는 이펙트
 HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeTerm, _float fTimeDelta, string strAddPath, string strFileName
 	, _float3 vPos
-	, _bool bLookTarget, _float3 vTargetPos)
+	, _bool bLookTarget, _float3 vTargetPos
+	, _bool bScaleLerp, _float3* vScaleAcc)
 {
 	*fTimeAcc += fTimeDelta; // 시간 누적
 
@@ -148,6 +178,31 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 		*fTimeAcc = 0.f;
 
 		CEffect* pEffect = Play_Effect(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+
+
+		if (nullptr == pEffect)
+		{
+//#ifdef _DEBUG
+			MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+			return S_OK;
+//#endif // _DEBUG
+		}
+
+
+		// 크기 러프가 true면
+		if (bScaleLerp)
+		{
+			*vScaleAcc += *vScaleAcc;	// 크기 누적
+
+			_float3 vScaled = pEffect->Get_Transform()->Get_Scaled();
+
+			_float3 vNewScale;
+			vNewScale.x = vScaled.x + vScaleAcc->x;
+			vNewScale.y = vScaled.y + vScaleAcc->y;
+			vNewScale.z = vScaled.z + vScaleAcc->z;
+
+			pEffect->Get_Transform()->Set_Scaling(vNewScale.x, vNewScale.y, vNewScale.z);
+		}
 	}
 
 	return S_OK;
@@ -320,7 +375,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma region 테스트 이펙트 시작
 
 	/* Circle_Floor */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json"));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
 
 	/* Test Explosion */
@@ -344,33 +398,48 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	
 #pragma region 보스1 이펙트 시작
 	/* Boos 1 */
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_04.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_08.json"));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura.json")); 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
 
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", 50));
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json", 50));
+	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
 #pragma endregion 보스1 이펙트 끝
 
 
 #pragma region 보스2 이펙트 시작
 	/* Boos 2 */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Yellow_Blood_Test_02.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_Blood3.json", 50));
 
 	/* Boss2 MotherShakeTreeProjectile */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json", 200));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
-
+	
 	/* Boss2 MotherShakeTreeProjectile */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherProjectileDead.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherShakeTreeProjectile1.json", 200));
 
 	/* SnowBoss Falling Leaves */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves.json", 30));
+	/*Boss2 Monster_Explosion*/
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_ExplosionNonLoop.json", 50));
+
+	//Mother_Egg
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead3.json", 10));
+
+	//Mother_breath
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath3.json", 500));
+
+
 #pragma endregion 보스2 이펙트 끝
 
 
@@ -413,8 +482,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 		//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
 #pragma endregion 플레이어 이펙트 끝
 
-		//Mother_Egg
-		FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead2.json"));
+	
 
 
 	return S_OK;

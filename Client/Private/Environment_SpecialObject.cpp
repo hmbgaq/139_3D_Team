@@ -157,18 +157,10 @@ HRESULT CEnvironment_SpecialObject::Render()
 
 		if (m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER)
 		{
-			
-			if (m_tEnvironmentDesc.bLeverForElevator == true)
-			{
-				m_pShaderCom->Begin(0);
-			}
+			if (m_bLeverOn == true)
+				m_pShaderCom->Begin(m_iSignalMeshShaderPass);
 			else
-			{
-				if (m_bLeverOn == true)
-					m_pShaderCom->Begin(m_iSignalMeshShaderPass);
-				else
-					m_pShaderCom->Begin(8);
-			}
+				m_pShaderCom->Begin(8);
 		}
 		else if(m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
 		{
@@ -334,15 +326,23 @@ HRESULT CEnvironment_SpecialObject::TrackLeverInit()
 	m_bLeverOn = false;
 	m_bSignalChange = false;
 
-	if (m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.bLeverForElevator == false)
+	if (m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
-		return Find_SignalBox_AndLightObject();
+		if (m_tEnvironmentDesc.bLeverForElevator == true)
+		{
+			return Find_ElevatorObject();
+		}
+		else
+		{
+			return Find_SignalBox_AndLightObject();
+		}
 	}
+	
 
-	if (m_tEnvironmentDesc.bLeverForElevator == true)
-	{
-		return Find_ElevatorObject();
-	}
+	
+
+	
+
 
 	return S_OK;
 
@@ -446,55 +446,69 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 {
 	if (m_pLeverWeaknessUI != nullptr)
 	{
-		if (m_pLeverWeaknessUI->Get_Enable() == false)
+		if (m_pLeverWeaknessUI->Get_Enable() == false) 
 		{
 			if (m_pTargetObject != nullptr)
 			{
-				if (m_tEnvironmentDesc.bLeverForElevator == false)
+				if (m_tEnvironmentDesc.bLeverForElevator == true)
+				{	
+					if (m_pTargetObject->Get_ElevatorOn() == false)
+					{
+						m_pTargetObject->Set_ElevatorOn(true);
+						m_bLeverOn = true;
+
+						if(m_pLightObject != nullptr)
+							m_pLightObject->Set_Enable(true);
+					}
+					else
+					{
+						m_pLeverWeaknessUI->Set_Enable(true);
+
+						if (m_pLightObject != nullptr)
+							m_pLightObject->Set_Enable(false);
+
+					}
+					
+				}
+				else if(m_pSnowMountainWagon != nullptr)
 				{
 					m_pTargetObject->Set_SignalChange(true);
 					m_pLeverWeaknessUI->Set_Dead(true);
 					m_pLeverWeaknessUI = nullptr;
-				}
-				else
-				{
-					m_pTargetObject->Set_ElevatorOn(true);
-		
-				}
-			}
-
-			if (nullptr != m_pLightObject)
-				m_pLightObject->Set_Enable(true);
-
-			
-
-			if (m_tEnvironmentDesc.bLeverForElevator == false && m_pSnowMountainWagon != nullptr)
-			{
-				m_pSnowMountainWagon->Set_SplineCheck(m_tEnvironmentDesc.iSpecialGroupIndex, true);				
-				m_bLeverOn = true;
-			}
-			else if(m_pTargetObject != nullptr)
-			{
-				if (true == m_pTargetObject->Get_ElevatorOn() && m_bLeverOn == true)
-				{
-					m_pLeverWeaknessUI->Set_Enable(true);
-					m_bLeverOn = false;
 
 					if (nullptr != m_pLightObject)
-						m_pLightObject->Set_Enable(false);
+						m_pLightObject->Set_Enable(true);
 
-				}
-				else
+					m_pSnowMountainWagon->Set_SplineCheck(m_tEnvironmentDesc.iSpecialGroupIndex, true);
 					m_bLeverOn = true;
+				}
 			}
 
+			
 		}
 		else
 		{
 			m_pLeverWeaknessUI->SetUp_WorldToScreen(m_pTransformCom->Get_WorldFloat4x4(), _float3(0.f, 1.f, 0.f));
 		}
 	}
-	
+
+	if (m_tEnvironmentDesc.bOffset == true)
+	{
+		Move_ForOffset();
+	}
+}
+
+void CEnvironment_SpecialObject::Move_ForOffset()
+{
+		if (m_pTargetObject == nullptr)
+			return;
+
+		_float4 vOwnerPosition = m_pTargetObject->Get_Transform()->Get_State(CTransform::STATE_POSITION);
+
+		_vector vCalcPosition = XMLoadFloat4(&vOwnerPosition) + XMLoadFloat4(&m_tEnvironmentDesc.vOffset);
+
+		m_pTransformCom->Set_State(CTransform::STATE_POSITION, vCalcPosition);
+
 }
 
 
@@ -505,6 +519,7 @@ HRESULT CEnvironment_SpecialObject::ElevatorInit()
 		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
 		Safe_AddRef(m_pPlayer);
 		m_bFindPlayer = true;
+		m_bElevatorOn = false;
 	}
 	
 	
@@ -550,11 +565,13 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 					}
 					else
 					{
-						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
 						m_bArrival = true;
 						m_bElevatorOn = false;
 						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+						m_pPlayer->Set_UseGravity(true);
+						m_bFirstCollision = false;
+						
 					}
 
 					break;
@@ -568,11 +585,12 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 					}
 					else
 					{
-						m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
 						m_bArrival = true;
 						m_bElevatorOn = false;
 						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
+						m_pPlayer->Set_UseGravity(true);
+						m_bFirstCollision = false;
 					}
 
 					break;
@@ -583,7 +601,6 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 					if (false == SMath::Is_InRange(m_tEnvironmentDesc.vArrivalPosition, vPosition, 0.5f))
 					{
 						m_pTransformCom->Go_Target(m_tEnvironmentDesc.vArrivalPosition, fTimeDelta, 0.5f);
-						//m_pTransformCom->Go_Straight(fTimeDelta);
 					}
 					else
 					{
@@ -591,8 +608,6 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 						m_bArrival = true;
 						
 						m_bElevatorOn = false;
-						//m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
-						
 						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 						m_pPlayer->Set_UseGravity(true);
@@ -636,19 +651,8 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 		else
 		{
 			m_bElevatorOn = false;
-			
-			//m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_pPlayer->Get_Navigation()->Find_CurrentCellIndex(m_pPlayer->Get_Position_Vector()));
-			//m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 		}
-
-
-		
-
-		
 	}
-
-	
-	
 
 }
 
@@ -664,6 +668,9 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 				{
 					m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_DOWN;
 					m_bArrival = false;
+					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
+					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
+					m_iInitCellIndex = iSwapCellIndex;
 				}
 				
 
@@ -676,6 +683,9 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 				{
 					m_tEnvironmentDesc.eElevatorType = CEnvironment_SpecialObject::ELEVATOR_UP;
 					m_bArrival = false;
+					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
+					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
+					m_iInitCellIndex = iSwapCellIndex;
 				}
 
 				break;
@@ -701,7 +711,8 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 		
 		}
 	}
-		m_bElevatorOn = bElevatorOn;
+
+	m_bElevatorOn = bElevatorOn;
 
 	
 }
@@ -875,29 +886,23 @@ HRESULT CEnvironment_SpecialObject::Bind_ShaderResources()
 	if(FAILED(m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float))))
 		return E_FAIL;
 
-	if (m_tEnvironmentDesc.eSpecialType != CEnvironment_SpecialObject::SPECIAL_ELEVATOR)
+	
+	if (nullptr != m_pDiffuseTexture)
 	{
-		
+		if (FAILED(m_pDiffuseTexture->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse")))
+			return E_FAIL;
 	}
-	else
+
+	if (nullptr != m_pMaskTexture)
 	{
-		if (nullptr != m_pDiffuseTexture)
-		{
-			if (FAILED(m_pDiffuseTexture->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse")))
-				return E_FAIL;
-		}
+		if (FAILED(m_pMaskTexture->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture")))
+			return E_FAIL;
+	}
 
-		if (nullptr != m_pMaskTexture)
-		{
-			if (FAILED(m_pMaskTexture->Bind_ShaderResource(m_pShaderCom, "g_MaskTexture")))
-				return E_FAIL;
-		}
-
-		if (nullptr != m_pNoiseTexture)
-		{
-			if (FAILED(m_pNoiseTexture->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture")))
-				return E_FAIL;
-		}
+	if (nullptr != m_pNoiseTexture)
+	{
+		if (FAILED(m_pNoiseTexture->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture")))
+			return E_FAIL;
 	}
 	
 
@@ -909,7 +914,7 @@ HRESULT CEnvironment_SpecialObject::Bind_ShaderResources()
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_fSignalBloomPower, sizeof(_float))))
 			return E_FAIL;
 	}
-	else if(m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER && m_bLeverOn == true && m_tEnvironmentDesc.bLeverForElevator == false)
+	else if(m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_TRACKLEVER && m_bLeverOn == true)
 	{
 		_float4 GreenColor = { 0.f, 1.f, 0.f, 1.f};
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseColor", &GreenColor, sizeof(_float4))))

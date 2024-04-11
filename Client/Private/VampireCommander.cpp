@@ -80,8 +80,8 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
 	 
-	m_pMapEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/", "Map_Blood_04.json", m_pTransformCom->Get_Position());
-	m_pAuraEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/","VampireCommanderAura.json", this);
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/", "Map_Blood_08.json", m_pTransformCom->Get_Position());
+	m_pAuraEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/","VampireCommanderAura.json", this);
 
 	if (nullptr == m_pTarget)
 	{
@@ -133,7 +133,7 @@ void CVampireCommander::Tick(_float fTimeDelta)
 		if (fTimeAcc >= 3.f)
 		{
 			Set_Dead(true);
-			m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
+			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
 		}
 	}
 	

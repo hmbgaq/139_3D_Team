@@ -63,6 +63,9 @@
 
 #include "Player_InteractionClimbRope_Start.h"
 #include "Player_InteractionRope_Down_Start.h"
+#include "Player_ZipLine_Start.h"
+#include "Player_CrouchUnder_Start.h"
+#include "Player_CrouchUnder_Gate.h"
 
 #include "Environment_Interact.h"
 #include "Player_ZipLine_Loop.h"
@@ -147,7 +150,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Right", 5.f);
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Bottom", 5.f);
 	//m_pUIManager->Change_RightHUD_MaxCoolTime("RightHUD_Left", 5.f);
-
+	
 
 	return S_OK;
 }
@@ -161,12 +164,22 @@ void CPlayer::Priority_Tick(_float fTimeDelta)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_H))
-	{
-		m_iLadderCount = 6;
-		m_pActor->Set_State(new CPlayer_ZipLine_Loop());
-	}
+	//!if (m_pGameInstance->Key_Down(DIK_H))
+	//!{
+	//!	if (GAME_STATE::UI == m_pDataManager->Get_GameState())
+	//!	{
+	//!		m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
+	//!	}
+	//!	else if (GAME_STATE::GAMEPLAY == m_pDataManager->Get_GameState())
+	//!	{
+	//!		m_pDataManager->Set_GameState(GAME_STATE::UI);
+	//!	}
+	//!}
 
+	if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
+	{
+		m_pActor->Set_State(new CPlayer_IdleLoop());
+	}
 
 	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
 	if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
@@ -197,10 +210,10 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 
-	if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
-	{
-		m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
-	}
+	//if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
+	//{
+	//	m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+	//}
 
 
 	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) && (false == Is_Splitted()));
@@ -725,6 +738,21 @@ void CPlayer::SetState_InteractWhipPull()
 void CPlayer::SetState_InteractRotationValve()
 {
 	m_pActor->Set_State(new CPlayer_InteractionRotateValve_01());
+}
+
+void CPlayer::SetState_InteractZipLine()
+{
+	m_pActor->Set_State(new CPlayer_ZipLine_Start());
+}
+
+void CPlayer::SetState_CrouchUnder()
+{
+	m_pActor->Set_State(new CPlayer_CrouchUnder_Start());
+}
+
+void CPlayer::SetState_CrouchUnderGate()
+{
+	m_pActor->Set_State(new CPlayer_CrouchUnder_Gate());
 }
 
 

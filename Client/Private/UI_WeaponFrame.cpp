@@ -43,7 +43,6 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Top", true); // ÇØ±Ý
-
 	return S_OK;
 }
 

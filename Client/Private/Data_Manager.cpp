@@ -41,14 +41,12 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 		m_AdditionalWeapons[i] = true;
 	}
 
-	//_uint iEquipWeaponEnd = ECast(Additional_Weapon::SHOTGUN) + 1;
-
-	//for (_uint i = 0; i < iEquipWeaponEnd; ++i)
+	//for (_uint i = 0; i < ECast(Additional_Weapon::SHOTGUN) + 1; ++i)
 	//{
 	//	m_AdditionalWeapons[i] = true;
 	//}
-
-	//for (_uint i = iEquipWeaponEnd; i < ECast(Additional_Weapon::Additional_Weapon_End); ++i)
+	//
+	//for (_uint i = ECast(Additional_Weapon::SHOTGUN) + 1; i < ECast(Additional_Weapon::Additional_Weapon_End); ++i)
 	//{
 	//	m_AdditionalWeapons[i] = true;
 	//}

@@ -530,7 +530,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 26;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 29;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 						}
 
@@ -628,7 +628,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Mask_Base"))	// 베이스 마스크로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 173;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 175;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_MASK] = 0;
 
 						}ImGui::SameLine();
@@ -680,7 +680,7 @@ void CWindow_EffectTool::Update_ParticleTab()
 						if (ImGui::Button("Noise_Base"))	// 베이스 노이즈로 변경
 						{
 							dynamic_cast<CEffect_Particle*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Noise"));
-							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 243;
+							m_iMaxTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 244;
 							m_iTexIndex_Particle[CEffect_Void::TEXTURE_NOISE] = 0;
 						}
 
@@ -1871,7 +1871,7 @@ void CWindow_EffectTool::Update_RectTab()
 					if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 					{
 						dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 26;
+						m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 29;
 						m_iTexIndex_Rect[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 					}
 
@@ -1929,7 +1929,7 @@ void CWindow_EffectTool::Update_RectTab()
 				if (ImGui::Button("Noise_Base"))	// 베이스 노이즈로 변경
 				{
 					dynamic_cast<CEffect_Rect*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Noise"));
-					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 243;
+					m_iMaxTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 244;
 					m_iTexIndex_Rect[CEffect_Void::TEXTURE_NOISE] = 0;
 				}
 				ImGui::SameLine();
@@ -2480,6 +2480,9 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("MotherShakeTreeProjectile"))
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
 
+						if (ImGui::Button("MotherBreath"))
+							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_ModelCom(TEXT("Prototype_Component_Model_Effect_MotherBreath"));
+
 						ImGui::SeparatorText("");
 						ImGui::TreePop();
 					}
@@ -2510,7 +2513,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Diffuse_Base"))	// 베이스 디퓨즈로 변경
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Diffuse"));
-							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 26;
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 29;
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_DIFFUSE] = 0;
 
 
@@ -2582,7 +2585,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Mask_Base_Mesh"))	// 베이스 마스크로 변경
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Mask"));
-							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 173;
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 175;
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_MASK] = 0;
 
 						}ImGui::SameLine();
@@ -2622,7 +2625,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						if (ImGui::Button("Noise_Base_Mesh"))	// 베이스 노이즈로 변경
 						{
 							dynamic_cast<CEffect_Instance*>(m_pCurPartEffect)->Change_TextureCom(TEXT("Prototype_Component_Texture_Effect_Noise"));
-							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = 243;
+							m_iMaxTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = 244;
 							m_iTexIndex_Mesh[CEffect_Void::TEXTURE_NOISE] = 0;
 
 						}
@@ -3510,7 +3513,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pMeshBufferDesc->bDynamic_Color = FALSE;
 
 
-					/* Min 색 설정_파티클 */
+					/* Min 색 설정_메쉬 */
 					if (ImGui::ColorEdit4("Min_Color_Mesh", m_fColor_Min_Mesh, ImGuiColorEditFlags_None))
 					{
 						m_pMeshBufferDesc->vMinMaxRed.x = m_fColor_Min_Mesh[0];
@@ -3518,7 +3521,7 @@ void CWindow_EffectTool::Update_MeshTab()
 						m_pMeshBufferDesc->vMinMaxBlue.x = m_fColor_Min_Mesh[2];
 					}
 
-					/* Max 색 설정_파티클 */
+					/* Max 색 설정_메쉬 */
 					if (ImGui::ColorEdit4("Max_Color_Mesh", m_fColor_Max_Mesh, ImGuiColorEditFlags_None))
 					{
 						m_pMeshBufferDesc->vMinMaxRed.y = m_fColor_Max_Mesh[0];
@@ -4380,7 +4383,7 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 			m_fColor_Min_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.x;
 			m_fColor_Min_Particle[1] = m_pParticleBufferDesc->vMinMaxGreen.x;
-			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.x;
+			m_fColor_Min_Particle[2] = m_pParticleBufferDesc->vMinMaxBlue.x; 
 			m_fColor_Min_Particle[3] = m_pParticleBufferDesc->vMinMaxAlpha.x;
 
 			m_fColor_Max_Particle[0] = m_pParticleBufferDesc->vMinMaxRed.y;
@@ -5552,7 +5555,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
 				{
-					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_02);
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_01);
 				}
 			}
 			ImGui::SameLine();
@@ -5578,7 +5581,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
 				{
-					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_BloodRange_02_Loop);
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_02);
 				}
 			}
 			ImGui::SameLine();
@@ -5588,6 +5591,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				{
 					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Winchester_Ironsights_AimPose);
 				}
+
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_03_d);
+				}
 			}
 
 			if (ImGui::Button("Revolver_01"))
@@ -5595,6 +5603,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
 					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Bandit_Special_01);
+				}
+
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_Leap_01_Start);
 				}
 			}
 
@@ -6262,6 +6275,11 @@ void CWindow_EffectTool::Update_EffectList_Window()
 				if (ImGui::Button("MotherShakeTreeProjectile"))
 				{
 					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_MotherShakeTreeProjectile"));
+				}
+
+				if (ImGui::Button("MotherBreath"))
+				{
+					Add_Part_Mesh(TEXT("Prototype_Component_Model_Effect_MotherBreath"));
 				}
 
 

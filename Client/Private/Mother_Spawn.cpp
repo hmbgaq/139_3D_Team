@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "MasterCamera.h"
 #include "Data_Manager.h"
+#include "Effect_Manager.h"
+#include "Player.h"
 
 void CMother_Spawn::Initialize(CMother* pActor)
 {
@@ -48,6 +50,8 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		pSpringCam->Set_ShakeCameraTime(0.4f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 		pActor->Apply_Shake_And_Blur(Power::Medium);
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves.json", CData_Manager::GetInstance()->Get_Player()->Get_Position());
+
 
 		m_bFlags[1] = true;
 	}
