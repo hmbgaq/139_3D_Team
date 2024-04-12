@@ -111,7 +111,6 @@ void CSpringCamera::Tick(_float fTimeDelta)
 	}
 
 
-
 	if(true == m_pPlayer->m_bPlayerCheck && m_pPlayer != nullptr)
 	{// 뼈에 붙인 카메라 
 		_float4x4 BoneMatrix = {};
