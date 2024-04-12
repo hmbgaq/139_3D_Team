@@ -8,7 +8,13 @@ _float4& CBone::Get_CombinedPosition(_fmatrix WorldMatrix)
 {
 	// TODO: 여기에 return 문을 삽입합니다.
 
-	_vector vBonePosition = XMLoadFloat4(&(_float4(m_CombinedTransformationMatrix._41, m_CombinedTransformationMatrix._42, m_CombinedTransformationMatrix._43, m_CombinedTransformationMatrix._44)));
+	_float4 vTest = {};
+	vTest.x = m_CombinedTransformationMatrix._41;
+	vTest.y = m_CombinedTransformationMatrix._42;
+	vTest.z = m_CombinedTransformationMatrix._43;
+	vTest.w = 1.f;
+
+	_vector vBonePosition = XMLoadFloat4(&vTest);
 	
 	_float4 vReturnCombinePos = {};
 	XMStoreFloat4(&vReturnCombinePos, XMVector3TransformCoord(vBonePosition, WorldMatrix));
