@@ -295,6 +295,21 @@ HRESULT CWeapon::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CWeapon::Play_Hit_Sound(Power ePower)
+{
+	//Play_Hit_Sound_Base();
+
+	switch (ePower)
+	{
+	case Engine::Heavy:
+		Play_Hit_Sound_Heavy();
+		break;
+	default:
+		Play_Hit_Sound_Normal();
+		break;
+	}
+}
+
 void CWeapon::Free()
 {
 	__super::Free();

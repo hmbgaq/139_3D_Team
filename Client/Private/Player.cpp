@@ -6,6 +6,7 @@
 #include "Data_Manager.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
+#include "SMath.h"
 
 // Add_UIManager
 #include "UI_Manager.h"
@@ -1126,6 +1127,178 @@ void CPlayer::Hitted_Dead(Power ePower)
 		m_pActor->Set_State(new CPlayer_DeathNormal_F_01());
 		break;
 	}
+}
+
+void CPlayer::Play_Whoosh_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 4);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_Punch_Whoosh_01_new.wav";
+		break;
+	case 1:
+		strFileName = L"Player_Punch_Whoosh_02_new.wav";
+		break;
+	case 2:
+		strFileName = L"Player_Punch_Whoosh_03_new.wav";
+		break;
+	case 3:
+		strFileName = L"Player_Punch_Whoosh_04_new.wav";
+		break;
+	default:
+		strFileName = L"Player_Punch_Whoosh_01_new.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", strFileName, CHANNELID::SOUND_PLAYER_WHOOSH, 10.f);
+}
+
+void CPlayer::Play_Hitted_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 23);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"VO_Jesse_TakingDamageHitA01.wav";
+		break;
+	case 1:
+		strFileName = L"VO_Jesse_TakingDamageHitA02.wav";
+		break;
+	case 2:
+		strFileName = L"VO_Jesse_TakingDamageHitA03.wav";
+		break;
+	case 3:
+		strFileName = L"VO_Jesse_TakingDamageHitA04.wav";
+		break;
+	case 4:
+		strFileName = L"VO_Jesse_TakingDamageHitA05.wav";
+		break;
+	case 5:
+		strFileName = L"VO_Jesse_TakingDamageHitA06.wav";
+		break;
+	case 6:
+		strFileName = L"VO_Jesse_TakingDamageHitA07.wav";
+		break;
+	case 7:
+		strFileName = L"VO_Jesse_TakingDamageHitA08.wav";
+		break;
+	case 8:
+		strFileName = L"VO_Jesse_TakingDamageHitA09.wav";
+		break;
+	case 9:
+		strFileName = L"VO_Jesse_TakingDamageHitA10.wav";
+		break;
+	case 10:
+		strFileName = L"VO_Jesse_TakingDamageHitA11.wav";
+		break;
+	case 11:
+		strFileName = L"VO_Jesse_TakingDamageHitA12.wav";
+		break;
+	case 12:
+		strFileName = L"VO_Jesse_TakingDamageHitA13.wav";
+		break;
+	case 13:
+		strFileName = L"VO_Jesse_TakingDamageHitA14.wav";
+		break;
+	case 14:
+		strFileName = L"VO_Jesse_TakingDamageHitA15.wav";
+		break;
+	case 15:
+		strFileName = L"VO_Jesse_TakingDamageHitA16.wav";
+		break;
+	case 16:
+		strFileName = L"VO_Jesse_TakingDamageHitA17.wav";
+		break;
+	case 17:
+		strFileName = L"VO_Jesse_TakingDamageHitA18.wav";
+		break;
+	case 18:
+		strFileName = L"VO_Jesse_TakingDamageHitA19.wav";
+		break;
+	case 19:
+		strFileName = L"VO_Jesse_TakingDamageHitA20.wav";
+		break;
+	case 20:
+		strFileName = L"VO_Jesse_TakingDamageHitA21.wav";
+		break;
+	case 21:
+		strFileName = L"VO_Jesse_TakingDamageHitA22.wav";
+		break;
+	case 22:
+		strFileName = L"VO_Jesse_TakingDamageHitA23.wav";
+		break;
+	default:
+		strFileName = L"VO_Jesse_TakingDamageHitA01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_HITTED", strFileName, CHANNELID::SOUND_PLAYER_HITTED, 10.f);
+}
+
+void CPlayer::Play_Dead_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Jesse_Die_VO_01.wav";
+		break;
+	case 1:
+		strFileName = L"Jesse_Die_VO_02.wav";
+		break;
+	case 2:
+		strFileName = L"Jesse_Die_VO_03.wav";
+		break;
+	case 3:
+		strFileName = L"Jesse_Die_VO_04.wav";
+		break;
+	case 4:
+		strFileName = L"Jesse_Die_VO_05.wav";
+		break;
+	default:
+		strFileName = L"Jesse_Die_VO_01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_DEAD", strFileName, CHANNELID::SOUND_PLAYER_DEAD, 10.f);
+
+}
+
+void CPlayer::Play_Kick_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_kick_layer1_001.wav";
+		break;
+	case 1:
+		strFileName = L"player_kick_layer1_002.wav";
+		break;
+	case 2:
+		strFileName = L"player_kick_layer1_003.wav";
+		break;
+	case 3:
+		strFileName = L"player_kick_layer1_004.wav";
+		break;
+	case 4:
+		strFileName = L"player_kick_layer1_005.wav";
+		break;
+	default:
+		strFileName = L"player_kick_layer1_001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", strFileName, CHANNELID::SOUND_PLAYER_WHOOSH, 10.f);
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

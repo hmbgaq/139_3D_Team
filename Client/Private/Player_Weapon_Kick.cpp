@@ -6,6 +6,7 @@
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "Effect_Manager.h"
+#include "SMath.h"
 
 CPlayer_Weapon_Kick::CPlayer_Weapon_Kick(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
@@ -68,7 +69,7 @@ HRESULT CPlayer_Weapon_Kick::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.6f };
+	BoundingDesc.fRadius = { 1.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -80,6 +81,8 @@ HRESULT CPlayer_Weapon_Kick::Ready_Components()
 
 void CPlayer_Weapon_Kick::OnCollisionEnter(CCollider* other)
 {
+	m_eHitPower = Power::Heavy;
+
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 	if (nullptr != pTarget_Character)
 	{
@@ -119,6 +122,36 @@ void CPlayer_Weapon_Kick::OnCollisionExit(CCollider* other)
 {
 	_int a = 0;
 
+}
+
+void CPlayer_Weapon_Kick::Play_Hit_Sound_Normal()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_kick_layer2_001.wav";
+		break;
+	case 1:
+		strFileName = L"player_kick_layer2_002.wav";
+		break;
+	case 2:
+		strFileName = L"player_kick_layer2_003.wav";
+		break;
+	case 3:
+		strFileName = L"player_kick_layer2_004.wav";
+		break;
+	case 4:
+		strFileName = L"player_kick_layer2_005.wav";
+		break;
+	default:
+		strFileName = L"player_kick_layer2_001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 5.f);
 }
 
 CPlayer_Weapon_Kick* CPlayer_Weapon_Kick::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

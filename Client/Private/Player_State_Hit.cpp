@@ -20,6 +20,8 @@ void CPlayer_State_Hit::Initialize(CPlayer* pActor)
 	pSpringCam->Set_ShakeCameraTime(0.05f);
 	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.3f));
 	pActor->Apply_Shake_And_Blur(Power::Light);
+
+	pActor->Play_Hitted_Sound();
 }
 
 CState<CPlayer>* CPlayer_State_Hit::Update(CPlayer* pActor, _float fTimeDelta)

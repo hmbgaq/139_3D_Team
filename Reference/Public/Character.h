@@ -160,6 +160,12 @@ public:
 	virtual void Set_Taunt() {};
 
 	
+public:
+	virtual void Play_Whoosh_Sound() {};
+	virtual void Play_Hitted_Sound() {};
+	virtual void Play_Dead_Sound() {};
+
+
 
 public:
 	void	 Add_Force(_vector In_vDir, _float In_fPower);

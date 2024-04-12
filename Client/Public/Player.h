@@ -216,6 +216,12 @@ public:
 			return m_pLockOnTarget->Get_Position();
 		return _float3();
 	}
+
+public:
+	virtual void Play_Whoosh_Sound() override;
+	virtual void Play_Hitted_Sound() override;
+	virtual void Play_Dead_Sound() override;
+	void Play_Kick_Sound();
 	
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
@@ -223,6 +229,7 @@ protected:
 	virtual void Hitted_Front(Power ePower) override;
 	virtual void Hitted_Knock(_bool bIsCannonball) override;
 	virtual void Hitted_Dead(Power ePower)	override;
+
 
 
 
