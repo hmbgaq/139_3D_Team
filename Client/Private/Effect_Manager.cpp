@@ -114,11 +114,16 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 	//Safe_AddRef(pEffect);
 
 	if (nullptr != pOwner)	// 주인 설정
+	{
+		pEffect->Get_Desc()->bParentPivot = false;
 		pEffect->Set_Object_Owner(pOwner);
-
+	}
+	
 
 	// 위치 설정
-	pEffect->Set_Position(vPos);
+	//pEffect->Set_Position(vPos);
+	pEffect->Get_Transform()->Set_State(CTransform::STATE_POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
+
 
 	if (bLookTarget)
 	{

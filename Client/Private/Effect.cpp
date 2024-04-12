@@ -13,6 +13,7 @@
 #include "Character.h"
 #include "Weapon.h"
 #include "Son_Projectile.h"
+#include "MotherShakeTreeProjectile.h"
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -373,8 +374,8 @@ void CEffect::Update_PivotMat()
 		}
 		else
 		{
-			_int a = 0;
-
+			// 주인이 있지만 주인 피봇을 사용하지 않을거면 컴바인 매트릭스에 자신의 월드만 저장하기
+			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix());	
 		}
 
 	}

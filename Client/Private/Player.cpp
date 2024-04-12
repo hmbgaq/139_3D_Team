@@ -177,6 +177,15 @@ void CPlayer::Tick(_float fTimeDelta)
 	//!		m_pDataManager->Set_GameState(GAME_STATE::UI);
 	//!	}
 	//!}
+	
+	//! 유정 테스트 공간 시작
+	if (m_bfirstcheck)
+	{
+		//EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_05.json", this, _float3(m_pTransformCom->Get_Position().x, 0.1f, m_pTransformCom->Get_Position().z));
+		//EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_05.json", nullptr, _float3(m_pTransformCom->Get_Position().x + 2.f, 0.1f, m_pTransformCom->Get_Position().z + 2.f));
+		m_bfirstcheck = false;
+	}
+	//! 유정 테스트 공간 끝
 
 	if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
 	{
@@ -926,7 +935,7 @@ HRESULT CPlayer::Ready_Components()
 	//m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath02.json", this, TRUE, "lips_H_close_upnode");
 	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
 
-	EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_Breath_02.json", this);
+
 
 	return S_OK;
 }

@@ -245,6 +245,7 @@ private:
 
 public:
 	_bool	m_bPlayerCheck = true;
+	_bool m_bfirstcheck = true;
 
 private:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };
