@@ -134,15 +134,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Player(this);
 	m_pGameInstance->Set_Player(this);
 
-	Set_HUD_MaxCooltime(HUD::LEFT_TOP,		30.f);		//슈퍼차지
-	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT,	5.f);		//힐
-	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	7.f);		//리볼버
+	Set_HUD_MaxCooltime(HUD::LEFT_TOP,		SUPER_CHARGE_MAXCOOLTIME);		//슈퍼차지
+	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT,	HEAL_MAXCOOLTIME);		//힐
+	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	REVOLVER_MAXCOOLTIME);		//리볼버
 	Set_HUD_MaxCooltime(HUD::LEFT_LEFT,		SHOTGUN_MAXCOOLTIME);		//샷건
 
-	Set_HUD_MaxCooltime(HUD::RIGHT_TOP,		2.0f);	//라이플
-	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT,	10.f);	//내려찍기
-	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM,	1.f);	//발차기
-	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT,	1.f);	//전기 줄
+	Set_HUD_MaxCooltime(HUD::RIGHT_TOP,		RIFLE_MAXCOOLTIME);	//라이플
+	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT,	SLAM_MAXCOOLTIME);	//내려찍기
+	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM,	KICK_MAXCOOLTIME);	//발차기
+	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT,	WHIP_MAXCOOLTIME);	//전기 줄
 
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Top", 5.f);
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f);
@@ -219,7 +219,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	//}
 
 
-	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) && (false == Is_Splitted()));
+	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) || (false == Is_Splitted()));
 	
 	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		m_pDataManager->Set_ShowInterface(bIsNotIdle);
@@ -563,12 +563,16 @@ _bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD, _float fCost)
 	}
 	else 
 	{
+		_float fDiff = 0.f;
+
 		if (fCooltime >= fMaxCooltime)
 		{
-			fMaxCooltime = fCooltime;
+			fDiff = fCost + 1.f;
 		}
-
-		_float fDiff = fMaxCooltime - fCooltime;
+		else 
+		{
+			fDiff = fMaxCooltime - fCooltime;
+		}
 
 		bResult = fDiff >= fCost;
 	}

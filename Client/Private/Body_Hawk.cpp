@@ -122,7 +122,7 @@ HRESULT CBody_Hawk::Ready_Components()
 
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
-	BoundingDesc.iLayer = ECast(COLLISION_LAYER::OBSTACLE);
+	BoundingDesc.iLayer = ECast(COLLISION_LAYER::INTERACT);
 	BoundingDesc.fRadius = 5.f;
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_Sphere"),
