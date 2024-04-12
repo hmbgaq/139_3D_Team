@@ -448,8 +448,10 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherSoundWave.json", 20));
 
 	//BossDeadBlood
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_Blood3.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_Blood4.json", 500));
 
+	//Bosschim
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Chim_01.json", 200));
 
 #pragma endregion 보스2 이펙트 끝
 

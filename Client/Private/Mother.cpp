@@ -82,6 +82,7 @@ HRESULT CMother::Initialize(void* pArg)
 	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
 	Search_Target(200.f);
 
+	m_pChimEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Chim_01.json", this, true, "Jaws_Center");
 
 	
 	return S_OK;
@@ -99,12 +100,15 @@ void CMother::Tick(_float fTimeDelta)
 	
 	m_fTimeDelta2 += fTimeDelta;
 
-	if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
-	{
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood3.json", this, true, "Jaws_Center");
-		//cout << "MotherBossHP:" << m_fHp << endl;
-		m_fTimeDelta2 = 0.f;
-	}
+	if (m_bChimCheck == true && m_fHp <= 0.f)
+		EFFECT_MANAGER->Return_ToPool(m_pChimEffect);
+
+	//if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
+	//{
+	//	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood4.json", this, true, "Jaws_Center");
+	//	//cout << "MotherBossHP:" << m_fHp << endl;
+	//	m_fTimeDelta2 = 0.f;
+	//}
 
 	__super::Tick(fTimeDelta);
 

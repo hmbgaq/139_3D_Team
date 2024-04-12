@@ -146,7 +146,7 @@ void CSon::Tick(_float fTimeDelta)
 		}
 		if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
 		{
-			m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood3.json", this, true, "Bone020");
+			m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood4.json", this, true, "Bone020");
 			//cout << "MotherBossHP:" << m_fHp << endl;
 			m_fTimeDelta2 = 0.f;
 		}
