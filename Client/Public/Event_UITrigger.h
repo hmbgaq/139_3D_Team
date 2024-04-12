@@ -11,11 +11,11 @@ class CUI_Manager;
 class CEvent_UITrigger final : public CEvent_Trigger
 {
 public:
-	typedef struct tagMonsterSpawnTriggerDesc : public CEvent_Trigger::TRIGGER_DESC
+	typedef struct tagUITriggerDesc : public CEvent_Trigger::TRIGGER_DESC
 	{
 		_uint	   iSpawnGroupIndex = 0;
 		string	   strSpawnMonsterJsonPath = "";
-	}MONSTERSPAWN_TRIGGERDESC;
+	}UI_TRIGGERDESC;
 
 
 protected:
@@ -35,19 +35,19 @@ protected:
 	virtual HRESULT			Ready_Component() override;
 
 public:
-	void					Set_SpawnGroupIndex(_uint iSpawnGroupIndex) { m_tMonsterTriggerDesc.iSpawnGroupIndex = iSpawnGroupIndex; }
+	void					Set_SpawnGroupIndex(_uint iSpawnGroupIndex) { m_tUITriggerDesc.iSpawnGroupIndex = iSpawnGroupIndex; }
 	void					Set_ForceActivate(_bool bForceActivate) { m_bForceActivate = bForceActivate; } //! °­Á¦·Î Activate
 	void					Set_ColliderOwnerPosition() { m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix()); }
 	virtual void			Set_ColliderSize(_float3 vColliderSize) override;
 	virtual void			Set_ColliderCenter(_float3 vColliderCenter) override;
 
 
-	MONSTERSPAWN_TRIGGERDESC* Get_MonsterTriggerDesc() { return &m_tMonsterTriggerDesc; }
+	UI_TRIGGERDESC* Get_UITriggerDesc() { return &m_tUITriggerDesc; }
 
 private:
 	//vector<MONSTER
 
-	MONSTERSPAWN_TRIGGERDESC				 m_tMonsterTriggerDesc = {};
+	UI_TRIGGERDESC				 m_tUITriggerDesc = {};
 	_bool									 m_bJsonReady = false;
 	_bool									 m_bForceActivate = false;
 	vector<CMonster_Character::MONSTER_DESC> m_vecCreateMonsterDesc;

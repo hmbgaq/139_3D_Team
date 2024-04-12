@@ -1109,6 +1109,16 @@ HRESULT CRenderer::Deferred_UI()
 
 HRESULT CRenderer::Render_UI()
 {
+	for (auto& pGameObject : m_RenderObjects[RENDER_UI_WORLD])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_UI_WORLD].clear();
+
 	for (auto& pGameObject : m_RenderObjects[RENDER_UI_BACK])
 	{
 		if (nullptr != pGameObject && true == pGameObject->Get_Enable())

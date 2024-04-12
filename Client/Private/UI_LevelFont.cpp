@@ -106,7 +106,13 @@ HRESULT CUI_LevelFont::Render()
 			m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
 			//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
 			//m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
-			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2((m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) - 10.f, (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) - 30.f), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+			
+			_float fX = 0.f;
+			_float fY = 0.f;
+			fX = (m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) + 2.f;
+			fY = (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) + 2.f;
+
+			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(fX, fY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
 		}
 	}
 

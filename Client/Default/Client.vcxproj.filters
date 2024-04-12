@@ -4036,6 +4036,9 @@
     <Filter Include="03.Event\Trigger\UITrigger">
       <UniqueIdentifier>{0f509588-22a9-49d4-bd65-9301441f3417}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Text\02. TalkBox">
+      <UniqueIdentifier>{a3721189-fd31-402e-a1a1-13e8253aceb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7926,6 +7929,9 @@
     <ClInclude Include="..\Public\Event_UITrigger.h">
       <Filter>03.Event\Trigger\UITrigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_TalkBox.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11283,6 +11289,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Event_UITrigger.cpp">
       <Filter>03.Event\Trigger\UITrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_TalkBox.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
