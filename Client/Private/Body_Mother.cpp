@@ -27,6 +27,11 @@ HRESULT CBody_Mother::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	//디졸브 값
+	m_fDissolveWeight = 0.f;
+	m_fDissolve_feather = 0.1f;
+	m_vDissolve_Color = { 1.f, 0.f, 0.f };
+	m_fDissolve_Discard = 0.2f;
 	//m_vDiscardMesh[CBody_Mother::RENDER_STATE::ATTACK] = { 1 }; // 무기 
 
 	return S_OK;
@@ -39,7 +44,26 @@ void CBody_Mother::Priority_Tick(_float fTimeDelta)
 
 void CBody_Mother::Tick(_float fTimeDelta)
 {
+	if (m_iRenderPass == ECast(MONSTER_SHADER::COMMON_DISSOLVE))
+	{
+		m_bDissolve = true;
+
+		if (m_fDissolveWeight <= 3.f)
+			m_fDissolveWeight += fTimeDelta * 0.5f;
+
+	}
+
 	__super::Tick(fTimeDelta);
+
+	if (true == m_bDeadState)
+	{
+		m_fTimeAcc += fTimeDelta;
+		if (m_fTimeAcc >= 2.f)
+		{
+			//Set_EnemyHUD_Dead();
+			Set_Dead(true);
+		}
+	}
 
 }
 
@@ -81,8 +105,21 @@ HRESULT CBody_Mother::Render()
 		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
-		m_pShaderCom->Begin(0);
+		//m_pShaderCom->Begin(0);
+		if (m_bDissolve)
+		{
+			m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+			m_pShaderCom->Bind_RawValue("g_Dissolve_Weight", &m_fDissolveWeight, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_feather", &m_fDissolve_feather, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_Color", &m_vDissolve_Color, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_ColorRange", &m_fDissolve_Discard, sizeof(_float));
 
+			m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_DISSOLVE));
+		}
+		else
+		{
+			m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+		}
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -129,6 +166,9 @@ HRESULT CBody_Mother::Ready_Components()
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Mother"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
+
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_Dissolve"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pDissolveTexture)));
+
 
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
