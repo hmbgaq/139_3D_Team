@@ -1,5 +1,4 @@
 {
-
   "Basic_Json": [
     {
       "AnimType": false,
@@ -623,7 +622,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 101.22721862792969, -0.2481483817100525, 62.2137565612793, 1.0 ]
+          [ 101.22721862792969, -0.10899999737739563, 62.2137565612793, 1.0 ]
         ]
       },
       "Enable": false,
@@ -633,17 +632,14 @@
       "InteractColliderCenter": [ 0.0, 1.0, -1.0, 0.0 ],
       "InteractColliderSize": [ 30.0, 14.399999618530273, 2.0, 0.0 ],
       "InteractGroupIndex": -1,
-      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 2.0, 6.0, -1.0, 0.0 ],
       "InteractMoveColliderSize": [ 3.0, 1.0, 1.0, 0.0 ],
-      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
-      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -652,8 +648,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
-      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.0, 3.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -663,14 +658,31 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": [
+        { "UpdateCellIndex": 14 },
+        { "UpdateCellIndex": 15 },
+        { "UpdateCellIndex": 16 },
+        { "UpdateCellIndex": 17 },
+        { "UpdateCellIndex": 18 },
+        { "UpdateCellIndex": 19 },
+        { "UpdateCellIndex": 20 },
+        { "UpdateCellIndex": 21 },
+        { "UpdateCellIndex": 22 },
+        { "UpdateCellIndex": 23 },
+        { "UpdateCellIndex": 24 },
+        { "UpdateCellIndex": 25 },
+        { "UpdateCellIndex": 26 },
+        { "UpdateCellIndex": 27 },
+        { "UpdateCellIndex": 28 },
+        { "UpdateCellIndex": 29 },
+        { "UpdateCellIndex": 30 },
+        { "UpdateCellIndex": 31 },
         { "UpdateCellIndex": 32 },
         { "UpdateCellIndex": 33 },
         { "UpdateCellIndex": 34 },
         { "UpdateCellIndex": 35 },
         { "UpdateCellIndex": 36 }
       ],
-      "UseGravity": true,
-      "iArrivalCellIndex": -1
+      "UseGravity": false
     },
     {
       "AnimType": false,
@@ -693,17 +705,14 @@
       "InteractColliderCenter": [ 0.0, 1.0, 2.0, 0.0 ],
       "InteractColliderSize": [ 30.0, 14.0, 4.0, 0.0 ],
       "InteractGroupIndex": -1,
-      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 12,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
-      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam3",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -712,8 +721,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
-      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.5, 1.25, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.7000000476837158, 1.25, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -723,8 +731,7 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false,
-      "iArrivalCellIndex": -1
+      "UseGravity": false
     }
   ],
   "LightObject_Json": null,
@@ -770,10 +777,10 @@
             [ 1.0, 0.0, 0.0, 0.0 ],
             [ 0.0, 1.0, 0.0, 0.0 ],
             [ 0.0, 0.0, 1.0, 0.0 ],
-            [ 107.16552734375, 10.878019332885742, 73.57027435302734, 1.0 ]
+            [ 107.16552734375, 10.878019332885742, 73.57027313232422, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/boss2323_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage2Boss_Test.json",
         "NameTag": "MonsterSpawn",
         "OnTrigger": false,
         "SpawnGroupIndex": 0
