@@ -71,7 +71,6 @@ HRESULT CSon::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Son(this);
 
 	// !UI : HUD_Create
-	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
 	return S_OK;
 }
@@ -79,6 +78,8 @@ HRESULT CSon::Initialize(void* pArg)
 void CSon::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+
 }
 
 void CSon::Tick(_float fTimeDelta)
@@ -87,6 +88,12 @@ void CSon::Tick(_float fTimeDelta)
 		return;
 
 	__super::Tick(fTimeDelta);
+
+	if (m_bfirst)
+	{
+		Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+		m_bfirst = false;
+	}
 
 	m_fTimeDelta2 += fTimeDelta;
 
