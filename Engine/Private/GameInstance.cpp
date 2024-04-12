@@ -1141,27 +1141,32 @@ int64_t CGameInstance::GenerateUniqueID()
 
 void CGameInstance::Play_Sound(const wstring& strGroupKey, const wstring& strSoundKey, CHANNELID eID, float fVolume)
 {
-	m_pSoundManager->Play_Sound(strGroupKey, strSoundKey, eID, fVolume);
+	if (true == m_bUseSoundManager)
+		m_pSoundManager->Play_Sound(strGroupKey, strSoundKey, eID, fVolume);
 }
 
 void CGameInstance::Play_BGM(const wstring& strGroupKey, const wstring& strSoundKey, float fVolume)
 {
-	m_pSoundManager->Play_BGM(strGroupKey, strSoundKey, fVolume);
+	if (true == m_bUseSoundManager)
+		m_pSoundManager->Play_BGM(strGroupKey, strSoundKey, fVolume);
 }
 
 void CGameInstance::Stop_Sound(CHANNELID eID)
 {
-	m_pSoundManager->Stop_Sound(eID);
+	if (true == m_bUseSoundManager)
+		m_pSoundManager->Stop_Sound(eID);
 }
 
 void CGameInstance::Stop_All()
 {
-	m_pSoundManager->Stop_All();
+	if (true == m_bUseSoundManager)
+		m_pSoundManager->Stop_All();
 }
 
 void CGameInstance::Set_ChannelVolume(CHANNELID eID, float fVolume)
 {
-	m_pSoundManager->Set_ChannelVolume(eID, fVolume);
+	if (true == m_bUseSoundManager)
+		m_pSoundManager->Set_ChannelVolume(eID, fVolume);
 }
 
 void CGameInstance::String_To_WString(string _string, wstring& _wstring)

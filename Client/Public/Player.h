@@ -150,7 +150,7 @@ public://!For. Interact
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
 
-	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
+	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 5);
 
 public:
 	void		 LeftHUDCoolDown(const string& strUIName, _float fCoolTime);

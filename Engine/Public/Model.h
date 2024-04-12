@@ -178,6 +178,10 @@ private:
 
 	_float2					m_vMouseMove			= { 0.f, 0.f };
 
+
+	_bool					m_bReset				= { false };
+
+
 	/* Cascade */
 	vector<_matrix>			m_matCurrTransforms;
 	vector<KEYFRAME>		m_CurrKeyFrameDatas;
