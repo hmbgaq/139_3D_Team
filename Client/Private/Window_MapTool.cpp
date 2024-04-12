@@ -442,8 +442,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				InteractJson[i].emplace("InteractMove", Desc.bInteractMoveMode);
 				InteractJson[i].emplace("InteractLadderCount", Desc.iLadderCount);
 				InteractJson[i].emplace("InteractReverseLadderCount", Desc.iReverseLadderCount);
-				
-				
+				InteractJson[i].emplace("LeverSwitchIndex", Desc.iSwitchIndex);
+				InteractJson[i].emplace("iArrivalCellIndex", Desc.iArrivalCellIndex);
 
 				CJson_Utility::Write_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
 				CJson_Utility::Write_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
@@ -587,7 +587,8 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				LightJson[i].emplace("LightEnable", LightDesc.bEnable);
 				LightJson[i].emplace("CutOff", LightDesc.fCutOff);
 				LightJson[i].emplace("OuterCutOff", LightDesc.fOuterCutOff);
-				
+				LightJson[i].emplace("Intensity", LightDesc.fIntensity); // ◀ 여기 추가됨 
+
 				LightJson[i].emplace("Type", LightDesc.eType);
 				CJson_Utility::Write_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
 				LightJson[i].emplace("Range", LightDesc.fRange);
@@ -630,6 +631,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 					LightObjectJson[i].emplace("LightEnable", LightDesc.bEnable);
 					LightObjectJson[i].emplace("CutOff", LightDesc.fCutOff);
 					LightObjectJson[i].emplace("OuterCutOff", LightDesc.fOuterCutOff);
+					LightObjectJson[i].emplace("Intensity", LightDesc.fIntensity); // ◀ 여기 추가됨 
 
 					LightObjectJson[i].emplace("LightType", LightDesc.eType);
 					CJson_Utility::Write_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -890,16 +892,14 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 			Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 			Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-
+			Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+			Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 			
 
 			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
 			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 			 CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
-
-			 CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vInteractColliderSize);
-			 CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vInteractColliderCenter);
 
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);	
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
@@ -929,13 +929,13 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 			Desc.WorldMatrix = WorldMatrix;
 			//
-			//json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-			//_int iUpdateCellJsonSize = UpdateCellJson.size();
-			//
-			//for (_int i = 0; i < iUpdateCellJsonSize; ++i)
-			//{
-			//	Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
-			//}
+			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+			_int iUpdateCellJsonSize = UpdateCellJson.size();
+			
+			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+			{
+				Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+			}
 			
 			
 			CEnvironment_Interact* pObject = { nullptr };
@@ -1096,6 +1096,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			LightDesc.bEnable = LightJson[i]["LightEnable"];
 			LightDesc.fCutOff = LightJson[i]["CutOff"];
 			LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+			//LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 			
 			LightDesc.eType = LightJson[i]["Type"];
 			CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -1170,6 +1171,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 			LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 			LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+			//LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 		
 			LightDesc.eType = LightObjectJson[i]["LightType"];
 			CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -2406,6 +2408,9 @@ void CWindow_MapTool::Light_CreateTab()
 
 				}
 			}
+
+			ImGui::InputFloat(u8"라이트 감쇄강도", &m_tEditLightDesc.fIntensity); // ◀ 여기 추가됨 
+			ImGui::SameLine();
 
 			ImGui::Checkbox(u8"활성화", &m_tEditLightDesc.bEnable);
 
@@ -3884,7 +3889,7 @@ void CWindow_MapTool::Interact_LevelChangeFunction()
 	{
 		//!LEVEL_INTRO_BOSS,
 		//!	LEVEL_SNOWMOUNTAIN,
-		const char* InteractLevels[] = { u8"인트로보스레벨", u8"설산레벨" };
+		const char* InteractLevels[] = { u8"인트로보스레벨", u8"설산레벨", "설산보스레벨"};
 		const char* InteractPreviewLevel = InteractLevels[m_eInteractLevel];
 
 		static ImGuiComboFlags ComboLevelFlags = ImGuiComboFlags_WidthFitPreview | ImGuiComboFlags_HeightSmall;
@@ -3929,6 +3934,15 @@ void CWindow_MapTool::Interact_LevelChangeFunction()
 #endif // _DEBUG
 			break;
 		}
+
+		case 2:
+		{
+#ifdef _DEBUG
+			m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_LevelChangeType(m_tSelectInteractDesc.bLevelChange, LEVEL_SNOWMOUNTAINBOSS);
+#endif // _DEBUG
+			break;
+		}
+
 		}
 	}
 
@@ -4206,6 +4220,11 @@ void CWindow_MapTool::Interact_ArrivalMissonFunction()
 	if (ImGui::InputFloat4(u8"도착 지점", &m_tSelectInteractDesc.vArrivalPosition.x))
 	{
 		pInteractObject->Set_ArrivalMission(m_tSelectInteractDesc.bArrival, m_tSelectInteractDesc.vArrivalPosition);
+	}
+
+	if (ImGui::InputInt(u8"도착 지점 네비 셀인덱스", &m_tSelectInteractDesc.iArrivalCellIndex))
+	{
+		pInteractObject->Set_ArrivalCellIndex(m_tSelectInteractDesc.iArrivalCellIndex);
 	}
 
 	static _bool bArrivalPosPicking = false;
@@ -4967,6 +4986,21 @@ void CWindow_MapTool::Interact_NavigationFunction()
 
 		Reset_NaviPicking();
 	}
+
+	ImGui::NewLine();
+
+	static _int iAddInteractCellIndex = 0;
+
+	ImGui::InputInt(u8"상호작용 셀인덱스 직접입력", &iAddInteractCellIndex);
+
+	if (ImGui::Button(u8"직접입력한 셀인덱스  추가"))
+	{
+		pInteract->Add_UpdateCellIndex(iAddInteractCellIndex);
+	}
+
+	
+
+	ImGui::NewLine();
 
 	ImGui::SameLine();
 	if (ImGui::Button(u8"네비 활성화"))
@@ -8602,6 +8636,7 @@ void CWindow_MapTool::Light_CreateFunction()
 				OriginDesc.vSpecular = m_tEditLightDesc.vSpecular;
 				OriginDesc.vAmbient = m_tEditLightDesc.vAmbient;
 				OriginDesc.vPosition = m_tEditLightDesc.vPosition;
+				OriginDesc.fIntensity = m_tEditLightDesc.fIntensity; // ◀ 여기 추가됨 
 
 				pLight->Set_LightDesc(OriginDesc);
 
@@ -9474,9 +9509,16 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_iInteractLadderCount = InteractDesc.iLadderCount;
 					m_iInteractReverseLadderCount = InteractDesc.iReverseLadderCount;
 					m_vInteractReverseRootMoveRate = InteractDesc.vPlayerReverseRootMoveRate;
+
+					
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
+					}
+
+					if (InteractDesc.eInteractType == CEnvironment_Interact::INTERACT_LEVER)
+					{
+						m_iInteractSwitchIndex = InteractDesc.iSwitchIndex;
 					}
 				}
 			}
@@ -9616,6 +9658,19 @@ void CWindow_MapTool::Interact_SelectTab()
 					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_UseGravity(m_tSelectInteractDesc.bUseGravity);
 				#endif // _DEBUG
 			}
+
+			if (m_tSelectInteractDesc.eInteractType == CEnvironment_Interact::INTERACT_LEVER)
+			{
+				ImGui::SameLine();
+
+				if (ImGui::InputInt(u8"스위치 인덱스", &m_iInteractSwitchIndex))
+				{
+					m_vecCreateInteractObject[m_iSelectObjectIndex]->Set_SwitchIndex(m_iInteractSwitchIndex);
+				}
+			}
+
+
+			
 
 			
 			ImGui::Checkbox(u8"스플라인 이벤트", &m_bInteractUseSpline);

@@ -327,14 +327,15 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
 
-		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
-		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 
@@ -418,16 +419,17 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.eRotationState = InteractJson[i]["RotationType"];
 		Desc.bArrival = InteractJson[i]["Arrival"];
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
-
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
 
-		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderSize"], Desc.vBodyColliderSize);
-		CJson_Utility::Load_Float3(InteractJson[i]["BodyColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 

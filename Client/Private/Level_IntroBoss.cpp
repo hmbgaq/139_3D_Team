@@ -77,6 +77,10 @@ HRESULT CLevel_IntroBoss::Render()
     return S_OK;
 }
 
+//!코드위치: Level_IntroBoss / Ready_LightDesc함수
+//!
+//!변경된 코드 부분 : ◀으로 검색하면 나오도록함.주석으로 변경지점 체크해둠
+
 HRESULT CLevel_IntroBoss::Ready_LightDesc()
 {
     /* Shadow Light */
@@ -110,6 +114,7 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
         LightDesc.bEnable = LightJson[i]["LightEnable"];
         LightDesc.fCutOff = LightJson[i]["CutOff"];
         LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+        LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
         LightDesc.eType = LightJson[i]["Type"];
         CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -138,7 +143,7 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
             MSG_BOX("라이트 불러오기 실패");
             return E_FAIL;
         }
-        
+
     }
 
     json LightObjectJson = IntroBossMapJson["LightObject_Json"];
@@ -176,6 +181,7 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
         LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
         LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
         LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+        LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
         LightDesc.eType = LightObjectJson[i]["LightType"];
         CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
