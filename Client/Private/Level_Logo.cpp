@@ -42,7 +42,7 @@ HRESULT CLevel_Logo::Initialize()
 	ShowCursor(false);
 
 
-	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
+	//ÁÖ¼® FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
 
 	return S_OK;
 }
@@ -69,7 +69,7 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		m_pDataManager->Get_SelectLevel() != LEVEL_END &&
 		m_pDataManager->Get_SelectLevel() != LEVEL_TOOL)
 	{
-		FAILED_CHECK_RETURN(Ready_Static_UI(), );
+		//FAILED_CHECK_RETURN(Ready_Static_UI(), );
 	}
 
 	switch (m_pDataManager->Get_SelectLevel())
