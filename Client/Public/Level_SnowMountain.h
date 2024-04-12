@@ -35,7 +35,7 @@ private: /* Map*/
 	HRESULT Ready_Event();
 
 private: /* Shader */
-	HRESULT Ready_Shader();
+	HRESULT Ready_Shader(const string& strShaderFilePath);
 
 private:
 	_int			TempLightNumber = 0;

@@ -129,7 +129,6 @@ void CPlayer_Weapon_Punch::OnCollisionStay(CCollider* other)
 void CPlayer_Weapon_Punch::OnCollisionExit(CCollider* other)
 {
 	_int a = 0;
-
 }
 
 CPlayer_Weapon_Punch* CPlayer_Weapon_Punch::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

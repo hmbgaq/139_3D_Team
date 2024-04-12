@@ -2257,10 +2257,7 @@ _bool CEnvironment_Interact::Check_InteractMoveCollider()
 					break;
 				}
 
-
 				}
-
-
 			}
 
 			pPlayerNavigation->Set_InteractMoveMode(false);
@@ -2270,10 +2267,6 @@ _bool CEnvironment_Interact::Check_InteractMoveCollider()
 			return true;
 		}
 	}
-
-	
-	
-
 
 }
 

@@ -95,6 +95,9 @@ HRESULT CVIBuffer_Particle::Initialize(void* pArg)
 		m_vecParticleRigidbodyDesc.reserve(m_tBufferDesc.iCurNumInstance);
 
 
+	// 끝 아님
+	m_bFinished = false;
+
 	// 시간 초기화
 	m_tBufferDesc.Reset_Times();
 
@@ -241,6 +244,9 @@ HRESULT CVIBuffer_Particle::Init_Instance(_int iNumInstance)
 
 void CVIBuffer_Particle::ReSet()
 {
+	// 끝 아님
+	m_bFinished = false;
+
 	// 시간 초기화
 	m_tBufferDesc.Reset_Times();
 
@@ -584,55 +590,74 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 		return;
 
 
-	// 누적 시간이 최대 라이프타임보다 커지면 시간 누적 안함 & 탈출
+	// 누적 시간이 최대 라이프타임보다 커지면 시간 누적 안함(끝 true)
 	if (m_tBufferDesc.fTimeAcc > m_tBufferDesc.vMinMaxLifeTime.y)
 	{
-		if (!m_tBufferDesc.bRecycle) // 리사이클이 아니면 값 고정 & 탈출
+		m_bFinished = true;
+
+		if (!m_tBufferDesc.bRecycle) // 리사이클이 아니면 값 고정(다 죽임?) & 탈출
 		{
 			m_tBufferDesc.fTimeAcc = m_tBufferDesc.vMinMaxLifeTime.y;
 			m_tBufferDesc.fLifeTimeRatio = 1.f;
-			return;
+			//return;
 		}		
 		else
 		{
+			m_bFinished = false;
+
+			// 방출초기화
+			m_tBufferDesc.bEmitFinished = false;
+			m_tBufferDesc.iEmitCount = 0;
+
+			for (_uint i = 0; i < m_iNumInstance; i++)	// 방출안할걸로 초기화
+			{
+				m_vecParticleInfoDesc[i].bEmit = false;
+			}
+
 			m_tBufferDesc.Reset_Times();
 		}
 	}
+	else
+	{
+		// 라이프 타임중이면 ~ 
 
-	// 시간 누적(전체)
-	m_tBufferDesc.fTimeAcc += fTimeDelta;
-	m_tBufferDesc.fLifeTimeRatio = min(1.0f, m_tBufferDesc.fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y);
+		// 시간 누적(전체)
+		m_tBufferDesc.fTimeAcc += fTimeDelta;
+		m_tBufferDesc.fLifeTimeRatio = min(1.0f, m_tBufferDesc.fTimeAcc / m_tBufferDesc.vMinMaxLifeTime.y);
 
 
 #pragma region 방출 시작
-	if (!m_tBufferDesc.bEmitFinished) // 방출이 끝이 아니면 
-	{
-		m_tBufferDesc.fEmissionTimeAcc += fTimeDelta; // 시간누적
-
-		if (m_tBufferDesc.fEmissionTimeAcc >= m_tBufferDesc.fEmissionTime) // 하나씩 방출
+		if (!m_tBufferDesc.bEmitFinished) // 방출이 끝이 아니면 
 		{
-			if (m_iNumInstance <= m_tBufferDesc.iEmitCount) // 방출 카운트가 인스턴스개수와 크거나 같아지면 방출 끝
+			m_tBufferDesc.fEmissionTimeAcc += fTimeDelta; // 시간누적
+
+			if (m_tBufferDesc.fEmissionTimeAcc >= m_tBufferDesc.fEmissionTime) // 하나씩 방출
 			{
-				m_tBufferDesc.iEmitCount = m_iNumInstance;
-				m_tBufferDesc.bEmitFinished = true;
-			}
-			else
-			{
-				// 아니면 방출
-				for (_uint i = 0; i <= m_tBufferDesc.iAddEmitCount; i++)
+				if (m_iNumInstance <= m_tBufferDesc.iEmitCount) // 방출 카운트가 인스턴스개수와 크거나 같아지면 방출 끝
 				{
-					if (m_iNumInstance <= m_tBufferDesc.iEmitCount)	// 벡터 인덱스 맞추기용
-						m_tBufferDesc.iEmitCount = m_iNumInstance - 1;
-
-					m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = true;
-					m_tBufferDesc.iEmitCount++;				
+					m_tBufferDesc.iEmitCount = m_iNumInstance;
+					m_tBufferDesc.bEmitFinished = true;
 				}
-				m_tBufferDesc.fEmissionTimeAcc = 0.f; // 초기화
-			}
+				else
+				{
+					// 아니면 방출
+					for (_uint i = 0; i <= m_tBufferDesc.iAddEmitCount; i++)
+					{
+						if (m_iNumInstance <= m_tBufferDesc.iEmitCount)	// 벡터 인덱스 맞추기용
+							m_tBufferDesc.iEmitCount = m_iNumInstance - 1;
 
+						m_vecParticleInfoDesc[m_tBufferDesc.iEmitCount].bEmit = true;
+						m_tBufferDesc.iEmitCount++;
+					}
+					m_tBufferDesc.fEmissionTimeAcc = 0.f; // 초기화
+				}
+
+			}
 		}
-	}
 #pragma region 방출 끝
+
+	}
+
 
 #pragma region Map UnMap 전 조건 체크 끝
 
@@ -647,6 +672,11 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 	m_iNumInstance = m_tBufferDesc.iCurNumInstance;
 	for (_uint i = 0; i < m_iNumInstance; i++)	// 반복문 시작
 	{
+		if (m_bFinished) // 끝이면 전부 죽이기
+		{
+			m_vecParticleInfoDesc[i].bDie = true;
+		}
+
 		if (m_vecParticleInfoDesc[i].bDie) // 죽었으면
 		{
 			// 죽었으면 안보이게 & 다음 반복으로
@@ -782,6 +812,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 							if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
 							{
 								m_vecParticleInfoDesc[i].bDie = true;
+								continue;
 							}
 
 						}
@@ -812,6 +843,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						if (m_vecParticleInfoDesc[i].fMaxRange <= fLength)	// 현재 이동 거리가 맥스 레인지보다 크거나 같으면 초기화 or 죽음
 						{
 							m_vecParticleInfoDesc[i].bDie = true;
+							continue;
 						}
 
 					}
@@ -823,6 +855,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						if (m_vecParticleInfoDesc[i].fLifeTime <= m_vecParticleInfoDesc[i].fTimeAccs)	// 라이프 타임이 끝나면 초기화 or 죽음
 						{
 							m_vecParticleInfoDesc[i].bDie = true;
+							continue;
 						}
 
 					}
@@ -834,6 +867,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						if (m_vecParticleInfoDesc[i].fMaxPosY >= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 작으면 초기화 or 죽음
 						{
 							m_vecParticleInfoDesc[i].bDie = true;
+							continue;
 						}
 
 					}
@@ -846,6 +880,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						if (m_vecParticleInfoDesc[i].fMaxPosY <= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 						{
 							m_vecParticleInfoDesc[i].bDie = true;
+							continue;
 						}
 
 					}
@@ -872,6 +907,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 						if (m_vecParticleInfoDesc[i].fMaxPosY <= pVertices[i].vPosition.y)	// 현재 y위치가 최대 범위보다 크면 초기화 or 죽음
 						{
 							m_vecParticleInfoDesc[i].bDie = true;
+							continue;
 						}
 
 

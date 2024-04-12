@@ -170,6 +170,10 @@ private:
 	_bool		 m_bShowSkillWindow = false;
 	_bool		 m_bShowDiedScreen = false;
 
+	/* Effect Ãß°¡ */
+private:
+	class CEffect* m_pEffect = { nullptr };
+
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
 	void Set_Actor(CActor<CPlayer>* _pActor) { m_pActor = _pActor; }
@@ -248,7 +252,6 @@ private:
 
 private:
 	CCharacter* m_pLockOnTarget = { nullptr };
-
 
 public:
 	_bool	m_bPlayerCheck = true;

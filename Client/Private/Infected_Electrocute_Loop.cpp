@@ -2,6 +2,7 @@
 #include "Infected_Idle.h"
 #include "Body_Infected_D.h"
 #include "Weapon_Infected_D.h"
+#include "Effect_Manager.h"
 
 void CInfected_Electrocute_Loop::Initialize(CInfected* pActor)
 {
@@ -35,9 +36,11 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 			{
 				pActor->Explosion();
 				pActor->Set_EnemyHUD_Dead();
+				EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", pActor->Get_Position());
+
 				m_bFlags[0] = true;
 			}
-			
+
 			__super::Bomb_State(pActor, fTimeDelta, g_iAnimIndex);
 		}
 	}

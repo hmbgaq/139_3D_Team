@@ -19,8 +19,8 @@ public:
 
 
 		/* Types */
-		_bool		bRecycle = { TRUE };			// 입자를 재사용 할건지
-		_bool		bReverse = { FALSE };			// 진행방향 리버스
+		_bool		bRecycle = { true };			// 입자를 재사용 할건지
+		_bool		bReverse = { false };			// 진행방향 리버스
 		TYPE_ACTION eType_Action = { SPARK };		// 움직이는 모양
 
 
@@ -32,12 +32,12 @@ public:
 		_uint		iAddEmitCount = { 0 };			// 저장 O	한번 방출 할 때 몇개씩 추가로 방출할건지
 		_float		fEmissionTimeAcc = { 0.f };		// 저장 X
 		_uint		iEmitCount = { 0 };				// 저장 X
-		_bool		bEmitFinished = { FALSE };		// 저장 X
+		_bool		bEmitFinished = { false };		// 저장 X
 
 		/* RigidBody */
-		_bool		bUseRigidBody	= { TRUE };
-		_bool		bKinetic		= { TRUE };	// 키네틱, 즉 TRUE면 속도 계산 함)
-		_bool		bUseGravity		= { TRUE };
+		_bool		bUseRigidBody	= { true };
+		_bool		bKinetic		= { true };	// 키네틱, 즉 true면 속도 계산 함)
+		_bool		bUseGravity		= { true };
 		FORCE_MODE	eForce_Mode		= { FORCE_MODE::IMPULSE };
 
 		_float		fGravity = { -9.8f };			// 중력 가속도
@@ -72,7 +72,7 @@ public:
 		/* For.Rotation */
 		TYPE_DIRAXIS eType_Dir = { DIR_UP };
 
-		_bool		bRotAcc = { FALSE };
+		_bool		bRotAcc = { false };
 		//_float3		vRadian = { 0.f, 0.f, 0.f };
 		_float3		vMinRadian = { 0.f, 0.f, 0.f };
 		_float3		vMaxRadian = { 0.f, 0.f, 0.f };
@@ -87,8 +87,8 @@ public:
 
 
 		/* For.Scale */
-		_bool		bScaleRatio = { TRUE };						// 크기 정비율
-		_bool		bUseScaleLerp	= { TRUE };
+		_bool		bScaleRatio = { true };						// 크기 정비율
+		_bool		bUseScaleLerp	= { true };
 		EASING_TYPE	eType_ScaleLerp = { EASING_TYPE::LINEAR };
 		_float2		vScaleLerp_Up_Pos	= { 0.f, 0.3f };		// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(커지는 용)
 		_float2		vScaleLerp_Down_Pos = { 1.f, 1.f };			// 0~1로 보간한 라이프 타임에서 어디서부터 러프를 시작하고, 끝낼건지(작아지는 용)
@@ -98,7 +98,7 @@ public:
 
 		/* For.Color */
 		EASING_TYPE	eType_ColorLerp = { EASING_TYPE::LINEAR };
-		_bool		bDynamic_Color	= { TRUE };
+		_bool		bDynamic_Color	= { true };
 		_float2     vMinMaxRed		= { 1.f, 1.f };
 		_float2     vMinMaxGreen	= { 1.f, 1.f };
 		_float2     vMinMaxBlue		= { 1.f, 1.f };
@@ -136,8 +136,8 @@ public:
 	typedef struct tagParticleDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_bool bEmit = { FALSE };
-		_bool bDie = { FALSE };
+		_bool bEmit = { false };
+		_bool bDie = { false };
 
 		// 시간
 		_float	fTimeAccs = { 0.f };
@@ -216,8 +216,8 @@ public:
 	typedef struct tagParticleRigidbodyDesc
 	{
 		// 업데이트 돌면서 변하는 정보들(저장X)
-		_bool			bForced = { FALSE };
-		_bool			bSleep	= { FALSE };
+		_bool			bForced = { false };
+		_bool			bSleep	= { false };
 
 		_float3			vAccel = {0.f, 0.f, 0.f};		// 가속도
 		_float3			vVelocity = { 0.f, 0.f, 0.f };	// 속도
@@ -253,6 +253,9 @@ public:
 	void ReSet();
 	void ReSet_Info(_uint iNum);
 
+	_bool Get_Finished() { return m_bFinished; }
+	void Set_Finish(_bool bFinished) { m_bFinished = bFinished; }
+
 
 public:
 	_float4 Make_Dir(_uint iNum);
@@ -276,8 +279,8 @@ public:
 
 
 	const _bool	Check_Sleep(_uint iNum);
-	void		Sleep(_uint iNum) { Clear_Power(iNum); m_vecParticleRigidbodyDesc[iNum].bSleep = TRUE; }
-	void		Wake(_uint iNum) { m_vecParticleRigidbodyDesc[iNum].bSleep = FALSE; }
+	void		Sleep(_uint iNum) { Clear_Power(iNum); m_vecParticleRigidbodyDesc[iNum].bSleep = true; }
+	void		Wake(_uint iNum) { m_vecParticleRigidbodyDesc[iNum].bSleep = false; }
 
 	void		Set_FreezeAxis(AXIS eAxis) { m_tBufferDesc.byFreezeAxis ^= 1 << (_int)eAxis; }
 	_bool		Is_FrozeAxis(AXIS eAxis) { return m_tBufferDesc.byFreezeAxis & 1 << (_int)eAxis; }
@@ -286,6 +289,10 @@ public:
 public:
 	PARTICLE_BUFFER_DESC* Get_Desc() { return &m_tBufferDesc; }
 	vector<PARTICLE_SHADER_INFO_DESC>& Get_ParticleShaderInfoDescs() { return m_vecParticleShaderInfoDesc; }
+
+
+private:
+	_bool								m_bFinished = { false };	
 
 private:
 	PARTICLE_BUFFER_DESC				m_tBufferDesc;

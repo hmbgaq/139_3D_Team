@@ -154,6 +154,7 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 	{
 		MSG_BOX("아직 셰이더는 안만들었습니당 :) >_<");
 		m_iSkyTextureIndex = 0;
+		m_iPBRTextureNumber = 0;
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1);
 		//Load_Finished_Light(LEVEL::LEVEL_GAMEPLAY);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(0);
@@ -162,6 +163,7 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 	if (ImGui::Button("Load Intro Boss Shader"))	// 베이스 디퓨즈로 변경
 	{
 		m_iSkyTextureIndex = 1;
+		m_iPBRTextureNumber = 1;
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1BOSS);
 		//Load_Finished_Light(LEVEL::LEVEL_INTRO_BOSS);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(1);
@@ -169,16 +171,17 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 	}
 	if (ImGui::Button("Load SnowMountain Shader"))	// 베이스 디퓨즈로 변경
 	{
-		MSG_BOX("아직 셰이더는 안만들었습니당 :) >_< ");
-		m_iSkyTextureIndex = 8;
+		m_iSkyTextureIndex = 2;
+		m_iPBRTextureNumber = 2;
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2);
 		//Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAIN);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(2);
-		//m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
+		m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), "../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Shader.json");
 	}
 	if (ImGui::Button("Load SnowMountain Boss Shader"))	// 베이스 디퓨즈로 변경
 	{
 		m_iSkyTextureIndex = 3; /* Skybox 셋팅 */
+		m_iPBRTextureNumber = 3;
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE2BOSS);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(3); /* HDR 셋팅 */
 		//Load_Finished_Light(LEVEL::LEVEL_SNOWMOUNTAINBOSS); /* 빛 가져오기 */
@@ -190,6 +193,10 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 
 HRESULT CWindow_ShaderTool::Load_Finished_Light(LEVEL eLoadLevel)
 {
+	// 빛 터져서 일단 다른거 임시 
+	return S_OK; 
+
+	
 	/* Shadow Light */
 	//m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
 	//m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
@@ -202,7 +209,7 @@ HRESULT CWindow_ShaderTool::Load_Finished_Light(LEVEL eLoadLevel)
 		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
 		break;
 	case Client::LEVEL_SNOWMOUNTAIN:
-		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainTemp_MapData_MapData.json";
+		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/SnowMountainTemp_MapData.json";
 		break;
 	case Client::LEVEL_SNOWMOUNTAINBOSS:
 		m_strShaderLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData_MapData_MapData.json";
@@ -739,8 +746,8 @@ void CWindow_ShaderTool::Compress_PBR_Setting()
 
 	if (m_iPBRTextureNumber < 0)
 		m_iPBRTextureNumber = 0;
-	if (m_iPBRTextureNumber >= 8)
-		m_iPBRTextureNumber = 8;
+	if (m_iPBRTextureNumber >= 9)
+		m_iPBRTextureNumber = 9;
 
 	ImGui::SliderFloat("BrightnessOffset", &m_ePBR_Desc.fBrightnessOffset, 0.f, 5.0f, "BrightnessOffset = %.3f");
 	ImGui::SliderFloat("SaturationOffset", &m_ePBR_Desc.fSaturationOffset, 0.f, 5.0f, "SaturationOffset = %.3f");

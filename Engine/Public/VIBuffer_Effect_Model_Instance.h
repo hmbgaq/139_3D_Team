@@ -267,6 +267,9 @@ public:
 	void ReSet();
 	void ReSet_ParticleInfo(_uint iNum);
 
+	_bool Get_Finished() { return m_bFinished; }
+	void Set_Finish(_bool bFinished) { m_bFinished = bFinished; }
+
 
 public:
 	_float4 Make_Dir(_uint iNum);
@@ -301,6 +304,10 @@ public:
 public:
 	EFFECT_MODEL_INSTANCE_DESC* Get_Desc() { return &m_tBufferDesc; }
 	vector<PARTICLE_SHADER_INFO_DESC>& Get_ParticleShaderInfoDescs() { return m_vecParticleShaderInfoDesc; }
+
+
+private:
+	_bool								m_bFinished = { false };
 
 private:
 	EFFECT_MODEL_INSTANCE_DESC			m_tBufferDesc;

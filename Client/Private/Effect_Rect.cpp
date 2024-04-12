@@ -101,7 +101,7 @@ void CEffect_Rect::Tick(_float fTimeDelta)
 				if (m_tSpriteDesc.bSpriteFinish)
 				{
 					// 스프라이트 재생이 끝났고,
-					if (m_tSpriteDesc.bLoop)	// 스프라이트의 루프가 true이면
+					if (m_tSpriteDesc.bSpriteLoop)	// 스프라이트의 루프가 true이면
 					{
 						// 스프라이트 초기화
 						m_tSpriteDesc.Reset_Sprite();
@@ -185,7 +185,7 @@ _bool CEffect_Rect::Write_Json(json& Out_Json)
 
 
 	/* Sprite Desc */
-	Out_Json["bLoop"] = m_tSpriteDesc.bLoop;
+	Out_Json["bSpriteLoop"] = m_tSpriteDesc.bSpriteLoop;
 	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
 
 	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
@@ -216,7 +216,14 @@ void CEffect_Rect::Load_FromJson(const json& In_Json)
 
 
 	/* Sprite Desc */
-	m_tSpriteDesc.bLoop = In_Json["bLoop"];
+	if (In_Json.contains("bSpriteLoop")) // 디스토션 정보가 있으면 읽기 (다시 저장 후 if문 삭제)
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bSpriteLoop"];
+	}
+	else
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bLoop"];
+	}
 	m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
 
 	CJson_Utility::Load_Float2(In_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);

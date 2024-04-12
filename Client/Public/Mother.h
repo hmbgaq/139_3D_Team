@@ -45,7 +45,7 @@ private:
 
 private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
-
+	CEffect* m_pEffect = { nullptr };
 public:
 	CGameObject* m_pMonster1 = { nullptr };
 	CGameObject* m_pMonster2 = { nullptr };

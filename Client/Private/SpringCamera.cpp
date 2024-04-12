@@ -77,7 +77,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 
 	if (m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_TOOL)
 		ShowCursor(true);
-	else 
+	else
 		ShowCursor(false);
 
 	return S_OK;
@@ -186,13 +186,13 @@ void CSpringCamera::Tick(_float fTimeDelta)
 	}
 
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
-	if (iCurrentLevel != (_uint)LEVEL_TOOL)
-	{
-		if (m_pDataManager->Get_MouseCenter() == false)
-			ShowCursor(FALSE);
-		else
-			ShowCursor(TRUE);
-	}
+	//if (iCurrentLevel != (_uint)LEVEL_TOOL)
+	//{
+	//	if (m_pDataManager->Get_MouseCenter() == false)
+	//		ShowCursor(FALSE);
+	//	else
+	//		ShowCursor(TRUE);
+	//}
 
 	if (false == m_pDataManager->Get_MouseFix())
 		return;
