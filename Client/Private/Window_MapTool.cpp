@@ -7214,7 +7214,7 @@ void CWindow_MapTool::Trigger_CreateTab()
 	{
 		
 		static _int iTriggerType = 0;
-		const char* TriggerType[2] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거" };
+		const char* TriggerType[3] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거", "UI 트리거"};
 
 		for (_uint i = 0; i < IM_ARRAYSIZE(TriggerType); ++i)
 		{
@@ -7228,7 +7228,7 @@ void CWindow_MapTool::Trigger_CreateTab()
 
 		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 
-
+		
 
 		static char NameTagBuf[32] = "MonsterSpawn";
 		ImGui::InputText(u8"트리거 네임태그", NameTagBuf, IM_ARRAYSIZE(NameTagBuf));
@@ -7287,6 +7287,119 @@ void CWindow_MapTool::Trigger_CreateTab()
 
 			}
 		}
+	}
+}
+
+void CWindow_MapTool::Monster_TriggerFunction()
+{
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+
+		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+		static char NameTagBuf[32] = "MonsterSpawn";
+		ImGui::InputText(u8"트리거 네임태그", NameTagBuf, IM_ARRAYSIZE(NameTagBuf));
+
+		ImGui::InputFloat3(u8"트리거 콜라이더 사이즈", m_fColliderSizeArray);
+
+		ImGui::InputFloat3(u8"트리거 콜라이더 센터", m_fColliderCenterArray);
+
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	
+		ImGui::InputInt(u8"스폰그룹인덱스", &m_iMonsterSpawnGroupIndex);
+
+
+		ImGui::EndChild();
+
+		if (ImGui::Button(u8" 트리거 생성"))
+		{
+				string strSpawnMonsterJsonPath = "Stage1Final_MonsterInclude_Decrease.json";
+
+				CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+
+				MonsterTriggerDesc.bOnTrigger = false;
+				MonsterTriggerDesc.strTriggerNameTag = NameTagBuf;
+				MonsterTriggerDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+				MonsterTriggerDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+
+				MonsterTriggerDesc.iSpawnGroupIndex = m_iMonsterSpawnGroupIndex;
+				MonsterTriggerDesc.strSpawnMonsterJsonPath = strSpawnMonsterJsonPath;
+
+				CEvent_MosnterSpawnTrigger* pMonsterSpawnTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+				if (pMonsterSpawnTrigger == nullptr)
+				{
+					MSG_BOX("몬스터 스폰 트리거 생성 실패");
+				}
+				else
+				{
+					m_vecCreateMonsterTrigger.push_back(pMonsterSpawnTrigger);
+					m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
+					m_pPickingTrigger = pMonsterSpawnTrigger;
+				}
+
+		}
+		
+}
+
+void CWindow_MapTool::UI_TriggerFunction()
+{
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+
+	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
+
+	static char NameTagBuf[32] = "UIGroup";
+	ImGui::InputText(u8"트리거 네임태그", NameTagBuf, IM_ARRAYSIZE(NameTagBuf));
+
+	ImGui::InputFloat3(u8"트리거 콜라이더 사이즈", m_fColliderSizeArray);
+
+	ImGui::InputFloat3(u8"트리거 콜라이더 센터", m_fColliderCenterArray);
+
+	ImGui::EndChild();
+
+	ImGui::SameLine();
+
+	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
+
+
+	ImGui::InputInt(u8"UI그룹인덱스", &m_iUIGroupIndex);
+
+
+	ImGui::EndChild();
+
+	if (ImGui::Button(u8" 트리거 생성"))
+	{
+		string strSpawnMonsterJsonPath = "Stage1Final_MonsterInclude_Decrease.json";
+
+		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+
+		MonsterTriggerDesc.bOnTrigger = false;
+		MonsterTriggerDesc.strTriggerNameTag = NameTagBuf;
+		MonsterTriggerDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+		MonsterTriggerDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+
+		MonsterTriggerDesc.iSpawnGroupIndex = m_iMonsterSpawnGroupIndex;
+		MonsterTriggerDesc.strSpawnMonsterJsonPath = strSpawnMonsterJsonPath;
+
+		CEvent_MosnterSpawnTrigger* pMonsterSpawnTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+		if (pMonsterSpawnTrigger == nullptr)
+		{
+			MSG_BOX("몬스터 스폰 트리거 생성 실패");
+		}
+		else
+		{
+			m_vecCreateMonsterTrigger.push_back(pMonsterSpawnTrigger);
+			m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
+			m_pPickingTrigger = pMonsterSpawnTrigger;
+		}
+
 	}
 }
 

@@ -80,7 +80,7 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 
 		if (iCurrentLevel == (_uint)LEVEL_GAMEPLAY)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData3.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_INTRO_BOSS)
 		{

@@ -145,6 +145,8 @@ private:
 
 	//!For. Trigger
 	void			Trigger_CreateTab();
+		void			Monster_TriggerFunction();
+		void			UI_TriggerFunction();
 	void			Trigger_SelectTab();
 	void			Trigger_DeleteTab();
 
@@ -296,6 +298,7 @@ private:   //!For Navigation
 private:  //!For Trigger
 	_int						m_iMonsterSpawnGroupIndex = 0;
 	_int						m_iNPCSpawnGroupIndex = 0;
+	_int						m_iUIGroupIndex = 0;
 	class CEvent_Trigger*		m_pPickingTrigger = {nullptr};
 	_char						m_strSelectTriggerNameTag[32] = "";
 
