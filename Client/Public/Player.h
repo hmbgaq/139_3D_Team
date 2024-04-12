@@ -98,15 +98,21 @@ public:
 	//_bool Activate_HUD_Skill(HUD eHUD);
 	_bool Activate_HUD_Skill(HUD eHUD, _float fCost = -1.f);
 	_bool Is_HUD_Cooltime_End(HUD eHUD, _float fCost = -1.f);
-
+	
 	HUD Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill);
 	
 
 public://!For. Interact
 	CEnvironment_Interact* Get_InteractObject() { return m_pInteractObject; }
 	void				   Set_InteractObject(CEnvironment_Interact* pInteractObject) { m_pInteractObject = pInteractObject; }
+	_float3&			   Get_InteractDir() { return m_vInteractDir;}
+	void				   Set_InteractDir(_float3 vInteractDir) { m_vInteractDir = vInteractDir; }
 
+	void				   Set_ZipLineBonePositions(vector<_float4> vecZipLineBonePositions) {	m_vecZipLineBonePositions = vecZipLineBonePositions;}
+	
+	_vector					Get_HandPos() { return m_pBody->Get_Model()->Get_BonePosForMyPos("RightHand", m_pTransformCom->Get_WorldMatrix()); }
 
+public:
 	void SetState_InteractJumpDown100();
 	void SetState_InteractJumpDown200();
 	void SetState_InteractJumpDown300();
@@ -241,8 +247,11 @@ private:
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
 private:
-	CCharacter* m_pLockOnTarget = { nullptr };
+	_float3 m_vInteractDir = {};
+	vector<_float4> m_vecZipLineBonePositions;
 
+private:
+	CCharacter* m_pLockOnTarget = { nullptr };
 
 public:
 	_bool	m_bPlayerCheck = true;

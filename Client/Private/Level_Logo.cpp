@@ -21,7 +21,7 @@ CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	//	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+	//FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
 	Set_Filter();
 	
@@ -40,7 +40,7 @@ HRESULT CLevel_Logo::Initialize()
 	m_pDataManager->Set_GameState(GAME_STATE::UI);
 	ShowCursor(false);
 
-	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ¿Ã∆Â∆Æ «Æ
+	//FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ¿Ã∆Â∆Æ «Æ
 
 	return S_OK;
 }

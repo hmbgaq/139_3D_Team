@@ -390,6 +390,8 @@ private: //!For.Interact //! 상호작용
 	_int							m_iSplineListIndex = 0;
 	_int							m_iSplineDivergingCount = 0;
 
+	_int							m_iInteractSwitchIndex = -1;
+
 private: //!For.Light//! 라이트
 	_int							m_eLightEffectType = 0; //! 전부 이넘 캐스팅
 	LIGHT_DESC::TYPE				m_eLightType = LIGHT_DESC::TYPE::TYPE_END;

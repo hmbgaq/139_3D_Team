@@ -56,10 +56,12 @@ public:
 /* For.Desc */
 public:
 	EFFECT_INSTANCE_DESC*	Get_InstanceDesc() { return &m_tInstanceDesc; }
+	UVSPRITE_DESC*			Get_Sprite_Desc() { return &m_tSpriteDesc; }
 	DISTORTION_DESC*		Get_Distortion_Desc() { return &m_tDistortionDesc; }
 
-	CVIBuffer_Effect_Model_Instance* Get_VIBufferCom() { return m_pVIBufferCom; }
 
+	CVIBuffer_Effect_Model_Instance* Get_VIBufferCom() { return m_pVIBufferCom; }
+	CTexture* Get_TextureCom(TEXTURE eTexture) { return m_pTextureCom[eTexture]; }
 
 // Åø ¿ë
 public:
@@ -75,6 +77,7 @@ private:
 	CVIBuffer_Effect_Model_Instance*	m_pVIBufferCom				= { nullptr };
 
 	EFFECT_INSTANCE_DESC				m_tInstanceDesc = {};
+	UVSPRITE_DESC						m_tSpriteDesc = {};
 	DISTORTION_DESC						m_tDistortionDesc = {};
 
 private:

@@ -75,6 +75,10 @@ HRESULT CLevel_IntroBoss::Render()
     return S_OK;
 }
 
+//!코드위치: Level_IntroBoss / Ready_LightDesc함수
+//!
+//!변경된 코드 부분 : ◀으로 검색하면 나오도록함.주석으로 변경지점 체크해둠
+
 HRESULT CLevel_IntroBoss::Ready_LightDesc()
 {
     /* Shadow Light */
@@ -137,7 +141,7 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
             MSG_BOX("라이트 불러오기 실패");
             return E_FAIL;
         }
-        
+
     }
 
     json LightObjectJson = IntroBossMapJson["LightObject_Json"];
@@ -479,7 +483,7 @@ HRESULT CLevel_IntroBoss::Ready_LandObjects()
     LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-    //FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
 
     FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 

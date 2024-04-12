@@ -388,6 +388,18 @@ struct PS_OUT
 };
 
 
+struct PS_OUT_EFFECT
+{
+    float4 vDiffuse     : SV_TARGET0;     // Diffuse
+    float4 vSolid       : SV_TARGET1;
+    float4 vNormal      : SV_TARGET2;      // Normal
+    float4 vDepth       : SV_TARGET3;      // Depth
+    float4 vRimBloom    : SV_TARGET4;      // RimBloom
+    float4 vDistortion  : SV_TARGET5;
+};
+
+
+
 PS_OUT PS_MAIN(PS_IN In, uniform bool bSolid)
 {
 	PS_OUT Out = (PS_OUT) 0;
@@ -730,6 +742,108 @@ PS_OUT PS_MAIN_DISTORTION(PS_IN_DISTORTION In, uniform bool bSolid)
 
 
 
+PS_OUT_EFFECT PS_MAIN_DISTORTION_NOTPRI(PS_IN_DISTORTION In, uniform bool bSolid)
+{
+    PS_OUT_EFFECT Out = (PS_OUT_EFFECT) 0;
+
+    
+    float4 vFinalDiffuse;
+    float4 vAlphaColor;
+
+    float4 vDistortion;
+    float fPerturb;
+    float2 vDistortedCoord;
+    
+ 
+    // 텍스쿠드
+    In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
+    In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
+	
+    
+
+    float2 vMaskUV = In.vTexUV * g_UVScale_Mask + g_UVOffset_Mask;
+    if (false == g_bUV_Wave)
+    {
+        if ((vMaskUV.x > 1.f) || (vMaskUV.y > 1.f) || (vMaskUV.x < 0.f) || (vMaskUV.y < 0.f))
+            discard;
+    }
+    else
+    {
+        vMaskUV.x = vMaskUV.x + (g_fFrameTime * g_UV_WaveSpeed.x);
+        vMaskUV.y = vMaskUV.y + (g_fFrameTime * g_UV_WaveSpeed.y);
+    }
+    
+    
+    
+    /* Distortion ============================================================ */	
+    
+    vDistortion = Calculation_Distortion(In.vTexUV, In.vTexcoord1, In.vTexcoord2, In.vTexcoord3);
+
+	
+	// 입력으로 들어온 텍스쳐의 Y좌표를 왜곡 크기와 바이어스 값으로 교란시킨다. 이 교란은 텍스쳐의 위쪽으로 갈수록 강해져서 맨 위쪽에는 깜박이는 효과를 만들어낸다.
+    fPerturb = ((1.0f - In.vTexUV.y) * g_fDistortionScale) + g_fDistortionBias;
+
+	
+	// 텍스쳐를 샘플링하는데 사용될 왜곡 및 교란된 텍스쳐 좌표를(UV) 만든다.
+    vDistortedCoord = (vDistortion.xy * fPerturb) + In.vTexUV.xy;
+
+
+	// 디퓨즈 텍스처 (clamp 샘플러 사용)
+    vFinalDiffuse = g_DiffuseTexture.Sample(LinearSampler, vDistortedCoord.xy);
+
+
+	// 마스크 텍스처를 알파로 사용 (clamp 샘플러 사용)
+    vAlphaColor = g_MaskTexture.Sample(LinearSampler, vDistortedCoord.xy + vMaskUV);
+    vFinalDiffuse.a *= vAlphaColor.r;
+	
+    
+	/* Discard & Color Mul ==================================================== */
+    if (vFinalDiffuse.a <= g_fAlpha_Discard) // 알파 잘라내기
+        discard;
+	
+     // 색상 혼합
+    Out.vDiffuse.rgb = Calculation_ColorBlend(vFinalDiffuse, g_EffectDesc[In.iInstanceID].g_vColors_Mul, g_iColorMode).rgb;
+    Out.vDiffuse.a = vFinalDiffuse.a * g_EffectDesc[In.iInstanceID].g_vColors_Mul.a * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha;
+    
+	/* Dissolve ============================================================== */
+    vector vDissolveTex = g_NoiseTexture.Sample(LinearSampler, In.vTexUV);
+    clip(vDissolveTex - g_fDissolveRatio);
+
+    float fStepValue = IsIn_Range(0.f, 0.05f, vDissolveTex.r - g_fDissolveRatio);
+
+    vFinalDiffuse = (1.f - fStepValue) * vFinalDiffuse + fStepValue;
+
+		
+
+	/* Normal & Depth ========================================================= */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexUV).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+
+	Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.f, 0.f);
+	
+	
+	/* RimBloom ================================================================ */
+    float4 vRimColor = Calculation_RimColor(float4(In.vNormal.r, In.vNormal.g, In.vNormal.b, 0.f), In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = float4(g_vBloomPower, Out.vDiffuse.a) * g_EffectDesc[In.iInstanceID].g_fCurAddAlpha; //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) /*+ vRimColor*/;
+	
+
+    
+    if (bSolid)
+        Out.vSolid = Out.vDiffuse;
+	
+	
+    return Out;
+}
+//  DISTORTION ==================================================================================================================
+
+
+
 
 //  DISTORTION_POST ==================================================================================================
 PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
@@ -844,5 +958,32 @@ technique11 DefaultTechnique
         GeometryShader	= NULL;
         PixelShader		= compile ps_5_0 PS_MAIN_DISTORTION_POST();
     }
+
+    pass Distortion_NotPri // 6
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_NOTPRI(false);
+    }
+
+    pass Distortion_Solid_NotPri // 7
+    {
+        SetBlendState(BS_AlphaBlend_Add, vector(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_DepthStencilEnable, 0);
+        SetRasterizerState(RS_Cull_None);
+
+        VertexShader = compile vs_5_0 VS_MAIN_DISTORTION();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION_NOTPRI(true);
+    }
+
 
 }

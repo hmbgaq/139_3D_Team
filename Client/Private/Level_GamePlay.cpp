@@ -440,8 +440,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
-		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
@@ -487,7 +487,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		{
 			CEnvironment_Interact* pObject = { nullptr };
 
-			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 
 			if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
 			{
@@ -534,8 +534,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
-		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
@@ -587,48 +587,48 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		else
 			continue;
 	}
-
-	json InstanceJson = Stage1MapJson["Instance_Json"];
-	_int InstanceJsonSize = (_int)InstanceJson.size();
-
-	for (_int i = 0; i < InstanceJsonSize; ++i)
-	{
-		MAPTOOL_INSTANCE_DESC InstanceDesc;
-
-		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
-
-
-		wstring strLoadModelTag;
-		string strJsonModelTag = InstanceJson[i]["ModelTag"];
-
-		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
-		InstanceDesc.strModelTag = strLoadModelTag;
-
-		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
-
-		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
-		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
-
-		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
-		{
-			INSTANCE_INFO_DESC InstanceInfoDesc = {};
-
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
-			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
-			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
-
-			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
-		}
-
-
-		CEnvironment_Instance* pInstanceObject = { nullptr };
-
-		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
-
-	}
-
-
+ 
+ 	json InstanceJson = Stage1MapJson["Instance_Json"];
+ 	_int InstanceJsonSize = (_int)InstanceJson.size();
+ 
+ 	for (_int i = 0; i < InstanceJsonSize; ++i)
+ 	{
+ 		MAPTOOL_INSTANCE_DESC InstanceDesc;
+ 
+ 		InstanceDesc.iNumInstance = InstanceJson[i]["InstanceCount"];
+ 
+ 
+ 		wstring strLoadModelTag;
+ 		string strJsonModelTag = InstanceJson[i]["ModelTag"];
+ 
+ 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+ 		InstanceDesc.strModelTag = strLoadModelTag;
+ 
+ 		InstanceDesc.iShaderPassIndex = InstanceJson[i]["ShaderPassIndex"];
+ 
+ 		json InstanceInfoJson = InstanceJson[i]["InstanceInfo_Json"];
+ 		_uint InstanceInfoJsonSize = (_uint)InstanceInfoJson.size();
+ 
+ 		for (_uint j = 0; j < InstanceInfoJsonSize; ++j)
+ 		{
+ 			INSTANCE_INFO_DESC InstanceInfoDesc = {};
+ 
+ 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Scale"], InstanceInfoDesc.vScale);
+ 			CJson_Utility::Load_Float4(InstanceInfoJson[j]["Instance_Rotation"], InstanceInfoDesc.vRotation);
+ 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Translation"], InstanceInfoDesc.vTranslation);
+ 			CJson_Utility::Load_Float3(InstanceInfoJson[j]["Instance_Center"], InstanceInfoDesc.vCenter);
+ 
+ 			InstanceDesc.vecInstanceInfoDesc.push_back(InstanceInfoDesc);
+ 		}
+ 
+ 
+ 		CEnvironment_Instance* pInstanceObject = { nullptr };
+ 
+ 		pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
+ 
+ 	}
+ 
+ 
 	return S_OK;
 
 }

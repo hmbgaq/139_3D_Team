@@ -58,6 +58,9 @@ public:
 		_bool		bAttachStatic = { FALSE };
 
 
+		_bool		bAttachTool = { false };
+		_float4x4	matPivot_Tool = {};
+
 		string		strFileName		= { "" };	// Json에 저장X (Json파일 이름 .json포함)
 
 
@@ -66,10 +69,13 @@ public:
 			XMStoreFloat4x4(&matPivot, XMMatrixIdentity());
 			XMStoreFloat4x4(&matCombined, XMMatrixIdentity());
 
-			bUseSocket = FALSE;
+			bUseSocket = false;
 			strBoneTag = { "" };
 
-			bAttachStatic = FALSE;
+			bAttachStatic = false;
+
+			bAttachTool = false;
+			XMStoreFloat4x4(&matPivot_Tool, XMMatrixIdentity());
 		}
 
 

@@ -10,7 +10,7 @@
 CEffect_Instance::CEffect_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = false;
 }
 
 CEffect_Instance::CEffect_Instance(const CEffect_Instance & rhs)
@@ -62,7 +62,7 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 				if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
 				{
-					m_tVoidDesc.bRender = TRUE;
+					m_tVoidDesc.bRender = true;
 				}
 				else
 					return;
@@ -70,38 +70,52 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 
 			// 라이프타임 누적 시작
 			m_tVoidDesc.fTimeAcc += fTimeDelta;
+			m_tVoidDesc.fSpriteTimeAcc += fTimeDelta;
 			m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
 
 			/* ======================= 라이프 타임 동작 시작 ======================= */
 
-
-
-
-			/* ======================= 라이프 타임 동작 끝  ======================= */
-
-
-			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
+			if (m_tVoidDesc.bUseSpriteAnim)
 			{
-				// 삭제 대기시간 누적 시작
-				m_tVoidDesc.fRemainAcc += fTimeDelta;
+				if (!m_tSpriteDesc.bSpriteFinish)
+				{
+					if (m_tVoidDesc.fSpriteTimeAcc > m_tSpriteDesc.fSequenceTerm)
+					{
+						(m_tSpriteDesc.vUV_CurTileIndex.x)++;	// 가로 인덱스 증가
 
-				// 디졸브 시작
-				m_tVoidDesc.bDissolve = TRUE;
-				if (m_tVoidDesc.bDissolve)
-				{			
-					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
+						if (m_tSpriteDesc.vUV_CurTileIndex.x == m_tSpriteDesc.vUV_MaxTileCount.x)
+						{
+							(m_tSpriteDesc.vUV_CurTileIndex.y)++;									// 세로 인덱스 증가
+							m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;	// 가로 인덱스 초기화
+
+							if (m_tSpriteDesc.vUV_CurTileIndex.y == m_tSpriteDesc.vUV_MaxTileCount.y)	// 세로 인덱스도 끝까지 왔다면
+							{
+								m_tSpriteDesc.bSpriteFinish = true;										// 스프라이트 애님 끝	
+							}
+						}
+						m_tVoidDesc.fSpriteTimeAcc = 0.f;	// 시간 초기화
+					}
 				}
 
-				// 이 이펙트의 타임라인 종료
-				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
+				if (m_tSpriteDesc.bSpriteFinish)
 				{
-					m_tVoidDesc.fDissolveAmount = 1.f;
-					m_tVoidDesc.bRender = TRUE;
-					return;
+					// 스프라이트 재생이 끝났고,
+					if (m_tSpriteDesc.bSpriteLoop)	// 스프라이트의 루프가 true이면
+					{
+						// 스프라이트 초기화
+						m_tSpriteDesc.Reset_Sprite();
+					}
+					else
+					{
+						// 아니면 렌더 끄기
+						m_tVoidDesc.bRender = false;
+						//m_tSpriteDesc.Reset_Sprite(); // 초기화
+					}
 				}
 			}
 
-			if (m_tVoidDesc.bRender)
+
+			if (m_tVoidDesc.bRender)	 // 파티클 버퍼 업데이트
 			{
 				if (CVIBuffer_Effect_Model_Instance::MODE_PARTICLE == m_pVIBufferCom->Get_Desc()->eType_Mode)
 				{
@@ -113,6 +127,34 @@ void CEffect_Instance::Tick(_float fTimeDelta)
 				}
 
 			}
+
+
+			/* ======================= 라이프 타임 동작 끝  ======================= */
+
+
+			if (m_tVoidDesc.fTimeAcc >= m_tVoidDesc.fLifeTime)
+			{
+				// 삭제 대기시간 누적 시작
+				m_tVoidDesc.fRemainAcc += fTimeDelta;
+
+				// 디졸브 시작
+				m_tVoidDesc.bDissolve = true;
+				if (m_tVoidDesc.bDissolve)
+				{			
+					m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
+				}
+
+				// 이 이펙트의 타임라인 종료
+				if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
+				{
+					m_tVoidDesc.fDissolveAmount = 1.f;
+					m_pVIBufferCom->Set_Finish(true);
+					m_tVoidDesc.bRender = true;
+					return;
+				}
+			}
+
+
 		}
 	}
 
@@ -144,7 +186,7 @@ HRESULT CEffect_Instance::Render()
 	//{
 	//	_uint	iCurModelNum = m_pVIBufferCom->Get_Desc()->eCurModelNum;
 
-	//	if (FALSE == m_tInstanceDesc.bUseCustomTex)
+	//	if (false == m_tInstanceDesc.bUseCustomTex)
 	//	{
 	//		m_pModelCom[iCurModelNum]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)0, aiTextureType_DIFFUSE);
 	//	}
@@ -181,17 +223,19 @@ void CEffect_Instance::ReSet_Effect()
 	__super::ReSet_Effect(); // 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
-	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bDissolve = false;
 
 
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-
+		m_tSpriteDesc.bSpriteFinish = false;
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
 	{
-		//m_tVoidDesc.bRender = FALSE;
+		//m_tVoidDesc.bRender = false;
 		m_pVIBufferCom->ReSet(); // 버퍼 리셋
 	}
 		
@@ -203,16 +247,19 @@ void CEffect_Instance::Init_ReSet_Effect()
 	__super::ReSet_Effect(); // 시간 초기화
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
-	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bDissolve = false;
 
 
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-
+		m_tSpriteDesc.bSpriteFinish = false;
+		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
+		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
 
-	m_tVoidDesc.bRender = FALSE;
+
+	m_tVoidDesc.bRender = false;
 	m_pVIBufferCom->ReSet(); // 버퍼 리셋
 
 
@@ -361,6 +408,17 @@ _bool CEffect_Instance::Write_Json(json& Out_Json)
 	Out_Json["bUseCustomTex"] = m_tInstanceDesc.bUseCustomTex;
 
 
+	/* Sprite Desc */
+	Out_Json["bSpriteLoop"] = m_tSpriteDesc.bSpriteLoop;
+	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
+
+	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
+	CJson_Utility::Write_Float2(Out_Json["vTileSize"], m_tSpriteDesc.vTileSize);
+
+	CJson_Utility::Write_Float2(Out_Json["vUV_MinTileCount"], m_tSpriteDesc.vUV_MinTileCount);
+	CJson_Utility::Write_Float2(Out_Json["vUV_MaxTileCount"], m_tSpriteDesc.vUV_MaxTileCount);
+
+
 	/* Distortion */
 	Out_Json["eType_Scroll"] = m_tDistortionDesc.eType_Scroll;
 
@@ -384,6 +442,21 @@ void CEffect_Instance::Load_FromJson(const json& In_Json)
 
 	/* Mesh */
 	m_tInstanceDesc.bUseCustomTex	= In_Json["bUseCustomTex"];
+
+
+	/* Sprite Desc */
+	if (In_Json.contains("bSpriteLoop")) // 다시 저장 후 삭제
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bSpriteLoop"];
+		m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
+
+		CJson_Utility::Load_Float2(In_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
+		CJson_Utility::Load_Float2(In_Json["vTileSize"], m_tSpriteDesc.vTileSize);
+
+		CJson_Utility::Load_Float2(In_Json["vUV_MinTileCount"], m_tSpriteDesc.vUV_MinTileCount);
+		CJson_Utility::Load_Float2(In_Json["vUV_MaxTileCount"], m_tSpriteDesc.vUV_MaxTileCount);
+	}
+
 
 
 	/* Distortion */
@@ -497,7 +570,7 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 
-	if (TRUE == m_tInstanceDesc.bUseCustomTex)	// 텍스처를 내가 정해줄거면 
+	if (true == m_tInstanceDesc.bUseCustomTex)	// 텍스처를 내가 정해줄거면 
 	{
 
 		// 기본은 디퓨즈만 바인드
@@ -513,6 +586,19 @@ HRESULT CEffect_Instance::Bind_ShaderResources()
 		if (nullptr != m_pTextureCom[TEXTURE_NOISE])	// 노이즈 텍스처 있으면 바인드
 			FAILED_CHECK(m_pTextureCom[TEXTURE_NOISE]->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture", m_tVoidDesc.iTextureIndex[TEXTURE_NOISE]));
 	}
+
+
+
+	// 스프라이트
+	if (m_tVoidDesc.bUseSpriteAnim)
+	{
+		m_tVoidDesc.vUV_Offset = { (_float)(m_tSpriteDesc.vUV_CurTileIndex.x * m_tSpriteDesc.vTileSize.x) / m_tSpriteDesc.vTextureSize.x
+									, (_float)(m_tSpriteDesc.vUV_CurTileIndex.y * m_tSpriteDesc.vTileSize.y) / m_tSpriteDesc.vTextureSize.y };
+
+		m_tVoidDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
+								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
+	}
+
 
 	/* UV ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset", &m_tVoidDesc.vUV_Offset, sizeof(_float2)));

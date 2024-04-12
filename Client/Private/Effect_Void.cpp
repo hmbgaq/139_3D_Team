@@ -127,7 +127,7 @@ void CEffect_Void::Update_PivotMat()
 			{
 				// 부모(Effect)의 오너가 있으면 부모의 컴바인 매트릭스 사용
 				m_tVoidDesc.matPivot = dynamic_cast<CEffect*>(m_pOwner)->Get_Desc()->matCombined;
-				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
+				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot); // 나 * 주인
 			}
 			else
 			{
@@ -195,6 +195,8 @@ void CEffect_Void::Write_VoidDesc(json& Out_Json)
 
 	Out_Json["bBillBoard"] = m_tVoidDesc.bBillBoard;
 	Out_Json["bDissolve"] = m_tVoidDesc.bDissolve;
+	Out_Json["bSoft"] = m_tVoidDesc.bSoft;
+	Out_Json["bUseMask"] = m_tVoidDesc.bUseMask;
 
 	CJson_Utility::Write_Float2(Out_Json["vUV_Offset"], m_tVoidDesc.vUV_Offset);
 	CJson_Utility::Write_Float2(Out_Json["vUV_Scale"], m_tVoidDesc.vUV_Scale);
@@ -281,6 +283,16 @@ void CEffect_Void::Load_VoidDesc(const json& In_Json)
 
 	m_tVoidDesc.bBillBoard = (_bool)In_Json["bBillBoard"];
 	m_tVoidDesc.bDissolve = (_bool)In_Json["bDissolve"];
+
+	if (In_Json.contains("bSoft")) // 다시 저장 후 if문 삭제
+	{
+		m_tVoidDesc.bSoft = (_bool)In_Json["bSoft"];
+	}
+
+	if (In_Json.contains("bUseMask")) // 다시 저장 후 if문 삭제
+	{
+		m_tVoidDesc.bUseMask = (_bool)In_Json["bUseMask"];
+	}
 
 
 	CJson_Utility::Load_Float2(In_Json["vUV_Offset"], m_tVoidDesc.vUV_Offset);

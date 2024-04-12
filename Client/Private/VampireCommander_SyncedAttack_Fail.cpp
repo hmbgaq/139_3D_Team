@@ -2,6 +2,7 @@
 #include "VampireCommander_SyncedAttack.h"
 #include "VampireCommander_Idle.h"
 #include "Body_VampireCommander.h"
+#include "VampireCommander_Weapon.h"
 
 void CVampireCommander_SyncedAttack_Fail::Initialize(CVampireCommander* pActor)
 {
@@ -10,9 +11,11 @@ void CVampireCommander_SyncedAttack_Fail::Initialize(CVampireCommander* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	pActor->Get_Weapon(L"Weapon_hand_R")->Set_Synced(true);
 
-	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
-
-	pWeapon
+	CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_R)->Play_Trail(true);	// 트레일 켜기
+	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(true);	// 트레일 켜기
+	pWeapon_R
 		->Set_Damage(0)
 		->Set_Direction(Direction::Right)
 		->Set_Power(Power::Medium)
@@ -20,6 +23,9 @@ void CVampireCommander_SyncedAttack_Fail::Initialize(CVampireCommander* pActor)
 
 	CBody_VampireCommander* pBody = dynamic_cast<CBody_VampireCommander*>(pActor->Get_Body());
 	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
+
+
+	
 
 	pActor->m_bLookAt = false;
 
@@ -54,8 +60,12 @@ void CVampireCommander_SyncedAttack_Fail::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
 
-	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
-	pWeapon->Set_Enable(false);
+	CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_R)->Play_Trail(false);	// 트레일 켜기
+	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(false);	// 트레일 켜기
+
+	pWeapon_R->Set_Enable(false);
 
 	pActor->m_bLookAt = true;
 

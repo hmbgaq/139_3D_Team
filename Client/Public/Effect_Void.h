@@ -38,14 +38,16 @@ public:
 		// Shader
 		_uint		iShaderPassIndex = { 0 };
 		// Shader Variables
-		_bool		bBillBoard		= { TRUE };
-		_bool		bDissolve		= { TRUE };
+		_bool		bBillBoard		= { true };
+		_bool		bDissolve		= { true };
+		_bool		bSoft			= { false };	// 바닥에 닿을수록 투명해질건지
 		_float2		vUV_Offset		= { 0.f, 0.f };
 		_float2		vUV_Scale		= { 1.f, 1.f };
 
 		_float		fUV_RotDegree	= { 0.f };
 
-		_bool		bUV_Wave		= { FALSE };
+		_bool		bUseMask		= { true };
+		_bool		bUV_Wave		= { false };
 		_float2		vUV_WaveSpeed	= { 1.f, 1.f };
 		_float2		vUV_Offset_Mask = { 0.f, 0.f };
 		_float2		vUV_Scale_Mask  = { 1.f, 1.f };
@@ -62,12 +64,12 @@ public:
 		_float		fRimPower = { 0.f };
 
 		// States
-		_bool		bPlay			= { TRUE };
-		_bool		bLoop			= { TRUE };
-		_bool		bReverse		= { FALSE };
-		_bool		bRender			= { FALSE };
-		_bool		bUseSpriteAnim	= { FALSE };
-		_bool		bUseRigidBody	= { FALSE };
+		_bool		bPlay			= { true };
+		_bool		bLoop			= { true };
+		_bool		bReverse		= { false };
+		_bool		bRender			= { false };
+		_bool		bUseSpriteAnim	= { false };
+		_bool		bUseRigidBody	= { false };
 
 		
 		// Times
@@ -78,11 +80,11 @@ public:
 
 
 		// 주인
-		_bool		 bParentPivot	 = { TRUE };
+		_bool		 bParentPivot	 = { true };
 
 
 		/* 업데이트 되면서 바뀌는 정보들(저장x) */
-		_bool		bActive_Tool = { TRUE };
+		_bool		bActive_Tool = { true };
 
 		// Times 
 		_float		fWaitingAcc		= { 0.f };	/* 시작 딜레이 시간 누적 */
@@ -122,9 +124,9 @@ public:
 
 	typedef struct tagUvSpriteDesc
 	{
-		_bool	bSpriteFinish   = { FALSE };
+		_bool	bSpriteFinish   = { false };
 
-		_bool	bLoop = { TRUE };				// 저장
+		_bool	bSpriteLoop = { true };				// 저장
 		_float	fSequenceTerm	= { 0.05f };	// 저장
 
 		_float2 vTextureSize	 = { 1792.f, 1792.f };  // 저장
@@ -137,7 +139,7 @@ public:
 
 		void Reset_Sprite()
 		{
-			bSpriteFinish = { FALSE };
+			bSpriteFinish = { false };
 			vUV_CurTileIndex.y = vUV_MinTileCount.y;
 			vUV_CurTileIndex.x = vUV_MinTileCount.x;
 		}

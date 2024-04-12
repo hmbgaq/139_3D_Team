@@ -85,6 +85,8 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 	{
 		//여기서 이펙트도 터트려야 함 돌튀는거 
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_pEffect = nullptr;
+
 		EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherProjectileDead.json", m_pTransformCom->Get_Position());
 		Set_Dead(true);
 	}
@@ -129,6 +131,7 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 
 	}
 	EFFECT_MANAGER->Return_ToPool(m_pEffect);
+	m_pEffect = nullptr;
 	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
 	//m_pEffect->Set_Dead(true);	// 이펙트 죽이기
@@ -207,8 +210,9 @@ void CMotherShakeTreeProjectile::Free()
 {
 	__super::Free();
 
-
-	Safe_Release(m_pEffect);	// 동그라미 삭제
-	Safe_Release(m_pMainEffect);	// 동그라미 삭제
+	if(nullptr != m_pEffect)
+		Safe_Release(m_pEffect);	// 동그라미 삭제
+	if(nullptr != m_pMainEffect)
+		Safe_Release(m_pMainEffect);	// 동그라미 삭제
 
 }

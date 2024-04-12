@@ -56,7 +56,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// ÀÌÆåÆ® »ý¼º
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath3.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath4.json", this);
 
 
 	return S_OK;
@@ -139,11 +139,10 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 
 		pTarget_Character->Get_Damaged(m_fDamage);
 
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 	this->Set_Enable(false);
-
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
 }
@@ -174,7 +173,7 @@ HRESULT CMotherVomit::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 70.f };
+	BoundingDesc.fRadius = { 100.f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -219,7 +218,7 @@ void CMotherVomit::Free()
 {
 	__super::Free();
 
-
-	Safe_Release(m_pEffect);
+	if(nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 }
