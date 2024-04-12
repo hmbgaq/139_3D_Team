@@ -4,13 +4,16 @@ CBone::CBone()
 {
 }
 
-_vector& CBone::Get_CombinedPosition(_fmatrix WorldMatrix)
+_float4& CBone::Get_CombinedPosition(_fmatrix WorldMatrix)
 {
 	// TODO: 여기에 return 문을 삽입합니다.
 
-	_vector vBonePosition = _float4(m_CombinedTransformationMatrix._41, m_CombinedTransformationMatrix._42, m_CombinedTransformationMatrix._43, m_CombinedTransformationMatrix._44);
+	_vector vBonePosition = XMLoadFloat4(&(_float4(m_CombinedTransformationMatrix._41, m_CombinedTransformationMatrix._42, m_CombinedTransformationMatrix._43, m_CombinedTransformationMatrix._44)));
 	
-	return XMVector3TransformCoord(vBonePosition, WorldMatrix);
+	_float4 vReturnCombinePos = {};
+	XMStoreFloat4(&vReturnCombinePos, XMVector3TransformCoord(vBonePosition, WorldMatrix));
+
+	return vReturnCombinePos;
 }
 
 HRESULT CBone::Initialize(CMyAINode pAINode, _int iParentIndex)

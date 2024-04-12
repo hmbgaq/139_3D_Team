@@ -324,10 +324,13 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		m_pMoveRangeColliderCom->Update(XMMatrixIdentity());
 
 	
-	if (m_pPlayer != nullptr && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_JUMP300 && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true)
+	if (m_pPlayer != nullptr && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true && true == m_pPlayer->Is_Animation_End())
 	{
-		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-		m_bInteract = false;
+		if(m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_InteractionJumpDown300)
+		{
+			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+			m_bInteract = false;
+		}
 
 	}
 }
@@ -1016,7 +1019,7 @@ void CEnvironment_Interact::Interact()
 						//	m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
 						//}
 						//else
-						//{
+						//{F
 						//	m_pPlayer->SetState_InteractJumpDown300();
 						//	m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerReverseRootMoveRate);
 						//}
@@ -1229,8 +1232,8 @@ void CEnvironment_Interact::Interact()
 					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 					{
 						ZipLine_Function();
-						m_pPlayer->Set_Ladder_Count(m_tEnvironmentDesc.iLadderCount);
 						m_pPlayer->SetState_InteractZipLine();
+						m_pPlayer->Set_Ladder_Count(m_tEnvironmentDesc.iLadderCount);
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
 					}
 

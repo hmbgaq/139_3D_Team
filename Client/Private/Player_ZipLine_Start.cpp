@@ -17,6 +17,7 @@ void CPlayer_ZipLine_Start::Initialize(CPlayer* pActor)
 	
 
 	CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
+	m_vArrivalPosition = {};
 
 	m_vArrivalPosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
 	_float3 vZipLinePosition = pInteractObject->Get_Position();

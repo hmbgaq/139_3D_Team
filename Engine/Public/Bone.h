@@ -21,7 +21,7 @@ public:
 
 	_float4x4& Get_CombinedTransformationFloat4x4()  { return m_CombinedTransformationMatrix; }
 
-	_vector&   Get_CombinedPosition(_fmatrix WorldMatrix);
+	_float4&   Get_CombinedPosition(_fmatrix WorldMatrix);
 
 public:
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix) {
@@ -48,10 +48,10 @@ private:
 	_int				m_iIndex = { -10 };
 
 	/* 이 뼈만의 상태행렬 */
-	_float4x4			m_TransformationMatrix;
+	_float4x4			m_TransformationMatrix = {};
 
 	/* 이 뼈만의 상태행렬 * 부모뼈의 m_CombindTransformationMatrix */
-	_float4x4			m_CombinedTransformationMatrix;
+	_float4x4			m_CombinedTransformationMatrix = {};
 
 public:
 	static CBone* Create(CMyAINode pAINode, _int iParentIndex);
