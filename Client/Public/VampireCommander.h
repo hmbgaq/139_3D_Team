@@ -44,7 +44,7 @@ public:
 private:
 	CActor<CVampireCommander>* m_pActor = { nullptr };
 
-private:
+public:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
 	CEffect* m_pAuraEffect = { nullptr }; // TEST
 public://»À 13°³ 
@@ -52,7 +52,8 @@ public://»À 13°³
 public:
 	vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
-	_bool	m_bCntDead_Active = { false };
+	_bool m_bCntDead_Active = { false };
+	_bool m_bAuraDead = false;
 	_float	m_fCntDead_Time = 3.f;
 	_float fTimeAcc = 0.f;
 public:

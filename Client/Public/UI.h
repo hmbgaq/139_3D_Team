@@ -346,7 +346,7 @@ public:
 
 protected:
 	_bool			m_bLifeTimeUI = false;
-	_float			m_fActive_Distance = 16.f;
+	_float			m_fActive_Distance = 35.f;
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);

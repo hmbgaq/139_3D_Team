@@ -46,7 +46,23 @@ void CUI_EnemyHUD_Shard::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	_bool bIsDead = { false };
+
 	if (m_bDeadOwner == true)
+	{
+		bIsDead = true;
+	}
+	else if (nullptr == m_pOwner) 
+	{
+		bIsDead = true;
+	}
+	else if (false == m_pOwner->Get_Enable() || true == m_pOwner->Is_Dead())
+	{
+		bIsDead = true;
+	}
+	
+
+	if (true == bIsDead)
 	{
 		DeadEnemyHUD();
 		Set_Dead(true);

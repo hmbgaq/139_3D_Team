@@ -43,6 +43,9 @@ void CInfected_D::Priority_Tick(_float fTimeDelta)
 
 void CInfected_D::Tick(_float fTimeDelta)
 {
+	/* !성희 추가 : 몬스터 HUD 위치 갱신 */
+	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, vOffsetPos*/);
+
 	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
 		return;
 
@@ -76,6 +79,22 @@ HRESULT CInfected_D::Render_OutLine()
 HRESULT CInfected_D::Update_RenderState(_int CurrentHP)
 {
 	return S_OK;
+}
+
+void CInfected_D::Explosion()
+{
+	CGameObject* pBullet = m_pGameInstance->Add_CloneObject_And_Get(m_iCurrnetLevel, LAYER_MONSTER_BULLET, L"Prototype_GameObject_Explosion_Infected_D");
+	
+	_float3 vSpawnPos = Get_Position();
+	CWeapon* pWeapon = Get_Weapon(TEXT("Weapon_Bomb"));
+	if (pWeapon)
+	{
+		vSpawnPos = pWeapon->Get_WorldPosition();
+		vSpawnPos.y -= 1.5f;
+	}
+	
+	pBullet->Set_Position(vSpawnPos);
+	//pBullet->Get_Transform()->Look_At(vLook * -1);
 }
 
 #pragma region Base Setting

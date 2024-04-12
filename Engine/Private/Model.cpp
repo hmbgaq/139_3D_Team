@@ -708,6 +708,11 @@ _float CModel::Calc_Upper_Cooltime_Percent()
 	return Calc_Cooltime_Percent(m_iUpperAnimIndex);
 }
 
+_vector CModel::Get_BonePosForMyPos(const char* pBoneName, _fmatrix WorldMatrix)
+{
+	return Get_BonePtr(pBoneName)->Get_CombinedPosition(WorldMatrix);
+}
+
 void CModel::Set_Speed(_int iSpeed)
 {
 	//return m_Animations
@@ -764,7 +769,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 	for (size_t i = 0; i < m_iNumMaterials; i++)
 	{
 		//if() 내일 와서 이거 작업 할것 
-		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material((_uint)i);
+ 		CMyAIMaterial pAIMaterial = m_pAIScene.Get_Material((_uint)i);
 
 		MATERIAL_DESC			MaterialDesc = {  };
 

@@ -67,6 +67,7 @@ private:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 
 	_float3					m_vPoints[POINT_END] = {};
+	_float3					m_vOriginPoints[POINT_END] = {};
 	_float3					m_vPointsInWorld[POINT_END] = {};
 	_int					m_iNeighbors[LINE_END] = { -1, -1, -1 };
 	_float3					m_vNormals[LINE_END] = {};

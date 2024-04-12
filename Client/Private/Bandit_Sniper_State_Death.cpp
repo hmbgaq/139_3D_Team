@@ -1,8 +1,10 @@
 #include "..\Public\Bandit_Sniper_State_Death.h"
+#include "Data_Manager.h"
 
 void CBandit_Sniper_State_Death::Initialize(CBandit_Sniper* pActor)
 {
 	__super::Initialize(pActor);
+	CData_Manager::GetInstance()->Add_CurEXP(BANDIT_SNIPER_EXP);
 }
 
 CState<CBandit_Sniper>* CBandit_Sniper_State_Death::Update(CBandit_Sniper* pActor, _float fTimeDelta)

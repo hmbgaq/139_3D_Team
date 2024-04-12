@@ -2,6 +2,8 @@
 #include "VampireCommander_Leap_Stop.h"
 #include "Collider.h"
 
+#include "Effect_Manager.h"
+
 void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
@@ -35,6 +37,13 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	else if (pActor->Is_Inputable_Front(58))
 	{
 		pActor->Move_In_Proportion_To_Enemy(0, 0);
+	}
+
+	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(68))
+	{
+		// µ¹Æ¢±â±â ÀÌÆåÆ® Ãß°¡
+		EFFECT_MANAGER->Play_Effect("VampireCommander/", "landing_Rock_01.json", pActor->Get_Position_Vector());
+		m_bFlags[0] = true;
 	}
 
 	if (pActor->Is_Inputable_Front(55))

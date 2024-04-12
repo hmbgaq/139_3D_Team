@@ -558,7 +558,14 @@ void CUI::Parts_Delete()
 
 _float CUI::Check_CamToTarget_Distance(_vector vTargetPos)
 {
-	_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+	_vector		vCamPosition;
+
+	m_pGameInstance = CGameInstance::GetInstance();
+
+	if (m_pGameInstance != nullptr)
+	{
+		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+	}
 	_float		fDistance = 0.0f;
 
 	fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vCamPosition));
@@ -812,7 +819,10 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 		1.0f);
 
 	/* Distance Check */
-	m_fTarget_Distance = Check_CamToTarget_Distance(vTargetPos);
+	//if (m_pGameInstance->Get_NextLevel() != LEVEL_LOADING)
+	{
+		m_fTarget_Distance = Check_CamToTarget_Distance(vTargetPos);
+	}
 	if (m_fTarget_Distance >= m_fActive_Distance)
 	{
 		m_bActive = false;
@@ -831,8 +841,11 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 	//vTargetPos.m128_f32[1] *= scaleFactor;
 
 	//vTargetPos.m128_f32[1] += 2.f;
-	vTargetPos = XMVector3Transform(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
-	vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+	if (m_pGameInstance->Get_NextLevel() != LEVEL_LOADING)
+	{
+		vTargetPos = XMVector3Transform(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+		vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+	}
 
 	XMStoreFloat4(&vViewPort, vTargetPos);
 
@@ -917,7 +930,10 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 		//m_fWorldToScreenY = -300.f;
 	}
 
-	m_bActive = m_pTransformCom->Calc_FrontCheck(vTargetPos);
+	if (m_pGameInstance->Get_NextLevel() != LEVEL_LOADING)
+	{
+		m_bActive = m_pTransformCom->Calc_FrontCheck(vTargetPos);
+	}
 
 	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
 

@@ -1,4 +1,5 @@
 {
+  
   "Basic_Json": [
     {
       "AnimType": false,
@@ -346,7 +347,7 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ -7.219437065941747e-07, -0.0330272801220417, 0.9991682171821594, 0.0 ],
+          [ -7.21943195003405e-07, -0.03302725404500961, 0.9991675019264221, 0.0 ],
           [ -4.541857833828544e-06, 0.9994480609893799, 0.033036526292562485, 0.0 ],
           [ -1.0, -4.515548425843008e-06, -8.718050708012015e-07, 0.0 ],
           [ 42.18000030517578, 18.745532989501953, 57.12709426879883, 1.0 ]
@@ -1372,9 +1373,9 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ -4.371138828673793e-08, -1.0, 5.536568092878724e-09, 0.0 ],
+          [ -4.371138828673793e-08, -1.0, 5.536559211094527e-09, 0.0 ],
           [ 1.399999976158142, -6.119594075926216e-08, 1.2210820443669945e-07, 0.0 ],
-          [ -8.720941480078181e-08, 5.535890856833703e-09, 0.999876856803894, 0.0 ],
+          [ -8.72093508519356e-08, 5.535878422335827e-09, 0.9998761415481567, 0.0 ],
           [ 76.16966247558594, 0.44135457277297974, -4.822421550750732, 1.0 ]
         ]
       },
@@ -2149,7 +2150,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 23.84933090209961, 13.639745712280273, -36.65716552734375, 1.0 ]
+          [ 23.84933090209961, 13.640000343322754, -36.65716552734375, 1.0 ]
         ]
       },
       "Index": 119,
@@ -2167,7 +2168,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 23.849000930786133, 20.47152328491211, -32.49620819091797, 1.0 ]
+          [ 23.849000930786133, 20.472000122070313, -32.49620819091797, 1.0 ]
         ]
       },
       "Index": 120,
@@ -2308,175 +2309,13 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 30.44976806640625, 16.951000213623047, -56.76599884033203, 1.0 ]
-        ]
-      },
-      "Index": 128,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatform1",
-      "ObjectTag": "TeslaRICellMovingPlatform1",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 28.30246925354004, 17.30203628540039, -56.87744903564453, 1.0 ]
-        ]
-      },
-      "Index": 129,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
-      "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 28.287002563476563, 17.302230834960938, -56.83259963989258, 1.0 ]
-        ]
-      },
-      "Index": 130,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
-      "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 9.099629210140847e-07, 1.6560627652192905e-12, -1.0, 0.0 ],
-          [ 0.0, 0.9999963045120239, 1.6560566936871246e-12, 0.0 ],
-          [ 1.0, 0.0, 9.099629210140847e-07, 0.0 ],
-          [ 29.43315887451172, 17.328655242919922, -54.502567291259766, 1.0 ]
-        ]
-      },
-      "Index": 131,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
-      "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
-          [ 0.0, 0.9999975562095642, -1.6560610304958145e-12, 0.0 ],
-          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 31.495622634887695, 17.339513778686523, -54.53406524658203, 1.0 ]
-        ]
-      },
-      "Index": 132,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
-      "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 32.73126220703125, 17.299686431884766, -56.82879638671875, 1.0 ]
-        ]
-      },
-      "Index": 133,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
-      "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 32.769744873046875, 17.29938507080078, -56.87053680419922, 1.0 ]
-        ]
-      },
-      "Index": 134,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
-      "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
-          [ 0.0, 0.9999919533729553, -1.6560517063571312e-12, 0.0 ],
-          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 29.430875778198242, 17.32699966430664, -59.2278938293457, 1.0 ]
-        ]
-      },
-      "Index": 135,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatFormDoorLeft",
-      "ObjectTag": "TeslaRICellMovingPlatFormDoorLeft",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 9.099629210140847e-07, 1.6560627652192905e-12, 1.0, 0.0 ],
-          [ -3.639841906988295e-06, 0.9999986886978149, 1.6560605968149456e-12, 0.0 ],
-          [ -1.0, -3.639846681835479e-06, 9.099629210140847e-07, 0.0 ],
-          [ 30.467655181884766, 17.327001571655273, -59.17866134643555, 1.0 ]
-        ]
-      },
-      "Index": 136,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_TeslaRICellMovingPlatformDoorRight",
-      "ObjectTag": "TeslaRICellMovingPlatformDoorRight",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
           [ 9.099629210140847e-07, 1.6560627652192905e-12, 1.0, 0.0 ],
           [ -3.639824626588961e-06, 0.9999939203262329, 1.6560526821390864e-12, 0.0 ],
           [ -1.0, -3.639846681835479e-06, 9.099629210140847e-07, 0.0 ],
           [ 24.36732292175293, 22.487504959106445, -56.78935241699219, 1.0 ]
         ]
       },
-      "Index": 137,
+      "Index": 128,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaAerialTramStandB",
       "ObjectTag": "TeslaAerialTramStandB",
@@ -2494,7 +2333,7 @@
           [ 36.490291595458984, 19.498905181884766, -56.76879119873047, 1.0 ]
         ]
       },
-      "Index": 138,
+      "Index": 129,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_Cable1",
       "ObjectTag": "Cable1",
@@ -2512,7 +2351,7 @@
           [ 51.13274002075195, 17.105628967285156, -56.76900100708008, 1.0 ]
         ]
       },
-      "Index": 139,
+      "Index": 130,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_Cable1",
       "ObjectTag": "Cable1",
@@ -2530,7 +2369,7 @@
           [ 54.30343246459961, 11.610528945922852, -57.04552459716797, 1.0 ]
         ]
       },
-      "Index": 140,
+      "Index": 131,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaAerialTramStandA",
       "ObjectTag": "TeslaAerialTramStandA",
@@ -2548,7 +2387,7 @@
           [ 54.5947151184082, 16.396015167236328, -56.77924728393555, 1.0 ]
         ]
       },
-      "Index": 141,
+      "Index": 132,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaAerialTramStand3",
       "ObjectTag": "TeslaAerialTramStand3",
@@ -2566,7 +2405,7 @@
           [ 54.749839782714844, -4.876999855041504, -55.71305465698242, 1.0 ]
         ]
       },
-      "Index": 142,
+      "Index": 133,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MineBuilding1",
       "ObjectTag": "MineBuilding1",
@@ -2584,7 +2423,7 @@
           [ -41.985958099365234, -81.7118148803711, -423.6727294921875, 1.0 ]
         ]
       },
-      "Index": 143,
+      "Index": 134,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_PUBGFrozenField1",
       "ObjectTag": "PUBGFrozenField1",
@@ -2602,7 +2441,7 @@
           [ -29.105846405029297, -79.00210571289063, -148.0270538330078, 1.0 ]
         ]
       },
-      "Index": 144,
+      "Index": 135,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment1",
       "ObjectTag": "TeslaEmbankment1",
@@ -2620,7 +2459,7 @@
           [ -247.81056213378906, -43.68299865722656, -446.1361083984375, 1.0 ]
         ]
       },
-      "Index": 145,
+      "Index": 136,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDown",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDown",
@@ -2638,7 +2477,7 @@
           [ -246.94290161132813, -43.58377456665039, -445.93609619140625, 1.0 ]
         ]
       },
-      "Index": 146,
+      "Index": 137,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2656,7 +2495,7 @@
           [ -247.24923706054688, -59.53396987915039, -400.3363952636719, 1.0 ]
         ]
       },
-      "Index": 147,
+      "Index": 138,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
@@ -2674,7 +2513,7 @@
           [ -214.24664306640625, -62.69972610473633, -481.17718505859375, 1.0 ]
         ]
       },
-      "Index": 148,
+      "Index": 139,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
@@ -2692,7 +2531,7 @@
           [ -195.4278564453125, -62.70000076293945, -486.4595031738281, 1.0 ]
         ]
       },
-      "Index": 149,
+      "Index": 140,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentRight",
       "ObjectTag": "MedievalDynastyCaveBentRight",
@@ -2710,7 +2549,7 @@
           [ -165.7362823486328, -62.70000076293945, -483.8046569824219, 1.0 ]
         ]
       },
-      "Index": 150,
+      "Index": 141,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraightIsland",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraightIsland",
@@ -2728,7 +2567,7 @@
           [ -150.0446014404297, -62.54785919189453, -481.23846435546875, 1.0 ]
         ]
       },
-      "Index": 151,
+      "Index": 142,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2746,7 +2585,7 @@
           [ -133.93161010742188, -62.54800033569336, -480.22344970703125, 1.0 ]
         ]
       },
-      "Index": 152,
+      "Index": 143,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2764,7 +2603,7 @@
           [ -117.9603042602539, -62.54800033569336, -471.7077331542969, 1.0 ]
         ]
       },
-      "Index": 153,
+      "Index": 144,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentRight",
       "ObjectTag": "MedievalDynastyCaveBentRight",
@@ -2782,7 +2621,7 @@
           [ -110.2676010131836, -62.54800033569336, -460.2647705078125, 1.0 ]
         ]
       },
-      "Index": 154,
+      "Index": 145,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentRight",
       "ObjectTag": "MedievalDynastyCaveBentRight",
@@ -2800,7 +2639,7 @@
           [ -111.06877136230469, -62.54793930053711, -461.2248840332031, 1.0 ]
         ]
       },
-      "Index": 155,
+      "Index": 146,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranching",
       "ObjectTag": "MedievalDynastyCaveBentBranching",
@@ -2818,7 +2657,7 @@
           [ -66.32609558105469, -78.4150161743164, -439.0292053222656, 1.0 ]
         ]
       },
-      "Index": 156,
+      "Index": 147,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
       "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
@@ -2836,7 +2675,7 @@
           [ -120.73829650878906, -60.70203399658203, -442.8841247558594, 1.0 ]
         ]
       },
-      "Index": 157,
+      "Index": 148,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingEnd",
       "ObjectTag": "MedievalDynastyCaveBentBranchingEnd",
@@ -2854,7 +2693,7 @@
           [ -252.11541748046875, -43.840545654296875, -454.2397766113281, 1.0 ]
         ]
       },
-      "Index": 158,
+      "Index": 149,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingStraight",
       "ObjectTag": "MedievalDynastyCaveBentBranchingStraight",
@@ -2872,7 +2711,7 @@
           [ -7.362637042999268, -0.01701216772198677, 26.304868698120117, 1.0 ]
         ]
       },
-      "Index": 159,
+      "Index": 150,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_LocomotiveBuilding2",
       "ObjectTag": "LocomotiveBuilding2",
@@ -2884,13 +2723,13 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ 0.9998273849487305, 1.9127173800370656e-06, 0.01008515153080225, 0.0 ],
+          [ 0.9998273849487305, 1.9127173800370656e-06, 0.010085135698318481, 0.0 ],
           [ -1.9033456055694842e-06, 0.9999998807907104, -9.618155445423326e-07, 0.0 ],
-          [ -0.01008515153080225, 9.42454050800734e-07, 0.9998273849487305, 0.0 ],
+          [ -0.010085135698318481, 9.424541076441528e-07, 0.9998273849487305, 0.0 ],
           [ 8.121509552001953, 12.079212188720703, 66.57096862792969, 1.0 ]
         ]
       },
-      "Index": 160,
+      "Index": 151,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_PersphoneMergeHouse1",
       "ObjectTag": "PersphoneMergeHouse1",
@@ -2908,7 +2747,7 @@
           [ -10.551471710205078, -0.017019957304000854, 8.883041381835938, 1.0 ]
         ]
       },
-      "Index": 161,
+      "Index": 152,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_RentierBuildingGroundFloor",
       "ObjectTag": "RentierBuildingGroundFloor",
@@ -2926,7 +2765,7 @@
           [ -66.46269989013672, 2.741795539855957, 141.31094360351563, 1.0 ]
         ]
       },
-      "Index": 162,
+      "Index": 153,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainBuilding",
       "ObjectTag": "TeslaMainBuilding",
@@ -2944,7 +2783,7 @@
           [ -73.8826904296875, -0.017015427350997925, 154.99822998046875, 1.0 ]
         ]
       },
-      "Index": 163,
+      "Index": 154,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainCage",
       "ObjectTag": "TeslaMainCage",
@@ -2962,7 +2801,7 @@
           [ -72.87614440917969, -0.017006367444992065, 155.5001220703125, 1.0 ]
         ]
       },
-      "Index": 164,
+      "Index": 155,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainCageFence",
       "ObjectTag": "TeslaMainCageFence",
@@ -2980,7 +2819,7 @@
           [ -19.052452087402344, 2.3753628730773926, -40.50480651855469, 1.0 ]
         ]
       },
-      "Index": 165,
+      "Index": 156,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainFloor",
       "ObjectTag": "TeslaMainFloor",
@@ -2998,7 +2837,7 @@
           [ -19.052000045776367, 58.978759765625, -40.505001068115234, 1.0 ]
         ]
       },
-      "Index": 166,
+      "Index": 157,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaMainFoundation",
       "ObjectTag": "TeslaMainFoundation",
@@ -3016,7 +2855,7 @@
           [ -33.85807800292969, -0.01702222228050232, 11.943496704101563, 1.0 ]
         ]
       },
-      "Index": 167,
+      "Index": 158,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaTowerB",
       "ObjectTag": "TeslaTowerB",
@@ -3034,7 +2873,7 @@
           [ -19.529024124145508, -8.408865928649902, 48.882286071777344, 1.0 ]
         ]
       },
-      "Index": 168,
+      "Index": 159,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
       "ObjectTag": "TeslaRockGroup2",
@@ -3052,7 +2891,7 @@
           [ -6.68206787109375, 19.758108139038086, 28.488628387451172, 1.0 ]
         ]
       },
-      "Index": 169,
+      "Index": 160,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofSnow1",
       "ObjectTag": "TeslaRoofSnow1",
@@ -3070,7 +2909,7 @@
           [ -6.8899688720703125, 17.157855987548828, 32.50492477416992, 1.0 ]
         ]
       },
-      "Index": 170,
+      "Index": 161,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofSnow1",
       "ObjectTag": "TeslaRoofSnow1",
@@ -3088,7 +2927,7 @@
           [ -7.5450921058654785, 16.54154396057129, 22.069725036621094, 1.0 ]
         ]
       },
-      "Index": 171,
+      "Index": 162,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofSnow1",
       "ObjectTag": "TeslaRoofSnow1",
@@ -3106,7 +2945,7 @@
           [ -4.238518238067627, 4.098412990570068, 25.6970272064209, 1.0 ]
         ]
       },
-      "Index": 172,
+      "Index": 163,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicleLong1",
       "ObjectTag": "TeslaIcicleLong1",
@@ -3124,7 +2963,7 @@
           [ -2.8200507164001465, 13.00913143157959, 32.19206619262695, 1.0 ]
         ]
       },
-      "Index": 173,
+      "Index": 164,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicle1",
       "ObjectTag": "TeslaIcicle1",
@@ -3142,7 +2981,7 @@
           [ -2.534005880355835, 19.022216796875, 28.15094757080078, 1.0 ]
         ]
       },
-      "Index": 174,
+      "Index": 165,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicle1",
       "ObjectTag": "TeslaIcicle1",
@@ -3160,7 +2999,7 @@
           [ -3.344977617263794, 12.453771591186523, 21.63297462463379, 1.0 ]
         ]
       },
-      "Index": 175,
+      "Index": 166,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicleLong2",
       "ObjectTag": "TeslaIcicleLong2",
@@ -3178,7 +3017,7 @@
           [ 10.225858688354492, 11.82414436340332, 63.384307861328125, 1.0 ]
         ]
       },
-      "Index": 176,
+      "Index": 167,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaIcicleLong1",
       "ObjectTag": "TeslaIcicleLong1",
@@ -3191,12 +3030,12 @@
       "Component": {
         "Transform": [
           [ -0.17977336049079895, -0.07427167892456055, -2.9936816692352295, 0.0 ],
-          [ -0.002971005393192172, 1.9993146657943726, -0.049423541873693466, 0.0 ],
+          [ -0.002971003297716379, 1.999313235282898, -0.04942350462079048, 0.0 ],
           [ 3.094411849975586, 4.7117264330154285e-06, -0.18582244217395782, 0.0 ],
           [ 9.684602737426758, 13.116704940795898, 67.03515625, 1.0 ]
         ]
       },
-      "Index": 177,
+      "Index": 168,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoof9",
       "ObjectTag": "TeslaRoof9",
@@ -3214,7 +3053,7 @@
           [ 7.328847885131836, -0.805838406085968, 59.36810302734375, 1.0 ]
         ]
       },
-      "Index": 178,
+      "Index": 169,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment1",
       "ObjectTag": "TeslaEmbankment1",
@@ -3232,7 +3071,7 @@
           [ 18.641780853271484, -0.017018824815750122, 48.64672088623047, 1.0 ]
         ]
       },
-      "Index": 179,
+      "Index": 170,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_RentierBuildingGroundFloor",
       "ObjectTag": "RentierBuildingGroundFloor",
@@ -3250,7 +3089,7 @@
           [ 18.6319522857666, 5.830273628234863, 48.39280700683594, 1.0 ]
         ]
       },
-      "Index": 180,
+      "Index": 171,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofRentier",
       "ObjectTag": "TeslaRoofRentier",
@@ -3268,7 +3107,7 @@
           [ -275.8435974121094, -187.053955078125, -314.6854248046875, 1.0 ]
         ]
       },
-      "Index": 181,
+      "Index": 172,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRockGroup5",
       "ObjectTag": "TeslaRockGroup5",
@@ -3286,7 +3125,7 @@
           [ -422.6053771972656, 20.809926986694336, -14.386154174804688, 1.0 ]
         ]
       },
-      "Index": 182,
+      "Index": 173,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaSnowMountain",
       "ObjectTag": "TeslaSnowMountain",
@@ -3304,7 +3143,7 @@
           [ 81.78468322753906, -0.017019957304000854, 5.054053783416748, 1.0 ]
         ]
       },
-      "Index": 183,
+      "Index": 174,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_RentierBuildingGroundFloor",
       "ObjectTag": "RentierBuildingGroundFloor",
@@ -3322,7 +3161,7 @@
           [ 81.78500366210938, 3.7838034629821777, 5.053999900817871, 1.0 ]
         ]
       },
-      "Index": 184,
+      "Index": 175,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaRoofRentier",
       "ObjectTag": "TeslaRoofRentier",
@@ -3340,7 +3179,7 @@
           [ 110.6831283569336, -0.017018824815750122, 8.088638305664063, 1.0 ]
         ]
       },
-      "Index": 185,
+      "Index": 176,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaTowerA",
       "ObjectTag": "TeslaTowerA",
@@ -3358,7 +3197,7 @@
           [ 79.35401916503906, -0.01702052354812622, -2.7948760986328125, 1.0 ]
         ]
       },
-      "Index": 186,
+      "Index": 177,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
       "ObjectTag": "TeslaEmbankment8",
@@ -3376,7 +3215,7 @@
           [ 81.99933624267578, -0.017019564285874367, -1.3543610572814941, 1.0 ]
         ]
       },
-      "Index": 187,
+      "Index": 178,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
       "ObjectTag": "TeslaEmbankment8",
@@ -3394,7 +3233,7 @@
           [ 60.27728271484375, 0.0, -6.5829925537109375, 1.0 ]
         ]
       },
-      "Index": 188,
+      "Index": 179,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TrackModule10M1",
       "ObjectTag": "TrackModule10M1",
@@ -3412,10 +3251,712 @@
           [ 60.07426834106445, 9.5367431640625e-07, 3.622971534729004, 1.0 ]
         ]
       },
-      "Index": 189,
+      "Index": 180,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TrackModule10M1",
       "ObjectTag": "TrackModule10M1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.6560627652192905e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999967813491821, 1.6560574526286453e-12, 0.0 ],
+          [ 1.0, 0.0, 9.099629210140847e-07, 0.0 ],
+          [ 48.03269958496094, -5.982517242431641, -39.72357940673828, 1.0 ]
+        ]
+      },
+      "Index": 181,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRICellWoodenPole",
+      "ObjectTag": "TeslaRICellWoodenPole",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
+          [ -1.8199176565758535e-06, 0.9999954700469971, -1.8199175428890157e-06, 0.0 ],
+          [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
+          [ 30.599224090576172, -2.9599344730377197, -63.754417419433594, 1.0 ]
+        ]
+      },
+      "Index": 182,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRICellWoodenPole",
+      "ObjectTag": "TeslaRICellWoodenPole",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.8578317703688008e-11, -1.0, 0.0 ],
+          [ 0.0, 0.9999986290931702, 1.8578291682835868e-11, 0.0 ],
+          [ 1.0, 0.0, 9.099629210140847e-07, 0.0 ],
+          [ 23.829280853271484, 1.2664031982421875, -37.13288116455078, 1.0 ]
+        ]
+      },
+      "Index": 183,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_CatWalkStair1",
+      "ObjectTag": "CatWalkStair1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.5, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 24.56064224243164, 0.0, -35.92880630493164, 1.0 ]
+        ]
+      },
+      "Index": 184,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_CatWalkBeamFencePole1",
+      "ObjectTag": "CatWalkBeamFencePole1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.699999988079071, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 24.748088836669922, 0.23258982598781586, -37.04093551635742, 1.0 ]
+        ]
+      },
+      "Index": 185,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_CatWalkBeamFencePole1",
+      "ObjectTag": "CatWalkBeamFencePole1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.5, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 23.205049514770508, 0.0, -35.92900085449219, 1.0 ]
+        ]
+      },
+      "Index": 186,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_CatWalkBeamFencePole1",
+      "ObjectTag": "CatWalkBeamFencePole1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.699999988079071, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 23.22809410095215, -2.384185791015625e-07, -37.04100036621094, 1.0 ]
+        ]
+      },
+      "Index": 187,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_CatWalkBeamFencePole1",
+      "ObjectTag": "CatWalkBeamFencePole1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.07128535956144333, -1.2973406171568058e-07, -0.07013129442930222, 0.0 ],
+          [ -5.435883920767992e-08, 0.10000000149011612, -1.2973406171568058e-07, 0.0 ],
+          [ 0.07013129442930222, -5.435883920767992e-08, -0.07128535956144333, 0.0 ],
+          [ 47.62353515625, -6.603024959564209, -69.19236755371094, 1.0 ]
+        ]
+      },
+      "Index": 188,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.09999886155128479, -1.819905151023704e-07, -0.00047497343621216714, 0.0 ],
+          [ -1.8112817201654252e-07, 0.10000000149011612, -1.8199054352407984e-07, 0.0 ],
+          [ 0.00047497343621216714, -1.811281435948331e-07, -0.09999886155128479, 0.0 ],
+          [ 33.05321502685547, -6.603036880493164, -73.56670379638672, 1.0 ]
+        ]
+      },
+      "Index": 189,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.09978146106004715, 8.684761354516013e-08, -0.006608645431697369, 0.0 ],
+          [ -9.626944574847585e-08, 0.10000000149011612, -1.393848805264497e-07, 0.0 ],
+          [ 0.006608645431697369, 1.45442385246497e-07, 0.09978146106004715, 0.0 ],
+          [ 26.130619049072266, -6.6030473709106445, -72.59098052978516, 1.0 ]
+        ]
+      },
+      "Index": 190,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.055992595851421356, 1.693902333954611e-07, 0.08285433053970337, 0.0 ],
+          [ -9.626901231740703e-08, 0.10000000149011612, -1.3938523579781759e-07, 0.0 ],
+          [ -0.08285433053970337, -1.7176271516206043e-09, 0.055992595851421356, 0.0 ],
+          [ 42.85074996948242, -6.603031158447266, -73.39712524414063, 1.0 ]
+        ]
+      },
+      "Index": 191,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -2.0019185740238754e-06, -3.643343005760302e-12, -2.200000047683716, 0.0 ],
+          [ 0.0, 6.0, -9.936390252263116e-12, 0.0 ],
+          [ 2.200000047683716, 0.0, -2.0019185740238754e-06, 0.0 ],
+          [ 62.204219818115234, -0.506594717502594, -29.00295639038086, 1.0 ]
+        ]
+      },
+      "Index": 192,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment5",
+      "ObjectTag": "TeslaEmbankment5",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -2.200000047683716, -4.003837148047751e-06, 0.0, 0.0 ],
+          [ -1.0919555279542692e-05, 6.0, -1.0919555279542692e-05, 0.0 ],
+          [ 7.286686011520604e-12, -4.003837148047751e-06, -2.200000047683716, 0.0 ],
+          [ 55.79983139038086, -0.5066093802452087, -35.94317626953125, 1.0 ]
+        ]
+      },
+      "Index": 193,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment5",
+      "ObjectTag": "TeslaEmbankment5",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.2000000476837158, 2.1839080091012875e-06, 1.0490732904600009e-07, 0.0 ],
+          [ -9.099617273022886e-06, 5.0, 9.09962909645401e-06, 0.0 ],
+          [ -1.0490335711210719e-07, -2.1839111923327437e-06, 1.2000000476837158, 0.0 ],
+          [ 57.66884994506836, -0.07871987670660019, -23.137582778930664, 1.0 ]
+        ]
+      },
+      "Index": 194,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment5",
+      "ObjectTag": "TeslaEmbankment5",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -2.729888819885673e-06, -4.968195126131558e-12, -3.0, 0.0 ],
+          [ 0.0, 2.999994993209839, -4.968186886195047e-12, 0.0 ],
+          [ 3.0, 0.0, -2.729888819885673e-06, 0.0 ],
+          [ 59.25309753417969, -1.4688420295715332, -33.124107360839844, 1.0 ]
+        ]
+      },
+      "Index": 195,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
+      "ObjectTag": "TeslaEmbankment8",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.6560627652192905e-12, 1.0, 0.0 ],
+          [ -3.639841906988295e-06, 0.9999986886978149, 1.6560605968149456e-12, 0.0 ],
+          [ -1.0, -3.639846681835479e-06, 9.099629210140847e-07, 0.0 ],
+          [ 64.5288314819336, -1.8839676840798347e-06, -27.12118911743164, 1.0 ]
+        ]
+      },
+      "Index": 196,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
+      "ObjectTag": "TeslaEmbankment8",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.005991379264742136, 2.1803145955345826e-08, -0.9999820590019226, 0.0 ],
+          [ -7.279686542460695e-06, 2.0, -9.073953394223011e-12, 0.0 ],
+          [ 0.9999820590019226, 3.6397780149854952e-06, 0.005991379264742136, 0.0 ],
+          [ 59.27466583251953, -2.100827441608999e-05, -23.57324981689453, 1.0 ]
+        ]
+      },
+      "Index": 197,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
+      "ObjectTag": "TeslaEmbankment8",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.3072739839553833, 6.797782816647668e-07, -0.9516211152076721, 0.0 ],
+          [ -0.17609889805316925, 0.9827271103858948, -0.056860800832509995, 0.0 ],
+          [ 0.935185432434082, 0.1850515753030777, 0.3019671142101288, 0.0 ],
+          [ 51.841060638427734, -0.10682747513055801, -24.78154182434082, 1.0 ]
+        ]
+      },
+      "Index": 198,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastySnowMan",
+      "ObjectTag": "MedievalDynastySnowMan",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.9997901916503906, 1.8195439679402625e-06, 0.020477689802646637, 0.0 ],
+          [ 1.8571937516753678e-06, 1.0, 1.819544195313938e-06, 0.0 ],
+          [ -0.020477689802646637, 1.8571935243016924e-06, -0.9997901916503906, 0.0 ],
+          [ 46.96408462524414, -1.2339138265815563e-05, -30.589529037475586, 1.0 ]
+        ]
+      },
+      "Index": 199,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastySnowMan",
+      "ObjectTag": "MedievalDynastySnowMan",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -2.0, -3.639851684056339e-06, 1.74845538936097e-07, 0.0 ],
+          [ -5.459777639771346e-06, 3.0, -5.459777639771346e-06, 0.0 ],
+          [ -1.7483891667779972e-07, -3.6398519114300143e-06, -2.0, 0.0 ],
+          [ 52.85408401489258, -2.393685917922994e-06, -30.422813415527344, 1.0 ]
+        ]
+      },
+      "Index": 200,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
+      "ObjectTag": "TeslaEmbankment8",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
+          [ -1.8199135638496955e-06, 0.9999932050704956, -1.8199134501628578e-06, 0.0 ],
+          [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
+          [ 9.902199745178223, -2.6790647211782925e-07, -11.212289810180664, 1.0 ]
+        ]
+      },
+      "Index": 201,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_WoodenWallRetaning6Snow",
+      "ObjectTag": "WoodenWallRetaning6Snow",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.9833577871322632, -1.7896381905302405e-06, 0.18167877197265625, 0.0 ],
+          [ -2.1505677523236955e-06, 1.0, -1.789638417903916e-06, 0.0 ],
+          [ -0.18167877197265625, -2.15056752495002e-06, -0.9833577871322632, 0.0 ],
+          [ 7.041738510131836, 1.304210570651776e-07, -10.891602516174316, 1.0 ]
+        ]
+      },
+      "Index": 202,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_WoodenWallRetaning6Snow",
+      "ObjectTag": "WoodenWallRetaning6Snow",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.3416362702846527, -5.159730562809273e-07, -0.9398320317268372, 0.0 ],
+          [ 4.0932707179308636e-07, 1.0, -4.0021200220508035e-07, 0.0 ],
+          [ 0.9398320317268372, -2.4797174091872876e-07, 0.3416362702846527, 0.0 ],
+          [ 77.8022232055664, -5.994543528231588e-08, 17.782562255859375, 1.0 ]
+        ]
+      },
+      "Index": 203,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_WoodenWallRetaning6Snow",
+      "ObjectTag": "WoodenWallRetaning6Snow",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.34556999802589417, 0.0, -0.9383924007415771, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.9383924007415771, 0.0, 0.34556999802589417, 0.0 ],
+          [ 78.69853210449219, 0.0, 15.090155601501465, 1.0 ]
+        ]
+      },
+      "Index": 204,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_WoodenWallRetaning6Snow",
+      "ObjectTag": "WoodenWallRetaning6Snow",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.1137475073337555, -1.1491572138311312e-07, -0.9935089945793152, 0.0 ],
+          [ 2.786407549137948e-08, 1.0, -1.1247633580069305e-07, 0.0 ],
+          [ 0.9935089945793152, -1.4889327104583572e-08, 0.1137475073337555, 0.0 ],
+          [ 78.42304992675781, 8.445394428235886e-07, 11.323026657104492, 1.0 ]
+        ]
+      },
+      "Index": 205,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_WoodenWallRetaning6Snow",
+      "ObjectTag": "WoodenWallRetaning6Snow",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.9976367950439453, -1.815624955270323e-06, -0.06852351874113083, 0.0 ],
+          [ -1.6952164969552541e-06, 1.0, -1.8156480336983805e-06, 0.0 ],
+          [ 0.06852351874113083, -1.6951950101429247e-06, -0.9976367950439453, 0.0 ],
+          [ 47.6165657043457, 2.08803129196167, -50.63885498046875, 1.0 ]
+        ]
+      },
+      "Index": 206,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRICellRailRoadSignalBox",
+      "ObjectTag": "TeslaRICellRailRoadSignalBox",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.06428724527359009, 2.7027076043850684e-07, -1.1982768774032593, 0.0 ],
+          [ 6.037216060406081e-09, 0.9999983906745911, 2.2522523579482367e-07, 0.0 ],
+          [ 0.9985639452934265, 6.037225830368698e-09, -0.053572699427604675, 0.0 ],
+          [ 46.572227478027344, 2.0804848670959473, -55.22600555419922, 1.0 ]
+        ]
+      },
+      "Index": 207,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_LocomotiveMetalBeam1",
+      "ObjectTag": "LocomotiveMetalBeam1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.6560627652192905e-12, -1.0, 0.0 ],
+          [ -3.3651303965598345e-11, 1.0, 1.6560321907180264e-12, 0.0 ],
+          [ 1.0, 3.3651303965598345e-11, 9.099629210140847e-07, 0.0 ],
+          [ 54.04957962036133, 7.994497776031494, -60.22381591796875, 1.0 ]
+        ]
+      },
+      "Index": 208,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_ZipLineBase1",
+      "ObjectTag": "ZipLineBase1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 2.4236581325531006, 0.0, -0.613091230392456, 0.0 ],
+          [ 0.0, 2.5, 0.0, 0.0 ],
+          [ 0.613091230392456, 0.0, 2.4236581325531006, 0.0 ],
+          [ 43.871864318847656, 1.2834471464157104, -96.30415344238281, 1.0 ]
+        ]
+      },
+      "Index": 209,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentEntrance",
+      "ObjectTag": "MedievalDynastyCaveBentEntrance",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.1153503954410553, -3.620137022153358e-06, -0.4865124225616455, 0.0 ],
+          [ -1.4672349379907246e-06, 0.4999999701976776, -3.372621449670987e-06, 0.0 ],
+          [ 0.4865124225616455, 6.495893671853992e-07, -0.1153503954410553, 0.0 ],
+          [ 93.64039611816406, -43.17243957519531, -116.79348754882813, 1.0 ]
+        ]
+      },
+      "Index": 210,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.1916118860244751, -1.1267155059613287e-05, -0.4618275463581085, 0.0 ],
+          [ -9.621860044717323e-06, 0.4999999701976776, -8.206340680771973e-06, 0.0 ],
+          [ 0.4618275463581085, 5.742414487031056e-06, -0.1916118860244751, 0.0 ],
+          [ -10.692941665649414, -43.172550201416016, -115.77806854248047, 1.0 ]
+        ]
+      },
+      "Index": 211,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaRockGroup2",
+      "ObjectTag": "TeslaRockGroup2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -2.442291736602783, -4.444790192792425e-06, 0.5340511202812195, 0.0 ],
+          [ -5.521747880266048e-06, 2.5, -4.444790192792425e-06, 0.0 ],
+          [ -0.5340511202812195, -5.521747880266048e-06, -2.442291736602783, 0.0 ],
+          [ 30.517086029052734, -19.115991592407227, -154.51673889160156, 1.0 ]
+        ]
+      },
+      "Index": 212,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveBentBranchingDrop",
+      "ObjectTag": "MedievalDynastyCaveBentBranchingDrop",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.0, 0.0, 0.0, 1.0 ]
+        ]
+      },
+      "Index": 213,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_Rock1",
+      "ObjectTag": "Rock1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 53.050899505615234, 4.76837158203125e-07, -93.38851928710938, 1.0 ]
+        ]
+      },
+      "Index": 214,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_RockIce1",
+      "ObjectTag": "RockIce1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 19.689298629760742, 0.0, -92.08252716064453, 1.0 ]
+        ]
+      },
+      "Index": 215,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_RockIce2",
+      "ObjectTag": "RockIce2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.5, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.5, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.5, 0.0 ],
+          [ 53.337921142578125, 6.449319362640381, -102.80191802978516, 1.0 ]
+        ]
+      },
+      "Index": 216,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockD",
+      "ObjectTag": "MedievalDynastyCaveRockD",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.527343213558197, 9.597255257176585e-07, 2.9532880783081055, 0.0 ],
+          [ 8.501240245095687e-08, 3.0, -9.597254120308207e-07, 0.0 ],
+          [ -2.9532880783081055, -8.501240955638423e-08, -0.527343213558197, 0.0 ],
+          [ 29.923507690429688, 6.449319362640381, -98.3723373413086, 1.0 ]
+        ]
+      },
+      "Index": 217,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_MedievalDynastyCaveRockD",
+      "ObjectTag": "MedievalDynastyCaveRockD",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.9601902961730957, 0.0, -0.3970567286014557, 0.0 ],
+          [ 0.0, 4.0, 0.0, 0.0 ],
+          [ 0.3970567286014557, 0.0, 1.9601902961730957, 0.0 ],
+          [ 42.51253890991211, -1.361519694328308, -100.7852554321289, 1.0 ]
+        ]
+      },
+      "Index": 218,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveFootBridge1",
+      "ObjectTag": "InstanceLocomotiveFootBridge1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.06441463530063629, 1.1722986670292812e-07, -0.9979211688041687, 0.0 ],
+          [ 3.77962239284102e-09, 0.9999973177909851, 1.1722978854322719e-07, 0.0 ],
+          [ 0.9979211688041687, 3.779625057376279e-09, -0.06441463530063629, 0.0 ],
+          [ 45.20651626586914, 0.007069034967571497, -98.43150329589844, 1.0 ]
+        ]
+      },
+      "Index": 219,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_ZipLineBase1",
+      "ObjectTag": "ZipLineBase1",
       "PlayAnimationIndex": 0,
       "ShaderPassIndex": 0,
       "Type": "Basic"
@@ -16050,8 +16591,8 @@
         {
           "Instance_Center": [ 7.000335693359375, -0.017016559839248657, 50.329742431640625, 0.0 ],
           "Instance_Index": 3,
-          "Instance_Rotation": [ -0.07110273092985153, -0.22814908623695374, 0.016708621755242348, 0.9708827137947083 ],
-          "Instance_Scale": [ 0.9999971985816956, 0.9999972581863403, 0.9999989867210388, 0.0 ],
+          "Instance_Rotation": [ -0.07110275328159332, -0.22814910113811493, 0.0167086124420166, 0.9708827137947083 ],
+          "Instance_Scale": [ 0.9999967217445374, 0.9999971985816956, 0.9999985694885254, 0.0 ],
           "Instance_Translation": [ 7.000335693359375, -0.017016559839248657, 50.329742431640625, 0.0 ]
         },
         {
@@ -16064,8 +16605,8 @@
         {
           "Instance_Center": [ 14.065910339355469, -0.017019957304000854, -15.9036865234375, 0.0 ],
           "Instance_Index": 5,
-          "Instance_Rotation": [ 0.006280731409788132, 0.2606596350669861, 0.023254862055182457, 0.9651302099227905 ],
-          "Instance_Scale": [ 0.9999997615814209, 0.9999922513961792, 0.9999971389770508, 0.0 ],
+          "Instance_Rotation": [ 0.00628075934946537, 0.2606596350669861, 0.02325485460460186, 0.9651302099227905 ],
+          "Instance_Scale": [ 0.9999997615814209, 0.9999897480010986, 0.9999971389770508, 0.0 ],
           "Instance_Translation": [ 14.065910339355469, -0.017019957304000854, -15.9036865234375, 0.0 ]
         },
         {
@@ -16078,8 +16619,8 @@
         {
           "Instance_Center": [ 34.56605529785156, -0.01701769232749939, 42.239898681640625, 0.0 ],
           "Instance_Index": 7,
-          "Instance_Rotation": [ -0.3289763629436493, 0.19842128455638885, 0.1632915884256363, 0.90870201587677 ],
-          "Instance_Scale": [ 0.999998927116394, 0.9999988079071045, 0.9999973177909851, 0.0 ],
+          "Instance_Rotation": [ -0.3289763629436493, 0.19842129945755005, 0.1632915884256363, 0.9087020754814148 ],
+          "Instance_Scale": [ 0.9999988675117493, 0.9999988079071045, 0.9999973177909851, 0.0 ],
           "Instance_Translation": [ 34.56605529785156, -0.01701769232749939, 42.239898681640625, 0.0 ]
         },
         {
@@ -16115,13 +16656,13 @@
           "Instance_Index": 12,
           "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
           "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
-          "Instance_Translation": [ 74.48226928710938, -0.017021089792251587, -2.287109375, 0.0 ]
+          "Instance_Translation": [ 75.68556213378906, -0.017021089792251587, -0.7922219038009644, 0.0 ]
         },
         {
           "Instance_Center": [ 55.346771240234375, -0.017021089792251587, 3.923065185546875, 0.0 ],
           "Instance_Index": 13,
           "Instance_Rotation": [ -0.0, -0.6669583320617676, -0.0, 0.7450950145721436 ],
-          "Instance_Scale": [ 0.9999984502792358, 1.0, 0.9999984502792358, 0.0 ],
+          "Instance_Scale": [ 0.999997615814209, 1.0, 0.999997615814209, 0.0 ],
           "Instance_Translation": [ 55.346771240234375, -0.017021089792251587, 3.923065185546875, 0.0 ]
         },
         {
@@ -16136,20 +16677,20 @@
           "Instance_Index": 15,
           "Instance_Rotation": [ -0.0, -0.35267680883407593, -0.0, 0.9357451796531677 ],
           "Instance_Scale": [ 0.9999994039535522, 1.0, 0.9999994039535522, 0.0 ],
-          "Instance_Translation": [ 71.6896743774414, -0.01702052354812622, -12.605224609375, 0.0 ]
+          "Instance_Translation": [ 72.70257568359375, -0.01702052354812622, -13.758072853088379, 0.0 ]
         },
         {
           "Instance_Center": [ 55.421958923339844, -0.01702222228050232, -42.48046875, 0.0 ],
           "Instance_Index": 16,
-          "Instance_Rotation": [ -0.0, -0.14028654992580414, -0.0, 0.9901109337806702 ],
-          "Instance_Scale": [ 0.9999992847442627, 1.0, 0.9999992847442627, 0.0 ],
+          "Instance_Rotation": [ -0.0, -0.14028653502464294, -0.0, 0.9901109337806702 ],
+          "Instance_Scale": [ 0.9999992251396179, 1.0, 0.9999992251396179, 0.0 ],
           "Instance_Translation": [ 55.421958923339844, -0.01702222228050232, -42.48046875, 0.0 ]
         },
         {
           "Instance_Center": [ 30.523452758789063, -0.017021089792251587, -39.966583251953125, 0.0 ],
           "Instance_Index": 17,
-          "Instance_Rotation": [ -4.73823718039057e-07, 0.9177847504615784, -4.73823718039057e-07, 0.39707815647125244 ],
-          "Instance_Scale": [ 0.9999994039535522, 1.0, 0.9999994039535522, 0.0 ],
+          "Instance_Rotation": [ -4.738237464607664e-07, 0.9177847504615784, -4.73823718039057e-07, 0.39707818627357483 ],
+          "Instance_Scale": [ 0.9999953508377075, 1.0, 0.9999953508377075, 0.0 ],
           "Instance_Translation": [ 30.523452758789063, -0.017021089792251587, -39.966583251953125, 0.0 ]
         },
         {
@@ -16336,6 +16877,261 @@
       "ObjectTag": "PUBGSnowField6",
       "ShaderPassIndex": 6,
       "Type": "Instance"
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.0, 0.0, 0.0, 1.0 ]
+        ]
+      },
+      "Index": 21,
+      "InstanceCount": 22,
+      "InstanceInfo_Json": [
+        {
+          "Instance_Center": [ 52.14314270019531, -4.76837158203125e-07, -46.628021240234375, 0.0 ],
+          "Instance_Index": 0,
+          "Instance_Rotation": [ -0.0, 0.2641662061214447, -0.0, 0.9644771814346313 ],
+          "Instance_Scale": [ 0.9999997615814209, 1.0, 0.9999997615814209, 0.0 ],
+          "Instance_Translation": [ 50.982444763183594, -4.76837158203125e-07, -47.13923645019531, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 25.68759536743164, 0.0, -27.684707641601563, 0.0 ],
+          "Instance_Index": 1,
+          "Instance_Rotation": [ -0.0, 0.3296487033367157, -0.0, 0.9441036581993103 ],
+          "Instance_Scale": [ 0.999999463558197, 1.0, 0.999999463558197, 0.0 ],
+          "Instance_Translation": [ 26.18572425842285, 0.0, -29.33551788330078, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 33.413455963134766, -9.5367431640625e-07, -27.340103149414063, 0.0 ],
+          "Instance_Index": 2,
+          "Instance_Rotation": [ -0.0, -0.7012054324150085, -0.0, 0.7129592299461365 ],
+          "Instance_Scale": [ 0.999959409236908, 1.0, 0.999959409236908, 0.0 ],
+          "Instance_Translation": [ 33.38386917114258, -9.5367431640625e-07, -29.120006561279297, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 39.43647384643555, -9.5367431640625e-07, -29.101085662841797, 0.0 ],
+          "Instance_Index": 3,
+          "Instance_Rotation": [ -1.6766632597864373e-06, -0.5834609270095825, 1.4628984672526713e-06, 0.8121411800384521 ],
+          "Instance_Scale": [ 0.9999914169311523, 0.9999999403953552, 0.9999914169311523, 0.0 ],
+          "Instance_Translation": [ 37.66396713256836, -0.20829570293426514, -31.594221115112305, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 42.826778411865234, 0.0, -29.93201446533203, 0.0 ],
+          "Instance_Index": 4,
+          "Instance_Rotation": [ 1.929299514813465e-06, 0.7688584923744202, -2.505021825527365e-07, -0.6394189596176147 ],
+          "Instance_Scale": [ 0.9999526739120483, 1.0, 0.9999526739120483, 0.0 ],
+          "Instance_Translation": [ 43.19436264038086, -6.628424671362154e-06, -31.914737701416016, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 19.814537048339844, 0.0, -38.90690612792969, 0.0 ],
+          "Instance_Index": 5,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 19.814537048339844, 0.0, -38.90690612792969, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 23.237478256225586, 9.5367431640625e-07, -43.75600051879883, 0.0 ],
+          "Instance_Index": 6,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 23.237478256225586, 9.5367431640625e-07, -43.75600051879883, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 22.670795440673828, 0.0, -53.112613677978516, 0.0 ],
+          "Instance_Index": 7,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 23.929035186767578, 0.0, -51.8760871887207, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 26.990520477294922, 9.5367431640625e-07, -53.90842056274414, 0.0 ],
+          "Instance_Index": 8,
+          "Instance_Rotation": [ 1.1171174492119462e-06, 0.9648498892784119, 1.1171174492119462e-06, -0.2628016769886017 ],
+          "Instance_Scale": [ 1.000000238418579, 1.0, 1.000000238418579, 0.0 ],
+          "Instance_Translation": [ 26.88736343383789, 7.735789608886989e-07, -53.61326599121094, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 53.95906066894531, 0.0, -12.469354629516602, 0.0 ],
+          "Instance_Index": 9,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 53.95906066894531, 0.0, -12.469354629516602, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 73.33075714111328, -9.5367431640625e-07, 11.829792022705078, 0.0 ],
+          "Instance_Index": 10,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 73.33075714111328, -9.5367431640625e-07, 11.829792022705078, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 23.43343162536621, 0.0, 55.4910774230957, 0.0 ],
+          "Instance_Index": 11,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 23.43343162536621, 0.0, 55.4910774230957, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 15.270329475402832, -1.9073486328125e-06, -9.948444366455078, 0.0 ],
+          "Instance_Index": 12,
+          "Instance_Rotation": [ -2.8581007427419536e-07, 0.7211292386054993, -2.8581007427419536e-07, 0.6928005814552307 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 16.160804748535156, -2.4519529233657522e-06, -12.07956600189209, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 12.239235877990723, 1.9073486328125e-06, -9.869714736938477, 0.0 ],
+          "Instance_Index": 13,
+          "Instance_Rotation": [ -0.0, 0.3815903067588806, -0.0, 0.924331545829773 ],
+          "Instance_Scale": [ 0.9999999403953552, 1.0, 0.9999999403953552, 0.0 ],
+          "Instance_Translation": [ 12.239235877990723, -0.17712688446044922, -13.835128784179688, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 8.293701171875, 1.9073486328125e-06, -9.892772674560547, 0.0 ],
+          "Instance_Index": 14,
+          "Instance_Rotation": [ 4.258030458004214e-06, 0.783561110496521, -2.1059913706267253e-06, 0.6213147044181824 ],
+          "Instance_Scale": [ 0.9999988079071045, 1.0, 0.9999988079071045, 0.0 ],
+          "Instance_Translation": [ 1.838011384010315, -0.3576466143131256, -10.675748825073242, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 3.8437767028808594, -1.9073486328125e-06, -9.822744369506836, 0.0 ],
+          "Instance_Index": 15,
+          "Instance_Rotation": [ -0.022024482488632202, 0.9393537044525146, 0.06144718453288078, 0.33668065071105957 ],
+          "Instance_Scale": [ 0.9999997615814209, 0.9999994039535522, 1.0000019073486328, 0.0 ],
+          "Instance_Translation": [ -1.7556439638137817, -0.950858473777771, -8.186467170715332, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 0.8089599609375, 0.0, -9.60213851928711, 0.0 ],
+          "Instance_Index": 16,
+          "Instance_Rotation": [ 0.018886614590883255, 0.9858449101448059, -0.04237240552902222, -0.16111378371715546 ],
+          "Instance_Scale": [ 0.9999937415122986, 0.9999997615814209, 0.9999951124191284, 0.0 ],
+          "Instance_Translation": [ -2.8103549480438232, -0.3042767345905304, -7.379687786102295, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 0.0, 0.0, 0.0, 0.0 ],
+          "Instance_Index": 17,
+          "Instance_Rotation": [ 1.0924261459877016e-06, 0.9740093350410461, -1.0924261459877016e-06, 0.22650790214538574 ],
+          "Instance_Scale": [ 1.000000238418579, 1.0, 1.000000238418579, 0.0 ],
+          "Instance_Translation": [ -6.507719039916992, -0.32427385449409485, 5.295991627463081e-07, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 0.6931495666503906, -1.9073486328125e-06, -5.859516143798828, 0.0 ],
+          "Instance_Index": 18,
+          "Instance_Rotation": [ 8.212489888137497e-07, 0.9956526160240173, 8.212489888137497e-07, 0.09314439445734024 ],
+          "Instance_Scale": [ 0.9999998807907104, 1.0, 0.9999998807907104, 0.0 ],
+          "Instance_Translation": [ -4.727340221405029, -0.6123712062835693, -3.55997896194458, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 0.5949897766113281, 5.7220458984375e-06, 16.50632095336914, 0.0 ],
+          "Instance_Index": 19,
+          "Instance_Rotation": [ -1.4377882280314225e-06, 0.9637546539306641, -2.268635171276401e-06, -0.26678991317749023 ],
+          "Instance_Scale": [ 0.9999576807022095, 1.0, 0.9999576807022095, 0.0 ],
+          "Instance_Translation": [ -12.90112590789795, 5.7220458984375e-06, 16.50632095336914, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 68.86616516113281, 0.0, -31.143543243408203, 0.0 ],
+          "Instance_Index": 20,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 68.86616516113281, 0.0, -31.143543243408203, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 50.71952438354492, -9.5367431640625e-07, -39.9412841796875, 0.0 ],
+          "Instance_Index": 21,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 50.71952438354492, -9.5367431640625e-07, -39.9412841796875, 0.0 ]
+        }
+      ],
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaEmbankment8",
+      "ObjectTag": "TeslaEmbankment8",
+      "ShaderPassIndex": 0,
+      "Type": "Instance"
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.0, 0.0, 0.0, 1.0 ]
+        ]
+      },
+      "Index": 22,
+      "InstanceCount": 9,
+      "InstanceInfo_Json": [
+        {
+          "Instance_Center": [ 33.09136962890625, 0.0, -92.49794006347656, 0.0 ],
+          "Instance_Index": 0,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 33.09136962890625, 0.0, -92.49794006347656, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 26.112789154052734, -1.9073486328125e-06, -87.76372528076172, 0.0 ],
+          "Instance_Index": 1,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 26.112789154052734, -1.9073486328125e-06, -87.76372528076172, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 31.647083282470703, 0.0, -86.10211181640625, 0.0 ],
+          "Instance_Index": 2,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 31.647083282470703, 0.0, -86.10211181640625, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 26.178775787353516, 0.0, -83.45419311523438, 0.0 ],
+          "Instance_Index": 3,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 26.178775787353516, 0.0, -83.45419311523438, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 69.57250213623047, -1.9073486328125e-06, -81.80067443847656, 0.0 ],
+          "Instance_Index": 4,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 69.57250213623047, -1.9073486328125e-06, -81.80067443847656, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 66.49055480957031, -1.9073486328125e-06, -76.94866943359375, 0.0 ],
+          "Instance_Index": 5,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 66.49055480957031, -1.9073486328125e-06, -76.94866943359375, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 62.24717330932617, 0.0, -71.09159851074219, 0.0 ],
+          "Instance_Index": 6,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 62.24717330932617, 0.0, -71.09159851074219, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 67.77383422851563, -1.9073486328125e-06, -71.50104522705078, 0.0 ],
+          "Instance_Index": 7,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 67.77383422851563, -1.9073486328125e-06, -71.50104522705078, 0.0 ]
+        },
+        {
+          "Instance_Center": [ 58.331687927246094, 0.0, -66.44854736328125, 0.0 ],
+          "Instance_Index": 8,
+          "Instance_Rotation": [ -0.0, 0.0, -0.0, 1.0 ],
+          "Instance_Scale": [ 1.0, 1.0, 1.0, 0.0 ],
+          "Instance_Translation": [ 58.331687927246094, 0.0, -66.44854736328125, 0.0 ]
+        }
+      ],
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TreeSnowOzSpruceWind",
+      "ObjectTag": "TreeSnowOzSpruceWind",
+      "ShaderPassIndex": 1,
+      "Type": "Instance"
     }
   ],
   "Interact_Json": [
@@ -16360,14 +17156,17 @@
       "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 6,
+      "InteractType": 14,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_InteractCoalWagon1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -16376,6 +17175,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -16386,7 +17186,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16399,7 +17200,7 @@
           [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
           [ 0.0, 0.9999987483024597, -1.656062982059725e-12, 0.0 ],
           [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 66.17658996582031, 1.4469779330283927e-07, -6.607514381408691, 1.0 ]
+          [ 73.99967193603516, 1.4469779330283927e-07, -6.7266035079956055, 1.0 ]
         ]
       },
       "Enable": false,
@@ -16409,14 +17210,17 @@
       "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 3.4000000953674316, 1.0, 0.5, 0.0 ],
       "InteractGroupIndex": 0,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 3.0, 1.0, 0.5, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 0,
       "InteractType": 5,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_MergeCoalWagon",
       "MoveColliderCenter": [ 65.5, 1.0, -6.568999767303467, 0.0 ],
       "MoveColliderSize": [ 8.5, 1.0, 1.0, 0.0 ],
@@ -16425,6 +17229,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": true,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": true,
       "Rotate": false,
@@ -16435,7 +17240,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16448,24 +17254,27 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 66.17658996582031, -2.3999998569488525, -5.407514572143555, 1.0 ]
+          [ 73.99967193603516, -2.3999998569488525, -5.526603698730469, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 2,
-      "InteractColliderCenter": [ 0.0, 4.0, 0.30000001192092896, 0.0 ],
+      "InteractColliderCenter": [ 0.0, 4.0, 0.800000011920929, 0.0 ],
       "InteractColliderSize": [ 0.30000001192092896, 1.0, 0.25, 0.0 ],
       "InteractGroupIndex": 0,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": true,
       "InteractMoveColliderCenter": [ 0.0, 6.0, -1.2000000476837158, 0.0 ],
       "InteractMoveColliderSize": [ 2.200000047683716, 1.0, 1.2000000476837158, 0.0 ],
-      "InteractState": 1,
+      "InteractReverseLadderCount": 4,
+      "InteractState": 0,
       "InteractType": 10,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadder4",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -16474,7 +17283,8 @@
       "OffsetPosition": [ 0.0, -2.4000000953674316, 1.2000000476837158, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
-      "RootMoveRate": [ 1.0, 1.5, 1.0, 0.0 ],
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2999999523162842, 0.8500000238418579, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 90.0,
@@ -16484,7 +17294,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16497,24 +17308,27 @@
           [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
           [ -1.8199259557150071e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
           [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
-          [ 66.17658996582031, -2.3999998569488525, -7.807514190673828, 1.0 ]
+          [ 73.99967193603516, -2.3999998569488525, -7.926603317260742, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 3,
-      "InteractColliderCenter": [ 0.0, 4.0, -0.30000001192092896, 0.0 ],
+      "InteractColliderCenter": [ 0.0, 4.0, -0.800000011920929, 0.0 ],
       "InteractColliderSize": [ 0.30000001192092896, 1.0, 0.25, 0.0 ],
       "InteractGroupIndex": 0,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": true,
       "InteractMoveColliderCenter": [ 0.0, 6.0, 1.2000000476837158, 0.0 ],
       "InteractMoveColliderSize": [ 2.200000047683716, 1.0, 1.2000000476837158, 0.0 ],
-      "InteractState": 1,
+      "InteractReverseLadderCount": 4,
+      "InteractState": 0,
       "InteractType": 10,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadder4",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -16523,7 +17337,8 @@
       "OffsetPosition": [ 0.0, -2.4000000953674316, -1.2000000476837158, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
-      "RootMoveRate": [ 1.0, 1.5, 1.0, 0.0 ],
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2999999523162842, 0.8500000238418579, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 90.0,
@@ -16533,7 +17348,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16556,14 +17372,17 @@
       "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 0.800000011920929, 1.0, 3.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 0.800000011920929, 1.0, 3.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 0,
       "InteractType": 5,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_InteractCoalWagon3",
       "MoveColliderCenter": [ 60.02336883544922, 0.9999999403953552, -1.279335618019104, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 8.0, 0.0 ],
@@ -16572,6 +17391,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": true,
       "Rotate": false,
@@ -16582,7 +17402,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16605,14 +17426,17 @@
       "InteractColliderCenter": [ -0.699999988079071, 0.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 0.699999988079071, 0.800000011920929, 0.699999988079071, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ -0.699999988079071, 0.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 0.699999988079071, 0.800000011920929, 0.699999988079071, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 0,
       "InteractType": 4,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam5",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -16621,6 +17445,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 0.6000000238418579, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -16631,7 +17456,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16654,14 +17480,17 @@
       "InteractColliderCenter": [ 0.0, 0.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 0.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 0,
       "InteractType": 3,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -16670,6 +17499,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 2.0, 3.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -16680,7 +17510,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16690,10 +17521,10 @@
       "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
-          [ -0.9996196031570435, 1.8192334891864448e-06, 0.01484826859086752, 0.0 ],
-          [ 1.8469528413334046e-06, 0.9999983310699463, 1.8197220015281346e-06, 0.0 ],
-          [ -0.01484826859086752, 1.846456939347263e-06, -0.9996196031570435, 0.0 ],
-          [ 74.31480407714844, 4.396507263183594, -19.883953094482422, 1.0 ]
+          [ 0.9999816417694092, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.9999816417694092, 0.0, 0.0 ],
+          [ 0.0, 0.0, 0.9998700618743896, 0.0 ],
+          [ 64.44208526611328, 4.365223407745361, -18.56820297241211, 1.0 ]
         ]
       },
       "Enable": false,
@@ -16703,71 +17534,26 @@
       "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": 1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 22,
+      "InteractType": 26,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
-      "ModelTag": "Prototype_Component_Model_ChainInteraction2",
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoor01Rotate90",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "ObjectTag": "LocomotiveInteractDoorB01Rotate90",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Owner": true,
-      "PlayAnimationIndex": 0,
-      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootTranslate": false,
-      "Rotate": false,
-      "RotationAngle": 90.0,
-      "RotationSpeed": 90.0,
-      "RotationType": 1,
-      "ShaderPassIndex": 0,
-      "SplineJsonPath": "",
-      "Type": "Interact",
-      "UpdateCellJson": null,
-      "UseGravity": true
-    },
-    {
-      "AnimType": false,
-      "Arrival": false,
-      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "Component": {
-        "Transform": [
-          [ 0.999991238117218, 0.0, 0.0, 0.0 ],
-          [ 0.0, 0.999991238117218, 0.0, 0.0 ],
-          [ 0.0, 0.0, 0.9998701214790344, 0.0 ],
-          [ 64.44208526611328, 4.365223407745361, -18.56820297241211, 1.0 ]
-        ]
-      },
-      "Enable": false,
-      "EnableJsonPath": "",
-      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 8,
-      "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "InteractGroupIndex": 1,
-      "InteractLevel": 3,
-      "InteractMove": false,
-      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "InteractState": 1,
-      "InteractType": 23,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "LevelChange": false,
-      "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoor01Rotate90",
-      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "ChainInteraction2",
-      "Offset": false,
-      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": true,
@@ -16778,7 +17564,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16788,35 +17575,39 @@
       "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
-          [ 0.9999886751174927, 0.0, 0.0, 0.0 ],
-          [ 0.0, 0.9999886751174927, 0.0, 0.0 ],
-          [ 0.0, 0.0, 0.9999743103981018, 0.0 ],
+          [ 0.9999845623970032, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.9999845623970032, 0.0, 0.0 ],
+          [ 0.0, 0.0, 0.999974250793457, 0.0 ],
           [ 71.12496185302734, 4.351385593414307, -18.535642623901367, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 9,
+      "Index": 8,
       "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": 1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 23,
+      "InteractType": 26,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoor01Rotate90",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "LocomotiveInteractDoor01Rotate90",
+      "ObjectTag": "ChainInteraction2",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": true,
@@ -16826,13 +17617,9 @@
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
-      "UpdateCellJson": [
-        { "UpdateCellIndex": 382 },
-        { "UpdateCellIndex": 383 },
-        { "UpdateCellIndex": 384 },
-        { "UpdateCellIndex": 385 }
-      ],
-      "UseGravity": true
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16842,35 +17629,39 @@
       "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
-          [ -0.9999819993972778, -1.8198931002189056e-06, 0.0, 0.0 ],
+          [ -0.9999727606773376, -1.8198762745669228e-06, 0.0, 0.0 ],
           [ -1.8199242504124413e-06, 0.9999991059303284, -1.8199242504124413e-06, 0.0 ],
-          [ 3.3120704529682188e-12, -1.8198931002189056e-06, -0.9999819993972778, 0.0 ],
+          [ 3.3120398784669547e-12, -1.8198762745669228e-06, -0.9999727606773376, 0.0 ],
           [ 55.554443359375, 4.093999862670898, -22.813175201416016, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 10,
+      "Index": 9,
       "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": 1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 23,
+      "InteractType": 26,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoorB02MinXRotate90",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "LocomotiveInteractDoorB02MinXRotate90",
+      "ObjectTag": "LocomotiveInteractDoor01Rotate90",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": true,
@@ -16881,7 +17672,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16891,27 +17683,30 @@
       "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
-          [ 0.9999760389328003, 0.0, 0.0, 0.0 ],
+          [ 0.9999674558639526, 0.0, 0.0, 0.0 ],
           [ 0.0, 0.9999999403953552, 0.0, 0.0 ],
-          [ 0.0, 0.0, 0.9999760389328003, 0.0 ],
+          [ 0.0, 0.0, 0.9999674558639526, 0.0 ],
           [ 55.69868087768555, 4.094000339508057, -17.068437576293945, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 11,
+      "Index": 10,
       "InteractColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": 1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 0,
-      "InteractType": 23,
+      "InteractType": 26,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_LocomotiveInteractDoorB02MinXRotate90",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -16920,6 +17715,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": true,
@@ -16929,11 +17725,9 @@
       "ShaderPassIndex": 0,
       "SplineJsonPath": "",
       "Type": "Interact",
-      "UpdateCellJson": [
-        { "UpdateCellIndex": 386 },
-        { "UpdateCellIndex": 387 }
-      ],
-      "UseGravity": true
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -16952,26 +17746,30 @@
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 12,
+      "Index": 11,
       "InteractColliderCenter": [ -0.5, 0.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
       "InteractMove": false,
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 0,
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainJumpDown1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "ChainJumpDown1",
+      "ObjectTag": "LocomotiveInteractDoorB02MinXRotate90",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 2.0, 1.0, 3.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -16982,18 +17780,678 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.6560627652192905e-12, 1.0, 0.0 ],
+          [ -3.639840542746242e-06, 0.9999983310699463, 1.6560600547138593e-12, 0.0 ],
+          [ -1.0, -3.639846681835479e-06, 9.099629210140847e-07, 0.0 ],
+          [ 19.193012237548828, 12.140209197998047, -58.24300765991211, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 12,
+      "InteractColliderCenter": [ 0.0, 4.0, 0.0, 0.0 ],
+      "InteractColliderSize": [ 1.0, 2.0, 1.0, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 2,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 2,
+      "InteractState": 1,
+      "InteractType": 19,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_ChainClimbLadder3",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainJumpDown1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 2.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2000000476837158, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.999983012676239, -1.6560369612075854e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 57.33639144897461, 7.267736911773682, -55.66504669189453, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 13,
+      "InteractColliderCenter": [ 0.0, 4.0, 0.0, 0.0 ],
+      "InteractColliderSize": [ 1.0, 2.0, 1.0, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 2,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 2,
+      "InteractState": 1,
+      "InteractType": 19,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_ChainClimbLadder3",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainClimbLadder3",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.25, 2.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.25, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
+          [ -1.819908902689349e-06, 0.9999906420707703, -1.8199087890025112e-06, 0.0 ],
+          [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
+          [ 44.49729537963867, 10.153420448303223, -39.76179122924805, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 14,
+      "InteractColliderCenter": [ 0.0, -6.0, 5.0, 0.0 ],
+      "InteractColliderSize": [ 3.0, 6.0, 1.0, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 1,
+      "InteractType": 20,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_ChainHookRound1",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainClimbLadder5",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.2000000476837158, 2.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2000000476837158, 2.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 1.8199233409177396e-06, 0.0, 0.0 ],
+          [ -1.8199233409177396e-06, 1.0, 1.819902763600112e-06, 0.0 ],
+          [ 3.3120834633942886e-12, -1.819902763600112e-06, 1.0, 0.0 ],
+          [ 75.04328918457031, 4.420855522155762, -21.593177795410156, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 15,
+      "InteractColliderCenter": [ 0.20000000298023224, 1.0, 0.0, 0.0 ],
+      "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractGroupIndex": 1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 0,
+      "InteractType": 22,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_SafeMainDoor01BlastC",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainClimbLadder5",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": true,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": true,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999974370002747, -1.65606081365538e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 30.552000045776367, 11.788000106811523, -61.7869987487793, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 16,
+      "InteractColliderCenter": [ 0.0, -6.0, 0.0, 0.0 ],
+      "InteractColliderSize": [ 1.0, 4.0, 1.0, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 8,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 8,
+      "InteractState": 0,
+      "InteractType": 16,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_InteractHangingChain900",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "InteractHangingChain600",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.2000000476837158, 2.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2000000476837158, 2.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 23.69086265563965, 22.105653762817383, -49.1145133972168, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 17,
+      "InteractColliderCenter": [ 0.0, -3.0, 0.0, 0.0 ],
+      "InteractColliderSize": [ 2.0, 3.0, 4.0, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 0,
+      "InteractType": 20,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_ChainHookRound1",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainHookRound1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.2000000476837158, 1.5, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.2000000476837158, 1.5, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ -0.11460889875888824, 2.085797063955397e-07, -0.9934104681015015, 0.0 ],
+          [ 1.1992013604356089e-08, 0.9999987483024597, 2.0857949323271896e-07, 0.0 ],
+          [ 0.9934104681015015, 1.1992026038853965e-08, -0.11460889875888824, 0.0 ],
+          [ 65.69554901123047, 12.169256210327148, -59.411006927490234, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 18,
+      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 1,
+      "InteractType": 14,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": 2,
+      "ModelTag": "Prototype_Component_Model_InteractionLeverBaseBlob",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainHookRound1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 23.64008331298828, 17.084548950195313, -62.75365447998047, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 19,
+      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 1,
+      "InteractType": 14,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": 0,
+      "ModelTag": "Prototype_Component_Model_InteractionLeverBaseBlob",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "InteractionLeverBaseBlob",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.6560627652192905e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999986886978149, 1.6560605968149456e-12, 0.0 ],
+          [ 1.0, 0.0, 9.099629210140847e-07, 0.0 ],
+          [ 21.776792526245117, 17.137123107910156, -41.40476608276367, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 20,
+      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 1,
+      "InteractType": 14,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": 1,
+      "ModelTag": "Prototype_Component_Model_InteractionLeverBaseBlob",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "InteractionLeverBaseBlob",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
+    },
+    {
+      "AnimType": true,
+      "Arrival": true,
+      "ArrivalPosition": [ 44.269962310791016, 0.0, -90.89321899414063, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 0.4407384395599365, 0.40189284086227417, 1.9089871644973755, 0.0 ],
+          [ -0.045205648988485336, 0.9796028733253479, -0.1957957148551941, 0.0 ],
+          [ -0.9743741154670715, -1.1324948445690097e-06, 0.2249593883752823, 0.0 ],
+          [ 52.157169342041016, 14.649983406066895, -60.144412994384766, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 21,
+      "InteractColliderCenter": [ 0.0, -2.0, 0.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 2.0, 1.100000023841858, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 3,
+      "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.5, -0.5, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 3,
+      "InteractState": 1,
+      "InteractType": 23,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": false,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_InteractZipLineRope",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "InteractionLeverBaseBlob",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.4500000476837158, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.4500000476837158, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": [
+        { "UpdateCellIndex": 638 },
+        { "UpdateCellIndex": 637 },
+        { "UpdateCellIndex": 631 },
+        { "UpdateCellIndex": 630 }
+      ],
+      "UseGravity": true,
+      "iArrivalCellIndex": 655
+    },
+    {
+      "AnimType": false,
+      "Arrival": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 0.18162786960601807, 0.0, 0.9833667278289795, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ -0.9833667278289795, 0.0, 0.18162786960601807, 0.0 ],
+          [ 43.32474899291992, 4.330756187438965, -99.95539093017578, 1.0 ]
+        ]
+      },
+      "Enable": false,
+      "EnableJsonPath": "",
+      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Index": 22,
+      "InteractColliderCenter": [ -0.6000000238418579, 1.0, -0.4000000059604645, 0.0 ],
+      "InteractColliderSize": [ 0.75, 1.0, 0.75, 0.0 ],
+      "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
+      "InteractLevel": 5,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
+      "InteractState": 1,
+      "InteractType": 2,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "LevelChange": true,
+      "LeverSwitchIndex": -1,
+      "ModelTag": "Prototype_Component_Model_ChainJumpDown1",
+      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "ObjectTag": "ChainJumpDown1",
+      "Offset": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Owner": false,
+      "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
+      "RootTranslate": false,
+      "Rotate": false,
+      "RotationAngle": 0.0,
+      "RotationSpeed": 0.0,
+      "RotationType": 1,
+      "ShaderPassIndex": 0,
+      "SplineJsonPath": "",
+      "Type": "Interact",
+      "UpdateCellJson": null,
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     }
   ],
-  "LightObject_Json": null,
+  "LightObject_Json": [
+    {
+      "Ambient": [ 0.563706636428833, 1.0, 0.0, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999987483024597, -1.656062982059725e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 48.21651840209961, 20.699983596801758, -55.10978317260742, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.19305014610290527, 1.0, 0.0, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.0,
+      "LightEnable": true,
+      "LightIndex": 3,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp2",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 48.21651840209961, 20.699983596801758, -55.10978317260742, 1.0 ],
+      "Range": 5.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": 0,
+      "Specular": [ 0.644608736038208, 1.0, 0.3822394013404846, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.6563706398010254, 1.0, 0.0, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 23.83987045288086, 21.721084594726563, -36.19622039794922, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.33204638957977295, 1.0, 0.0, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.0,
+      "LightEnable": true,
+      "LightIndex": 4,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp4",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 23.83987045288086, 21.851085662841797, -36.19622039794922, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": 1,
+      "Specular": [ 0.6332046985626221, 1.0, 0.0, 0.0 ]
+    }
+  ],
   "Light_Json": [
     {
       "Ambient": [ 0.20000000298023224, 0.20000000298023224, 0.20000000298023224, 1.0 ],
       "CutOff": 0.0,
       "Diffuse": [ 1.0, 1.0, 1.0, 1.0 ],
       "Direction": [ 1.0, -1.0, 1.0, 0.0 ],
+      "Intensity": 0.0,
       "LightEnable": true,
-      "LightIndex": 0,
+      "LightIndex": 2,
       "OuterCutOff": 0.0,
       "Position": [ -222.13111877441406, -48.08638000488281, -452.5732727050781, 1.0 ],
       "Range": 0.0,
@@ -17002,6 +18460,127 @@
     }
   ],
   "Monster_Json": null,
-  "Special_Json": null,
+  "Special_Json": [
+    {
+      "AnimType": false,
+      "ArrivalPosition": [ 47.02899932861328, 12.269000053405762, -56.8323860168457, 1.0 ],
+      "BloomMeshIndex": 0,
+      "ColliderCenter": [ 0.0, 2.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.5, 2.0, 1.2999999523162842, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.6560627652192905e-12, 1.0, 0.0 ],
+          [ -3.639835313151707e-06, 0.9999969005584717, 1.6560576694690798e-12, 0.0 ],
+          [ -1.0, -3.639846681835479e-06, 9.099629210140847e-07, 0.0 ],
+          [ 29.6746883392334, 17.123390197753906, -56.70743942260742, 1.0 ]
+        ]
+      },
+      "ElevatorArrivalCellIndex": 501,
+      "ElevatorLever": false,
+      "ElevatorMaxHeight": 10.0,
+      "ElevatorMinHeight": 0.0,
+      "ElevatorRotationSpeed": 2.0325215151706473e-30,
+      "ElevatorSpeed": 2.0,
+      "ElevatorType": 2,
+      "ModelTag": "Prototype_Component_Model_Elevator1",
+      "OffsetFunction": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "PlayAnimationIndex": 0,
+      "SpecialGroupIndex": 0,
+      "SpecialType": 2,
+      "UpdateCellJson": null,
+      "iShaderPassIndex": 0
+    },
+    {
+      "AnimType": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 1.0 ],
+      "BloomMeshIndex": 0,
+      "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999975562095642, -1.6560610304958145e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 30.6746883392334, 17.123390197753906, -55.70743942260742, 1.0 ]
+        ]
+      },
+      "ElevatorArrivalCellIndex": -1,
+      "ElevatorLever": true,
+      "ElevatorMaxHeight": 10.0,
+      "ElevatorMinHeight": 0.0,
+      "ElevatorRotationSpeed": 1.5707963705062866,
+      "ElevatorSpeed": 10.0,
+      "ElevatorType": 3,
+      "ModelTag": "Prototype_Component_Model_TeslaRICellRailRoadLever",
+      "OffsetFunction": true,
+      "OffsetPosition": [ 1.0, 0.0, 1.0, 0.0 ],
+      "PlayAnimationIndex": 0,
+      "SpecialGroupIndex": 0,
+      "SpecialType": 1,
+      "UpdateCellJson": null,
+      "iShaderPassIndex": 0
+    },
+    {
+      "AnimType": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 1.0 ],
+      "BloomMeshIndex": 0,
+      "ColliderCenter": [ 0.0, 2.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.2999999523162842, 2.0, 1.5, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 23.840219497680664, 17.153278350830078, -34.035606384277344, 1.0 ]
+        ]
+      },
+      "ElevatorArrivalCellIndex": 623,
+      "ElevatorLever": false,
+      "ElevatorMaxHeight": 17.152999877929688,
+      "ElevatorMinHeight": 2.0,
+      "ElevatorRotationSpeed": 1.003329700456569e-42,
+      "ElevatorSpeed": 2.0,
+      "ElevatorType": 1,
+      "ModelTag": "Prototype_Component_Model_Elevator1",
+      "OffsetFunction": false,
+      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
+      "PlayAnimationIndex": 0,
+      "SpecialGroupIndex": 1,
+      "SpecialType": 2,
+      "UpdateCellJson": null,
+      "iShaderPassIndex": 0
+    },
+    {
+      "AnimType": false,
+      "ArrivalPosition": [ 0.0, 0.0, 0.0, 1.0 ],
+      "BloomMeshIndex": 0,
+      "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 24.840219497680664, 17.153278350830078, -33.035606384277344, 1.0 ]
+        ]
+      },
+      "ElevatorArrivalCellIndex": -1,
+      "ElevatorLever": true,
+      "ElevatorMaxHeight": 10.0,
+      "ElevatorMinHeight": 0.0,
+      "ElevatorRotationSpeed": 1.5707963705062866,
+      "ElevatorSpeed": 10.0,
+      "ElevatorType": 3,
+      "ModelTag": "Prototype_Component_Model_TeslaRICellRailRoadLever",
+      "OffsetFunction": true,
+      "OffsetPosition": [ 1.0, 0.0, 1.0, 0.0 ],
+      "PlayAnimationIndex": 0,
+      "SpecialGroupIndex": 1,
+      "SpecialType": 1,
+      "UpdateCellJson": null,
+      "iShaderPassIndex": 0
+    }
+  ],
   "Trigger_Json": null
 }

@@ -9,6 +9,7 @@ class CModel;
 END
 
 BEGIN(Client)
+class CUI_Weakness;
 
 class CEnvironment_Object final : public CGameObject
 {
@@ -78,6 +79,7 @@ private:
 	CShader*					m_pShaderCom = { nullptr };	
 	CModel*						m_pModelCom = { nullptr };
 	CCollider*					m_pPickingCollider = nullptr;
+	CUI_Weakness*				m_pWeaknessUI = { nullptr };
 
 private:
 	ENVIRONMENT_OBJECT_DESC		m_tEnvironmentDesc = {};
@@ -90,17 +92,19 @@ private:
 	HRESULT				Ready_Components();
 	HRESULT				Bind_ShaderResources();
 
+	/* 맵용 */
+	class CEffect*		m_pEffect = { nullptr };
 	/* 고드름용 - 소영 작업중 */
-	_int		iCheckMeshNum = 0;
-	_int		m_iIceMeshNumber = 0;
-	_float4		m_vCamPosition = {};
-	_float		m_fCamFar = {};
+	_int				iCheckMeshNum = 0;
+	_int				m_iIceMeshNumber = 0;
+	_float4				m_vCamPosition = {};
+	_float				m_fCamFar = {};
 
-	_bool		bRenderIce = { false };
-	_bool		bIcarusTexture = { false };
-	CTexture*	m_pIceNoise = { nullptr };
-	CTexture*	m_pIceDiffuse = { nullptr };
-	CTexture*	m_pRADTexture = { nullptr };
+	_bool				bRenderIce = { false };
+	_bool				bIcarusTexture = { false };
+	CTexture*			m_pIceNoise = { nullptr };
+	CTexture*			m_pIceDiffuse = { nullptr };
+	CTexture*			m_pRADTexture = { nullptr };
 
 	/* 렌더링용 */
 private:

@@ -21,8 +21,6 @@ private:
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
 	HRESULT Ready_Layer_BackGround(const wstring& strLayerTag);
-
-	
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
@@ -35,13 +33,11 @@ private: /* UI */
 private: /* Map*/
 	HRESULT Ready_Event();
 
-private: /* Shader */
-	HRESULT Ready_Shader();
-
 private:
 	_int			TempLightNumber = 0;
 	class CEffect*  m_pMainEffect = nullptr;
 	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData.json";
+	_bool			m_bTestMode = false;
 public:
 	static CLevel_SnowMountainBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

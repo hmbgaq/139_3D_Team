@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "..\Public\Body_Player.h"
+#include "Body_Player.h"
 #include "GameInstance.h"
 #include "Character.h"
+#include "Data_Manager.h"
 
 #include "PhysXCollider.h"
 #include "Preset_PhysXColliderDesc.h"
@@ -61,6 +62,15 @@ void CBody_Player::Tick(_float fTimeDelta)
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
 {
+	if (GAME_STATE::GAMEPLAY != CData_Manager::GetInstance()->Get_GameState())
+	{
+		m_bIsPaused = true;
+	}
+	else
+	{
+		m_bIsPaused = false;
+	}
+
 	__super::Late_Tick(fTimeDelta);
 	
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
@@ -156,7 +166,9 @@ HRESULT CBody_Player::Ready_Components()
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
 		return E_FAIL;
-
+	
+	//m_pTrail = EFFECT_MANAGER->Ready_Trail("Monster_Bullet_Trail.json", this);
+	//m_pTrail->Set_Play(true); // 시작 때 트레일 켜기
 	//if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_PhysXCollider"),
 	//	TEXT("Com_PhysXCollider"), reinterpret_cast<CComponent**>(&m_pPhysXCollider))))
 	//	return E_FAIL;
@@ -220,4 +232,6 @@ CGameObject* CBody_Player::Pool()
 void CBody_Player::Free()
 {
 	__super::Free();
+
+	/* 이펙트 무한루프라 제거 */
 }

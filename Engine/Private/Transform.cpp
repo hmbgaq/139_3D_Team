@@ -84,7 +84,7 @@ void CTransform::Move_On_Navigation(_vector vMove, CNavigation* pNavigation)
 			_int i = 0;
 		}
 
-		if (true == m_bIsGround)
+		if (true == m_bIsGround && pNavigation->Get_InteractMoveMode() == false)
 		{
 			vResult.y = fHeight;
 		}
@@ -147,7 +147,7 @@ void CTransform::Move_On_Navigation_ForSliding(_vector vMove, const _float fTime
 		
 		_float fHeight = pNavigation->Compute_Height(vResult_Float3, &m_bIsGround);
 
-		if (true == m_bIsGround && pNavigation->Get_InteractMoveMode())
+		if (true == m_bIsGround && pNavigation->Get_InteractMoveMode() == false)
 		{
 			vResult.y = fHeight;
 		}
@@ -658,11 +658,14 @@ _vector CTransform::Calc_Look_Dir_XZ(_fvector vTargetPos)
 
 void CTransform::Move_Position(_float4 vDir, _float fSpeed, _float fTimeDelta)
 {
+	vDir.w = 0.f;
 	/* 총알용입니다. 네비없어도됨 */
 	/* 주의사항. vDir채로 더하므로 전에 미리 Normalize해서 넘기세요 */
 
 	_float4 vPos = Get_Position();
 	vPos += vDir * fSpeed * fTimeDelta;
+
+
 
 	Set_State(STATE_POSITION, vPos);
 }

@@ -9,7 +9,7 @@ void CPlayer_CrouchUnder_Start::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	pActor->Set_Ladder_Count(4);
+	//pActor->Set_Ladder_Count(4);
 }
 
 CState<CPlayer>* CPlayer_CrouchUnder_Start::Update(CPlayer* pActor, _float fTimeDelta)

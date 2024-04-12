@@ -98,15 +98,21 @@ public:
 	//_bool Activate_HUD_Skill(HUD eHUD);
 	_bool Activate_HUD_Skill(HUD eHUD, _float fCost = -1.f);
 	_bool Is_HUD_Cooltime_End(HUD eHUD, _float fCost = -1.f);
-
+	
 	HUD Get_Skill_HUD_Enum(Player_Skill ePlayer_Skill);
 	
 
 public://!For. Interact
 	CEnvironment_Interact* Get_InteractObject() { return m_pInteractObject; }
 	void				   Set_InteractObject(CEnvironment_Interact* pInteractObject) { m_pInteractObject = pInteractObject; }
+	_float3&			   Get_InteractDir() { return m_vInteractDir;}
+	void				   Set_InteractDir(_float3 vInteractDir) { m_vInteractDir = vInteractDir; }
 
+	void				   Set_ZipLineBonePositions(vector<_float4> vecZipLineBonePositions) {	m_vecZipLineBonePositions = vecZipLineBonePositions;}
+	
+	_vector					Get_HandPos() { return m_pBody->Get_Model()->Get_BonePosForMyPos("RightHand", m_pTransformCom->Get_WorldMatrix()); }
 
+public:
 	void SetState_InteractJumpDown100();
 	void SetState_InteractJumpDown200();
 	void SetState_InteractJumpDown300();
@@ -142,6 +148,9 @@ public://!For. Interact
 	void SetState_InteractWhipPull();
 
 	void SetState_InteractRotationValve();
+	void SetState_InteractZipLine();
+	void SetState_CrouchUnder();
+	void SetState_CrouchUnderGate();
 
 
 public:
@@ -160,6 +169,10 @@ private:
 	_bool		 m_bShowOption = false;
 	_bool		 m_bShowSkillWindow = false;
 	_bool		 m_bShowDiedScreen = false;
+
+	/* Effect Ãß°¡ */
+private:
+	class CEffect* m_pEffect = { nullptr };
 
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
@@ -201,6 +214,15 @@ public:
 		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
 	};
 
+public:
+	void Search_LockOn_Target();
+	CCharacter* Get_LockOn_Target() { return m_pLockOnTarget; };
+	_float3 Get_LockOn_Target_Position() { 
+		if (nullptr !=  m_pLockOnTarget && nullptr != m_pLockOnTarget->Get_Transform())
+			return m_pLockOnTarget->Get_Position();
+		return _float3();
+	}
+	
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
@@ -224,6 +246,12 @@ private:
 	_float m_fSuperChargeTime = { 0.f };
 	TeleportPunch_State m_eTeleportPunch_State = { TeleportPunch_State::TeleportPunch_State_End };
 
+private:
+	_float3 m_vInteractDir = {};
+	vector<_float4> m_vecZipLineBonePositions;
+
+private:
+	CCharacter* m_pLockOnTarget = { nullptr };
 
 public:
 	_bool	m_bPlayerCheck = true;

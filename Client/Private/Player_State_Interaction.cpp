@@ -11,7 +11,7 @@ void CPlayer_State_Interaction::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_State_Interaction::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
+	//__super::Update(pActor, fTimeDelta);
 
 	return nullptr;
 }
@@ -25,8 +25,7 @@ void CPlayer_State_Interaction::Release(CPlayer* pActor)
 
 	CNavigation* pNavigation = pActor->Get_Navigation();
 
-	if(m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_GAMEPLAY)
-		pNavigation->Find_CurrentCellIndex(pActor->Get_Position_Vector());
+	
 
 	//pNavigation->Set_InteractMoveMode(false);
 

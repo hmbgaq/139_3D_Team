@@ -5,12 +5,12 @@
 namespace Client
 {
 	/* 1600 x 900 가능할지도 ㄱㄷ */
-	static const unsigned int	g_iWinSizeX = 1280;
-	static const unsigned int	g_iWinSizeY = 720;
+	//static const unsigned int	g_iWinSizeX = 1280;
+	//static const unsigned int	g_iWinSizeY = 720;
 	//static const unsigned int	g_iWinSizeX = 1600;
 	//static const unsigned int	g_iWinSizeY = 900;
-	//static const unsigned int	g_iWinSizeX = 1920;
-	//static const unsigned int	g_iWinSizeY = 1080;
+	static const unsigned int	g_iWinSizeX = 1920;
+	static const unsigned int	g_iWinSizeY = 1080;
 	//static const unsigned int	g_iWinSizeX = 2560;
 	//static const unsigned int	g_iWinSizeY = 1440;
 
@@ -86,6 +86,17 @@ namespace Client
 
 	
 	#define	REVOLVER_DELAY					1.f
+	#define SHOTGUN_MAXCOOLTIME				10.f
+
+
+	#define INFECTED_EXP					15.f
+	#define BANDIT_SNIPER_EXP				20.f
+	#define BANDIT_HEAVY_EXP				45.f
+	#define TANK_EXP						60.f
+
+	#define VAMPIRE_COMMANDER_EXP			80.f
+	#define PARASITER_EXP					120.f
+
 
 
 

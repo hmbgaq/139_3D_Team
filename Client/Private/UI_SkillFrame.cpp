@@ -299,7 +299,7 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 				m_pUIManager->Select_Skill("Kick");
 
 				// 선택한 UI의 레벨
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Kick");
 			}
 			else if (m_tUIInfo.strUIName == "ElectricDash")
@@ -313,20 +313,20 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Skill("DashShock");
 				
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("DashShock");
 			}
 			else if (m_tUIInfo.strUIName == "ElectricCord")
 			{
 				m_pUIManager->Select_Skill("ElectricCord");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("ElectricCord");
 			}
 			else if (m_tUIInfo.strUIName == "PowerUP")
 			{
 				m_pUIManager->Select_Skill("PowerUP");
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("PowerUP");
 			}
 #pragma region 2
@@ -334,35 +334,35 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Skill("UpperCut");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("UpperCut");
 			}
 			else if (m_tUIInfo.strUIName == "OneTouch")
 			{
 				m_pUIManager->Select_Skill("OneTouch");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("OneTouch");
 			}
 			else if (m_tUIInfo.strUIName == "TwoTouch")
 			{
 				m_pUIManager->Select_Skill("TwoTouch");
 				
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("TwoTouch");
 			}
 			else if (m_tUIInfo.strUIName == "ThreeTouch")
 			{
 				m_pUIManager->Select_Skill("ThreeTouch");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("ThreeTouch");
 			}
 			else if (m_tUIInfo.strUIName == "ComboPunch")
 			{
 				m_pUIManager->Select_Skill("ComboPunch");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("ComboPunch");
 			}
 #pragma region 3
@@ -370,7 +370,7 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Skill("Punch");
 				
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Punch");
 				
 			}
@@ -378,28 +378,28 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Skill("SuperChargeMod");
 				
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("SuperChargeMod");
 			}
 			else if (m_tUIInfo.strUIName == "TeleportPunch")
 			{
 				m_pUIManager->Select_Skill("TeleportPunch");
 				
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("TeleportPunch");
 			}
 			else if (m_tUIInfo.strUIName == "IncreaseEXP")
 			{
 				m_pUIManager->Select_Skill("IncreaseEXP");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("IncreaseEXP");
 			}
 			else if (m_tUIInfo.strUIName == "NPCPowerUP")
 			{
 				m_pUIManager->Select_Skill("NPCPowerUP");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("NPCPowerUP");
 			}
 #pragma region 4
@@ -407,35 +407,35 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Skill("Heal");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Heal");
 			}
 			else if (m_tUIInfo.strUIName == "RecoveryEnergy")
 			{
 				m_pUIManager->Select_Skill("RecoveryEnergy");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("RecoveryEnergy");
 			}
 			else if (m_tUIInfo.strUIName == "IncreaseHP")
 			{
 				m_pUIManager->Select_Skill("IncreaseHP");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("IncreaseHP");
 			}
 			else if (m_tUIInfo.strUIName == "IncreaseEnergy")
 			{
 				m_pUIManager->Select_Skill("IncreaseEnergy");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("IncreaseEnergy");
 			}
 			else if (m_tUIInfo.strUIName == "MaxHP")
 			{
 				m_pUIManager->Select_Skill("MaxHP");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("MaxHP");
 			}
 			else

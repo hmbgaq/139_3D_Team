@@ -157,6 +157,8 @@ public:
 		Hitted_Front(Power::Heavy);
 	};
 
+	virtual void Set_Taunt() {};
+
 	
 
 public:

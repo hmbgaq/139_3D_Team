@@ -23,31 +23,34 @@ class CEnvironment_Interact final : public CGameObject
 {
 public:
 	enum INTERACT_TYPE { 
-							INTERACT_JUMP100, 
-							INTERACT_JUMP200, 
-							INTERACT_JUMP300, 
-							INTERACT_VAULT100, 
-							INTERACT_VAULT200, 
-							INTERACT_WAGONPUSH, 
-							INTERACT_WAGONJUMP, 
-							INTERACT_WAGONEVENT, 
-							INTEARCT_WAGONROPEJUMP, 
-							INTERACT_CLIMB100, 
-							INTERACT_CLIMB200, 
-							INTERACT_CLIMB300, 
-							INTERACT_CLIMB450,
-							INTERACT_SLIDE,
-							INTERACT_LEVER,
-							INTERACT_PLANK,
-							INTERACT_ROPECLIMB,
-							INTERACT_ROPEDOWN,
-							INTERACT_DOOROPEN,
-							INTERACT_LADDERUP,
-							INTERACT_WHIPSWING,
-							INTERACT_WHIPPULL,
-							INTERACT_ROTATIONVALVE,
-							INTERACT_NONE,
-							INTERACT_END 
+							INTERACT_JUMP100,			//0
+							INTERACT_JUMP200, 			//1
+							INTERACT_JUMP300, 			//2
+							INTERACT_VAULT100, 			//3
+							INTERACT_VAULT200, 			//4
+							INTERACT_WAGONPUSH, 		//5
+							INTERACT_WAGONJUMP, 		//6
+							INTERACT_WAGONEVENT, 		//7
+							INTEARCT_WAGONROPEJUMP, 	//8
+							INTERACT_CLIMB100, 			//9
+							INTERACT_CLIMB200, 			//10
+							INTERACT_CLIMB300, 			//11
+							INTERACT_CLIMB450,			//12
+							INTERACT_SLIDE,				//13
+							INTERACT_LEVER,				//14
+							INTERACT_PLANK,				//15
+							INTERACT_ROPECLIMB,			//16
+							INTERACT_ROPEDOWN,			//17
+							INTERACT_DOOROPEN,			//18
+							INTERACT_LADDERUP,			//19
+							INTERACT_WHIPSWING,			//20
+							INTERACT_WHIPPULL,			//21
+							INTERACT_ROTATIONVALVE,		//22
+							INTERACT_ZIPLINE,			//23
+							INTERACT_CROUCHUNDER,		//24
+							INTERACT_CROUCHUNDERGATE,   //25
+							INTERACT_NONE,				//26
+							INTERACT_END 				//27
 					    };
 	enum INTERACT_STATE { INTERACTSTATE_LOOP, INTERACTSTATE_ONCE, INTERACTSTATE_END };
 
@@ -68,6 +71,7 @@ public:
 		_float3			vInteractColliderSize = { 1.f, 1.f, 1.f};
 		_float3			vInteractColliderCenter = { 0.f, 1.f, 0.f };
 		_float3			vPlayerRootMoveRate = { 1.f, 1.f, 1.f};
+		_float3			vPlayerReverseRootMoveRate = { 1.f, 1.f, 1.f};
 		_int			iPlayAnimationIndex = { 0 };
 
 		_bool			bAnimModel = { false };
@@ -104,8 +108,17 @@ public:
 		_bool			bEnable = false; //! 활성화 시킬 위치가 있는 상호작용일 경우
 		_bool			bInteractMoveMode = false; //! 플레이어를 강제로 이동시켜야할 경우
 
+
 		vector<_int>	vecUpdateCellIndex; //! 활성화, 비활성화 시킬 셀들의 인덱스
+
+		_bool			bWeakNessUI = false;
 		
+		_int			iLadderCount = 4; //! 래더카운트
+		_int			iReverseLadderCount = 4;
+		
+		_int			iSwitchIndex = -1;
+
+		_int			iArrivalCellIndex = -1;
 
 	}ENVIRONMENT_INTERACTOBJECT_DESC;
 
@@ -144,13 +157,17 @@ public:
 	wstring&							Get_ModelTag() { return m_tEnvironmentDesc.strModelTag; }
 	string&								Get_StringModelTag() { return m_pGameInstance->Convert_WString_To_String(m_tEnvironmentDesc.strModelTag);}
 	_bool								Is_AnimModel() { return m_tEnvironmentDesc.bAnimModel; }
-	
+	CModel*								Get_ModelCom() { return m_pModelCom;}
+
 #ifdef _DEBUG
 	void								Set_InteractColliderSize(_float3 vInteractColliderSize);
 	void								Set_InteractColliderCenter(_float3 vInteractColliderCenter);
 	void								Set_InteractType(INTERACT_TYPE eInteractType) { m_tEnvironmentDesc.eInteractType = eInteractType; }
 	void								Set_InteractState(INTERACT_STATE eInteractState) { m_tEnvironmentDesc.eInteractState = eInteractState; }
+
 	void								Set_PlayerRootMoveRate(_float3 vRootMoveRate) { m_tEnvironmentDesc.vPlayerRootMoveRate = vRootMoveRate;}
+	void								Set_PlayerReverseRootMoveRate(_float3 vReverseRootMoveRate) { m_tEnvironmentDesc.vPlayerReverseRootMoveRate = vReverseRootMoveRate; }
+
 	void								Set_UseGravity(_bool bUseGravity) { m_tEnvironmentDesc.bUseGravity = bUseGravity; }
 	
 
@@ -160,6 +177,7 @@ public:
 #endif // _DEBUG
 	_int								Get_AnimationIndex() { return m_tEnvironmentDesc.iPlayAnimationIndex; }
 	void								Set_AnimationIndex(_uint iAnimIndex);
+	void								Set_Animation(_uint iAnimIndex, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL, _uint iTargetKeyFrameIndex = 0);
 	void								Set_ShaderPassIndex(_int iShaderPassIndex) { m_tEnvironmentDesc.iShaderPassIndex = iShaderPassIndex; }
 
 
@@ -183,6 +201,7 @@ public: //! For Public
 	void								Set_Interact(_bool bInteract) { m_bInteract = bInteract;}
 	_int								Get_InteractGroupIndex() { return m_tEnvironmentDesc.iInteractGroupIndex; }
 	void								Set_InteractGroupIndex(_int iGroupIndex) { m_tEnvironmentDesc.iInteractGroupIndex = iGroupIndex; }
+	
 
 
 	_bool								Is_OwnerInteract() { return m_bInteract;}
@@ -192,10 +211,14 @@ public:	//! For Spline
 
 public: //! For RopeChainClimb _ RopeChainDown
 	void								Rope_ChainFunction(const _float fTimeDelta);
-	//_int								Get_RollDown // 2
-	//_int								Get_ChainUpIndex(); //  7
-	//_int								Get_RopeDownIndex(); 
 
+public: //!For SwitchFunction
+	void								Switch_Funtion();
+
+public: //!For ZipLineFunction				
+	void								ZipLine_Function();
+	_float4x4							Get_ZipLineBoneMatrix();
+	void								Set_ArrivalCellIndex(_int iArrivalCellIndex) { m_tEnvironmentDesc.iArrivalCellIndex = iArrivalCellIndex;}
 
 
 #ifdef _DEBUG
@@ -204,8 +227,6 @@ public: //! For.Tool
 
 #endif 
 
-public:
-	void								Start_Environment_Animation() { m_bPlay = true; }
 
 public:
 	void								Interact();
@@ -235,14 +256,7 @@ public:	//! For Public
 	
 	void								Set_InteractEnable(_bool bInteractEnable) { m_bInteractEnable = bInteractEnable; }
 
-	//!_int			iInteractGroupIndex = -1; //! 특정 상호작용 오브젝트가 활성화될시 다른 상호작용 오브젝트도 활성시키기 위한 그룹핑인덱스
-	//!_float4			vEnablePosition = {}; //!  특정 상호작용 오브젝트가 다른 상호작용 오브젝트를 활성화시키기 위한 위치 조건을 위한 위치벡터
-	//!_float4			vArrivalPosition = {}; //! 특정 상호작용 오브젝트가 위치벡터에 도달하면 종료시키기위한 위치벡터
-	//!_float4			vOffset = {}; //!  특정 상호작용 오브젝트를 기준으로 위치해야하기 위한 오프셋
-	//!_float			fRadian = XMConvertToRadians(90.f); //! 특정 상호작용 오브젝트가 활성화될시 회전해야할 각도
-	//!_float			fRotationSpeed = 90.f; //! 회전해야하는 오브젝트인경우 회전 속도를 저장시키기위함.
-	//!_bool			bOffset = false; //! 오프셋 위치가 적용시켜져야하는 지.
-	//! _bool			bLeft = true; // ! 왼쪽으로 회전할지 오른쪽으로 회전할지
+	
 
 	
 public: //! For ToolTest
@@ -251,6 +265,11 @@ public: //! For ToolTest
 
 	void								Set_DescWorldMatrix() { m_tEnvironmentDesc.WorldMatrix = m_pTransformCom->Get_WorldMatrix();}
 
+	void								Set_LadderCount(_int iLadderCount) { m_tEnvironmentDesc.iLadderCount = iLadderCount;}
+	void								Set_ReverseLadderCount(_int iReverseLadderCount) { m_tEnvironmentDesc.iReverseLadderCount = iReverseLadderCount; }
+
+	void								Set_SwitchIndex(_int iLeverSwitchIndex) { m_tEnvironmentDesc.iSwitchIndex = iLeverSwitchIndex;}
+	
 	void								Set_Rotate(_bool bRotate) { m_tEnvironmentDesc.bRotate = bRotate; }
 	void								Set_RotationAngle(_float fAngle) { m_tEnvironmentDesc.fRotationAngle = fAngle;}
 	void								Set_RotationSpeed(_float fRotationSpeed) { m_tEnvironmentDesc.fRotationSpeed = fRotationSpeed; m_pTransformCom->Set_RotationSpeed(XMConvertToRadians(fRotationSpeed)); }
@@ -315,49 +334,41 @@ private:
 private:
 	CShader*							m_pShaderCom = { nullptr };	
 	CModel*								m_pModelCom = { nullptr };
-
-
-	CCollider*							m_pColliderCom = { nullptr };
 	CRigidBody*							m_pRigidBodyCom = { nullptr };
 
+	CCollider*							m_pColliderCom = { nullptr };
 	CCollider*							m_pInteractColliderCom = { nullptr };
 	CCollider*							m_pMoveRangeColliderCom = { nullptr };
-
 	CCollider*							m_pInteractMoveColliderCom = { nullptr };
 
 	CNavigation*						m_pNavigationCom = { nullptr };
-	
+	_int								m_iCurrentLevelIndex = -1;
 	
 
-	_int								m_iCurrentLevelIndex = -1;
+private:
+	CPlayer*							m_pPlayer = { nullptr };
+	_bool								m_bFindPlayer = false;
+
+
 
 private:
 	ENVIRONMENT_INTERACTOBJECT_DESC		m_tEnvironmentDesc = {};
-	_bool								m_bPlay = false;
 	
 	_bool								m_bTest = false;
-
 	_bool								m_bInteract = false;
-	_bool								m_bInteractStart = false;
-	
-	_bool								m_bFindPlayer = false;
-
-	_bool								m_bSpline = false;
 	_bool								m_bInteractEnable = true;
+	_bool								m_bArrival = false;
+	_bool								m_bExit = false;
+	_bool								m_bMove = true;
 	_bool								m_bInteractMoveMode = false;
-	_float4x4							m_InitMatrix;
-
 	
+private:
+	_bool								m_bSpline = false;
 	vector<_float4>						m_vecSplinePoints;
 	map<wstring, vector<_float4>>		m_mapSplineVectors;
-	
-	map<wstring, _float>					m_mapSplineSpeeds;
-
+	map<wstring, _float>				m_mapSplineSpeeds;
 	wstring								m_strCurrentSplineTrack = L"";
 	_int								m_iCurrentTrackIndex = 0;
-
-
-	
 	vector<_bool>						m_vecPointChecks;
 	_float								m_fSplineTimeAcc = 0.f;
 	_float								m_fSplineEndRaidus = 1.f;
@@ -367,64 +378,61 @@ private:
 	_float								m_fSplineSpeed = 1.f;
 	_float								m_fArrivalTime = 3.f; // ! 스플라인에 마지막 점까지 도착하는데 걸리는 시간.
 	_float4								m_vArrivalPosition = { 99999.f, 99999.f, 99999.f, 1.f };
-
 	_int								m_iCalcCount = 0;
-	_bool								m_bArrival = false;
-	_bool								m_bMove = true;
 	
-	_bool								m_bExit = false; 
+private:
+	_bool								m_bChainEnable = false;
 
+private:
+	_bool								m_bLeverSwitch = false;
 
-
+private:
+	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
 	vector<CEnvironment_Interact*>		m_vecInteractGroup;
 	vector<string>						m_vecInteractGroupTag; //! 툴 또는 디버깅용
-	CEnvironment_Interact*				m_pOwnerInteract = { nullptr }; //! 특정 상호작용 오브젝트가 이동된다면 같이 움직여져야 할 경우 찾아야함.
-
-	
-	
 	vector<_float4>						m_vecEnablePosition;
 
 
+private:
+	_float4x4							m_InitMatrix;
+
+private:
 	_bool								m_bMoveColliderRender = false;
 	_bool								m_bInteractMoveColliderRender = false;
 	_bool								m_bInteractColliderRender = true;
 	_bool								m_bColliderRender = false;
 
-private:
-	CPlayer*						    m_pPlayer = { nullptr };
 
-	// !성희 추가
-	CUI_Manager*						m_pUIManager = { nullptr };
-	CUI_Interaction*					m_pUI_Interaction = { nullptr };
-	CUI*								m_pWeaknessUI = { nullptr };
 
 private:
 	HRESULT						Ready_Components();
 	HRESULT						Ready_InteractCollider(INTERACT_TYPE eInteractType);
 	HRESULT						Bind_ShaderResources();
 
-	/* 소영추가 - 렌더용 */
-public:
 
-private:
-	HRESULT		Classification_Model(); 
-	vector<_int>	m_vChainMesh = {};
+private:	// !성희 추가
+	CUI_Manager* m_pUIManager = { nullptr };
+	CUI_Interaction* m_pUI_Interaction = { nullptr };
+	CUI* m_pWeaknessUI = { nullptr };
 
-	_bool		m_bIncrease = true;
-	_bool		m_bRenderOutLine = { false };
 
+private: //! 소영 추가
+	HRESULT						Classification_Model(); 
+	vector<_int>					m_vChainMesh = {};
+	_bool							m_bIncrease = true;
+	_bool							m_bRenderOutLine = { false };
 
 	/* Origin Shader */
-	_float		m_gCamFar				= 0.f;
+	_float							m_gCamFar				= 0.f;
 
 	/* OutLine Shader */
-	_float		m_fTimeAcc				= 0.f; /* 디퓨즈 자체 */
+	_float							m_fTimeAcc				= 0.f; /* 디퓨즈 자체 */
 
-	_float4		m_vLineColor			= { 1.f, 1.f, 1.f, 1.f };
-	_bool		m_bLineIncrease			= true;
-	_float		m_fLineThick			= 0.f;
-	_float		m_fLineTimeAcc			= 0.f;
-	_float		m_fLineThick_Ratio		= 0.f;
+	_float4							m_vLineColor			= { 1.f, 1.f, 1.f, 1.f };
+	_bool							m_bLineIncrease			= true;
+	_float							m_fLineThick			= 0.f;
+	_float							m_fLineTimeAcc			= 0.f;
+	_float							m_fLineThick_Ratio		= 0.f;
 
 public:
 	/* 원형객체를 생성한다. */

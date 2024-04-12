@@ -73,7 +73,7 @@ void CMonster_Character::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
 
-	if (true == m_bDead)
+	if (true == m_bDead || false == m_bEnable)
 	{
 		Set_EnemyHUD_Dead();
 	}
@@ -94,6 +94,8 @@ void CMonster_Character::Search_Target(const _float fSearchDistance)
 
 CPlayer* CMonster_Character::Set_Player_Finisher_Pos(_float3 vPlayerPos)
 {
+	m_pBody->Collider_Off();
+
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	_float3 vPos = m_pTransformCom->Calc_Front_Pos(vPlayerPos);
 	pPlayer->Set_Position(vPos);
@@ -104,6 +106,8 @@ CPlayer* CMonster_Character::Set_Player_Finisher_Pos(_float3 vPlayerPos)
 
 CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 {
+	m_pBody->Collider_Off();
+
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
 	_float3 vTargetPos = pPlayer->Calc_Front_Pos(vPos);
@@ -121,7 +125,7 @@ void CMonster_Character::Check_Frustum()
 // 몬스터 HUD를 준비합니다. (생성 : Level, Owner)
 void CMonster_Character::Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner)
 {
-		m_pEnemyHUD = m_pUIManager->Ready_EnemyHUD_Shard(iLevelIndex, pOwner);
+	m_pEnemyHUD = m_pUIManager->Ready_EnemyHUD_Shard(iLevelIndex, pOwner);
 }
 
 // 몬스터 HUD의 위치를 잡아줍니다. (매 틱마다 불러주세요. | 몬스터의 World매트릭스를 넣어주세요. | Offset만큼 위치를 움직일 수 있습니다. [Defualt (오프셋 안줬을 경우) : 0, 2, 0]

@@ -1,17 +1,29 @@
 #include "..\Public\Player_ZipLine_Start_to_Loop.h"
 #include "Player_ZipLine_Loop.h"
+#include "Environment_Interact.h"
+#include "Transform.h"
+#include "Navigation.h"
+#include "GameInstance.h"
+#include "Bone.h"
 
 void CPlayer_ZipLine_Start_to_Loop::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true);
+	
+	m_fZipLineSpeed = pActor->Get_Transform()->Get_Speed() + 2.f;
+		
+	CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
 
+	m_vArrivalPosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
+	pActor->Get_Transform()->Look_At(m_vArrivalPosition);
 }
 
 CState<CPlayer>* CPlayer_ZipLine_Start_to_Loop::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
+	pActor->Get_Transform()->Look_At(m_vArrivalPosition);
 
 	if (false == m_bFlags[0])
 	{
@@ -26,7 +38,7 @@ CState<CPlayer>* CPlayer_ZipLine_Start_to_Loop::Update(CPlayer* pActor, _float f
 	//{
 	//	return new CPlayer_ZipLine_Start_to_Loop();
 	//}
-
+	//pActor->Get_Transform()->Go_Target(m_vArrivalPosition, fTimeDelta);
 	return nullptr;
 
 	//return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);

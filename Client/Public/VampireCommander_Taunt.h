@@ -12,7 +12,8 @@ public:
 
 public:
 	virtual CState<CVampireCommander>* Update_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
-
+private:
+	CEffect* m_pEffect = { nullptr };
 };
 
 END

@@ -55,6 +55,8 @@ HRESULT CLevel_Tool::Initialize()
 void CLevel_Tool::Tick(_float fTimeDelta)
 {
 	m_pImguiManager->Tick(fTimeDelta);
+
+
 }
 
 HRESULT CLevel_Tool::Render()

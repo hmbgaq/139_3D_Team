@@ -41,7 +41,7 @@ HRESULT CBullet_ELShotgun::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 20.f;
+	m_fDamage = 6.f;
 
 	m_fLifeTime = 0.5f;
 
@@ -89,32 +89,39 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
-	//if (nullptr != pTarget_Character)// 일반 타격 
+	if (nullptr != pTarget_Character)// 일반 타격 
 	{
 		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Medium;
-		m_fForce = 0.f;
+		m_eHitPower = Power::Heavy;
+		m_fForce = 0.0f;
 
 		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
 
 		if (nullptr != pTarget_Character)
 		{
-			_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
+			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+			_vector vPlayerPos = pPlayer->Get_Position_Vector();
 			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
 			pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower, m_bIsMelee);
+
+
+			_float3 vPos = m_pTransformCom->Get_Position();
+			_float3 vTargetPos = pPlayer->Get_Position();
+			vTargetPos.y = vPos.y;
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos, true, vTargetPos);
+
+
+			//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+
+			Set_Dead(true);
+			//if (nullptr != m_pEffect)
+			//	m_pEffect->Set_Dead(true);
 		}
-
-
-		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 
 	}
 
-	//Set_Dead(true);
 
-
-	//m_pEffect->Set_Dead(true);
 }
 
 void CBullet_ELShotgun::OnCollisionStay(CCollider* other)

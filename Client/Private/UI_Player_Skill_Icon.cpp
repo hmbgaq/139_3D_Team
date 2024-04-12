@@ -41,38 +41,38 @@ HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 	/* Left */
 	if (m_tUIInfo.strUIName == "LeftHUD_Top")
 	{
-		m_bUnlock = false;
+		m_bUnlock = true;
 	}
 	else if (m_tUIInfo.strUIName == "LeftHUD_Right")
 	{
 		// Test
-		m_bUnlock = false/*true*/;
+		m_bUnlock = true/*true*/;
 	}
 	else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
 	{
-		m_bUnlock = false;
+		m_bUnlock = true;
 	}
 	else if (m_tUIInfo.strUIName == "LeftHUD_Left")
 	{
-		m_bUnlock = false;
+		m_bUnlock = true;
 	}
 
 	/* Right */
 	if (m_tUIInfo.strUIName == "RightHUD_Top")
 	{
-		m_bUnlock = false;
+		m_bUnlock = true;
 	}
 	else if (m_tUIInfo.strUIName == "RightHUD_Right")
 	{
-		m_bUnlock = false;
+		m_bUnlock = true;
 	}
 	else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
 	{
-		m_bUnlock = false;
+		m_bUnlock = true;
 	}
 	else if (m_tUIInfo.strUIName == "RightHUD_Left")
 	{
-		m_bUnlock = false;
+		m_bUnlock = true;
 	}
 
 

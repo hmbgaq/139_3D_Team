@@ -34,7 +34,8 @@ public:
 	// 두두두두 이펙트 지나간 자리에 이펙트 생성(누적시간 변수, 생성시간 텀, 타임델타, 생성할 이펙트 파일.json, 생성할 위치, 바라볼 타겟이 있는지, 타겟의 위치)
 	HRESULT Generate_Effect(_float* fTimeAcc, _float fGenerateTimeTerm, _float fTimeDelta, string strAddPath, string strFileName
 		                   , _float3 vPos
-						   , _bool bLookTarget = false, _float3 vTargetPos = _float3(0.f, 0.f, 0.f));
+						   , _bool bLookTarget = false, _float3 vTargetPos = _float3(0.f, 0.f, 0.f)
+							, _bool bScaleLerp = false, _float3* vScaleAcc = nullptr);
 
 
 public:

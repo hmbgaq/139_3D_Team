@@ -14,6 +14,14 @@ BEGIN(Client)
 
 class CDestructableProp abstract : public CGameObject
 {
+public:
+	typedef struct tagDestructablePropDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+		//_float4		vPos = { 0.f, 0.f, 0.f, 0.f };
+		_float4x4	WorldMatrix;
+
+	}DESTRUCTABLE_PROP_DESC;
+
 protected:
 	CDestructableProp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CDestructableProp(const CDestructableProp& rhs);
@@ -43,6 +51,8 @@ protected:
 	CModel*		m_pModelCom = { nullptr };
 	CCollider*	m_pColliderCom = { nullptr };
 
+
+	DESTRUCTABLE_PROP_DESC m_tDestructablePropDesc = {};
 
 public:
 	//static CDestructableProp* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

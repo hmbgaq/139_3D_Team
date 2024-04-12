@@ -277,17 +277,24 @@ public: /* ========================== Player Info ========================== */
 	// =>총을 발사했을 때 Crosshair발사 애니메이션 활성화 여부를 결정하는 Get함수
 	void	Set_TriggerCrosshair(_bool bTriggerCrosshair) { m_bTriggerCrosshair = bTriggerCrosshair; }
 
+
+public:
+	vector<pair<_int, _bool>>*			Get_LevelSwitchContainer() { return &m_vecLevelSwitch; }
+	void								Set_LevelSwitchForIndex(_int iIndex, _bool bSwitch) { m_vecLevelSwitch[iIndex, bSwitch] = make_pair(iIndex, bSwitch);	}
+
 private:
-	CMasterCamera* m_pMasterCamera = { nullptr };
-	CPlayer* m_pPlayer = { nullptr };
-	CMother* m_pMother = { nullptr };
-	CGameObject* m_pSon = { nullptr };
-	CGameObject* m_pSon2 = { nullptr };
+	CMasterCamera*						m_pMasterCamera = { nullptr };
+	CPlayer*							m_pPlayer = { nullptr };
+	CMother*							m_pMother = { nullptr };
+	CGameObject*						m_pSon = { nullptr };
+	CGameObject*						m_pSon2 = { nullptr };
 
-	CSky* m_pSky = { nullptr };
-	CNavigation* m_pNavigation = { nullptr };
-	CEnvironment_Interact* m_pSnowMountainWagon = { nullptr };
+	CSky*								m_pSky = { nullptr };
+	CNavigation*						m_pNavigation = { nullptr };
+	CEnvironment_Interact*				m_pSnowMountainWagon = { nullptr };
 
+
+	vector<pair<_int, _bool>>			m_vecLevelSwitch; //! 특정 레벨에서 필요한 스위치 개수만큼 푸시 해주고 On, Off 시켜주자.
 
 private:
 	CCamera* m_pCamera = { nullptr };
