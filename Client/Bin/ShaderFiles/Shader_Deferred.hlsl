@@ -610,7 +610,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float fMetalness = vORMDesc.z;
     float fOcclusion = vHBAO.r;
     
-    if (g_bPBR)
+    if (false)
     {
         fRoughness = max(fRoughness, 0.001f);
         fMetalness = max(fMetalness, 0.001f);

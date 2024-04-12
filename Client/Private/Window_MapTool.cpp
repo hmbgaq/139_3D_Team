@@ -2653,6 +2653,15 @@ void CWindow_MapTool::Light_SelectTab()
 					m_eLightType = eLightType;
 				};
 
+				if (ImGui::InputFloat(u8"라이트 감쇄강도", &m_tEditLightDesc.fIntensity))
+				{
+					LIGHT_DESC OriginDesc = m_vecCreateLight[m_iSelectLightIndex]->Get_LightDesc();
+					OriginDesc.fIntensity = m_tEditLightDesc.fIntensity;
+
+					m_vecCreateLight[m_iSelectLightIndex]->Set_LightDesc(OriginDesc);
+
+				}
+
 				if (iLightType == 0)
 				{
 					if (ImGui::InputFloat4(u8"라이트 디렉션", &m_tEditLightDesc.vDirection.x))
@@ -2852,7 +2861,14 @@ void CWindow_MapTool::Light_SelectTab()
 					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Change_LightType(eLightType);
 				};
 
+				if (ImGui::InputFloat(u8"라이트 감쇄강도", &m_tEditLightDesc.fIntensity))
+				{
+					LIGHT_DESC OriginDesc = m_vecCreateLightObject[m_iSelectLightObjectIndex]->Get_LightDesc();
+					OriginDesc.fIntensity = m_tEditLightDesc.fIntensity;
 
+					m_vecCreateLightObject[m_iSelectLightObjectIndex]->Set_LightDesc(OriginDesc);
+
+				} 
 				if (iLightType == 0)
 				{
 					if (ImGui::InputFloat4(u8"라이트 디렉션", &m_tEditLightDesc.vDirection.x))
