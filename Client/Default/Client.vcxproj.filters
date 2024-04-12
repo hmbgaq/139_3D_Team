@@ -4015,6 +4015,9 @@
     <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint">
       <UniqueIdentifier>{642cf3b7-25bb-4636-a4cc-51f157d3d511}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Event\Trigger\UITrigger">
+      <UniqueIdentifier>{0f509588-22a9-49d4-bd65-9301441f3417}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7890,6 +7893,9 @@
     <ClInclude Include="..\Public\UI_SkillPoint_Font.h">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Event_UITrigger.h">
+      <Filter>03.Event\Trigger\UITrigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11235,6 +11241,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_SkillPoint_Font.cpp">
       <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_UITrigger.cpp">
+      <Filter>03.Event\Trigger\UITrigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

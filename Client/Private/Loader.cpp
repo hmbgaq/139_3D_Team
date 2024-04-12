@@ -403,7 +403,7 @@ HRESULT CLoader::Loading_For_Logo_Level()
 	Ready_Origin();
 
 	lstrcpy(m_szLoadingText, TEXT("이펙트를 로드하는 중입니다."));
-	FAILED_CHECK(Ready_Effect_All());
+	//FAILED_CHECK(Ready_Effect_All());
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 

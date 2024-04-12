@@ -323,6 +323,7 @@
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Body_Crane.h" />
     <ClInclude Include="..\Public\Cargo_Crane.h" />
+    <ClInclude Include="..\Public\Event_UITrigger.h" />
     <ClInclude Include="..\Public\HitPoint_Crane.h" />
     <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
@@ -1644,6 +1645,7 @@
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
+    <ClCompile Include="..\Private\Event_UITrigger.cpp" />
     <ClCompile Include="..\Private\Explosion_Dynamite.cpp" />
     <ClCompile Include="..\Private\Explosion_TNTCrate.cpp" />
     <ClCompile Include="..\Private\Explosion_TNTPack.cpp" />

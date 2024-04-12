@@ -97,18 +97,30 @@ HRESULT CUI_MoneyFont::Render()
 		//! 이 셰이더에 0번째 패스로 그릴거야.
 		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-		m_pVIBufferCom->Bind_VIBuffers();
+		////! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+		//m_pVIBufferCom->Bind_VIBuffers();
 
-		//! 바인딩된 정점, 인덱스를 그려
-		m_pVIBufferCom->Render();
+		////! 바인딩된 정점, 인덱스를 그려
+		//m_pVIBufferCom->Render();
 
 		//if (m_bTrigger == true)
 		{
-			if(m_tUIInfo.strUIName == "SkillPoint")
+			if (m_tUIInfo.strUIName == "SkillPoint")
+			{
 				m_strText = to_wstring(m_pData_Manager->Get_SkillPoint());
-			if(m_tUIInfo.strUIName == "Money")
+				m_fScale = 0.6f;
+				m_fOffsetX = -10.f;
+				m_fOffsetY = -30.f;
+			}
+
+			if (m_tUIInfo.strUIName == "Money")
+			{
 				m_strText = to_wstring(m_pData_Manager->Get_Money());
+				m_fScale = 0.6f;
+				m_fOffsetX = -15.f;
+				m_fOffsetY = -35.f;
+			}
+
 
 			//m_strText = L"Test";
 			//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
@@ -214,7 +226,7 @@ HRESULT CUI_MoneyFont::Ready_Text()
 	/* 임의 값 (추 후 로드해서 받기) */
 	LoadInfo->fPosX = 625.5f;
 	LoadInfo->fPosY = 176.f;
-	LoadInfo->fScale = 0.7f;
+	LoadInfo->fScale = 0.5f;
 	LoadInfo->vOrigin.x = 0.f;
 	LoadInfo->vOrigin.y = 0.f;
 	LoadInfo->fRotation = 0.f;

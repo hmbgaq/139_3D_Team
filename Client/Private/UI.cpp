@@ -1003,7 +1003,7 @@ void CUI::TutorialBox(_float fTimeDelta)
 	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
 		LifeOn(fTimeDelta);
 	}
-	else
+	else                                                     
 	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
 		LifeOff(fTimeDelta);
 	}
