@@ -4042,6 +4042,9 @@
     <Filter Include="02.GameObjects\UI\97. Video\Sprite">
       <UniqueIdentifier>{9f99e6c2-f92c-40a9-820f-4dbce387bf4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\2. Animal">
+      <UniqueIdentifier>{8788932a-9733-4983-aaeb-8654e624d450}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7935,6 +7938,9 @@
     <ClInclude Include="..\Public\Hawk_Fly_Heavy.h">
       <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\AnimalObject.h">
+      <Filter>02.GameObjects\00. Character\NPC\2. Animal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11295,6 +11301,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Hawk_Fly_Heavy.cpp">
       <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimalObject.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\2. Animal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

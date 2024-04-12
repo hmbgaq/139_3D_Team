@@ -12,9 +12,11 @@ END
 
 BEGIN(Client)
 
+
 class CPlayer;
 class CMother;
 class CSon;
+class CHawk;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
@@ -68,6 +70,10 @@ public:
 
 	CEnvironment_Interact* Get_SnowMountainWagon() { return m_pSnowMountainWagon;}
 	void				   Set_SnowMountainWagon(CEnvironment_Interact* pSnowWagon) { m_pSnowMountainWagon = pSnowWagon;}
+
+	CHawk*				   Get_Hawk() { return m_pCutSceneHawk; }
+	void				   Set_Hawk(CHawk* pHawk) { m_pCutSceneHawk = pHawk;}
+	void				   Start_HawkCutScene();
 
 public:
 	CNavigation* Get_Navigation() { return m_pNavigation; }
@@ -279,6 +285,7 @@ private:
 	CSky*								m_pSky = { nullptr };
 	CNavigation*						m_pNavigation = { nullptr };
 	CEnvironment_Interact*				m_pSnowMountainWagon = { nullptr };
+	CHawk*								m_pCutSceneHawk = { nullptr };
 
 
 	vector<pair<_int, _bool>>			m_vecLevelSwitch; //! 특정 레벨에서 필요한 스위치 개수만큼 푸시 해주고 On, Off 시켜주자.

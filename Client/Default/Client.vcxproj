@@ -197,6 +197,7 @@
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImZoomSlider.h" />
     <ClInclude Include="..\Public\Actor.h" />
+    <ClInclude Include="..\Public\AnimalObject.h" />
     <ClInclude Include="..\Public\Assassin.h" />
     <ClInclude Include="..\Public\Assassin_AttackScream.h" />
     <ClInclude Include="..\Public\Assassin_DodgeRun_L_01.h" />
@@ -1439,6 +1440,7 @@
     <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.cpp" />
+    <ClCompile Include="..\Private\AnimalObject.cpp" />
     <ClCompile Include="..\Private\Assassin.cpp" />
     <ClCompile Include="..\Private\Assassin_AttackScream.cpp" />
     <ClCompile Include="..\Private\Assassin_DodgeRun_L_01.cpp" />

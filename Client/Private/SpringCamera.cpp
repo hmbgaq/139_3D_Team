@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "MasterCamera.h"
 #include "Bone.h"
+#include "Hawk.h"
 #include "SMath.h"
 
 CSpringCamera::CSpringCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -90,118 +91,19 @@ void CSpringCamera::Priority_Tick(_float fTimeDelta)
 
 void CSpringCamera::Tick(_float fTimeDelta)
 {
-	PreActualPosition = m_TargetPosition;
-
-	// !SH Add
-	if (m_pGameInstance != nullptr)
+	if (m_bHawkSpring == false)
 	{
-		if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
-		{
-			if (m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
-			{
-				m_pDataManager->Set_MouseFix(true);
-				m_pDataManager->Set_MouseCenter(true);
-			}
-			else
-			{
-				m_pDataManager->Set_MouseFix(false);
-				m_pDataManager->Set_MouseCenter(false);
-			}
-		}
-	}
+		For_PlayerSpring(fTimeDelta);
 
+		//!호크가 아닐때 호크에서 쓰는 변수초기화
+		m_fSplineTimeAcc = 0.0;
+		m_iCurrentAtPoint = 0;
 
-
-	if(true == m_pPlayer->m_bPlayerCheck && m_pPlayer != nullptr)
-	{// 뼈에 붙인 카메라 
-		_float4x4 BoneMatrix = {};
-		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-
-		BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
-		_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
-		_float4x4 temp = {};
-		XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
-		m_TargetPosition.x = temp._41;
-		m_TargetPosition.y = temp._42;
-		m_TargetPosition.z = temp._43;
-		NewTargetPosition = m_TargetPosition;
 	}
 	else
 	{
-		// 뼈에 붙인 카메라 TEST
-		_float4x4 BoneMatrix = {};
-		
-		BoneMatrix = m_pCharacter->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
-		_float4x4 pCharacterPos = m_pCharacter->Get_Transform()->Get_WorldMatrix();
-		_float4x4 temp = {};
-		XMStoreFloat4x4(&temp, BoneMatrix * pCharacterPos);
-		m_TargetPosition.x = temp._41;
-		m_TargetPosition.y = temp._42;
-		m_TargetPosition.z = temp._43;
-		NewTargetPosition = m_TargetPosition;
+		For_HawkSpring(fTimeDelta);
 	}
-	
-
-	m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
-	
-	Lerp_CameraPosition(fTimeDelta);
-	CameraRotation(fTimeDelta);
-	
-	
-
-	//Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
-	if (true == m_pPlayer->Is_Rotate_In_CameraDir() && true == m_pPlayer->m_bPlayerCheck)
-	{
-		RotatePlayer();
-	}
-	else
-	{
-		int i = 0;
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_TAB))
-	{
-		if (m_pDataManager != nullptr)
-		{
-			// !SH Add
-			if (m_pDataManager->Get_MouseFix() == true)
-			{
-				// !SH Add
-				m_pDataManager->Set_MouseFix(false);
-				m_pDataManager->Set_MouseCenter(false);
-			}
-			else
-			{
-				// !SH Add
-				m_pDataManager->Set_MouseFix(true);
-				m_pDataManager->Set_MouseCenter(true);
-			}
-		}
-	}
-
-	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
-	{
-		if (m_pGameInstance->Key_Down(DIK_F2))
-			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
-	}
-
-	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
-	//if (iCurrentLevel != (_uint)LEVEL_TOOL)
-	//{
-	//	if (m_pDataManager->Get_MouseCenter() == false)
-	//		ShowCursor(FALSE);
-	//	else
-	//		ShowCursor(TRUE);
-	//}
-
-	if (false == m_pDataManager->Get_MouseFix())
-		return;
-	if (true == m_pDataManager->Get_MouseFix())
-	{
-		Mouse_Fix();
-	}
-
-	__super::Tick(fTimeDelta);
 	
 }
 
@@ -214,6 +116,12 @@ void CSpringCamera::Late_Tick(_float fTimeDelta)
 
 	//CCharacter* m_pTargetCharacter = m_pPlayer->Get_Target();
 	//if (m_pTargetCharacter) return;
+
+	if (m_bHawkSpring == true) //! 호크 카메라 중일땐 안함.
+	{
+		return;
+	}
+
 
 	_long	MouseMoveX = m_pGameInstance->Get_DIMouseMove(DIMS_X);
 	_long	MouseMoveY = m_pGameInstance->Get_DIMouseMove(DIMS_Y);
@@ -331,6 +239,149 @@ void CSpringCamera::Lock_On(_float fTimeDelta)
 
 }
 
+void CSpringCamera::For_PlayerSpring(_float fTimeDelta)
+{
+	PreActualPosition = m_TargetPosition;
+
+	// !SH Add
+	if (m_pGameInstance != nullptr)
+	{
+		if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
+		{
+			if (m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
+			{
+				m_pDataManager->Set_MouseFix(true);
+				m_pDataManager->Set_MouseCenter(true);
+			}
+			else
+			{
+				m_pDataManager->Set_MouseFix(false);
+				m_pDataManager->Set_MouseCenter(false);
+			}
+		}
+	}
+
+
+
+	if (true == m_pPlayer->m_bPlayerCheck && m_pPlayer != nullptr)
+	{// 뼈에 붙인 카메라 
+		_float4x4 BoneMatrix = {};
+		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+
+		BoneMatrix = pPlayer->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+		_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
+		_float4x4 temp = {};
+		XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
+		m_TargetPosition.x = temp._41;
+		m_TargetPosition.y = temp._42;
+		m_TargetPosition.z = temp._43;
+		NewTargetPosition = m_TargetPosition;
+	}
+	else
+	{
+		// 뼈에 붙인 카메라 TEST
+		_float4x4 BoneMatrix = {};
+
+		BoneMatrix = m_pCharacter->Get_Body()->Get_BonePtr("Spine2")->Get_CombinedTransformationMatrix();
+		_float4x4 pCharacterPos = m_pCharacter->Get_Transform()->Get_WorldMatrix();
+		_float4x4 temp = {};
+		XMStoreFloat4x4(&temp, BoneMatrix * pCharacterPos);
+		m_TargetPosition.x = temp._41;
+		m_TargetPosition.y = temp._42;
+		m_TargetPosition.z = temp._43;
+		NewTargetPosition = m_TargetPosition;
+	}
+
+
+	m_pTransformCom->Look_At(m_ptarget->Get_State(CTransform::STATE::STATE_POSITION));
+
+	Lerp_CameraPosition(fTimeDelta);
+	CameraRotation(fTimeDelta);
+
+
+
+	//Player가 앞키를 누르면 카메라 회전했던 방향쪽에서 회전값을 받아서 카메라가 바라보고 있는 방향으로 플레이어도 쳐다 보게 만듬 
+	if (true == m_pPlayer->Is_Rotate_In_CameraDir() && true == m_pPlayer->m_bPlayerCheck)
+	{
+		RotatePlayer();
+	}
+	else
+	{
+		int i = 0;
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_TAB))
+	{
+		if (m_pDataManager != nullptr)
+		{
+			// !SH Add
+			if (m_pDataManager->Get_MouseFix() == true)
+			{
+				// !SH Add
+				m_pDataManager->Set_MouseFix(false);
+				m_pDataManager->Set_MouseCenter(false);
+			}
+			else
+			{
+				// !SH Add
+				m_pDataManager->Set_MouseFix(true);
+				m_pDataManager->Set_MouseCenter(true);
+			}
+		}
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	{
+		if (m_pGameInstance->Key_Down(DIK_F2))
+			CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
+	}
+
+	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
+	//if (iCurrentLevel != (_uint)LEVEL_TOOL)
+	//{
+	//	if (m_pDataManager->Get_MouseCenter() == false)
+	//		ShowCursor(FALSE);
+	//	else
+	//		ShowCursor(TRUE);
+	//}
+
+	if (false == m_pDataManager->Get_MouseFix())
+		return;
+	if (true == m_pDataManager->Get_MouseFix())
+	{
+		Mouse_Fix();
+	}
+
+	__super::Tick(fTimeDelta);
+}
+
+void CSpringCamera::For_HawkSpring(_float fTimeDelta)
+{
+	m_vHawkPreActualPosition = m_vHawkTargetPosition;
+
+	if (m_pHawk != nullptr)
+	{// 뼈에 붙인 카메라 
+		_float4x4 BoneMatrix = {};
+		CHawk* pHawk = CData_Manager::GetInstance()->Get_Hawk();
+
+		BoneMatrix = pHawk->Get_Body()->Get_BonePtr("Tail")->Get_CombinedTransformationMatrix();
+		_float4x4 pHawkPos = pHawk->Get_Transform()->Get_WorldMatrix();
+		_float4x4 temp = {};
+		XMStoreFloat4x4(&temp, BoneMatrix * pHawkPos);
+		m_vHawkTargetPosition.x = temp._41;
+		m_vHawkTargetPosition.y = temp._42;
+		m_vHawkTargetPosition.z = temp._43;
+		m_vHawkNewTargetPosition = m_vHawkTargetPosition;
+	}
+
+	HawkLerp_CameraPosition(fTimeDelta);
+	//CameraRotation(fTimeDelta);
+	
+	Spline_At_LogicFunction(fTimeDelta);
+}
+
+
+
 void CSpringCamera::RotatePlayer()
 {
 	//_matrix rotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, m_fAngle, 0.0f);
@@ -420,6 +471,109 @@ void CSpringCamera::Shake_Camera(_float fTimeDelta)
 	}
 	ActualPosition += Temp;
 
+}
+
+void CSpringCamera::Spline_At_LogicFunction(const _float fTimeDelta)
+{
+
+	m_fSplineTimeAcc += (_float)fTimeDelta * m_fSplineMoveSpeed;
+
+	if (m_vecAtPoints.size() == 1)
+	{
+		m_bFixAt = true;
+	}
+
+	if (m_vecAtPoints.size() != 1 && !m_bOnceAt)
+	{
+		m_bFixAt = false;
+		m_bOnceAt = true;
+	}
+
+	if (m_fSplineTimeAcc >= 1.f)
+	{
+		m_fSplineTimeAcc = 0.f;
+	
+
+		if (m_iCurrentAtPoint + 1 >= m_vecAtPoints.size())
+		{
+			m_bFixAt = true;
+		}
+		else
+		{
+			++m_iCurrentAtPoint;
+		}
+
+		if (m_iCurrentAtPoint + 1 >= m_vecAtPoints.size())
+		{
+			
+		}
+
+	}
+	
+// 	if (false == m_pDataManager->Get_MouseFix())
+// 		return;
+	if (true == m_pDataManager->Get_MouseFix())
+	{
+		Mouse_Fix();
+	}
+
+
+	Spline_At_Function(fTimeDelta);
+
+	__super::Tick(fTimeDelta);
+}
+
+void CSpringCamera::Spline_At_Function(const _float fTimeDelta)
+{
+	if(m_vecAtPoints.empty() == true)
+		return;
+
+	_vector vAtPosition;
+
+
+	if (!m_bFixAt)
+	{
+		if (m_iCurrentAtPoint + 1 >= m_vecAtPoints.size())
+			vAtPosition = XMLoadFloat4(&m_vecAtPoints[m_iCurrentAtPoint]);
+		else
+		{
+			_vector vAtPoint1, vAtPoint2;
+			vAtPoint1 = XMLoadFloat4(&m_vecAtPoints[m_iCurrentAtPoint]);
+			vAtPoint2 = XMLoadFloat4(&m_vecAtPoints[m_iCurrentAtPoint + 1]);
+			vAtPosition = XMVectorCatmullRom(vAtPoint1, vAtPoint1, vAtPoint2, vAtPoint2, m_fSplineTimeAcc);
+		}
+	}
+	else
+	{
+		//if (m_vecAt.size() == 1)
+		vAtPosition = XMLoadFloat4(&m_vecAtPoints[m_iCurrentAtPoint]);
+		//else
+		//vAtPosition = m_vecAt[m_iNumAtCheck + 1];
+	}
+
+	vAtPosition.m128_f32[3] = 1.f;
+	m_pTransformCom->Look_At(vAtPosition);
+}
+
+void CSpringCamera::HawkLerp_CameraPosition(_float fTimeDelta)
+{
+	// 현재 카메라 위치와 다음 타겟 위치 사이의 거리 계산
+	_float3 direction = m_vHawkNewTargetPosition - m_vHawkActualPosition;
+	_float distance = XMVectorGetX(XMVector3Length(direction));
+
+	// 일정 비율로 현재 카메라 위치를 다음 타겟 위치로 이동
+	_float moveDistance = m_fSplineMoveInterpolate * fTimeDelta;
+	if (moveDistance > distance)
+	{
+		// 이동 거리가 남은 거리보다 크면 바로 다음 타겟 위치로 이동
+		m_vHawkActualPosition = m_vHawkNewTargetPosition;
+	}
+	else
+	{
+		// 일정 비율로 이동
+		_float3 moveVector = XMVector3Normalize(direction) * moveDistance;
+		m_vHawkActualPosition += moveVector;
+	}
 }
 
 
