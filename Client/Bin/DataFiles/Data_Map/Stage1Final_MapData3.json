@@ -1466,7 +1466,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 221.3716278076172, 0.0, 44.19449234008789, 1.0 ]
+          [ 221.3716278076172, 2.384185791015625e-07, 44.19449234008789, 1.0 ]
         ]
       },
       "Index": 81,
@@ -1482,9 +1482,9 @@
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 0.9999998807907104, 0.0, 0.0 ],
-          [ 0.0, 0.0, 0.9999998807907104, 0.0 ],
-          [ 175.16424560546875, -5.479806900024414, 70.75907897949219, 1.0 ]
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 175.16424560546875, -5.479806900024414, 68.33160400390625, 1.0 ]
         ]
       },
       "Index": 82,
@@ -1574,7 +1574,7 @@
           [ -0.9957414269447327, -8.69687028171029e-06, 0.09219010919332504, 0.0 ],
           [ -8.566285941924434e-06, 1.0, 1.8121755829270114e-06, 0.0 ],
           [ -0.09219010919332504, 1.014731424220372e-06, -0.9957414269447327, 0.0 ],
-          [ 167.30601501464844, 8.70882511138916, 183.14303588867188, 1.0 ]
+          [ 167.30601501464844, 9.31242561340332, 183.14303588867188, 1.0 ]
         ]
       },
       "Index": 87,
@@ -1592,7 +1592,7 @@
           [ -0.009495072066783905, -3.636419592112361e-07, 0.9999549388885498, 0.0 ],
           [ -6.915553967701271e-06, 1.0, 2.979917042011948e-07, 0.0 ],
           [ -0.9999549388885498, -6.912414391990751e-06, -0.009495072066783905, 0.0 ],
-          [ 146.32708740234375, 7.075030326843262, 170.61972045898438, 1.0 ]
+          [ 146.32708740234375, 8.203601837158203, 170.61972045898438, 1.0 ]
         ]
       },
       "Index": 88,
@@ -1610,7 +1610,7 @@
           [ 0.9500480890274048, 0.0, 0.3121035397052765, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ -0.3121035397052765, 0.0, 0.9500480890274048, 0.0 ],
-          [ 155.28175354003906, 9.23876667022705, 216.39520263671875, 1.0 ]
+          [ 155.28175354003906, 9.667271614074707, 216.39520263671875, 1.0 ]
         ]
       },
       "Index": 89,
@@ -1628,31 +1628,13 @@
           [ 0.01976213976740837, 0.0, 0.9998047351837158, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ -0.9998047351837158, 0.0, 0.01976213976740837, 0.0 ],
-          [ 148.17967224121094, 9.195648193359375, 204.78424072265625, 1.0 ]
+          [ 148.17967224121094, 9.667271614074707, 204.78424072265625, 1.0 ]
         ]
       },
       "Index": 90,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_TNTCrate",
       "ObjectTag": "TNTCrate",
-      "PlayAnimationIndex": 0,
-      "ShaderPassIndex": 0,
-      "Type": "Basic"
-    },
-    {
-      "AnimType": false,
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 221.55538940429688, 0.0, 42.14895248413086, 1.0 ]
-        ]
-      },
-      "Index": 91,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "ModelTag": "Prototype_Component_Model_IcarusRockSandBank3",
-      "ObjectTag": "IcarusRockSandBank3",
       "PlayAnimationIndex": 0,
       "ShaderPassIndex": 0,
       "Type": "Basic"
@@ -27684,8 +27666,8 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 2,
-      "InteractColliderCenter": [ -1.0, 1.0, 4.0, 0.0 ],
-      "InteractColliderSize": [ 0.5, 1, 6.0, 0.0 ],
+      "InteractColliderCenter": [ -1.0, 0.0, 4.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 6.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLadderCount": 4,
       "InteractLevel": 9,
@@ -27707,7 +27689,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 2.0, 2.5, 3.0, 0.0 ],
+      "RootMoveRate": [ 2.0, 2.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -27739,7 +27721,7 @@
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 3,
       "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
-      "InteractColliderSize": [ 0.5, 1, 0.5, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLadderCount": 4,
       "InteractLevel": 9,
@@ -27761,7 +27743,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 2.0, 2.5, 3.0, 0.0 ],
+      "RootMoveRate": [ 2.0, 2.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -27846,7 +27828,7 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 5,
-      "InteractColliderCenter": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractColliderCenter": [ 1.0, 1.0, 1.2000000476837158, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLadderCount": 4,
@@ -27856,7 +27838,7 @@
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 3,
+      "InteractType": 4,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
       "LeverSwitchIndex": -1,
@@ -27869,7 +27851,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.4000000476837158, 1.4000000476837158, 0.0 ],
+      "RootMoveRate": [ 1.0, 0.4000000059604645, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -27900,7 +27882,7 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 6,
-      "InteractColliderCenter": [ -1.0, 1.0, 1.0, 0.0 ],
+      "InteractColliderCenter": [ -1.0, 1.0, 1.2000000476837158, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLadderCount": 4,
@@ -27910,7 +27892,7 @@
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 3,
+      "InteractType": 4,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
       "LeverSwitchIndex": -1,
@@ -27923,7 +27905,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.4000000476837158, 1.4000000476837158, 0.0 ],
+      "RootMoveRate": [ 1.0, 0.4000000059604645, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -28262,7 +28244,7 @@
             [ 239.6129608154297, 0.6107544898986816, 42.0361328125, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/TEST32323333333_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn1",
         "OnTrigger": false,
         "SpawnGroupIndex": 1
@@ -28278,7 +28260,7 @@
             [ 253.0107421875, 2.496873140335083, 11.082213401794434, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/TEST32323333333_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn2",
         "OnTrigger": false,
         "SpawnGroupIndex": 0
@@ -28294,7 +28276,7 @@
             [ 228.68804931640625, 1.1457509994506836, 60.23256301879883, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/TEST32323333333_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn3",
         "OnTrigger": false,
         "SpawnGroupIndex": 2
@@ -28310,7 +28292,7 @@
             [ 189.0815887451172, -8.666459083557129, 63.92729949951172, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/TEST32323333333_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn4",
         "OnTrigger": false,
         "SpawnGroupIndex": 3
@@ -28326,7 +28308,7 @@
             [ 130.79710388183594, 0.23765693604946136, 102.0268325805664, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/TEST32323333333_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn5",
         "OnTrigger": false,
         "SpawnGroupIndex": 4
@@ -28342,7 +28324,7 @@
             [ 159.40817260742188, 11.178049087524414, 196.69546508789063, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/TEST32323333333_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn6",
         "OnTrigger": false,
         "SpawnGroupIndex": 5

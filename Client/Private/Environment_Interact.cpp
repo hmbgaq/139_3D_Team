@@ -3360,8 +3360,13 @@ void CEnvironment_Interact::Free()
 	if(m_pPlayer != nullptr)
 		Safe_Release(m_pPlayer);
 
+	if(m_pUI_Interaction != nullptr)
+		Safe_Release(m_pUI_Interaction);
+
 	if (m_pUIManager != nullptr)
 		Safe_Release(m_pUIManager);
+
+
 
 	Safe_Release(m_pModelCom);	
 	Safe_Release(m_pShaderCom);
