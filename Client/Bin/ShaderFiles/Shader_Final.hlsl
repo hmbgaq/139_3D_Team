@@ -270,7 +270,8 @@ PS_OUT PS_MAIN_FINAL_SEPHIA(PS_IN In)
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
     vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
-    float4 MainObject = vFinal + vDebug + vRimBloom + vOutLine;
+    
+    float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom;
     
     MainObject = Sepia(MainObject);
     vIndep = Sepia(vIndep);
@@ -300,7 +301,8 @@ PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
     vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
-    float4 MainObject = vFinal + vDebug + vRimBloom + vOutLine;
+    
+    float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom;
     
     MainObject = MonochromePass(MainObject);
     vIndep = MonochromePass(vIndep);

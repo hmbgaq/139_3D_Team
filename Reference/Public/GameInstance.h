@@ -263,7 +263,9 @@ public:
 	void Update_Hitlag(_float fTimeDelta);
 
 	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = max(m_fRadialBlurTime, fTime); };
+	void Set_ChromaBlurTime(_float fTime = 0.3f) { m_fChromaTime = max(m_fChromaTime, fTime); };
 	void Update_RadialBlurTime(_float fTimeDelta);
+	void Update_ChromaTime(_float fTimeDelta);
 #pragma endregion
 
 private:
@@ -290,6 +292,7 @@ private:
 	_float m_fHitlag_Time = { 0.f };
 	_float m_fTimeDelta = { 0.f };
 	_float m_fRadialBlurTime = { 0.f };
+	_float m_fChromaTime = { 0.f };
 
 private:
 	_uint m_iCurrentLevelIndex = { 0 };

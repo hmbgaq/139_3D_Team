@@ -363,14 +363,15 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 
 	if(m_pRigidBodyCom != nullptr)
 		m_pRigidBodyCom->Late_Tick(fTimeDelta);
+
 	/* 소영 보류 */
-	if (true == m_bRenderOutLine)
-	{
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
-	}
+	//if (true == m_bRenderOutLine)
+	//{
+	//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
+	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
+	//}
 }
 
 HRESULT CEnvironment_Interact::Render()

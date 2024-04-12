@@ -26,7 +26,8 @@ namespace Engine
 		MYPBR,				 // 6 - PBR (외부 참고)
 		VIEW_SHADOW,		 // 7 - 
 		FOG,				 // 8 -
-		TEST, 
+		TEST,				 // 9 - 테스트용 
+		VOLUMETRIC_SPOTLIGHT,// 10 - Volumetric SpotLight 구현용 
 		SHADER_END };
 
 	enum class SSAO_SHADER {
@@ -47,6 +48,7 @@ namespace Engine
 		POST_ORIGIN, 
 		POST_HDR, POST_RADIAL, POST_DOF, POST_EFFECT_MIX, POST_EFFECT_DISTORTION, //(1) ~ (5)
 		POST_VIGNETTE, POST_SSR, POST_CHROMA, POST_MOTIONBLUR, POST_LUMASHARPEN, POST_FOG,
+		POST_GODRAY, POST_EFFECT_FINAL, 
 		POST_END
 	};
 

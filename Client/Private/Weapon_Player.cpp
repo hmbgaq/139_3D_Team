@@ -52,7 +52,21 @@ void CWeapon_Player::Late_Tick(_float fTimeDelta)
 
 HRESULT CWeapon_Player::Render()
 {
-	FAILED_CHECK(__super::Render());
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+
+		m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
+
+		m_pModelCom->Render((_uint)i);
+	}
 
 	return S_OK;
 }
@@ -97,8 +111,7 @@ HRESULT CWeapon_Player::Ready_Components()
 
 HRESULT CWeapon_Player::Bind_ShaderResources()
 {
-	if (FAILED(__super::Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Bind_ShaderResources());
 	
 	return S_OK;
 }

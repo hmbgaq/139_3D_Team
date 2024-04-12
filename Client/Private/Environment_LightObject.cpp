@@ -62,10 +62,10 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 	}
 
 
-	if (true == m_tEnvironmentDesc.bEffect)
-	{
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Fire/", "Fire_Torch_05.json", this);
-	}
+// 	if (true == m_tEnvironmentDesc.bEffect)
+// 	{
+// 		m_pEffect = EFFECT_MANAGER->Play_Effect("Fire/", "Fire_Torch_05.json", this);
+// 	}
 	
 	return S_OK;
 }
@@ -256,7 +256,6 @@ void CEnvironment_LightObject::Change_LightType(LIGHT_DESC::TYPE eLightType)
 	pLight->Set_LightDesc(tOriginDesc);
 
 }
-
 
 
 void CEnvironment_LightObject::Set_EffectPos(_float3 vEffectPos)
@@ -467,8 +466,8 @@ void CEnvironment_LightObject::Free()
 		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
 	
 
-	if (m_pEffect != nullptr)
-		Safe_Release(m_pEffect);
+	//if (m_pEffect != nullptr)
+	//	Safe_Release(m_pEffect);
 	
 	
 
@@ -477,6 +476,8 @@ void CEnvironment_LightObject::Free()
 
 	if(m_iCurrentLevel == (_uint)LEVEL_TOOL)
 		Safe_Release(m_pPickingCollider);
+
+	
 }
 
 

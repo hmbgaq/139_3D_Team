@@ -39,8 +39,8 @@ struct VIGNETTE_DESC
 
 struct SSR_DESC
 {
-    float fRayStep; // 0.005
-    float fStepCnt; // 75
+    float fRayStep;     // 1.6f
+    float fRayHitThreshold; // 2.0f
     bool bSSR_Active;
 };
 
@@ -75,6 +75,16 @@ struct FOG_DESC
     float fFogHeightDensity;
     float padding; // 4 
     float4 vFogColor;
+};
+
+struct GODRAY_DESC
+{
+    float godraysDensity;
+    float godraysWeight;
+    float godraysDecay;
+    float godraysExposure;
+    float2 vScreenSunPosition;
+    float2 padding;
 };
 
 /*=============================================================
@@ -117,6 +127,7 @@ Texture2D g_Effect_Target;
 Texture2D g_EffectBlur_Target;
 Texture2D g_Effect_Solid;
 Texture2D g_Distortion_Target;
+Texture2D g_Priority_Distortion_Target;
 Texture2D g_Effect_Priority_DistortionTarget;
 Texture2D g_Effect_Priority_Diffuse;
 Texture2D g_EffectBlur_Priority_Target;
@@ -152,6 +163,13 @@ LUMA_DESC g_Luma_Desc;
 Texture2D g_PerlinNoiseTexture;
 float2 g_vFogUVAcc = { 0.f, 0.f };
 FOG_DESC g_Fogdesc;
+
+/* ========== GodRay ==========*/
+Texture2D SunTexture;
+GODRAY_DESC g_GodrayDesc;
+
+/* ========== Effect_Final ==========*/
+Texture2D g_Effect_Combine;
 
 /*=============================================================
  
@@ -307,8 +325,8 @@ float4 SSRBinarySearch(float3 dir, inout float3 hitCoord)
     float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
     float depthDifference = hitCoord.z - viewSpacePosition.z;
 
-    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fStepCnt ? 1.0f : 0.0f);
-//    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fRayHitThreshold ? 1.0f : 0.0f);
+    //return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fStepCnt ? 1.0f : 0.0f);
+    return float4(projectedCoord.xy, depth, abs(depthDifference) < g_SSR_Desc.fRayHitThreshold ? 1.0f : 0.0f);
 }
 
 float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
@@ -322,8 +340,8 @@ float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
 
-        float4 DepthTexture = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
-        float depth = DepthTexture.r;
+        //float4 DepthTexture = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
+        float depth = g_DepthTarget.SampleLevel(PointClampSampler, projectedCoord.xy, 0);
         float3 viewSpacePosition = GetViewSpacePosition(projectedCoord.xy, depth);
         float depthDifference = hitCoord.z - viewSpacePosition.z;
 
@@ -338,16 +356,16 @@ float4 SSRRayMarch(float3 dir, inout float3 hitCoord)
    return float4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-//Logical XOR - not used right now but it might be useful at a later time
-float XOR(float xor_A, float xor_B)
-{
-    return saturate(dot(float4(-xor_A, -xor_A, xor_A, xor_B), float4(xor_B, xor_B, 1.0, 1.0))); // -2 * A * B + A + B
-}
-
 
 bool IsInsideScreen(float2 vCoord)
 {
     return !(vCoord.x < 0 || vCoord.x > 1 || vCoord.y < 0 || vCoord.y > 1);
+}
+
+//Logical XOR - not used right now but it might be useful at a later time
+float XOR(float xor_A, float xor_B)
+{
+    return saturate(dot(float4(-xor_A, -xor_A, xor_A, xor_B), float4(xor_B, xor_B, 1.0, 1.0))); // -2 * A * B + A + B
 }
 
 
@@ -615,6 +633,33 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
+    //vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
+    
+    //vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
+    //vector Effect_Diffuse = g_Effect_Target.Sample(LinearSampler, In.vTexcoord);
+    //vector Effect_Blur = g_EffectBlur_Target.Sample(LinearSampler, In.vTexcoord);
+    
+    //vector Effect_Priority_Solid = g_Effect_Priority_Solid.Sample(LinearSampler, In.vTexcoord);
+    //vector Effect_Priority_Diffuse = g_Effect_Priority_Diffuse.Sample(LinearSampler, In.vTexcoord);
+    //vector Effect_Priority_Blur = g_EffectBlur_Priority_Target.Sample(LinearSampler, In.vTexcoord);
+    
+    //vector Distortion_Effects = Effect_Diffuse + Effect_Blur + Effect_Priority_Diffuse + Effect_Priority_Blur;
+    
+    //// 다른 이펙트를 가리지 않도록 처리
+    //Out.vColor = Effect_Solid + Effect_Priority_Solid;
+    
+    //if (Out.vColor.a == 0.f)
+    //{
+    //    Out.vColor += Distortion_Effects;
+    //}
+   
+    //if (Out.vColor.a == 0)
+    //    discard;
+    
+    //Out.vColor.a == 0;
+    
+    //Out.vColor += Deferred;
+    
     vector Deferred = g_Deferred_Target.Sample(LinearSampler, In.vTexcoord);
     
     vector Effect_Solid = g_Effect_Solid.Sample(LinearSampler, In.vTexcoord);
@@ -634,13 +679,8 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
         Out.vColor += Effect_Distortion;
     
     if (Out.vColor.a == 0.f)
-    {       
-        //Out.vColor += Deferred;
-        
-        //if (Effect.a > 0.f)
-        //   Out.vColor *= Effect + Effect_Blur;
-                 
-        Out.vColor += Deferred + Effect_Diffuse + Effect_Blur + Effect_Priority_Diffuse + Effect_Priority_Blur; // 원래
+    {
+        Out.vColor += Deferred  + Effect_Diffuse + Effect_Blur + Effect_Priority_Diffuse + Effect_Priority_Blur; // 원래
     }
    
     
@@ -653,12 +693,28 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     if (Out.vColor.a == 0)
         discard;
     
+    
     return Out;
 }
 
 /* ------------------- 5 -Effect Distortion Shader -------------------*/
 PS_OUT PS_MAIN_EFFECT_DISTORTION(PS_IN In)
 {
+   // PS_OUT Out = (PS_OUT) 0;
+   // 
+   // // 전처리에서 찍어준 디스토션 렌더타겟을 샘플링해서 얻어온다.
+   // vector Distortion = g_Effect_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+   //  
+   // // 왜곡된 텍스쿠드 좌표를 만든다.
+   // float2 vDistortedCoord = Distortion.xy + In.vTexcoord.xy;
+   //  
+   // // 디퍼드 렌더타겟을 왜곡된 텍스쿠드 좌표로 샘플링한다.
+   // vector Result = g_Deferred_Target.Sample(LinearSampler, vDistortedCoord);
+   // 
+   // Out.vColor = Result;
+   // 
+   // if(Out.vColor.a == 0)
+   //     discard;
     PS_OUT Out = (PS_OUT) 0;
        
     // 전처리에서 찍어준 디스토션 렌더타겟을 샘플링해서 얻어온다.
@@ -692,119 +748,121 @@ PS_OUT PS_MAIN_VIGNETTE(PS_IN In)
 /* ------------------- 7 - SSR -------------------*/
 PS_OUT PS_MAIN_SSR(PS_IN In)
 {
+   // PS_OUT Out = (PS_OUT) 0;
+   // 
+   // if (0 == g_SSR_Desc.fStepCnt || EPSILON > g_SSR_Desc.fRayStep)
+   // {
+   //     Out.vColor = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+   //     return Out;
+   // }
+   // float4 vColor = float4(0.f, 0.f, 0.f, 0.f);
+   // 
+   // float4 vNormal = g_NormalTarget.Sample(LinearSampler, In.vTexcoord);
+   // float4 vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+   // float4 vProperties = g_ORMTarget.Sample(LinearSampler, In.vTexcoord);
+   // 
+   // float fViewZ = vDepth.w * 1200.f;
+   // 
+   // float4 vWorldPos;
+   //
+   // vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
+   // vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+   // vWorldPos.z = vNormal.w;
+   // vWorldPos.w = 1.0f;
+   // 
+   // vWorldPos *= fViewZ;
+   // //vWorldPos = mul(vWorldPos, g_ProjViewMatrixInv);
+   // vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+   // vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+   // 
+   // float4 vViewDir = normalize(vWorldPos - g_vCamPosition);
+   // vViewDir.w = 0.f;
+   // 
+   // float4 vRayOrigin = vWorldPos;
+   // 
+   // vNormal = float4(vNormal.xyz * 2.f - 1.f, 0.f);
+   // float4 vRayDir = normalize(reflect(vViewDir, vNormal));
+   // vRayDir.w = 0.f;
+   // 
+   // float fStep = g_SSR_Desc.fRayStep;
+   // float4x4 matVP = mul(g_ViewMatrix, g_ProjMatrix);
+   // 
+   // float fPixelDepth = 0.f;
+   // int iStepDistance = 0;
+   // float2 vRayPixelPos = (float2) 0;
+   //
+   // [loop]
+   // for (iStepDistance = 1; iStepDistance < g_SSR_Desc.fStepCnt; ++iStepDistance)
+   // {
+   //     float4 vDirStep = vRayDir * fStep * iStepDistance;
+   //     vDirStep.w = 0.f;
+   //     float4 vRayWorldPos = vRayOrigin + vDirStep;
+   //
+   //     float4 vRayProjPos = mul(vRayWorldPos, matVP);
+   //     vRayProjPos.x = vRayProjPos.x / vRayProjPos.w;
+   //     vRayProjPos.y = vRayProjPos.y / vRayProjPos.w;
+   //   
+   //     vRayPixelPos = float2(vRayProjPos.x * 0.5f + 0.5f, vRayProjPos.y * -0.5f + 0.5f);
+   //     
+   //     clip(vRayPixelPos);
+   //     clip(1.f - vRayPixelPos);
+   //     
+   //     float2 vPixelCoord = float2(0.f, 0.f);
+   //     //vPixelCoord.x = g_NormalTarget.Sample(LinearSampler, vRayPixelPos).w;
+   //     //vPixelCoord.y = g_NormalDepthTarget.Sample(LinearSampler, vRayPixelPos).w;
+   //     
+   //     fPixelDepth = g_NormalTarget.Sample(LinearSampler, vRayPixelPos).w;
+   //     fPixelDepth *= g_DepthTarget.Sample(LinearSampler, vRayPixelPos).w * 1200.f;
+   //     
+   //     float fDiff = vRayProjPos.z - fPixelDepth;
+   //     
+   //     if (fDiff > 0.0f && fDiff < g_SSR_Desc.fRayStep)
+   //         break;
+   // }
+   //
+   // clip(g_SSR_Desc.fStepCnt - 0.5f - iStepDistance);
+   // 
+   // Out.vColor = g_ProcessingTarget.Sample(LinearSampler, vRayPixelPos) * (1.f - iStepDistance / g_SSR_Desc.fStepCnt) * (clamp(pow(vProperties.x, 2.2f) / (vProperties.y + EPSILON), 0.01f, 1.f));
+   // 
+   // return Out;
+
+    // Adria
     PS_OUT Out = (PS_OUT) 0;
-    
-    if (0 == g_SSR_Desc.fStepCnt || EPSILON > g_SSR_Desc.fRayStep)
+  
+    // 반사되는 반직선을 계산하기위해 Depth 와 Normal의 방향을 사용한다. -> 반직선이 Geometry와 충돌할때까지 추적 
+    float4 normalMetallic = g_NormalTarget.Sample(LinearBorderSampler, In.vTexcoord);
+    float4 sceneColor = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0);
+    vector vORMDesc = g_ORMTarget.Sample(LinearSampler, In.vTexcoord);
+
+    float metallic = vORMDesc.b;
+    if (metallic < 0.01f)
     {
-        Out.vColor = g_ProcessingTarget.Sample(LinearSampler, In.vTexcoord);
+        Out.vColor = sceneColor;
         return Out;
     }
-    float4 vColor = float4(0.f, 0.f, 0.f, 0.f);
-    
-    float4 vNormal = g_NormalTarget.Sample(LinearSampler, In.vTexcoord);
-    float4 vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
-    float4 vProperties = g_ORMTarget.Sample(LinearSampler, In.vTexcoord);
-    
-    float fViewZ = vDepth.w * 1200.f;
-    
-    float4 vWorldPos;
-
-    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
-    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
-    vWorldPos.z = vNormal.w;
-    vWorldPos.w = 1.0f;
-    
-    vWorldPos *= fViewZ;
-    //vWorldPos = mul(vWorldPos, g_ProjViewMatrixInv);
-    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
-    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
-    
-    float4 vViewDir = normalize(vWorldPos - g_vCamPosition);
-    vViewDir.w = 0.f;
-    
-    float4 vRayOrigin = vWorldPos;
-    
-    vNormal = float4(vNormal.xyz * 2.f - 1.f, 0.f);
-    float4 vRayDir = normalize(reflect(vViewDir, vNormal));
-    vRayDir.w = 0.f;
-    
-    float fStep = g_SSR_Desc.fRayStep;
-    float4x4 matVP = mul(g_ViewMatrix, g_ProjMatrix);
-    
-    float fPixelDepth = 0.f;
-    int iStepDistance = 0;
-    float2 vRayPixelPos = (float2) 0;
   
-    [loop]
-    for (iStepDistance = 1; iStepDistance < g_SSR_Desc.fStepCnt; ++iStepDistance)
-    {
-        float4 vDirStep = vRayDir * fStep * iStepDistance;
-        vDirStep.w = 0.f;
-        float4 vRayWorldPos = vRayOrigin + vDirStep;
+    float3 normal = normalMetallic.rgb;
+    normal = 2 * normal - 1.0;
+    normal = normalize(normal);
 
-        float4 vRayProjPos = mul(vRayWorldPos, matVP);
-        vRayProjPos.x = vRayProjPos.x / vRayProjPos.w;
-        vRayProjPos.y = vRayProjPos.y / vRayProjPos.w;
-      
-        vRayPixelPos = float2(vRayProjPos.x * 0.5f + 0.5f, vRayProjPos.y * -0.5f + 0.5f);
-        
-        clip(vRayPixelPos);
-        clip(1.f - vRayPixelPos);
-        
-        float2 vPixelCoord = float2(0.f, 0.f);
-        //vPixelCoord.x = g_NormalTarget.Sample(LinearSampler, vRayPixelPos).w;
-        //vPixelCoord.y = g_NormalDepthTarget.Sample(LinearSampler, vRayPixelPos).w;
-        
-        fPixelDepth = g_NormalTarget.Sample(LinearSampler, vRayPixelPos).w;
-        fPixelDepth *= g_DepthTarget.Sample(LinearSampler, vRayPixelPos).w * 1200.f;
-        
-        float fDiff = vRayProjPos.z - fPixelDepth;
-        
-        if (fDiff > 0.0f && fDiff < g_SSR_Desc.fRayStep)
-            break;
-    }
+    float4 DepthColor = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
+    float depth = DepthColor.r;
+    float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
+    float3 reflectDirection = normalize(reflect(viewSpacePosition, normal));
+
+    float3 hitPosition = viewSpacePosition;
+    float4 coords = SSRRayMarch(reflectDirection, hitPosition);
+
+    float2 coordsEdgeFactor = float2(1, 1) - pow(saturate(abs(coords.xy - float2(0.5f, 0.5f)) * 2), 8);
+    float screenEdgeFactor = saturate(min(coordsEdgeFactor.x, coordsEdgeFactor.y));
+    float reflectionIntensity = saturate(screenEdgeFactor * saturate(reflectDirection.z) * (coords.w));
+
+    float3 reflectionColor = reflectionIntensity * g_ProcessingTarget.SampleLevel(ClampSampler, coords.xy, 0).rgb;
+    Out.vColor =  sceneColor + metallic * max(0, float4(reflectionColor, 1.0f));
  
-    clip(g_SSR_Desc.fStepCnt - 0.5f - iStepDistance);
-    
-    Out.vColor = g_ProcessingTarget.Sample(LinearSampler, vRayPixelPos) * (1.f - iStepDistance / g_SSR_Desc.fStepCnt) * (clamp(pow(vProperties.x, 2.2f) / (vProperties.y + EPSILON), 0.01f, 1.f));
-    
     return Out;
-}
-// SSR
-//    PS_OUT Out = (PS_OUT) 0;
-    
-//    // 반사되는 반직선을 계산하기위해 Depth 와 Normal의 방향을 사용한다. -> 반직선이 Geometry와 충돌할때까지 추적 
-//    float4 normalMetallic = g_NormalTarget.Sample(LinearBorderSampler, In.vTexcoord);
-//    float4 sceneColor = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0);
+} 
 
-//    float metallic = normalMetallic.a;
-//    if (metallic < 0.01f)
-//    {
-//        Out.vColor = sceneColor;
-//        return Out;
-//    }
-    
-//    float3 normal = normalMetallic.rgb;
-//    normal = 2 * normal - 1.0;
-//    normal = normalize(normal);
-
-//    float4 DepthColor = g_DepthTarget.Sample(ClampSampler, In.vTexcoord);
-//    float depth = DepthColor.r;
-//    float3 viewSpacePosition = GetViewSpacePosition(In.vTexcoord, depth);
-//    float3 reflectDirection = normalize(reflect(viewSpacePosition, normal));
-
-//    float3 hitPosition = viewSpacePosition;
-//    float4 coords = SSRRayMarch(reflectDirection, hitPosition);
-
-//    float2 coordsEdgeFactor = float2(1, 1) - pow(saturate(abs(coords.xy - float2(0.5f, 0.5f)) * 2), 8);
-//    float screenEdgeFactor = saturate(min(coordsEdgeFactor.x, coordsEdgeFactor.y));
-//    float reflectionIntensity = saturate(screenEdgeFactor * saturate(reflectDirection.z) * (coords.w));
-
-//    float3 reflectionColor = reflectionIntensity * g_ProcessingTarget.SampleLevel(ClampSampler, coords.xy, 0).rgb;
-//    Out.vColor =  sceneColor + metallic * max(0, float4(reflectionColor, 1.0f));
-   
-//    return Out;
-//} 
 /* ------------------- 8 - Chroma-------------------*/
 PS_OUT PS_MAIN_CHROMA(PS_IN In)
 {
@@ -959,6 +1017,54 @@ PS_OUT PS_MAIN_FOG(PS_IN In)
     
     return Out;
 }
+
+/* ------------------- 12 - GodRay -------------------*/
+PS_OUT PS_MAIN_GODRAY(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float2 texCoord = In.vTexcoord;
+    float3 color = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0).rgb;
+    
+    float2 lightPosition = g_GodrayDesc.vScreenSunPosition.xy;
+    float2 deltaTexCoord = (texCoord - lightPosition);
+    const int NUM_SAMPLES = 32;
+    deltaTexCoord *= g_GodrayDesc.godraysDensity / NUM_SAMPLES;
+    
+    float illuminationDecay = 1.0f;
+    float3 accumulatedGodRays = float3(0.0f, 0.0f, 0.0f);
+    float3 accumulated = 0.0f;
+    
+    for (int i = 0; i < NUM_SAMPLES; i++)
+    {
+        texCoord.xy -= deltaTexCoord;
+        float3 sample = g_ProcessingTarget.SampleLevel(ClampSampler, In.vTexcoord, 0).rgb;
+        sample *= illuminationDecay * g_GodrayDesc.godraysWeight;
+        accumulated += sample;
+        illuminationDecay *= g_GodrayDesc.godraysDecay;
+    }
+    
+    accumulated *= g_GodrayDesc.godraysExposure;
+    Out.vColor = float4(color + accumulated, 1.0f);
+    
+    return Out;
+}
+
+/* ------------------- 13 - Effect Final -------------------*/
+PS_OUT PS_MAIN_EFFECT_FINAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+	     
+    vector vDistortion = g_Distortion_Target.Sample(LinearSampler, In.vTexcoord);
+
+    if (0.01f < vDistortion.r)
+        Out.vColor = g_Effect_Combine.Sample(ClampSampler, In.vTexcoord + (vDistortion.r * 0.1f));
+    else
+        Out.vColor = g_Effect_Combine.Sample(ClampSampler, In.vTexcoord);
+    return Out;
+}
+
+
 /*=============================================================
  
                          Technique 
@@ -1104,7 +1210,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_LUMA();
     }
 
-    pass Fog
+    pass Fog // 11
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -1114,5 +1220,29 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_FOG();
+    }
+
+    pass GodRay // 12
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_GODRAY();
+    }
+
+    pass Effect_Final
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EFFECT_FINAL();
     }
 }

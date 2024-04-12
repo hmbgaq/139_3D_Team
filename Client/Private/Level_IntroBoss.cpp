@@ -49,18 +49,16 @@ CLevel_IntroBoss::CLevel_IntroBoss(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 HRESULT CLevel_IntroBoss::Initialize()
 {
+    m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
     m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+    Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
 
     FAILED_CHECK(Ready_LightDesc());
     FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_LandObjects());
-    //FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
-    if (FAILED(Ready_UI()))
-        return E_FAIL;
-
-    Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
+    FAILED_CHECK(Ready_UI());
 
     return S_OK;
 }
@@ -202,6 +200,23 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
             return E_FAIL;
         }
     }
+
+    LIGHT_DESC LightDesc = {};
+    LightDesc.bEnable = true;
+    LightDesc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+    
+    LightDesc.vDirection = { 0.f, -1.f, 0.f, 0.f };
+    LightDesc.vPosition = _float4(60.0f, 5.f, 29.84f, 0.f);
+    LightDesc.fRange = 3.f;
+    LightDesc.fCutOff = 0.5f;
+    LightDesc.fOuterCutOff = 0.7f;
+
+    LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
+    LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
+    LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
+    LightDesc.fIntensity = 0.5f;
+    
+    CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
 
     return S_OK;
 }

@@ -1399,6 +1399,15 @@ void CGameInstance::Update_RadialBlurTime(_float fTimeDelta)
 	Get_Renderer()->Set_Radial_Blur_Active(bIsActivateRadialBlur);
 }
 
+void CGameInstance::Update_ChromaTime(_float fTimeDelta)
+{
+	m_fChromaTime = m_fChromaTime - fTimeDelta > 0 ? m_fChromaTime - fTimeDelta : 0.f;
+
+	_bool bIsActivateChroma = 0 < m_fChromaTime;
+
+	Get_Renderer()->Set_Chroma_Active(bIsActivateChroma);
+}
+
 wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 기준으로 잘라서 오브젝트 이름만 가져오자 - TO 승용
 {
 	size_t pos = strObjectTag.rfind(L"_");
