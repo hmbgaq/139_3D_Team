@@ -1440,6 +1440,204 @@
       "PlayAnimationIndex": 0,
       "ShaderPassIndex": 11,
       "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 251.37574768066406, 0.0, 34.413143157958984, 1.0 ]
+        ]
+      },
+      "Index": 80,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": true,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 221.3716278076172, 2.384185791015625e-07, 44.19449234008789, 1.0 ]
+        ]
+      },
+      "Index": 81,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_Crane",
+      "ObjectTag": "Crane",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 175.16424560546875, -5.479806900024414, 68.33160400390625, 1.0 ]
+        ]
+      },
+      "Index": 82,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 155.56124877929688, 0.0, 105.54010009765625, 1.0 ]
+        ]
+      },
+      "Index": 83,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 155.19912719726563, 0.0, 101.47913360595703, 1.0 ]
+        ]
+      },
+      "Index": 84,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 152.32452392578125, 0.0, 103.73985290527344, 1.0 ]
+        ]
+      },
+      "Index": 85,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 170.99404907226563, 9.722010612487793, 205.53173828125, 1.0 ]
+        ]
+      },
+      "Index": 86,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.9957414269447327, -8.69687028171029e-06, 0.09219010919332504, 0.0 ],
+          [ -8.566285941924434e-06, 1.0, 1.8121755829270114e-06, 0.0 ],
+          [ -0.09219010919332504, 1.014731424220372e-06, -0.9957414269447327, 0.0 ],
+          [ 167.30601501464844, 9.31242561340332, 183.14303588867188, 1.0 ]
+        ]
+      },
+      "Index": 87,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.009495072066783905, -3.636419592112361e-07, 0.9999549388885498, 0.0 ],
+          [ -6.915553967701271e-06, 1.0, 2.979917042011948e-07, 0.0 ],
+          [ -0.9999549388885498, -6.912414391990751e-06, -0.009495072066783905, 0.0 ],
+          [ 146.32708740234375, 8.203601837158203, 170.61972045898438, 1.0 ]
+        ]
+      },
+      "Index": 88,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.9500480890274048, 0.0, 0.3121035397052765, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ -0.3121035397052765, 0.0, 0.9500480890274048, 0.0 ],
+          [ 155.28175354003906, 9.667271614074707, 216.39520263671875, 1.0 ]
+        ]
+      },
+      "Index": 89,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.01976213976740837, 0.0, 0.9998047351837158, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ -0.9998047351837158, 0.0, 0.01976213976740837, 0.0 ],
+          [ 148.17967224121094, 9.667271614074707, 204.78424072265625, 1.0 ]
+        ]
+      },
+      "Index": 90,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TNTCrate",
+      "ObjectTag": "TNTCrate",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
     }
   ],
   "Instance_Json": [
@@ -27346,8 +27544,8 @@
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ -1.0, 1.0, -1.7000000476837158, 0.0 ],
-      "ColliderSize": [ 0.5, 0.5, 1.7000000476837158, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -27360,12 +27558,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 0,
+      "InteractColliderCenter": [ -1.0, 1.0, -1.7000000476837158, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 1.7000000476837158, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 1,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27374,6 +27580,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.5, 1.5, 1.5, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27384,14 +27591,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ -1.0, 1.0, 0.0, 0.0 ],
-      "ColliderSize": [ 0.5, 0.5, 1.2000000476837158, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -27404,12 +27612,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 1,
+      "InteractColliderCenter": [ -1.0, 1.0, 0.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 1.2000000476837158, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 1,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27418,6 +27634,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.5, 1.5, 1.5, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27428,14 +27645,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ -1.0, 0.0, 4.0, 0.0 ],
-      "ColliderSize": [ 0.5, 0.5, 6.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -27448,12 +27666,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 2,
+      "InteractColliderCenter": [ -1.0, 0.0, 4.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 6.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27462,6 +27688,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 2.0, 2.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27472,14 +27699,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
-      "ColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -27492,12 +27720,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 3,
+      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainHook1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27506,6 +27742,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 2.0, 2.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27516,14 +27753,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
-      "ColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -27536,12 +27774,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 4,
+      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
+      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainHook1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27550,6 +27796,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 2.0, 2.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27560,14 +27807,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 1.0, 1.0, 1.2000000476837158, 0.0 ],
-      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -27580,12 +27828,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 5,
+      "InteractColliderCenter": [ 1.0, 1.0, 1.2000000476837158, 0.0 ],
+      "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 4,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27594,6 +27850,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 0.4000000059604645, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27604,14 +27861,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ -1.0, 1.0, 1.2000000476837158, 0.0 ],
-      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ -0.9841952323913574, 1.7911623899635742e-06, -0.17708678543567657, 0.0 ],
@@ -27624,12 +27882,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 6,
+      "InteractColliderCenter": [ -1.0, 1.0, 1.2000000476837158, 0.0 ],
+      "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 4,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27638,6 +27904,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 0.4000000059604645, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27648,14 +27915,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 0.0, 0.0, 1.0, 0.0 ],
-      "ColliderSize": [ 1.7999999523162842, 1.0, 1.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ 1.0, 0.0, 0.0, 0.0 ],
@@ -27668,12 +27936,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 7,
+      "InteractColliderCenter": [ 0.0, 0.0, 1.0, 0.0 ],
+      "InteractColliderSize": [ 1.7999999523162842, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 9,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 0,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27682,6 +27958,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.5, 1.0, 1.5, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27692,14 +27969,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 0.5, 0.5, 3.799999952316284, 0.0 ],
-      "ColliderSize": [ 4.0, 2.0, 4.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
@@ -27712,12 +27990,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 8,
+      "InteractColliderCenter": [ 0.5, 0.5, 3.799999952316284, 0.0 ],
+      "InteractColliderSize": [ 4.0, 2.0, 4.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 1,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": true,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainJumpDown1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27726,6 +28012,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 3.0, 2.5, 3.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27736,14 +28023,15 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
       "Arrival": false,
       "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "ColliderCenter": [ 0.0, 0.25, 0.0, 0.0 ],
-      "ColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "Component": {
         "Transform": [
           [ -0.027422964572906494, -4.9907761479062174e-08, 0.9996139407157898, 0.0 ],
@@ -27756,12 +28044,20 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 9,
+      "InteractColliderCenter": [ 0.0, 0.25, 0.0, 0.0 ],
+      "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
+      "InteractLadderCount": 4,
       "InteractLevel": 3,
+      "InteractMove": false,
+      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
+      "InteractReverseLadderCount": 4,
       "InteractState": 1,
       "InteractType": 3,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27770,6 +28066,7 @@
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
       "PlayAnimationIndex": 0,
+      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
@@ -27780,7 +28077,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     }
   ],
   "LightObject_Json": null,
@@ -27790,7 +28088,7 @@
       "CutOff": 0.0,
       "Diffuse": [ 0.6431372761726379, 0.5411764979362488, 0.5411764979362488, 1.0 ],
       "Direction": [ 1.0, 1.0, 1.0, 1.0 ],
-      "Intensity": 1.0,
+      "Intensity": 0.0,
       "LightEnable": true,
       "LightIndex": 0,
       "OuterCutOff": 0.0,
@@ -27946,7 +28244,7 @@
             [ 239.6129608154297, 0.6107544898986816, 42.0361328125, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn1",
         "OnTrigger": false,
         "SpawnGroupIndex": 1
@@ -27962,7 +28260,7 @@
             [ 253.0107421875, 2.496873140335083, 11.082213401794434, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn2",
         "OnTrigger": false,
         "SpawnGroupIndex": 0
@@ -27978,7 +28276,7 @@
             [ 228.68804931640625, 1.1457509994506836, 60.23256301879883, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn3",
         "OnTrigger": false,
         "SpawnGroupIndex": 2
@@ -27994,7 +28292,7 @@
             [ 189.0815887451172, -8.666459083557129, 63.92729949951172, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn4",
         "OnTrigger": false,
         "SpawnGroupIndex": 3
@@ -28010,7 +28308,7 @@
             [ 130.79710388183594, 0.23765693604946136, 102.0268325805664, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn5",
         "OnTrigger": false,
         "SpawnGroupIndex": 4
@@ -28026,7 +28324,7 @@
             [ 159.40817260742188, 11.178049087524414, 196.69546508789063, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Final_MapData_MapData.json",
         "NameTag": "MonsterSpawn6",
         "OnTrigger": false,
         "SpawnGroupIndex": 5

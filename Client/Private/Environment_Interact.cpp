@@ -92,20 +92,19 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
 	{
-		Init_WagonEvent();
-	}
+		if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+		{
+			Init_WagonEvent();
+		}
 
-	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
-	{
 		if (m_tEnvironmentDesc.bOwner == true)
 		{
 			if (FAILED(Find_InteractGroupObject()))
 				return E_FAIL;
 		}
-		
-		
 	}
 
+	
 	if (m_tEnvironmentDesc.bRotate == true)
 	{
 		UnEnable_UpdateCells();
@@ -134,10 +133,10 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 		m_bExit = true;
 	}
 
-	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_JUMP300)
-	{
-		m_bTest = TRUE;
-	}
+	//if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_JUMP300)
+	//{
+	//	f = TRUE;
+	//}
 
 
 	if (m_tEnvironmentDesc.bAnimModel == true)
@@ -293,7 +292,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		Move_For_PlayerRootMotion();
 	}
 
-	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB || m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB)
+	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB || m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPEDOWN)
 	{
 		Rope_ChainFunction(fTimeDelta);
 	}
@@ -325,7 +324,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		m_pMoveRangeColliderCom->Update(XMMatrixIdentity());
 
 	
-	if (m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_JUMP300 && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true)
+	if (m_pPlayer != nullptr && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_JUMP300 && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true)
 	{
 		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
 		m_bInteract = false;
