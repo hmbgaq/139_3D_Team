@@ -144,7 +144,7 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 			// ÀÌÆåÆ® »ı¼º
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-			EFFECT_MANAGER->Play_Effect("Hit", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+			EFFECT_MANAGER->Play_Effect("Hit", "Hit_Distortion.json", nullptr, m_pTransformCom->Get_Position());
 		}
 
 		//m_pCollider->Set_Enable(false);

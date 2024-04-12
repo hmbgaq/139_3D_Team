@@ -153,8 +153,10 @@ public: /* For.Light_Manager */
 	HRESULT			Ready_StaticLightMatrix(_float3 vPos, _float3 vLook);
 
 
+
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	_bool		Remove_Light(const _uint& iIndex);
+	_bool		Remove_AllLight();
 	HRESULT		Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp);
 	HRESULT		Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp);
 	HRESULT		Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngleY, _float fAspectRatio, _float fNearZ, _float fFarZ);
@@ -298,6 +300,8 @@ private:
 	_uint m_iCurrentLevelIndex = { 0 };
 	CLevel* m_pNewLevel = { nullptr };
 	_bool m_bIsRequestOpenLevel = { false };
+
+	_bool m_bUseSoundManager = { false };
 
 
 public:

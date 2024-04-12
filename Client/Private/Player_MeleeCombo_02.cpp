@@ -6,7 +6,7 @@ void CPlayer_MeleeCombo_02::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 4);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 5);
 
 
 	CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_L);

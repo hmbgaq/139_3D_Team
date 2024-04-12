@@ -90,7 +90,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	
 	XMStoreFloat4x4(&m_InitMatrix, XMMatrixIdentity());
 
-	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
 		if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
 		{
@@ -1842,17 +1842,36 @@ void CEnvironment_Interact::ZipLine_Function()
 {
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
-	_float4 ZipLineRootBonePosition = m_pModelCom->Get_BonePtr("Root")->Get_CombinedPosition(WorldMatrix);
-	_float4 ZipLineFinalBonePosition = m_pModelCom->Get_BonePtr("Rope_030")->Get_CombinedPosition(WorldMatrix);
+	_float4x4 RootBoneMatrix = m_pModelCom->Get_BonePtr("Root")->Get_CombinedTransformationFloat4x4();
+	_float4x4 FinalBoneMatrix = m_pModelCom->Get_BonePtr("Rope_030")->Get_CombinedTransformationFloat4x4();
+
+	_float4 vRootPos = { RootBoneMatrix._41, RootBoneMatrix._42, RootBoneMatrix._43, 1.f};
+	_float4 vFinalPos = { FinalBoneMatrix._41, FinalBoneMatrix._42, FinalBoneMatrix._43, 1.f };
+
+	_vector vRootWorldPos = XMVector3TransformCoord(vRootPos, m_pTransformCom->Get_WorldMatrix());
+	_vector vFinalWorldPos = XMVector3TransformCoord(vFinalPos, m_pTransformCom->Get_WorldMatrix());
+
+	//_float4 ZipLineRootBonePosition = m_pModelCom->Get_BonePtr("Root")->Get_CombinedPosition(WorldMatrix);
+	//_float4 ZipLineFinalBonePosition = m_pModelCom->Get_BonePtr("Rope_030")->Get_CombinedPosition(WorldMatrix);
+
+	//!CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
+	//!
+	//!_float4x4 BoneMatrix = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedTransformationFloat4x4();
+	//!
+	//!_float4 vBonePos = { BoneMatrix._41, BoneMatrix._42, BoneMatrix._43, 1.f };
+	//!_vector vWorldPos = XMVector3TransformCoord(vBonePos, pInteractObject->Get_Transform()->Get_WorldMatrix());
+	//!vWorldPos.m128_f32[3] = 1.f;
 
 
-	_float4 vPlayerHandPos = m_pPlayer->Get_HandPos();
-	_float	fOffsetY = vPlayerHandPos.y - m_pPlayer->Get_Position().y;
+	m_vArrivalPosition = vFinalWorldPos;
 
-	ZipLineRootBonePosition.y -= fOffsetY;
+	//_float4 vPlayerHandPos = m_pPlayer->Get_HandPos();
+	//_float	fOffsetY = vPlayerHandPos.y - m_pPlayer->Get_Position().y;
+
+	//ZipLineRootBonePosition.y -= fOffsetY;
 	//_vector vDir = ZipLineFinalBonePosition - m_pPlayer->Get_HandPos();
 
-	_vector vZipLineDir = XMVector4Normalize(XMLoadFloat4(&ZipLineFinalBonePosition) - XMLoadFloat4(&ZipLineRootBonePosition));
+	//_float3 vZipLineDir = ZipLineFinalBonePosition - ZipLineRootBonePosition;
 	
 	
 	//! 먼저 시작 점을 구해야해. 시작점은 로프의 첫번째 뼈위치야. 즉 루트 뼈 인거지.
@@ -1860,7 +1879,7 @@ void CEnvironment_Interact::ZipLine_Function()
 	//! 플레이어의 위치로부터 손 위치까지의 오프셋 y만큼 벌어져야해.
 	
 	m_pPlayer->Set_InteractObject(this);
-	m_pPlayer->Set_InteractDir(XMVector3Normalize(vZipLineDir));
+	//m_pPlayer->Set_InteractDir(vZipLineDir);
 
 }
 _float4x4 CEnvironment_Interact::Get_ZipLineBoneMatrix()
@@ -3364,8 +3383,6 @@ void CEnvironment_Interact::Free()
 	if(m_pPlayer != nullptr)
 		Safe_Release(m_pPlayer);
 
-	if(m_pUI_Interaction != nullptr)
-		Safe_Release(m_pUI_Interaction);
 
 	if (m_pUIManager != nullptr)
 		Safe_Release(m_pUIManager);

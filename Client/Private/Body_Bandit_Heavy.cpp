@@ -100,7 +100,7 @@ HRESULT CBody_Bandit_Heavy::Ready_Components()
 	/* For.Com_Collider */
 	CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-	BoundingDesc.vExtents = _float3(0.7f, 1.0f, 0.7f);
+	BoundingDesc.vExtents = _float3(0.7f, 1.5f, 0.7f);
 	BoundingDesc.vCenter = _float3(0.f, 1.f, 0.f);
 
 

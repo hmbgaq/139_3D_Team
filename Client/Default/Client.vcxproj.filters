@@ -4009,6 +4009,33 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt">
       <UniqueIdentifier>{1b871775-93ff-4649-98d5-bb2ce11be509}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal">
+      <UniqueIdentifier>{16ad304a-426b-41e3-aee3-8b6e2312100c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk">
+      <UniqueIdentifier>{cf06b042-e1b8-43f4-8b99-f6f31997cd70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\1. Body">
+      <UniqueIdentifier>{ec9b3451-0712-4a48-aef8-82d071bf3dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State">
+      <UniqueIdentifier>{e3f0dd59-36ee-451e-9c99-375a53c10143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin">
+      <UniqueIdentifier>{32de8c22-9cfd-4dec-831c-537969858f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\1. Eating">
+      <UniqueIdentifier>{0c9bf2f7-7e48-4248-a35b-f4c8e61b2e87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin\Normal">
+      <UniqueIdentifier>{722e1e62-d641-48d0-9fb8-224f3aaa31c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\2. StandGround_To_FlyHeavy">
+      <UniqueIdentifier>{0a219143-669c-45db-ba80-ad87209cd2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy">
+      <UniqueIdentifier>{95c30dfc-559a-4dc7-9fe8-673abb093cb2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\97. Video">
       <UniqueIdentifier>{3cb1d511-2556-458b-82a7-568cd584fe7c}</UniqueIdentifier>
     </Filter>
@@ -7887,6 +7914,27 @@
     <ClInclude Include="..\Public\Tank_Taunt_03.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Hawk.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Hawk.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\1. Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_State.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_Eating_01.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\1. Eating</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_Trans_StandGround_to_FlyHeavy.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\2. StandGround_To_FlyHeavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_Fly_Heavy.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11226,6 +11274,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tank_Taunt_03.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Hawk.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\1. Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_State.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_Eating_01.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\1. Eating</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_Trans_StandGround_to_FlyHeavy.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\2. StandGround_To_FlyHeavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_Fly_Heavy.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

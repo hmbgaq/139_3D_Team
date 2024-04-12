@@ -27,7 +27,7 @@ public:
 public:	
 	// Effect ======================================================================================================================================
 	CEffect* Play_Effect(string strAddPath, string strFileName, CGameObject* pOwner = nullptr, _bool bUseSocket = false, string strBoneTag = "");
-	CEffect* Play_Effect(string strAddPath, string strFileName, _float3 vPos, _bool bLookTarget = false, _float3 vTargetPos = _float3(0.f, 0.f, 0.f));
+	CEffect* Play_Effect(string strAddPath, string strFileName, CGameObject* pOwner, _float3 vPos, _bool bLookTarget = false, _float3 vTargetPos = _float3(0.f, 0.f, 0.f));
 	CEffect* Play_Effect_StaticPivot(string strAddPath, string strFileName, CGameObject* pOwner, _float4x4 matPivot);
 
 

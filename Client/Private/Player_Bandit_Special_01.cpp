@@ -23,6 +23,7 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 	CData_Manager* pDataManager = CData_Manager::GetInstance();
 	if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER_UPGRADE))
 	{
+		EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
 		//Fire(pActor);
 		Create_Bullet(pActor);
 	}

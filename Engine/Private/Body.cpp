@@ -14,7 +14,10 @@ CBody::CBody(const CBody& rhs)
 
 CBone* CBody::Get_BonePtr(const _char* pBoneName)
 {
-	return m_pModelCom->Get_BonePtr(pBoneName);
+	if(m_pModelCom != nullptr)
+		return m_pModelCom->Get_BonePtr(pBoneName);
+	else
+		return nullptr;
 }
 
 void CBody::Collider_Off()

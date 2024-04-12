@@ -113,7 +113,7 @@ void CVampireCommander_Projectile_Range3::OnCollisionEnter(CCollider* other)
 
 		// Å¸°İ ÀÌÆåÆ®
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pGameInstance->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", nullptr, m_pGameInstance->Get_Player()->Get_Position());
 	}
 	m_pCollider->Set_Enable(false);
 	this->Set_Dead(true);

@@ -130,6 +130,8 @@
 #include "Player_MeleeKick.h"
 #include "Player_CartRide_Loop.h"
 #include "Player_InteractionGlamour_Activate.h"
+#include "Player_MeleeSlashAlt_01.h"
+#include "Player_MeleeFollowUp.h"
 
 #pragma endregion
 
@@ -674,24 +676,29 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 	{
 		switch (eState)
 		{
-		//case Client::CPlayer::Player_Empowered_MeleeCombo_01:
-		//	return new CPlayer_Empowered_MeleeCombo_02();
-		//case Client::CPlayer::Player_Empowered_MeleeCombo_02:
-		//	return new CPlayer_Empowered_MeleeCombo_03();
-		case Client::CPlayer::Player_Empowered_MeleeCombo_03:
-			return new CPlayer_MeleeCombo_04();
+		//case Client::CPlayer::Player_Empowered_MeleeCombo_03:
+		//	return new CPlayer_MeleeCombo_04();
 
 		case Client::CPlayer::Player_MeleeCombo_01:
 			return new CPlayer_MeleeCombo_02();
 		case Client::CPlayer::Player_MeleeCombo_02:
 			return new CPlayer_MeleeCombo_02_L_NEW();
+		//case Client::CPlayer::Player_MeleeCombo_02_L_NEW:
+		//	return new CPlayer_Empowered_MeleeCombo_03();
 		case Client::CPlayer::Player_MeleeCombo_02_L_NEW:
-			return new CPlayer_Empowered_MeleeCombo_03();
+			return new CPlayer_MeleeCombo_04();
 
-		//case Client::CPlayer::Player_MeleeCombo_03_SlamAOEJump:
-		//	return new CPlayer_MeleeCombo_04();
+		//case Client::CPlayer::Player_MeleeCombo_04:
+		//	return new CPlayer_MeleeCombo_02();
+
 		case Client::CPlayer::Player_MeleeCombo_04:
-			return new CPlayer_MeleeCombo_02();
+			return new CPlayer_MeleeSlashAlt_01();
+
+		case Client::CPlayer::Player_MeleeSlashAlt_01:
+			return new CPlayer_MeleeFollowUp();
+
+		case Client::CPlayer::Player_MeleeFollowUp:
+			return new CPlayer_MeleeCombo_01();
 		}
 	}
 
@@ -700,7 +707,10 @@ CState<CPlayer>* CPlayer_State::MeleeCombo(CPlayer* pActor, _float fTimeDelta, _
 		&& CPlayer_MeleeCombo_01::g_iAnimIndex != _iAnimIndex
 		&& CPlayer_MeleeCombo_02::g_iAnimIndex != _iAnimIndex
 		&& CPlayer_MeleeCombo_02_L_NEW::g_iAnimIndex != _iAnimIndex
-		&& CPlayer_Empowered_MeleeCombo_03::g_iAnimIndex != _iAnimIndex
+		//&& CPlayer_Empowered_MeleeCombo_03::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeCombo_04::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeSlashAlt_01::g_iAnimIndex != _iAnimIndex
+		&& CPlayer_MeleeFollowUp::g_iAnimIndex != _iAnimIndex
 		)
 	{
 		if (m_pGameInstance->Mouse_Up(DIM_LB))

@@ -41,7 +41,7 @@ CState<CPlayer>* CPlayer_MeleeCombo_01::Update(CPlayer* pActor, _float fTimeDelt
 	else if (false == m_bFlags[1])
 	{
 		pActor->Chasing_Attack(fTimeDelta);
-		m_bFlags[1] = pActor->Is_Inputable_Front(24);
+		m_bFlags[1] = pActor->Is_Inputable_Front(26);
 		if (true == m_bFlags[1])
 		{
 			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, false);

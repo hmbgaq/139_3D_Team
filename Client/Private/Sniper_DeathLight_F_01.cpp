@@ -13,7 +13,7 @@ CState<CBandit_Sniper>* CSniper_DeathLight_F_01::Update(CBandit_Sniper* pActor, 
 {
 	if (pActor->Is_Animation_End())
 	{
-		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+		return __super::Death_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 
 	return nullptr;
