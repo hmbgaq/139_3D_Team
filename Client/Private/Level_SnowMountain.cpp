@@ -194,7 +194,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 	}
 
 
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", _float3(0.f, 0.f, 0.f));
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", nullptr, _float3(0.f, 0.f, 0.f));
 
 	return S_OK;
 }

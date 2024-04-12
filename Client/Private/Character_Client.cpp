@@ -194,7 +194,7 @@ void CCharacter_Client::Create_Hitting_Effect(_float3 vPos, Power ePower, string
 	//if (pEffect)
 	//	pEffect->Set_Position(vPos);
 
-	EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos);
+	EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos);
 
 
 	Apply_Shake_And_Blur(ePower);

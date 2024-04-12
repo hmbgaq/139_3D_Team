@@ -36,13 +36,13 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"AMBIENCE", "../Bin/Resources/Sound/Ambience/");
 	//Wait_GroupAsync();
 
-	Load_SoundFile_GroupAsync(L"PLAYER_ATTACK", "../Bin/Resources/Sound/Attack/");
+	Load_SoundFile_GroupAsync(L"PLAYER_ATTACK", "../Bin/Resources/Sound/Player/Attack/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT", "../Bin/Resources/Sound/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_HIT", "../Bin/Resources/Sound/Player/Hit/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT2", "../Bin/Resources/Sound/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_HIT2", "../Bin/Resources/Sound/Player/Hit/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_FOOTSTEP", "../Bin/Resources/Sound/Footstep/");
+	Load_SoundFile_GroupAsync(L"PLAYER_FOOTSTEP", "../Bin/Resources/Sound/Player/Footstep/");
 	////Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK", "../Bin/Resources/Sound/Attack/");

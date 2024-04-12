@@ -323,9 +323,16 @@
     <ClInclude Include="..\Public\Body_Bandit_Heavy.h" />
     <ClInclude Include="..\Public\Body_Bandit_Sniper.h" />
     <ClInclude Include="..\Public\Body_Crane.h" />
+    <ClInclude Include="..\Public\Body_Hawk.h" />
     <ClInclude Include="..\Public\Cargo_Crane.h" />
     <ClInclude Include="..\Public\Explosion_Infected_D.h" />
     <ClInclude Include="..\Public\Gimic.h" />
+    <ClInclude Include="..\Public\Hawk.h" />
+    <ClInclude Include="..\Public\Hawk_Eating_01.h" />
+    <ClInclude Include="..\Public\Hawk_Fly_Heavy.h" />
+    <ClInclude Include="..\Public\Hawk_State.h" />
+    <ClInclude Include="..\Public\Hawk_State_Normal.h" />
+    <ClInclude Include="..\Public\Hawk_Trans_StandGround_to_FlyHeavy.h" />
     <ClInclude Include="..\Public\HitPoint_Crane.h" />
     <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
@@ -1543,6 +1550,7 @@
     <ClCompile Include="..\Private\Body_Bandit_Sniper.cpp" />
     <ClCompile Include="..\Private\Body_Crane.cpp" />
     <ClCompile Include="..\Private\Body_Edgar.cpp" />
+    <ClCompile Include="..\Private\Body_Hawk.cpp" />
     <ClCompile Include="..\Private\Body_Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\Body_Infected.cpp" />
     <ClCompile Include="..\Private\Body_Infected_A.cpp" />
@@ -1650,6 +1658,12 @@
     <ClCompile Include="..\Private\Explosion_TNTPack.cpp" />
     <ClCompile Include="..\Private\Finisher_Tank.cpp" />
     <ClCompile Include="..\Private\Grid.cpp" />
+    <ClCompile Include="..\Private\Hawk.cpp" />
+    <ClCompile Include="..\Private\Hawk_Eating_01.cpp" />
+    <ClCompile Include="..\Private\Hawk_Fly_Heavy.cpp" />
+    <ClCompile Include="..\Private\Hawk_State.cpp" />
+    <ClCompile Include="..\Private\Hawk_State_Normal.cpp" />
+    <ClCompile Include="..\Private\Hawk_Trans_StandGround_to_FlyHeavy.cpp" />
     <ClCompile Include="..\Private\Heavy_Vampiric_Zombie.cpp" />
     <ClCompile Include="..\Private\HitPoint_Crane.cpp" />
     <ClCompile Include="..\Private\Impact_Slam.cpp" />

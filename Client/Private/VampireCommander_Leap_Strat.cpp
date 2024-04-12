@@ -42,7 +42,7 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(68))
 	{
 		// µ¹Æ¢±â±â ÀÌÆåÆ® Ãß°¡
-		EFFECT_MANAGER->Play_Effect("VampireCommander/", "landing_Rock_01.json", pActor->Get_Position_Vector());
+		EFFECT_MANAGER->Play_Effect("VampireCommander/", "landing_Rock_01.json", nullptr, pActor->Get_Position_Vector());
 		m_bFlags[0] = true;
 	}
 

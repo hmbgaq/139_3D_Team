@@ -50,7 +50,7 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		pSpringCam->Set_ShakeCameraTime(0.4f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 		pActor->Apply_Shake_And_Blur(Power::Medium);
-		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves.json", CData_Manager::GetInstance()->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_02.json", nullptr, CData_Manager::GetInstance()->Get_Player()->Get_Position());
 
 
 		m_bFlags[1] = true;
@@ -72,7 +72,7 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 
 		m_bFlags[2] = true;
 	}
-	if (m_bFlags[8] == false && pActor->Is_Inputable_Front(135))
+	if (m_bFlags[8] == false && pActor->Is_Inputable_Front(125))
 	{
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		m_bFlags[8] = true;
@@ -87,7 +87,7 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		m_bFlags[3] = true;
 	}
 
-	if (m_bFlags[9] == false && pActor->Is_Inputable_Front(200))
+	if (m_bFlags[9] == false && pActor->Is_Inputable_Front(210))
 	{
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 

@@ -58,7 +58,7 @@ HRESULT CSon::Initialize(void* pArg)
 		m_pActor->Set_State(new CSon_Spawn);
 	}
 	//HP
-	m_fMaxHp = 150;
+	m_fMaxHp = 1;
 	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;
@@ -71,7 +71,6 @@ HRESULT CSon::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Son(this);
 
 	// !UI : HUD_Create
-	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
 	return S_OK;
 }
@@ -79,6 +78,8 @@ HRESULT CSon::Initialize(void* pArg)
 void CSon::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+
 }
 
 void CSon::Tick(_float fTimeDelta)
@@ -87,6 +88,12 @@ void CSon::Tick(_float fTimeDelta)
 		return;
 
 	__super::Tick(fTimeDelta);
+
+	if (m_bfirst)
+	{
+		Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+		m_bfirst = false;
+	}
 
 	m_fTimeDelta2 += fTimeDelta;
 
@@ -146,7 +153,7 @@ void CSon::Tick(_float fTimeDelta)
 		}
 		if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
 		{
-			m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood3.json", this, true, "Bone020");
+			m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood4.json", this, true, "Bone020");
 			//cout << "MotherBossHP:" << m_fHp << endl;
 			m_fTimeDelta2 = 0.f;
 		}

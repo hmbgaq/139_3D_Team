@@ -78,10 +78,12 @@ HRESULT CMother::Initialize(void* pArg)
 
 	CData_Manager::GetInstance()->Set_Mother(this);
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
-	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
-	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
+
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_Map_05.json", nullptr, m_pTransformCom->Get_Position());
+
 	Search_Target(200.f);
 
+	m_pChimEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Chim_01.json", this, true, "Jaws_Center");
 
 	
 	return S_OK;
@@ -99,12 +101,15 @@ void CMother::Tick(_float fTimeDelta)
 	
 	m_fTimeDelta2 += fTimeDelta;
 
-	if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
-	{
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood3.json", this, true, "Jaws_Center");
-		//cout << "MotherBossHP:" << m_fHp << endl;
-		m_fTimeDelta2 = 0.f;
-	}
+	if (m_bChimCheck == true && m_fHp <= 0.f)
+		EFFECT_MANAGER->Return_ToPool(m_pChimEffect);
+
+	//if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
+	//{
+	//	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood4.json", this, true, "Jaws_Center");
+	//	//cout << "MotherBossHP:" << m_fHp << endl;
+	//	m_fTimeDelta2 = 0.f;
+	//}
 
 	__super::Tick(fTimeDelta);
 
@@ -274,9 +279,7 @@ void CMother::Free()
 	}
 
 	if (nullptr != m_pMapEffect)
-	{
-		m_pMapEffect->Set_Dead(TRUE);
-	}
+		Safe_Release(m_pMapEffect);
 
 	if (nullptr != m_pEffect)
 		Safe_Release(m_pEffect);
