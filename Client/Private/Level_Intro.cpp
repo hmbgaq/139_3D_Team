@@ -57,17 +57,18 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
-
     FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
+    FAILED_CHECK(Ready_Shader());
     
-
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 
-    //FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_UI());
 
     //FAILED_CHECK(Ready_Shader());
+
+
+    m_pGameInstance->Play_BGM(L"BGM", L"HM_MUS_Cargo_Lvl_combat_axe_95bpm_24.wav", 5.f);
 
     return S_OK;
 }
@@ -80,8 +81,8 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 
         if (m_iPBRTexture < 0)
             m_iPBRTexture = 0;
-        if (m_iPBRTexture >= 8)
-            m_iPBRTexture = 8;
+        if (m_iPBRTexture >= 9)
+            m_iPBRTexture = 9;
 
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
@@ -91,8 +92,8 @@ void CLevel_Intro::Tick(_float fTimeDelta)
 
         if (m_iPBRTexture < 0)
             m_iPBRTexture = 0;
-        if (m_iPBRTexture >= 8)
-            m_iPBRTexture = 8;
+        if (m_iPBRTexture >= 9)
+            m_iPBRTexture = 9;
 
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
@@ -115,6 +116,13 @@ void CLevel_Intro::Tick(_float fTimeDelta)
         
         pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
         pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
+        pMonster->Set_InitPosition(_float3(10.0f, 0.f, 50.f));
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
+        pMonster->Set_InitPosition(_float3(20.0f, 0.f, 50.f));
     }
 }
 
@@ -139,7 +147,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     }
 
     _bool bSpawnSniper = false;
-    _bool bSpawnTanker = true; 
+    _bool bSpawnTanker = false; 
     _bool bSpawnInfected = false;
     _bool bSpawnZenuGiant = false;
     
@@ -209,24 +217,27 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     //pMonster->Set_InitPosition(_float3(0.0f, 0.f, 2.f));
 
 
+ //   //! 유정 트레일 테스트 스나이퍼 소환
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
 
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_Position(_float3(10.f, 0.f, 25.f));
 
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
-    //
-    //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
-    //NULL_CHECK_RETURN(pMonster, E_FAIL);
-    //pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+
+ //// 주석 풀기
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
+ //   
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
 
     /* Intro Boss */
     {
@@ -268,13 +279,21 @@ HRESULT CLevel_Intro::Ready_Layer_NPC(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pNPC, E_FAIL);
     pNPC->Set_InitPosition(_float3(10.f, 0.f, 35.f));
 
+    pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Hawk"));
+    NULL_CHECK_RETURN(pNPC, E_FAIL);
+    pNPC->Set_InitPosition(_float3(5.f, 0.f, 15.f));
+
+
+
+    pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+    NULL_CHECK_RETURN(pNPC, E_FAIL);
+    pNPC->Set_Position(_float3(10.f, 0.f, 25.f));
+
     return S_OK;
 }
 
 HRESULT CLevel_Intro::Ready_Layer_Gimic(const wstring& strLayerTag)
 {
-
-
     return S_OK;
 }
 
@@ -1140,6 +1159,7 @@ HRESULT CLevel_Intro::Ready_LightDesc()
         LightDesc.bEnable = LightJson[i]["LightEnable"];
         LightDesc.fCutOff = LightJson[i]["CutOff"];
         LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+        LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
         LightDesc.eType = LightJson[i]["Type"];
         CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -1203,14 +1223,13 @@ HRESULT CLevel_Intro::Ready_LightDesc()
 
         LightObjectDesc.WorldMatrix = WorldMatrix;
 
-
-
         LIGHT_DESC LightDesc = {};
 
         LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
         LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
         LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
         LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+        LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
         LightDesc.eType = LightObjectJson[i]["LightType"];
         CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);

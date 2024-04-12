@@ -71,6 +71,7 @@
 #include "Player_CrouchUnder_Gate.h"
 
 #include "Environment_Interact.h"
+#include "Player_ZipLine_Loop.h"
 
 #include "PhysXCharacterController.h"
 #include "PhysXCollider.h"
@@ -133,15 +134,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Player(this);
 	m_pGameInstance->Set_Player(this);
 
-	Set_HUD_MaxCooltime(HUD::LEFT_TOP,		30.f);		//슈퍼차지
-	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT,	5.f);		//힐
-	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	7.f);		//리볼버
+	Set_HUD_MaxCooltime(HUD::LEFT_TOP,		SUPER_CHARGE_MAXCOOLTIME);		//슈퍼차지
+	Set_HUD_MaxCooltime(HUD::LEFT_RIGHT,	HEAL_MAXCOOLTIME);		//힐
+	Set_HUD_MaxCooltime(HUD::LEFT_BOTTOM,	REVOLVER_MAXCOOLTIME);		//리볼버
 	Set_HUD_MaxCooltime(HUD::LEFT_LEFT,		SHOTGUN_MAXCOOLTIME);		//샷건
 
-	Set_HUD_MaxCooltime(HUD::RIGHT_TOP,		2.0f);	//라이플
-	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT,	10.f);	//내려찍기
-	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM,	1.f);	//발차기
-	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT,	1.f);	//전기 줄
+	Set_HUD_MaxCooltime(HUD::RIGHT_TOP,		RIFLE_MAXCOOLTIME);	//라이플
+	Set_HUD_MaxCooltime(HUD::RIGHT_RIGHT,	SLAM_MAXCOOLTIME);	//내려찍기
+	Set_HUD_MaxCooltime(HUD::RIGHT_BOTTOM,	KICK_MAXCOOLTIME);	//발차기
+	Set_HUD_MaxCooltime(HUD::RIGHT_LEFT,	WHIP_MAXCOOLTIME);	//전기 줄
 
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Top", 5.f);
 	//m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f);
@@ -183,6 +184,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	{
 		//EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_05.json", this, _float3(m_pTransformCom->Get_Position().x, 0.1f, m_pTransformCom->Get_Position().z));
 		//EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_05.json", nullptr, _float3(m_pTransformCom->Get_Position().x + 2.f, 0.1f, m_pTransformCom->Get_Position().z + 2.f));
+		
+		//EFFECT_MANAGER->Play_Effect("Player/TeleportPunch/", "TeleportPunch_01.json", this, true, "Head");
 		m_bfirstcheck = false;
 	}
 	//! 유정 테스트 공간 끝
@@ -227,7 +230,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	//}
 
 
-	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) && (false == Is_Splitted()));
+	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) || (false == Is_Splitted()));
 	
 	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		m_pDataManager->Set_ShowInterface(bIsNotIdle);
@@ -571,12 +574,16 @@ _bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD, _float fCost)
 	}
 	else 
 	{
+		_float fDiff = 0.f;
+
 		if (fCooltime >= fMaxCooltime)
 		{
-			fMaxCooltime = fCooltime;
+			fDiff = fCost + 1.f;
 		}
-
-		_float fDiff = fMaxCooltime - fCooltime;
+		else 
+		{
+			fDiff = fMaxCooltime - fCooltime;
+		}
 
 		bResult = fDiff >= fCost;
 	}
@@ -845,6 +852,15 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
+	if (m_pGameInstance->Key_Down(DIK_P))
+	{
+		m_pUIManager->Active_LetterBox();
+	}
+	if (m_pGameInstance->Key_Down(DIK_O))
+	{
+		m_pUIManager->NonActive_LetterBox();
+	}
+
 	/* ! UI : SkillWindow / Key : K */
 	if (m_pGameInstance->Key_Down(DIK_K))
 	{
@@ -854,11 +870,14 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		{
 			m_pUIManager->Active_SkillWindowBackground();
 			m_pUIManager->NonActive_PlayerHUD(); // PlayerHUD Off
+			m_pUIManager->NonActive_MouseCursor(); // MouseCursor Off
+			m_pUIManager->NonActive_Crosshair(); // Crosshair Off
 			m_pDataManager->Set_GameState(GAME_STATE::UI);
 		}
 		else
 		{
 			m_pUIManager->NonActive_SkillWindowAll();
+			m_pUIManager->Active_Crosshair(true); // Crosshair On
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
 		}
 	}
@@ -1174,6 +1193,10 @@ void CPlayer::Free()
 		Safe_Delete(m_pActor);
 	}
 
-	Safe_Release(m_pEffect);
+	if (nullptr != m_pEffect)
+	{
+		m_pEffect->Delete_Object_Owner();
+		Safe_Release(m_pEffect);
+	}
 	
 }

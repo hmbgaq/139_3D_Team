@@ -83,6 +83,7 @@ HRESULT CMother::Initialize(void* pArg)
 
 	Search_Target(200.f);
 
+	m_pChimEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Chim_01.json", this, true, "Jaws_Center");
 
 	
 	return S_OK;
@@ -100,11 +101,15 @@ void CMother::Tick(_float fTimeDelta)
 	
 	m_fTimeDelta2 += fTimeDelta;
 
-	if (m_fTimeDelta2 >= 1.f)
-	{
-		cout << "MotherBossHP:" << m_fHp << endl;
-		m_fTimeDelta2 = 0.f;
-	}
+	if (m_bChimCheck == true && m_fHp <= 0.f)
+		EFFECT_MANAGER->Return_ToPool(m_pChimEffect);
+
+	//if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
+	//{
+	//	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood4.json", this, true, "Jaws_Center");
+	//	//cout << "MotherBossHP:" << m_fHp << endl;
+	//	m_fTimeDelta2 = 0.f;
+	//}
 
 	__super::Tick(fTimeDelta);
 
@@ -151,8 +156,17 @@ void CMother::Tick(_float fTimeDelta)
 		//m_pTransformCom->m_fRadian += 90.f;
 
 		
+		
 	}
 
+	if (true == m_bDeadState)
+	{
+		m_fTimeAcc += fTimeDelta;
+		if (m_fTimeAcc >= 2.f)
+		{
+			Set_Dead(true);
+		}
+	}
 	
 
 }
@@ -274,4 +288,7 @@ void CMother::Free()
 
 	if (nullptr != m_pMapEffect)
 		Safe_Release(m_pMapEffect);
+
+	if (nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 }

@@ -48,7 +48,6 @@ CState<CVampireCommander>* CVampireCommander_Melee1::Update(CVampireCommander* p
 	}
 	if (pActor->Is_Animation_End())
 	{
-		dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// ∆Æ∑π¿œ ≤Ù±‚
 		return new CVampireCommander_Idle();
 	}
 
@@ -58,8 +57,9 @@ CState<CVampireCommander>* CVampireCommander_Melee1::Update(CVampireCommander* p
 void CVampireCommander_Melee1::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
-
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// ∆Æ∑π¿œ ≤Ù±‚
+
 	pWeapon->Set_Enable(false);
 	pActor->m_bLookAt = true;
 }

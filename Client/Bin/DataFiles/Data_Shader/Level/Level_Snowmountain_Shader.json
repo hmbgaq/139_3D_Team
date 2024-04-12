@@ -70,12 +70,12 @@
   },
   "Vignette": {
     "bFinal_Active": true,
-    "fFinal_Amount": -0.057,
+    "fFinal_Amount": -0.869,
     "fFinal_CenterX": 0.5,
     "fFinal_CenterY": 0.5,
-    "fFinal_Radius": 0.9490000009536743,
-    "fFinal_Ratio": 2.436,
-    "fFinal_Slope": 8.0
+    "fFinal_Radius": 0.950,
+    "fFinal_Ratio": 0.100,
+    "fFinal_Slope": 10.0
   }
 
 }

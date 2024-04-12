@@ -36,9 +36,9 @@ HRESULT CImpact_Slam::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
 		return E_FAIL;
 
-	m_fDamage = 10.f;
+	m_fDamage = 2.f;
 
-	m_fLifeTime = 1.f;
+	m_fLifeTime = 0.1f;
 
 
 
@@ -76,20 +76,18 @@ void CImpact_Slam::OnCollisionEnter(CCollider* other)
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
 		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Medium;
-		m_fForce = 0.5f;
+		m_eHitPower = Power::Heavy;
+		m_fForce = 0.2f;
 
 		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
 
-		//_vector vPlayerPos = CData_Manager::GetInstance()->Get_Player()->Get_Position_Vector();
-		//_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 		_vector vDir = CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Look();
 		pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 
-		_float3 vPos = m_pTransformCom->Get_Position();
-		_float3 vTargetPos = pTarget_Character->Get_WeaknessPos();
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
+		//_float3 vPos = m_pTransformCom->Get_Position();
+		//_float3 vTargetPos = pTarget_Character->Get_WeaknessPos();
+		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", nullptr, vPos, true, vTargetPos);
 
 		// 타격 이펙트
 		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), true, pTarget_Character->Get_Position());
@@ -99,6 +97,7 @@ void CImpact_Slam::OnCollisionEnter(CCollider* other)
 
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
+
 
 }
 

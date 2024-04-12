@@ -126,6 +126,9 @@ public:
 	_float					Calc_Cooltime_Percent();
 	_float					Calc_Upper_Cooltime_Percent();
 
+	_vector					Get_BonePosForMyPos(const char* pBoneName, _fmatrix WorldMatrix);
+	
+
 
 	void					Set_Speed(_int iSpeed);
 
@@ -177,6 +180,10 @@ private:
 	ANIM_STATE				m_eUpperAnimState		= { CModel::ANIM_STATE::ANIM_STATE_LOOP };
 
 	_float2					m_vMouseMove			= { 0.f, 0.f };
+
+
+	_bool					m_bReset				= { false };
+
 
 	/* Cascade */
 	vector<_matrix>			m_matCurrTransforms;

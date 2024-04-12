@@ -6,6 +6,7 @@ void CPlayer_TeleportPunch_L01_Alt::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	pActor->Set_TeleportPunch_State(CPlayer::TeleportPunch_State::Player_TeleportPunch_L01_Alt);
+
 }
 
 CState<CPlayer>* CPlayer_TeleportPunch_L01_Alt::Update(CPlayer* pActor, _float fTimeDelta)

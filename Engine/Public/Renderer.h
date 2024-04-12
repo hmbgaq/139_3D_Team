@@ -20,7 +20,7 @@ public:
 		RENDER_BLEND, RENDER_CASCADE, RENDER_END
 	};
 
-	enum class POST_TYPE { DEFERRED, FOG, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
+	enum class POST_TYPE { DEFERRED, FOG, GODRAY, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
 						   MOTIONBLUR, LUMASHARPEN, FINAL, TYPE_END};
 
 private:
@@ -66,7 +66,9 @@ private:
 	HRESULT Render_Effect_Priority();
 	HRESULT Render_Effect_BloomBlur();
 	HRESULT Render_Effect_Distortion();
+	HRESULT Render_Effect_Priority_Distortion();
 	HRESULT Render_Effect_Distortion_Blur();
+	HRESULT Render_Effect_Combine();
 	HRESULT Render_Effect_Final();
 
 	HRESULT Render_OutLine();
@@ -79,6 +81,7 @@ private:
 	HRESULT Render_Final();
 	HRESULT Render_Blend();
 	HRESULT Render_MotionBlur();
+	HRESULT Render_Godray();
 
 	HRESULT Deferred_UI();
 
@@ -177,13 +180,25 @@ private:
 	LUMASHARPEN_DESC			m_tLumaSharpen_Desc			= {};
 
 	MOTIONBLUR_DESC				m_tMotionBlur_Desc			= {};
+	LIGHTSHAFT_DESC				m_tLightShaft_Desc			= {};
 
 private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
-	_bool						m_bBloomBlur_Clear			= false;
-	_bool						m_bRimBlur_Clear			= false;
 	_int						m_iCurrentLevel				= {};
 	wstring						strCurrentTarget			= TEXT("Target_Effect_Final");
+
+	_bool						m_bBloomBlur_Clear			= false;
+	_bool						m_bRimBlur_Clear			= false;
+	_bool						m_bShadow_Clear				= false;
+	_bool 						m_bHBAO_Clear				= false;
+	_bool 						m_bPBR_Clear				= false;
+	_bool 						m_bFOG_Clear				= false;
+	_bool 						m_bDOF_Clear				= false;
+	_bool 						m_bHDR_Clear				= false;
+	_bool 						m_bRadialBlur_Clear			= false;
+	_bool 						m_bFxaa_Clear				= false;
+	_bool 						m_Chroma_Clear				= false;
+	_bool 						m_bLumaSharpen_Clear		= false;
 
 private:
 	ID3DBlob*					m_psByteCode				= { nullptr };
@@ -206,6 +221,7 @@ private:
 	class CTexture*				m_pPreFilteredTextureCom[4]	= { nullptr };
 	class CTexture*				m_pBRDFTextureCom			= { nullptr };
 	class CTexture*				m_pVolumetrix_Voxel			= { nullptr };
+	class CTexture*				m_pSunTextureCom = { nullptr };
 	ID3D11DepthStencilView*		m_pLightDepthDSV			= { nullptr };
 	_float4x4					m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	HRESULT						Control_HotKey();

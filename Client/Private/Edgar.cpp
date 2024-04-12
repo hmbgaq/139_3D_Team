@@ -145,4 +145,5 @@ CGameObject* CEdgar::Pool()
 
 void CEdgar::Free()
 {
+	__super::Free();
 }

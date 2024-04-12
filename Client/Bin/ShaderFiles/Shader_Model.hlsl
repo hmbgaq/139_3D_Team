@@ -415,18 +415,6 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     return Out;
 }
 
-/* ------------------- OutLine Pixel Shader(4) -------------------*/
-PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
-{
-    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
-    
-    float4 vColor = lerp(g_vLineColor, mul(g_vLineColor, float4(0.f, 0.f, 0.f, 0.f)), g_fTimeDelta);
-    
-    Out.vColor = vColor;
-   
-    return Out;
-}
-
 /* ------------------- (5) IntroBoss BloodPool -------------------*/
 // NoneCull모드일뿐 동일함 
 
@@ -689,6 +677,76 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_KEEP(PS_IN_OUTLINE In)
     return Out;
 }
 
+/* ------------------- (12) Outline Blink -------------------*/
+PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    float4 vColor = lerp(g_vLineColor, mul(g_vLineColor, float4(0.f, 0.f, 0.f, 0.f)), g_fTimeDelta);
+    
+    Out.vColor = vColor;
+   
+    return Out;
+}
+/* ------------------- (14) Except Emissive  -------------------*/
+PS_OUT PS_MAIN_EX_EMISSIVE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.0f)
+        discard;
+    
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    return Out;
+}
+
+
+/* ------------------- (15) Mesh Bloom  -------------------*/
+PS_OUT PS_MAIN_MESH_BLOOM(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.0f)
+        discard;
+    
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    
+    return Out;
+}
 /*=============================================================
  
                           Technique
@@ -857,7 +915,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE_KEEP();
     }
 
-    pass OutLine_Blink // 4
+    pass OutLine_Blink // 13
     {
         SetRasterizerState(RS_Cull_CW);
         SetDepthStencilState(DSS_Default, 0);
@@ -868,6 +926,30 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
+    }
+
+    pass EX_EMISSIVE // 14
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EX_EMISSIVE();
+    }
+
+    pass GLOW_MESH // 15
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_MESH_BLOOM();
     }
 
 

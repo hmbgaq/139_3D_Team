@@ -56,15 +56,26 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		m_bFlags[1] = true;
 	}
 
-
+// 	if (m_bFlags[7] == false && pActor->Is_Inputable_Front(25))
+// 	{
+// 		if (m_pEffect != nullptr)
+// 			Safe_Release(m_pEffect);
+// 		m_bFlags[7] = true;
+// 	}
 
 	if (m_bFlags[2] == false && pActor->Is_Inputable_Front(100))
 	{
 		pSpringCam->Set_ShakeCameraTime(1.f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
 		pActor->Apply_Shake_And_Blur(Power::Medium);
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherSoundWave.json", pActor, true, "Jaws_Center");
 
 		m_bFlags[2] = true;
+	}
+	if (m_bFlags[8] == false && pActor->Is_Inputable_Front(135))
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_bFlags[8] = true;
 	}
 
 	if (m_bFlags[3] == false && pActor->Is_Inputable_Front(190))
@@ -72,9 +83,17 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		pSpringCam->Set_ShakeCameraTime(1.f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
 		pActor->Apply_Shake_And_Blur(Power::Medium);
-
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "MotherSoundWave.json", pActor, true, "Jaws_Center");
 		m_bFlags[3] = true;
 	}
+
+	if (m_bFlags[9] == false && pActor->Is_Inputable_Front(220))
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+
+		m_bFlags[9] = true;
+	}
+
 	//if (m_pSpringCamera != nullptr)
 	//{
 	//	m_fCameraFovy += (fTimeDelta);
@@ -116,4 +135,6 @@ void CMother_Spawn::Release(CMother* pActor)
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 	pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
  
+	if (m_pEffect != nullptr)
+		Safe_Release(m_pEffect);
 }

@@ -110,11 +110,13 @@ void CEffect::Tick(_float fTimeDelta)
 					if (m_tEffectDesc.bParentPivot)
 					{
 						// 주인의 매트릭스를 사용할거면 컴바인된 매트릭스 사용
+						m_pTrail->Set_Play(true);
 						m_pTrail->Tick_Trail(fTimeDelta, m_tEffectDesc.matCombined);
 					}
 					else
 					{
 						// 아니면 내 월드
+						m_pTrail->Set_Play(true);
 						m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
 					}
 				}
@@ -343,7 +345,14 @@ void CEffect::Update_PivotMat()
 			if (m_tEffectDesc.bUseSocket)
 			{
 				// 소켓사용이 트루이면 밖에서 소켓에 대한 정보를 던져주고 이걸 사용함
-				m_tEffectDesc.matPivot = dynamic_cast<CCharacter*>(m_pOwner)->Get_Body()->Get_BonePtr(m_tEffectDesc.strBoneTag.c_str())->Get_CombinedTransformationMatrix();
+				CBone* pOwnerBone = dynamic_cast<CCharacter*>(m_pOwner)->Get_Body()->Get_BonePtr(m_tEffectDesc.strBoneTag.c_str());
+
+				if(pOwnerBone == nullptr)
+					return;
+
+					
+
+				m_tEffectDesc.matPivot = pOwnerBone->Get_CombinedTransformationMatrix();
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
 			
 			}
@@ -454,7 +463,10 @@ void CEffect::End_Effect()
 void CEffect::End_Effect_ForPool()
 {
 	if (nullptr != m_pTrail)
+	{
 		m_pTrail->Set_Play(false);
+		m_pTrail->Reset_Trail();
+	}
 
 	m_tEffectDesc.bFinished = true;	// 이펙트 종료
 
@@ -603,7 +615,10 @@ void CEffect::Free()
 	m_PartObjects.clear();
 
 
-	Safe_Release(m_pTrail);	
-
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Object_Owner(nullptr);
+		Safe_Release(m_pTrail);
+	}
 }
 

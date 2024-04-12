@@ -365,10 +365,14 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
 	{
-		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now() && false == m_bReset)
 		{
 			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
 			_Pos = ChangedPos;
+		}
+		else if (true == m_bReset)
+		{
+			m_bReset = false;
 		}
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
@@ -401,6 +405,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos,_float3 pPlayerPos)
 			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
 			_Pos = ChangedPos;
 		}
+
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
@@ -517,6 +522,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 		{
 			m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, false);
 			m_bIsAnimEnd = false;
+			m_bReset = true;
 		}
 	}
 	//else 
@@ -708,6 +714,11 @@ _float CModel::Calc_Upper_Cooltime_Percent()
 	return Calc_Cooltime_Percent(m_iUpperAnimIndex);
 }
 
+_vector CModel::Get_BonePosForMyPos(const char* pBoneName, _fmatrix WorldMatrix)
+{
+	return Get_BonePtr(pBoneName)->Get_CombinedPosition(WorldMatrix);
+}
+
 void CModel::Set_Speed(_int iSpeed)
 {
 	//return m_Animations
@@ -735,7 +746,7 @@ _uint CModel::Get_BoneNum(const _char* _szName)
 
 _uint CModel::Get_CurrentKeyFrames(_uint iIndex)
 {
-	return m_Animations[iIndex]->Get_CurrentKeyFrames(0);
+	return m_Animations[iIndex]->Get_CurrentKeyFrames(iIndex);
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)

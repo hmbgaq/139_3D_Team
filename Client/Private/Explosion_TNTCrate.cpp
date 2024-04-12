@@ -47,6 +47,7 @@ HRESULT CExplosion_TNTCrate::Initialize(void* pArg)
 
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
+	EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", nullptr, Get_Position());
 
 	return S_OK;
 }

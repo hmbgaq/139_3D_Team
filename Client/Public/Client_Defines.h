@@ -86,17 +86,28 @@ namespace Client
 
 	
 	#define	REVOLVER_DELAY					1.f
-	#define SHOTGUN_MAXCOOLTIME				10.f
+	
 
 
-	#define INFECTED_EXP					15.f
-	#define BANDIT_SNIPER_EXP				20.f
-	#define BANDIT_HEAVY_EXP				45.f
-	#define TANK_EXP						60.f
+	#define INFECTED_EXP					115.f
+	#define BANDIT_SNIPER_EXP				120.f
+	#define BANDIT_HEAVY_EXP				145.f
+	#define TANK_EXP						160.f
 
 	#define VAMPIRE_COMMANDER_EXP			80.f
 	#define PARASITER_EXP					120.f
 
+
+
+
+	#define SUPER_CHARGE_MAXCOOLTIME		0.f	//30.f
+	#define HEAL_MAXCOOLTIME				0.f	//5.f
+	#define REVOLVER_MAXCOOLTIME			0.f	//7.f
+	#define SHOTGUN_MAXCOOLTIME				0.f	//10.f
+	#define RIFLE_MAXCOOLTIME				0.f	//2.f
+	#define SLAM_MAXCOOLTIME				0.f	//10.f
+	#define KICK_MAXCOOLTIME				0.f	//1.f
+	#define WHIP_MAXCOOLTIME				0.f	//1.f
 
 
 

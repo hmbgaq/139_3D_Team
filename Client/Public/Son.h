@@ -43,10 +43,12 @@ private:
 public:
 	//vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
+	_bool m_bfirst = true;
 	CMother* m_pMother = { nullptr };
-
+	CEffect* m_pEffect = { nullptr };
 public:
 	_float m_fTimeDelta = 0.f;
+	_float m_fTimeDelta2 = 0.f;
 public:
 	/* 원형객체를 생성한다. */
 	static CSon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

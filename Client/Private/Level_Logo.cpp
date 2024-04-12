@@ -21,7 +21,7 @@ CLevel_Logo::CLevel_Logo(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 HRESULT CLevel_Logo::Initialize()
 {
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
+	//FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 
 	Set_Filter();
 	
@@ -29,11 +29,13 @@ HRESULT CLevel_Logo::Initialize()
 
 	FAILED_CHECK(Ready_Static_UI());
 
+
 	FAILED_CHECK(m_pUIManager->Ready_MainMenu(LEVEL_LOGO));
 	m_pUIManager->Active_MainMenu();
-	FAILED_CHECK(m_pUIManager->Ready_MouseCursor(LEVEL_STATIC));
-	m_pUIManager->Active_MouseCursor();
 
+	FAILED_CHECK(m_pUIManager->Ready_MouseCursor(LEVEL_STATIC)); // 생성 시점을 바꿔보자.
+	m_pUIManager->NonActive_MouseCursor(); // 마우스 커서 UI를 끄면 메인화면 스타트가 꺼짐..
+	
 	m_pUIManager->NonActive_MainList();
 	m_pUIManager->NonActive_LevelList();
 	m_pUIManager->NonActive_MainLogo();
@@ -42,6 +44,8 @@ HRESULT CLevel_Logo::Initialize()
 
 
 	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // 이펙트 풀
+
+	m_pGameInstance->Play_BGM(L"BGM", L"HM_MainMenu_Theme.wav", 10.f);
 
 	return S_OK;
 }
@@ -121,6 +125,7 @@ HRESULT CLevel_Logo::Ready_Static_UI()
 		FAILED_CHECK(m_pUIManager->Ready_Interface(LEVEL_STATIC));
 		// Ready Crosshair
 		FAILED_CHECK(m_pUIManager->Ready_Crosshair(LEVEL_STATIC));
+		m_pUIManager->NonActive_Crosshair();
 		// Ready DiedScreen
 		FAILED_CHECK(m_pUIManager->Ready_DiedScreen(LEVEL_STATIC));
 		// Ready MouseCursor
@@ -133,6 +138,9 @@ HRESULT CLevel_Logo::Ready_Static_UI()
 		// Ready HitUI
 		FAILED_CHECK(m_pUIManager->Ready_HitUI(LEVEL_STATIC));
 		m_pUIManager->NonActive_HitUI();
+		// Ready LetterBox
+		FAILED_CHECK(m_pUIManager->Ready_LetterBox(LEVEL_STATIC));
+		m_pUIManager->NonActive_LetterBox();
 
 		m_pUIManager->NonActive_UI(); // Basic UI All
 		//m_pUIManager->Active_MouseCursor();

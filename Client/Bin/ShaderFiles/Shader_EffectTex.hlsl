@@ -45,8 +45,6 @@ int		g_iColorMode;
 float4	g_vColor_Mul;
 
 
-
-
 /* RimLight - 필요한거 두개뿐임(+1개 추가) */
 float4	g_vRimColor;
 float	g_fRimPower;

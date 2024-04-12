@@ -555,7 +555,7 @@ void CCharacter::Search_Target(const wstring& strLayerTag, const _float fSearchD
 {
 	if (nullptr != m_pTarget) 
 	{
-		if (m_pTarget->Is_In_Frustum())
+		if (true == m_pTarget->Is_In_Frustum() && true == m_pTarget->Get_Enable() && false == m_pTarget->Is_Dead())
 		{
 			return;
 		}

@@ -12,7 +12,8 @@ public:
 
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::Parasiter_Death;
-
+public:
+	CEffect* m_pEffect = { nullptr };
 };
 
 END

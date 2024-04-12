@@ -15,6 +15,7 @@ public:
 	_float m_fOffSetY = 0.5f;
 	_float m_fOffSetZ = -3.f;
 	_float3 m_fOffSet = {};
+	CEffect* m_pEffect = nullptr;
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::GrandParasiter_Intro;
 

@@ -35,7 +35,7 @@ public:
 
 public:
 	void					Check_Picking(_float fTimeDelta);
-	void					Check_State(_float fTimeDelta);
+	void					Check_State();
 	void					Check_LevelChange(_float fTimeDelta);
 
 private:
