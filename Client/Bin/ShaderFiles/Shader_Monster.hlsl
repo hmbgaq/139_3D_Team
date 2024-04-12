@@ -423,7 +423,7 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
 }
 
 /* ------------------- Pixel Shader(9) : Infected -------------------*/
-PS_OUT PS_MAIN_EMPHASIS(PS_IN In)
+PS_OUT PS_MAIN_EXCEPT(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -437,17 +437,12 @@ PS_OUT PS_MAIN_EMPHASIS(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    
     Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
     Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
-            
+    Out.vRimBloom = float4(0.f, 0.f, 0.f, 0.f);
+    
     if (true == g_bORM_Available)
         Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
-    
-    if (true == g_bEmissive_Available)
-        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
-    
-    Out.vEmissive += Out.vDiffuse;
     
     return Out;
 }
@@ -568,7 +563,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_INFECTED_WEAPON();
     }
 
-    pass EMPHASIS_DIFFUSE // 9
+    pass EXCEPT_EMISSIVE // 9
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -577,7 +572,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_EMPHASIS();
+        PixelShader = compile ps_5_0 PS_MAIN_EXCEPT();
     }
 
 }

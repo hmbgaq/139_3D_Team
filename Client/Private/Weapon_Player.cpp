@@ -111,8 +111,7 @@ HRESULT CWeapon_Player::Ready_Components()
 
 HRESULT CWeapon_Player::Bind_ShaderResources()
 {
-	if (FAILED(__super::Bind_ShaderResources()))
-		return E_FAIL;
+	FAILED_CHECK(__super::Bind_ShaderResources());
 	
 	return S_OK;
 }

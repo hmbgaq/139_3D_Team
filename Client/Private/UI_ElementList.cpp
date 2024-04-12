@@ -150,8 +150,8 @@ void CUI_ElementList::Check_Picking(_float fTimeDelta)
 		}
 		else if (m_tUIInfo.strUIName == "PBR")
 		{
-			m_bHSV_Active = !m_bHSV_Active;
-			m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bHSV_Active);
+			m_bPBR_Active = !m_bPBR_Active;
+			m_pGameInstance->Get_Renderer()->Set_PBR_Active(m_bPBR_Active);
 		}
 	}
 }

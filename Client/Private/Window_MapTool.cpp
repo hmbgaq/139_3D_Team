@@ -895,15 +895,9 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
 
 
-			
-
 			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
 			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 			 CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
-
-			 CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vInteractColliderSize);
-			 CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vInteractColliderCenter);
-
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);	
 			CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
 			CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"],		Desc.vInteractColliderSize);

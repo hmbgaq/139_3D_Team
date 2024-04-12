@@ -184,10 +184,21 @@ private:
 
 private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
-	_bool						m_bBloomBlur_Clear			= false;
-	_bool						m_bRimBlur_Clear			= false;
 	_int						m_iCurrentLevel				= {};
 	wstring						strCurrentTarget			= TEXT("Target_Effect_Final");
+
+	_bool						m_bBloomBlur_Clear			= false;
+	_bool						m_bRimBlur_Clear			= false;
+	_bool						m_bShadow_Clear				= false;
+	_bool 						m_bHBAO_Clear				= false;
+	_bool 						m_bPBR_Clear				= false;
+	_bool 						m_bFOG_Clear				= false;
+	_bool 						m_bDOF_Clear				= false;
+	_bool 						m_bHDR_Clear				= false;
+	_bool 						m_bRadialBlur_Clear			= false;
+	_bool 						m_bFxaa_Clear				= false;
+	_bool 						m_Chroma_Clear				= false;
+	_bool 						m_bLumaSharpen_Clear		= false;
 
 private:
 	ID3DBlob*					m_psByteCode				= { nullptr };

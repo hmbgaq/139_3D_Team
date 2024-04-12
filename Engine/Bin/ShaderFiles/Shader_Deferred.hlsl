@@ -572,28 +572,26 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 /* ------------------ 2 - Point ------------------ */
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
-    PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
-
+    PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 1;
+    
 	/* 방향성광원의 정보와 노멀 타겟에 담겨있는 노멀과의 빛연산을 수행한다. */
     vector vDiffuseColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
     vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
     vector vDepthDesc = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
     vector vORMDesc = g_ORMTexture.Sample(LinearSampler, In.vTexcoord);
     vector vHBAO = g_SSAOTexture.Sample(LinearSampler, In.vTexcoord);
-   // vLightFlagDesc *= g_vLightFlag;
-	
+ 
     float fViewZ = vDepthDesc.y * g_CamFar;
-	vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
+    vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
     vector vWorldPos;
 
-	/* 투영스페이스 상의 위치르 ㄹ구한다. */
-	/* 뷰스페이스 상 * 투영행렬 / w 까지 위치를 구한다. */
+    /* 투영스페이스 상의 위치르 ㄹ구한다. */
+    /* 뷰스페이스 상 * 투영행렬 / w 까지 위치를 구한다. */
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
     vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
     vWorldPos.z = vDepthDesc.x;
     vWorldPos.w = 1.0f;
-
-	/* 뷰스페이스 상 * 투영행렬까지 곱해놓은 위치를 구한다. */
+ 
     vWorldPos *= fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
@@ -605,28 +603,26 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float fAtt = 1.f / (1.f + fDenom * fDenom);
     clip(fAtt - 0.01f);
     fAtt *= g_fLightIntensity;
-    
-    //float fAtt = max((g_fLightRange - fDistance) / g_fLightRange, 0.f);
-    
+ 
     vector vLook = normalize(g_vCamPosition - vWorldPos);
    
     float fRoughness = vORMDesc.y;
     float fMetalness = vORMDesc.z;
     float fOcclusion = vHBAO.r;
     
-    if (g_bPBR)
+    if (false)
     {
         fRoughness = max(fRoughness, 0.001f);
         fMetalness = max(fMetalness, 0.001f);
         fOcclusion = max(fOcclusion, 0.001f);
-    
-        vector vHalfVec = normalize(vLook + normalize(vLightDir) * -1.f);
+ 
+        vector vHalfVec = normalize(vLook + normalize(g_vLightDir) * -1.f);
 
-        float NdotL = max(dot(vNormal, normalize(vLightDir) * -1.f), 0.0);
+        float NdotL = max(dot(vNormal, normalize(g_vLightDir) * -1.f), 0.0);
         float NdotH = max(dot(vNormal, vHalfVec), 0.0);
         float NdotV = max(dot(vNormal, vLook), 0.0);
         float HdotV = max(dot(vHalfVec, vLook), 0.0);
-    
+ 
         float3 vMetalic = lerp(float3(0.04f, 0.04f, 0.04f), vDiffuseColor.xyz, fMetalness);
 
         float NDF = trowbridgeReitzNDF(NdotH, fRoughness);
@@ -636,17 +632,17 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vector kS = vector(F, 0.f);
         vector kD = vector(1.f, 1.f, 1.f, 0.f) - kS;
         kD *= 1.f - fMetalness;
-
+        
         vector vNumerator = kS * NDF * G;
         float fDenominator = 4.f * NdotV * NdotL;
         vector vSpecular = vNumerator / max(fDenominator, 0.001f);
 
-        vector vSpecularAcc = vSpecular * NdotL * g_vLightDiffuse * fAtt /** fOcclusion*/;
+        vector vSpecularAcc = vSpecular * NdotL * g_vLightDiffuse * fAtt;
         vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * NdotL * g_vLightDiffuse * fAtt;
 
         Out.vSpecular = vSpecularAcc;
         Out.vSpecular.a = 0.f;
-
+      
         Out.vAmbient = vAmbientColor;
         Out.vAmbient.a = 1.f;
       
@@ -760,12 +756,6 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vector vSpecular = vNumerator / max(fDenominator, 0.001f);
 
         vector vSpecularAcc = vSpecular * NdotL * g_vLightDiffuse * fAtt;
-      
-        // Lambertian 모델을 사용하여 빛의 각도에 따른 볼류메트릭을 계산합니다.
-        //float fLambertian = max(dot(normalize(vNormal), normalize(g_vLightDir)), 0.0);
-        // 앰비언트 렌더링 부분
-        //vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * fLambertian * g_vLightDiffuse * fAtt;
-
         vector vAmbientColor = kD * vDiffuseColor / 3.141592265359 * fOcclusion * NdotL * g_vLightDiffuse * fAtt;
 
         Out.vSpecular = vSpecularAcc;
@@ -778,15 +768,15 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     else
     {
         vector vResult = g_vLightDiffuse * saturate(saturate(dot(normalize(g_vLightDir) * -1.f, vNormal)) + (g_vLightAmbient * g_vMtrlAmbient)) * fAtt;
-
+        
         if (vResult.r < 0.05f && vResult.g < 0.05f && vResult.b < 0.05f)
             discard;
-
+        
         Out.vAmbient = vResult * fAtt;
         Out.vAmbient.a = 1.f;
-
+        
         vector vReflect = reflect(normalize(g_vLightDir), vNormal);
-
+        
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(saturate(dot(normalize(vReflect) * -1.f, vLook)), 20.f) * fAtt;
         Out.vSpecular.a = 0.f;
     }

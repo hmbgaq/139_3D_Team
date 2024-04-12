@@ -158,7 +158,7 @@ HRESULT CWindow_ShaderTool::Load_SaveShader()
 		m_pSky->Set_SkyType(CSky::SKYTYPE::SKY_STAGE1);
 		Load_Finished_Light(LEVEL::LEVEL_GAMEPLAY);
 		m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(0);
-		//m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_GAMEPLAY), "../Bin/DataFiles/Data_Shader/Level/Level_Gameplay_Shader.json");
+		m_pGameInstance->Set_ShaderOption(ECast(LEVEL::LEVEL_GAMEPLAY), "../Bin/DataFiles/Data_Shader/Level/Level_Intro_Shader.json");
 	}
 	if (ImGui::Button("Load Intro Boss Shader"))	// 베이스 디퓨즈로 변경
 	{
@@ -795,11 +795,11 @@ void CWindow_ShaderTool::Compress_Fog_Setting()
 
 	ImGui::SliderFloat("FogStartDistance", &m_eFog_Desc.fFogStartDistance, 0.001f, 30.0f, "StartDistance = %.3f");
 
-	ImGui::SliderFloat("FogDistanceValue", &m_eFog_Desc.fFogDistanceValue, 0.001f, 50.f, "FogDistanceValue = %.3f");
+	ImGui::SliderFloat("FogDistanceValue", &m_eFog_Desc.fFogDistanceValue, 0.001f, 50.f, "DistanceValue = %.3f");
 
 	ImGui::SliderFloat("FogHeightValue", &m_eFog_Desc.fFogHeightValue, 0.001f, 100.f, "HeightValue = %.3f");
 
-	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.001f, 1.0f, "FogDistanceValue = %.3f");
+	ImGui::SliderFloat("FogDistanceDensity", &m_eFog_Desc.fFogDistanceDensity, 0.001f, 1.0f, "DistanceDensity = %.3f");
 
 	ImGui::SliderFloat("FogHeightDensity", &m_eFog_Desc.fFogHeightDensity, 0.001f, 1.0f, "HeightDensity = %.3f");
 

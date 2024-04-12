@@ -479,7 +479,7 @@ HRESULT CLevel_IntroBoss::Ready_LandObjects()
     LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+    //FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
 
     FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 

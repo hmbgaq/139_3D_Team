@@ -680,7 +680,7 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
     
     if (Out.vColor.a == 0.f)
     {
-        Out.vColor += Deferred + Effect_Diffuse + Effect_Blur + Effect_Priority_Diffuse + Effect_Priority_Blur; // 원래
+        Out.vColor += Deferred  + Effect_Diffuse + Effect_Blur + Effect_Priority_Diffuse + Effect_Priority_Blur; // 원래
     }
    
     
@@ -692,6 +692,7 @@ PS_OUT PS_MAIN_EFFECTMIX(PS_IN In)
   
     if (Out.vColor.a == 0)
         discard;
+    
     
     return Out;
 }
