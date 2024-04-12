@@ -83,7 +83,7 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 
 
 // 주인 없이 위치 생성 이펙트
-CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _float3 vPos, _bool bLookTarget, _float3 vTargetPos)
+CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGameObject* pOwner, _float3 vPos, _bool bLookTarget, _float3 vTargetPos)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
 
@@ -113,6 +113,10 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 
 	//Safe_AddRef(pEffect);
 
+	if (nullptr != pOwner)	// 주인 설정
+		pEffect->Set_Object_Owner(pOwner);
+
+
 	// 위치 설정
 	pEffect->Set_Position(vPos);
 
@@ -130,6 +134,7 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 
 	return pEffect;
 }
+
 
 
 CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strFileName, CGameObject* pOwner, _float4x4 matPivot)
@@ -193,7 +198,7 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 	{
 		*fTimeAcc = 0.f;
 
-		CEffect* pEffect = Play_Effect(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		CEffect* pEffect = Play_Effect(strAddPath, strFileName, nullptr, vPos, bLookTarget, vTargetPos);
 
 		if (nullptr == pEffect)
 		{
@@ -441,11 +446,11 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 200));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 800));
 	
 	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "Circle_Floor_04.json", 200));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherProjectileDead_05.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "Circle_Floor_05.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherProjectileDead_08.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherShakeTreeProjectile1.json", 200));
 
 	//Mother_Egg
@@ -453,7 +458,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	/* Mother Breath */
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 500));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_06.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08.json", 400));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", 1000));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", 400));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_03.json", 2));
 
 #pragma endregion 보스2 이펙트 끝

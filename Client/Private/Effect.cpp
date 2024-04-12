@@ -315,6 +315,21 @@ void CEffect::Update_PivotMat()
 			if (nullptr != m_pTrail)	// Æ®·¹ÀÏÀ» °®°íÀÖ´ø ÀÌÆåÆ®¸é Æ®·¹ÀÏ ¸ØÃã
 				m_pTrail->Set_Play(false);
 
+			if (m_tEffectDesc.strFileName == "Mother_Breath_08.json")
+			{
+				_int a = 0;
+			}
+
+			if (m_tEffectDesc.strFileName == "Mother_Breath_08_Tick_02.json")
+			{
+				_int a = 0;
+			}
+
+			if (m_tEffectDesc.strFileName == "Circle_Floor_05.json")
+			{
+				_int a = 0;
+			}
+
 			// ÀÌÆåÆ®ÀÇ ÁÖÀÎÀÌ Á×¾úÀ¸¸é ÀÌÆåÆ® Ç®¿¡ ¹Ý³³
 			EFFECT_MANAGER->Return_ToPool(this);
 
@@ -358,7 +373,7 @@ void CEffect::Update_PivotMat()
 		}
 		else
 		{
-
+			_int a = 0;
 
 		}
 

@@ -34,7 +34,7 @@ CState<CMother>* CMother_ShakeTreeLoop::Update(CMother* pActor, _float fTimeDelt
 		pActor->Apply_Shake_And_Blur(Power::Medium);
 		//이떄 카메라 쉐이킹 하면서 맵에 전체 공격 패턴 추가하면 될 거같음 
 
-		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves.json", CData_Manager::GetInstance()->Get_Player()->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves.json", nullptr, CData_Manager::GetInstance()->Get_Player()->Get_Position());
 
 
 		CGameObject* pObjcet = { nullptr };

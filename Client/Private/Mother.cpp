@@ -79,7 +79,7 @@ HRESULT CMother::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Mother(this);
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 
-	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_Map_05.json", m_pTransformCom->Get_Position());
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_Map_05.json", nullptr, m_pTransformCom->Get_Position());
 
 	Search_Target(200.f);
 

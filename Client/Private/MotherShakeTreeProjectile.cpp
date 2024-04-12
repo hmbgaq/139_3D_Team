@@ -73,8 +73,8 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 
 	if (m_bFirst)
 	{
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_04.json", _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
-		EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "MotherShakeTreeProjectile1.json", this);
+		EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_05.json", this, _float3(m_pTransformCom->Get_Position().x, 0.f, m_pTransformCom->Get_Position().z));
+		EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "MotherShakeTreeProjectile1.json", this, false);
 		
 		m_bFirst = false;
 	}
@@ -84,10 +84,10 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 	if (m_pTransformCom->Get_Position().y <= 0.f)
 	{
 		//여기서 이펙트도 터트려야 함 돌튀는거 
-		EFFECT_MANAGER->Return_ToPool(m_pEffect);	// 동그라미 돌려주기
-		m_pEffect = nullptr;
+		//EFFECT_MANAGER->Return_ToPool(m_pEffect);	// 동그라미 돌려주기
+		//m_pEffect = nullptr;
 
-		EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "MotherProjectileDead_05.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "MotherProjectileDead_08.json", nullptr, m_pTransformCom->Get_Position());
 		Set_Dead(true);
 	}
 
@@ -127,7 +127,7 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 
 		pTarget_Character->Get_Damaged(m_fDamage);
 
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", nullptr, m_pTransformCom->Get_Position());
 	}
 	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);

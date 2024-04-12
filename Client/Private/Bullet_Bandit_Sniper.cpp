@@ -100,7 +100,11 @@ void CBullet_Bandit_Sniper::Set_Enable(_bool _Enable)
 {
 	__super::Set_Enable(_Enable);
 
-	Safe_Release(m_pTrail);
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Play(false);
+	}
+
 }
 
 void CBullet_Bandit_Sniper::OnCollisionEnter(CCollider* other)
@@ -116,7 +120,11 @@ void CBullet_Bandit_Sniper::OnCollisionEnter(CCollider* other)
 		//_uint iDamage, _vector vDir, _float fForce, _float fStiffnessRate, Direction eHitDirection, Power eHitPower, _bool bIsMelee)
 		pTarget_Character->Set_Hitted(4.f, m_pTransformCom->Get_Look(), m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 	}
-	m_pTrail->Set_Play(false);
+	if (nullptr != m_pTrail)		// 트레일 삭제
+	{
+		m_pTrail->Set_Play(false);
+		Safe_Release(m_pTrail);
+	}
 	Set_Dead(true);
 }
 
@@ -169,7 +177,11 @@ void CBullet_Bandit_Sniper::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTrail);	// 트레일 삭제
+	if (nullptr != m_pTrail)		// 트레일 삭제
+	{
+		m_pTrail->Set_Play(false);
+		Safe_Release(m_pTrail);
+	}
 
 	//Safe_Release(m_pCollider);
 }

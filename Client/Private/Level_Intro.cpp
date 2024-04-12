@@ -139,7 +139,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     }
 
     _bool bSpawnSniper = false;
-    _bool bSpawnTanker = false;
+    _bool bSpawnTanker = true; 
     _bool bSpawnInfected = false;
     _bool bSpawnZenuGiant = false;
     
@@ -289,10 +289,10 @@ HRESULT CLevel_Intro::Ready_Layer_Effect(const wstring& strLayerTag)
 {
 
 	// 이펙트 테스트 (삭제처리 생각안함 파티클 누수 6개면 정상)
-    EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", _float3(5.f, 0.f, 5.f));    
+    EFFECT_MANAGER->Play_Effect("Parasiter/", "Circle_Floor_03.json", nullptr, _float3(5.f, 0.f, 5.f));
 
-    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05.json", _float3(5.f, 0.f, 10.f));
-    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05_Big.json", _float3(12.f, 0.f, 10.f));
+    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05.json", nullptr, _float3(5.f, 0.f, 10.f));
+    EFFECT_MANAGER->Play_Effect("Explosion/", "Explosion_05_Big.json", nullptr, _float3(12.f, 0.f, 10.f));
 
 
     return S_OK;
