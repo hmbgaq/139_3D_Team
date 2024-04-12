@@ -343,7 +343,14 @@ void CEffect::Update_PivotMat()
 			if (m_tEffectDesc.bUseSocket)
 			{
 				// 소켓사용이 트루이면 밖에서 소켓에 대한 정보를 던져주고 이걸 사용함
-				m_tEffectDesc.matPivot = dynamic_cast<CCharacter*>(m_pOwner)->Get_Body()->Get_BonePtr(m_tEffectDesc.strBoneTag.c_str())->Get_CombinedTransformationMatrix();
+				CBone* pOwnerBone = dynamic_cast<CCharacter*>(m_pOwner)->Get_Body()->Get_BonePtr(m_tEffectDesc.strBoneTag.c_str());
+
+				if(pOwnerBone == nullptr)
+					return;
+
+					
+
+				m_tEffectDesc.matPivot = pOwnerBone->Get_CombinedTransformationMatrix();
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
 			
 			}

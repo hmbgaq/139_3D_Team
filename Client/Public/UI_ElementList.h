@@ -40,7 +40,7 @@ public:
 	void				 Load_Desc();
 
 private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	CTexture*	m_pTextureCom[TEXTURE_END] = { nullptr };
 	_bool		m_bHABO_Active = false;
 	_bool		m_bFOG_Active = false;
 	_bool		m_bRadial_Blur_Active = false;
@@ -48,6 +48,7 @@ private:
 	_bool		m_bHDR_Active = false;
 	_bool		m_bShadow_Active = false;
 	_bool		m_bHSV_Active = false;
+	_bool		m_bPBR_Active = false;
 
 public:
 	static CUI_ElementList* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

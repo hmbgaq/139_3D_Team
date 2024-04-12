@@ -46,7 +46,7 @@ namespace Engine
 		_float4 vAmbient = { 0.f, 0.f, 0.f, 0.f }; /* 광원의 확산위치와 무관하게 똑같은양으로 모든점에서 반사되는 색 */
 		_float4 vSpecular = { 0.f, 0.f, 0.f, 0.f }; /* 특정방향으로만 반사되는 색 */
 
-		_float4 vLightFlag = { 0.f, 0.f, 0.f, 0.f };
+		_float4 vLightFlag = { 0.f, 0.f, 0.f, 0.f }; // 안쓰긴함 
 
 	public:
 		unsigned int iLightIndex = unsigned int(-1);
@@ -372,12 +372,14 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagGodRay_Desc
 	{
-		_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825f, 2.0f);
+		//_float4 vShaftValue = _float4(0.975f, 0.25f, 0.825f, 2.0f);
+		_float godraysDensity;
+		_float godraysWeight;
+		_float godraysDecay;
+		_float godraysExposure;
 		_float2 vScreenSunPosition = {};
-		_float2 Padding = {};
+		_float2 padding = {};
 
-		tagGodRay_Desc()
-			: vShaftValue(_float4(0.975f, 0.25f, 0.825f, 2.0f)), vScreenSunPosition(_float2(0.f, 0.f)) {}
 	}LIGHTSHAFT_DESC;
 
 	typedef struct ENGINE_DLL tagPBR_Desc
@@ -404,12 +406,12 @@ namespace Engine
 
 	typedef struct ENGINE_DLL tagSSR_Desc
 	{
-		_float  fRayStep			= 0.005f;
-		_float  fStepCnt			= 75.f;
+		_float  fRayStep			= 1.60f;
+		_float  fStepCnt			= 2.00f; // thredhold 인데 귀찮안바꿈
 		_bool	bSSR_Active			= { false };
 
 		tagSSR_Desc()
-			: fRayStep(0.005f), fStepCnt(75.f), bSSR_Active(false) {}
+			: fRayStep(1.60f), fStepCnt(2.00f), bSSR_Active(false) {}
 	}SSR_DESC;
 
 	typedef struct ENGINE_DLL tagChroma_Desc

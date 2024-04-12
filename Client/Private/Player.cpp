@@ -1178,7 +1178,11 @@ void CPlayer::Free()
 	{
 		Safe_Delete(m_pActor);
 	}
-	if(nullptr != m_pEffect)
+
+	if (nullptr != m_pEffect)
+	{
+		m_pEffect->Delete_Object_Owner();
 		Safe_Release(m_pEffect);
+	}
 	
 }

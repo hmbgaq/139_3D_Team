@@ -31,8 +31,8 @@ HRESULT CLevel::Set_ShaderOption(string filePath)
 
 	if (FAILED(CJson_Utility::Load_Json(filePath.c_str(), BasicJson)))
 	{
-		MSG_BOX("Fail to Load Shader");
-		return E_FAIL;
+		MSG_BOX("Fail to Load Shader / 소영문의 ");
+        return S_OK;
 	}
 
     /* 1. 셰이더 초기화 */

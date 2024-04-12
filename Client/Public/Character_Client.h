@@ -40,6 +40,7 @@ public:
 
 public:
 	void Apply_Shake_And_Blur(Power ePower = Power::Light);
+	void Apply_Shake_And_Chroma(Power ePower = Power::Light);
 	void Create_Hitting_Effect(_float3 vPos, Power ePower = Power::Light, string strEffectName = "", CGameObject* pOwner = nullptr);
 	
 public:

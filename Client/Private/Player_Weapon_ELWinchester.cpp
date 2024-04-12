@@ -70,8 +70,32 @@ void CPlayer_Weapon_ELWinchester::Late_Tick(_float fTimeDelta)
 
 HRESULT CPlayer_Weapon_ELWinchester::Render()
 {
-	if (FAILED(__super::Render()))
-		return E_FAIL;
+	FAILED_CHECK(Bind_ShaderResources());
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+
+		if (i == 1)
+		{
+			_float3 bloompower = {1.f, 1.f, 1.f };
+			_float4 campos = m_pGameInstance->Get_CamPosition();
+			_float4 RimColor = { 1.f, 1.f, 1.f, 1.f };
+			m_pShaderCom->Bind_RawValue("g_vBloomPower", &bloompower, sizeof(_float3));
+			m_pShaderCom->Bind_RawValue("g_vCamPosition", &campos, sizeof(_float4));
+			m_pShaderCom->Bind_RawValue("g_vRimColor", &RimColor, sizeof(_float4));
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_MESH_BLOOM));
+		}
+		else
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
+		
+		m_pModelCom->Render((_uint)i);
+	}
 
 	return S_OK;
 }

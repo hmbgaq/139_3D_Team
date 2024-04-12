@@ -55,8 +55,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석. + 저두요
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_UI());
@@ -84,12 +83,16 @@ HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
 	/* Map Light */
-	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
-	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
-	{
-		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
-	}
+	m_pGameInstance->Remove_AllLight();
+
+
+	//CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+	//
+	//if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
+	//{
+	//	m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
+	//}
 
 	json IntroBossMapJson = {};
 
@@ -110,6 +113,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 		LightDesc.bEnable = LightJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightJson[i]["Type"];
 		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -176,6 +180,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 		LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightObjectJson[i]["LightType"];
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);

@@ -5,6 +5,8 @@
 #include "Effect_Instance.h"
 #include "Environment_Instance.h"
 #include "Level_SnowMountain.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
 
 #pragma region UI
 #include "UI_Anything.h"
@@ -44,15 +46,14 @@ HRESULT CLevel_SnowMountain::Initialize()
 {
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Shader.json");
 
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	FAILED_CHECK(Ready_Shader("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Shader.json"));
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
@@ -77,13 +78,15 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-	/* Map Light */
-	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+	m_pGameInstance->Remove_AllLight();
 
-	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
-	{
-		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
-	}
+	/* Map Light */
+//	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+//
+//	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
+//	{
+//		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
+//	}
 
 	json IntroBossMapJson = {};
 
@@ -104,6 +107,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		LightDesc.bEnable = LightJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightJson[i]["Type"];
 		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -170,6 +174,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightObjectJson[i]["LightType"];
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -189,6 +194,9 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 			return E_FAIL;
 		}
 	}
+
+
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", nullptr, _float3(0.f, 0.f, 0.f));
 
 	return S_OK;
 }
