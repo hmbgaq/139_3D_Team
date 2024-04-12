@@ -49,7 +49,6 @@ CState<CVampireCommander>* CVampireCommander_Ranged2::Update(CVampireCommander* 
 		m_bFlags[1] = false;
 		m_bFlags[3] = true;
 
-		dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// Æ®·¹ÀÏ ²ô±â
 		pWeapon->Set_Enable(false);
 
 	}
@@ -67,6 +66,8 @@ void CVampireCommander_Ranged2::Release(CVampireCommander* pActor)
 	__super::Release(pActor);
 
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// Æ®·¹ÀÏ ²ô±â
+
 	//pWeapon->Set_Enable(false);
 
 	pActor->m_bLookAt = true;

@@ -47,8 +47,7 @@ CState<CVampireCommander>* CVampireCommander_Ranged1::Update(CVampireCommander* 
 		m_bFlags[1] = false;
 	if (pActor->Is_Animation_End())
 	{
-		dynamic_cast<CVampireCommander_Weapon*>(pWeapon_R)->Play_Trail(false);	// 트레일 끄기
-		dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(false);	// 트레일 끄기
+		
 
 		return new CVampireCommander_Idle();
 	}
@@ -60,6 +59,11 @@ void CVampireCommander_Ranged1::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
 
+	CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_R)->Play_Trail(false);	// 트레일 켜기
+
+	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(false);	// 트레일 켜기
 	pActor->m_bLookAt = true;
 
 }
