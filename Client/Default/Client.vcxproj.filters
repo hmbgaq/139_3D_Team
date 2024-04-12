@@ -4009,6 +4009,27 @@
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt">
       <UniqueIdentifier>{1b871775-93ff-4649-98d5-bb2ce11be509}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\07. SelectUI">
+      <UniqueIdentifier>{0071f72a-4a37-4dcc-9bfa-eb283593c91f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\04. UIEffect\01. LetterBox">
+      <UniqueIdentifier>{e05948dc-538d-4434-8e91-3ced87117767}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font">
+      <UniqueIdentifier>{9adc49ff-3130-4237-9da8-529de70c9bd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\00. Level">
+      <UniqueIdentifier>{f308d092-d06d-449a-a233-5b6f1486537b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\01. Money">
+      <UniqueIdentifier>{d05a7727-4c84-4cf6-8ff6-0e31249d5528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint">
+      <UniqueIdentifier>{642cf3b7-25bb-4636-a4cc-51f157d3d511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Event\Trigger\UITrigger">
+      <UniqueIdentifier>{0f509588-22a9-49d4-bd65-9301441f3417}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\00. Character\Animal">
       <UniqueIdentifier>{16ad304a-426b-41e3-aee3-8b6e2312100c}</UniqueIdentifier>
     </Filter>
@@ -7917,6 +7938,24 @@
     <ClInclude Include="..\Public\Tank_Taunt_03.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Icon_SelectAnim.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\07. SelectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LetterBox.h">
+      <Filter>02.GameObjects\UI\04. UIEffect\01. LetterBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LevelFont.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\00. Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_MoneyFont.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\01. Money</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillPoint_Font.h">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Event_UITrigger.h">
+      <Filter>03.Event\Trigger\UITrigger</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Hawk.h">
       <Filter>02.GameObjects\00. Character\Animal\1. Hawk</Filter>
     </ClInclude>
@@ -11280,6 +11319,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\Tank_Taunt_03.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Tank\2. State\1. Idle\3. Taunt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Icon_SelectAnim.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\07. SelectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LetterBox.cpp">
+      <Filter>02.GameObjects\UI\04. UIEffect\01. LetterBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LevelFont.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\00. Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_MoneyFont.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\01. Money</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillPoint_Font.cpp">
+      <Filter>02.GameObjects\UI\02. System\06. Option\02. SkillWindow\08. Font\02. SkillPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Event_UITrigger.cpp">
+      <Filter>03.Event\Trigger\UITrigger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Hawk.cpp">
       <Filter>02.GameObjects\00. Character\Animal\1. Hawk</Filter>

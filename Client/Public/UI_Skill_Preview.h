@@ -38,11 +38,15 @@ private:
 	virtual HRESULT			Bind_ShaderResources() override;
 
 private:
+	void			TextureChange(_float fTimeDelta);
+
+private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
 	TEXTUREKIND m_eTextureKind = TEXTURE_END;
 
 private: // Sprite Info
 	string		m_strPreName = "";
+	_bool		m_bInOut = false;
 
 public:
 	virtual json			Save_Desc(json& out_json);

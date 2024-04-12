@@ -21,9 +21,9 @@
 
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
-	, m_pUIManager(CUI_Manager::GetInstance())
+	//, m_pUIManager(CUI_Manager::GetInstance())
 {
-		Safe_AddRef(m_pUIManager);
+		//Safe_AddRef(m_pUIManager);
 }
 
 CEnvironment_Interact::CEnvironment_Interact(const CEnvironment_Interact & rhs)
@@ -255,9 +255,20 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	{
 		if (m_pUI_Interaction != nullptr)
 		{
-			// 각 상호작용 객체에 맞게 vOffset 조절해줘야함.
-			m_pUI_Interaction->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix(), m_tEnvironmentDesc.vInteractColliderCenter/*, vOffset*/); // 위치 갱신
-			m_pUI_Interaction->Set_OnInteraction(m_bInteract);	// 상호작용을 했는지
+			if (m_pGameInstance->Get_CurrentLevel() != LEVEL_LOADING)
+			{
+				try 
+				{
+					// 각 상호작용 객체에 맞게 vOffset 조절해줘야함.
+					m_pUI_Interaction->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix(), m_tEnvironmentDesc.vInteractColliderCenter/*, vOffset*/); // 위치 갱신
+					m_pUI_Interaction->Set_OnInteraction(m_bInteract);	// 상호작용을 했는지
+				}
+				catch (_uint e) 
+				{
+					_int a = 0;
+				}
+
+			}
 		}
 	}
 		

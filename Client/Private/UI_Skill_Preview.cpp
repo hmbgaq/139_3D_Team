@@ -55,7 +55,7 @@ void CUI_Skill_Preview::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-
+		TextureChange(fTimeDelta * 1.5); // 설명 텍스처 Fade InOut 속도
 	}
 
 }
@@ -123,117 +123,7 @@ void CUI_Skill_Preview::Change_Preview(const string& strUIName)
 {
 	if (m_strPreName != strUIName)
 	{
-#pragma region 1
-		if (strUIName == "Kick")
-		{
-			m_eTextureKind = KICK;
-		}
-		else if (strUIName == "ElectricDash")
-		{
-			m_eTextureKind = ELECTRICDASH;
-		}
-		else if (strUIName == "DashShock")
-		{
-			m_eTextureKind = DASHSHOCK;
-		}
-		else if (strUIName == "ElectricCord")
-		{
-			m_eTextureKind = ELECTRICCORD;
-		}
-		else if (strUIName == "PowerUP")
-		{
-			m_eTextureKind = POWERUP;
-		}
-#pragma region 2
-		else if (strUIName == "UpperCut")
-		{
-			m_eTextureKind = UPPERCUT;
-		}
-		else if (strUIName == "OneTouch")
-		{
-			m_eTextureKind = ONETOUCH;
-		}
-		else if (strUIName == "TwoTouch")
-		{
-			m_eTextureKind = TWOTOUCH;
-		}
-		else if (strUIName == "ThreeTouch")
-		{
-			m_eTextureKind = THREETOUCH;
-		}
-		else if (strUIName == "ComboPunch")
-		{
-			m_eTextureKind = COMBOPUNCH;
-		}
-#pragma region 3
-		else if (strUIName == "Punch")
-		{
-			m_eTextureKind = PUNCH;
-		}
-		else if (strUIName == "SuperChargeMod")
-		{
-			m_eTextureKind = SUPERCHARGEMOD;
-		}
-		else if (strUIName == "TeleportPunch")
-		{
-			m_eTextureKind = TELEPORTPUNCH;
-		}
-		else if (strUIName == "IncreaseEXP")
-		{
-			m_eTextureKind = INCREASEEXP;
-		}
-		else if (strUIName == "NPCPowerUP")
-		{
-			m_eTextureKind = NPCPOWERUP;
-		}
-#pragma region 4
-		else if (strUIName == "Heal")
-		{
-			m_eTextureKind = HEAL;
-		}
-		else if (strUIName == "RecoveryEnergy")
-		{
-			m_eTextureKind = RECOVERYENERGY;
-		}
-		else if (strUIName == "IncreaseHP")
-		{
-			m_eTextureKind = INCREASEHP;
-		}
-		else if (strUIName == "IncreaseEnergy")
-		{
-			m_eTextureKind = INCREASEENERGY;
-		}
-		else if (strUIName == "MaxHP")
-		{
-			m_eTextureKind = MAXHP;
-		}
-
-#pragma region Weapon
-		else if (strUIName == "Revolver")
-		{
-			m_eTextureKind = REVOLVER;
-		}
-		else if (strUIName == "Shotgun")
-		{
-			m_eTextureKind = SHOTGUN;
-		}
-		else if (strUIName == "Rifle")
-		{
-			m_eTextureKind = RIFLE;
-		}
-#pragma region WeaponSkill
-		else if (strUIName == "Revolver_Skill1")
-		{
-			m_eTextureKind = REVOLVER_SKILL1;
-		}
-		else if (strUIName == "Shotgun_Skill1")
-		{
-			m_eTextureKind = SHOTGUN_SKILL1;
-		}
-		else if (strUIName == "Rifle_Skill1")
-		{
-			m_eTextureKind = RIFLE_SKILL1;
-		}
+		m_bInOut = true;
 	}
 
 	m_strPreName = strUIName;
@@ -401,10 +291,141 @@ HRESULT CUI_Skill_Preview::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Alpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
 	if (FAILED(m_pTextureCom[m_eTextureKind]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture"/*, m_iCurrentFrame*/)))	// MainStart
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CUI_Skill_Preview::TextureChange(_float fTimeDelta)
+{
+	if (m_bInOut == true)
+	{
+		m_bInOut = Alpha_Plus(fTimeDelta);
+	}
+	else
+	{
+		if (m_fAlpha > 0.f)
+		{
+			Alpha_Minus(fTimeDelta);
+		}
+
+#pragma region 1
+		if (m_strPreName == "Kick")
+		{
+			m_eTextureKind = KICK;
+		}
+		else if (m_strPreName == "ElectricDash")
+		{
+			m_eTextureKind = ELECTRICDASH;
+		}
+		else if (m_strPreName == "DashShock")
+		{
+			m_eTextureKind = DASHSHOCK;
+		}
+		else if (m_strPreName == "ElectricCord")
+		{
+			m_eTextureKind = ELECTRICCORD;
+		}
+		else if (m_strPreName == "PowerUP")
+		{
+			m_eTextureKind = POWERUP;
+		}
+#pragma region 2
+		else if (m_strPreName == "UpperCut")
+		{
+			m_eTextureKind = UPPERCUT;
+		}
+		else if (m_strPreName == "OneTouch")
+		{
+			m_eTextureKind = ONETOUCH;
+		}
+		else if (m_strPreName == "TwoTouch")
+		{
+			m_eTextureKind = TWOTOUCH;
+		}
+		else if (m_strPreName == "ThreeTouch")
+		{
+			m_eTextureKind = THREETOUCH;
+		}
+		else if (m_strPreName == "ComboPunch")
+		{
+			m_eTextureKind = COMBOPUNCH;
+		}
+#pragma region 3
+		else if (m_strPreName == "Punch")
+		{
+			m_eTextureKind = PUNCH;
+		}
+		else if (m_strPreName == "SuperChargeMod")
+		{
+			m_eTextureKind = SUPERCHARGEMOD;
+		}
+		else if (m_strPreName == "TeleportPunch")
+		{
+			m_eTextureKind = TELEPORTPUNCH;
+		}
+		else if (m_strPreName == "IncreaseEXP")
+		{
+			m_eTextureKind = INCREASEEXP;
+		}
+		else if (m_strPreName == "NPCPowerUP")
+		{
+			m_eTextureKind = NPCPOWERUP;
+		}
+#pragma region 4
+		else if (m_strPreName == "Heal")
+		{
+			m_eTextureKind = HEAL;
+		}
+		else if (m_strPreName == "RecoveryEnergy")
+		{
+			m_eTextureKind = RECOVERYENERGY;
+		}
+		else if (m_strPreName == "IncreaseHP")
+		{
+			m_eTextureKind = INCREASEHP;
+		}
+		else if (m_strPreName == "IncreaseEnergy")
+		{
+			m_eTextureKind = INCREASEENERGY;
+		}
+		else if (m_strPreName == "MaxHP")
+		{
+			m_eTextureKind = MAXHP;
+		}
+
+#pragma region Weapon
+		else if (m_strPreName == "Revolver")
+		{
+			m_eTextureKind = REVOLVER;
+		}
+		else if (m_strPreName == "Shotgun")
+		{
+			m_eTextureKind = SHOTGUN;
+		}
+		else if (m_strPreName == "Rifle")
+		{
+			m_eTextureKind = RIFLE;
+		}
+#pragma region WeaponSkill
+		else if (m_strPreName == "Revolver_Skill1")
+		{
+			m_eTextureKind = REVOLVER_SKILL1;
+		}
+		else if (m_strPreName == "Shotgun_Skill1")
+		{
+			m_eTextureKind = SHOTGUN_SKILL1;
+		}
+		else if (m_strPreName == "Rifle_Skill1")
+		{
+			m_eTextureKind = RIFLE_SKILL1;
+		}
+	}
+
 }
 
 json CUI_Skill_Preview::Save_Desc(json& out_json)

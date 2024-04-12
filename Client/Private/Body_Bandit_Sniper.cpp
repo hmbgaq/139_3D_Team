@@ -48,6 +48,7 @@ HRESULT CBody_Bandit_Sniper::Ready_Components()
 
 	return S_OK;
 }
+
 void CBody_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
@@ -74,15 +75,15 @@ void CBody_Bandit_Sniper::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (true == m_bDeadState)
-	{
-		m_fTimeAcc += fTimeDelta;
-		if (m_fTimeAcc >= 2.f)
-		{
-			//Set_EnemyHUD_Dead();
-			Set_Dead(true);
-		}
-	}
+	//if (true == m_bDeadState)
+	//{
+	//	m_fTimeAcc += fTimeDelta;
+	//	if (m_fTimeAcc >= 2.f)
+	//	{
+	//		//Set_EnemyHUD_Dead();
+	//		Set_Dead(true);
+	//	}
+	//}
 }
 
 void CBody_Bandit_Sniper::Late_Tick(_float fTimeDelta)

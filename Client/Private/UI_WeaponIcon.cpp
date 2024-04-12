@@ -45,7 +45,7 @@ HRESULT CUI_WeaponIcon::Initialize(void* pArg)
 	//TEST
 	if (m_bWeapon == true)
 	{
-		m_eUI_Level = LEVEL0;
+		m_eUI_Level = LEVEL1;
 	}
 	else
 	{
@@ -336,6 +336,8 @@ HRESULT CUI_WeaponIcon::Ready_Components()
 	else
 	{ // Weapon
 		m_bWeapon = true;
+		m_eUI_Level = LEVEL1;
+
 		//! For.Com_Texture2 // 활성화
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, strPrototag,
 			TEXT("Com_Texture_SkillIcon_Active"), reinterpret_cast<CComponent**>(&m_pTextureCom[ACTIVE]))))
@@ -361,9 +363,9 @@ HRESULT CUI_WeaponIcon::Bind_ShaderResources()
 
 	if (m_bWeapon == true)
 	{
-		// 최대 레벨 제한
-		if (m_eUI_Level <= CUI::LEVEL2)
-			m_eUI_Level = CUI::LEVEL1;
+		//// 최대 레벨 제한
+		//if (m_eUI_Level >= CUI::LEVEL2)
+		//	m_eUI_Level = CUI::LEVEL1;
 
 		/* UI_Level */
 		switch (m_eUI_Level)
@@ -373,10 +375,12 @@ HRESULT CUI_WeaponIcon::Bind_ShaderResources()
 				return E_FAIL;
 			break;
 		case Client::CUI::LEVEL1: /* => Unlock/Active <= */
-			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+			if (FAILED(m_pTextureCom[LOCK]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 			break;
 		case Client::CUI::LEVEL2:
+			if (FAILED(m_pTextureCom[ACTIVE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
+				return E_FAIL;
 			break;
 		case Client::CUI::LEVEL3:
 			break;

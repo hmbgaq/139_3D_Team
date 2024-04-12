@@ -14,8 +14,10 @@ void CMother_Dead::Initialize(CMother* pActor)
 CState<CMother>* CMother_Dead::Update(CMother* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
-	{	//죽여 버리기 여기서 
-		pActor->Set_Dead(true);
+	{	//죽여 버리기 여기서
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		pActor->Get_Body()->Set_RenderPass(ECast(MONSTER_SHADER::COMMON_DISSOLVE));
+		pActor->m_bDeadState = true;
 	}
 
 	return nullptr;
@@ -24,6 +26,5 @@ CState<CMother>* CMother_Dead::Update(CMother* pActor, _float fTimeDelta)
 void CMother_Dead::Release(CMother* pActor)
 {
 	__super::Release(pActor);
-	EFFECT_MANAGER->Return_ToPool(m_pEffect);
 	CData_Manager::GetInstance()->Add_CurEXP(PARASITER_EXP);
 }
