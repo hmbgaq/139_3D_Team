@@ -896,8 +896,6 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
 			Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
-			
-
 			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
 			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 			 CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
