@@ -195,6 +195,10 @@ BlendState BS_AlphaBlend_Effect
 {
     BlendEnable[0] = true;
     BlendEnable[1] = true;
+    //BlendEnable[2] = true;
+    //BlendEnable[3] = true;
+    //BlendEnable[4] = true;
+    //BlendEnable[5] = true;
 
     SrcBlend = Src_Alpha;
     DestBlend = Inv_Src_Alpha;

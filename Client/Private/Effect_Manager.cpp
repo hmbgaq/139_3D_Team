@@ -35,6 +35,7 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
 
+
 	if (EffectPool == nullptr)
 	{
 //#ifdef _DEBUG
@@ -43,6 +44,9 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 		return nullptr;
 //#endif // _DEBUG
 	}
+
+	if(0 >= EffectPool->size())
+		return nullptr;
 
 	CEffect* pEffect = EffectPool->front();
 
@@ -79,7 +83,7 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 
 
 // 주인 없이 위치 생성 이펙트
-CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _float3 vPos, _bool bLookTarget, _float3 vTargetPos)
+CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGameObject* pOwner, _float3 vPos, _bool bLookTarget, _float3 vTargetPos)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
 
@@ -91,6 +95,9 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 		return nullptr;
 //#endif // _DEBUG
 	}
+
+	if (0 >= EffectPool->size())
+		return nullptr;
 
 	CEffect* pEffect = EffectPool->front();
 
@@ -106,8 +113,17 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 
 	//Safe_AddRef(pEffect);
 
+	if (nullptr != pOwner)	// 주인 설정
+	{
+		pEffect->Get_Desc()->bParentPivot = false;
+		pEffect->Set_Object_Owner(pOwner);
+	}
+	
+
 	// 위치 설정
-	pEffect->Set_Position(vPos);
+	//pEffect->Set_Position(vPos);
+	pEffect->Get_Transform()->Set_State(CTransform::STATE_POSITION, XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f));
+
 
 	if (bLookTarget)
 	{
@@ -125,6 +141,7 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, _fl
 }
 
 
+
 CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strFileName, CGameObject* pOwner, _float4x4 matPivot)
 {
 	queue<CEffect*>* EffectPool = Get_EffectPool(strFileName);
@@ -137,6 +154,10 @@ CEffect* CEffect_Manager::Play_Effect_StaticPivot(string strAddPath, string strF
 		return nullptr;
 //#endif // _DEBUG
 	}
+
+
+	if (0 >= EffectPool->size())
+		return nullptr;
 
 	CEffect* pEffect = EffectPool->front();
 
@@ -182,7 +203,7 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 	{
 		*fTimeAcc = 0.f;
 
-		CEffect* pEffect = Play_Effect(strAddPath, strFileName, vPos, bLookTarget, vTargetPos);
+		CEffect* pEffect = Play_Effect(strAddPath, strFileName, nullptr, vPos, bLookTarget, vTargetPos);
 
 		if (nullptr == pEffect)
 		{
@@ -401,7 +422,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	
 #pragma region 보스1 이펙트 시작
 	/* Boos 1 */
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_08.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_02.json")); 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
@@ -421,30 +442,34 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma region 보스2 이펙트 시작
 	/* Boos 2 */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_Map_05.json", 2));
+
+	/* SnowBoss Falling Leaves */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_02.json", 30));
+
+	/* Boss2 Monster_Explosion */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_ExplosionNonLoop.json", 50));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_Blood3.json", 50));
 
-	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03.json", 200));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 500));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
 	
 	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherProjectileDead.json", 300));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherShakeTreeProjectile1.json", 300));
-
-	/* SnowBoss Falling Leaves */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves.json", 30));
-	/*Boss2 Monster_Explosion*/
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_ExplosionNonLoop.json", 50));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "Circle_Floor_05.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherProjectileDead_08.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherShakeTreeProjectile1.json", 200));
 
 	//Mother_Egg
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead3.json", 20));
 
-	//Mother_breath
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 200));
-	//BossSoundWave
+	/* Mother Breath */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08.json", 400));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", 1000));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_03.json", 2));
 
+	//BossSoundWave
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherSoundWave.json", 20));
 
 	//BossDeadBlood

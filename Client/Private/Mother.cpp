@@ -78,8 +78,9 @@ HRESULT CMother::Initialize(void* pArg)
 
 	CData_Manager::GetInstance()->Set_Mother(this);
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
-	//m_pMapEffect = EFFECT_MANAGER->Create_Effect("Test_Blood_map_04.json");
-	//m_pMapEffect->Set_Position(m_pTransformCom->Get_Position());
+
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_Map_05.json", nullptr, m_pTransformCom->Get_Position());
+
 	Search_Target(200.f);
 
 	m_pChimEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Chim_01.json", this, true, "Jaws_Center");
@@ -278,9 +279,7 @@ void CMother::Free()
 	}
 
 	if (nullptr != m_pMapEffect)
-	{
-		m_pMapEffect->Set_Dead(TRUE);
-	}
+		Safe_Release(m_pMapEffect);
 
 	if (nullptr != m_pEffect)
 		Safe_Release(m_pEffect);

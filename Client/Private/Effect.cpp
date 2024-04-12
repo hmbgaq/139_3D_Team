@@ -13,6 +13,7 @@
 #include "Character.h"
 #include "Weapon.h"
 #include "Son_Projectile.h"
+#include "MotherShakeTreeProjectile.h"
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -314,7 +315,22 @@ void CEffect::Update_PivotMat()
 		{
 			if (nullptr != m_pTrail)	// 트레일을 갖고있던 이펙트면 트레일 멈춤
 				m_pTrail->Set_Play(false);
-			
+
+			if (m_tEffectDesc.strFileName == "Mother_Breath_08.json")
+			{
+				_int a = 0;
+			}
+
+			if (m_tEffectDesc.strFileName == "Mother_Breath_08_Tick_02.json")
+			{
+				_int a = 0;
+			}
+
+			if (m_tEffectDesc.strFileName == "Circle_Floor_05.json")
+			{
+				_int a = 0;
+			}
+
 			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
 			EFFECT_MANAGER->Return_ToPool(this);
 
@@ -358,8 +374,8 @@ void CEffect::Update_PivotMat()
 		}
 		else
 		{
-
-
+			// 주인이 있지만 주인 피봇을 사용하지 않을거면 컴바인 매트릭스에 자신의 월드만 저장하기
+			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix());	
 		}
 
 	}

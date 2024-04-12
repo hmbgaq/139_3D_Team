@@ -64,7 +64,7 @@ HRESULT CEnvironment_LightObject::Initialize(void* pArg)
 
 	if (true == m_tEnvironmentDesc.bEffect)
 	{
-		m_pEffect = EFFECT_MANAGER->Play_Effect("Fire/", "Fire_Torch_05.json", this);
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Fire/", "Fire_Torch_05.json", this, false);
 	}
 	
 	return S_OK;

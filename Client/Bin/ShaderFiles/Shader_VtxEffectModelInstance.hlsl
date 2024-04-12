@@ -846,9 +846,9 @@ PS_OUT_EFFECT PS_MAIN_DISTORTION_NOTPRI(PS_IN_DISTORTION In, uniform bool bSolid
 
 
 //  DISTORTION_POST ==================================================================================================
-PS_OUT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
+PS_OUT_EFFECT PS_MAIN_DISTORTION_POST(PS_IN_DISTORTION In)
 {
-    PS_OUT Out = (PS_OUT) 0;	
+    PS_OUT_EFFECT Out = (PS_OUT_EFFECT) 0;
     
     In.vTexUV = In.vTexUV * g_UVScale + g_UVOffset;
     In.vTexUV = Rotate_Texcoord(In.vTexUV, g_fDegree);
