@@ -243,7 +243,6 @@ private:
 private:
 	CCharacter* m_pLockOnTarget = { nullptr };
 
-
 public:
 	_bool	m_bPlayerCheck = true;
 

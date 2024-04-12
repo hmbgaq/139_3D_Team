@@ -8,7 +8,7 @@
 CEffect_Particle::CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CEffect_Void(pDevice, pContext, strPrototypeTag)
 {
-	m_bIsPoolObject = FALSE;
+	m_bIsPoolObject = false;
 }
 
 CEffect_Particle::CEffect_Particle(const CEffect_Particle& rhs)
@@ -63,8 +63,8 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 					if (m_tVoidDesc.fWaitingAcc >= m_tVoidDesc.fWaitingTime)
 					{
-						m_tVoidDesc.bRender = TRUE;
-						//pDesc->bPlay	= TRUE;
+						m_tVoidDesc.bRender = true;
+						//pDesc->bPlay	= true;
 					}
 					else
 						return;
@@ -92,7 +92,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 								if (m_tSpriteDesc.vUV_CurTileIndex.y == m_tSpriteDesc.vUV_MaxTileCount.y)	// 세로 인덱스도 끝까지 왔다면
 								{
-									m_tSpriteDesc.bSpriteFinish = TRUE;										// 스프라이트 애님 끝	
+									m_tSpriteDesc.bSpriteFinish = true;										// 스프라이트 애님 끝	
 								}
 							}
 							m_tVoidDesc.fSpriteTimeAcc = 0.f;	// 시간 초기화
@@ -102,7 +102,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 					if (m_tSpriteDesc.bSpriteFinish)
 					{
 						// 스프라이트 재생이 끝났고,
-						if (m_tSpriteDesc.bLoop)	// 스프라이트의 루프가 true이면
+						if (m_tSpriteDesc.bSpriteLoop)	// 스프라이트의 루프가 true이면
 						{	
 							// 스프라이트 초기화
 							m_tSpriteDesc.Reset_Sprite();
@@ -110,10 +110,16 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 						else
 						{
 							// 아니면 렌더 끄기
-							m_tVoidDesc.bRender = FALSE;
+							m_tVoidDesc.bRender = false;
 							//m_tSpriteDesc.Reset_Sprite(); // 초기화
 						}				
 					}
+				}
+
+
+				if (m_tVoidDesc.bRender) // 파티클 버퍼 업데이트
+				{
+					m_pVIBufferCom->Update(fTimeDelta);
 				}
 
 				/* ======================= 라이프 타임 동작 끝  ======================= */
@@ -124,7 +130,7 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 					m_tVoidDesc.fRemainAcc += fTimeDelta;
 
 					// 디졸브 시작
-					m_tVoidDesc.bDissolve = TRUE;
+					m_tVoidDesc.bDissolve = true;
 					if (m_tVoidDesc.bDissolve)
 					{
 						m_tVoidDesc.fDissolveAmount = Easing::LerpToType(0.f, 1.f, m_tVoidDesc.fRemainAcc, m_tVoidDesc.fRemainTime, m_tVoidDesc.eType_Easing);
@@ -132,16 +138,15 @@ void CEffect_Particle::Tick(_float fTimeDelta)
 
 					if (m_tVoidDesc.fRemainAcc >= m_tVoidDesc.fRemainTime)
 					{
+						// 파티클 끝
 						m_tVoidDesc.fDissolveAmount = 1.f;
-						//m_tVoidDesc.bRender = TRUE;
+						m_pVIBufferCom->Set_Finish(true);
+						//m_tVoidDesc.bRender = true;
 						return;
 					}
 				}
 
-				if (m_tVoidDesc.bRender)
-				{
-					m_pVIBufferCom->Update(fTimeDelta);
-				}
+
 			}
 
 #ifdef _DEBUG
@@ -208,19 +213,19 @@ void CEffect_Particle::ReSet_Effect()
 	__super::ReSet_Effect();
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
-	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bDissolve = false;
 	
 
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-		m_tSpriteDesc.bSpriteFinish = FALSE;
+		m_tSpriteDesc.bSpriteFinish = false;
 		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
 	if (!m_pVIBufferCom->Get_Desc()->bRecycle)	// 파티클 버퍼가 재사용이 아닐때만 리셋
 	{
-		//m_tVoidDesc.bRender = FALSE;
+		//m_tVoidDesc.bRender = false;
 		m_pVIBufferCom->ReSet(); // 버퍼 리셋
 	}
 
@@ -231,18 +236,18 @@ void CEffect_Particle::Init_ReSet_Effect()
 	__super::ReSet_Effect();
 
 	m_tVoidDesc.fDissolveAmount = 0.f;
-	m_tVoidDesc.bDissolve = FALSE;
+	m_tVoidDesc.bDissolve = false;
 
 
 	if (m_tVoidDesc.bUseSpriteAnim)
 	{
-		m_tSpriteDesc.bSpriteFinish = FALSE;
+		m_tSpriteDesc.bSpriteFinish = false;
 		m_tSpriteDesc.vUV_CurTileIndex.y = m_tSpriteDesc.vUV_MinTileCount.y;
 		m_tSpriteDesc.vUV_CurTileIndex.x = m_tSpriteDesc.vUV_MinTileCount.x;
 	}
 
 
-	m_tVoidDesc.bRender = FALSE;
+	m_tVoidDesc.bRender = false;
 	m_pVIBufferCom->ReSet(); // 버퍼 리셋
 
 }
@@ -268,7 +273,7 @@ _bool CEffect_Particle::Write_Json(json& Out_Json)
 
 
 	/* Sprite Desc */
-	Out_Json["bLoop"] = m_tSpriteDesc.bLoop;
+	Out_Json["bSpriteLoop"] = m_tSpriteDesc.bSpriteLoop;
 	Out_Json["fSequenceTerm"] = m_tSpriteDesc.fSequenceTerm;
 
 	CJson_Utility::Write_Float2(Out_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
@@ -309,7 +314,14 @@ void CEffect_Particle::Load_FromJson(const json& In_Json)
 
 
 	/* Sprite Desc */
-	m_tSpriteDesc.bLoop = In_Json["bLoop"]; 
+	if (In_Json.contains("bSpriteLoop")) // 다시 저장 후 if문 삭제
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bSpriteLoop"];
+	}
+	else
+	{
+		m_tSpriteDesc.bSpriteLoop = In_Json["bLoop"];
+	}
 	m_tSpriteDesc.fSequenceTerm = In_Json["fSequenceTerm"];
 
 	CJson_Utility::Load_Float2(In_Json["vTextureSize"], m_tSpriteDesc.vTextureSize);
@@ -544,7 +556,8 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bBillBoard", &m_tVoidDesc.bBillBoard, sizeof(_bool)));
-
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bSoft", &m_tVoidDesc.bSoft, sizeof(_bool)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bUseMask", &m_tVoidDesc.bUseMask, sizeof(_bool)));
 
 	/* Color & Discard ===============================================================================*/
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iColorMode", &m_tVoidDesc.eMode_Color, sizeof(_int)));
@@ -569,7 +582,6 @@ HRESULT CEffect_Particle::Bind_ShaderResources()
 
 		m_tVoidDesc.vUV_Scale = { (_float)m_tSpriteDesc.vTileSize.x / m_tSpriteDesc.vTextureSize.x
 								, (_float)m_tSpriteDesc.vTileSize.y / m_tSpriteDesc.vTextureSize.y };
-
 	}
 
 	/* UV ============================================================================================ */

@@ -296,6 +296,8 @@ private:
 	CLevel* m_pNewLevel = { nullptr };
 	_bool m_bIsRequestOpenLevel = { false };
 
+	_bool m_bUseSoundManager = { false };
+
 
 public:
 	void Release_Manager();
