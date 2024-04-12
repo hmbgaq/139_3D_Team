@@ -440,8 +440,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
-		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
@@ -534,8 +534,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
-		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);

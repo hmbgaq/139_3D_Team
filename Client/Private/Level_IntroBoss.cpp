@@ -85,13 +85,15 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
     m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_INTRO_BOSS), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
     m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_INTRO_BOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-    /* Map Light */
-    CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+    m_pGameInstance->Remove_AllLight();
 
-    if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
-    {
-        m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
-    }
+    /* Map Light */
+    //CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+    //
+    //if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
+    //{
+    //    m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
+    //}
 
     json IntroBossMapJson = {};
 
@@ -201,22 +203,24 @@ HRESULT CLevel_IntroBoss::Ready_LightDesc()
         }
     }
 
-    LIGHT_DESC LightDesc = {};
-    LightDesc.bEnable = true;
-    LightDesc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
-    
-    LightDesc.vDirection = { 0.f, -1.f, 0.f, 0.f };
-    LightDesc.vPosition = _float4(60.0f, 5.f, 29.84f, 0.f);
-    LightDesc.fRange = 3.f;
-    LightDesc.fCutOff = 0.5f;
-    LightDesc.fOuterCutOff = 0.7f;
+    //TODO LIGHT_DESC LightDesc = {};
+    //TODO LightDesc.bEnable = true;
+    //TODO LightDesc.eType = LIGHT_DESC::TYPE::TYPE_SPOTLIGHT;
+    //TODO 
+    //TODO LightDesc.vDirection = { 0.f, -1.f, 0.f, 0.f };
+    //TODO LightDesc.vPosition = _float4(60.0f, 5.f, 29.84f, 0.f);
+    //TODO LightDesc.fRange = 3.f;
+    //TODO LightDesc.fCutOff = 0.5f;
+    //TODO LightDesc.fOuterCutOff = 0.7f;
+    //TODO 
+    //TODO LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
+    //TODO LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
+    //TODO LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
+    //TODO LightDesc.fIntensity = 0.5f;
+    //TODO 
+    //TODO CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
 
-    LightDesc.vDiffuse = { 1.f, 0.f, 0.f, 1.f };
-    LightDesc.vAmbient = { 1.f, 0.f, 0.f, 1.f };
-    LightDesc.vSpecular = { 1.f, 0.f, 0.f, 1.f };
-    LightDesc.fIntensity = 0.5f;
-    
-    CLight* pLight = m_pGameInstance->Add_Light_AndGet(LightDesc, LightDesc.iLightIndex);
+
 
     return S_OK;
 }

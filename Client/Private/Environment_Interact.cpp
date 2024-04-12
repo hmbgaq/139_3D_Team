@@ -90,7 +90,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	
 	XMStoreFloat4x4(&m_InitMatrix, XMMatrixIdentity());
 
-	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
 		if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
 		{

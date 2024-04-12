@@ -72,7 +72,7 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 
 		m_bFlags[2] = true;
 	}
-	if (m_bFlags[8] == false && pActor->Is_Inputable_Front(125))
+	if (m_bFlags[8] == false && pActor->Is_Inputable_Front(135))
 	{
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 		m_bFlags[8] = true;
@@ -87,7 +87,7 @@ CState<CMother>* CMother_Spawn::Update(CMother* pActor, _float fTimeDelta)
 		m_bFlags[3] = true;
 	}
 
-	if (m_bFlags[9] == false && pActor->Is_Inputable_Front(210))
+	if (m_bFlags[9] == false && pActor->Is_Inputable_Front(220))
 	{
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
 

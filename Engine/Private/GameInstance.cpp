@@ -906,6 +906,13 @@ _bool CGameInstance::Remove_Light(const _uint& iIndex)
 	return m_pLight_Manager->Remove_Light(iIndex);
 }
 
+_bool CGameInstance::Remove_AllLight()
+{
+	
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	return m_pLight_Manager->Remove_AllLight();
+}
+
 HRESULT CGameInstance::Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp)
 {
 	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);

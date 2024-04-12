@@ -83,12 +83,16 @@ HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
 	/* Map Light */
-	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
-	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
-	{
-		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
-	}
+	m_pGameInstance->Remove_AllLight();
+
+
+	//CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+	//
+	//if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
+	//{
+	//	m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
+	//}
 
 	json IntroBossMapJson = {};
 
