@@ -5,7 +5,7 @@
 #include "Effect_Manager.h"
 
 #include "Effect_Particle.h"
-#include "Effect_Rect.h"
+//#include "Effect_Rect.h"
 #include "Effect_Instance.h"
 #include "Effect_Trail.h"
 
