@@ -24,6 +24,8 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 	if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER_UPGRADE))
 	{
 		EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
+		m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"Revolver_Fire_Player_03.wav", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
+
 		//Fire(pActor);
 		Create_Bullet(pActor);
 	}
@@ -34,6 +36,7 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
+
 
 	fInputWaitTime += fTimeDelta;
 	if (0.7f <= fInputWaitTime) 
@@ -64,7 +67,8 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		{
 
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
-			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"Revolver_Fire_Player_01.wav", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
+
 
 			//Fire(pActor);
 			Create_Bullet(pActor);
@@ -77,7 +81,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		if (true == m_bFlags[1])
 		{
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
-			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"Revolver_Fire_Player_02.wav", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
 
 			//Fire(pActor);
 			Create_Bullet(pActor);
@@ -90,7 +94,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		if (true == m_bFlags[2])
 		{
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
-			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"Revolver_Fire_Player_03.wav", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
 
 			//Fire(pActor);
 			Create_Bullet(pActor);
@@ -103,7 +107,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		if (true == m_bFlags[3])
 		{
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
-			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"Revolver_Fire_Player_04.wav", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
 
 			//Fire(pActor);
 			Create_Bullet(pActor);
@@ -116,7 +120,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		if (true == m_bFlags[4])
 		{
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
-			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"Revolver_Fire_Player_05.wav", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
 
 			//Fire(pActor);
 			Create_Bullet(pActor);
@@ -129,7 +133,7 @@ CState<CPlayer>* CPlayer_Bandit_Special_01::Update(CPlayer* pActor, _float fTime
 		if (true == m_bFlags[5])
 		{
 			EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_Fire_03.json", pActor);
-			//EFFECT_MANAGER->Play_Effect_StaticPivot("Revolver_Fire_02_Tail.json", pActor, pActor->Get_Transform()->Get_WorldFloat4x4());
+			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"Revolver_Fire_Player_06.wav", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
 
 			//Fire(pActor);
 			Create_Bullet(pActor);
@@ -168,6 +172,7 @@ void CPlayer_Bandit_Special_01::Release(CPlayer* pActor)
 
 void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 {
+	pActor->Set_Target(nullptr);
 	pActor->Search_Target(15.f);
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget)
@@ -181,6 +186,10 @@ void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 
 		m_pGameInstance->Set_RadialBlurTime(0.1f);
 		//pActor->Apply_Shake_And_Blur(Power::Light);
+	}
+	else 
+	{
+		_int a = 0;
 	}
 	pActor->Set_Target(nullptr);
 

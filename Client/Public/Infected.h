@@ -62,6 +62,7 @@ public:
 public:
 	virtual void Explosion() {};
 
+
 protected:
 	HRESULT Ready_Components();
 	_bool	m_bCntDead_Active = { false };

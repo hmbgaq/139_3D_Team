@@ -972,6 +972,7 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 		if (true == bIsCooltimeEnd)
 		{
 			pActor->Activate_SuperCharge();
+			pActor->Play_Sound_SuperCharge_Enter();
 		}
 	}
 

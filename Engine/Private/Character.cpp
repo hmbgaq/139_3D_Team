@@ -469,6 +469,8 @@ Hit_Type CCharacter::Set_Hitted(_float iDamage, _vector vDir, _float fForce, _fl
 	}
 	else //if (eHitPower >= m_eStrength)
 	{
+		
+
 		eHitType = Hit_Type::Hit;
 
 		if (true == bKnockUp)

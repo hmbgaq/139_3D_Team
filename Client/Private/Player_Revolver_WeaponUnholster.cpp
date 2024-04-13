@@ -13,7 +13,8 @@ void CPlayer_Revolver_WeaponUnholster::Initialize(CPlayer* pActor)
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(true);
 
-	pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, true);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, true);
+	pWeapon->Play_Weapon_Sound_UnHolster();
 
 	//pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 }

@@ -575,7 +575,7 @@ _bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD, _float fCost)
 	{
 		_float fDiff = 0.f;
 
-		if (fCooltime >= fMaxCooltime)
+		if (fCooltime >= fMaxCooltime || 0.f >= fCooltime )
 		{
 			fDiff = fCost + 1.f;
 		}
@@ -1057,6 +1057,57 @@ void CPlayer::Teleport()
 
 	pTeleport->Set_InitPosition(vSpawnPos);
 	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
+}
+
+void CPlayer::Play_Sound_SuperCharge_Enter()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_EnergyMode_Enter_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_EnergyMode_Enter_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_EnergyMode_Enter_03.wav";
+		break;
+	default:
+		strFileName = L"Player_EnergyMode_Enter_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"SUPER_CHARGE", strFileName, CHANNELID::SOUND_SUPER_CHARGE, 10.f);
+
+}
+
+void CPlayer::Play_Sound_SuperCharge_Exit()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_supercharged_energy_mode_off_001.wav";
+		break;
+	case 1:
+		strFileName = L"player_supercharged_energy_mode_off_002.wav";
+		break;
+	case 2:
+		strFileName = L"player_supercharged_energy_mode_off_003.wav";
+		break;
+	case 3:
+		strFileName = L"player_supercharged_energy_mode_off_004.wav";
+		break;
+	case 4:
+		strFileName = L"player_supercharged_energy_mode_off_005.wav";
+		break;
+	default:
+		strFileName = L"player_supercharged_energy_mode_off_001.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"SUPER_CHARGE", strFileName, CHANNELID::SOUND_SUPER_CHARGE, 10.f);
 }
 
 void CPlayer::Search_LockOn_Target()

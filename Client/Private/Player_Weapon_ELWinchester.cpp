@@ -149,7 +149,7 @@ void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Holster()
 		strFileName = L"HM_Winchester_AimOff_01.wav";
 		break;
 	}
-	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 15.f);
+	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 35.f);
 
 }
 
@@ -181,7 +181,7 @@ void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Aim()
 		strFileName = L"HM_Winchester_AimOn_01.wav";
 		break;
 	}
-	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 15.f);
+	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 25.f);
 
 }
 
@@ -210,24 +210,51 @@ void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Reload()
 
 void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Fire()
 {
-	wstring strFileName = L"";
-	_uint iRand = SMath::Random(0, 3);
-	switch (iRand)
 	{
-	case 0:
-		strFileName = L"Winchester_Fire_Player_01.wav";
-		break;
-	case 1:
-		strFileName = L"Winchester_Fire_Player_02.wav";
-		break;
-	case 2:
-		strFileName = L"Winchester_Fire_Player_03.wav";
-		break;
-	default:
-		strFileName = L"Winchester_Fire_Player_01.wav";
-		break;
+		wstring strFileName = L"";
+		_uint iRand = SMath::Random(0, 3);
+		switch (iRand)
+		{
+		case 0:
+			strFileName = L"Winchester_Fire_Player_01.wav";
+			break;
+		case 1:
+			strFileName = L"Winchester_Fire_Player_02.wav";
+			break;
+		case 2:
+			strFileName = L"Winchester_Fire_Player_03.wav";
+			break;
+		default:
+			strFileName = L"Winchester_Fire_Player_01.wav";
+			break;
+		}
+		m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
+
 	}
-	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
+
+
+	{
+		wstring strFileName = L"";
+		_uint iRand = SMath::Random(0, 3);
+		switch (iRand)
+		{
+		case 0:
+			strFileName = L"Player_WinchesterShot_Dry_01.wav";
+			break;
+		case 1:
+			strFileName = L"Player_WinchesterShot_Dry_02.wav";
+			break;
+		case 2:
+			strFileName = L"Player_WinchesterShot_Dry_03.wav";
+			break;
+		default:
+			strFileName = L"Player_WinchesterShot_Dry_01.wav";
+			break;
+		}
+		m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK2, 10.f);
+
+	}
+
 
 }
 

@@ -67,6 +67,12 @@ HRESULT CSound_Manager::Ready_Sound()
 
 
 
+	Load_SoundFile_GroupAsync(L"HITTED", "../Bin/Resources/Sound/Hitted/");
+	////Wait_GroupAsync();
+
+	Load_SoundFile_GroupAsync(L"SUPER_CHARGE", "../Bin/Resources/Sound/Player/SuperCharge/");
+	////Wait_GroupAsync();
+
 
 	return S_OK;
 }

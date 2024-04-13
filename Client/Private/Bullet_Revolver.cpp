@@ -8,6 +8,7 @@
 #include "Effect_Manager.h"
 #include "Effect_Trail.h"
 #include "Mother.h"
+#include "SMath.h"
 
 CBullet_Revolver::CBullet_Revolver(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
@@ -32,7 +33,8 @@ HRESULT CBullet_Revolver::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 60.f;
+	//GameObjectDesc.fSpeedPerSec = 60.f;
+	GameObjectDesc.fSpeedPerSec = 0.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	if (FAILED(__super::Initialize(&GameObjectDesc)))
@@ -110,6 +112,31 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 		_float3 vTargetPos = pPlayer->Get_Position();
 		vTargetPos.y = vPos.y;
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
+
+
+		{
+			wstring strFileName = L"";
+			_uint iRand = SMath::Random(0, 3);
+			switch (iRand)
+			{
+			case 0:
+				strFileName = L"Jesse_Impact_revolver_01.wav";
+				break;
+			case 1:
+				strFileName = L"Jesse_Impact_revolver_02.wav";
+				break;
+			case 2:
+				strFileName = L"Jesse_Impact_revolver_03.wav";
+				break;
+			default:
+				strFileName = L"Jesse_Impact_revolver_01.wav";
+				break;
+			}
+
+			m_pGameInstance->Play_Sound(L"HITTED", strFileName, CHANNELID::SOUND_HITTED, 15.f);
+		}
+
+
 
 		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), true, pPlayer->Get_Position());
 		

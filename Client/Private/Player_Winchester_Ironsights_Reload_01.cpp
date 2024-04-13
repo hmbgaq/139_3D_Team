@@ -10,7 +10,8 @@ void CPlayer_Winchester_Ironsights_Reload_01::Initialize(CPlayer* pActor)
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Set_Splitted(true);
 
-	pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
+	//pWeapon->Play_Weapon_Sound_Reload();
 }
 
 CState<CPlayer>* CPlayer_Winchester_Ironsights_Reload_01::Update(CPlayer* pActor, _float fTimeDelta)
@@ -19,7 +20,26 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_Reload_01::Update(CPlayer* pActor
 
 	pActor->Aim_Walk(fTimeDelta);
 
-	if (pActor->Is_UpperAnimation_End())
+
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Upper_Inputable_Front(22);
+		if (true == m_bFlags[0])
+		{
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_WINCHESTER);
+			pWeapon->Play_Weapon_Sound_Holster();
+		}
+	}
+	else if (false == m_bFlags[1])
+	{
+		m_bFlags[1] = pActor->Is_Upper_Inputable_Front(45);
+		if (true == m_bFlags[1]) 
+		{
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_WINCHESTER);
+			pWeapon->Play_Weapon_Sound_Reload();
+		}
+	}
+	else if (pActor->Is_UpperAnimation_End())
 	{
 		return new CPlayer_Winchester_Ironsights_AimPose();
 	}
