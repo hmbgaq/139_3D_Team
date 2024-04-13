@@ -825,7 +825,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			strcat_s(szTmp, szEXT);
 
 			_tchar		szFullPath[MAX_PATH] = TEXT("");
-
+			//0x000000e86ff6c9b0 L"../Bin/Resources/Models/Map/SnowMountain/NonAnim/Interact\\T_WoodenPanels_03_BC.png"
 			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
 			if (szFileName == "M_Invisible") /* 현재 게임에서 이 텍스쳐를 가지면 투명한 텍스쳐라 가상으로 만들어줘도 터짐 */

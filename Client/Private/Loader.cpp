@@ -1422,10 +1422,10 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 			string strConvertFBXPath;
 			m_pGameInstance->WString_To_String(wstrFBXPath, strConvertFBXPath);
 			
-			//if (strConvertFBXPath == "../Bin/Resources/Models/Map/Road\\Track\\Track_Switch_Module20m\\Track_Module20m") µð¹ö±ë¿ë
-			//{
-			//	_int i = 0;
-			//}
+			if (strConvertFBXPath == "../Bin/Resources/Models/Map/SnowMountain/NonAnim/Interact\\InteractTeslaAerialTramCart1")// µð¹ö±ë¿ë
+			{
+				_int i = 0;
+			}
 
 			FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, wstrSliceModelTag, CModel::Create(m_pDevice, m_pContext, (CModel::TYPE)iAnimType, strConvertFBXPath, PivotMatrix)));
 

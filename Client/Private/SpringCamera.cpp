@@ -50,6 +50,12 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		m_CameraOffset.y = 0.5f;
 		m_CameraOffset.z = -3.0f;
 		
+		
+		m_HawkOffset.x = 1.f;
+		m_HawkOffset.y = 0.5f;
+		m_HawkOffset.z = -3.0f;
+		m_HawkOffset.w = 1.f;
+		
 // 		_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 // 		
 // 		if (iCurrentLevel != (_uint)LEVEL_TOOL)
@@ -61,6 +67,7 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 		ActualPosition = m_pTransformCom->Get_State(CTransform::STATE_POSITION);
 
 	}
+
 	_float4x4 BoneMatrix = {};
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	m_pPlayer = CData_Manager::GetInstance()->Get_Player();
@@ -69,9 +76,9 @@ HRESULT CSpringCamera::Initialize(void* pArg)
 	_float4x4 pPlayerPos = pPlayer->Get_Transform()->Get_WorldMatrix();
 	_float4x4 temp = {};
 	XMStoreFloat4x4(&temp, BoneMatrix * pPlayerPos);
-	m_TargetPosition.x = temp._41;
-	m_TargetPosition.y = temp._42;
-	m_TargetPosition.z = temp._43;
+	m_vHawkTargetPosition.x = temp._41;
+	m_vHawkTargetPosition.y = temp._42;
+	m_vHawkTargetPosition.z = temp._43;
 	
 	//m_pCharacter = m_pGameInstance->Get
 
@@ -574,6 +581,25 @@ void CSpringCamera::HawkLerp_CameraPosition(_float fTimeDelta)
 		_float3 moveVector = XMVector3Normalize(direction) * moveDistance;
 		m_vHawkActualPosition += moveVector;
 	}
+}
+
+void CSpringCamera::Set_Hawk(CHawk* pHawk)
+{
+	if(pHawk == nullptr)
+		return;
+
+	ActualPosition = pHawk->Get_Position();
+	m_pHawk = pHawk;
+
+	_float4x4 BoneMatrix = {};
+
+	BoneMatrix = m_pHawk->Get_Body()->Get_BonePtr("Tail")->Get_CombinedTransformationMatrix();
+	_float4x4 pHawkPos = m_pHawk->Get_Transform()->Get_WorldMatrix();
+	_float4x4 temp = {};
+	XMStoreFloat4x4(&temp, BoneMatrix * pHawkPos);
+	m_vHawkNewTargetPosition.x = temp._41;
+	m_vHawkNewTargetPosition.y = temp._42;
+	m_vHawkNewTargetPosition.z = temp._43;
 }
 
 

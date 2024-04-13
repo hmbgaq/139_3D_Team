@@ -89,6 +89,7 @@ public: //!For Hawk
 	void Spline_At_Function(const _float fTimeDelta);
 	void Set_HawkSpring(_bool bHawkSpring) { m_bHawkSpring = bHawkSpring;}
 	void HawkLerp_CameraPosition(_float fTimeDelta);
+	void Set_Hawk(CHawk* pHawk);
 
 private:
 	// 	수평 , 수직 수행거리
@@ -141,6 +142,7 @@ private: //!For Hawk
 	_float3 m_vHawkVelocity = {};
 	_float3 m_vHawkActualPosition = {};//속도벡터와 카메라의 실제 위치를 나타내는 벡터
 	_float3 m_vHawkPreActualPosition = {};//카메라 보간을 위해 이전 프레임 포지션가져옴
+	_float3 m_vHawkTargetPosition = {};
 	_float3 m_vHawkNewTargetPosition = {};
 	_float3 m_vHawkCameraTickPos = {};// tick 에서 값이 자꾸 이상하게 초기화되서 이걸로 다시 값을 맞춰줘야함 
 	CTransform* m_pHawkTransform = { nullptr };//카메라가 따라다닐 타깃 오브젝트 //타깃 오브젝트는 위치, 방향벡터 , 타깃의 위쪽을 가리키는 벡터를 지닌다.
@@ -150,7 +152,7 @@ private: //!For Hawk
 
 	CHawk*			m_pHawk = { nullptr };
 	_bool			m_bHawkSpring = false;
-	_float3			m_vHawkTargetPosition = {};
+	_float3			m_vHawkTargetPositionTest = {};
 	vector<_float4> m_vecAtPoints;
 	_float			m_fSplineTimeAcc = 0.f;
 	_float			m_fSplineMoveSpeed = 12.f;
@@ -158,9 +160,10 @@ private: //!For Hawk
 	_bool			m_bFixAt = false;
 	_bool			m_bOnceAt = false;
 	_int			m_iCurrentAtPoint = 0;
+	_float4			m_HawkOffset = {};
 
 	
-
+	
 public:
 	static CSpringCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

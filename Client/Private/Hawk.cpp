@@ -42,6 +42,14 @@ HRESULT CHawk::Initialize(void* pArg)
 	m_pRigidBody->Set_UseGravity(true);
 	m_vPreCutSceneMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
+	CMasterCamera* pMasterCamera = CData_Manager::GetInstance()->Get_MasterCamera();
+	CSpringCamera* pSpringCamera = pMasterCamera->Get_SpringCamera();
+
+	if (pSpringCamera != nullptr)
+	{
+		pSpringCamera->Set_Hawk(this);
+	}
+
 	return S_OK;
 }
 
