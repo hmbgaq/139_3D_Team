@@ -20,6 +20,8 @@ public:
 	void Sound_Impact_Layer1();
 	void Sound_Impact_Layer2();
 
+	void Sound_Hit();
+
 
 
 };

@@ -36,6 +36,10 @@ void CPlayer_OpenStateCombo_8hit::Initialize(CPlayer* pActor)
 	if (pTarget)
 	{
 		pTarget->Set_Position(pActor->Calc_Front_Pos());
+
+
+		//pActor->Play_Voice_Melee();
+
 	}
 
 	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"OpenState_Start_01.wav", CHANNELID::SOUND_PLAYER_ATTACK, 15.f);
@@ -51,6 +55,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 	{
 		return new CPlayer_IdleLoop();
 	}	
+
 
 	_uint iTiming = 8;
 

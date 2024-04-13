@@ -20,6 +20,7 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_STOP, true, false, 17);
 
+
 	CData_Manager* pDataManager = CData_Manager::GetInstance();
 	if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::REVOLVER_UPGRADE))
 	{
@@ -29,6 +30,8 @@ void CPlayer_Bandit_Special_01::Initialize(CPlayer* pActor)
 		//Fire(pActor);
 		Create_Bullet(pActor);
 	}
+
+	pActor->Play_Voice_Revolver();
 	
 	//Create_Bullet(pActor);
 }
@@ -172,7 +175,7 @@ void CPlayer_Bandit_Special_01::Release(CPlayer* pActor)
 
 void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 {
-	pActor->Set_Target(nullptr);
+	//pActor->Set_Target(nullptr);
 	pActor->Search_Target(15.f);
 	CCharacter* pTarget = pActor->Get_Target();
 	if (pTarget)
@@ -187,10 +190,7 @@ void CPlayer_Bandit_Special_01::Create_Bullet(CPlayer* pActor)
 		m_pGameInstance->Set_RadialBlurTime(0.1f);
 		//pActor->Apply_Shake_And_Blur(Power::Light);
 	}
-	else 
-	{
-		_int a = 0;
-	}
+
 	pActor->Set_Target(nullptr);
 
 	CData_Manager* pDataManager = CData_Manager::GetInstance();

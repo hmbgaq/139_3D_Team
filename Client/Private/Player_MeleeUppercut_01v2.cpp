@@ -17,7 +17,7 @@ void CPlayer_MeleeUppercut_01v2::Initialize(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_R);
 
 	pWeapon
-		->Set_Damage(20.f)
+		->Set_Damage(10.f)
 		->Set_Direction(Direction::Front)
 		->Set_Power(Power::Heavy)
 		->Set_Force(0.5f)
@@ -37,12 +37,18 @@ CState<CPlayer>* CPlayer_MeleeUppercut_01v2::Update(CPlayer* pActor, _float fTim
 	if (false == m_bFlags[0] && pActor->Is_Inputable_Front(13))
 	{
 		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
+		pActor->Play_Whoosh_Sound();
 		m_bFlags[0] = true;
 	}
 
 	if (true == m_bFlags[0] && false == m_bFlags[1])
 	{
 		pActor->Chasing_Attack(fTimeDelta, 7.f, 2);
+
+		if (pActor->Get_Target())
+		{
+			pActor->Play_Voice_Melee_Heavy();
+		}
 	}
 
 	if (false == m_bFlags[1] && pActor->Is_Inputable_Front(23))
@@ -61,6 +67,7 @@ CState<CPlayer>* CPlayer_MeleeUppercut_01v2::Update(CPlayer* pActor, _float fTim
 
 		if (m_pGameInstance->Key_Pressing(DIK_E)) 
 		{
+			pActor->Set_Target(nullptr);
 			return new CPlayer_Bandit_Special_01();
 		}
 

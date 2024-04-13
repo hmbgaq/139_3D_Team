@@ -12,6 +12,7 @@ void CPlayer_ShotgunElectric_Fire_ShortRange::Initialize(CPlayer* pActor)
 
 	pActor->Set_UseMouseMove(false);
 
+
 	//pActor->Set_StiffnessRate_Upper(0.7f);
 }
 

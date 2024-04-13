@@ -3,6 +3,8 @@
 void CPlayer_State_Attack::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
+
+	
 }
 
 CState<CPlayer>* CPlayer_State_Attack::Update(CPlayer* pActor, _float fTimeDelta)

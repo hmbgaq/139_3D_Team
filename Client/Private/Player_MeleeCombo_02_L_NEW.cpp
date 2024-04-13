@@ -36,6 +36,12 @@ CState<CPlayer>* CPlayer_MeleeCombo_02_L_NEW::Update(CPlayer* pActor, _float fTi
 	else if (false == m_bFlags[1])
 	{
 		pActor->Chasing_Attack(fTimeDelta);
+
+		if (pActor->Get_Target())
+		{
+			pActor->Play_Voice_Melee();
+		}
+
 		m_bFlags[1] = pActor->Is_Inputable_Front(18);
 		if (true == m_bFlags[1])
 		{

@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_EnergyWhip_Pull;
 
+public:
+	void Sound_Pull();
+
 };
 
 END

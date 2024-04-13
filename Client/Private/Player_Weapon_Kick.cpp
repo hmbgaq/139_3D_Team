@@ -81,9 +81,27 @@ HRESULT CPlayer_Weapon_Kick::Ready_Components()
 
 void CPlayer_Weapon_Kick::OnCollisionEnter(CCollider* other)
 {
+	Hit(other);
+}
+
+void CPlayer_Weapon_Kick::OnCollisionStay(CCollider* other)
+{
+	Hit(other);
+}
+
+void CPlayer_Weapon_Kick::OnCollisionExit(CCollider* other)
+{
+	_int a = 0;
+
+}
+
+void CPlayer_Weapon_Kick::Hit(CCollider* other)
+{
 	m_eHitPower = Power::Heavy;
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
+
+
 	if (nullptr != pTarget_Character)
 	{
 		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
@@ -108,20 +126,10 @@ void CPlayer_Weapon_Kick::OnCollisionEnter(CCollider* other)
 			CData_Manager::GetInstance()->Apply_Shake_And_Blur(m_eHitPower);
 		}
 
+		Play_Hit_Sound_Normal();
+
 		Set_Enable_Collisions(false);
 	}
-	
-}
-
-void CPlayer_Weapon_Kick::OnCollisionStay(CCollider* other)
-{
-	_int a = 0;
-}
-
-void CPlayer_Weapon_Kick::OnCollisionExit(CCollider* other)
-{
-	_int a = 0;
-
 }
 
 void CPlayer_Weapon_Kick::Play_Hit_Sound_Normal()
@@ -132,26 +140,26 @@ void CPlayer_Weapon_Kick::Play_Hit_Sound_Normal()
 	switch (iRand)
 	{
 	case 0:
-		strFileName = L"player_kick_layer2_001.wav";
+		strFileName = L"player_kick_layer1_001.wav";
 		break;
 	case 1:
-		strFileName = L"player_kick_layer2_002.wav";
+		strFileName = L"player_kick_layer1_002.wav";
 		break;
 	case 2:
-		strFileName = L"player_kick_layer2_003.wav";
+		strFileName = L"player_kick_layer1_003.wav";
 		break;
 	case 3:
-		strFileName = L"player_kick_layer2_004.wav";
+		strFileName = L"player_kick_layer1_004.wav";
 		break;
 	case 4:
-		strFileName = L"player_kick_layer2_005.wav";
+		strFileName = L"player_kick_layer1_005.wav";
 		break;
 	default:
-		strFileName = L"player_kick_layer2_001.wav";
+		strFileName = L"player_kick_layer1_001.wav";
 		break;
 	}
 
-	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 5.f);
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 15.f);
 }
 
 CPlayer_Weapon_Kick* CPlayer_Weapon_Kick::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

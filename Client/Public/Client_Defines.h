@@ -86,6 +86,8 @@ namespace Client
 
 	
 	#define	REVOLVER_DELAY					1.f
+
+	#define PLAYER_VOICE_DELAY				3.f
 	
 
 

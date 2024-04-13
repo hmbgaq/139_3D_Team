@@ -86,6 +86,13 @@ HRESULT CPlayer_Weapon_Punch::Ready_Components()
 void CPlayer_Weapon_Punch::Attack(CCollider* other)
 {
 	CCharacter* pTarget_Character = Get_Target_Character(other);
+
+	CGameObject* pTarget_Object = Get_Target_Object(other);
+	if (nullptr != pTarget_Object)
+	{
+		Play_Hit_Sound(m_eHitPower);
+	}
+
 	if (nullptr != pTarget_Character)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
@@ -112,13 +119,17 @@ void CPlayer_Weapon_Punch::Attack(CCollider* other)
 			//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", Get_WorldPosition(), true, pTarget_Character->Get_Position());
 			CData_Manager::GetInstance()->Apply_Shake_And_Blur(m_eHitPower);
 
-			Play_Hit_Sound(m_eHitPower);
+			
 
 
 		}
 
 		Set_Enable_Collisions(false);
 	}
+
+
+	
+
 }
 
 

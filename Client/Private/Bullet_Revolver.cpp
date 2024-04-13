@@ -59,7 +59,7 @@ void CBullet_Revolver::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
-	m_pTransformCom->Go_Straight(fTimeDelta);
+	//m_pTransformCom->Go_Straight(fTimeDelta);
 }
 
 void CBullet_Revolver::Late_Tick(_float fTimeDelta)
@@ -91,28 +91,25 @@ HRESULT CBullet_Revolver::Render_Shadow()
 
 void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 {
+	Hit(other);
+}
 
+void CBullet_Revolver::OnCollisionStay(CCollider* other)
+{
+	Hit(other);
+}
+
+void CBullet_Revolver::OnCollisionExit(CCollider* other)
+{
+}
+
+void CBullet_Revolver::Hit(CCollider* other)
+{
 	CCharacter* pTarget_Character = Get_Target_Character(other);
 
-	if (nullptr != pTarget_Character)// 일반 타격 
+	CGameObject* pTarget_Object = Get_Target_Object(other);
+	if (nullptr != pTarget_Object)
 	{
-		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Medium;
-		m_fForce = 0.f;
-		m_fDamage = 4.f;
-
-		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-		_vector vPlayerPos = pPlayer->Get_Position_Vector();
-		_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
-		//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-		pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
-
-
-		_float3 vPos = m_pTransformCom->Get_Position();
-		_float3 vTargetPos = pPlayer->Get_Position();
-		vTargetPos.y = vPos.y;
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
-
 
 		{
 			wstring strFileName = L"";
@@ -135,30 +132,41 @@ void CBullet_Revolver::OnCollisionEnter(CCollider* other)
 
 			m_pGameInstance->Play_Sound(L"HITTED", strFileName, CHANNELID::SOUND_HITTED, 15.f);
 		}
-
-
-
-		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), true, pPlayer->Get_Position());
-		
-		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-
 	}
+
+
+	if (nullptr != pTarget_Character)// 일반 타격 
+	{
+		m_eHitDirection = Direction::Front;
+		m_eHitPower = Power::Medium;
+		m_fForce = 0.f;
+		m_fDamage = 4.f;
+
+		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+		_vector vPlayerPos = pPlayer->Get_Position_Vector();
+		_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
+		//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
+		pTarget_Character->Set_Hitted(m_fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
+
+
+		_float3 vPos = m_pTransformCom->Get_Position();
+		_float3 vTargetPos = pPlayer->Get_Position();
+		vTargetPos.y = vPos.y;
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
+
+
+		
+
+		Set_Dead(true);
+	}
+
 	if (CData_Manager::GetInstance()->Get_Mother() != nullptr)
 	{
 		CData_Manager::GetInstance()->Get_Mother()->Get_Damaged(Get_Damage());
 	}
-	Set_Dead(true);
 
 
-	//m_pEffect->Set_Dead(true);
-}
-
-void CBullet_Revolver::OnCollisionStay(CCollider* other)
-{
-}
-
-void CBullet_Revolver::OnCollisionExit(CCollider* other)
-{
+	
 }
 
 HRESULT CBullet_Revolver::Ready_Components()

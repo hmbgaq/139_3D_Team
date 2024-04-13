@@ -33,7 +33,6 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"BGM", "../Bin/Resources/Sound/BGM/");
 	//Wait_GroupAsync();
 
-
 	Load_SoundFile_GroupAsync(L"PLAYER_ATTACK", "../Bin/Resources/Sound/Player/Attack/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"PLAYER_IMPACT", "../Bin/Resources/Sound/Player/Impact/");
@@ -44,11 +43,17 @@ HRESULT CSound_Manager::Ready_Sound()
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"PLAYER_DEAD", "../Bin/Resources/Sound/Player/Dead/");
 	////Wait_GroupAsync();
-
 	Load_SoundFile_GroupAsync(L"PLAYER_FOOTSTEP", "../Bin/Resources/Sound/Player/Footstep/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"PLAYER_WEAPON", "../Bin/Resources/Sound/Player/Weapon/");
 	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_VOICE", "../Bin/Resources/Sound/Player/Voice/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_EFFECT", "../Bin/Resources/Sound/Player/Effect/");
+	////Wait_GroupAsync();
+
+
+
 
 
 
@@ -64,7 +69,7 @@ HRESULT CSound_Manager::Ready_Sound()
 	////Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"CRITICAL", "../Bin/Resources/Sound/Hit/");
-
+	////Wait_GroupAsync();
 
 
 	Load_SoundFile_GroupAsync(L"HITTED", "../Bin/Resources/Sound/Hitted/");

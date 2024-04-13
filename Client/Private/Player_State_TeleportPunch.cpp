@@ -45,7 +45,7 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 		//_vector vDir = pTarget->Calc_Look_Dir_XZ(vPlayerPos);
 		
 		_float fDamage = 30.f + CData_Manager::GetInstance()->Get_Additional_ElectricDamage();
-		_float fForce = 0.3f;
+		_float fForce = 0.6f;
 		Direction eDir = Direction::Front;
 		Power ePower = Power::Heavy;
 		_bool bIsMelee = true;
@@ -58,6 +58,7 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 
 		Sound_Impact_Layer1();
 		Sound_Impact_Layer2();
+		Sound_Hit();
 
 
 		//pTarget->Look_At_And_Knockback(pActor->Get_Position(), 1.0f);
@@ -195,4 +196,26 @@ void CPlayer_State_TeleportPunch::Sound_Impact_Layer2()
 		break;
 	}
 	m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", strFileName, CHANNELID::SOUND_PLAYER_IMPACT2, 10.f);
+}
+
+void CPlayer_State_TeleportPunch::Sound_Hit()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_EnergyMode_ElectroHit_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_EnergyMode_ElectroHit_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_EnergyMode_ElectroHit_03.wav";
+		break;
+	default:
+		strFileName = L"Player_EnergyMode_ElectroHit_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 5.f);
 }

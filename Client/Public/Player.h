@@ -59,6 +59,23 @@ public:
 		Player_Skill_End
 	};
 
+	enum class Player_Voice_Cooltime
+	{
+		MELEE,
+		MELEE_HEAVY,
+		WINCHESTER,
+		SHOTGUN,
+		REVOLVER,
+		ZAPPER_BLOCK,
+		ZAPPER_DASH,
+		ZAPPER_PULL,
+		SUPER_CHARGE,
+		SLAM,
+		E_COMBO,
+		HEAL,
+		Player_Voice_Cooltime_End
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	CPlayer(const CPlayer& rhs);
@@ -242,6 +259,30 @@ public:
 	virtual void Play_Hitted_Sound() override;
 	virtual void Play_Dead_Sound() override;
 	void Play_Kick_Sound();
+	virtual void Play_Walk_Sound() override;
+	void Play_Run_Sound();
+	void Play_Dodge_Sound();
+	void Play_Roll_Sound();
+
+public:
+	void Play_Voice_Melee();
+	void Play_Voice_Melee_Heavy();
+	void Play_Voice_Winchester();
+	void Play_Voice_Shotgun();
+	void Play_Voice_Revolver();
+	void Play_Voice_Zapper_Block();
+	void Play_Voice_Zapper_Dash();
+	void Play_Voice_Zapper_Pull();
+	void Play_Voice_Super_Charge();
+	void Play_Voice_Slam();
+	void Play_Voice_E_Combo();
+	void Play_Voice_Heal();
+
+protected:
+	void Update_Voice_Cooltime(_float fTimeDelta);
+
+
+
 	
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
@@ -284,6 +325,9 @@ private:
 private:
 	_float m_MaxCooltimes[ECast(HUD::HUD_END)];
 
+private:
+	_float m_VoiceCooltime[ECast(Player_Voice_Cooltime::Player_Voice_Cooltime_End)];
+	_float m_fVoiceCooltime = { 0.f };
 
 
 public:

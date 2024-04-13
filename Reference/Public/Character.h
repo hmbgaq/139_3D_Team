@@ -92,7 +92,8 @@ public:
 		, CModel::ANIM_STATE _eAnimState = CModel::ANIM_STATE::ANIM_STATE_NORMAL
 		, _bool _bIsTransition = true
 		, _bool _bUseAnimationPos = true
-		, _uint iTargetKeyFrameIndex = 0);
+		, _uint iTargetKeyFrameIndex = 0
+	);
 
 	void	Set_AnimState(CModel::ANIM_STATE _eAnimState);
 	void	Set_Animation_End(_bool _bIsAnimEnd);
@@ -164,6 +165,7 @@ public:
 	virtual void Play_Whoosh_Sound() {};
 	virtual void Play_Hitted_Sound() {};
 	virtual void Play_Dead_Sound() {};
+	virtual void Play_Walk_Sound() {};
 
 
 
