@@ -110,11 +110,13 @@ void CEffect::Tick(_float fTimeDelta)
 					if (m_tEffectDesc.bParentPivot)
 					{
 						// 주인의 매트릭스를 사용할거면 컴바인된 매트릭스 사용
+						m_pTrail->Set_Play(true);
 						m_pTrail->Tick_Trail(fTimeDelta, m_tEffectDesc.matCombined);
 					}
 					else
 					{
 						// 아니면 내 월드
+						m_pTrail->Set_Play(true);
 						m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
 					}
 				}
@@ -461,7 +463,10 @@ void CEffect::End_Effect()
 void CEffect::End_Effect_ForPool()
 {
 	if (nullptr != m_pTrail)
+	{
 		m_pTrail->Set_Play(false);
+		m_pTrail->Reset_Trail();
+	}
 
 	m_tEffectDesc.bFinished = true;	// 이펙트 종료
 
@@ -610,7 +615,10 @@ void CEffect::Free()
 	m_PartObjects.clear();
 
 
-	Safe_Release(m_pTrail);	
-
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Object_Owner(nullptr);
+		Safe_Release(m_pTrail);
+	}
 }
 

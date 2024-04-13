@@ -184,6 +184,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	{
 		//EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_05.json", this, _float3(m_pTransformCom->Get_Position().x, 0.1f, m_pTransformCom->Get_Position().z));
 		//EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "Circle_Floor_05.json", nullptr, _float3(m_pTransformCom->Get_Position().x + 2.f, 0.1f, m_pTransformCom->Get_Position().z + 2.f));
+		
+		//EFFECT_MANAGER->Play_Effect("Player/TeleportPunch/", "TeleportPunch_01.json", this, true, "Head");
 		m_bfirstcheck = false;
 	}
 	//! 유정 테스트 공간 끝

@@ -81,7 +81,7 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 
 	 
 	m_pMapEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/", "Map_Blood_09.json", nullptr, m_pTransformCom->Get_Position());
-	m_pAuraEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/","VampireCommanderAura_02.json", this, false);
+	m_pAuraEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/","VampireCommanderAura_03.json", this, false);
 
 	if (nullptr == m_pTarget)
 	{

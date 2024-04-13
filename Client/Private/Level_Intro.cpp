@@ -147,7 +147,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     }
 
     _bool bSpawnSniper = false;
-    _bool bSpawnTanker = true; 
+    _bool bSpawnTanker = false; 
     _bool bSpawnInfected = false;
     _bool bSpawnZenuGiant = false;
     
@@ -217,24 +217,27 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     //pMonster->Set_InitPosition(_float3(0.0f, 0.f, 2.f));
 
 
+ //   //! 유정 트레일 테스트 스나이퍼 소환
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
 
 
 
-
-
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
-    
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+ //// 주석 풀기
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
+ //   
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
 
     /* Intro Boss */
     {

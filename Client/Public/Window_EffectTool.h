@@ -108,6 +108,8 @@ public:
 
 	void	Update_CurParameters_Parts();			// 현재 파트 이펙트의 정보 업데이트
 
+	void	Update_CurParameters_Trail();			// 현재 트레일의 정보 업데이트
+
 public:
 	void	Select_EasingType(EASING_TYPE* eType);	// 이징 타입(러프관련) 선택
 
@@ -386,6 +388,7 @@ private:
 
 	_int	m_iBillBoard_Rect = { 0 };
 
+
 	_float	m_fColor_Mul_Rect[4] = { 1.f, 1.f, 1.f, 1.f };	// 쉐이더에서 곱해줄 색
 	_float	m_vColor_Clip_Rect[4] = { 0.f, 0.f, 0.f, 0.f };	// 쉐이더에서 discard할 값
 
@@ -558,19 +561,50 @@ private:
 
 #pragma region Trail 옵션 시작
 private:
-	_float	m_vColor_Clip_Trail[4] = { 0.f, 0.f, 0.f, 0.f };	// 쉐이더에서 discard할 값
-	_float	m_fColor_Mul_Trail[4] = { 1.f, 1.f, 1.f, 1.f };		// 쉐이더에서 추가로 곱해줄 색 값
-	
-	_float m_vPos_0[3] = { 0.f, 0.f, 0.f };	
+	_float m_vPos_0[3] = { 0.f, 0.f, 0.f };
 	_float m_vPos_1[3] = { 0.f, 0.f, 0.f };
 
 	_int	m_iMaxCnt_Trail = { 32 };
 	_int	m_iLerpPointNum = { 12 };
 
+	_int	m_iColor_Mode_Trail = { 0 };
+	_float	m_vColor_Clip_Trail[4] = { 0.f, 0.f, 0.f, 0.f };	// 쉐이더에서 discard할 값
+	_float	m_fColor_Mul_Trail[4] = { 1.f, 1.f, 1.f, 1.f };		// 쉐이더에서 추가로 곱해줄 색 값
+
 
 	_float	m_vBloomPower_Trail[3]	= { 1.f, 1.f, 1.f };
 	_float	m_fRimColor_Trail[4]	= { 1.f, 1.f, 1.f, 1.f };
 	_float	m_fRimPower_Trail		= { 5.f };
+
+
+	/* UV Option */
+	_float  m_fUV_Offset_Trail[2] = { 0.f, 0.f };
+	_float  m_vUV_Scale_Trail[2] = { 1.f, 1.f };
+	_float	m_fUV_RotDegree_Trail = { 0.f };
+
+
+	/* 마스크 UV */
+	_int	m_iUV_Wave_Trail = { 0 };	// 1이 FALSE
+	_float m_fUV_WaveSpeed_Trail[2] = { 0.f, 0.f };
+	_float m_fUV_Offset_Mask_Trail[2] = { 0.f, 0.f };
+	_float m_fUV_Scale_Mask_Trail[2] = { 1.f, 1.f };
+
+
+	/* Distortion ============================================== */
+	_float m_fSequenceTerm_Distortion_Trail = { 1.f };
+	_int	m_iType_Scroll_Trail = { 0 };
+
+	_float	m_vScrollSpeeds_Trail[3] = { 1.f, 1.f, 0.f };
+	_float	m_vScales_Distortion_Trail[3] = { 1.f, 1.f, 1.f };
+
+	_float	m_vDistortion1_Trail[2] = { 0.1f, 0.1f };
+	_float	m_vDistortion2_Trail[2] = { 0.0f, 0.0f };
+	_float	m_vDistortion3_Trail[2] = { 0.0f, 0.1f };
+
+	_float	m_fDistortionScale_Trail = { 1.f };
+	_float	m_fDistortionBias_Trail = { 1.f };
+	/* Distortion ============================================== */
+
 #pragma endregion Trail 옵션 끝
 
 
@@ -614,6 +648,9 @@ private:
 	CEffect*		m_pTestEffect = { nullptr };
 
 	CGameObject*	m_pTestProjectile = { nullptr };
+
+
+	string m_strBoneTag = { "" };	// 툴에서 본에 붙이기용
 #pragma endregion
 
 

@@ -365,7 +365,7 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 
 	CEffect_Trail* pTrail = dynamic_cast<CEffect_Trail*>(m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, TEXT("Prototype_GameObject_Effect_Trail"), &tVoidDesc));
 
-	Safe_AddRef(pTrail);
+	//Safe_AddRef(pTrail);
 
 	string strPath = "../Bin/DataFiles/Data_Effect/Data_Trail";
 	string strLoadPath = strPath + "/" + strFileName;
@@ -424,8 +424,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	/* Boos 1 */
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
 
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_02.json")); 
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json")); 
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
 
 	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
@@ -467,7 +467,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 500));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08.json", 400));
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", 1000));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Start_Circle_03.json", 2));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", 400));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Ready_01.json", 2));
 
 	//BossSoundWave
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherSoundWave.json", 20));
@@ -521,6 +522,10 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	/* Revolver_Fire */
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
+
+
+	/* TeleportPunch */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/TeleportPunch/", "TeleportPunch_01.json", 30, true, "TeleportPunch_Trail_01.json"));
 #pragma endregion 플레이어 이펙트 끝
 
 	
