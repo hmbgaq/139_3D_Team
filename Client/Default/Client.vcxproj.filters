@@ -4039,6 +4039,9 @@
     <Filter Include="02.GameObjects\UI\02. System\00. Text\02. TalkBox">
       <UniqueIdentifier>{a3721189-fd31-402e-a1a1-13e8253aceb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Text\03. TextImage">
+      <UniqueIdentifier>{fa933417-03ea-48ed-8411-4f4f1331dfa5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -7932,6 +7935,9 @@
     <ClInclude Include="..\Public\UI_TalkBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_TextImage.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text\03. TextImage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="01.Levels\02.Tool\Imgui\Windows\EffectToolWindow">
@@ -11292,6 +11298,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_TalkBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_TextImage.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text\03. TextImage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

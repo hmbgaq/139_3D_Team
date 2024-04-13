@@ -586,6 +586,11 @@ void CUI::LifeOff(_float fTimeDelta)
 		{
 			m_bActive = Alpha_Plus(fTimeDelta); // 안보이게 알파가 지워지게 해준다.
 
+			if (m_tUIInfo.strUIName == "Fog" ||
+				m_tUIInfo.strUIName == "Linghtning")
+			{
+				m_bActive = false;
+			}
 			//m_fTime = GetTickCount64();
 		}
 	}

@@ -486,11 +486,24 @@ void CUI_Manager::Active_PlayerHUD()
 
 	for (auto& iter : m_vecLeftHUD)
 	{
-		iter->Set_Alpha(0.f);		// UI 알파값 초기화
-		iter->Set_Active(true);		// UI 활성화
-		iter->Set_AnimPlay(true);	// UI Animation 재생
-		iter->Set_Disappear(false); // UI 사라짐 Off
-		iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		if (iter->Get_UIDesc().strUIName == "Fog" ||
+			iter->Get_UIDesc().strUIName == "Lightning")
+		{
+			//iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
+		else
+		{
+			iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
+
 	}
 
 	if (m_vecRightHUD.empty())
@@ -498,11 +511,22 @@ void CUI_Manager::Active_PlayerHUD()
 
 	for (auto& iter : m_vecRightHUD)
 	{
-		iter->Set_Alpha(0.f);		// UI 알파값 초기화
-		iter->Set_Active(true);		// UI 활성화
-		iter->Set_AnimPlay(true);	// UI Animation 재생
-		iter->Set_Disappear(false); // UI 사라짐 Off
-		iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		if (iter->Get_UIDesc().strUIName == "Fog")
+		{
+			//iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
+		else
+		{
+			iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
 	}
 
 	if (m_vecLeftSkill.empty())
@@ -660,9 +684,20 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
-		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		if (tUI_Info.strUIName == "Fog" ||
+			tUI_Info.strUIName == "Linghtning")
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(2600.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
+		else
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
+
 
 		m_vecLeftHUD.push_back(pUI_Object);
 
@@ -1332,9 +1367,19 @@ HRESULT CUI_Manager::Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag)
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
-		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		if (tUI_Info.strUIName == "Fog" ||
+			tUI_Info.strUIName == "Linghtning")
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(2600.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
+		else
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
 
 		m_vecRightHUD.push_back(pUI_Object);
 

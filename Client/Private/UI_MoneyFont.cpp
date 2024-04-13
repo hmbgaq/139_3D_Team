@@ -103,14 +103,23 @@ HRESULT CUI_MoneyFont::Render()
 		////! 바인딩된 정점, 인덱스를 그려
 		//m_pVIBufferCom->Render();
 
+		if (m_pGameInstance->Key_Pressing(DIK_LEFTARROW))
+			m_fX -= 0.1f;
+		if (m_pGameInstance->Key_Pressing(DIK_RIGHTARROW))
+			m_fX += 0.1f;
+		if (m_pGameInstance->Key_Pressing(DIK_UPARROW))
+			m_fY -= 0.1f;
+		if (m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
+			m_fY += 0.1f;
+
 		//if (m_bTrigger == true)
 		{
 			if (m_tUIInfo.strUIName == "SkillPoint")
 			{
 				m_strText = to_wstring(m_pData_Manager->Get_SkillPoint());
-				m_fScale = 0.6f;
-				m_fOffsetX = -5.f;
-				m_fOffsetY = -5.f;
+				m_fScale = 0.5f;
+				m_fOffsetX += m_fX;
+				m_fOffsetY += m_fY;
 			}
 
 			if (m_tUIInfo.strUIName == "Money")

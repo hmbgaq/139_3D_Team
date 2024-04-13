@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "UI_TalkBox.h"
+#include "UI_TextImage.h"
 #include "GameInstance.h"
 #include "Json_Utility.h"
 
-CUI_TalkBox::CUI_TalkBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_TextImage::CUI_TextImage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CUI_Text(pDevice, pContext, strPrototypeTag)
 {
 
 }
 
-CUI_TalkBox::CUI_TalkBox(const CUI_TalkBox& rhs)
+CUI_TextImage::CUI_TextImage(const CUI_TextImage& rhs)
 	: CUI_Text(rhs)
 {
 }
 
-HRESULT CUI_TalkBox::Initialize_Prototype()
+HRESULT CUI_TextImage::Initialize_Prototype()
 {
 	//TODO 원형객체의 초기화과정을 수행한다.
 	/* 1.서버로부터 값을 받아와서 초기화한다 .*/
@@ -23,7 +23,7 @@ HRESULT CUI_TalkBox::Initialize_Prototype()
 	return S_OK;
 }
 
-HRESULT CUI_TalkBox::Initialize(void* pArg)
+HRESULT CUI_TextImage::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
@@ -42,26 +42,63 @@ HRESULT CUI_TalkBox::Initialize(void* pArg)
 
 	m_bActive = false;
 
+	m_iTextNum = 0;
+
 	return S_OK;
 }
 
-void CUI_TalkBox::Priority_Tick(_float fTimeDelta)
+void CUI_TextImage::Priority_Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_TalkBox::Tick(_float fTimeDelta)
+void CUI_TextImage::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 	//Check_Disappear(fTimeDelta);
 
 	if (m_bActive == true)
 	{
+		if (m_pGameInstance->Key_Down(DIK_4))
+			m_iTextNum = 0;
+		if (m_pGameInstance->Key_Down(DIK_5))
+		{
+			m_iTextNum = 1;
+			m_fTime = GetTickCount64();
+		}
+		if (m_pGameInstance->Key_Down(DIK_6))
+		{
+			m_iTextNum = 2;
+			m_fTime = GetTickCount64();
+		}
 
+		if (m_iTextNum != 0)
+		{
+			if (m_fTime + 1500.f < GetTickCount64())
+			{
+				m_iTextNum = 0;
+			}
+		}
+
+		_float3 vPosition = { 0.f, 0.f, 0.5f };
+		if (m_iTextNum == 0)
+		{
+			vPosition = { 420.f, -250.f, 0.5f };
+		}
+		else if (m_iTextNum == 1)
+		{
+			vPosition = { 435.f, -250.f, 0.5f };
+		}
+		else if (m_iTextNum == 2)
+		{
+			vPosition = { 427.f, -250.f, 0.5f };
+		}
+
+		m_pTransformCom->Set_Position(vPosition);
 	}
 }
 
-void CUI_TalkBox::Late_Tick(_float fTimeDelta)
+void CUI_TextImage::Late_Tick(_float fTimeDelta)
 {
 	//if (m_tUIInfo.bWorldUI == true)
 	//	Compute_OwnerCamDistance();
@@ -73,7 +110,7 @@ void CUI_TalkBox::Late_Tick(_float fTimeDelta)
 	}
 }
 
-HRESULT CUI_TalkBox::Render()
+HRESULT CUI_TextImage::Render()
 {
 	if (m_bActive == true)
 	{
@@ -105,61 +142,59 @@ HRESULT CUI_TalkBox::Render()
 	return S_OK;
 }
 
-void CUI_TalkBox::UI_Ready(_float fTimeDelta)
+void CUI_TextImage::UI_Ready(_float fTimeDelta)
 {
 }
 
-void CUI_TalkBox::UI_Enter(_float fTimeDelta)
+void CUI_TextImage::UI_Enter(_float fTimeDelta)
 {
 }
 
-void CUI_TalkBox::UI_Loop(_float fTimeDelta)
+void CUI_TextImage::UI_Loop(_float fTimeDelta)
 {
 }
 
-void CUI_TalkBox::UI_Exit(_float fTimeDelta)
+void CUI_TextImage::UI_Exit(_float fTimeDelta)
 {
 }
 
-void CUI_TalkBox::Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
+void CUI_TextImage::Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation)
 {
 	__super::Add_Text(strTextKey, strFontTag, strText, fPosX, fPosY, vColor, fScale, vOrigin, fRotation);
 }
 
-HRESULT CUI_TalkBox::Find_Change(const string& strTextTag)
+HRESULT CUI_TextImage::Find_Change(const string& strTextTag)
 {
 	__super::Find_Change(strTextTag);
 	return S_OK;
 }
 
-HRESULT CUI_TalkBox::Ready_Components()
+HRESULT CUI_TextImage::Ready_Components()
 {
 	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
-
 	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("TutorialText"),
-		TEXT("Com_Texture_Text"), reinterpret_cast<CComponent**>(&m_pTextureCom[TUTORIALTEXT]))))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Button_Message"),
+		TEXT("Com_Texture_Text"), reinterpret_cast<CComponent**>(&m_pTextureCom[RWARD_BUTTON_MESSAGE]))))
 		return E_FAIL;
 
 	/* 효과가 필요한 녀석은 Map텍스쳐도 추가해주기 */
 	return S_OK;
 }
 
-HRESULT CUI_TalkBox::Bind_ShaderResources()
+HRESULT CUI_TextImage::Bind_ShaderResources()
 {
 
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
-
-	if (FAILED(m_pTextureCom[TUTORIALTEXT]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Front", m_iTextNum)))
+	if (FAILED(m_pTextureCom[RWARD_BUTTON_MESSAGE]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", m_iTextNum)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CUI_TalkBox::Ready_Text()
+HRESULT CUI_TextImage::Ready_Text()
 {
 	/* 파싱 정보 받기 */
 	TEXTINFO* LoadInfo = new TEXTINFO;
@@ -186,7 +221,7 @@ HRESULT CUI_TalkBox::Ready_Text()
 	return S_OK;
 }
 
-void CUI_TalkBox::Compute_OwnerCamDistance()
+void CUI_TextImage::Compute_OwnerCamDistance()
 {
 	//_vector		vPosition = m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION);
 	//_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
@@ -194,13 +229,13 @@ void CUI_TalkBox::Compute_OwnerCamDistance()
 	//m_fOwnerCamDistance = XMVectorGetX(XMVector3Length(vPosition - vCamPosition));
 }
 
-_bool CUI_TalkBox::In_Frustum()
+_bool CUI_TextImage::In_Frustum()
 {
 	return false;
 	//return m_pGameInstance->isIn_WorldPlanes(m_tUIInfo.pOwnerTransform->Get_State(CTransform::STATE_POSITION), 2.f);
 }
 
-json CUI_TalkBox::Save_Desc(json& out_json)
+json CUI_TextImage::Save_Desc(json& out_json)
 {
 	/* 기본정보 저장 */
 	__super::Save_Desc(out_json);
@@ -212,43 +247,43 @@ json CUI_TalkBox::Save_Desc(json& out_json)
 	return out_json;
 }
 
-void CUI_TalkBox::Load_Desc()
+void CUI_TextImage::Load_Desc()
 {
 
 }
 
-CUI_TalkBox* CUI_TalkBox::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
+CUI_TextImage* CUI_TextImage::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
-	CUI_TalkBox* pInstance = new CUI_TalkBox(pDevice, pContext, strPrototypeTag);
+	CUI_TextImage* pInstance = new CUI_TextImage(pDevice, pContext, strPrototypeTag);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_TalkBox");
+		MSG_BOX("Failed to Created : CUI_TextImage");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_TalkBox::Clone(void* pArg)
+CGameObject* CUI_TextImage::Clone(void* pArg)
 {
-	CUI_TalkBox* pInstance = new CUI_TalkBox(*this);
+	CUI_TextImage* pInstance = new CUI_TextImage(*this);
 
 	/* 원형객체를 초기화한다.  */
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_TalkBox");
+		MSG_BOX("Failed to Cloned : CUI_TextImage");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CUI_TalkBox::Pool()
+CGameObject* CUI_TextImage::Pool()
 {
-	return new CUI_TalkBox(*this);
+	return new CUI_TextImage(*this);
 }
 
-void CUI_TalkBox::Free()
+void CUI_TextImage::Free()
 {
 	__super::Free();
 }

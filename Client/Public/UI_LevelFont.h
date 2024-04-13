@@ -43,7 +43,9 @@ public:
 	_float				 m_fChangeScale = 1.f;
 
 private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	CTexture*	m_pTextureCom[TEXTURE_END] = { nullptr };
+	_float		m_fX = 0.f;
+	_float		m_fY = 0.f;
 
 public:
 	static CUI_LevelFont* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 원형객체 생성

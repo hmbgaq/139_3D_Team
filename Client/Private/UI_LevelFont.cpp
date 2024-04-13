@@ -101,16 +101,28 @@ HRESULT CUI_LevelFont::Render()
 		//! 바인딩된 정점, 인덱스를 그려
 		m_pVIBufferCom->Render();
 
+		//if (m_pGameInstance->Key_Pressing(DIK_LEFTARROW))
+		//	m_fX -= 0.01f;
+		//if(m_pGameInstance->Key_Pressing(DIK_RIGHTARROW))
+		//	m_fX += 0.01f;
+		//if(m_pGameInstance->Key_Pressing(DIK_UPARROW))
+		//	m_fY -= 0.01f;
+		//if(m_pGameInstance->Key_Pressing(DIK_DOWNARROW))
+		//	m_fY += 0.01f;
+
 		//if (m_bTrigger == true)
 		{
 			m_strText = to_wstring(m_pData_Manager->Get_CurLevel());
 			//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
 			//m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(m_fPosX, m_fPosY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
 			
+			m_fScale = 0.6f;
 			_float fX = 0.f;
 			_float fY = 0.f;
-			fX = (m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) + 2.f;
-			fY = (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) + 2.f;
+			m_fX = 6.14;
+			m_fY = 18.7;
+			fX = (m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) - m_fX;
+			fY = (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) - m_fY;
 
 			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2(fX, fY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
 		}
