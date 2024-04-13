@@ -1069,7 +1069,8 @@ void CPlayer::Update_SuperCharge(_float fTimeDelta)
 		m_fSuperChargeTime = fTime;
 		
 		// 슈퍼차지 상시 이펙트 생성
-		EFFECT_MANAGER->Generate_Effect_AttachBone(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_02.json", this, true, "Head");
+		EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", Get_Position());
+		//EFFECT_MANAGER->Generate_Effect_AttachBone(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", this, true, "Head");
 	}
 	else 
 	{
@@ -1218,5 +1219,6 @@ void CPlayer::Free()
 		m_pEffect->Delete_Object_Owner();
 		Safe_Release(m_pEffect);
 	}
-	
+
+
 }

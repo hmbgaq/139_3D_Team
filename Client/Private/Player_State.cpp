@@ -978,6 +978,8 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 			//! 유정 : 슈퍼차지 이펙트 재생
 			EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_05.json", nullptr, pActor->Get_Position());
 		}
+
+
 	}
 
 	_bool bIsLearned = CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::TELEPORT_PUNCH);

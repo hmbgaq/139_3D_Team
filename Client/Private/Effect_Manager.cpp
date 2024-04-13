@@ -247,11 +247,11 @@ HRESULT CEffect_Manager::Generate_Effect_AttachBone(_float* fTimeAcc, _float fGe
 
 		if (nullptr == pEffect)
 		{
-			//#ifdef _DEBUG
-						//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
-						//return S_OK;
+//#ifdef _DEBUG
+			//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+			//return S_OK;
 			return S_OK;
-			//#endif // _DEBUG
+//#endif // _DEBUG
 		}
 
 	}
@@ -450,10 +450,10 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 //	
 //#pragma region 보스1 이펙트 시작
 //	/* Boos 1 */
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
 //
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json")); 
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json")); 
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
 //
 //	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
 //	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
@@ -558,7 +558,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	/* SuperCharge */
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_05.json", 5));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_02.json", 100));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", 100));
 
 
 #pragma endregion 플레이어 이펙트 끝
