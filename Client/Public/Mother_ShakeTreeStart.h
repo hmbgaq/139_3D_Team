@@ -13,6 +13,8 @@ public:
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::Parasiter_ShakeTree_Start;
 
+
+
 };
 
 END

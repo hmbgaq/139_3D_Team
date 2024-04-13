@@ -1,11 +1,37 @@
 #include "Son_Hit.h"
 #include "Son_Idle.h"
+#include "GameInstance.h"
 
 void CSon_Hit::Initialize(CSon* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+
+	_int iRandomSound = m_pGameInstance->Random_Int(1, 5);
+	wstring strSoundKey = L"";
+
+	switch (iRandomSound)
+	{
+	case 1 :
+		strSoundKey = L"grand_parasiter_vo_worms_hit001";
+		break;
+	case 2:
+		strSoundKey = L"grand_parasiter_vo_worms_hit002";
+		break;
+	case 3:
+		strSoundKey = L"grand_parasiter_vo_worms_hit003";
+		break;
+	case 4:
+		strSoundKey = L"grand_parasiter_vo_worms_hit004";
+		break;
+	case 5:
+		strSoundKey = L"grand_parasiter_vo_worms_hit005";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"SON_HIT", strSoundKey, SOUND_ENEMY_HIT2, 7.f);
 }
 
 CState<CSon>* CSon_Hit::Update(CSon* pActor, _float fTimeDelta)

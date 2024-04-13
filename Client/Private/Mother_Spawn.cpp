@@ -12,7 +12,11 @@ void CMother_Spawn::Initialize(CMother* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	m_pGameInstance->Play_Sound(L"MOTHER_TAUNT", L"OilFields_StormWind_Amb_loop.wav", SOUND_SUBEFFECT2, 10.f);
+	
+	m_pGameInstance->Play_Sound(L"MOTHER_TAUNT", L"GrandParasiter_Introduction.wav", SOUND_ENEMY_SPAWN, 10.f);
+	m_pGameInstance->Play_Sound(L"MOTHER_SUB_BGM", L"OilFields_StormWind_Amb_loop.wav", SOUND_SYSTEM_EFFECT, 7.f);
+	m_pGameInstance->Play_Sound(L"MOTHER_SUB_BGM", L"digger_abi_bury_loop002.wav", SOUND_SYSTEM_EFFECT2, 8.f);
+	m_pGameInstance->Play_Sound(L"MOTHER_SUB_BGM", L"grand_parasiter_mvm_slime_mediumA002.wav", SOUND_EFFECT5, 8.f);
 	
 	//CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 
