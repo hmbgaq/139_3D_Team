@@ -35,7 +35,8 @@ namespace Engine
 		ANIM_EXAMPLE_D,				// 8 - Bloom , Rim 사용하는 예시
 		ANIM_FUR_SHADER,			// 9 - 털셰이더 할까 했었음 - 시간나면... 찾아는놓음
 		ANIM_OUTLINE,				// 10 - 아웃라인용도 
-		ANIM_RIMBLOOM,				// 11 - 플레이어 림라이트용도 
+		ANIM_PLAYER_SNOWMOUNTAIN,	// 11 - Player SnouMountain에서 idle 렌더용 
+		ANIM_PLAYER_HEAL,			// 12 - Player Skill - Heal 
 		ANIM_SHADER_END };
 
 	enum class MONSTER_SHADER {

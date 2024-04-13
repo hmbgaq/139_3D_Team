@@ -1715,7 +1715,7 @@ CLoader * CLoader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext
 
 	if (FAILED(pInstance->Initialize(eNextLevelID)))
 	{
-		MSG_BOX("Failed to Created : CLoader");
+		MSG_BOX("Failed to Created : CLoader");	
 		Safe_Release(pInstance);
 	}
 	return pInstance;

@@ -1,6 +1,6 @@
 #include "..\Public\Player_InteractionGlamour_Activate.h"
 #include "Data_Manager.h"
-
+#include "Body_Player.h"
 #include "Bone.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
@@ -46,11 +46,10 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 		}
 	}
 	
-
-
 	//if (pActor->Is_Animation_End())
 	if (pActor->Is_UpperAnimation_End())
 	{
+		pActor->Set_BodyRender(0); // Origin RenderPass 
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 

@@ -98,20 +98,26 @@ HRESULT CBody_Player::Render()
 
 			m_pModelCom->Render((_uint)i);
 		}
+		cout << "Origin Pass " << endl;
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
 	{
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
+			/* 기본 */
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_vBloomPower, sizeof(_float3));
+			m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+			m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
 
-			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_PLAYER_HEAL));
 
 			m_pModelCom->Render((_uint)i);
 		}
+		cout << "Heal Pass " << endl;
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SNOWMOUNTAIN)
 	{
@@ -126,6 +132,7 @@ HRESULT CBody_Player::Render()
 
 			m_pModelCom->Render((_uint)i);
 		}
+		cout << "SnowMountain Pass " << endl;
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
 	{
@@ -140,28 +147,25 @@ HRESULT CBody_Player::Render()
 
 			m_pModelCom->Render((_uint)i);
 		}
+		cout << "SuperCharge Pass " << endl;
 	}
 	return S_OK;
 }
 
 HRESULT CBody_Player::Render_Shadow()
 {
-	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_pGameInstance->Get_NextLevel());
-
+	_float lightFarValue = m_pGameInstance->Get_ShadowLightFar(m_iCurrnetLevel);
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fLightFar", &lightFarValue, sizeof(_float)));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_pGameInstance->Get_NextLevel())));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_pGameInstance->Get_NextLevel())));
+
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_ShadowLightViewMatrix(m_iCurrnetLevel)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_ShadowLightProjMatrix(m_iCurrnetLevel)));
 
 	_uint iNumMeshes = m_pModelCom->Get_NumMeshes();
-
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
-
 		m_pShaderCom->Begin(2);
-
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -170,19 +174,19 @@ HRESULT CBody_Player::Render_Shadow()
 
 HRESULT CBody_Player::Render_OutLine()
 {
-	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
-	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+	cout << "OutLine " << endl;
 
+	FAILED_CHECK(Bind_ShaderResources());
 	m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
 	m_pShaderCom->Bind_RawValue("g_LineThick",	&m_fLineThick, sizeof(_float));
-	m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fLineTimeAcc, sizeof(_float));
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_CASCADE));
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -250,6 +254,9 @@ HRESULT CBody_Player::Bind_ShaderResources()
 	_float fCamFar = m_pGameInstance->Get_CamFar();
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fCamFar", &fCamFar, sizeof(_float)));
 
+	_float4 fCamPos = m_pGameInstance->Get_CamPosition();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &fCamPos, sizeof(_float4)));
+
 	return S_OK;
 }
 
@@ -268,12 +275,13 @@ HRESULT CBody_Player::Ready_ShaderOption()
 
 	/* 셰이더에 올릴 값들에 대한 옵션값 조절 */
 	// 1. OutLine
-	m_vLineColor		= { 1.f, 0.f, 0.f, 0.f };
-	m_fLineThick		= { 0.5f };
-	m_fLineTimeAcc		= { 0.f };
+	m_vLineColor		= { 0.5f, 0.f, 0.f, 1.f };
+	m_fLineThick		= { 0.3f };
 
 	// 2. RimLight 
-
+	m_vBloomPower = { 1.f, 0.f, 0.f };
+	m_vRimColor   = { 1.f, 1.f, 1.f, 1.f };
+	m_fRimPower   = 5.f;
 
 	return S_OK;
 }

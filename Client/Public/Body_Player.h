@@ -42,16 +42,19 @@ private:
 	_int iTemp = 0;
 
 	/* 소영 추가 - 렌더링용 */
-private:
-	_float4 m_vLineColor = {0.f, 0.f, 0.f, 0.f};
-	_float m_fLineThick = { 0.f };
-	_float m_fLineTimeAcc = { 0.f };
-
 public:
 	void Set_PlayerRender(RENDER_PASS eRender) { m_ePlayerRenderPass = eRender; }
 	
 private:
 	RENDER_PASS m_ePlayerRenderPass = RENDER_PASS::RENDER_END;
+
+	_float4 m_vLineColor = { 0.f, 0.f, 0.f, 0.f };
+	_float m_fLineThick = { 0.f };
+	_float m_fLineTimeAcc = { 0.f };
+
+	_float3  m_vBloomPower = { 0.f, 0.f, 0.f };        /* Bloom */
+	_float4  m_vRimColor = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
+	_float   m_fRimPower = 5.f;                      /* RimLight */
 
 
 public:

@@ -194,8 +194,6 @@ public:
 	void Throw_Dynamite();
 	void Teleport();
 
-	
-
 public:
 	_bool Is_Exist_Ladder_Count() { return m_iLadderCount > 0; }
 	void Remove_Ladder_Count() { m_iLadderCount = m_iLadderCount - 1 > 0 ? m_iLadderCount - 1 : 0; };
@@ -262,9 +260,10 @@ private:
 private:
 	_float m_MaxCooltimes[ECast(HUD::HUD_END)];
 
-
-private:
-
+/* 소영 추가 */
+public:
+	void Set_BodyRender(_uint iOption);
+	
 
 public:
 	/* 원형객체를 생성한다. */

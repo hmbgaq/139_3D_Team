@@ -233,16 +233,19 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     Out.vColor = vUI;
     
     if(Out.vColor.a == 0)
+    {
         Out.vColor = vOutLine;
+     
+        if (Out.vColor.a == 0)
+            Out.vColor = MainObject;
+    }
     
     if (Out.vColor.a == 0)
-        Out.vColor = MainObject;
+    discard;
     
-    if(Out.vColor.a == 0)
-        discard;
-       
     return Out;
 }
+
 /* ------------------ 4 - Effect Blend ------------------ */
 PS_OUT PS_MAIN_BLENDEFFECT(PS_IN In)
 {

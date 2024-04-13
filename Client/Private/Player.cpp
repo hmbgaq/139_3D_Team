@@ -1137,6 +1137,31 @@ void CPlayer::Hitted_Dead(Power ePower)
 	}
 }
 
+void CPlayer::Set_BodyRender(_uint iOption)
+{
+	switch (iOption)
+	{
+	case 0:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_ORIGIN);
+		break;
+	case 1:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_HEAL);
+		break;
+	case 2:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_SUPERCHARGE);
+		break;
+	case 3:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_SNOWMOUNTAIN);
+		break;
+	case 4: /* πÃ¡§ */
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_ORIGIN);
+		break;
+	case 5:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_ORIGIN);
+		break;
+	}
+}
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext, strPrototypeTag);
