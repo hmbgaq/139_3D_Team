@@ -44,7 +44,7 @@ HRESULT CProjectile_GroundWave::Initialize(void* pArg)
 	m_fDamage = 10.f;
 
 	// ÀÌÆåÆ® »ý¼º
-	//m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Tank_Projectile2.json",this);
 
 
 	return S_OK;
@@ -183,6 +183,7 @@ void CProjectile_GroundWave::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pEffect);
+	if(nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 }
