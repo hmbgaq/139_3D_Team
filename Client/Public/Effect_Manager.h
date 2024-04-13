@@ -38,6 +38,9 @@ public:
 							, _bool bScaleLerp = false, _float3* vScaleAcc = nullptr);
 
 
+	HRESULT Generate_Effect_AttachBone(_float* fTimeAcc, _float fGenerateTimeTerm, _float fTimeDelta, string strAddPath, string strFileName
+										, CGameObject* pOwner = nullptr, _bool bUseSocket = false, string strBoneTag = "");
+
 public:
 	// Trail ========================================================================================================================================
 
