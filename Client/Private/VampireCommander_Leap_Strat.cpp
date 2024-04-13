@@ -49,6 +49,7 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	if (pActor->Is_Inputable_Front(55))
 	{
 		pWeapon->Set_Enable(true);
+		pActor->Set_UseGravity(true);
 	}
 	else if (pActor->Is_Inputable_Front(75))
 	{

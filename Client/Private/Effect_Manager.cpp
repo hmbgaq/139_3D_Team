@@ -555,6 +555,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	//Projectile
 	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Rush.json", 50));
 
+	//제누거인
+	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Vampire_Zombie_GroundAttack.json", 100));
+
 
 #pragma endregion 탱크 이펙트 끝
 #pragma region 맵에 전역으로 깔리는 이펙트
