@@ -56,11 +56,6 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"PLAYER_EFFECT", "../Bin/Resources/Sound/Player/Effect/");
 	////Wait_GroupAsync();
 
-
-
-
-
-
 	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK", "../Bin/Resources/Sound/Attack/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK2", "../Bin/Resources/Sound/Attack/");
@@ -74,7 +69,6 @@ HRESULT CSound_Manager::Ready_Sound()
 
 	Load_SoundFile_GroupAsync(L"CRITICAL", "../Bin/Resources/Sound/Hit/");
 	////Wait_GroupAsync();
-
 
 	Load_SoundFile_GroupAsync(L"HITTED", "../Bin/Resources/Sound/Hitted/");
 	////Wait_GroupAsync();
@@ -107,7 +101,20 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"VAMPIRE_TAUNT", "../Bin/Resources/Sound/Enemy/VampireCommander/Taunt/");
 	Load_SoundFile_GroupAsync(L"VAMPIRE_BATTHROW", "../Bin/Resources/Sound/Enemy/VampireCommander/BatThrow/");
 	Load_SoundFile_GroupAsync(L"VAMPIRE_ATTACK", "../Bin/Resources/Sound/Enemy/VampireCommander/ATTACK/");
-	
+
+	Load_SoundFile_GroupAsync(L"MOTHER_ATTACK", "../Bin/Resources/Sound/Enemy/GrandParasite/Attack/");
+	Load_SoundFile_GroupAsync(L"MOTHER_HIT", "../Bin/Resources/Sound/Enemy/GrandParasite/Hit/");
+	Load_SoundFile_GroupAsync(L"MOTHER_IDLE", "../Bin/Resources/Sound/Enemy/GrandParasite/Idle/");
+	Load_SoundFile_GroupAsync(L"MOTHER_GROUNDSLAM", "../Bin/Resources/Sound/Enemy/GrandParasite/GroundSlam/");
+	Load_SoundFile_GroupAsync(L"MOTHER_FALLINGLOOP", "../Bin/Resources/Sound/Enemy/GrandParasite/FallingLoop/");
+	Load_SoundFile_GroupAsync(L"MOTHER_TREEHIT", "../Bin/Resources/Sound/Enemy/GrandParasite/TreeHit/");
+	Load_SoundFile_GroupAsync(L"MOTHER_TAUNT", "../Bin/Resources/Sound/Enemy/GrandParasite/Taunt/");
+	Load_SoundFile_GroupAsync(L"MOTHER_SUB_BGM", "../Bin/Resources/Sound/Enemy/GrandParasite/SUB_BGM/");
+	Load_SoundFile_GroupAsync(L"MOTHER_DEATH", "../Bin/Resources/Sound/Enemy/GrandParasite/Dead/");
+
+	Load_SoundFile_GroupAsync(L"SON_ATTACK", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Attack/");
+	Load_SoundFile_GroupAsync(L"SON_HIT", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Hit/");
+	Load_SoundFile_GroupAsync(L"SON_DEAD", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Dead/");
 	
 	Load_SoundFile_GroupAsync(L"EFFECT", "../Bin/Resources/Sound/Effect/");
 
