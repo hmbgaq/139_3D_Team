@@ -845,6 +845,23 @@ void CWindow_UITool::Parent_Object(_float fTimeDelta)
 		Delete_Parent();
 	}
 
+	if (ImGui::Button("Parent_Delete_ALL")) 
+	{
+		if (!m_vecParentObject.empty())
+		{
+			m_vecParentObject.clear();
+			m_vecParentObjectName.clear();
+			m_iSelected_ParentObjectIndex = 0;
+
+			if (m_vecParentObject.empty())
+			{
+				m_pCurrParent = nullptr;
+				m_pCurrSelectUI = nullptr;
+			}
+		}
+	}
+
+
 	/* 지워지고 갱신 */
 	_int		iParentObjectTagSize = (_int)m_vecParentObjectName.size();
 

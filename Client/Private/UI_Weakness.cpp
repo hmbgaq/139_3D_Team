@@ -45,6 +45,8 @@ HRESULT CUI_Weakness::Initialize(void* pArg)
 
 	m_bActive = true;
 
+	m_tUIInfo.iRenderGroup = 18; // World
+
 	return S_OK;
 }
 

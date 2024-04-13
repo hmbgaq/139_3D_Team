@@ -18,23 +18,57 @@ HRESULT CEvent_UITrigger::Initialize(void* pArg)
 	if (FAILED(__super::Ready_Component()))
 		return E_FAIL;
 
-	m_tMonsterTriggerDesc = *(CEvent_UITrigger::MONSTERSPAWN_TRIGGERDESC*)pArg;
+	m_tUITriggerDesc = *(CEvent_UITrigger::UI_TRIGGERDESC*)pArg;
 
 
-	Set_ColliderSize(m_tMonsterTriggerDesc.vColliderSize);
-	Set_ColliderCenter(m_tMonsterTriggerDesc.vColliderCenter);
+	Set_ColliderSize(m_tUITriggerDesc.vColliderSize);
+	Set_ColliderCenter(m_tUITriggerDesc.vColliderCenter);
 
 	return S_OK;
 }
 
 void CEvent_UITrigger::Activate()
 {
-	if (m_tMonsterTriggerDesc.iSpawnGroupIndex == 0)
-	{
-		//m_pUIManager->Set_
+	if (m_tUITriggerDesc.iSpawnGroupIndex == 0)
+	{// 게임시작 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::START); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
-
-	
+	if (m_tUITriggerDesc.iSpawnGroupIndex == 1)
+	{// Crane 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 2)
+	{// 좀비 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 3)
+	{// Jenu거인 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::JENU); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 4)
+	{// 좀비무리 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE_OVER); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 5)
+	{// 스나이퍼 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::SNIPER); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 6)
+	{// 설산 시작 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::SNOW_START); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 7)
+	{// 탱커 설명
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::TANK); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
 
 	m_tTriggerDesc.bOnTrigger = true;
 }
@@ -98,7 +132,7 @@ void CEvent_UITrigger::Set_ColliderSize(_float3 vColliderSize)
 {
 	__super::Set_ColliderSize(vColliderSize);
 
-	m_tMonsterTriggerDesc.vColliderSize = vColliderSize;
+	m_tUITriggerDesc.vColliderSize = vColliderSize;
 
 }
 
@@ -106,7 +140,7 @@ void CEvent_UITrigger::Set_ColliderCenter(_float3 vColliderCenter)
 {
 	__super::Set_ColliderCenter(vColliderCenter);
 
-	m_tMonsterTriggerDesc.vColliderCenter = vColliderCenter;
+	m_tUITriggerDesc.vColliderCenter = vColliderCenter;
 }
 
 void CEvent_UITrigger::Free()

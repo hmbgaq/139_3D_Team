@@ -7,6 +7,7 @@
 #include "MasterCamera.h"
 #include "SpringCamera.h"
 
+
 CHawk::CHawk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
 {
@@ -66,7 +67,7 @@ void CHawk::Tick(_float fTimeDelta)
 	{
 		m_pActor->Update_State(fTimeDelta);
 	}
-
+		
 	if (m_bCutSceneHawk)
 	{
 		Spline_Move_LogicFunction(fTimeDelta);

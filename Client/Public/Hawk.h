@@ -31,7 +31,7 @@ public:
 
 public:
 	void FlyAway();
-	
+
 	
 
 public:
@@ -51,9 +51,10 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
 
+
 private:
 	CActor<CHawk>* m_pActor = { nullptr };
-	
+
 
 private: //! ½Â¿ë
 	_bool			m_bFindPlayer = false;

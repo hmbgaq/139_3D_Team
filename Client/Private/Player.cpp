@@ -193,7 +193,7 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_pActor->Set_State(new CPlayer_IdleLoop());
 	}
 
-	/* 성희임시추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해서 밖에 뺐음. => 알맞은 곳에 넣어주세요 */
+	/* 성희추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해야해서 밖에 뺐음. */
 	if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
 		KeyInput(fTimeDelta);
 
@@ -836,14 +836,12 @@ void CPlayer::KeyInput(_float fTimeDelta)
 	
 		if (m_bShowOption == true)
 		{
-			
 			m_pUIManager->Active_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::UI);
 		}
 		else
 		{
-			
 			m_pUIManager->NonActive_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
@@ -931,7 +929,7 @@ void CPlayer::KeyInput(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_9))
 	{
 		m_pUIManager->Active_TutorialBox();
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::PUNCH);
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE);
 	}
 
 	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */

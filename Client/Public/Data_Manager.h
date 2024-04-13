@@ -160,6 +160,7 @@ private: /* _bool */
 	_bool	m_bShowLevelBox = false;		// 레벨 박스		On/Off
 	_bool	m_bShowInterface = false;		// 인터페이스	On/Off
 	_bool	m_bShowTutorial = false;		// 튜토리얼 박스 On/Off
+	_bool	m_bShowDiedScreen = false;		// DiedScreen	On/Off
 	_bool	m_bShowQuestBox = false;		// 퀘스트 박스	On/Off
 	_bool	m_bShowRewardBox = false;		// 리워드 박스	On/Off
 	_bool	m_bShowCrosshair = false;		// 크로스헤어	On/Off
@@ -260,6 +261,12 @@ public: /* ========================== Player Info ========================== */
 	_bool	Get_ShowTutorialBox() { return m_bShowTutorial; };
 	// =>TutorialBox를 보여줄지 말지 세팅할 수 있는 Set함수
 	void	Set_ShowTutorialBox(_bool bShowTutorial) { m_bShowTutorial = bShowTutorial; }
+
+#pragma region =========> DiedScreen <=========
+	// =>DiedScreen를 보여줄지 말지 결정하는 Get함수
+	_bool	Get_ShowDiedScreen() { return m_bShowDiedScreen; };
+	// =>DiedScreen를 보여줄지 말지 세팅할 수 있는 Set함수
+	void	Set_ShowDiedScreen(_bool bDiedScreen) { m_bShowDiedScreen = bDiedScreen; }
 
 #pragma region =========> QuestBox <=========
 	// =>QuestBox를 보여줄지 말지 결정하는 Get함수
