@@ -374,6 +374,10 @@ void CEffect::Update_PivotMat()
 		}
 
 	}
+	else
+	{
+
+	}
 
 
 
@@ -461,8 +465,9 @@ void CEffect::End_Effect_ForPool()
 
 	Init_ReSet_Effect();			// 리셋
 
-	// 주인이 존재하면 지워줌
-	Delete_Object_Owner();
+
+	Set_Object_Owner(nullptr); // 주인 해제
+	//Delete_Object_Owner();
 
 	m_tEffectDesc.Reset_Pivot();
 }
@@ -593,7 +598,7 @@ void CEffect::Free()
 {
 	__super::Free();
 
-	Delete_Object_Owner();
+	Set_Object_Owner(nullptr);
 
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);
@@ -604,7 +609,8 @@ void CEffect::Free()
 	if (nullptr != m_pTrail)
 	{
 		m_pTrail->Set_Object_Owner(nullptr);
-		Safe_Release(m_pTrail);
+		m_pTrail = nullptr;
+		//Safe_Release(m_pTrail);
 	}
 }
 

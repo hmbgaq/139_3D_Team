@@ -172,7 +172,7 @@ private:
 
 	/* Effect Ãß°¡ */
 private:
-	class CEffect* m_pEffect = { nullptr };
+	class CEffect* m_pEffect				= { nullptr };
 
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
