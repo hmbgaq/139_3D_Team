@@ -1058,6 +1058,26 @@ void CPlayer::Teleport()
 	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
 }
 
+void CPlayer::Update_SuperCharge(_float fTimeDelta)
+{
+	_float fTime = m_fSuperChargeTime - fTimeDelta;
+
+	if (fTime > 0) 
+	{
+		m_fSuperChargeTime = fTime;
+		
+		// 슈퍼차지 상시 이펙트 생성
+		EFFECT_MANAGER->Generate_Effect_AttachBone(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_02.json", this, true, "Head");
+	}
+	else 
+	{
+		m_fSuperChargeTime = 0.f;
+		m_fEffectTimeAcc = 0.f;
+	}
+
+	//m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
+}
+
 void CPlayer::Search_LockOn_Target()
 {
 	m_pLockOnTarget = Select_The_Nearest_Enemy(LAYER_MONSTER);

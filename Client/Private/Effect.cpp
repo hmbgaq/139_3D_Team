@@ -313,25 +313,11 @@ void CEffect::Update_PivotMat()
 	if (nullptr != m_pOwner)	// 주인이 존재하고,
 	{
 		// 이펙트의 주인이 죽었다. 또는 비활성화 상태다.
-		if (m_pOwner->Is_Dead() || m_pOwner->Get_Enable() == false)
+		if (m_pOwner->Is_Dead() || false == m_pOwner->Get_Enable())
 		{
 			if (nullptr != m_pTrail)	// 트레일을 갖고있던 이펙트면 트레일 멈춤
 				m_pTrail->Set_Play(false);
 
-			//if (m_tEffectDesc.strFileName == "Mother_Breath_08.json")
-			//{
-			//	_int a = 0;
-			//}
-			//
-			//if (m_tEffectDesc.strFileName == "Mother_Breath_08_Tick_02.json")
-			//{
-			//	_int a = 0;
-			//}
-			//
-			//if (m_tEffectDesc.strFileName == "Circle_Floor_05.json")
-			//{
-			//	_int a = 0;
-			//}
 
 			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
 			EFFECT_MANAGER->Return_ToPool(this);

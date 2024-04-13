@@ -1,6 +1,8 @@
 #include "..\Public\Player_State.h"
 #include "GameInstance.h"
 #include "Data_Manager.h"
+#include "Effect_Manager.h"
+#include "Effect.h"
 
 #pragma region 플레이어 상태 헤더
 
@@ -972,10 +974,10 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 		if (true == bIsCooltimeEnd)
 		{
 			pActor->Activate_SuperCharge();
+
+			//! 유정 : 슈퍼차지 이펙트 재생
+			EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_05.json", nullptr, pActor->Get_Position());
 		}
-
-		//! 유정 : 슈퍼차지 이펙트 재생
-
 	}
 
 	_bool bIsLearned = CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::TELEPORT_PUNCH);

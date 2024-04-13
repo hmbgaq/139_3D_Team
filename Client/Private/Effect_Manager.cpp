@@ -234,6 +234,31 @@ HRESULT CEffect_Manager::Generate_Effect(_float* fTimeAcc, _float fGenerateTimeT
 	return S_OK;
 }
 
+HRESULT CEffect_Manager::Generate_Effect_AttachBone(_float* fTimeAcc, _float fGenerateTimeTerm, _float fTimeDelta, string strAddPath, string strFileName
+					, CGameObject* pOwner, _bool bUseSocket, string strBoneTag)
+{
+	*fTimeAcc += fTimeDelta; // 시간 누적
+
+	if (*fTimeAcc >= fGenerateTimeTerm) // 누적 시간이 생성 시간 텀보다 커지면 이펙트 생성 & 누적 시간 초기화
+	{
+		*fTimeAcc = 0.f;
+
+		CEffect* pEffect = Play_Effect(strAddPath, strFileName, pOwner, bUseSocket, strBoneTag);
+
+		if (nullptr == pEffect)
+		{
+			//#ifdef _DEBUG
+						//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+						//return S_OK;
+			return S_OK;
+			//#endif // _DEBUG
+		}
+
+	}
+
+	return S_OK;
+}
+
 
 CEffect* CEffect_Manager::Load_Effect(_uint iLevelIndex, string strAddPath, string strFileName, _bool bHasTrail, string strTrailFileName)
 {
@@ -378,6 +403,7 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 
 	pTrail->Load_FromJson(In_Json);
 
+
 	Safe_AddRef(pTrail);
 
 	return pTrail;
@@ -509,25 +535,16 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json", 2));
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json", 2));
 
-	/* DodgeBlink */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json", 2));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json", 2));
-
-	/* Roll */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
-
-	/* Revolver */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json", 10));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json", 10));
-
-	/* Revolver_Fire */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
-	//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
-
 
 	/* TeleportPunch */
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/TeleportPunch/", "TeleportPunch_01.json", 30, true, "TeleportPunch_Trail_01.json"));
+
+
+	/* SuperCharge */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_05.json", 5));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_02.json", 100));
+
+
 #pragma endregion 플레이어 이펙트 끝
 
 #pragma region 탱크 이펙트 시작
@@ -579,7 +596,7 @@ HRESULT CEffect_Manager::Return_ToPool(CEffect* pEffect)
 	if (pEffect == nullptr)
 	{
 //#ifdef _DEBUG
-		MSG_BOX("nullptr : CEffect_Manager::Return_ToPool()");
+		//MSG_BOX("nullptr : CEffect_Manager::Return_ToPool()");
 		return S_OK;
 //#endif // _DEBUG
 	}
