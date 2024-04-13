@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Transform.h"
 #include "Bone.h"
+#include "GameInstance.h"
 
 void CVampireCommander_Spawn1::Initialize(CVampireCommander* pActor)
 {
@@ -24,6 +25,7 @@ void CVampireCommander_Spawn1::Initialize(CVampireCommander* pActor)
 	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
 	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(true);	// 트레일 켜기
 
+	pActor->Set_UseGravity(false);
 }
 
 CState<CVampireCommander>* CVampireCommander_Spawn1::Update(CVampireCommander* pActor, _float fTimeDelta)
@@ -31,6 +33,17 @@ CState<CVampireCommander>* CVampireCommander_Spawn1::Update(CVampireCommander* p
 
 
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+
+	if (m_bFlags[0] == false)
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(21);
+
+		if (true == m_bFlags[0])
+		{
+			m_pGameInstance->Play_Sound(L"VAMPIRE_BODYFALL", L"commander_lesser_mvm_bodyfall002.wav", SOUND_ENEMY_BODYMOVE, 10.f);
+		}
+		
+	}
 
 	if (m_bFlags[7] == false)
 	{
@@ -43,6 +56,7 @@ CState<CVampireCommander>* CVampireCommander_Spawn1::Update(CVampireCommander* p
 
 		m_fOffSet = _float3(1.f, 0.5f, m_fOffSetZ);
 
+		
 		pSpringCam->Set_CameraOffset(m_fOffSet);
 	}
 
@@ -57,7 +71,7 @@ CState<CVampireCommander>* CVampireCommander_Spawn1::Update(CVampireCommander* p
 
 	if (pActor->Is_Animation_End())
 	{
-		
+		pActor->Set_UseGravity(true);
 		return new CVampireCommander_Taunt1();
 	}
 

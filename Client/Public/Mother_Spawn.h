@@ -1,5 +1,6 @@
 #pragma once
 #include "Mother_State_Normal.h"
+#include "GameInstance.h"
 
 BEGIN(Client)
 
@@ -18,6 +19,12 @@ public:
 	CEffect* m_pEffect = nullptr;
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::GrandParasiter_Intro;
+
+private:
+	void	PlaySound_Spawn(_float fTimeDelta);
+
+private:
+	_float m_fSoundTimeAcc = 0.f;
 
 };
 

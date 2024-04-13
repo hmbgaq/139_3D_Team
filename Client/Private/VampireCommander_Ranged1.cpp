@@ -29,6 +29,16 @@ CState<CVampireCommander>* CVampireCommander_Ranged1::Update(CVampireCommander* 
 	//CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	//CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
 
+	if (m_bFlags[0] == false)
+	{
+		if (pActor->Is_Inputable_Front(22))
+		{
+			m_pGameInstance->Play_Sound(L"VAMPIRE_WING", L"commander_lesser_mvm_wings003.wav", SOUND_ENEMY_BODYMOVE2, 10.f);
+		}
+
+		m_bFlags[0] = true;
+	}
+
 	if (m_bFlags[1] == false)
 	{
 		//pActor->m_bLookAt = true;
@@ -40,6 +50,10 @@ CState<CVampireCommander>* CVampireCommander_Ranged1::Update(CVampireCommander* 
 		if (m_bfirstCheck)
 		{
 			m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_MonsterBullet", L"Prototype_GameObject_VampireCommander_Projectile_Range1");
+			m_pGameInstance->Play_Sound(L"VAMPIRE_BATTHROW", L"commander_lesser_attack_bats_throw005.wav", SOUND_ENEMY_SKILL1, 10.f);
+			m_pGameInstance->Play_Sound(L"VAMPIRE_ATTACKWAVE", L"commander_lesser_attack_bats_shuriken005.wav", SOUND_ENEMY_SKILL2, 8.f);
+			m_pGameInstance->Play_Sound(L"VAMPIRE_ATTACKWAVE", L"trickster_attack_projectileA_cross_power001.wav", SOUND_ENEMY_SKILL3, 8.f);
+			
 			m_bfirstCheck = false;
 		}
 	}

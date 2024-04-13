@@ -9,6 +9,7 @@ void CMother_VomitLoop::Initialize(CMother* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true);
+	m_pGameInstance->Play_Sound(L"MOTHER_ATTACK", L"grand_parasiter_attack_vomit_loop.wav", SOUND_ENEMY_SKILL2, 10.f);
 }
 
 CState<CMother>* CMother_VomitLoop::Update(CMother* pActor, _float fTimeDelta)

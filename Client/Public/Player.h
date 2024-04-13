@@ -226,8 +226,8 @@ public:
 public:
 	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
 	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
-	void Update_SuperCharge(_float fTimeDelta);
 
+	void Update_SuperCharge(_float fTimeDelta);
 	void Play_Sound_SuperCharge_Enter();
 	void Play_Sound_SuperCharge_Exit();
 

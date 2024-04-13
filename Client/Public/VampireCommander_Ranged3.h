@@ -16,6 +16,13 @@ public:
 public:
 	_bool	m_bfirstCheck = true;
 
+
+private: //! ½Â¿ëÃß°¡
+	void	PlaySound_Wing(CVampireCommander* pActor);
+
+private:
+	_float	m_fWingTimeArray[2] = { 0.f, 0.f};
+	_bool	m_bPlayWingSoundArray[2] = { false, false};
 };
 
 END

@@ -11,6 +11,9 @@ void CMother_Spawn::Initialize(CMother* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	m_pGameInstance->Play_Sound(L"MOTHER_TAUNT", L"OilFields_StormWind_Amb_loop.wav", SOUND_SUBEFFECT2, 10.f);
+	
 	//CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 
 	//pSpringCam->Set_CameraOffset(_float3(3.f, 1.5f, -9.f));
@@ -137,4 +140,9 @@ void CMother_Spawn::Release(CMother* pActor)
  
 	if (m_pEffect != nullptr)
 		Safe_Release(m_pEffect);
+}
+
+void CMother_Spawn::PlaySound_Spawn(_float fTimeDelta)
+{
+	
 }
