@@ -669,7 +669,6 @@
     <ClInclude Include="..\Public\Effect_Explosion.h" />
     <ClInclude Include="..\Public\Effect_Instance.h" />
     <ClInclude Include="..\Public\Effect_Particle.h" />
-    <ClInclude Include="..\Public\Effect_Rect.h" />
     <ClInclude Include="..\Public\Effect_Trail.h" />
     <ClInclude Include="..\Public\Environment_Instance.h" />
     <ClInclude Include="..\Public\Environment_Interact.h" />
@@ -1867,7 +1866,6 @@
     <ClCompile Include="..\Private\Effect_Explosion.cpp" />
     <ClCompile Include="..\Private\Effect_Instance.cpp" />
     <ClCompile Include="..\Private\Effect_Particle.cpp" />
-    <ClCompile Include="..\Private\Effect_Rect.cpp" />
     <ClCompile Include="..\Private\Effect_Trail.cpp" />
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Interact.cpp" />

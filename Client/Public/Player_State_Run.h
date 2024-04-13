@@ -13,6 +13,8 @@ public:
 public:
 	virtual CState<CPlayer>* Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
 
+private:
+	_float m_fWalkDelay = { 0.2f };
 
 };
 

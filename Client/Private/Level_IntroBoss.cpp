@@ -42,6 +42,10 @@
 #include "SpringCamera.h"
 #include "Light.h"
 
+
+
+#include "Level_Loading.h"
+
 CLevel_IntroBoss::CLevel_IntroBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel(pDevice, pContext)
 {
@@ -60,12 +64,18 @@ HRESULT CLevel_IntroBoss::Initialize()
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
     FAILED_CHECK(Ready_UI());
     FAILED_CHECK(Ready_Event());
-
+    
+    m_pGameInstance->Play_BGM(L"BGM", L"IntroBossIntroBGM.wav", 5.f);
     return S_OK;
 }
 
 void CLevel_IntroBoss::Tick(_float fTimeDelta)
 {
+
+	if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	{
+		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
+	}
 
 }
 

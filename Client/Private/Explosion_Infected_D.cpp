@@ -103,7 +103,8 @@ void CExplosion_Infected_D::OnCollisionEnter(CCollider* other)
 
 		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 	
-		//m_pCollider->Set_Enable(false);
+		m_pCollider->Set_Enable(false);
+
 	}
 }
 

@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_SlamDown_v3;
 
+private:
+	_float m_fEffectTimeAcc = { 0.f };
+
 };
 
 END

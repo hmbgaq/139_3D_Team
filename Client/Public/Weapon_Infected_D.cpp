@@ -134,7 +134,6 @@ void CWeapon_Infected_D::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pTrail);
 }
 
 

@@ -508,7 +508,7 @@ void CEffect_Trail::Free()
 {
 	__super::Free();
 
-	Delete_Object_Owner();	// 오너 해제
+	Set_Object_Owner(nullptr);	// 오너 해제
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);

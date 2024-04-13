@@ -23,6 +23,7 @@ class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
 class CEvent_MosnterSpawnTrigger;
+class CEvent_UITrigger;
 class CEvent_Trigger;
 class CHawk;
 //TODO 추후 추가 class CNPC;
@@ -145,10 +146,16 @@ private:
 
 	//!For. Trigger
 	void			Trigger_CreateTab();
-		void			Monster_TriggerFunction();
-		void			UI_TriggerFunction();
+		void			Monster_CreateTriggerFunction();
+		void			UI_CreateTriggerFunction();
+
 	void			Trigger_SelectTab();
+		void			Monster_SelectTriggerFunction();
+		void			UI_SelectTriggerFunction();
+
 	void			Trigger_DeleteTab();
+		void			Monster_DeleteTriggerFunction();
+		void			UI_DeleteTriggerFunction();
 
 	
 	//!For. HawkCamera
@@ -301,6 +308,7 @@ private:  //!For Trigger
 	_int						m_iUIGroupIndex = 0;
 	class CEvent_Trigger*		m_pPickingTrigger = {nullptr};
 	_char						m_strSelectTriggerNameTag[32] = "";
+	_int						m_eTriggerType = 0; //! 이넘 캐스트용
 
 private:  //! For Public
 	_uint							m_iSelectModelTag = 0;
@@ -498,6 +506,12 @@ private: //!For.CreateTrigger
 	_int								 m_iSelectMonsterTriggerIndex = 0;
 	_int								 m_iSelectMonsterSpawnGroupIndex = 0;
 	_int								 m_iSelectAnimalSpawnGroupIndex = 0;
+
+	vector<CEvent_UITrigger*>			 m_vecCreateUITrigger;
+	vector<string>						 m_vecCreateUITriggerTag;
+	_int								 m_iSelectUITriggerIndex = 0;
+	_int								 m_iSelectUITriggerGroupIndex = 0;
+	
 	
 
 private:  //!For. CreateCharacter

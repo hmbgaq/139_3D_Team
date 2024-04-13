@@ -6,7 +6,7 @@ BEGIN(Client)
 class CEffect;
 class CEffect_Void;
 class CEffect_Particle;
-class CEffect_Rect;
+//class CEffect_Rect;
 class CEffect_Instance;
 class CEffect_Trail;
 
@@ -82,7 +82,7 @@ public:
 	void	Update_ImageList_Window();		// 텍스처 이미지 미리보기, 리스트
 
 	void	Update_ParticleTab();			// 파티클 탭
-	void	Update_RectTab();				// 렉트 탭
+	//void	Update_RectTab();				// 렉트 탭
 	void	Update_MeshTab();				// 메쉬 탭
 	void	Update_TrailTab(_float fTimeDelta);				// 트레일 탭
 
@@ -90,7 +90,7 @@ public:
 /* For.Create & Add (이펙트 생성 관련) */
 	HRESULT Create_EffectObject(const wstring& strLayerTag, CGameObject* pOwner = nullptr);		// 파트 이펙트를 담을 이펙트 오브젝트 생성 함수
 	HRESULT Add_Part_Particle();						// 파트:2D파티클 추가
-	HRESULT Add_Part_Rect();							// 파트:Rect 추가
+	//HRESULT Add_Part_Rect();							// 파트:Rect 추가
 	HRESULT Add_Part_Mesh(wstring strModelTag);			// 파트:메시 이펙트 추가
 	HRESULT Add_Part_Mesh_Morph(wstring strModelTag1, wstring strModelTag2);	// 파트:메시(모프) 이펙트 추가
 	
@@ -145,8 +145,8 @@ private:
 	CVIBuffer_Particle::PARTICLE_BUFFER_DESC*		m_pParticleBufferDesc	= {};	// 파티클 버퍼 Desc
 	CEffect_Void::UVSPRITE_DESC*					m_pSpriteDesc_Particle	= {};	// 파티클이 사용할 Void의 스프라이트 Desc
 
-	/* Rect Desc */
-	CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};		// Rect만의 Desc
+	///* Rect Desc */
+	//CEffect_Rect::EFFECT_RECT_DESC*					m_pRectDesc			= {};		// Rect만의 Desc
 
 
 	/* Instance(Mesh) Desc */

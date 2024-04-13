@@ -8,6 +8,8 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 
+#include "Effect_Trail.h"
+
 CWeapon_Heavy_Vampiric_Zombie::CWeapon_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
 {
@@ -60,6 +62,12 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 		return E_FAIL;
 
 
+
+	//! 유정: 트레일
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Test_Trail.json");
+	m_pTrail->Set_Play(false);		// 시작은 끄기
+
+
 	return S_OK;
 }
 
@@ -91,7 +99,12 @@ void CWeapon_Heavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 
 	if (m_bAttack)
 	{
-		EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json",nullptr,m_pTransformCom->Get_Position());
+		
+
+		_float3 vPosition = { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43};
+		//m_pTransformCom->Get_Position();
+		//EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, vPosition);
 		m_bAttack = false;
 	}
 	//if (m_pGameInstance->Key_Down(DIK_F))
@@ -111,6 +124,12 @@ void CWeapon_Heavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
+		//! 유정: 트레일 
+		if (nullptr != m_pTrail)
+		{
+			m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+		}
+
 		m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
 	}
 
@@ -191,6 +210,12 @@ void CWeapon_Heavy_Vampiric_Zombie::OnCollisionExit(CCollider* other)
 
 }
 
+void CWeapon_Heavy_Vampiric_Zombie::Play_Trail(_bool bPlay)
+{
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Play(bPlay);
+}
+
 #pragma region Create, Clone, Pool, Free
 
 CWeapon_Heavy_Vampiric_Zombie* CWeapon_Heavy_Vampiric_Zombie::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -225,6 +250,17 @@ CGameObject* CWeapon_Heavy_Vampiric_Zombie::Pool()
 void CWeapon_Heavy_Vampiric_Zombie::Free()
 {
 	__super::Free();
+
+
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Play(false);
+		m_pTrail->Get_Desc()->bRender = false;
+		m_pTrail->Set_Object_Owner(nullptr);
+		m_pTrail = nullptr;
+		//Safe_Release(m_pTrail);
+	}
+
 }
 
 

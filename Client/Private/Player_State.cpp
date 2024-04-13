@@ -134,6 +134,7 @@
 #include "Player_InteractionGlamour_Activate.h"
 #include "Player_MeleeSlashAlt_01.h"
 #include "Player_MeleeFollowUp.h"
+#include "Player_DeathNormal_F_01.h"
 
 #pragma endregion
 
@@ -239,6 +240,11 @@ CState<CPlayer>* CPlayer_State::Roll_State(CPlayer* pActor, _float fTimeDelta, _
 
 CState<CPlayer>* CPlayer_State::Hit_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
+	//if (0.f >= pActor->Get_Hp())
+	//{
+	//	return new CPlayer_DeathNormal_F_01();
+	//}
+
 	if (pActor->Is_Animation_End())
 	{
 		return new CPlayer_IdleLoop();
@@ -976,8 +982,12 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 			pActor->Activate_SuperCharge();
 
 			//! 유정 : 슈퍼차지 이펙트 재생
-			EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_05.json", nullptr, pActor->Get_Position());
+			//EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_05.json", nullptr, pActor->Get_Position());
+			EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_06.json", pActor, false);
+			pActor->Play_Sound_SuperCharge_Enter();
 		}
+
+
 	}
 
 	_bool bIsLearned = CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::TELEPORT_PUNCH);

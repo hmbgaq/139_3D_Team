@@ -44,10 +44,12 @@ HRESULT CModel_Preview::Initialize(void* pArg)
 		return E_FAIL;
 
 
-
+	
 	if (CModel::TYPE_ANIM == m_tDesc.eType)
 	{
-		if (TEXT("Prototype_Component_Model_Rentier") == m_tDesc.strModelTag)
+		if (TEXT("Prototype_Component_Model_Rentier") == m_tDesc.strModelTag
+			|| TEXT("Prototype_Component_Model_VampireCommander") == m_tDesc.strModelTag
+			|| TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie") == m_tDesc.strModelTag)
 		{
 			if (FAILED(Ready_PartObjects()))
 				return E_FAIL;
@@ -267,11 +269,19 @@ HRESULT CModel_Preview::Ready_PartObjects()
 	if (TEXT("Prototype_Component_Model_Rentier") == m_tDesc.strModelTag)
 	{
 		tPartDesc.pSocketBone = m_pModelCom->Get_BonePtr("RightHandIK");	// "LeftHandIK" , "RightHandIK"
+		tPartDesc.strOwnerModelTag = TEXT("Prototype_Component_Model_Rentier");
 	}
 
 	if (TEXT("Prototype_Component_Model_VampireCommander") == m_tDesc.strModelTag)
 	{
 		tPartDesc.pSocketBone = m_pModelCom->Get_BonePtr("RightHandIK");	// "LeftHandIK" , "RightHandIK"
+		tPartDesc.strOwnerModelTag = TEXT("Prototype_Component_Model_VampireCommander");
+	}
+
+	if (TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie") == m_tDesc.strModelTag)
+	{
+		tPartDesc.pSocketBone = m_pModelCom->Get_BonePtr("LeftInHandMiddle");	// "LeftInHandMiddle"
+		tPartDesc.strOwnerModelTag = TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie");
 	}
 
 	tPartDesc.pParentTransform = { m_pTransformCom };

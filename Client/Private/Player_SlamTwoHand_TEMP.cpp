@@ -12,7 +12,9 @@
 void CPlayer_SlamTwoHand_TEMP::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 7);
+
+	m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", L"Player_GroundSlamAttack_Impact_04.wav", CHANNELID::SOUND_PLAYER_IMPACT, 10.f);
 }
 
 CState<CPlayer>* CPlayer_SlamTwoHand_TEMP::Update(CPlayer* pActor, _float fTimeDelta)
@@ -27,9 +29,12 @@ CState<CPlayer>* CPlayer_SlamTwoHand_TEMP::Update(CPlayer* pActor, _float fTimeD
 		pSpringCam->Set_ShakeCameraTime(0.1f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 
-		EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "SlamDown_v2_26_Rock.json", nullptr, pActor->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "New_SlamTwoHand_TEMP_02.json", nullptr, pActor->Get_Position());
 		pActor->Apply_Shake_And_Blur(Power::Heavy);
 		pActor->Slam();
+
+		
+
 		m_bFlags[0] = true;
 	}
 	else if (false == m_bFlags[1])

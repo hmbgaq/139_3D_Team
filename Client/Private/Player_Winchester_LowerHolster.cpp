@@ -1,6 +1,6 @@
 #include "..\Public\Player_Winchester_LowerHolster.h"
 #include "GameInstance.h"
-#
+#include "SMath.h"
 
 void CPlayer_Winchester_LowerHolster::Initialize(CPlayer* pActor)
 {
@@ -9,6 +9,10 @@ void CPlayer_Winchester_LowerHolster::Initialize(CPlayer* pActor)
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, 80);
 	pActor->Set_Splitted(true);
 	//pActor->Set_StiffnessRate_Upper(0.4f);
+
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
+
+	pWeapon->Play_Weapon_Sound_Holster();
 }
 
 CState<CPlayer>* CPlayer_Winchester_LowerHolster::Update(CPlayer* pActor, _float fTimeDelta)

@@ -11,6 +11,7 @@
 #include "Light.h"
 #include "Effect.h"
 #include "Event_MonsterSpawnTrigger.h"
+#include "Event_UITrigger.h"
 
 #include "Field.h"
 
@@ -673,6 +674,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				MonsterTriggerJson[i].emplace("JsonPath", strSavePath);
 				MonsterTriggerJson[i].emplace("NameTag", MonsterTriggerDesc.strTriggerNameTag);
 				MonsterTriggerJson[i].emplace("SpawnGroupIndex", MonsterTriggerDesc.iSpawnGroupIndex);
+				MonsterTriggerJson[i].emplace("TriggerType", CEvent_Trigger::TRIGGER_MONSTER);
 				CJson_Utility::Write_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
 				CJson_Utility::Write_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
 
@@ -681,8 +683,37 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 				
 			}
 
-			TriggerJson.emplace("MonsterTriggerJson", MonsterTriggerJson);
 		}
+
+		json UITriggerJson;
+
+
+		if (false == m_vecCreateUITrigger.empty())
+		{
+			_int iCreateUITriggerSize = (_int)m_vecCreateUITrigger.size();
+
+			for (_int i = 0; i < iCreateUITriggerSize; ++i)
+			{
+				CEvent_UITrigger::UI_TRIGGERDESC UITriggerDesc = *m_vecCreateUITrigger[i]->Get_UITriggerDesc();
+
+				UITriggerJson[i].emplace("OnTrigger", UITriggerDesc.bOnTrigger);
+				string strSavePath = strPath + "/" + strNoExtFileName + "_MapData.json";
+				UITriggerJson[i].emplace("JsonPath", strSavePath);
+				UITriggerJson[i].emplace("NameTag", UITriggerDesc.strTriggerNameTag);
+				UITriggerJson[i].emplace("SpawnGroupIndex", UITriggerDesc.iSpawnGroupIndex);
+				UITriggerJson[i].emplace("TriggerType", CEvent_Trigger::TRIGGER_UI);
+				CJson_Utility::Write_Float3(UITriggerJson[i]["ColliderSize"], UITriggerDesc.vColliderSize);
+				CJson_Utility::Write_Float3(UITriggerJson[i]["ColliderCenter"], UITriggerDesc.vColliderCenter);
+
+
+				m_vecCreateUITrigger[i]->Write_Json(UITriggerJson[i]);
+
+			}
+
+		}
+
+		TriggerJson.emplace("MonsterTriggerJson", MonsterTriggerJson);
+		TriggerJson.emplace("UITriggerJson", UITriggerJson);
 
 		json SpecialJson;
 
@@ -1213,8 +1244,6 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 		
 		json TriggerJson = LoadJson["Trigger_Json"];
 		
-		
-		
 		json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
 		_int iMonsterTriggerJsonSize = (_int)MonsterTriggerJson.size();
 		
@@ -1225,6 +1254,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			MonsterTriggerDesc.strSpawnMonsterJsonPath = MonsterTriggerJson[i]["JsonPath"];
 			MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
 			MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+			MonsterTriggerDesc.eTriggerType = CEvent_Trigger::TRIGGER_MONSTER;
 			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
 			CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
 		
@@ -1253,6 +1283,49 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			{
 				m_vecCreateMonsterTrigger.push_back(pMonsterTrigger);
 				m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
+			}
+		
+		
+		}
+
+		json UITriggerJson = TriggerJson["UITriggerJson"];
+		_int iUITriggerJsonSize = (_int)UITriggerJson.size();
+		
+		for (_int i = 0; i < iUITriggerJsonSize; ++i)
+		{
+			CEvent_UITrigger::UI_TRIGGERDESC UITriggerDesc = {};
+			UITriggerDesc.bOnTrigger = UITriggerJson[i]["OnTrigger"];
+			UITriggerDesc.strSpawnMonsterJsonPath = UITriggerJson[i]["JsonPath"];
+			UITriggerDesc.strTriggerNameTag = UITriggerJson[i]["NameTag"];
+			UITriggerDesc.iSpawnGroupIndex = UITriggerJson[i]["SpawnGroupIndex"];
+			UITriggerDesc.eTriggerType = CEvent_Trigger::TRIGGER_UI;
+			CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderSize"], UITriggerDesc.vColliderSize);
+			CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderCenter"], UITriggerDesc.vColliderCenter);
+		
+			CEvent_UITrigger* pUITrigger = CEvent_UITrigger::Create(m_pDevice, m_pContext, &UITriggerDesc);
+		
+			const json& TransformJson = UITriggerJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+		
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+		
+			pUITrigger->Load_FromJson(UITriggerJson[i]);
+		
+			if (pUITrigger == nullptr)
+			{
+				MSG_BOX("UI 트리거 불러오기 실패");
+				return E_FAIL;
+			}
+			else
+			{
+				m_vecCreateUITrigger.push_back(pUITrigger);
+				m_vecCreateUITriggerTag.push_back(UITriggerDesc.strTriggerNameTag);
 			}
 		
 		
@@ -1955,6 +2028,16 @@ void CWindow_MapTool::TriggerMode_Function()
 		ImGui::EndTabBar();
 
 		ShowDialog();
+	}
+
+	if (m_pPickingTrigger != nullptr)
+	{
+		CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
+
+		if (pTriggerCollider != nullptr)
+		{
+			m_pGameInstance->Add_DebugRender(pTriggerCollider);
+		}
 	}
 
 }
@@ -7226,71 +7309,24 @@ void CWindow_MapTool::Trigger_CreateTab()
 			}
 		}
 
-		ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
-
-		
-
-		static char NameTagBuf[32] = "MonsterSpawn";
-		ImGui::InputText(u8"트리거 네임태그", NameTagBuf, IM_ARRAYSIZE(NameTagBuf));
-
-		ImGui::InputFloat3(u8"트리거 콜라이더 사이즈", m_fColliderSizeArray);
-
-		ImGui::InputFloat3(u8"트리거 콜라이더 센터", m_fColliderCenterArray);
-
-		ImGui::EndChild();
-
-		ImGui::SameLine();
-
-		ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
 
 		if (iTriggerType == 0)
 		{
-			ImGui::InputInt(u8"스폰그룹인덱스", &m_iMonsterSpawnGroupIndex);
-			
+			Monster_CreateTriggerFunction();
+		}
+		else if (iTriggerType == 2)
+		{
+			UI_CreateTriggerFunction();
 		}
 		else
 		{
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "작업 해야함");
 		}
-
-		ImGui::EndChild();
-
-		if (ImGui::Button(u8" 트리거 생성"))
-		{
-
-			string strSpawnMonsterJsonPath = "Stage1Final_MonsterInclude_Decrease.json";
-
-			if (iTriggerType == 0)
-			{
-				CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
-
-				MonsterTriggerDesc.bOnTrigger = false;
-				MonsterTriggerDesc.strTriggerNameTag = NameTagBuf;
-				MonsterTriggerDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
-				MonsterTriggerDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
-
-				MonsterTriggerDesc.iSpawnGroupIndex = m_iMonsterSpawnGroupIndex;
-				MonsterTriggerDesc.strSpawnMonsterJsonPath = strSpawnMonsterJsonPath;
-
-				CEvent_MosnterSpawnTrigger* pMonsterSpawnTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
-
-				if (pMonsterSpawnTrigger == nullptr)
-				{
-					MSG_BOX("몬스터 스폰 트리거 생성 실패");
-				}
-				else
-				{
-					m_vecCreateMonsterTrigger.push_back(pMonsterSpawnTrigger);
-					m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
-					m_pPickingTrigger = pMonsterSpawnTrigger;
-				}
-
-			}
-		}
 	}
+		
 }
 
-void CWindow_MapTool::Monster_TriggerFunction()
+void CWindow_MapTool::Monster_CreateTriggerFunction()
 {
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 
@@ -7326,7 +7362,7 @@ void CWindow_MapTool::Monster_TriggerFunction()
 				MonsterTriggerDesc.strTriggerNameTag = NameTagBuf;
 				MonsterTriggerDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
 				MonsterTriggerDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
-
+				MonsterTriggerDesc.eTriggerType = CEvent_Trigger::TRIGGER_MONSTER;
 				MonsterTriggerDesc.iSpawnGroupIndex = m_iMonsterSpawnGroupIndex;
 				MonsterTriggerDesc.strSpawnMonsterJsonPath = strSpawnMonsterJsonPath;
 
@@ -7347,14 +7383,14 @@ void CWindow_MapTool::Monster_TriggerFunction()
 		
 }
 
-void CWindow_MapTool::UI_TriggerFunction()
+void CWindow_MapTool::UI_CreateTriggerFunction()
 {
 	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
 
 
 	ImGui::BeginChild("Create_LeftChild", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 260), ImGuiChildFlags_Border, WindowFlag);
 
-	static char NameTagBuf[32] = "UIGroup";
+	static char NameTagBuf[32] = "UITrigger";
 	ImGui::InputText(u8"트리거 네임태그", NameTagBuf, IM_ARRAYSIZE(NameTagBuf));
 
 	ImGui::InputFloat3(u8"트리거 콜라이더 사이즈", m_fColliderSizeArray);
@@ -7367,37 +7403,36 @@ void CWindow_MapTool::UI_TriggerFunction()
 
 	ImGui::BeginChild("Create_RightChild", ImVec2(0, 260), ImGuiChildFlags_Border, WindowFlag);
 
-
-	ImGui::InputInt(u8"UI그룹인덱스", &m_iUIGroupIndex);
-
+	ImGui::InputInt(u8"스폰그룹인덱스", &m_iUIGroupIndex);
 
 	ImGui::EndChild();
 
 	if (ImGui::Button(u8" 트리거 생성"))
 	{
-		string strSpawnMonsterJsonPath = "Stage1Final_MonsterInclude_Decrease.json";
+		string strSpawnUIJsonPath = "Stage1Final_MapData.json";
+		CEvent_UITrigger::UI_TRIGGERDESC UITriggerDesc = {};
 
-		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+		UITriggerDesc.bOnTrigger = false;
+		UITriggerDesc.strTriggerNameTag = NameTagBuf;
+		UITriggerDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
+		UITriggerDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
+		UITriggerDesc.eTriggerType = CEvent_Trigger::TRIGGER_UI;
+		UITriggerDesc.iSpawnGroupIndex = m_iUIGroupIndex;
+		UITriggerDesc.strSpawnMonsterJsonPath = strSpawnUIJsonPath;
 
-		MonsterTriggerDesc.bOnTrigger = false;
-		MonsterTriggerDesc.strTriggerNameTag = NameTagBuf;
-		MonsterTriggerDesc.vColliderSize = _float3(m_fColliderSizeArray[0], m_fColliderSizeArray[1], m_fColliderSizeArray[2]);
-		MonsterTriggerDesc.vColliderCenter = _float3(m_fColliderCenterArray[0], m_fColliderCenterArray[1], m_fColliderCenterArray[2]);
 
-		MonsterTriggerDesc.iSpawnGroupIndex = m_iMonsterSpawnGroupIndex;
-		MonsterTriggerDesc.strSpawnMonsterJsonPath = strSpawnMonsterJsonPath;
+		CEvent_UITrigger* pUISpawnTrigger = CEvent_UITrigger::Create(m_pDevice, m_pContext, &UITriggerDesc);
 
-		CEvent_MosnterSpawnTrigger* pMonsterSpawnTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
-
-		if (pMonsterSpawnTrigger == nullptr)
+		if (pUISpawnTrigger == nullptr)
 		{
-			MSG_BOX("몬스터 스폰 트리거 생성 실패");
+			MSG_BOX("UI 스폰 트리거 생성 실패");
 		}
 		else
 		{
-			m_vecCreateMonsterTrigger.push_back(pMonsterSpawnTrigger);
-			m_vecCreateMonsterTriggerTag.push_back(MonsterTriggerDesc.strTriggerNameTag);
-			m_pPickingTrigger = pMonsterSpawnTrigger;
+			m_vecCreateUITrigger.push_back(pUISpawnTrigger);
+			m_vecCreateUITriggerTag.push_back(UITriggerDesc.strTriggerNameTag);
+			
+			m_pPickingTrigger = pUISpawnTrigger;
 		}
 
 	}
@@ -7408,7 +7443,7 @@ void CWindow_MapTool::Trigger_SelectTab()
 	_uint iCreateTriggerSize = 0;//= (_uint)m_vecCreateMonsterTag.size();
 
 	static _int iTriggerType = 0;
-	const char* TriggerType[2] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거" };
+	const char* TriggerType[3] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거", "UI 트리거" };
 
 	for (_uint i = 0; i < IM_ARRAYSIZE(TriggerType); ++i)
 	{
@@ -7422,7 +7457,22 @@ void CWindow_MapTool::Trigger_SelectTab()
 
 	if (iTriggerType == 0) //! 몬스터 스폰트리거ㄴ
 	{
-		iCreateTriggerSize = (_uint)m_vecCreateMonsterTriggerTag.size();
+		Monster_SelectTriggerFunction();		
+	}
+	else if (iTriggerType == 2)
+	{
+		UI_SelectTriggerFunction();
+	}
+	else
+	{
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "작업 해야함");
+	}
+
+}
+
+void CWindow_MapTool::Monster_SelectTriggerFunction()
+{
+	_uint	iCreateTriggerSize = (_uint)m_vecCreateMonsterTriggerTag.size();
 
 		if (true == m_vecCreateMonsterTrigger.empty())
 		{
@@ -7441,7 +7491,7 @@ void CWindow_MapTool::Trigger_SelectTab()
 					{
 						m_iSelectMonsterTriggerIndex = i;
 						m_pPickingTrigger = m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex];
-					
+
 
 						CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC Desc = *m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]->Get_MonsterTriggerDesc();
 
@@ -7483,22 +7533,93 @@ void CWindow_MapTool::Trigger_SelectTab()
 				m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]->Get_Transform()->Set_State(CTransform::STATE_POSITION, m_pGameInstance->Get_CamPosition());
 			}
 		}
-		
-	}
-	
+
+
+
 	Trigger_GuizmoTick(m_pPickingTrigger);
 
-	if (m_pPickingTrigger != nullptr)
-	{
-		CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
+	//if (m_pPickingTrigger != nullptr)
+	//{
+	//	CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
+	//
+	//	if (pTriggerCollider != nullptr)
+	//		m_pGameInstance->Add_DebugRender(pTriggerCollider);
+	//}
+}
 
-		if (pTriggerCollider != nullptr)
-			m_pGameInstance->Add_DebugRender(pTriggerCollider);
-	}
-	
-	
-		
+void CWindow_MapTool::UI_SelectTriggerFunction()
+{
+	 _uint	iCreateTriggerSize = (_uint)m_vecCreateUITriggerTag.size();
 
+		if (true == m_vecCreateUITrigger.empty())
+		{
+			ImGui::Text(u8"생성한 UI 트리거가 없습니다. ");
+			return;
+		}
+		else
+		{
+			if (ImGui::BeginListBox(u8"UI 트리거 리스트", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (_uint i = 0; i < iCreateTriggerSize; ++i)
+				{
+					const _bool isSelected = (m_iSelectMonsterTriggerIndex == i);
+
+					if (ImGui::Selectable(m_vecCreateUITriggerTag[i].c_str(), isSelected))
+					{
+						m_iSelectUITriggerIndex = i;
+						m_pPickingTrigger = m_vecCreateUITrigger[m_iSelectUITriggerIndex];
+
+						CEvent_UITrigger::UI_TRIGGERDESC Desc = *m_vecCreateUITrigger[m_iSelectUITriggerIndex]->Get_UITriggerDesc();
+
+						m_fColliderCenterArray[0] = Desc.vColliderCenter.x;
+						m_fColliderCenterArray[1] = Desc.vColliderCenter.y;
+						m_fColliderCenterArray[2] = Desc.vColliderCenter.z;
+
+						m_fColliderSizeArray[0] = Desc.vColliderSize.x;
+						m_fColliderSizeArray[1] = Desc.vColliderSize.y;
+						m_fColliderSizeArray[2] = Desc.vColliderSize.z;
+						
+						m_iSelectUITriggerGroupIndex = Desc.iSpawnGroupIndex;
+						strcpy(m_strSelectTriggerNameTag, Desc.strTriggerNameTag.c_str());
+
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndListBox();
+			}
+
+			if (ImGui::InputInt(u8"UI 트리거 그룹인덱스", &m_iSelectUITriggerGroupIndex))
+			{
+				m_vecCreateUITrigger[m_iSelectUITriggerIndex]->Set_SpawnGroupIndex(m_iSelectUITriggerIndex);
+			}
+
+			if (ImGui::Button(u8"트리거 강제실행"))
+			{
+				m_vecCreateUITrigger[m_iSelectUITriggerIndex]->Activate();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(u8"트리거 카메라 위치이동"))
+			{
+				m_vecCreateUITrigger[m_iSelectUITriggerIndex]->Get_Transform()->Set_State(CTransform::STATE_POSITION, m_pGameInstance->Get_CamPosition());
+			}
+		}
+
+
+
+	Trigger_GuizmoTick(m_pPickingTrigger);
+
+	//if (m_pPickingTrigger != nullptr)
+	//{
+	//	CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
+	//
+	//	if (pTriggerCollider != nullptr)
+	//		m_pGameInstance->Add_DebugRender(pTriggerCollider);
+	//}
 }
 
 void CWindow_MapTool::Trigger_DeleteTab()
@@ -7506,7 +7627,7 @@ void CWindow_MapTool::Trigger_DeleteTab()
 
 	static _int iDeleteTriggerType = 0;
 
-	const char* DeleteTriggerType[2] = { u8"몬스터 트리거 삭제", u8"컷신 트리거 삭제" };
+	const char* DeleteTriggerType[3] = { u8"몬스터 트리거 삭제", u8"컷신 트리거 삭제", "UI 트리거 삭제" };
 
 
 	for (_uint i = 0; i < IM_ARRAYSIZE(DeleteTriggerType); ++i)
@@ -7522,53 +7643,106 @@ void CWindow_MapTool::Trigger_DeleteTab()
 
 	if (iDeleteTriggerType == 0)
 	{
-		_uint iCreateMonsterTriggerSize = (_uint)m_vecCreateMonsterTrigger.size();
-
-		if (iCreateMonsterTriggerSize == 0)
-			return;
-
-		ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
-
-		if (ImGui::BeginListBox(u8"생성한 몬스터 트리거", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
-		{
-			for (_uint i = 0; i < iCreateMonsterTriggerSize; ++i)
-			{
-				const _bool isSelected = (m_iSelectMonsterTriggerIndex == i);
-
-				if (ImGui::Selectable(m_vecCreateMonsterTriggerTag[i].c_str(), isSelected))
-				{
-					m_iSelectMonsterTriggerIndex = i;
-
-					m_bChange = true;
-					if (isSelected)
-					{
-						ImGui::SetItemDefaultFocus();
-					}
-				}
-			}
-			ImGui::EndListBox();
-		}
-
-		Set_GuizmoCamView();
-		Set_GuizmoCamProj();
-		Trigger_GuizmoTick(m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]);
+		Monster_DeleteTriggerFunction();
+	}
+	else if (iDeleteTriggerType == 1)
+	{
+		UI_DeleteTriggerFunction();
+	}
+	else
+	{
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "작업 해야함");
 	}
 	
+}
 
+void CWindow_MapTool::Monster_DeleteTriggerFunction()
+{
+	_uint iCreateMonsterTriggerSize = (_uint)m_vecCreateMonsterTrigger.size();
+
+	if (iCreateMonsterTriggerSize == 0)
+		return;
+
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	if (ImGui::BeginListBox(u8"생성한 몬스터 트리거", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		for (_uint i = 0; i < iCreateMonsterTriggerSize; ++i)
+		{
+			const _bool isSelected = (m_iSelectMonsterTriggerIndex == i);
+
+			if (ImGui::Selectable(m_vecCreateMonsterTriggerTag[i].c_str(), isSelected))
+			{
+				m_iSelectMonsterTriggerIndex = i;
+
+				m_bChange = true;
+				if (isSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	Set_GuizmoCamView();
+	Set_GuizmoCamProj();
+	Trigger_GuizmoTick(m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]);
 
 	if (ImGui::Button(u8"삭제"))
 	{
-		if (iDeleteTriggerType == 0)
+		Safe_Release(m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]);
+		m_vecCreateMonsterTrigger.erase(m_vecCreateMonsterTrigger.begin() + m_iSelectMonsterTriggerIndex);
+		m_vecCreateMonsterTriggerTag.erase(m_vecCreateMonsterTriggerTag.begin() + m_iSelectMonsterTriggerIndex);
+		m_pPickingTrigger = nullptr;
+
+		if (m_iSelectMonsterTriggerIndex > 0)
+			m_iSelectMonsterTriggerIndex--;
+	}
+}
+
+void CWindow_MapTool::UI_DeleteTriggerFunction()
+{
+	_uint iCreateUITriggerSize = (_uint)m_vecCreateUITrigger.size();
+
+	if (iCreateUITriggerSize == 0)
+		return;
+
+	ImGuiWindowFlags WindowFlag = ImGuiWindowFlags_HorizontalScrollbar;
+
+	if (ImGui::BeginListBox(u8"생성한 몬스터 트리거", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		for (_uint i = 0; i < iCreateUITriggerSize; ++i)
 		{
-				Safe_Release(m_vecCreateMonsterTrigger[m_iSelectMonsterTriggerIndex]);
-				m_vecCreateMonsterTrigger.erase(m_vecCreateMonsterTrigger.begin() + m_iSelectMonsterTriggerIndex);
-				m_vecCreateMonsterTriggerTag.erase(m_vecCreateMonsterTriggerTag.begin() + m_iSelectMonsterTriggerIndex);
-				m_pPickingTrigger = nullptr;
-				
-				if(m_iSelectMonsterTriggerIndex > 0)
-					m_iSelectMonsterTriggerIndex--;
-				
+			const _bool isSelected = (m_iSelectUITriggerIndex == i);
+
+			if (ImGui::Selectable(m_vecCreateUITriggerTag[i].c_str(), isSelected))
+			{
+				m_iSelectUITriggerIndex = i;
+
+				m_bChange = true;
+				if (isSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
 		}
+		ImGui::EndListBox();
+	}
+
+	Set_GuizmoCamView();
+	Set_GuizmoCamProj();
+	Trigger_GuizmoTick(m_vecCreateUITrigger[m_iSelectUITriggerIndex]);
+
+	if (ImGui::Button(u8"삭제"))
+	{
+		Safe_Release(m_vecCreateUITrigger[m_iSelectUITriggerIndex]);
+		m_vecCreateUITrigger.erase(m_vecCreateUITrigger.begin() + m_iSelectUITriggerIndex);
+		m_vecCreateUITriggerTag.erase(m_vecCreateUITriggerTag.begin() + m_iSelectUITriggerIndex);
+		m_pPickingTrigger = nullptr;
+
+		if (m_iSelectUITriggerIndex > 0)
+			m_iSelectUITriggerIndex--;
 	}
 }
 

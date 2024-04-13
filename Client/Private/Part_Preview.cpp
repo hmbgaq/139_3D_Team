@@ -44,9 +44,11 @@ HRESULT CPart_Preview::Initialize(void* pArg)
 	Safe_AddRef(m_pSocketBone);
 
 
+	m_strOwnerModelTag = ((PART_PREVIEW_DESC*)pArg)->strOwnerModelTag;
+
 	FAILED_CHECK(__super::Initialize(pArg));
 
-
+	
 	FAILED_CHECK(Ready_Components());
 
 
@@ -88,16 +90,36 @@ void CPart_Preview::Late_Tick(_float fTimeDelta)
 	XMStoreFloat4x4(&m_WorldMatrix, m_pTransformCom->Get_WorldMatrix() * SocketMatrix * m_pParentTransform->Get_WorldMatrix());
 
 
-	///* For.Render */
-	//if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
-	//	return;
-
+	if (m_strOwnerModelTag == TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"))
+	{
+		/* For.Render */
+		if (FAILED(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this)))
+			return;
+	}
 }
 
 HRESULT CPart_Preview::Render()
 {
 	__super::Render();
 
+	if (m_strOwnerModelTag == TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"))
+	{
+		FAILED_CHECK(Bind_ShaderResources());
+
+
+		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
+			m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
+
+			m_pShaderCom->Begin(0);
+
+			m_pModelCom->Render((_uint)i);
+		}
+	}
 
 	return S_OK;
 }
@@ -112,7 +134,28 @@ HRESULT CPart_Preview::Ready_Trail(_uint iLevelIndex, string strFileName)
 
 HRESULT CPart_Preview::Ready_Components()
 {
+	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
+
+	if (m_strOwnerModelTag == TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"))
+	{
+		_matrix matOffset =
+		{
+			0.6672178506851196f,-0.46065229177474976f, -0.5852329134941101f, 0.0f,
+			0.6070240139961243f, -0.11897064000368118f, 0.785706639289856f, 0.f,
+			-0.4315733313560486f, -0.8795087337493896f, 0.20025238394737244f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		};
+
+		m_pTransformCom->Set_WorldMatrix(matOffset);
+
+		/* For.Com_Model */
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie_Weapon"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
+
+		/* For. Com_Shader */
+		FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+
+	}
 
 
 	return S_OK;
@@ -120,7 +163,9 @@ HRESULT CPart_Preview::Ready_Components()
 
 HRESULT CPart_Preview::Bind_ShaderResources()
 {
-
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
 
 	return S_OK;
 }
@@ -167,6 +212,16 @@ void CPart_Preview::Free()
 	{
 		m_pTrail->Set_Object_Owner(nullptr);
 		Safe_Release(m_pTrail);
+	}
+
+	if (nullptr != m_pShaderCom)
+	{
+		Safe_Release(m_pShaderCom);
+	}
+
+	if (nullptr != m_pShaderCom)
+	{
+		Safe_Release(m_pModelCom);
 	}
 		
 }

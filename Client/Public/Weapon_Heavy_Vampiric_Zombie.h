@@ -32,6 +32,8 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
+public:
+	void	Play_Trail(_bool bPlay);
 
 private:
 	HRESULT			Load_Json();
@@ -41,7 +43,9 @@ protected:
 	virtual HRESULT Ready_Components();
 	HRESULT			Bind_ShaderResources();
 private:
-	CEffect* m_pEffect = { nullptr };
+	CEffect*				m_pEffect = { nullptr };
+	class CEffect_Trail*	m_pTrail = { nullptr };	//! 유정 : 트레일 추가
+
 public:
 	_bool m_bAttack = false;
 public:

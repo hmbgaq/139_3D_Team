@@ -20,12 +20,16 @@ class CEvent_Trigger abstract : public IEvent, public CBase
 {
 
 public:
+	enum TRIGGER_TYPE { TRIGGER_MONSTER, TRIGGER_BOSS, TRIGGER_UI, TRIGGER_CUTSCENE, TRIGGERTYPE_END};
+
+
 	typedef struct tagTriggerDesc
 	{
 		_float3		  vColliderSize = {};
 		_float3		  vColliderCenter = {};
 		_bool		  bOnTrigger = false;
 		string		  strTriggerNameTag = "";
+		TRIGGER_TYPE  eTriggerType = TRIGGERTYPE_END;
 	}TRIGGER_DESC;
 
 
@@ -45,6 +49,9 @@ public:
 public:
 	class CCollider*		Get_TriggerCollider() { return m_pColliderCom; }
 	void					Set_TriggerCollider(class CCollider* pCollider) { m_pColliderCom = pCollider; }
+
+	TRIGGER_TYPE			Get_TriggerType() { return m_tTriggerDesc.eTriggerType; }
+	void					Set_TriggerType(TRIGGER_TYPE eTriggerType) { m_tTriggerDesc.eTriggerType = eTriggerType;}
 
 	class CTransform*		Get_Transform() { return m_pTransformCom; }
 

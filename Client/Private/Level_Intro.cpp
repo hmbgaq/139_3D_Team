@@ -58,7 +58,7 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
     FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
-    FAILED_CHECK(Ready_Shader());
+    //FAILED_CHECK(Ready_Shader());
     
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
@@ -68,7 +68,8 @@ HRESULT CLevel_Intro::Initialize()
     //FAILED_CHECK(Ready_Shader());
 
 
-    m_pGameInstance->Play_BGM(L"BGM", L"HM_MUS_Cargo_Lvl_combat_axe_95bpm_24.wav", 5.f);
+    //m_pGameInstance->Play_BGM(L"BGM_LOADING", L"Bon_Jovi_Its_My_Life.wav", 6.f);
+    
 
     return S_OK;
 }
@@ -149,7 +150,7 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     _bool bSpawnSniper = false;
     _bool bSpawnTanker = false; 
     _bool bSpawnInfected = false;
-    _bool bSpawnZenuGiant = false;
+    _bool bSpawnZenuGiant = true;
     
 
     json MonsterJson = Stage1MapJson["Monster_Json"];

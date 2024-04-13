@@ -7,6 +7,7 @@ void CPlayer_State_Roll::Initialize(CPlayer* pActor)
 
 	pActor->Set_RootMoveRate(_float3(1.5f, 1.f, 1.5f));
 
+	pActor->Play_Roll_Sound();
 }
 
 CState<CPlayer>* CPlayer_State_Roll::Update(CPlayer* pActor, _float fTimeDelta)
