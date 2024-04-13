@@ -109,7 +109,7 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 			_float3 vPos = m_pTransformCom->Get_Position();
 			_float3 vTargetPos = pPlayer->Get_Position();
 			vTargetPos.y = vPos.y;
-			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos, true, vTargetPos);
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
 
 
 			//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());

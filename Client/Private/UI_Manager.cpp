@@ -561,10 +561,21 @@ void CUI_Manager::NonActive_PlayerHUD()
 
 	for (auto& iter : m_vecLeftHUD)
 	{
-		iter->Set_Alpha(1.f);		// UI 알파값 초기화
-		iter->Set_Active(false);	// UI 활성화
-		iter->Set_AnimPlay(false);	// UI Animation 재생
-		iter->Set_Disappear(true);	// UI 사라짐 Off
+
+		if (iter->Get_UIDesc().strUIName == "Fog" ||
+			iter->Get_UIDesc().strUIName == "Linghtning")
+		{
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
+		else
+		{
+			iter->Set_Alpha(1.f);		// UI 알파값 초기화
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
 	}
 
 	if (m_vecRightHUD.empty())
@@ -572,10 +583,20 @@ void CUI_Manager::NonActive_PlayerHUD()
 
 	for (auto& iter : m_vecRightHUD)
 	{
-		iter->Set_Alpha(1.f);		// UI 알파값 초기화
-		iter->Set_Active(false);	// UI 활성화
-		iter->Set_AnimPlay(false);	// UI Animation 재생
-		iter->Set_Disappear(true);	// UI 사라짐 Off
+		if (iter->Get_UIDesc().strUIName == "Fog" ||
+			iter->Get_UIDesc().strUIName == "Linghtning")
+		{
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
+		else
+		{
+			iter->Set_Alpha(1.f);		// UI 알파값 초기화
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
 	}
 
 	if (m_vecLeftSkill.empty())

@@ -7,7 +7,9 @@
 
 CEvent_UITrigger::CEvent_UITrigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEvent_Trigger(pDevice, pContext)
+	, m_pUIManager(CUI_Manager::GetInstance())
 {
+	Safe_AddRef(m_pUIManager);
 }
 
 HRESULT CEvent_UITrigger::Initialize(void* pArg)
@@ -151,4 +153,5 @@ void CEvent_UITrigger::Set_ColliderCenter(_float3 vColliderCenter)
 void CEvent_UITrigger::Free()
 {
 	__super::Free();
+	Safe_Release(m_pUIManager);
 }

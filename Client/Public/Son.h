@@ -43,6 +43,7 @@ private:
 public:
 	//vector<class CUI_Weakness*> m_pWeakneesUIs;
 	_bool m_bTurn = true;
+	_bool m_bfirst = true;
 	CMother* m_pMother = { nullptr };
 	CEffect* m_pEffect = { nullptr };
 public:

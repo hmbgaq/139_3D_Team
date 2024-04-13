@@ -171,33 +171,33 @@ private:
 
 public:
 	/* TutorialBox */
-	HRESULT Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
-	void	Active_TutorialBox();
-	void	NonActive_TutorialBox();
-	void	Change_TutorialText(TUTORIAL_TEXT eChangeText);
+	HRESULT			Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_TutorialBox();
+	void			NonActive_TutorialBox();
+	void			Change_TutorialText(TUTORIAL_TEXT eChangeText);
 private:
 	vector<CUI*>	m_vecTutorialBox;
 
 public:
 	/* LevelUp */
-	HRESULT Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag);
-	void	Active_LevelUp();
-	void	NonActive_LevelUp();
+	HRESULT			Add_LevelUp(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_LevelUp();
+	void			NonActive_LevelUp();
 private:
 	vector<CUI*>	m_vecLevelUP;
 
 public:
 	/* RewardBox */
-	HRESULT Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag);
-	void	Active_RewardBox();
-	void	NonActive_RewardBox();
+	HRESULT			Add_RewardBox(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_RewardBox();
+	void			NonActive_RewardBox();
 private:
 	vector<CUI*>	m_vecRewardBox;
 
 public:
 	/* QuestBox */
-	HRESULT Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag);
-	void	Active_QuestBox();
+	HRESULT			Add_QuestBox(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_QuestBox();
 private:
 	vector<CUI*>	m_vecQuestBox;
 

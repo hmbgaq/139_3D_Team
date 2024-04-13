@@ -119,7 +119,7 @@ void CVampireCommander_Weapon_Hand::OnCollisionEnter(CCollider* other)
  		string Test = "Data_Animation/";
 		parent->Set_EventNotify(Test, "Test2_AnimationData.json");
 
-		EFFECT_MANAGER->Play_Effect("Hit/", parent->Get_CharcterDesc().EffectFileName + ".json", this->Get_WorldPosition());
+		EFFECT_MANAGER->Play_Effect("Hit/", parent->Get_CharcterDesc().EffectFileName + ".json", nullptr, this->Get_WorldPosition());
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect(m_pGameInstance->Get_NextLevel(), LAYER_EFFECT, parent->Get_CharcterDesc().EffectFileName + ".json");
 		//_float3 vPos =this->Get_WorldPosition();
 		//pEffect->Set_Position(vPos);

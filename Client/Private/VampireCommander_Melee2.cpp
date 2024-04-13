@@ -43,7 +43,6 @@ CState<CVampireCommander>* CVampireCommander_Melee2::Update(CVampireCommander* p
 	else if (pActor->Is_Inputable_Front(45))
 	{
 		m_bFlags[1] = false;
-		dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// Æ®·¹ÀÏ ²ô±â
 		pWeapon->Set_Enable(false);
 	}
 
@@ -59,6 +58,8 @@ void CVampireCommander_Melee2::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(false);	// Æ®·¹ÀÏ ²ô±â
+
 	pWeapon->Set_Enable(false);
 
 	pActor->m_bLookAt = true;

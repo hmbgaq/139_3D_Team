@@ -5,6 +5,8 @@
 #include "Effect_Instance.h"
 #include "Environment_Instance.h"
 #include "Level_SnowMountain.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
 
 #pragma region UI
 #include "UI_Anything.h"
@@ -20,6 +22,7 @@
 
 #pragma region Monster
 #include "Monster_Character.h"
+#include "Event_MonsterSpawnTrigger.h"
 #pragma endregion
 
 #pragma region MAP
@@ -44,15 +47,14 @@ HRESULT CLevel_SnowMountain::Initialize()
 {
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Shader.json");
 
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석.
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-	FAILED_CHECK(Ready_Shader("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Shader.json"));
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
@@ -77,13 +79,15 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 	m_pGameInstance->Add_ShadowLight_View(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), _float4(Engine::g_vLightEye), _float4(Engine::g_vLightAt), _float4(Engine::g_vLightUp));
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAIN), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
-	/* Map Light */
-	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+	m_pGameInstance->Remove_AllLight();
 
-	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
-	{
-		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
-	}
+	/* Map Light */
+//	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+//
+//	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
+//	{
+//		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
+//	}
 
 	json IntroBossMapJson = {};
 
@@ -104,6 +108,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		LightDesc.bEnable = LightJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightJson[i]["Type"];
 		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -170,6 +175,7 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightObjectJson[i]["LightType"];
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -189,6 +195,9 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 			return E_FAIL;
 		}
 	}
+
+
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", nullptr, _float3(0.f, 0.f, 0.f));
 
 	return S_OK;
 }
@@ -515,37 +524,6 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	}
 
-	json MonsterJson = Stage1MapJson["Monster_Json"];
-	_int iMonsterJsonSize = (_int)MonsterJson.size();
-
-	for (_int i = 0; i < iMonsterJsonSize; ++i)
-	{
-		CMonster_Character::MONSTER_DESC MonsterDesc = {};
-
-		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-
-		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-		MonsterDesc.bPreview = false;
-		MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
-
-		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-
-		MonsterDesc.WorldMatrix = WorldMatrix;
-
-		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-			return E_FAIL;
-
-	}
-
 	json SpecialJson = Stage1MapJson["Special_Json"];
 	_int iSpecialJsonSize = (_int)SpecialJson.size();
 
@@ -836,6 +814,47 @@ HRESULT CLevel_SnowMountain::Ready_Layer_UI_Player(const wstring& strLayerTag, v
 
 HRESULT CLevel_SnowMountain::Ready_Event()
 {
+	json LoadJson;
+
+	if (FAILED(CJson_Utility::Load_Json(m_strMapLoadPath.c_str(), LoadJson)))
+	{
+		MSG_BOX("이벤트 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json TriggerJson = LoadJson["Trigger_Json"];
+
+	json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
+	_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
+
+	for (_int i = 0; i < iMonsterTriggerSize; ++i)
+	{
+		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+		MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
+		MonsterTriggerDesc.strSpawnMonsterJsonPath = m_strMapLoadPath;
+		MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
+		MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+
+		CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+		pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
+
+		if (pMonsterTrigger == nullptr)
+		{
+			MSG_BOX("몬스터 트리거 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+		{
+			m_pGameInstance->Add_Event(pMonsterTrigger);
+		}
+
+
+	}
+
+
 	return S_OK;
 }
 

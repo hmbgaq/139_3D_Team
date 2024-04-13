@@ -365,10 +365,14 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos)
 
 	if (true == m_bUseAnimationPos && false == m_bIsAnimEnd && false == Is_Transition())
 	{
-		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now())
+		if (false == m_Animations[m_iCurrentAnimIndex]->Is_TransitionEnd_Now() && false == m_bReset)
 		{
 			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
 			_Pos = ChangedPos;
+		}
+		else if (true == m_bReset)
+		{
+			m_bReset = false;
 		}
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
@@ -401,6 +405,7 @@ void CModel::Play_Animation(_float fTimeDelta, _float3& _Pos,_float3 pPlayerPos)
 			_float3 ChangedPos = NowPos - m_Animations[m_iCurrentAnimIndex]->Get_PrevPos();
 			_Pos = ChangedPos;
 		}
+
 
 		m_Animations[m_iCurrentAnimIndex]->Set_PrevPos(NowPos);
 	}
@@ -517,6 +522,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 		{
 			m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, false);
 			m_bIsAnimEnd = false;
+			m_bReset = true;
 		}
 	}
 	//else 
@@ -740,7 +746,7 @@ _uint CModel::Get_BoneNum(const _char* _szName)
 
 _uint CModel::Get_CurrentKeyFrames(_uint iIndex)
 {
-	return m_Animations[iIndex]->Get_CurrentKeyFrames(0);
+	return m_Animations[iIndex]->Get_CurrentKeyFrames(iIndex);
 }
 
 HRESULT CModel::Ready_Meshes(_fmatrix PivotMatrix)
@@ -819,7 +825,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			strcat_s(szTmp, szEXT);
 
 			_tchar		szFullPath[MAX_PATH] = TEXT("");
-
+			//0x000000e86ff6c9b0 L"../Bin/Resources/Models/Map/SnowMountain/NonAnim/Interact\\T_WoodenPanels_03_BC.png"
 			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
 			if (szFileName == "M_Invisible") /* 현재 게임에서 이 텍스쳐를 가지면 투명한 텍스쳐라 가상으로 만들어줘도 터짐 */

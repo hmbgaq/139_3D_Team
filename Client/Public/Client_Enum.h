@@ -18,6 +18,8 @@ namespace Engine
 		MODEL_FOLIAGECLIP,			// 11 - 
 		MODEL_OUTLINE_KEEP,			// 12 - OutLine 그대로 유지 
 		MODEL_OUTLINE_BLINK,		// 13 - OutLine 깜빡거림
+		MODEL_EX_EMISSIVE,			// 14 - Emissive 있음에도 안넣음
+		MODEL_MESH_BLOOM ,			// 15 - GLOW효과 그러니까 해당메시전체에 림블룸 주는거 
 		MODEL_SHADER_END
 	};
 
@@ -40,7 +42,7 @@ namespace Engine
 		COMMON_OUTLINE_BLINK,		// 6 - 외곽선 깜빡거림 
 		COMMON_OUTLINE_KEEP,		// 7 - 외곽선 계속 유지 
 		INFECTED_PUNCH,				// 8 - Infected - Attack에서 주먹변하기 
-		COMMON_EMPHASIS,			// 9 - Emissive에 Diffuse더넣어서 강조하기
+		COMMON_EXCEPT_EMISSIVE,		// 9 - EMISSIVE텍스쳐 없앤버전 
 		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};

@@ -25,4 +25,5 @@ CState<CPlayer>* CPlayer_DodgeBlink_L_03::Update(CPlayer* pActor, _float fTimeDe
 void CPlayer_DodgeBlink_L_03::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+
 }

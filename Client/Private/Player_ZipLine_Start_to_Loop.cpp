@@ -16,8 +16,18 @@ void CPlayer_ZipLine_Start_to_Loop::Initialize(CPlayer* pActor)
 		
 	CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
 
-	m_vArrivalPosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
-	pActor->Get_Transform()->Look_At(m_vArrivalPosition);
+	_float4x4 BoneMatrix = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedTransformationFloat4x4();
+	
+	_float4 vBonePos = { BoneMatrix._41, BoneMatrix._42, BoneMatrix._43, 1.f};
+	_vector vWorldPos = XMVector3TransformCoord(vBonePos, pInteractObject->Get_Transform()->Get_WorldMatrix());
+	vWorldPos.m128_f32[3] = 1.f;
+	
+
+	m_vArrivalPosition = vWorldPos;
+
+	//m_vArrivalPosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
+	//m_vArrivalPosition.w = 1.f;
+	pActor->Get_Transform()->Look_At(XMLoadFloat4(&m_vArrivalPosition));
 }
 
 CState<CPlayer>* CPlayer_ZipLine_Start_to_Loop::Update(CPlayer* pActor, _float fTimeDelta)
@@ -47,4 +57,5 @@ CState<CPlayer>* CPlayer_ZipLine_Start_to_Loop::Update(CPlayer* pActor, _float f
 void CPlayer_ZipLine_Start_to_Loop::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+	m_vArrivalPosition = {};
 }

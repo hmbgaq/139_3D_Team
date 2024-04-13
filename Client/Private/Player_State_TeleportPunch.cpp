@@ -3,9 +3,16 @@
 #include "Transform.h"
 #include "Data_Manager.h"
 
+#include "Effect_Manager.h"
+#include "Effect.h"
+
 void CPlayer_State_TeleportPunch::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
+
+
+	// ÅÚ·¹Æ÷Æ® ÆÝÄ¡ ÀÌÆåÆ®
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/TeleportPunch/", "TeleportPunch_01.json", pActor, true, "Head");
 }
 
 CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTimeDelta)
@@ -60,6 +67,12 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 void CPlayer_State_TeleportPunch::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+
+	if (m_pEffect != nullptr)	// ÀÌÆåÆ® ÇØÁ¦
+	{		
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+	}
+
 	pActor->Set_Target(nullptr);
 }
 

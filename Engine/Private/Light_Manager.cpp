@@ -56,7 +56,19 @@ _bool CLight_Manager::Remove_Light(const _uint& iIndex)
 
 _bool CLight_Manager::Remove_AllLight()
 {
-	return _bool();
+	for (auto& iter : m_Lights)
+	{
+		if(iter == nullptr)
+			return false;
+
+		
+		Safe_Release(iter);
+		
+	}
+
+	m_Lights.clear();
+
+	return true;
 }
 
 CLight* CLight_Manager::Find_Light(const _int iIndex)

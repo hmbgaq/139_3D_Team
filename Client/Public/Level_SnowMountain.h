@@ -40,8 +40,9 @@ private: /* Shader */
 private:
 	_int			TempLightNumber = 0;
 	
-	//string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountain_MapData.json";
+	//string		m_strMapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountain_MapData.json";
 	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/SnowMountain_MapData.json";
+	class CEffect*	m_pEffect = { nullptr };
 
 public:
 	static CLevel_SnowMountain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

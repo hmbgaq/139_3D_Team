@@ -106,7 +106,7 @@ void CPlayer_Weapon_Punch::Attack(CCollider* other)
 			_float3 vPos = Get_WorldPosition();
 			_float3 vTargetPos = pTarget_Character->Get_Position();
 			vTargetPos.y = vPos.y;
-			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", vPos, true, vTargetPos);
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
 
 			//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", Get_WorldPosition(), true, pTarget_Character->Get_Position());
 			CData_Manager::GetInstance()->Apply_Shake_And_Blur(m_eHitPower);

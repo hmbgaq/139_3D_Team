@@ -149,6 +149,9 @@ public:
 	void	Look_At_Direction(_fvector _vLook);
 	void	Look_At_Lerp(_fvector vTargetPos, _float fTimeDelta, _float fMinRadian = 0.5f);
 
+	void	Look_At_OnLand_Back(_fvector vTargetPos);
+
+
 	_vector Calc_Look_Dir(_fvector vTargetPos);
 	_vector Calc_Look_Dir_XZ(_fvector vTargetPos);
 

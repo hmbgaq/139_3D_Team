@@ -1111,9 +1111,6 @@
     <Filter Include="96.Manager\UI">
       <UniqueIdentifier>{d7757ce9-a1f9-4694-aebd-8973f281a226}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI\97. Video">
-      <UniqueIdentifier>{3cb1d511-2556-458b-82a7-568cd584fe7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\00. Character\Monster\Monster_Character\Bandit_Sniper\Parts\Weapon">
       <UniqueIdentifier>{b014bd44-d753-461a-9a23-42377505816a}</UniqueIdentifier>
     </Filter>
@@ -2271,9 +2268,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\02. System\06. Option\00. OptionWindow\0. Button\3. ElementList\Select">
       <UniqueIdentifier>{8e0ffcba-6dc3-4707-bf47-a12695be8aa6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\97. Video\Sprite">
-      <UniqueIdentifier>{9f99e6c2-f92c-40a9-820f-4dbce387bf4d}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\03. Object">
       <UniqueIdentifier>{d29e390e-cc28-4bc1-a536-6870a93520c7}</UniqueIdentifier>
@@ -4036,6 +4030,42 @@
     <Filter Include="03.Event\Trigger\UITrigger">
       <UniqueIdentifier>{0f509588-22a9-49d4-bd65-9301441f3417}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal">
+      <UniqueIdentifier>{16ad304a-426b-41e3-aee3-8b6e2312100c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk">
+      <UniqueIdentifier>{cf06b042-e1b8-43f4-8b99-f6f31997cd70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\1. Body">
+      <UniqueIdentifier>{ec9b3451-0712-4a48-aef8-82d071bf3dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State">
+      <UniqueIdentifier>{e3f0dd59-36ee-451e-9c99-375a53c10143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin">
+      <UniqueIdentifier>{32de8c22-9cfd-4dec-831c-537969858f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\1. Eating">
+      <UniqueIdentifier>{0c9bf2f7-7e48-4248-a35b-f4c8e61b2e87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin\Normal">
+      <UniqueIdentifier>{722e1e62-d641-48d0-9fb8-224f3aaa31c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\2. StandGround_To_FlyHeavy">
+      <UniqueIdentifier>{0a219143-669c-45db-ba80-ad87209cd2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy">
+      <UniqueIdentifier>{95c30dfc-559a-4dc7-9fe8-673abb093cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\97. Video">
+      <UniqueIdentifier>{3cb1d511-2556-458b-82a7-568cd584fe7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\97. Video\Sprite">
+      <UniqueIdentifier>{9f99e6c2-f92c-40a9-820f-4dbce387bf4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\00. Character\NPC\2. Animal">
+      <UniqueIdentifier>{8788932a-9733-4983-aaeb-8654e624d450}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\02. System\00. Text\02. TalkBox">
       <UniqueIdentifier>{a3721189-fd31-402e-a1a1-13e8253aceb8}</UniqueIdentifier>
     </Filter>
@@ -4700,9 +4730,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Window_Style.h">
       <Filter>01.Levels\02.Tool\Imgui\Windows\99.StyleWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Effect_Rect.h">
-      <Filter>02.GameObjects\03. Effect\02.Effect_Rect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Infected_MeleeDynamic_RU_01.h">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\1</Filter>
@@ -7932,6 +7959,30 @@
     <ClInclude Include="..\Public\Event_UITrigger.h">
       <Filter>03.Event\Trigger\UITrigger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Hawk.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body_Hawk.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\1. Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_State.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_Eating_01.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\1. Eating</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_State_Normal.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_Trans_StandGround_to_FlyHeavy.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\2. StandGround_To_FlyHeavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hawk_Fly_Heavy.h">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AnimalObject.h">
+      <Filter>02.GameObjects\00. Character\NPC\2. Animal</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\UI_TalkBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>
     </ClInclude>
@@ -8712,9 +8763,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Window_Style.cpp">
       <Filter>01.Levels\02.Tool\Imgui\Windows\99.StyleWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Effect_Rect.cpp">
-      <Filter>02.GameObjects\03. Effect\02.Effect_Rect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Infected_MeleeDynamic_RU_01.cpp">
       <Filter>02.GameObjects\00. Character\Monster\Monster_Character\Infected\2. State\4. Attack\Melee\1. Dynamic\1</Filter>
@@ -11295,6 +11343,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Event_UITrigger.cpp">
       <Filter>03.Event\Trigger\UITrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body_Hawk.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\1. Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_State.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_State_Normal.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\0. Origin\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_Eating_01.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\1. Eating</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_Trans_StandGround_to_FlyHeavy.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\2. StandGround_To_FlyHeavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hawk_Fly_Heavy.cpp">
+      <Filter>02.GameObjects\00. Character\Animal\1. Hawk\2. State\3. Fly_Heavy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AnimalObject.cpp">
+      <Filter>02.GameObjects\00. Character\NPC\2. Animal</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_TalkBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>

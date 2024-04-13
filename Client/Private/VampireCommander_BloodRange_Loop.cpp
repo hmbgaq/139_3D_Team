@@ -15,7 +15,7 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 	m_iLoopescape = 0;
 	m_fPreHP = pActor->Get_Hp();
 
-	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json", pActor->Get_Position());
+	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json", nullptr, pActor->Get_Position());
 	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json", pActor);
 
 }

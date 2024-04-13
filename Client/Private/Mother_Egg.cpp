@@ -77,7 +77,7 @@ void CMother_Egg::Tick(_float fTimeDelta)
 
 	if (m_fHp <= 0.f)
 	{
-		EFFECT_MANAGER->Play_Effect("Parasiter/", "Egg_Dead2.json", (m_pTransformCom->Get_Position()+_float3(0.f,1.5f,0.f)));
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "Egg_Dead2.json", nullptr, (m_pTransformCom->Get_Position()+_float3(0.f,1.5f,0.f)));
 		this->Set_Enable(false);
 
 	}
@@ -115,7 +115,7 @@ void CMother_Egg::Tick(_float fTimeDelta)
 // 
 // 		pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Monster", L"Prototype_Component_Model_Infected_D");
 // 		pMonster->Set_Position(this->Get_Transform()->Get_State(CTransform::STATE_POSITION) - this->Get_Transform()->Get_State(CTransform::STATE_RIGHT));
-		EFFECT_MANAGER->Play_Effect("Parasiter/", "Egg_Dead3.json", (m_pTransformCom->Get_Position() + _float3(0.f, 1.5f, 0.f)));
+		EFFECT_MANAGER->Play_Effect("Parasiter/", "Egg_Dead3.json", nullptr, (m_pTransformCom->Get_Position() + _float3(0.f, 1.5f, 0.f)));
 
 
 		//EFFECT_MANAGER->Return_ToPool(m_pEffect);

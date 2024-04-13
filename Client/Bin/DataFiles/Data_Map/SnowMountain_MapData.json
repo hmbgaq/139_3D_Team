@@ -186,9 +186,9 @@
       "Component": {
         "Transform": [
           [ 9.099627504838281e-07, 1.6560624399586388e-12, -0.9999998211860657, 0.0 ],
-          [ -3.365105069597085e-11, 0.9999924898147583, 1.6560197223930428e-12, 0.0 ],
+          [ -3.365102640984219e-11, 0.999991774559021, 1.6560185297706531e-12, 0.0 ],
           [ 0.9999998211860657, 3.365129702670444e-11, 9.099627504838281e-07, 0.0 ],
-          [ 57.50810623168945, 10.005459785461426, 30.889251708984375, 1.0 ]
+          [ 57.53791427612305, 9.933052062988281, 30.889251708984375, 1.0 ]
         ]
       },
       "Index": 10,
@@ -347,7 +347,7 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ -7.21943195003405e-07, -0.03302725404500961, 0.9991675019264221, 0.0 ],
+          [ -7.219391591206659e-07, -0.03302707150578499, 0.9991618990898132, 0.0 ],
           [ -4.541857833828544e-06, 0.9994480609893799, 0.033036526292562485, 0.0 ],
           [ -1.0, -4.515548425843008e-06, -8.718050708012015e-07, 0.0 ],
           [ 42.18000030517578, 18.745532989501953, 57.12709426879883, 1.0 ]
@@ -779,9 +779,9 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ 0.800000011920929, 0.0, 0.0, 0.0 ],
-          [ 0.0, 0.800000011920929, 0.0, 0.0 ],
-          [ 0.0, 0.0, 0.800000011920929, 0.0 ],
+          [ 0.800000011920929, 1.4559403780367575e-06, 0.0, 0.0 ],
+          [ -1.4559286682924721e-06, 0.7999935746192932, 1.4559252576873405e-06, 0.0 ],
+          [ 2.6496966513273046e-12, -1.4559369674316258e-06, 0.800000011920929, 0.0 ],
           [ 68.00804901123047, -1.0059062242507935, 35.093013763427734, 1.0 ]
         ]
       },
@@ -1373,9 +1373,9 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ -4.371138828673793e-08, -1.0, 5.536559211094527e-09, 0.0 ],
+          [ -4.371138828673793e-08, -1.0, 5.536506808567765e-09, 0.0 ],
           [ 1.399999976158142, -6.119594075926216e-08, 1.2210820443669945e-07, 0.0 ],
-          [ -8.72093508519356e-08, 5.535878422335827e-09, 0.9998761415481567, 0.0 ],
+          [ -8.720900268599507e-08, 5.535803371259362e-09, 0.999872088432312, 0.0 ],
           [ 76.16966247558594, 0.44135457277297974, -4.822421550750732, 1.0 ]
         ]
       },
@@ -1481,10 +1481,10 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.9984421133995056, 0.0, -0.055449314415454865, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 77.00042724609375, 5.68650484085083, -26.210126876831055, 1.0 ]
+          [ 0.04436030983924866, 0.0, 0.7987691760063171, 0.0 ],
+          [ 76.85415649414063, 7.468729019165039, -25.875520706176758, 1.0 ]
         ]
       },
       "Index": 82,
@@ -2023,7 +2023,7 @@
         "Transform": [
           [ -4.371138828673793e-08, -1.0, 0.0, 0.0 ],
           [ 1.0, -4.371138828673793e-08, 0.0, 0.0 ],
-          [ 0.0, 0.0, 0.9997435808181763, 0.0 ],
+          [ 0.0, 0.0, 0.9997425079345703, 0.0 ],
           [ 44.358741760253906, -0.6880000233650208, -15.870753288269043, 1.0 ]
         ]
       },
@@ -2041,7 +2041,7 @@
         "Transform": [
           [ -2.622683403785686e-08, -0.6000000238418579, 0.0, 0.0 ],
           [ 1.0, -4.371138828673793e-08, 0.0, 0.0 ],
-          [ 0.0, 0.0, 0.9995209574699402, 0.0 ],
+          [ 0.0, 0.0, 0.9995198845863342, 0.0 ],
           [ 44.35900115966797, -0.6880000233650208, -24.00016212463379, 1.0 ]
         ]
       },
@@ -2723,9 +2723,9 @@
       "AnimType": false,
       "Component": {
         "Transform": [
-          [ 0.9998273849487305, 1.9127173800370656e-06, 0.010085135698318481, 0.0 ],
+          [ 0.9998273849487305, 1.9127173800370656e-06, 0.010085114277899265, 0.0 ],
           [ -1.9033456055694842e-06, 0.9999998807907104, -9.618155445423326e-07, 0.0 ],
-          [ -0.010085135698318481, 9.424541076441528e-07, 0.9998273849487305, 0.0 ],
+          [ -0.010085114277899265, 9.424541076441528e-07, 0.9998273849487305, 0.0 ],
           [ 8.121509552001953, 12.079212188720703, 66.57096862792969, 1.0 ]
         ]
       },
@@ -3030,7 +3030,7 @@
       "Component": {
         "Transform": [
           [ -0.17977336049079895, -0.07427167892456055, -2.9936816692352295, 0.0 ],
-          [ -0.002971003297716379, 1.999313235282898, -0.04942350462079048, 0.0 ],
+          [ -0.0029710002709180117, 1.9993112087249756, -0.0494234561920166, 0.0 ],
           [ 3.094411849975586, 4.7117264330154285e-06, -0.18582244217395782, 0.0 ],
           [ 9.684602737426758, 13.116704940795898, 67.03515625, 1.0 ]
         ]
@@ -3660,8 +3660,8 @@
       "Component": {
         "Transform": [
           [ 0.3416362702846527, -5.159730562809273e-07, -0.9398320317268372, 0.0 ],
-          [ 4.0932707179308636e-07, 1.0, -4.0021200220508035e-07, 0.0 ],
-          [ 0.9398320317268372, -2.4797174091872876e-07, 0.3416362702846527, 0.0 ],
+          [ 4.093298002771917e-07, 1.0, -4.002110358669597e-07, 0.0 ],
+          [ 0.9398320317268372, -2.479745830896718e-07, 0.3416362702846527, 0.0 ],
           [ 77.8022232055664, -5.994543528231588e-08, 17.782562255859375, 1.0 ]
         ]
       },
@@ -3957,6 +3957,528 @@
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "ModelTag": "Prototype_Component_Model_ZipLineBase1",
       "ObjectTag": "ZipLineBase1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 73.99075317382813, -9.5367431640625e-07, -22.3477783203125, 1.0 ]
+        ]
+      },
+      "Index": 220,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_LocomotiveSegment13",
+      "ObjectTag": "LocomotiveSegment13",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 81.70878601074219, 0.0, -22.36451530456543, 1.0 ]
+        ]
+      },
+      "Index": 221,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_LocomotiveSegment13",
+      "ObjectTag": "LocomotiveSegment13",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999991059303284, -1.6560635241608113e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 70.25474548339844, 6.99629753003056e-13, -26.158056259155273, 1.0 ]
+        ]
+      },
+      "Index": 222,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_LocomotiveSegment13",
+      "ObjectTag": "LocomotiveSegment13",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 9.099626936404093e-07, 1.6560623315384215e-12, -0.9999997615814209, 0.0 ],
+          [ 2.6147959665545617e-12, 0.999999463558197, 1.656064283102332e-12, 0.0 ],
+          [ 0.9999997615814209, -2.614796617075865e-12, 9.099626936404093e-07, 0.0 ],
+          [ 19.841140747070313, 2.7015873262439816e-13, -17.853666305541992, 1.0 ]
+        ]
+      },
+      "Index": 223,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveSegment18",
+      "ObjectTag": "InstanceLocomotiveSegment18",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 35.265625, 4.76837158203125e-07, -94.46980285644531, 1.0 ]
+        ]
+      },
+      "Index": 224,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_Cable1",
+      "ObjectTag": "Cable1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.34214964509010315, 6.226869686543068e-07, -0.9396454691886902, 0.0 ],
+          [ 1.0984072673636547e-07, 0.9999992251396179, 6.22686513906956e-07, 0.0 ],
+          [ 0.9396454691886902, 1.0984081200149376e-07, -0.34214964509010315, 0.0 ],
+          [ 33.73671340942383, 7.981251997080108e-07, -107.17330932617188, 1.0 ]
+        ]
+      },
+      "Index": 225,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveSegment17",
+      "ObjectTag": "InstanceLocomotiveSegment17",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, 1.6560650420438527e-12, 1.0, 0.0 ],
+          [ 3.639849182945909e-06, 0.9999992847442627, 1.656063849421463e-12, 0.0 ],
+          [ -1.0, 3.639851684056339e-06, -9.099629210140847e-07, 0.0 ],
+          [ 32.3241081237793, 3.478428652670118e-06, -114.7591552734375, 1.0 ]
+        ]
+      },
+      "Index": 226,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveSegment18",
+      "ObjectTag": "InstanceLocomotiveSegment18",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 43.142051696777344, 0.0, -118.06718444824219, 1.0 ]
+        ]
+      },
+      "Index": 227,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveSegment18",
+      "ObjectTag": "InstanceLocomotiveSegment18",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.6854018568992615, 0.0, -0.1422116756439209, 0.0 ],
+          [ 0.0, 0.699999988079071, 0.0, 0.0 ],
+          [ 0.1422116756439209, 0.0, 0.6854018568992615, 0.0 ],
+          [ 43.719242095947266, 1.0875532627105713, -96.2363510131836, 1.0 ]
+        ]
+      },
+      "Index": 228,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_LocomotiveConstruction4",
+      "ObjectTag": "LocomotiveConstruction4",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.999999463558197, -1.6560641746821148e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 46.80742645263672, 2.287513494491577, -112.48882293701172, 1.0 ]
+        ]
+      },
+      "Index": 229,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_LocomotiveConstructionDirt",
+      "ObjectTag": "LocomotiveConstructionDirt",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.2099001705646515, -0.0829835906624794, 0.9741306304931641, 0.0 ],
+          [ -0.9393961429595947, 0.2590901851654053, 0.22448699176311493, 0.0 ],
+          [ -0.2710326313972473, -0.962272047996521, -0.023572808131575584, 0.0 ],
+          [ 45.30094909667969, 1.1405342817306519, -112.98883819580078, 1.0 ]
+        ]
+      },
+      "Index": 230,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_LocomotiveMetalBeam1",
+      "ObjectTag": "LocomotiveMetalBeam1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 71.98345947265625, 0.0, -85.14066314697266, 1.0 ]
+        ]
+      },
+      "Index": 231,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaMergeRailLampConstruction",
+      "ObjectTag": "TeslaMergeRailLampConstruction",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 51.90254211425781, 4.76837158203125e-07, -105.4863052368164, 1.0 ]
+        ]
+      },
+      "Index": 232,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaFootBridgePlank2",
+      "ObjectTag": "TeslaFootBridgePlank2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 45.951515197753906, 0.0, -105.06653594970703, 1.0 ]
+        ]
+      },
+      "Index": 233,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaFootBridgePlank2",
+      "ObjectTag": "TeslaFootBridgePlank2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 50.918338775634766, 0.0, -109.6406478881836, 1.0 ]
+        ]
+      },
+      "Index": 234,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaFootBridgePlank2",
+      "ObjectTag": "TeslaFootBridgePlank2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
+          [ -1.819925159907143e-06, 0.9999995827674866, -1.8199250462203054e-06, 0.0 ],
+          [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
+          [ 47.21990203857422, 3.7804007530212402, 43.777992248535156, 1.0 ]
+        ]
+      },
+      "Index": 235,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_Shelf_1",
+      "ObjectTag": "1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -4.5498146050704236e-07, -8.280325210219264e-13, -0.5, 0.0 ],
+          [ 0.0, 0.4999993145465851, -8.280313826096453e-13, 0.0 ],
+          [ 0.5, 0.0, -4.5498146050704236e-07, 0.0 ],
+          [ 41.5847053527832, 2.384185791015625e-07, 39.40951156616211, 1.0 ]
+        ]
+      },
+      "Index": 236,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_SawmillPropulsionSystem",
+      "ObjectTag": "SawmillPropulsionSystem",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 45.625450134277344, 4.394339084625244, -15.590620994567871, 1.0 ]
+        ]
+      },
+      "Index": 237,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveDoor2",
+      "ObjectTag": "InstanceLocomotiveDoor2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 45.347843170166016, 3.54787540435791, -15.972456932067871, 1.0 ]
+        ]
+      },
+      "Index": 238,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveDoor2",
+      "ObjectTag": "InstanceLocomotiveDoor2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 0.800000011920929, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 45.373287200927734, 7.742022514343262, -24.32314682006836, 1.0 ]
+        ]
+      },
+      "Index": 239,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveDoor2",
+      "ObjectTag": "InstanceLocomotiveDoor2",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.961673378944397, 0.0, -0.3896621763706207, 0.0 ],
+          [ 0.0, 2.0, 0.0, 0.0 ],
+          [ 0.3896621763706207, 0.0, 1.961673378944397, 0.0 ],
+          [ 44.437164306640625, 0.0930016040802002, -96.24276733398438, 1.0 ]
+        ]
+      },
+      "Index": 240,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_RodeoGateSeats_01_A",
+      "ObjectTag": "A",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999983906745911, -1.6560623315384215e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 44.75897216796875, -0.22586095333099365, 43.46347427368164, 1.0 ]
+        ]
+      },
+      "Index": 241,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_TeslaAerialTramCart1A",
+      "ObjectTag": "TeslaAerialTramCart1A",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999989867210388, -1.656063415740594e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 45.04692459106445, 0.0, 43.44542694091797, 1.0 ]
+        ]
+      },
+      "Index": 242,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_SawmillShelf_01",
+      "ObjectTag": "01",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999987483024597, -1.656062982059725e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 45.05137634277344, 2.2226290702819824, 43.45203399658203, 1.0 ]
+        ]
+      },
+      "Index": 243,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_SawmillShelf_01",
+      "ObjectTag": "01",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999979138374329, -1.6560615725969008e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 48.393795013427734, 4.49083137512207, -17.448087692260742, 1.0 ]
+        ]
+      },
+      "Index": 244,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_SawmillTapeSystem_01",
+      "ObjectTag": "01",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999979138374329, -1.6560615725969008e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 52.58091735839844, 4.49083137512207, -17.448087692260742, 1.0 ]
+        ]
+      },
+      "Index": 245,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_SawmillTapeSystem_01",
+      "ObjectTag": "01",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999979138374329, -1.6560615725969008e-12, 0.0 ],
+          [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
+          [ 52.58091735839844, 4.49083137512207, -17.448087692260742, 1.0 ]
+        ]
+      },
+      "Index": 246,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_SawmillTapeSystem_01",
+      "ObjectTag": "01",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.8493307828903198, 0.0, 0.5278605818748474, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ -0.5278605818748474, 0.0, 0.8493307828903198, 0.0 ],
+          [ 43.9517822265625, 4.17126989364624, -24.837636947631836, 1.0 ]
+        ]
+      },
+      "Index": 247,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveDoor1",
+      "ObjectTag": "InstanceLocomotiveDoor1",
+      "PlayAnimationIndex": 0,
+      "ShaderPassIndex": 0,
+      "Type": "Basic"
+    },
+    {
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 9.099629210140847e-07, 1.6560627652192905e-12, -1.0, 0.0 ],
+          [ 0.0, 0.9999990463256836, 1.6560611389160318e-12, 0.0 ],
+          [ 1.0, 0.0, 9.099629210140847e-07, 0.0 ],
+          [ -6.109267234802246, -0.18622863292694092, 12.05721378326416, 1.0 ]
+        ]
+      },
+      "Index": 248,
+      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
+      "ModelTag": "Prototype_Component_Model_InstanceLocomotiveDoor1",
+      "ObjectTag": "InstanceLocomotiveDoor1",
       "PlayAnimationIndex": 0,
       "ShaderPassIndex": 0,
       "Type": "Basic"
@@ -17200,7 +17722,7 @@
           [ -9.099629210140847e-07, -1.6560650420438527e-12, -1.0, 0.0 ],
           [ 0.0, 0.9999987483024597, -1.656062982059725e-12, 0.0 ],
           [ 1.0, 0.0, -9.099629210140847e-07, 0.0 ],
-          [ 73.99967193603516, 1.4469779330283927e-07, -6.7266035079956055, 1.0 ]
+          [ 70.41639709472656, 1.4469813436335244e-07, -6.496699810028076, 1.0 ]
         ]
       },
       "Enable": false,
@@ -17254,7 +17776,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 73.99967193603516, -2.3999998569488525, -5.526603698730469, 1.0 ]
+          [ 70.41639709472656, -2.3999998569488525, -5.296699523925781, 1.0 ]
         ]
       },
       "Enable": false,
@@ -17308,7 +17830,7 @@
           [ -1.0, -1.8199258420281694e-06, 8.74227694680485e-08, 0.0 ],
           [ -1.8199259557150071e-06, 1.0, -1.8199258420281694e-06, 0.0 ],
           [ -8.741945833889986e-08, -1.8199259557150071e-06, -1.0, 0.0 ],
-          [ 73.99967193603516, -2.3999998569488525, -7.926603317260742, 1.0 ]
+          [ 70.41639709472656, -2.3999998569488525, -7.696700096130371, 1.0 ]
         ]
       },
       "Enable": false,
@@ -18108,168 +18630,6 @@
       "iArrivalCellIndex": -1
     },
     {
-      "AnimType": false,
-      "Arrival": false,
-      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "Component": {
-        "Transform": [
-          [ -0.11460889875888824, 2.085797063955397e-07, -0.9934104681015015, 0.0 ],
-          [ 1.1992013604356089e-08, 0.9999987483024597, 2.0857949323271896e-07, 0.0 ],
-          [ 0.9934104681015015, 1.1992026038853965e-08, -0.11460889875888824, 0.0 ],
-          [ 65.69554901123047, 12.169256210327148, -59.411006927490234, 1.0 ]
-        ]
-      },
-      "Enable": false,
-      "EnableJsonPath": "",
-      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 18,
-      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
-      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
-      "InteractGroupIndex": -1,
-      "InteractLadderCount": 4,
-      "InteractLevel": 3,
-      "InteractMove": false,
-      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "InteractReverseLadderCount": 4,
-      "InteractState": 1,
-      "InteractType": 14,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "LevelChange": false,
-      "LeverSwitchIndex": 2,
-      "ModelTag": "Prototype_Component_Model_InteractionLeverBaseBlob",
-      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "ChainHookRound1",
-      "Offset": false,
-      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Owner": false,
-      "PlayAnimationIndex": 0,
-      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootTranslate": false,
-      "Rotate": false,
-      "RotationAngle": 0.0,
-      "RotationSpeed": 0.0,
-      "RotationType": 1,
-      "ShaderPassIndex": 0,
-      "SplineJsonPath": "",
-      "Type": "Interact",
-      "UpdateCellJson": null,
-      "UseGravity": true,
-      "iArrivalCellIndex": -1
-    },
-    {
-      "AnimType": false,
-      "Arrival": false,
-      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 23.64008331298828, 17.084548950195313, -62.75365447998047, 1.0 ]
-        ]
-      },
-      "Enable": false,
-      "EnableJsonPath": "",
-      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 19,
-      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
-      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
-      "InteractGroupIndex": -1,
-      "InteractLadderCount": 4,
-      "InteractLevel": 3,
-      "InteractMove": false,
-      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "InteractReverseLadderCount": 4,
-      "InteractState": 1,
-      "InteractType": 14,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "LevelChange": false,
-      "LeverSwitchIndex": 0,
-      "ModelTag": "Prototype_Component_Model_InteractionLeverBaseBlob",
-      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "InteractionLeverBaseBlob",
-      "Offset": false,
-      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Owner": false,
-      "PlayAnimationIndex": 0,
-      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootTranslate": false,
-      "Rotate": false,
-      "RotationAngle": 0.0,
-      "RotationSpeed": 0.0,
-      "RotationType": 1,
-      "ShaderPassIndex": 0,
-      "SplineJsonPath": "",
-      "Type": "Interact",
-      "UpdateCellJson": null,
-      "UseGravity": true,
-      "iArrivalCellIndex": -1
-    },
-    {
-      "AnimType": false,
-      "Arrival": false,
-      "ArrivalPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "BodyColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "BodyColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "Component": {
-        "Transform": [
-          [ 9.099629210140847e-07, 1.6560627652192905e-12, -1.0, 0.0 ],
-          [ 0.0, 0.9999986886978149, 1.6560605968149456e-12, 0.0 ],
-          [ 1.0, 0.0, 9.099629210140847e-07, 0.0 ],
-          [ 21.776792526245117, 17.137123107910156, -41.40476608276367, 1.0 ]
-        ]
-      },
-      "Enable": false,
-      "EnableJsonPath": "",
-      "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 20,
-      "InteractColliderCenter": [ 0.0, 0.5, 0.0, 0.0 ],
-      "InteractColliderSize": [ 0.5, 0.5, 0.5, 0.0 ],
-      "InteractGroupIndex": -1,
-      "InteractLadderCount": 4,
-      "InteractLevel": 3,
-      "InteractMove": false,
-      "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "InteractReverseLadderCount": 4,
-      "InteractState": 1,
-      "InteractType": 14,
-      "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
-      "LevelChange": false,
-      "LeverSwitchIndex": 1,
-      "ModelTag": "Prototype_Component_Model_InteractionLeverBaseBlob",
-      "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
-      "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "InteractionLeverBaseBlob",
-      "Offset": false,
-      "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Owner": false,
-      "PlayAnimationIndex": 0,
-      "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootTranslate": false,
-      "Rotate": false,
-      "RotationAngle": 0.0,
-      "RotationSpeed": 0.0,
-      "RotationType": 1,
-      "ShaderPassIndex": 0,
-      "SplineJsonPath": "",
-      "Type": "Interact",
-      "UpdateCellJson": null,
-      "UseGravity": true,
-      "iArrivalCellIndex": -1
-    },
-    {
       "AnimType": true,
       "Arrival": true,
       "ArrivalPosition": [ 44.269962310791016, 0.0, -90.89321899414063, 0.0 ],
@@ -18286,7 +18646,7 @@
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 21,
+      "Index": 18,
       "InteractColliderCenter": [ 0.0, -2.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 0.5, 2.0, 1.100000023841858, 0.0 ],
       "InteractGroupIndex": -1,
@@ -18304,7 +18664,7 @@
       "ModelTag": "Prototype_Component_Model_InteractZipLineRope",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "InteractionLeverBaseBlob",
+      "ObjectTag": "ChainHookRound1",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
@@ -18345,7 +18705,7 @@
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
-      "Index": 22,
+      "Index": 19,
       "InteractColliderCenter": [ -0.6000000238418579, 1.0, -0.4000000059604645, 0.0 ],
       "InteractColliderSize": [ 0.75, 1.0, 0.75, 0.0 ],
       "InteractGroupIndex": -1,
@@ -18363,7 +18723,7 @@
       "ModelTag": "Prototype_Component_Model_ChainJumpDown1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
-      "ObjectTag": "ChainJumpDown1",
+      "ObjectTag": "InteractionLeverBaseBlob",
       "Offset": false,
       "OffsetPosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Owner": false,
@@ -18385,7 +18745,7 @@
   ],
   "LightObject_Json": [
     {
-      "Ambient": [ 0.563706636428833, 1.0, 0.0, 0.0 ],
+      "Ambient": [ 0.11969113349914551, 0.11969113349914551, 0.11969113349914551, 0.0 ],
       "AnimType": false,
       "Component": {
         "Transform": [
@@ -18396,25 +18756,25 @@
         ]
       },
       "CutOff": 0.0,
-      "Diffuse": [ 0.19305014610290527, 1.0, 0.0, 0.0 ],
+      "Diffuse": [ 0.22745098173618317, 0.49803921580314636, 0.16470588743686676, 0.0 ],
       "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
       "Effect": true,
       "EffectType": 0,
-      "Intensity": 0.0,
+      "Intensity": 0.699999988079071,
       "LightEnable": true,
       "LightIndex": 3,
       "LightType": 1,
       "ModelTag": "Prototype_Component_Model_Lamp2",
       "OuterCutOff": 0.0,
       "PlayAnimationIndex": 0,
-      "Position": [ 48.21651840209961, 20.699983596801758, -55.10978317260742, 1.0 ],
+      "Position": [ 48.0, 20.899999618530273, -55.20000076293945, 1.0 ],
       "Range": 5.0,
       "ShaderPassIndex": 0,
       "SpecialGroupIndex": 0,
-      "Specular": [ 0.644608736038208, 1.0, 0.3822394013404846, 0.0 ]
+      "Specular": [ 0.9806950092315674, 0.8325111269950867, 0.7686528563499451, 0.0 ]
     },
     {
-      "Ambient": [ 0.6563706398010254, 1.0, 0.0, 0.0 ],
+      "Ambient": [ 0.12156862765550613, 0.12156862765550613, 0.12156862765550613, 1.0 ],
       "AnimType": false,
       "Component": {
         "Transform": [
@@ -18425,22 +18785,950 @@
         ]
       },
       "CutOff": 0.0,
-      "Diffuse": [ 0.33204638957977295, 1.0, 0.0, 0.0 ],
+      "Diffuse": [ 0.2291031777858734, 0.4903475046157837, 0.16660456359386444, 1.0 ],
       "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
       "Effect": true,
       "EffectType": 0,
-      "Intensity": 0.0,
+      "Intensity": 0.800000011920929,
       "LightEnable": true,
       "LightIndex": 4,
       "LightType": 1,
       "ModelTag": "Prototype_Component_Model_Lamp4",
       "OuterCutOff": 0.0,
       "PlayAnimationIndex": 0,
-      "Position": [ 23.83987045288086, 21.851085662841797, -36.19622039794922, 1.0 ],
+      "Position": [ 23.799999237060547, 21.851085662841797, -36.400001525878906, 1.0 ],
       "Range": 3.0,
       "ShaderPassIndex": 0,
       "SpecialGroupIndex": 1,
-      "Specular": [ 0.6332046985626221, 1.0, 0.0, 0.0 ]
+      "Specular": [ 0.9803921580314636, 0.8313725590705872, 0.7686274647712708, 1.0 ]
+    },
+    {
+      "Ambient": [ 0.11969113349914551, 0.11969113349914551, 0.11969113349914551, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 57.45124053955078, 19.78953742980957, 47.383453369140625, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.9420849680900574, 0.49756455421447754, 0.34555238485336304, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.5,
+      "LightEnable": true,
+      "LightIndex": 5,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp4",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 57.45124053955078, 19.78953742980957, 47.383453369140625, 1.0 ],
+      "Range": 5.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.9806950092315674, 0.8325111269950867, 0.7686528563499451, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.125490203499794, 0.08235294371843338, 0.08235294371843338, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 0.0058184098452329636, -2.2897079077210947e-07, 0.9999830722808838, 0.0 ],
+          [ -5.957641405984759e-06, 1.0, 2.636392650856578e-07, 0.0 ],
+          [ -0.9999830722808838, -5.9590747696347535e-06, 0.0058184098452329636, 0.0 ],
+          [ 30.632844924926758, 12.040348052978516, -60.2800178527832, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.6274510025978088, 0.30980393290519714, 0.22745098173618317, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6000000238418579,
+      "LightEnable": true,
+      "LightIndex": 6,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp2",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 30.632844924926758, 12.399999618530273, -60.2800178527832, 1.0 ],
+      "Range": 5.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12355214357376099, 0.08300414681434631, 0.08300414681434631, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 45.7695426940918, 9.013286590576172, -39.716102600097656, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.6293436288833618, 0.3100793957710266, 0.22598052024841309, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.800000011920929,
+      "LightEnable": true,
+      "LightIndex": 7,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp2",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 45.7695426940918, 9.199999809265137, -39.716102600097656, 1.0 ],
+      "Range": 6.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.13899612426757813, 0.13899612426757813, 0.13899612426757813, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 8.23105239868164, 13.114483833312988, 21.208297729492188, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.0, 0.0, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.800000011920929,
+      "LightEnable": true,
+      "LightIndex": 8,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp3",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 8.23105239868164, 13.114483833312988, 21.208297729492188, 1.0 ],
+      "Range": 1.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.13899612426757813, 0.13899612426757813, 0.13899612426757813, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ -32.25356674194336, 39.514530181884766, 13.148649215698242, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.27027028799057007, 0.27027028799057007, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.5,
+      "LightEnable": true,
+      "LightIndex": 9,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp3",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ -32.25356674194336, 39.514530181884766, 13.148649215698242, 1.0 ],
+      "Range": 5.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.13899612426757813, 0.13899612426757813, 0.13899612426757813, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ -35.492855072021484, 39.507293701171875, 10.011240005493164, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.0, 0.0, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.5,
+      "LightEnable": true,
+      "LightIndex": 10,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp3",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ -35.492855072021484, 39.507293701171875, 10.011240005493164, 1.0 ],
+      "Range": 5.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.13899612426757813, 0.13899612426757813, 0.13899612426757813, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 108.91492462158203, 39.5192985534668, 6.08961820602417, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.0, 0.0, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.5,
+      "LightEnable": true,
+      "LightIndex": 11,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp3",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 108.91492462158203, 39.5192985534668, 6.08961820602417, 1.0 ],
+      "Range": 5.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.13899612426757813, 0.13899612426757813, 0.13899612426757813, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.8765541315078735, -7.65587992646033e-06, -0.4813026785850525, 0.0 ],
+          [ -5.677850367646897e-06, 1.0, -5.566013896896038e-06, 0.0 ],
+          [ 0.4813026785850525, -2.14614806282043e-06, -0.8765541315078735, 0.0 ],
+          [ 46.54471969604492, 3.7769765853881836, 43.445343017578125, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.6293436288833618, 0.34745660424232483, 0.22598052024841309, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6000000238418579,
+      "LightEnable": true,
+      "LightIndex": 12,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 46.54471969604492, 4.300000190734863, 43.445343017578125, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.13899612426757813, 0.13899612426757813, 0.13899612426757813, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 75.62567138671875, 0.0, -54.34515380859375, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.5521235466003418, 0.5521235466003418, 0.5521235466003418, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.0,
+      "LightEnable": true,
+      "LightIndex": 13,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 75.62567138671875, 0.0, -54.34515380859375, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.3320463299751282, 0.014102376066148281, 0.014102376066148281, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 10.616562843322754, 2.922148212292086e-07, 43.589332580566406, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": false,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 14,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 10.619999885559082, 3.799999952316284, 43.380001068115234, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.11969113349914551, 0.11969113349914551, 0.11969113349914551, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 33.74222946166992, 5.499527454376221, 21.652658462524414, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.9459459185600281, 0.3499158024787903, 0.14609204232692719, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6000000238418579,
+      "LightEnable": true,
+      "LightIndex": 15,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp2",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 33.74222946166992, 5.650000095367432, 21.652658462524414, 1.0 ],
+      "Range": 5.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.9806950092315674, 0.8325111269950867, 0.7686528563499451, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.1725490242242813, 0.13333334028720856, 0.10196078568696976, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ -0.5000000596046448, -9.099630347009224e-07, 0.0, 0.0 ],
+          [ -9.099629210140847e-07, 0.5, -9.099629210140847e-07, 0.0 ],
+          [ 1.6560652588842872e-12, -9.099630347009224e-07, -0.5000000596046448, 0.0 ],
+          [ 43.933998107910156, 6.485591411590576, -98.37434387207031, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.8392156958580017, 0.7647058963775635, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.44999998807907104,
+      "LightEnable": true,
+      "LightIndex": 16,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp2",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 43.933998107910156, 6.599999904632568, -98.37434387207031, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.5843137502670288, 0.2078431397676468, 0.09803921729326248, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.17374515533447266, 0.1331845074892044, 0.10129544883966446, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 16.02117156982422, 22.787736892700195, -59.67229461669922, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.8408640623092651, 0.7644787430763245, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6499999761581421,
+      "LightEnable": true,
+      "LightIndex": 17,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp4A",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 16.02117156982422, 22.5, -59.67229461669922, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.5830116271972656, 0.20943087339401245, 0.09679345041513443, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.125490203499794, 0.1568627506494522, 0.21568627655506134, 1.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 12.15097427368164, 0.0, 31.42930793762207, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8352941274642944, 0.929411768913269, 0.9647058844566345, 0.9882352948188782 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.800000011920929,
+      "LightEnable": true,
+      "LightIndex": 18,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 12.149999618530273, 3.799999952316284, 31.239999771118164, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.1882352977991104, 0.3137255012989044, 0.4117647111415863, 1.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 11.952217102050781, 0.0, 6.901254177093506, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 19,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 11.9399995803833, 3.799999952316284, 6.699999809265137, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 14.618582725524902, 9.5367431640625e-07, 6.836688995361328, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 20,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 14.609999656677246, 3.799999952316284, 6.610000133514404, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 14.871487617492676, 0.0, 28.372495651245117, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 21,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 14.859999656677246, 3.799999952316284, 28.149999618530273, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 24.85434341430664, 0.0, 28.602886199951172, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 22,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 24.850000381469727, 3.799999952316284, 28.399999618530273, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 24.764507293701172, 0.0, 31.413368225097656, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 23,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 24.850000381469727, 3.799999952316284, 31.229999542236328, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 61.71167755126953, 0.0, 9.143707275390625, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 24,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 61.5, 3.799999952316284, 9.149999618530273, 1.0 ],
+      "Range": 4.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 58.50379943847656, 0.0, 9.18606948852539, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.550000011920929,
+      "LightEnable": true,
+      "LightIndex": 25,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 58.25, 3.799999952316284, 9.100000381469727, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 75.05814361572266, -4.76837158203125e-07, -4.680270195007324, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.550000011920929,
+      "LightEnable": true,
+      "LightIndex": 26,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 74.80000305175781, 3.799999952316284, -4.679999828338623, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 75.007568359375, -4.76837158203125e-07, -8.568157196044922, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.550000011920929,
+      "LightEnable": true,
+      "LightIndex": 27,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 74.69999694824219, 3.799999952316284, -8.5600004196167, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 58.825828552246094, 0.0, -11.77794361114502, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.550000011920929,
+      "LightEnable": true,
+      "LightIndex": 28,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 58.825828552246094, 3.799999952316284, -11.550000190734863, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 61.373069763183594, -9.5367431640625e-07, -11.957109451293945, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.550000011920929,
+      "LightEnable": true,
+      "LightIndex": 29,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 61.373069763183594, 3.799999952316284, -11.739999771118164, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 75.94143676757813, 0.0, 32.41970443725586, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.44999998807907104,
+      "LightEnable": true,
+      "LightIndex": 30,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 75.5999984741211, 3.799999952316284, 32.40999984741211, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 76.09687805175781, 9.5367431640625e-07, 22.78070068359375, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6499999761581421,
+      "LightEnable": true,
+      "LightIndex": 31,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_LampPost1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 75.80000305175781, 3.799999952316284, 22.770000457763672, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 112.16393280029297, 39.509666442871094, 9.443601608276367, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.0, 0.0, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.44999998807907104,
+      "LightEnable": true,
+      "LightIndex": 32,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp3",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 112.16393280029297, 39.509666442871094, 9.443601608276367, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12605656683444977, 0.1587785929441452, 0.21621620655059814, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 46.74612808227539, 2.7878365516662598, -104.33477020263672, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.8348116874694824, 0.927479088306427, 0.9652509689331055, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 33,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp1",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 46.74612808227539, 3.4000000953674316, -104.33477020263672, 1.0 ],
+      "Range": 1.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.18981531262397766, 0.3122490346431732, 0.41312742233276367, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.12741315364837646, 0.04718850925564766, 0.04329095780849457, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 75.51832580566406, 9.02009391784668, -21.9047794342041, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 0.5714285373687744, 0.5405915975570679, 0.5273028016090393, 0.0 ],
+      "Direction": [ 0.0, 0.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6000000238418579,
+      "LightEnable": true,
+      "LightIndex": 34,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp3",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 75.51000213623047, 8.899999618530273, -21.899999618530273, 1.0 ],
+      "Range": 11.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.41692879796028137, 0.4486581087112427, 0.7104247212409973, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.1725490242242813, 0.1568627506494522, 0.21568627655506134, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 23.845726013183594, 21.760887145996094, -47.15635299682617, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.8392156958580017, 0.7647058963775635, 0.0 ],
+      "Direction": [ 0.0, 22.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6000000238418579,
+      "LightEnable": true,
+      "LightIndex": 35,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp4",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 23.845726013183594, 21.200000762939453, -47.20000076293945, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.8262548446655273, 0.23596987128257751, 0.06380346417427063, 0.0 ]
+    },
+    {
+      "Ambient": [ 0.29729729890823364, 0.18900343775749207, 0.14233538508415222, 0.0 ],
+      "AnimType": false,
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 60.62208557128906, 17.931217193603516, -54.40583801269531, 1.0 ]
+        ]
+      },
+      "CutOff": 0.0,
+      "Diffuse": [ 1.0, 0.8392156958580017, 0.7647058963775635, 0.0 ],
+      "Direction": [ 0.0, 22.0, 0.0, 0.0 ],
+      "Effect": true,
+      "EffectType": 0,
+      "Intensity": 0.6499999761581421,
+      "LightEnable": true,
+      "LightIndex": 36,
+      "LightType": 1,
+      "ModelTag": "Prototype_Component_Model_Lamp4A",
+      "OuterCutOff": 0.0,
+      "PlayAnimationIndex": 0,
+      "Position": [ 60.62208557128906, 17.850000381469727, -54.40583801269531, 1.0 ],
+      "Range": 3.0,
+      "ShaderPassIndex": 0,
+      "SpecialGroupIndex": -1,
+      "Specular": [ 0.5843137502670288, 0.2078431397676468, 0.09803921729326248, 0.0 ]
     }
   ],
   "Light_Json": [
@@ -18451,15 +19739,343 @@
       "Direction": [ 1.0, -1.0, 1.0, 0.0 ],
       "Intensity": 0.0,
       "LightEnable": true,
-      "LightIndex": 2,
+      "LightIndex": 0,
       "OuterCutOff": 0.0,
-      "Position": [ -222.13111877441406, -48.08638000488281, -452.5732727050781, 1.0 ],
+      "Position": [ 43.551063537597656, 0.0, -47.13091278076172, 1.0 ],
       "Range": 0.0,
       "Specular": [ 0.0, 0.0, 0.0, 1.0 ],
       "Type": 0
+    },
+    {
+      "Ambient": [ 0.17374515533447266, 0.1331845074892044, 0.10129544883966446, 0.0 ],
+      "CutOff": 0.0,
+      "Diffuse": [ 0.5714285373687744, 0.46590155363082886, 0.4037506580352783, 0.0 ],
+      "Direction": [ 0.0, 22.0, 0.0, 0.0 ],
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 1,
+      "OuterCutOff": 0.0,
+      "Position": [ 15.0, 20.0, -57.863948822021484, 0.0 ],
+      "Range": 5.0,
+      "Specular": [ 0.5830116271972656, 0.20943087339401245, 0.09679345041513443, 0.0 ],
+      "Type": 1
+    },
+    {
+      "Ambient": [ 0.1725490242242813, 0.13333334028720856, 0.10196078568696976, 0.0 ],
+      "CutOff": 0.0,
+      "Diffuse": [ 0.43629342317581177, 0.33734941482543945, 0.2796320617198944, 0.0 ],
+      "Direction": [ 0.0, 22.0, 0.0, 0.0 ],
+      "Intensity": 0.699999988079071,
+      "LightEnable": true,
+      "LightIndex": 2,
+      "OuterCutOff": 0.0,
+      "Position": [ 61.0, 12.5, -54.40599822998047, 1.0 ],
+      "Range": 5.0,
+      "Specular": [ 0.5843137502670288, 0.2078431397676468, 0.09803921729326248, 0.0 ],
+      "Type": 1
     }
   ],
-  "Monster_Json": null,
+  "Monster_Json": [
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 0.4261441230773926, 9.5367431640625e-07, 31.553205490112305, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 39
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 2.447183132171631, 0.0, 33.878517150878906, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 42
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 7.429437637329102, 0.0, 36.01961135864258, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 88
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 2.1086788177490234, 0.0, 39.62749481201172, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 61
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.834761917591095, 0.08204422146081924, 0.5444270968437195, 0.0 ],
+          [ 1.0579799436527537e-06, 0.9888327121734619, -0.14901374280452728, 0.0 ],
+          [ 0.0, 0.0, -1.0, 0.0 ],
+          [ 14.326732635498047, 6.192241668701172, 40.74897003173828, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.9467746019363403, -1.723059540381655e-06, 0.3218955397605896, 0.0 ],
+          [ -2.4057521841314156e-06, 1.0, -1.7230605635631946e-06, 0.0 ],
+          [ -0.3218955397605896, -2.405750819889363e-06, -0.9467746019363403, 0.0 ],
+          [ 11.891733169555664, 6.713558197021484, 42.94185256958008, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 0,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.9122311472892761, -1.6601929928583559e-06, 0.4096758961677551, 0.0 ],
+          [ -4.421317953529069e-06, 1.0, -5.792557203676552e-06, 0.0 ],
+          [ -0.4096758961677551, -7.095458386174869e-06, -0.9122311472892761, 0.0 ],
+          [ 37.85067367553711, 9.5367431640625e-07, 22.386266708374023, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 1,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 242
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.6539275646209717, -1.1900996241820394e-06, 0.7565571665763855, 0.0 ],
+          [ -3.1968038456398062e-06, 1.0, -1.1900996241820394e-06, 0.0 ],
+          [ -0.7565571665763855, -3.1968038456398062e-06, -0.6539275646209717, 0.0 ],
+          [ 44.32062911987305, 3.814697265625e-06, 14.802940368652344, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 1,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 236
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.21669332683086395, 0.0, 0.9762396216392517, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ -0.9762396216392517, 0.0, 0.21669332683086395, 0.0 ],
+          [ 37.8566780090332, 1.9073486328125e-06, 13.732025146484375, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 1,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 231
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.7928106188774109, -1.4428565009438898e-06, 0.6094678640365601, 0.0 ],
+          [ -2.9291122700669803e-06, 1.0, -1.4428567283175653e-06, 0.0 ],
+          [ -0.6094678640365601, -2.9291118153196294e-06, -0.7928106188774109, 0.0 ],
+          [ 38.91032409667969, -2.2143487967696274e-06, 28.764144897460938, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 1,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 240
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.8941240906715393, -1.6272394987026928e-06, 0.4478191137313843, 0.0 ],
+          [ -2.634923475852702e-06, 1.0, -1.6272396123895305e-06, 0.0 ],
+          [ -0.4478191137313843, -2.6349232484790264e-06, -0.8941240906715393, 0.0 ],
+          [ 50.03557586669922, 16.56095314025879, 42.09597396850586, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 1,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.01443314179778099, 2.6362009464264702e-08, 0.9998589754104614, 0.0 ],
+          [ -0.013149064034223557, 0.9999135732650757, 0.00018978271691594273, 0.0 ],
+          [ 0.0, 0.0, -1.0, 0.0 ],
+          [ 59.08756637573242, 11.218031883239746, 21.90326690673828, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 1,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.7768819332122803, -1.413867494193255e-06, 0.6296463012695313, 0.0 ],
+          [ -2.9658353923878167e-06, 1.0, -1.413867494193255e-06, 0.0 ],
+          [ -0.6296463012695313, -2.9658353923878167e-06, -0.7768819332122803, 0.0 ],
+          [ 55.00716018676758, -0.07483381032943726, 32.75118637084961, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 1,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.9756378531455994, 0.0, 0.2193855196237564, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ -0.2193855196237564, 0.0, 0.9756378531455994, 0.0 ],
+          [ 65.57911682128906, 2.384185791015625e-07, -1.9052250385284424, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 2,
+      "PrototypeTag": "Prototype_GameObject_Heavy_Vampiric_Zombie",
+      "StartNaviIndex": 316
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.9805709719657898, 0.0, 0.1961640566587448, 0.0 ],
+          [ 3.5700409739547467e-07, -1.0, -1.7845666206994792e-06, 0.0 ],
+          [ 0.1961640864610672, 1.8199258420281694e-06, -0.9805710911750793, 0.0 ],
+          [ 74.8017578125, 4.360644340515137, -17.234737396240234, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 2,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, -1.0, -1.8199258420281694e-06, 0.0 ],
+          [ 0.0, 1.8199258420281694e-06, -1.0, 0.0 ],
+          [ 63.621925354003906, 4.288161754608154, -16.7462215423584, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 2,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.7542308568954468, 0.0, -0.6566093564033508, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.6566093564033508, 0.0, 0.7542308568954468, 0.0 ],
+          [ 50.140933990478516, 4.390873432159424, -22.001903533935547, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 3,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 384
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.2808047831058502, 0.0, -0.9597648978233337, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.9597648978233337, 0.0, 0.2808047831058502, 0.0 ],
+          [ 45.941104888916016, 4.353170871734619, -20.142526626586914, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 3,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 385
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 39.07538986206055, -4.76837158203125e-07, -56.047672271728516, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Tank",
+      "StartNaviIndex": 584
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 35.4757080078125, 0.0, -56.19530487060547, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 581
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 43.72708511352539, 4.76837158203125e-07, -56.14396286010742, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 559
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.35397759079933167, 6.442129460992874e-07, 0.935253918170929, 0.0 ],
+          [ 1.1783311038016109e-07, 1.0, -6.442129460992874e-07, 0.0 ],
+          [ 0.0, 0.0, -1.0, 0.0 ],
+          [ 50.48707580566406, 12.21142864227295, -51.913818359375, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.1810627430677414, 0.0, 0.9834712743759155, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, -1.0, 0.0 ],
+          [ 53.97662353515625, 12.38115406036377, -57.6834602355957, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
+      "StartNaviIndex": -1
+    }
+  ],
   "Special_Json": [
     {
       "AnimType": false,
@@ -18479,7 +20095,7 @@
       "ElevatorLever": false,
       "ElevatorMaxHeight": 10.0,
       "ElevatorMinHeight": 0.0,
-      "ElevatorRotationSpeed": 2.0325215151706473e-30,
+      "ElevatorRotationSpeed": 1.6815581571897805e-44,
       "ElevatorSpeed": 2.0,
       "ElevatorType": 2,
       "ModelTag": "Prototype_Component_Model_Elevator1",
@@ -18539,7 +20155,7 @@
       "ElevatorLever": false,
       "ElevatorMaxHeight": 17.152999877929688,
       "ElevatorMinHeight": 2.0,
-      "ElevatorRotationSpeed": 1.003329700456569e-42,
+      "ElevatorRotationSpeed": 0.0,
       "ElevatorSpeed": 2.0,
       "ElevatorType": 1,
       "ModelTag": "Prototype_Component_Model_Elevator1",
@@ -18582,5 +20198,104 @@
       "iShaderPassIndex": 0
     }
   ],
-  "Trigger_Json": null
+  "Trigger_Json": {
+    "MonsterTriggerJson": [
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 5.0, 2.0, 2.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 0.37300848960876465, 1.119554877281189, 18.144487380981445, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/sNOWMO22_MapData_MapData.json",
+        "NameTag": "MonsterSpawn1",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 0
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 5.0, 2.0, 2.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 19.95517921447754, 0.19533184170722961, 11.931842803955078, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/sNOWMO22_MapData_MapData.json",
+        "NameTag": "MonsterSpawn2",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 1
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 10.0, 2.0, 2.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 61.34325408935547, 0.3974544405937195, 4.950052261352539, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/sNOWMO22_MapData_MapData.json",
+        "NameTag": "MonsterSpawn3",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 2
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 2.0, 2.0, 5.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 55.307247161865234, 5.227665901184082, -20.134756088256836, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/sNOWMO22_MapData_MapData.json",
+        "NameTag": "MonsterSpawn4",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 3
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 15.0, 3.0, 3.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 38.97463607788086, 0.27519574761390686, -50.9798583984375, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/sNOWMO22_MapData_MapData.json",
+        "NameTag": "MonsterSpawn5",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 4
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 2.0, 3.0, 3.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 29.671363830566406, 17.648244857788086, -56.796104431152344, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/sNOWMO22_MapData_MapData.json",
+        "NameTag": "MonsterSpawn6",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 5
+      }
+    ]
+  }
 }

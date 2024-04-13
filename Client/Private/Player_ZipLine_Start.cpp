@@ -18,12 +18,25 @@ void CPlayer_ZipLine_Start::Initialize(CPlayer* pActor)
 
 	CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
 
-	m_vArrivalPosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
+	_float4x4 BoneMatrix = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedTransformationFloat4x4();
+
+	_float4 vBonePos = { BoneMatrix._41, BoneMatrix._42, BoneMatrix._43, 1.f };
+	_vector vWorldPos = XMVector3TransformCoord(vBonePos, pInteractObject->Get_Transform()->Get_WorldMatrix());
+	vWorldPos.m128_f32[3] = 1.f;
+
+
+	m_vArrivalPosition = vWorldPos;
+
+	//CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
+	//
+	//
+	//m_vArrivalPosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
+	//m_vArrivalPosition.w = 1.f;
 	_float3 vZipLinePosition = pInteractObject->Get_Position();
 
 	_float3 vActorPosition = { vZipLinePosition.x + 0.5f, pActor->Get_Position().y, vZipLinePosition.z + 1.5f};
 	pActor->Set_Position(vActorPosition);
-	pActor->Get_Transform()->Look_At(m_vArrivalPosition);
+	pActor->Get_Transform()->Look_At(XMLoadFloat4(&m_vArrivalPosition));
 
 
 	
@@ -56,16 +69,27 @@ void CPlayer_ZipLine_Start::Release(CPlayer* pActor)
 
 	CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
 
-	_float4 ZipLineFinalBonePosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
+	_float4x4 BoneMatrix = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedTransformationFloat4x4();
 
-	m_vZipLineDir = ZipLineFinalBonePosition - pActor->Get_HandPos();
+	_float4 vBonePos = { BoneMatrix._41, BoneMatrix._42, BoneMatrix._43, 1.f };
+	_vector vWorldPos = XMVector3TransformCoord(vBonePos, pInteractObject->Get_Transform()->Get_WorldMatrix());
+	vWorldPos.m128_f32[3] = 1.f;
 
-	pActor->Get_Transform()->Look_At_Direction(XMLoadFloat3(&m_vZipLineDir));
 
-	pActor->Set_InteractDir(m_vZipLineDir);
+	m_vArrivalPosition = vWorldPos;
+
+	//CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
+	//
+	//_float4 ZipLineFinalBonePosition = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedPosition(pInteractObject->Get_Transform()->Get_WorldMatrix());
+	//
+	//m_vZipLineDir = ZipLineFinalBonePosition - pActor->Get_HandPos();
+
+	pActor->Get_Transform()->Look_At(XMLoadFloat4(&m_vArrivalPosition));
+
+	//pActor->Set_InteractDir(m_vZipLineDir);
 	////todo_vector vDir = ZipLineFinalBonePosition - m_pPlayer->Get_HandPos();
 
-	
+	m_vArrivalPosition = {};
 	__super::Release(pActor);
 	//pActor->Set_RootMove_End(false);
 }

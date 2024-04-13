@@ -18,7 +18,6 @@ CEnvironment_Object::CEnvironment_Object(const CEnvironment_Object & rhs)
 
 HRESULT CEnvironment_Object::Initialize_Prototype()
 {	
-
 	return S_OK;
 }
 
@@ -295,13 +294,6 @@ HRESULT CEnvironment_Object::Ready_Components()
 		FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_IcarusRAD"), TEXT("Com_Texture3"), reinterpret_cast<CComponent**>(&m_pIceDiffuse)));
 		bIcarusTexture = true;
 		bRenderIce = false;
-	}
-	else if (TEXT("Prototype_Component_Model_TeslaCircuitCoil") == strTemp)
-	{
-		if(m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
-			m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", this);
-
-		cout << "snowmap effect on " << endl;
 	}
 	else
 	{

@@ -23,8 +23,10 @@
 #include "Environment_Instance.h"
 #include "Environment_Interact.h"
 #include "Environment_LightObject.h"
+#include "Environment_SpecialObject.h"
 #include "Event_Trigger.h"
 #include "Event_MonsterSpawnTrigger.h"
+#include "Event_UITrigger.h"
 #include "Light.h"
 #pragma endregion
 
@@ -46,21 +48,16 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Shader.json");
 
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
-
-	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-	//pPlayer->Set_InitPosition(_float3(250.66f, 0.f, 2.38f));
 
 	return S_OK;
 }
@@ -69,18 +66,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
-		//m_pGameInstance->Get_Renderer()->Set_HBAO_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
-
-
 		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
-		//m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
 }
@@ -106,7 +92,7 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
 	}
 
-	json Stage1MapJson = {};
+	json Stage1MapJson = {};     
 
 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
 	{
@@ -125,6 +111,7 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		LightDesc.bEnable = LightJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightJson[i]["Type"];
 		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -185,14 +172,13 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 
 		LightObjectDesc.WorldMatrix = WorldMatrix;
 
-
-
 		LIGHT_DESC LightDesc = {};
 
 		LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
 		LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightObjectJson[i]["LightType"];
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -346,61 +332,58 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 
 	return S_OK;
 }
-
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_SkyDome")));
 
- 	json Stage1MapJson = {};
- 
- 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
- 	{
- 		MSG_BOX("맵 불러오기 실패");
- 		return E_FAIL;
- 	}
- 
- 	json BasicJson = Stage1MapJson["Basic_Json"];
- 	_int iBasicJsonSize = (_int)BasicJson.size();
- 
- 	for (_int i = 0; i < iBasicJsonSize; ++i)
- 	{
- 		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
- 
- 		Desc.bAnimModel = BasicJson[i]["AnimType"];
- 
- 		wstring strLoadModelTag;
- 		string strJsonModelTag = BasicJson[i]["ModelTag"];
- 
- 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
- 		Desc.strModelTag = strLoadModelTag;
- 
- 		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
- 		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
- 		Desc.bPreview = false;
- 
- 		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
- 		_float4x4 WorldMatrix;
- 
- 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
- 		{
- 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
- 			{
- 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
- 			}
- 		}
+	json Stage1MapJson = {};
 
- 
- 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
- 		Desc.WorldMatrix = WorldMatrix;
+	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+	{
+		MSG_BOX("맵 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json BasicJson = Stage1MapJson["Basic_Json"];
+	_int iBasicJsonSize = (_int)BasicJson.size();
+
+	for (_int i = 0; i < iBasicJsonSize; ++i)
+	{
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+		Desc.bAnimModel = BasicJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = BasicJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+
+		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+		Desc.bPreview = false;
+
+		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
 
 
 		string strJsonObjectTag = BasicJson[i]["ObjectTag"];
 
 		if ("Prototype_Component_Model_TNTCrate" == strJsonModelTag || "TNTCrate" == strJsonObjectTag)
 		{
-			CGameObject* pObject =  m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_DestructableProps_TNTCrate");
+			CGameObject* pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_DestructableProps_TNTCrate");
 			pObject->Set_WorldMatrix(WorldMatrix);
 		}
 		else if ("Prototype_Component_Model_Crane" == strJsonModelTag || "Crane" == strJsonObjectTag)
@@ -408,17 +391,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 			CGameObject* pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Crane");
 			pObject->Set_WorldMatrix(WorldMatrix);
 		}
-		else 
+		else
 		{
 			CEnvironment_Object* pObject = { nullptr };
 
 			pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 
 		}
- 
- 	}
- 
- 
+
+	}
+
+
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();
 
@@ -458,8 +441,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
-		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
@@ -552,8 +535,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
 		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
 		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
-		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
-		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
@@ -650,7 +633,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 	return S_OK;
 
 }
-
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
@@ -1235,6 +1217,46 @@ HRESULT CLevel_GamePlay::Ready_Event()
 		}
 
 
+	}
+
+	json UITriggerJson = TriggerJson["UITriggerJson"];
+	_int iUITriggerJsonSize = (_int)UITriggerJson.size();
+	
+	for (_int i = 0; i < iUITriggerJsonSize; ++i)
+	{
+		CEvent_UITrigger::UI_TRIGGERDESC UITriggerDesc = {};
+		UITriggerDesc.bOnTrigger = UITriggerJson[i]["OnTrigger"];
+		UITriggerDesc.strSpawnMonsterJsonPath = UITriggerJson[i]["JsonPath"];
+		UITriggerDesc.strTriggerNameTag = UITriggerJson[i]["NameTag"];
+		UITriggerDesc.iSpawnGroupIndex = UITriggerJson[i]["SpawnGroupIndex"];
+		UITriggerDesc.eTriggerType = CEvent_Trigger::TRIGGER_UI;
+		CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderSize"], UITriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderCenter"], UITriggerDesc.vColliderCenter);
+	
+		CEvent_UITrigger* pUITrigger = CEvent_UITrigger::Create(m_pDevice, m_pContext, &UITriggerDesc);
+	
+		const json& TransformJson = UITriggerJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+	
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+	
+		pUITrigger->Load_FromJson(UITriggerJson[i]);
+	
+		if (pUITrigger == nullptr)
+		{
+			MSG_BOX("UI 트리거 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+		{
+			m_pGameInstance->Add_Event(pUITrigger);
+		}
 	}
 
 

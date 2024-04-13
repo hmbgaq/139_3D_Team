@@ -144,8 +144,8 @@ HRESULT CBody_Infected::Ready_Components()
 	{
 		CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-		BoundingDesc.vExtents = _float3(0.22f, 0.8f, 0.22f);
-		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
+		BoundingDesc.vExtents = _float3(0.32f, 1.8f, 0.32f);
+		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y / 2.f, 0.f);
 
 		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}

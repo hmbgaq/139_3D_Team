@@ -90,7 +90,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 	
 	XMStoreFloat4x4(&m_InitMatrix, XMMatrixIdentity());
 
-	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
 		if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
 		{
@@ -223,11 +223,14 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		{
 			UnEnable_UpdateCells();
 		}
-
-		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_ZipLine_Stop && m_pPlayer->Is_Animation_End() == true)
+		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_ZipLine_Stop && m_pPlayer->Is_Animation_End() == true)
 		{
 			UnEnable_UpdateCells();
 			m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
+		}
+		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionWhipSwing && m_pPlayer->Is_Animation_End() == true)
+		{
+			UnEnable_UpdateCells();
 		}
 
 		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
@@ -239,10 +242,11 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		if(m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
 			m_bInteractMoveMode = true;
 
-		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
+		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
 		{
 			UnEnable_UpdateCells();
 		}
+		
 		//else if (m_pPlayer->Is_Interection() == false && m_tEnvironmentDesc.bInteractMoveMode == true)
 		//	m_bInteractMoveMode = true;
 	}
@@ -335,10 +339,13 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		m_pMoveRangeColliderCom->Update(XMMatrixIdentity());
 
 	
-	if (m_pPlayer != nullptr && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_JUMP300 && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true)
+	if (m_pPlayer != nullptr && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true && true == m_pPlayer->Is_Animation_End())
 	{
-		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-		m_bInteract = false;
+		if(m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_InteractionJumpDown300)
+		{
+			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+			m_bInteract = false;
+		}
 
 	}
 }
@@ -371,14 +378,15 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 
 	if(m_pRigidBodyCom != nullptr)
 		m_pRigidBodyCom->Late_Tick(fTimeDelta);
+
 	/* 소영 보류 */
-	if (true == m_bRenderOutLine)
-	{
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
-	}
+	//if (true == m_bRenderOutLine)
+	//{
+	//	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
+	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
+	//}
 }
 
 HRESULT CEnvironment_Interact::Render()
@@ -1027,7 +1035,7 @@ void CEnvironment_Interact::Interact()
 						//	m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
 						//}
 						//else
-						//{
+						//{F
 						//	m_pPlayer->SetState_InteractJumpDown300();
 						//	m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerReverseRootMoveRate);
 						//}
@@ -1240,8 +1248,8 @@ void CEnvironment_Interact::Interact()
 					if (m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Run_F || m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_Walk_F)
 					{
 						ZipLine_Function();
-						m_pPlayer->Set_Ladder_Count(m_tEnvironmentDesc.iLadderCount);
 						m_pPlayer->SetState_InteractZipLine();
+						m_pPlayer->Set_Ladder_Count(m_tEnvironmentDesc.iLadderCount);
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
 					}
 
@@ -1849,17 +1857,36 @@ void CEnvironment_Interact::ZipLine_Function()
 {
 	_matrix WorldMatrix = m_pTransformCom->Get_WorldMatrix();
 
-	_float4 ZipLineRootBonePosition = m_pModelCom->Get_BonePtr("Root")->Get_CombinedPosition(WorldMatrix);
-	_float4 ZipLineFinalBonePosition = m_pModelCom->Get_BonePtr("Rope_030")->Get_CombinedPosition(WorldMatrix);
+	_float4x4 RootBoneMatrix = m_pModelCom->Get_BonePtr("Root")->Get_CombinedTransformationFloat4x4();
+	_float4x4 FinalBoneMatrix = m_pModelCom->Get_BonePtr("Rope_030")->Get_CombinedTransformationFloat4x4();
+
+	_float4 vRootPos = { RootBoneMatrix._41, RootBoneMatrix._42, RootBoneMatrix._43, 1.f};
+	_float4 vFinalPos = { FinalBoneMatrix._41, FinalBoneMatrix._42, FinalBoneMatrix._43, 1.f };
+
+	_vector vRootWorldPos = XMVector3TransformCoord(vRootPos, m_pTransformCom->Get_WorldMatrix());
+	_vector vFinalWorldPos = XMVector3TransformCoord(vFinalPos, m_pTransformCom->Get_WorldMatrix());
+
+	//_float4 ZipLineRootBonePosition = m_pModelCom->Get_BonePtr("Root")->Get_CombinedPosition(WorldMatrix);
+	//_float4 ZipLineFinalBonePosition = m_pModelCom->Get_BonePtr("Rope_030")->Get_CombinedPosition(WorldMatrix);
+
+	//!CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
+	//!
+	//!_float4x4 BoneMatrix = pInteractObject->Get_ModelCom()->Get_BonePtr("Rope_030")->Get_CombinedTransformationFloat4x4();
+	//!
+	//!_float4 vBonePos = { BoneMatrix._41, BoneMatrix._42, BoneMatrix._43, 1.f };
+	//!_vector vWorldPos = XMVector3TransformCoord(vBonePos, pInteractObject->Get_Transform()->Get_WorldMatrix());
+	//!vWorldPos.m128_f32[3] = 1.f;
 
 
-	_float4 vPlayerHandPos = m_pPlayer->Get_HandPos();
-	_float	fOffsetY = vPlayerHandPos.y - m_pPlayer->Get_Position().y;
+	m_vArrivalPosition = vFinalWorldPos;
 
-	ZipLineRootBonePosition.y -= fOffsetY;
+	//_float4 vPlayerHandPos = m_pPlayer->Get_HandPos();
+	//_float	fOffsetY = vPlayerHandPos.y - m_pPlayer->Get_Position().y;
+
+	//ZipLineRootBonePosition.y -= fOffsetY;
 	//_vector vDir = ZipLineFinalBonePosition - m_pPlayer->Get_HandPos();
 
-	_vector vZipLineDir = XMVector4Normalize(XMLoadFloat4(&ZipLineFinalBonePosition) - XMLoadFloat4(&ZipLineRootBonePosition));
+	//_float3 vZipLineDir = ZipLineFinalBonePosition - ZipLineRootBonePosition;
 	
 	
 	//! 먼저 시작 점을 구해야해. 시작점은 로프의 첫번째 뼈위치야. 즉 루트 뼈 인거지.
@@ -1867,7 +1894,7 @@ void CEnvironment_Interact::ZipLine_Function()
 	//! 플레이어의 위치로부터 손 위치까지의 오프셋 y만큼 벌어져야해.
 	
 	m_pPlayer->Set_InteractObject(this);
-	m_pPlayer->Set_InteractDir(XMVector3Normalize(vZipLineDir));
+	//m_pPlayer->Set_InteractDir(vZipLineDir);
 
 }
 _float4x4 CEnvironment_Interact::Get_ZipLineBoneMatrix()
@@ -3371,11 +3398,6 @@ void CEnvironment_Interact::Free()
 	if(m_pPlayer != nullptr)
 		Safe_Release(m_pPlayer);
 
-	//if(m_pUI_Interaction != nullptr)
-	//	m_pUI_Interaction->Set_Dead(true);
-
-	//if(m_pUI_Interaction != nullptr)
-	//	Safe_Release(m_pUI_Interaction);
 
 	if (m_pUIManager != nullptr)
 		Safe_Release(m_pUIManager);

@@ -1,5 +1,6 @@
 #include "..\Public\Player_TeleportPunch_R02_Alt.h"
 
+
 void CPlayer_TeleportPunch_R02_Alt::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);

@@ -156,7 +156,7 @@ public:
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
 
-	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 3);
+	void Chasing_Attack(_float fTimeDelta, _float fMaxDistance = 5.f, _uint iCount = 5);
 
 public:
 	void		 LeftHUDCoolDown(const string& strUIName, _float fCoolTime);
@@ -209,10 +209,7 @@ public:
 public:
 	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
 	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
-	void Update_SuperCharge(_float fTimeDelta) { 
-		_float fTime = m_fSuperChargeTime - fTimeDelta;
-		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
-	};
+	void Update_SuperCharge(_float fTimeDelta);
 
 public:
 	void Search_LockOn_Target();
@@ -255,6 +252,7 @@ private:
 
 public:
 	_bool	m_bPlayerCheck = true;
+	_bool m_bfirstcheck = true;
 
 private:
 	CPhysXCollider* m_pPhysXCollider = { nullptr };
@@ -263,6 +261,8 @@ private:
 	_float m_MaxCooltimes[ECast(HUD::HUD_END)];
 
 
+private:
+	_float				m_fEffectTimeAcc = { 0.f };
 
 public:
 	/* 원형객체를 생성한다. */

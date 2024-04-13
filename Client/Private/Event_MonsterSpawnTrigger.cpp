@@ -32,11 +32,20 @@ void CEvent_MosnterSpawnTrigger::Activate()
 	_uint iMonsterDescVectorSize = (_uint)m_vecCreateMonsterDesc.size();
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
+
+
 	for (_uint i = 0; i < iMonsterDescVectorSize; ++i)
 	{
 		CMonster_Character* pMonster = { nullptr };
+			
+		wstring strLayerTag = L"Layer_Monster";
 
-			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, L"Layer_Monster", m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
+			if (iCurrentLevel == _uint(LEVEL_INTRO_BOSS) || iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
+			{
+				strLayerTag = L"Layer_Boss";
+			}
+
+			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, strLayerTag, m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
 
 			if(pMonster == nullptr)
 			{
@@ -80,11 +89,13 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 
 		if (iCurrentLevel == (_uint)LEVEL_GAMEPLAY)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Fianal_MapData202404_13_17_42.json";
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_INTRO_BOSS)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+			//strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1BossTest_MapData202404_12_22_13.json";
+			
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAIN)
 		{
