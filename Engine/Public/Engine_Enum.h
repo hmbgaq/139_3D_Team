@@ -10,13 +10,13 @@ namespace Engine
 	/* Transform */
 	static const wchar_t* g_pTransformTag = TEXT("Com_Transform");
 	enum ROTATION_LERP_STATE { LERP_X, LERP_Y, LERP_Z };
-	
+
 	/* RigidBody */
 	static const wchar_t* g_pRigidBodyTag = TEXT("Com_RigidBody");
 
 
 	/* Shader */
-	enum class DEFERRED_SHADER { 
+	enum class DEFERRED_SHADER {
 		DEBUG,				 // 0 - 
 		DIRECTIONAL_LIGHT,	 // 1 - 빛 : 방향성 
 		POINT_LIGHT,		 // 2 - 빛 : 점광원
@@ -28,7 +28,8 @@ namespace Engine
 		FOG,				 // 8 -
 		TEST,				 // 9 - 테스트용 
 		VOLUMETRIC_SPOTLIGHT,// 10 - Volumetric SpotLight 구현용 
-		SHADER_END };
+		SHADER_END
+	};
 
 	enum class SSAO_SHADER {
 		SSAO,
@@ -45,15 +46,15 @@ namespace Engine
 	};
 
 	enum class POST_SHADER {
-		POST_ORIGIN, 
+		POST_ORIGIN,
 		POST_HDR, POST_RADIAL, POST_DOF, POST_EFFECT_MIX, POST_EFFECT_DISTORTION, //(1) ~ (5)
 		POST_VIGNETTE, POST_SSR, POST_CHROMA, POST_MOTIONBLUR, POST_LUMASHARPEN, POST_FOG,
-		POST_GODRAY, POST_EFFECT_FINAL, 
+		POST_GODRAY, POST_EFFECT_FINAL,
 		POST_END
 	};
 
 	enum class FINAL_SHADER {
-		FINAL_DEFAULT, FINAL_HSV, FINAL_MIX, FINAL, FINAL_MIXEFFECT, 
+		FINAL_DEFAULT, FINAL_HSV, FINAL_MIX, FINAL, FINAL_MIXEFFECT,
 		FINAL_SCREEN_SEPHIA, FINAL_SCREEN_GRAY,
 		TEST,
 		FINAL_END
@@ -70,13 +71,13 @@ namespace Engine
 						주로 바람이나 자기력과 같이 연속적으로 주어지는 힘
 
 	IMPULSE			:	질량 사용, 타격이나 폭발과 같은 순간적인 힘
-	
+
 	ACCELERATION	:	질량 무시, 직접 연속적인 가속력 부여 (주로 지구의 중력 표현)
 
 	VELOCITY_CHANGE :	질량 무시, 직접 순간적인 가속력 부여
 						ACCELERATION은 시간이 흘러가면서 변화를 일으키는데 비해 이 모드는 순간적으로 지정한 속도로 변화를 일으킨다.
 	*/
-	enum class FORCE_MODE { FORCE, IMPULSE, ACCELERATION, VELOCITY_CHANGE, FORCE_MODE_END }; 
+	enum class FORCE_MODE { FORCE, IMPULSE, ACCELERATION, VELOCITY_CHANGE, FORCE_MODE_END };
 
 
 	enum class EASING_TYPE
@@ -196,6 +197,8 @@ namespace Engine
 
 		SOUND_ENEMY_ATTACK,
 		SOUND_ENEMY_ATTACK2,
+		SOUND_ENEMY_WHOOSH,
+		SOUND_ENEMY_EFFORT,
 
 		SOUND_ENEMY_HIT,
 		SOUND_ENEMY_HIT2,
@@ -206,12 +209,12 @@ namespace Engine
 		SOUND_ENEMY_BODYMOVE,
 		SOUND_ENEMY_BODYMOVE2,
 		SOUND_ENEMY_SPAWN,
-		
+
 		SOUND_ENEMY_SKILL1,
 		SOUND_ENEMY_SKILL2,
 		SOUND_ENEMY_SKILL3,
 		SOUND_ENEMY_SKILL4,
-		
+
 		SOUND_ENEMY_VOICE,
 		SOUND_ENEMY_VOICE2,
 

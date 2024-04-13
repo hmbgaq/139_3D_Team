@@ -6,6 +6,8 @@ void CTank_GroundWave_01::Initialize(CTank* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	pActor->Add_AttackCount();
+
+	pActor->Play_Sound_Voice_Attack();
 }
 
 CState<CTank>* CTank_GroundWave_01::Update(CTank* pActor, _float fTimeDelta)
@@ -19,6 +21,7 @@ CState<CTank>* CTank_GroundWave_01::Update(CTank* pActor, _float fTimeDelta)
 		m_bFlags[0] = pActor->Is_Inputable_Front(70);
 		if (true == m_bFlags[0])
 		{
+			pActor->Play_Sound_Attack_Shield();
 			pActor->Create_GroundWave();
 		}
 	}

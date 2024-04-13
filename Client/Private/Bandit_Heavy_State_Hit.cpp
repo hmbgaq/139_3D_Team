@@ -4,6 +4,8 @@ void CBandit_Heavy_State_Hit::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
 
+	pActor->Play_Sound_Hit();
+
 }
 
 CState<CBandit_Heavy>* CBandit_Heavy_State_Hit::Update(CBandit_Heavy* pActor, _float fTimeDelta)

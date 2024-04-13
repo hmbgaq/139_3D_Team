@@ -28,6 +28,7 @@ CState<CBandit_Heavy>* CBanditHeavy_Melee_LM::Update(CBandit_Heavy* pActor, _flo
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
+			pActor->Play_Sound_Whoosh();
 		}
 	}
 	else if (false == m_bFlags[1])

@@ -32,6 +32,9 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
+public:
+	void Play_Sound_Attack();
+
 
 private:
 	HRESULT			Load_Json();
