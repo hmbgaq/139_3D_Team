@@ -42,7 +42,7 @@ HRESULT CLevel_Logo::Initialize()
 	ShowCursor(false);
 
 
-	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // 이펙트 풀
+	//주석풀기 FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // 이펙트 풀
 
 	return S_OK;
 }
