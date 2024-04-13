@@ -1063,21 +1063,32 @@ void CPlayer::Teleport()
 
 void CPlayer::Update_SuperCharge(_float fTimeDelta)
 {
+	_bool bIs_SuperCharge = Is_SuperCharge();
+	if (false == bIs_SuperCharge)
+		return;
+
 	_float fTime = m_fSuperChargeTime - fTimeDelta;
 
-	if (fTime > 0) 
+	if (fTime > 0)
 	{
 		m_fSuperChargeTime = fTime;
-		
+
 		// 슈퍼차지 상시 이펙트 생성
 		EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", Get_Position());
 		//EFFECT_MANAGER->Generate_Effect_AttachBone(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", this, true, "Head");
 	}
-	else 
+	else
 	{
 		m_fSuperChargeTime = 0.f;
 		m_fEffectTimeAcc = 0.f;
 	}
+
+	if (0.f == m_fSuperChargeTime)
+	{
+		Play_Sound_SuperCharge_Exit();
+	}
+
+}
 
 void CPlayer::Play_Sound_SuperCharge_Enter()
 {
