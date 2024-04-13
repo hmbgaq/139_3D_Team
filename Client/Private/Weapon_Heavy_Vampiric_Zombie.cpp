@@ -7,6 +7,8 @@
 #include "Data_Manager.h"
 #include "Effect_Manager.h"
 #include "Effect.h"
+#include "SMath.h"
+#include "Character.h"
 
 CWeapon_Heavy_Vampiric_Zombie::CWeapon_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -178,6 +180,8 @@ void CWeapon_Heavy_Vampiric_Zombie::Attack(CCollider* other)
 		pTarget_Character->Set_Hitted(m_fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 		Activate_Collisions(false);
+
+		Play_Sound_Attack();
 	}
 }
 
@@ -194,6 +198,36 @@ void CWeapon_Heavy_Vampiric_Zombie::OnCollisionStay(CCollider* other)
 void CWeapon_Heavy_Vampiric_Zombie::OnCollisionExit(CCollider* other)
 {
 
+}
+
+void CWeapon_Heavy_Vampiric_Zombie::Play_Sound_Attack()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact001.wav";
+		break;
+	case 1:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact002.wav";
+		break;
+	case 2:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact003.wav";
+		break;
+	case 3:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact004.wav";
+		break;
+	case 4:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact005.wav";
+		break;
+	default:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"ZENU_ATTACK", strFileName, CHANNELID::SOUND_ENEMY_ATTACK, 10.f);
 }
 
 #pragma region Create, Clone, Pool, Free

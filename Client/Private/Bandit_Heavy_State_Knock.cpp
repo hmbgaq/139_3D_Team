@@ -3,6 +3,8 @@
 void CBandit_Heavy_State_Knock::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
+
+	pActor->Play_Hitted_Sound();
 }
 
 CState<CBandit_Heavy>* CBandit_Heavy_State_Knock::Update(CBandit_Heavy* pActor, _float fTimeDelta)
