@@ -21,7 +21,7 @@ HRESULT CSound_Manager::Ready_Sound()
 	result = FMOD_System_SetOutput(m_pSystem, FMOD_OUTPUTTYPE_ALSA);
 
 	// 1. 시스템 포인터, 2. 사용할 가상채널 수 , 초기화 방식) 
-	result = FMOD_System_Init(m_pSystem, 32, FMOD_INIT_NORMAL, NULL);
+	result = FMOD_System_Init(m_pSystem, MAXCHANNEL, FMOD_INIT_NORMAL, NULL);
 
 	result = FMOD_System_CreateChannelGroup(m_pSystem, "BGM_Group", &m_pChannelGroup[BGM_GROUP]);
 	result = FMOD_System_CreateChannelGroup(m_pSystem, "SND1_Group", &m_pChannelGroup[SND1_GROUP]);
@@ -95,7 +95,21 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"ZENU_FOOTSTEP", "../Bin/Resources/Sound/Enemy/ZenuGiant/FootStep/");
 	Load_SoundFile_GroupAsync(L"ZENU_HIT", "../Bin/Resources/Sound/Enemy/ZenuGiant/Hit/");
 	Load_SoundFile_GroupAsync(L"ZENU_SPAWN", "../Bin/Resources/Sound/Enemy/ZenuGiant/Spawn/");
+
+	Load_SoundFile_GroupAsync(L"VAMPIRE_ATTACKWAVE", "../Bin/Resources/Sound/Enemy/VampireCommander/AttackWave/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_BLOODRANGE", "../Bin/Resources/Sound/Enemy/VampireCommander/BloodTornado/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_BODYFALL", "../Bin/Resources/Sound/Enemy/VampireCommander/BodyFall/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_DEATH", "../Bin/Resources/Sound/Enemy/VampireCommander/Death/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_HIT", "../Bin/Resources/Sound/Enemy/VampireCommander/Hit/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_IDLE", "../Bin/Resources/Sound/Enemy/VampireCommander/Idle/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_WING", "../Bin/Resources/Sound/Enemy/VampireCommander/Wing/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_GROUNDSLAM", "../Bin/Resources/Sound/Enemy/VampireCommander/GroundSlam/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_TAUNT", "../Bin/Resources/Sound/Enemy/VampireCommander/Taunt/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_BATTHROW", "../Bin/Resources/Sound/Enemy/VampireCommander/BatThrow/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_ATTACK", "../Bin/Resources/Sound/Enemy/VampireCommander/ATTACK/");
 	
+	
+	Load_SoundFile_GroupAsync(L"EFFECT", "../Bin/Resources/Sound/Effect/");
 
 
 	return S_OK;

@@ -36,26 +36,25 @@ void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 	pActor->Set_Invincible(true);
 	pActor->Set_Reveal_Weakness(true);
 	pActor->Set_WeaknessCount(3);
+	m_pGameInstance->Play_Sound(L"VAMPIRE_WING", L"commander_lesser_mvm_wings005.wav", SOUND_ENEMY_SKILL2, 10.f);
 }
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Start::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(59);
+
+		if (true == m_bFlags[0])
+		{
+			m_pGameInstance->Play_Sound(L"VAMPIRE_BLOODRANGE", L"commander_lesser_abi_heal_regeneration_flares005.wav", SOUND_ENEMY_SKILL1, 10.f);
+		}
+	}
+
 	if (pActor->Is_Animation_End())
 	{
 		return new CVampireCommander_BloodRange_Loop();
 	}
-
-	if (false == m_bFlags[0])
-	{
-		m_bFlags[0] = pActor->Is_Inputable_Front(59);
-		
-		if (true == m_bFlags[0])
-		{
-			
-		}
-	}
-
-	
 
 
 

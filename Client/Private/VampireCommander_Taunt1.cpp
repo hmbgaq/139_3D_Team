@@ -2,12 +2,15 @@
 #include "VampireCommander_Idle.h"
 #include "MasterCamera.h"
 #include "Data_Manager.h"
+#include "GameInstance.h"
 
 void CVampireCommander_Taunt1::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	m_pGameInstance->Play_Sound(L"VAMPIRE_TAUNT", L"commander_lesser_vo_taunt001.wav", SOUND_ENEMY_VOICE, 10.f);
+	
 }
 
 CState<CVampireCommander>* CVampireCommander_Taunt1::Update(CVampireCommander* pActor, _float fTimeDelta)

@@ -6,6 +6,7 @@
 #include "Effect.h"
 #include "Effect_Manager.h"
 #include "VampireCommander.h"
+#include "GameInstance.h"
 
 CVampireCommander_Projectile_Range3::CVampireCommander_Projectile_Range3(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
@@ -75,11 +76,23 @@ void CVampireCommander_Projectile_Range3::Tick(_float fTimeDelta)
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	m_pTransformCom->Go_Straight(fTimeDelta);
-
+	m_fSoundTimeAcc += fTimeDelta;
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
 	//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json", Get_Position(), true, m_vPlayerPos);
+	if (m_fSoundTimeAcc >= 0.32f && m_iPlaySoundCount < m_iMaxSoundCount)
+	{
+		m_pGameInstance->Play_Sound(L"EFFECT", L"dynamite_explosion_player_04.wav", SOUND_EFFECT6, 10.f);
+		m_pGameInstance->Play_Sound(L"VAMPIRE_GROUNDSLAM", L"commander_lesser_attack_ground_slam_impact002.wav", SOUND_EFFECT7, 8.f);
+		m_iPlaySoundCount++;
+		m_fSoundTimeAcc = 0.f;
+	}
+	
 	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.32f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", Get_Position(), true, m_vPlayerPos);
+
+
+	
+
 }
 
 void CVampireCommander_Projectile_Range3::Late_Tick(_float fTimeDelta)

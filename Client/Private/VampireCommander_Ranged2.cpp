@@ -3,6 +3,7 @@
 #include "Body_VampireCommander.h"
 
 #include "VampireCommander_Weapon.h"
+#include "GameInstance.h"
 
 void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 {
@@ -24,6 +25,7 @@ void CVampireCommander_Ranged2::Initialize(CVampireCommander* pActor)
 
 	dynamic_cast<CVampireCommander_Weapon*>(pWeapon)->Play_Trail(true);	// 트레일 켜기
 
+	m_pGameInstance->Play_Sound(L"VAMPIRE_ATTACK", L"commander_lesser_vo_attack005.wav", SOUND_ENEMY_VOICE, 8.f);
 
 	pActor->m_bLookAt = false;
 }
@@ -42,6 +44,7 @@ CState<CVampireCommander>* CVampireCommander_Ranged2::Update(CVampireCommander* 
 		m_bFlags[1] = true;
 		m_bFlags[2] = true;
 		pWeapon->Set_Enable(true);
+		m_pGameInstance->Play_Sound(L"VAMPIRE_ATTACK", L"william_attack_melee_whoosh003.wav", SOUND_ENEMY_ATTACK, 8.f);
 	}
 
 	if (m_bFlags[3] == false && pActor->Is_Inputable_Front(38))

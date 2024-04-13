@@ -7,6 +7,7 @@
 #include "Effect_Void.h"
 #include "Effect_Trail.h"
 
+
 IMPLEMENT_SINGLETON(CEffect_Manager);
 
 CEffect_Manager::CEffect_Manager()
@@ -136,6 +137,8 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 	pEffect->Set_Enable(true);
 
 	EffectPool->pop();
+
+	//Play_EffectSound_ForFileName(strFileName);
 
 	return pEffect;
 }
@@ -370,6 +373,22 @@ CEffect* CEffect_Manager::Create_Effect_ForDebug_StaticPivot(string strAddPath, 
 
 	return pEffect;
 }
+
+// void CEffect_Manager::Play_EffectSound_ForFileName(string strFileName)
+// {
+// 	//TODO 승용
+// 	//! 이 함수는 아래 채널만 사용할거임
+// 	//! 	SOUND_EFFECT,
+// 	//!	SOUND_SUBEFFECT,
+// 	//!	SOUND_SUBEFFECT1,
+// 	//!	SOUND_SUBEFFECT2,
+// 
+// 	if (strFileName == "landing_Rock_01.json")
+// 	{
+// 		m_pGameInstance->Play_Sound(L"VAMPIRE_HIT", L"commander_lesser_attack_ground_slam_impact001", SOUND_SUBEFFECT, 7.f);
+// 	}
+// 	
+// }
 
 
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
