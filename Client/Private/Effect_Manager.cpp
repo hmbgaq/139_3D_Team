@@ -378,6 +378,8 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 
 	pTrail->Load_FromJson(In_Json);
 
+	Safe_AddRef(pTrail);
+
 	return pTrail;
 
 }

@@ -82,7 +82,7 @@ void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 	//! 유정: 트레일
 	if (nullptr != m_pTrail)
 	{
-		m_pTrail->Set_Play(true); // 트레일 켜기
+		//m_pTrail->Set_Play(true); // 트레일 켜기
 		m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
 	}
 
@@ -131,8 +131,8 @@ void CBullet_Bandit_Sniper::OnCollisionEnter(CCollider* other)
 	if (nullptr != m_pTrail)		// 트레일 삭제
 	{
 		//m_pTrail->Set_Play(false);
-		m_pTrail->Set_Dead(true);
 		m_pTrail->Set_Object_Owner(nullptr);
+		//m_pTrail->Set_Dead(true);
 	}
 	Set_Dead(true);
 }
@@ -188,7 +188,7 @@ void CBullet_Bandit_Sniper::Free()
 
 	if (nullptr != m_pTrail)		// 트레일 삭제
 	{
-		m_pTrail->Set_Play(false);
+		//m_pTrail->Set_Play(false);
 		m_pTrail->Set_Object_Owner(nullptr);
 		Safe_Release(m_pTrail);
 	}

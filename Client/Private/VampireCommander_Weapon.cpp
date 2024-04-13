@@ -150,7 +150,10 @@ CGameObject* CVampireCommander_Weapon::Pool()
 void CVampireCommander_Weapon::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pTrail);
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Object_Owner(nullptr);
+		Safe_Release(m_pTrail);
+	}
 }
 

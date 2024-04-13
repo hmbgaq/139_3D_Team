@@ -42,7 +42,7 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 		//_vector vDir = pTarget->Calc_Look_Dir_XZ(vPlayerPos);
 		
 		_float fDamage = 30.f + CData_Manager::GetInstance()->Get_Additional_ElectricDamage();
-		_float fForce = 1.f;
+		_float fForce = 0.3f;
 		Direction eDir = Direction::Front;
 		Power ePower = Power::Heavy;
 		_bool bIsMelee = true;

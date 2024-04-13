@@ -32,23 +32,32 @@ void CEvent_MosnterSpawnTrigger::Activate()
 	_uint iMonsterDescVectorSize = (_uint)m_vecCreateMonsterDesc.size();
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
+
+
 	for (_uint i = 0; i < iMonsterDescVectorSize; ++i)
 	{
 		CMonster_Character* pMonster = { nullptr };
 
-			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, L"Layer_Monster", m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
+		wstring strLayerTag = L"Layer_Monster";
 
-			if(pMonster == nullptr)
-			{
-				MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
-			}
-			else if (iCurrentLevel == (_uint)LEVEL_TOOL)
-			{
+		if (iCurrentLevel == _uint(LEVEL_INTRO_BOSS) || iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
+		{
+			strLayerTag = L"Layer_Boss";
+		}
 
-				CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
+		pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, strLayerTag, m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
 
-				pMapTool->Add_Monster_ForTrigger(pMonster);
-			}
+		if (pMonster == nullptr)
+		{
+			MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
+		}
+		else if (iCurrentLevel == (_uint)LEVEL_TOOL)
+		{
+
+			CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
+
+			pMapTool->Add_Monster_ForTrigger(pMonster);
+		}
 
 	}
 

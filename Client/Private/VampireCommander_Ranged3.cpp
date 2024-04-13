@@ -27,8 +27,8 @@ void CVampireCommander_Ranged3::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_Ranged3::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
-	CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
-	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
+	//CWeapon* pWeapon_R = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
+	//CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
 
 	if (m_bFlags[1] == false)
 	{
@@ -40,7 +40,7 @@ CState<CVampireCommander>* CVampireCommander_Ranged3::Update(CVampireCommander* 
 		m_bFlags[1] = true;
 		if (m_bfirstCheck)
 		{
-			m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_Monster", L"Prototype_GameObject_VampireCommander_Projectile_Range3");
+			m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_MonsterBullet", L"Prototype_GameObject_VampireCommander_Projectile_Range3");
 			m_bfirstCheck = false;
 		}
 	}
