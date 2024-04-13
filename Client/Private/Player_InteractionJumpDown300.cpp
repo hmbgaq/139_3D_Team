@@ -7,7 +7,7 @@ void CPlayer_InteractionJumpDown300::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
-	if(m_pGameInstance->Get_NextLevel() != _uint(LEVEL_GAMEPLAY))
+	if(m_pGameInstance->Get_NextLevel() != _uint(LEVEL_GAMEPLAY) && m_pGameInstance->Get_NextLevel() != _uint(LEVEL_SNOWMOUNTAIN))
 		pActor->Set_UseGravity(true);
 }
 
@@ -15,8 +15,10 @@ CState<CPlayer>* CPlayer_InteractionJumpDown300::Update(CPlayer* pActor, _float 
 {
 	__super::Update(pActor, fTimeDelta);
 
-	if (m_pGameInstance->Get_NextLevel() != _uint(LEVEL_GAMEPLAY))
+	if (m_pGameInstance->Get_NextLevel() != _uint(LEVEL_GAMEPLAY) && m_pGameInstance->Get_NextLevel() != _uint(LEVEL_SNOWMOUNTAIN))
+	{
 		pActor->Set_UseGravity(true);
+	}
 
 
 	if (false == m_bFlags[0])
