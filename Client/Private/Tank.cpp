@@ -22,6 +22,7 @@
 #include "Player.h"
 #include "Player_Finisher_Tank.h"
 
+#include "Effect_Manager.h"
 
 
 CTank::CTank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -149,6 +150,17 @@ void CTank::Tick(_float fTimeDelta)
 	//{
 	//	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	//}
+	if (m_bRushStart)
+	{
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Tank_Rush.json", this);
+		m_bRushStart = false;
+	}
+	if (m_bRushStop == true && m_pEffect != nullptr)
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_pEffect = nullptr;
+		m_bRushStop = false;
+	}
 
 }
 

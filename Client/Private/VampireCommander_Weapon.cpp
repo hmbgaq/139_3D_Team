@@ -150,16 +150,10 @@ CGameObject* CVampireCommander_Weapon::Pool()
 void CVampireCommander_Weapon::Free()
 {
 	__super::Free();
-
-
-	//if (m_isCloned)
+	if (nullptr != m_pTrail)
 	{
-		if (nullptr != m_pTrail)
-		{
-			m_pTrail->Set_Object_Owner(nullptr);
-			m_pTrail = nullptr;
-			//Safe_Release(m_pTrail);
-		}
+		m_pTrail->Set_Object_Owner(nullptr);
+		Safe_Release(m_pTrail);
 	}
 
 }

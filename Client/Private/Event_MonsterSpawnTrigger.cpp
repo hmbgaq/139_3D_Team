@@ -47,17 +47,17 @@ void CEvent_MosnterSpawnTrigger::Activate()
 
 			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, strLayerTag, m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
 
-			if(pMonster == nullptr)
-			{
-				MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
-			}
-			else if (iCurrentLevel == (_uint)LEVEL_TOOL)
-			{
+		if (pMonster == nullptr)
+		{
+			MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
+		}
+		else if (iCurrentLevel == (_uint)LEVEL_TOOL)
+		{
 
-				CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
+			CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
 
-				pMapTool->Add_Monster_ForTrigger(pMonster);
-			}
+			pMapTool->Add_Monster_ForTrigger(pMonster);
+		}
 
 	}
 

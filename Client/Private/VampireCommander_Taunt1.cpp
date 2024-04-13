@@ -1,5 +1,7 @@
 #include "VampireCommander_Taunt1.h"
 #include "VampireCommander_Idle.h"
+#include "MasterCamera.h"
+#include "Data_Manager.h"
 
 void CVampireCommander_Taunt1::Initialize(CVampireCommander* pActor)
 {
@@ -21,4 +23,6 @@ CState<CVampireCommander>* CVampireCommander_Taunt1::Update(CVampireCommander* p
 void CVampireCommander_Taunt1::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
 }

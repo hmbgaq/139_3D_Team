@@ -17,7 +17,6 @@ void CTank_Charge_Start::Initialize(CTank* pActor)
 	//	;
 
 	//pWeapon->Set_Enable_Collisions(false);
-
 }
 
 CState<CTank>* CTank_Charge_Start::Update(CTank* pActor, _float fTimeDelta)
@@ -31,6 +30,12 @@ CState<CTank>* CTank_Charge_Start::Update(CTank* pActor, _float fTimeDelta)
 		{
 			//pActor->Set_Weapon_Collisions_Enable(TANK_WEAPON_PUNCH_L, true);
 		}
+	}
+
+	if (m_bFlags[1] == false && pActor->Is_Inputable_Front(29))
+	{
+		pActor->m_bRushStart = true;
+		m_bFlags[1] = true;
 	}
 
 	if (pActor->Is_Animation_End())

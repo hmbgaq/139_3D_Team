@@ -563,11 +563,22 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma endregion 플레이어 이펙트 끝
 
-	
+#pragma region 탱크 이펙트 시작
+	//rush
+	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Projectile2.json", 50));
 
+
+	//Projectile
+	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Rush.json", 50));
+
+	//제누거인
+	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Vampire_Zombie_GroundAttack.json", 100));
+
+
+#pragma endregion 탱크 이펙트 끝
 #pragma region 맵에 전역으로 깔리는 이펙트
 
-		FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
+	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
 
 #pragma endregion // 맵에 전역으로 깔리는 이펙트
 

@@ -54,6 +54,8 @@ public:
 	_bool m_bTurn = true;
 	_bool m_bCntDead_Active = { false };
 	_bool m_bAuraDead = false;
+	_bool m_bAuraStart = false;
+	_bool m_bfirst = true;
 	_float	m_fCntDead_Time = 3.f;
 	_float fTimeAcc = 0.f;
 public:

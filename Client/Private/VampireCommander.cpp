@@ -81,7 +81,6 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 
 	 
 	m_pMapEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/", "Map_Blood_09.json", nullptr, m_pTransformCom->Get_Position());
-	m_pAuraEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/","VampireCommanderAura_03.json", this, false);
 
 	if (nullptr == m_pTarget)
 	{
@@ -102,6 +101,12 @@ void CVampireCommander::Tick(_float fTimeDelta)
 		return;
 
 	__super::Tick(fTimeDelta);
+
+	if (m_bfirst == true && m_bAuraStart == true)
+	{
+		m_pAuraEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/", "VampireCommanderAura_03.json", this, false);
+		m_bfirst = false;
+	}
 
 	if (m_bAuraDead == false && m_fHp <= 0.f)
 	{
