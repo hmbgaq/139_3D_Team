@@ -88,7 +88,7 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 
 				if (m_pUIManager->Get_Select_Price() > m_pData_Manager->Get_Money()) // ∞°∞› > µ∑
 				{
-					m_pUIManager->Change_MessageBox(2); // µ∑ ∫Œ¡∑
+					// Ω¿µÊ∫“∞°
 					return;
 				}
 

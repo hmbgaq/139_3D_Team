@@ -262,9 +262,6 @@ HRESULT CMainApp::Ready_UITexture()
 	
 	// SkillWindow Text
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Button_Message"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/Button_Message (%d).dds"), 3)));
-	
-	// LevelUp Message
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LevelUpMessage"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD/LevelUpMessage.dds"))));
 
 	return S_OK;
 }

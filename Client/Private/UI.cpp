@@ -586,9 +586,8 @@ void CUI::LifeOff(_float fTimeDelta)
 		{
 			m_bActive = Alpha_Plus(fTimeDelta); // 안보이게 알파가 지워지게 해준다.
 
-			if (m_tUIInfo.strUIName == "Backgound" ||
-				m_tUIInfo.strUIName == "Lightning" ||
-				m_tUIInfo.strUIName == "Fog")
+			if (m_tUIInfo.strUIName == "Fog" ||
+				m_tUIInfo.strUIName == "Linghtning")
 			{
 				m_bActive = false;
 			}

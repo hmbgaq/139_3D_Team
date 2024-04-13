@@ -117,22 +117,22 @@ HRESULT CUI_MoneyFont::Render()
 			if (m_tUIInfo.strUIName == "SkillPoint")
 			{
 				m_strText = to_wstring(m_pData_Manager->Get_SkillPoint());
-				m_fScale = 0.60f;
-				m_fOffsetX = 2.70f;  // 2.7
-				m_fOffsetY = 18.0f;	// 18
+				m_fScale = 0.5f;
+				m_fOffsetX += m_fX;
+				m_fOffsetY += m_fY;
 			}
 
 			if (m_tUIInfo.strUIName == "Money")
 			{
 				m_strText = to_wstring(m_pData_Manager->Get_Money());
-				m_fScale = 0.60f;
-				m_fOffsetX = -5.0f;
-				m_fOffsetY = 30.30f; // 30.3f;
+				m_fScale = 0.6f;
+				m_fOffsetX = -5.f;
+				m_fOffsetY = -5.f;
 			}
 
 			//m_strText = L"Test";
 			//RenderTextWithLineBreak(m_pGameInstance->Convert_WString_To_String(m_strText), 10);
-			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2((m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) - m_fOffsetX, (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) - m_fOffsetY), m_vColor, m_fScale, m_vOrigin, m_fRotation);
+			m_pGameInstance->Render_Font(m_strFontTag, m_strText, _float2((m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) - m_fOffsetX, (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) - 30.f), m_vColor, m_fScale, m_vOrigin, m_fRotation);
 		}
 	}
 
