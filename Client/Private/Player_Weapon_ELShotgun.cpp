@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player_Weapon_ELShotgun.h"
 #include "GameInstance.h"
+#include "SMath.h"
 
 CPlayer_Weapon_ELShotgun::CPlayer_Weapon_ELShotgun(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
@@ -56,6 +57,55 @@ HRESULT CPlayer_Weapon_ELShotgun::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+
+void CPlayer_Weapon_ELShotgun::Play_Weapon_Sound_Reload()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 4);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Shotgun_Reload_01.wav";
+		break;
+	case 1:
+		strFileName = L"Shotgun_Reload_02.wav";
+		break;
+	case 2:
+		strFileName = L"Shotgun_Reload_03.wav";
+		break;
+	case 3:
+		strFileName = L"Shotgun_Reload_04.wav";
+		break;
+	default:
+		strFileName = L"Shotgun_Reload_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 10.f);
+
+
+}
+
+void CPlayer_Weapon_ELShotgun::Play_Weapon_Sound_Fire()
+{
+	
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 2);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Shotgun_Fire_Player_01.wav";
+		break;
+	case 1:
+		strFileName = L"Shotgun_Fire_Player_02.wav";
+		break;
+	default:
+		strFileName = L"Shotgun_Fire_Player_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
+
 }
 
 HRESULT CPlayer_Weapon_ELShotgun::Ready_Components()

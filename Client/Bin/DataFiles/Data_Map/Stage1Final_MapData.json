@@ -1,4 +1,5 @@
 {
+
   "Basic_Json": [
     {
       "AnimType": false,
@@ -1501,7 +1502,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 155.56124877929688, 0.0, 105.54010009765625, 1.0 ]
+          [ 155.56124877929688, 0.0, 93.49050903320313, 1.0 ]
         ]
       },
       "Index": 83,
@@ -1519,7 +1520,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 155.19912719726563, 0.0, 101.47913360595703, 1.0 ]
+          [ 155.19912719726563, 0.0, 90.25045013427734, 1.0 ]
         ]
       },
       "Index": 84,
@@ -1537,7 +1538,7 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 152.32452392578125, 0.0, 103.73985290527344, 1.0 ]
+          [ 152.32452392578125, 0.0, 92.3912353515625, 1.0 ]
         ]
       },
       "Index": 85,
@@ -27570,6 +27571,7 @@
       "InteractType": 1,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27589,7 +27591,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27622,6 +27625,7 @@
       "InteractType": 1,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27641,7 +27645,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27661,8 +27666,8 @@
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 2,
-      "InteractColliderCenter": [ -1.0, 0.0, 4.0, 0.0 ],
-      "InteractColliderSize": [ 0.5, 0.5, 6.0, 0.0 ],
+      "InteractColliderCenter": [ 0.0, 1.0, 4.0, 0.0 ],
+      "InteractColliderSize": [ 1.0, 1.0, 6.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLadderCount": 4,
       "InteractLevel": 9,
@@ -27670,10 +27675,11 @@
       "InteractMoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractReverseLadderCount": 4,
-      "InteractState": 1,
+      "InteractState": 0,
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam2",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27683,7 +27689,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 2.0, 2.0, 2.0, 0.0 ],
+      "RootMoveRate": [ 4.0, 4.0, 2.5, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -27693,7 +27699,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27726,6 +27733,7 @@
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainHook1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27745,7 +27753,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27778,6 +27787,7 @@
       "InteractType": 2,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainHook1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27797,7 +27807,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27810,14 +27821,14 @@
           [ 1.0, 0.0, 0.0, 0.0 ],
           [ 0.0, 1.0, 0.0, 0.0 ],
           [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 157.39341735839844, 9.184558868408203, 193.58863830566406, 1.0 ]
+          [ 157.39341735839844, 9.184558868408203, 194.2161407470703, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 5,
-      "InteractColliderCenter": [ 1.0, 1.0, 1.2000000476837158, 0.0 ],
+      "InteractColliderCenter": [ 1.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLadderCount": 4,
@@ -27827,9 +27838,10 @@
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 4,
+      "InteractType": 3,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27839,7 +27851,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 0.4000000059604645, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 3.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -27849,7 +27861,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27862,14 +27875,14 @@
           [ -0.9841952323913574, 1.7911623899635742e-06, -0.17708678543567657, 0.0 ],
           [ 1.4976410511735594e-06, 1.0, 1.7911623899635742e-06, 0.0 ],
           [ 0.17708678543567657, 1.4976410511735594e-06, -0.9841952323913574, 0.0 ],
-          [ 163.04823303222656, 9.225996971130371, 193.4741973876953, 1.0 ]
+          [ 162.88511657714844, 9.225996971130371, 194.38070678710938, 1.0 ]
         ]
       },
       "Enable": false,
       "EnableJsonPath": "",
       "EnablePosition": [ 0.0, 0.0, 0.0, 0.0 ],
       "Index": 6,
-      "InteractColliderCenter": [ -1.0, 1.0, 1.2000000476837158, 0.0 ],
+      "InteractColliderCenter": [ -1.0, 1.0, 0.0, 0.0 ],
       "InteractColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractGroupIndex": -1,
       "InteractLadderCount": 4,
@@ -27879,9 +27892,10 @@
       "InteractMoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
       "InteractReverseLadderCount": 4,
       "InteractState": 1,
-      "InteractType": 4,
+      "InteractType": 3,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainBeam1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27891,7 +27905,7 @@
       "Owner": false,
       "PlayAnimationIndex": 0,
       "ReverseRootMoveRate": [ 1.0, 1.0, 1.0, 0.0 ],
-      "RootMoveRate": [ 1.0, 0.4000000059604645, 1.0, 0.0 ],
+      "RootMoveRate": [ 1.0, 3.0, 2.0, 0.0 ],
       "RootTranslate": false,
       "Rotate": false,
       "RotationAngle": 0.0,
@@ -27901,7 +27915,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27934,6 +27949,7 @@
       "InteractType": 0,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -27953,7 +27969,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -27986,6 +28003,7 @@
       "InteractType": 1,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": true,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainJumpDown1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -28005,7 +28023,8 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": true
+      "UseGravity": true,
+      "iArrivalCellIndex": -1
     },
     {
       "AnimType": false,
@@ -28038,6 +28057,7 @@
       "InteractType": 3,
       "LayerTag": [ 76, 97, 121, 101, 114, 95, 66, 97, 99, 107, 71, 114, 111, 117, 110, 100, 0 ],
       "LevelChange": false,
+      "LeverSwitchIndex": -1,
       "ModelTag": "Prototype_Component_Model_ChainClimbLadderTopPlank1",
       "MoveColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
       "MoveColliderSize": [ 1.0, 1.0, 1.0, 0.0 ],
@@ -28057,16 +28077,17 @@
       "SplineJsonPath": "",
       "Type": "Interact",
       "UpdateCellJson": null,
-      "UseGravity": false
+      "UseGravity": false,
+      "iArrivalCellIndex": -1
     }
   ],
   "LightObject_Json": null,
   "Light_Json": [
     {
-      "Ambient": [ 1.0, 1.0, 1.0, 1.0 ],
+      "Ambient": [ 0.7137255072593689, 0.5803921818733215, 0.5803921818733215, 1.0 ],
       "CutOff": 0.0,
-      "Diffuse": [ 0.6718146800994873, 0.568059504032135, 0.568059504032135, 1.0 ],
-      "Direction": [ 1.0, 1.0, 0.0, 1.0 ],
+      "Diffuse": [ 0.6431372761726379, 0.5411764979362488, 0.5411764979362488, 1.0 ],
+      "Direction": [ 1.0, 1.0, 1.0, 1.0 ],
       "Intensity": 0.0,
       "LightEnable": true,
       "LightIndex": 0,
@@ -28087,7 +28108,7 @@
           [ 248.23802185058594, 0.058765709400177, 35.40472412109375, 1.0 ]
         ]
       },
-      "MonsterGroupIndex": 0,
+      "MonsterGroupIndex": 6,
       "PrototypeTag": "Prototype_GameObject_Infected_A",
       "StartNaviIndex": 0
     },
@@ -28207,6 +28228,279 @@
       "MonsterGroupIndex": 5,
       "PrototypeTag": "Prototype_GameObject_Bandit_Sniper",
       "StartNaviIndex": 225
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.8373180031776428, 1.5238566675179754e-06, -0.5467161536216736, 0.0 ],
+          [ 8.249429583884194e-07, 1.0, 1.5238566675179754e-06, 0.0 ],
+          [ 0.5467161536216736, 8.249429583884194e-07, -0.8373180031776428, 0.0 ],
+          [ 222.9151153564453, -9.5367431640625e-07, 69.17635345458984, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 2,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 166
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.9123746752738953, 0.0, -0.4093564450740814, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.4093564450740814, 0.0, 0.9123746752738953, 0.0 ],
+          [ 213.19189453125, 0.0, 63.73971939086914, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 2,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 927
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.13307379186153412, -2.421844271793816e-07, -0.9911047220230103, 0.0 ],
+          [ -1.6186277207452804e-08, 1.0, -2.4218476823989477e-07, 0.0 ],
+          [ 0.9911047220230103, -1.618625589117073e-08, -0.13307379186153412, 0.0 ],
+          [ 217.537353515625, 9.5367431640625e-07, 69.39852905273438, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 2,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 168
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.9394533634185791, 0.0, -0.3426767885684967, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.3426767885684967, 0.0, 0.9394533634185791, 0.0 ],
+          [ 206.68801879882813, 0.0, 62.35791015625, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 2,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 930
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.5315674543380737, -9.674133707449073e-07, -0.8470157980918884, 0.0 ],
+          [ -2.7841963401442626e-07, 1.0, -9.67413484431745e-07, 0.0 ],
+          [ 0.8470157980918884, -2.7841960559271683e-07, -0.5315674543380737, 0.0 ],
+          [ 172.93585205078125, -4.8505754470825195, 72.71891021728516, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 172
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 151.392333984375, -9.5367431640625e-07, 110.00592041015625, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 424
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 151.54678344726563, 0.0, 96.71875, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 392
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 167.0150146484375, -4.76837158203125e-07, 97.08064270019531, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 395
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 157.13282775878906, 0.0, 115.50821685791016, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 4,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 1005
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 0.05584880709648132, 4.3305865915499453e-07, 0.9984392523765564, 0.0 ],
+          [ -2.5889676180668175e-08, 1.0, -4.322874360696005e-07, 0.0 ],
+          [ -0.9984392523765564, -1.7062120605260134e-09, 0.05584880709648132, 0.0 ],
+          [ 158.70387268066406, 4.76837158203125e-07, 103.19750213623047, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Heavy_Vampiric_Zombie",
+      "StartNaviIndex": 389
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.7865035533905029, -1.4313781093733269e-06, -0.6175857782363892, 0.0 ],
+          [ -6.959654683669214e-07, 1.0, -1.4313781093733269e-06, 0.0 ],
+          [ 0.6175857782363892, -6.959654683669214e-07, -0.7865035533905029, 0.0 ],
+          [ 150.13143920898438, 5.501025199890137, 159.3341522216797, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 6,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 249
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ 1.0, 0.0, 0.0, 0.0 ],
+          [ 0.0, 1.0, 0.0, 0.0 ],
+          [ 0.0, 0.0, 1.0, 0.0 ],
+          [ 161.47183227539063, 6.076755523681641, 161.5789794921875, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 6,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 246
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.995956540107727, -1.8125671203961247e-06, -0.08982459455728531, 0.0 ],
+          [ -1.6564515590289375e-06, 1.0, -1.812569053072366e-06, 0.0 ],
+          [ 0.08982459455728531, -1.656449740039534e-06, -0.995956540107727, 0.0 ],
+          [ 154.6998748779297, 7.612656593322754, 175.8823699951172, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 6,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 268
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.9657423496246338, -1.7575794117874466e-06, -0.2595028579235077, 0.0 ],
+          [ -1.3476499134412734e-06, 1.0, -1.7575794117874466e-06, 0.0 ],
+          [ 0.2595028579235077, -1.3476499134412734e-06, -0.9657423496246338, 0.0 ],
+          [ 154.87074279785156, 9.011995315551758, 186.7982940673828, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 6,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 380
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.7017563581466675, 1.2771445199177833e-06, 0.7124168872833252, 0.0 ],
+          [ 5.233798674453283e-07, 1.0, -1.277144633604621e-06, 0.0 ],
+          [ -0.7124168872833252, -5.233798106019094e-07, -0.7017563581466675, 0.0 ],
+          [ 164.90499877929688, 8.880537033081055, 188.7943878173828, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 6,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 323
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.9462398886680603, 1.722086381050758e-06, -0.32346534729003906, 0.0 ],
+          [ 1.2312427770666545e-06, 1.0, 1.7220866084244335e-06, 0.0 ],
+          [ 0.32346534729003906, 1.2312426633798168e-06, -0.9462398886680603, 0.0 ],
+          [ 156.43881225585938, 9.495786666870117, 206.33517456054688, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 847
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.78572016954422, -1.4299525901151355e-06, 0.6185818910598755, 0.0 ],
+          [ -2.945699179690564e-06, 1.0, -1.4299527038019733e-06, 0.0 ],
+          [ -0.6185818910598755, -2.945698724943213e-06, -0.78572016954422, 0.0 ],
+          [ 161.0995635986328, 9.437419891357422, 207.21939086914063, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 760
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.6738676428794861, -1.2263891449038056e-06, -0.7388519644737244, 0.0 ],
+          [ -4.752699851451325e-07, 1.0, -1.2263892585906433e-06, 0.0 ],
+          [ 0.7388519644737244, -4.752699567234231e-07, -0.6738676428794861, 0.0 ],
+          [ 152.5667266845703, 9.448494911193848, 205.5793914794922, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Infected_C",
+      "StartNaviIndex": 550
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.9982046484947205, 1.8166584823120502e-06, 0.05989586189389229, 0.0 ],
+          [ 1.7109198324760655e-06, 1.0, -1.8166584823120502e-06, 0.0 ],
+          [ -0.05989586189389229, -1.7109198324760655e-06, -0.9982046484947205, 0.0 ],
+          [ 171.74362182617188, 9.638047218322754, 207.59815979003906, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 935
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.8659655451774597, 1.5759931102365954e-06, -0.5001037120819092, 0.0 ],
+          [ 9.097742008634668e-07, 1.0, 1.5759931102365954e-06, 0.0 ],
+          [ 0.5001037120819092, 9.097742008634668e-07, -0.8659655451774597, 0.0 ],
+          [ 155.92877197265625, 9.413182258605957, 211.95001220703125, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Infected_A",
+      "StartNaviIndex": 852
+    },
+    {
+      "Component": {
+        "Transform": [
+          [ -0.9684049487113953, 1.7624251995584927e-06, 0.24938254058361053, 0.0 ],
+          [ 1.366068090646877e-06, 1.0, -1.7624254269321682e-06, 0.0 ],
+          [ -0.24938254058361053, -1.3660679769600392e-06, -0.9684049487113953, 0.0 ],
+          [ 165.61634826660156, 9.584725379943848, 204.05874633789063, 1.0 ]
+        ]
+      },
+      "MonsterGroupIndex": 5,
+      "PrototypeTag": "Prototype_GameObject_Infected_B",
+      "StartNaviIndex": 773
     }
   ],
   "Special_Json": null,
@@ -28223,7 +28517,7 @@
             [ 239.6129608154297, 0.6107544898986816, 42.0361328125, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\Jusin\\0_SourceTree\\3D_Team\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
         "NameTag": "MonsterSpawn1",
         "OnTrigger": false,
         "SpawnGroupIndex": 1
@@ -28239,7 +28533,7 @@
             [ 253.0107421875, 2.496873140335083, 11.082213401794434, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\Jusin\\0_SourceTree\\3D_Team\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
         "NameTag": "MonsterSpawn2",
         "OnTrigger": false,
         "SpawnGroupIndex": 0
@@ -28255,7 +28549,7 @@
             [ 228.68804931640625, 1.1457509994506836, 60.23256301879883, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\Jusin\\0_SourceTree\\3D_Team\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
         "NameTag": "MonsterSpawn3",
         "OnTrigger": false,
         "SpawnGroupIndex": 2
@@ -28271,7 +28565,7 @@
             [ 189.0815887451172, -8.666459083557129, 63.92729949951172, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\Jusin\\0_SourceTree\\3D_Team\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
         "NameTag": "MonsterSpawn4",
         "OnTrigger": false,
         "SpawnGroupIndex": 3
@@ -28287,7 +28581,7 @@
             [ 130.79710388183594, 0.23765693604946136, 102.0268325805664, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\Jusin\\0_SourceTree\\3D_Team\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
         "NameTag": "MonsterSpawn5",
         "OnTrigger": false,
         "SpawnGroupIndex": 4
@@ -28303,12 +28597,130 @@
             [ 159.40817260742188, 11.178049087524414, 196.69546508789063, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\Jusin\\0_SourceTree\\3D_Team\\Client\\Bin\\DataFiles\\Data_Map/Stage1Final_MapData_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
         "NameTag": "MonsterSpawn6",
         "OnTrigger": false,
         "SpawnGroupIndex": 5
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 6.0, 2.0, 2.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 158.6244354248047, 0.1811985969543457, 103.26138305664063, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
+        "NameTag": "MonsterSpawn7",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 5
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 6.0, 2.0, 2.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 155.57403564453125, 4.019529342651367, 150.1522216796875, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1MonsterFinish_MapData_MapData.json",
+        "NameTag": "MonsterSpawn8",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 6
+      }
+    ],
+    "UITriggerJson": [
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 6.0, 6.0, 6.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 0.9971456527709961, 0.0, 0.07550029456615448, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ -0.07550029456615448, 0.0, 0.9971456527709961, 0.0 ],
+            [ 249.63121032714844, 0.5450118184089661, 8.348605155944824, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Fianal_MapData_MapData.json",
+        "NameTag": "UITutorialTrigger",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 0,
+        "TriggerType": 2
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 6.0, 6.0, 1.5, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 243.95407104492188, 0.33377787470817566, 38.471126556396484, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Fianal_MapData_MapData.json",
+        "NameTag": "UICraneTrigger",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 1,
+        "TriggerType": 2
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 6.0, 6.0, 1.5, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 249.3850860595703, 0.3711105287075043, 23.476675033569336, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Fianal_MapData_MapData.json",
+        "NameTag": "UIInfectedTrigger",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 2,
+        "TriggerType": 2
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 2.0, 2.0, 10.0, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 153.99899291992188, 0.1809999942779541, 103.29235076904297, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Fianal_MapData_MapData.json",
+        "NameTag": "UIVampiricGiant",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 3,
+        "TriggerType": 2
+      },
+      {
+        "ColliderCenter": [ 0.0, 1.0, 0.0, 0.0 ],
+        "ColliderSize": [ 10.0, 2.0, 1.5, 0.0 ],
+        "Component": {
+          "Transform": [
+            [ 1.0, 0.0, 0.0, 0.0 ],
+            [ 0.0, 1.0, 0.0, 0.0 ],
+            [ 0.0, 0.0, 1.0, 0.0 ],
+            [ 159.4080047607422, 11.178000450134277, 196.69500732421875, 1.0 ]
+          ]
+        },
+        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\Tool/Stage1Fianal_MapData_MapData.json",
+        "NameTag": "UISniper",
+        "OnTrigger": false,
+        "SpawnGroupIndex": 4,
+        "TriggerType": 2
       }
     ]
   }
-
 }

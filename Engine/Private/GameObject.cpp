@@ -285,6 +285,7 @@ void CGameObject::Free()
 {
 	__super::Free();
 
+	if(this != nullptr)
 	Safe_Release(m_pTransformCom);
 
 	for (auto& Pair : m_Components)

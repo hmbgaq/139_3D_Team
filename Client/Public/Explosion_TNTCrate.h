@@ -30,7 +30,7 @@ public:
 
 public:
 	CEffect* m_pEffect = { nullptr };
-
+	_bool m_bfirst = true;
 
 public:
 	static CExplosion_TNTCrate* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

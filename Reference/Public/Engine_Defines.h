@@ -81,10 +81,10 @@ using namespace std;
 
 namespace Engine 
 {
-	//static float					g_iWinsizeX = 1280.f;
-	//static float					g_iWinsizeY = 720.f;
-	static float					g_iWinsizeX = 1600;
-	static float					g_iWinsizeY = 900.f;
+	static float					g_iWinsizeX = 1280.f;
+	static float					g_iWinsizeY = 720.f;
+	//static float					g_iWinsizeX = 1600;
+	//static float					g_iWinsizeY = 900.f;
 	//static float					g_iWinsizeX = 1920;
 	//static float					g_iWinsizeY = 1080.f;
 	//static float					g_iWinsizeX = 2560.f;
@@ -100,7 +100,6 @@ namespace Engine
 	// XMVectorSet(-20.f, 20.f, -20.f, 1.f), 
 	// XMVectorSet(0.f, 0.f, 0.f, 1.f),
 	// XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	
 }
 
 using namespace Engine;

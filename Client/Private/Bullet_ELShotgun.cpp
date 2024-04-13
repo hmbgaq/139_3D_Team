@@ -86,8 +86,16 @@ HRESULT CBullet_ELShotgun::Render_Shadow()
 
 void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 {
-
+	
 	CCharacter* pTarget_Character = Get_Target_Character(other);
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+
+
+	//CGameObject* pTarget_Object = Get_Target_Object(other);
+	//if (nullptr != pTarget_Object)
+	//{
+	//	pPlayer->Play_Voice_Shotgun();
+	//}
 
 	if (nullptr != pTarget_Character)// 일반 타격 
 	{
@@ -99,7 +107,7 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 
 		if (nullptr != pTarget_Character)
 		{
-			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+			
 			_vector vPlayerPos = pPlayer->Get_Position_Vector();
 			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
 			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
@@ -112,14 +120,16 @@ void CBullet_ELShotgun::OnCollisionEnter(CCollider* other)
 			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
 
 
-			//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+			pPlayer->Play_Voice_Shotgun();
+
 
 			Set_Dead(true);
-			//if (nullptr != m_pEffect)
-			//	m_pEffect->Set_Dead(true);
+
 		}
 
 	}
+
+	
 
 
 }

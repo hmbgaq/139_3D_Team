@@ -21,16 +21,23 @@ public:
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
+public:
+	virtual void	OnCollisionEnter(CCollider* other)	override;
+	virtual void	OnCollisionStay(CCollider* other)	override;
+	virtual void	OnCollisionExit(CCollider* other)	override;
+
+
 protected:
 	virtual HRESULT Ready_Components();
 
 protected:
 	void Attack(CCollider* other);
 
-public:
-	virtual void	OnCollisionEnter(CCollider* other)	override;
-	virtual void	OnCollisionStay(CCollider* other)	override;
-	virtual void	OnCollisionExit(CCollider* other)	override;
+protected:
+	virtual void Play_Hit_Sound_Normal() override;
+	virtual void Play_Hit_Sound_Heavy() override;
+
 
 public:
 	static CPlayer_Weapon_Punch* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

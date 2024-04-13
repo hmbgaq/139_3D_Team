@@ -7,7 +7,7 @@ void CPlayer_Roll_L::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 2);
 
 	// ÀÌÆåÆ® »ý¼º
 	EFFECT_MANAGER->Play_Effect("Player/Roll/", "New_Roll_Side_01.json", pActor);

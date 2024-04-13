@@ -32,23 +32,43 @@ void CEvent_MosnterSpawnTrigger::Activate()
 	_uint iMonsterDescVectorSize = (_uint)m_vecCreateMonsterDesc.size();
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
+
+
 	for (_uint i = 0; i < iMonsterDescVectorSize; ++i)
 	{
 		CMonster_Character* pMonster = { nullptr };
+			
 
-			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, L"Layer_Monster", m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
 
-			if(pMonster == nullptr)
+		wstring strLayerTag = L"Layer_Monster";
+
+			if (iCurrentLevel == _uint(LEVEL_INTRO_BOSS) || iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
 			{
-				MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
+				strLayerTag = L"Layer_Boss";
 			}
-			else if (iCurrentLevel == (_uint)LEVEL_TOOL)
+
+			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, strLayerTag, m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
+
+			if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_INTRO_BOSS))
 			{
-
-				CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
-
-				pMapTool->Add_Monster_ForTrigger(pMonster);
+				m_pGameInstance->Play_BGM(L"BGM", L"IntroBossTriggerBGM.wav", 5.f);
 			}
+			else if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
+			{
+				m_pGameInstance->Play_BGM(L"BGM", L"SnowMountainBossTriggerBGM.wav", 5.f);
+			}
+
+		if (pMonster == nullptr)
+		{
+			MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
+		}
+		else if (iCurrentLevel == (_uint)LEVEL_TOOL)
+		{
+
+			CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
+
+			pMapTool->Add_Monster_ForTrigger(pMonster);
+		}
 
 	}
 
@@ -80,11 +100,13 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 
 		if (iCurrentLevel == (_uint)LEVEL_GAMEPLAY)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData3.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_INTRO_BOSS)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+			//strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1BossTest_MapData202404_12_22_13.json";
+			
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAIN)
 		{

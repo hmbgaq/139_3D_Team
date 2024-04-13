@@ -50,6 +50,33 @@ HRESULT CAttackObject::Render()
 	return S_OK;
 }
 
+CGameObject* CAttackObject::Get_Target_Object(CCollider* other)
+{
+	_bool bEnable = true;
+	_bool bIsDead = false;
+	_bool bResult = false;
+
+	if (nullptr == other)
+		return nullptr;
+
+	bEnable = other->Get_Enable();
+	if (false == bEnable)
+		return nullptr;
+
+
+	CGameObject* pOwner = other->Get_Owner();
+	if (nullptr == pOwner)
+		return nullptr;
+
+	bEnable = pOwner->Get_Enable();
+	bIsDead = pOwner->Is_Dead();
+	bResult = (false == bEnable || true == bIsDead);
+	if (true == bResult)
+		return nullptr;
+
+	return pOwner;
+}
+
 CCharacter* CAttackObject::Get_Target_Character(CCollider* other)
 {
 	_bool bEnable = true;

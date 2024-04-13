@@ -58,7 +58,10 @@ private:
 	CActor<CTank>* m_pActor = { nullptr };
 	//_bool m_bIsShieldBroken = { true };
 	_float m_fShieldBrokenTime = { 0.f };
-
+	CEffect* m_pEffect = { nullptr };
+public:
+	_bool m_bRushStart = false;
+	_bool m_bRushStop = false;
 public:
 	static CTank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

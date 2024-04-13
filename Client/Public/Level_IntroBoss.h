@@ -27,6 +27,7 @@ private:
 	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
 	HRESULT Ready_Shader();
+	HRESULT Ready_Event();
 
 private: /* UI */
 	HRESULT Ready_UI();
@@ -42,11 +43,15 @@ private: /* UI */
 #pragma endregion End
 	HRESULT Ready_Layer_UI(const wstring& strLayerTag, void* pArg);
 
+	
+
 private:
 	_int			TempLightNumber = 0;
 	//_bool			m_bPlayerStartRotate = false;
 
-	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1BossTest_MapData202404_12_22_13.json";
+	
 
 public:
 	static CLevel_IntroBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

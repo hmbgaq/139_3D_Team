@@ -40,7 +40,10 @@ private:
 protected:
 	virtual HRESULT Ready_Components();
 	HRESULT			Bind_ShaderResources();
-
+private:
+	CEffect* m_pEffect = { nullptr };
+public:
+	_bool m_bAttack = false;
 public:
 	static CWeapon_Heavy_Vampiric_Zombie* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

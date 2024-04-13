@@ -2,6 +2,7 @@
 #include "VampireCommander_Idle.h"
 #include "Body_VampireCommander.h"
 #include "VampireCommander_Weapon.h"
+#include "VampireCommander_Taunt1.h"
 
 #include "MasterCamera.h"
 #include "Data_Manager.h"
@@ -30,17 +31,34 @@ CState<CVampireCommander>* CVampireCommander_Spawn1::Update(CVampireCommander* p
 
 
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	if (m_bFlags[0] == false)
+
+	if (m_bFlags[7] == false)
 	{
-		pSpringCam->Set_pTargetCharacter(pActor);
-		m_bFlags[0] = true;
+		//m_fOffSetY += (fTimeDelta * 0.5f);
+		//if (m_fOffSetY >= 1.5f)
+		//	m_fOffSetY = 1.5f;
+		m_fOffSetZ += (fTimeDelta * 10.f);
+		if (m_fOffSetZ >= 22.f)
+			m_fOffSetZ = 22.f;
+
+		m_fOffSet = _float3(1.f, 0.5f, m_fOffSetZ);
+
+		pSpringCam->Set_CameraOffset(m_fOffSet);
 	}
+
+	if (m_fOffSetZ >= 22.f)
+		m_bFlags[7] = true;
+	//if (m_bFlags[0] == false)
+	//{
+	//	pSpringCam->Set_pTargetCharacter(pActor);
+	//	m_bFlags[0] = true;
+	//}
 
 
 	if (pActor->Is_Animation_End())
 	{
 		
-		return new CVampireCommander_Idle;
+		return new CVampireCommander_Taunt1();
 	}
 
 	return nullptr;
@@ -54,9 +72,8 @@ void CVampireCommander_Spawn1::Release(CVampireCommander* pActor)
 	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_R)->Play_Trail(false);	// Æ®·¹ÀÏ ²ô±â
 	CWeapon* pWeapon_L = pActor->Get_Weapon(TEXT("Weapon_hand_L"));
 	dynamic_cast<CVampireCommander_Weapon*>(pWeapon_L)->Play_Trail(false);	// Æ®·¹ÀÏ ²ô±â
-	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 
-	pSpringCam->Set_pTargetCharacter(CData_Manager::GetInstance()->Get_Player());
+	
 	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	//pPlayer->Set_Rotate_In_CameraDir(true);
 	//pPlayer->m_bPlayerCheck = true;

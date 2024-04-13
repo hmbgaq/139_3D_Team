@@ -48,6 +48,20 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Start::Update(CVampireCo
 		return new CVampireCommander_BloodRange_Loop();
 	}
 
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(59);
+		
+		if (true == m_bFlags[0])
+		{
+			
+		}
+	}
+
+	
+
+
+
 	return nullptr;
 	//__super::Update(pActor, fTimeDelta);
 //  ¿¹½Ã

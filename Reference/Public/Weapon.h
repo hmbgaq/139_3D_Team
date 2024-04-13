@@ -94,6 +94,18 @@ protected:
 	virtual HRESULT Ready_Components() PURE;
 	virtual HRESULT Bind_ShaderResources();
 
+public:
+	virtual void Play_Hit_Sound(Power ePower);
+	virtual void Play_Hit_Sound_Normal() {};
+	virtual void Play_Hit_Sound_Heavy() { Play_Hit_Sound_Normal(); };
+
+	virtual void Play_Weapon_Sound_UnHolster() {};
+	virtual void Play_Weapon_Sound_Holster() {};
+	virtual void Play_Weapon_Sound_Aim() {};
+	virtual void Play_Weapon_Sound_Reload() {};
+	virtual void Play_Weapon_Sound_Fire() {};
+
+	
 
 
 protected:

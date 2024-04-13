@@ -148,6 +148,10 @@ void CUI::Tick(_float fTimeDelta)
 			Player_HUD(fTimeDelta);
 			break;
 		case Client::UISTATE::TUTORIAL_BOX:
+			TutorialBox(fTimeDelta);
+			break;
+		case Client::UISTATE::DEIDSCREEN:
+			DiedScreen(fTimeDelta);
 			break;
 		case Client::UISTATE::STATE_END:
 			break;
@@ -1015,11 +1019,24 @@ void CUI::Player_HUD(_float fTimeDelta)
 void CUI::TutorialBox(_float fTimeDelta)
 {
 	/* LifeTime UI */
-	if (m_pData_Manager->Get_ShowInterface() == true)
+	if (m_pData_Manager->Get_ShowTutorialBox() == true)
 	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
 		LifeOn(fTimeDelta);
 	}
 	else                                                     
+	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
+		LifeOff(fTimeDelta);
+	}
+}
+
+void CUI::DiedScreen(_float fTimeDelta)
+{
+	/* LifeTime UI */
+	if (m_pData_Manager->Get_ShowDiedScreen() == true)
+	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
+		LifeOn(fTimeDelta);
+	}
+	else
 	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
 		LifeOff(fTimeDelta);
 	}
@@ -2045,6 +2062,7 @@ void CUI::LifeTime_LevelUp(_float fTimeDelta)
 		m_bEventOn = true;
 		m_pData_Manager->Set_ShowLevelBox(false);
 	}
+
 	/* 레벨 변동이 있을 경우 */
 	else if (m_pData_Manager->Get_ShowLevelBox()/*m_pData_Manager->Limit_EXP()*/)
 	{
@@ -2071,8 +2089,8 @@ void CUI::LifeTime_LevelUp(_float fTimeDelta)
 	if (m_fAlpha >= 1.f)
 	{
 		m_bEventOn = false;
+		m_bActive = false;
 		//m_pData_Manager->Set_ShowLevelBox(false);
-		//m_bActive = false;
 		//m_bEventOn = false;
 		//m_bReset = true;
 	}

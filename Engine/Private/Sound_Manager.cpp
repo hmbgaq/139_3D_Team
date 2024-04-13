@@ -31,21 +31,39 @@ HRESULT CSound_Manager::Ready_Sound()
 
 	/* For. BGM */
 	Load_SoundFile_GroupAsync(L"BGM", "../Bin/Resources/Sound/BGM/");
-	//Wait_GroupAsync();
 
-	Load_SoundFile_GroupAsync(L"AMBIENCE", "../Bin/Resources/Sound/Ambience/");
+	Load_SoundFile_GroupAsync(L"BGM_LOADING", "../Bin/Resources/Sound/LoadingBGM/");
+	
+
 	//Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"PLAYER_ATTACK", "../Bin/Resources/Sound/Player/Attack/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT", "../Bin/Resources/Sound/Player/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_IMPACT", "../Bin/Resources/Sound/Player/Impact/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT2", "../Bin/Resources/Sound/Player/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_WHOOSH", "../Bin/Resources/Sound/Player/Whoosh/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_HITTED", "../Bin/Resources/Sound/Player/Hitted/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_DEAD", "../Bin/Resources/Sound/Player/Dead/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"PLAYER_FOOTSTEP", "../Bin/Resources/Sound/Player/Footstep/");
 	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_WEAPON", "../Bin/Resources/Sound/Player/Weapon/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_VOICE", "../Bin/Resources/Sound/Player/Voice/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_EFFECT", "../Bin/Resources/Sound/Player/Effect/");
+	////Wait_GroupAsync();
+
+
+
+
+
 
 	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK", "../Bin/Resources/Sound/Attack/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK2", "../Bin/Resources/Sound/Attack/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"ENEMY_HIT", "../Bin/Resources/Sound/Hit/");
 	////Wait_GroupAsync();
@@ -55,8 +73,29 @@ HRESULT CSound_Manager::Ready_Sound()
 	////Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"CRITICAL", "../Bin/Resources/Sound/Hit/");
+	////Wait_GroupAsync();
 
 
+	Load_SoundFile_GroupAsync(L"HITTED", "../Bin/Resources/Sound/Hitted/");
+	////Wait_GroupAsync();
+
+	Load_SoundFile_GroupAsync(L"SUPER_CHARGE", "../Bin/Resources/Sound/Player/SuperCharge/");
+	////Wait_GroupAsync();
+
+	Load_SoundFile_GroupAsync(L"SNIPER_ATTACKLONG", "../Bin/Resources/Sound/Enemy/Sniper/Attack/LongDistance/");
+	Load_SoundFile_GroupAsync(L"SNIPER_ATTACKSHORT", "../Bin/Resources/Sound/Enemy/Sniper/Attack/ShotDistance/");
+	Load_SoundFile_GroupAsync(L"SNIPER_DEATH", "../Bin/Resources/Sound/Enemy/Sniper/Death/");
+	Load_SoundFile_GroupAsync(L"SNIPER_HIT", "../Bin/Resources/Sound/Enemy/Sniper/Hit/");
+	Load_SoundFile_GroupAsync(L"SNIPER_RELOAD", "../Bin/Resources/Sound/Enemy/Sniper/Reload/");
+
+	Load_SoundFile_GroupAsync(L"ZENU_ATTACK", "../Bin/Resources/Sound/Enemy/ZenuGiant/Attack/LongDistance/");
+	Load_SoundFile_GroupAsync(L"ZENU_THROWAXE", "../Bin/Resources/Sound/Enemy/ZenuGiant/AxeThrowProjectTile/");
+	Load_SoundFile_GroupAsync(L"ZENU_BODYMOVE", "../Bin/Resources/Sound/Enemy/ZenuGiant/BodyMove/");	
+	Load_SoundFile_GroupAsync(L"ZENU_DEATH", "../Bin/Resources/Sound/Enemy/ZenuGiant/Death/");
+	Load_SoundFile_GroupAsync(L"ZENU_FOOTSTEP", "../Bin/Resources/Sound/Enemy/ZenuGiant/FootStep/");
+	Load_SoundFile_GroupAsync(L"ZENU_HIT", "../Bin/Resources/Sound/Enemy/ZenuGiant/Hit/");
+	Load_SoundFile_GroupAsync(L"ZENU_SPAWN", "../Bin/Resources/Sound/Enemy/ZenuGiant/Spawn/");
+	
 
 
 	return S_OK;

@@ -5,7 +5,7 @@
 #include "Effect_Manager.h"
 
 #include "Effect_Particle.h"
-#include "Effect_Rect.h"
+//#include "Effect_Rect.h"
 #include "Effect_Instance.h"
 #include "Effect_Trail.h"
 
@@ -360,10 +360,10 @@ void CEffect::Update_PivotMat()
 			{
 				// 주인의 매트릭스를 사용할거면 받아오기
 				m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-				if (typeid(*m_pOwner) == typeid(CSon_Projectile))
-				{
-					_int i = 0;
-				}
+				//if (typeid(*m_pOwner) == typeid(CSon_Projectile))
+				//{
+				//	_int i = 0;
+				//}
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
 			}
 

@@ -12,7 +12,13 @@ public:
 	virtual void Release(CPlayer* pActor) override;
 
 public:
+	void Sound_Heal();
+
+
+public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_InteractionGlamour_Activate;
+
+
 
 };
 

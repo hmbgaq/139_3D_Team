@@ -13,6 +13,16 @@ public:
 public:
 	virtual CState<CPlayer>* Update_State(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
 
+public:
+	void Sound_Whoosh_Up();
+	void Sound_Whoosh_Down();
+
+	void Sound_Impact_Layer1();
+	void Sound_Impact_Layer2();
+
+	void Sound_Hit();
+
+
 protected:
 	class CEffect* m_pEffect = { nullptr };
 

@@ -11,11 +11,16 @@ void CPlayer_ShotgunElectric_Fire_ShortRange::Initialize(CPlayer* pActor)
 	pActor->Set_Weapon_Enable(PLAYER_WEAPON_SHOTGUN, true);
 
 	pActor->Set_UseMouseMove(false);
+
+
+	//pActor->Set_StiffnessRate_Upper(0.7f);
 }
 
 CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
+
+	pActor->Set_StiffnessRate_Upper(0.7f);
 
 	if (false == m_bFlags[0])
 	{
@@ -24,6 +29,7 @@ CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor
 		{
 			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_SHOTGUN);
 			pWeapon->Fire(_float3(-0.3f, 0.f, 1.f));
+			pWeapon->Play_Weapon_Sound_Fire();
 
 			pActor->Set_Animation(ECast(CPlayer::Player_State::Player_IdleLoop), CModel::ANIM_STATE_LOOP, true, false);
 			pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
@@ -42,6 +48,19 @@ CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor
 	else if (false == m_bFlags[2])
 	{
 		pActor->Aim_Walk(fTimeDelta);
+		m_bFlags[2] = pActor->Is_Upper_Inputable_Front(25);
+
+		if (true == m_bFlags[2])
+		{
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_SHOTGUN);
+			pWeapon->Play_Weapon_Sound_Reload();
+			
+		}
+
+	}
+	else if (false == m_bFlags[3])
+	{
+		pActor->Aim_Walk(fTimeDelta);
 
 		CData_Manager* pDataManager = CData_Manager::GetInstance();
 		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::SHOTGUN_UPGRADE))
@@ -50,7 +69,7 @@ CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor
 			if (pState)	return pState;
 		}
 
-		m_bFlags[2] = pActor->Is_UpperAnimation_End();
+		m_bFlags[3] = pActor->Is_UpperAnimation_End();
 	}
 	else 
 	{

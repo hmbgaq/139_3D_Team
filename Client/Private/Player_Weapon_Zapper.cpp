@@ -88,8 +88,12 @@ void CPlayer_Weapon_Zapper::OnCollisionEnter(CCollider* other)
 
 		pTarget_Character->Hitted_Electrocute();
 		//Set_Enable_Collisions(false);
-	}
 	
+		CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
+		pPlayer->Play_Voice_Zapper_Block();
+
+	}
+
 }
 
 void CPlayer_Weapon_Zapper::OnCollisionStay(CCollider* other)

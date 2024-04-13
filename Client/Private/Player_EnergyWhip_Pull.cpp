@@ -4,6 +4,7 @@
 #include "Effect_Manager.h"
 #include "Effect.h"
 #include "Bone.h"
+#include "SMath.h"
 
 void CPlayer_EnergyWhip_Pull::Initialize(CPlayer* pActor)
 {
@@ -11,6 +12,7 @@ void CPlayer_EnergyWhip_Pull::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 15);
 
 	pActor->Search_Target(20.f);
+
 }
 
 CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDelta)
@@ -19,32 +21,34 @@ CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDe
 
 	CCharacter* pTarget = pActor->Get_Target();
 
-	if (nullptr != pTarget)
+	if (nullptr == pTarget)
 	{
-		if (false == m_bFlags[0])
-		{
-			pTarget->Hitted_Electrocute();
-			pActor->Apply_Shake_And_Blur(Power::Medium);
-			m_bFlags[0] = true;
-		}
+		return Normal(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	else if (false == m_bFlags[0])
+	{
+		pTarget->Hitted_Electrocute();
 
-		if (false == m_bFlags[1]) 
+		Sound_Pull();
+		pActor->Play_Voice_Zapper_Dash();
+		m_bFlags[0] = true;
+	}
+	else if (false == m_bFlags[1])
+	{
+		m_bFlags[1] = pActor->Is_Inputable_Front(19);
+		if (true == m_bFlags[1])
 		{
-			_float fDistance = 1.2f;
-			if (fDistance < pActor->Calc_Distance())
-			{
-				_float3 vFront = pActor->Calc_Front_Pos(_float3(0.f, 0.f, fDistance / 2.f));
-				pTarget->Dragged(fTimeDelta, vFront);
-				//if (fDistance >= pActor->Calc_Distance()) 
-				//{
-				//	m_bFlags[1] = true;
-				//}
-			}
-			else 
-			{
-				m_bFlags[1] = true;
-			}
+			pActor->Apply_Shake_And_Blur(Power::Medium);
 		}
+	}
+	else if (false == m_bFlags[2])
+	{
+		_float fDistance = 1.2f;
+		m_bFlags[2] = fDistance >= pActor->Calc_Distance();
+
+		_float3 vFront = pActor->Calc_Front_Pos(_float3(0.f, 0.f, fDistance / 2.f));
+		pTarget->Dragged(fTimeDelta, vFront);
+
 	}
 
 	if (pActor->Is_Animation_End())
@@ -58,4 +62,35 @@ CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDe
 void CPlayer_EnergyWhip_Pull::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+}
+
+void CPlayer_EnergyWhip_Pull::Sound_Pull()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 6);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_EnergyMode_WhipAttack_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_EnergyMode_WhipAttack_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_EnergyMode_WhipAttack_03.wav";
+		break;
+	case 3:
+		strFileName = L"Player_EnergyMode_WhipAttack_04.wav";
+		break;
+	case 4:
+		strFileName = L"Player_EnergyMode_WhipAttack_05.wav";
+		break;
+	case 5:
+		strFileName = L"Player_EnergyMode_WhipAttack_06.wav";
+		break;
+	default:
+		strFileName = L"Player_EnergyMode_WhipAttack_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
 }

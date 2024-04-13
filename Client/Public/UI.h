@@ -371,6 +371,7 @@ public: /* ============================== SetUp ============================== *
 public:	// Tick
 	void			Player_HUD(_float fTimeDelta);
 	void			TutorialBox(_float fTimeDelta);
+	void			DiedScreen(_float fTimeDelta);
 
 public:
 	void			Check_Disappear(_float fTimeDelta);
