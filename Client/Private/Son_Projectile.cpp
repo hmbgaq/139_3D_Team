@@ -104,7 +104,7 @@ void CSon_Projectile::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.018f, fTimeDelta,"Parasiter/", "Son_ProjectilcTail.json", Get_Position(), TRUE, m_vPlayerPos);
+	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.018f, fTimeDelta,"Parasiter/", "Son_ProjectilcTail.json", Get_Position(), true, m_vPlayerPos);
 
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
@@ -144,7 +144,7 @@ void CSon_Projectile::OnCollisionEnter(CCollider* other)
 			// ÀÌÆåÆ® »ý¼º
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position());
 			//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Distortion.json", m_pTransformCom->Get_Position());
-			EFFECT_MANAGER->Play_Effect("Hit", "Hit_Distortion.json", m_pTransformCom->Get_Position());
+			EFFECT_MANAGER->Play_Effect("Hit", "Hit_Distortion.json", nullptr, m_pTransformCom->Get_Position());
 		}
 
 		//m_pCollider->Set_Enable(false);
@@ -223,7 +223,8 @@ void CSon_Projectile::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pEffect);
+	if(nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 
 }

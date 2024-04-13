@@ -55,8 +55,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
-	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround"))); // Object 생성 실패해서 임시 주석. + 저두요
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
+	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
 	FAILED_CHECK(Ready_UI());
@@ -84,12 +83,16 @@ HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 	m_pGameInstance->Add_ShadowLight_Proj(ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS), 60.f, (_float)g_iWinSizeX / (_float)g_iWinSizeY, Engine::g_fLightNear, Engine::g_fLightFar);
 
 	/* Map Light */
-	CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
 
-	if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
-	{
-		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
-	}
+	m_pGameInstance->Remove_AllLight();
+
+
+	//CLight* pDirectionalLight = m_pGameInstance->Get_DirectionLight();
+	//
+	//if (pDirectionalLight != nullptr) //TODO 기존에 디렉셔널 라이트가 존재했다면.
+	//{
+	//	m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
+	//}
 
 	json IntroBossMapJson = {};
 
@@ -110,6 +113,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 		LightDesc.bEnable = LightJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightJson[i]["Type"];
 		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -176,6 +180,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_LightDesc()
 		LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightObjectJson[i]["LightType"];
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -317,6 +322,7 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();
 
+
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
 
@@ -334,9 +340,10 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 		Desc.eInteractState = InteractJson[i]["InteractState"];
 		Desc.eInteractType = InteractJson[i]["InteractType"];
 		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		//Desc.bLevelChange = false;
 		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 
-		//Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
 		Desc.bEnable = InteractJson[i]["Enable"];
 		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
 		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
@@ -346,17 +353,27 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 		Desc.bRotate = InteractJson[i]["Rotate"];
 		Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
 		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+		Desc.eRotationState = InteractJson[i]["RotationType"];
 		Desc.bArrival = InteractJson[i]["Arrival"];
-
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
+		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
+		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
 		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
 
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
 
 		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
 
 		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
 		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
@@ -384,10 +401,109 @@ HRESULT CLevel_SnowMountainBoss::Ready_Layer_BackGround(const wstring& strLayerT
 			Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
 		}
 
+		if (Desc.bOwner == false)
+		{
+			CEnvironment_Interact* pObject = { nullptr };
 
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 
-		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAINBOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc)))
-			return E_FAIL;
+			if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+			{
+				CData_Manager::GetInstance()->Set_SnowMountainWagon(pObject);
+			}
+
+		}
+		else
+			continue;
+	}
+
+	for (_int i = 0; i < InteractJsonSize; ++i)
+	{
+
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
+
+		Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InteractJson[i]["ModelTag"];
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+		Desc.bPreview = false;
+		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.eInteractState = InteractJson[i]["InteractState"];
+		Desc.eInteractType = InteractJson[i]["InteractType"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		//Desc.bLevelChange = false;
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.bEnable = InteractJson[i]["Enable"];
+		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
+		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
+		Desc.bOffset = InteractJson[i]["Offset"];
+		Desc.bOwner = InteractJson[i]["Owner"];
+		Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
+		Desc.bRotate = InteractJson[i]["Rotate"];
+		Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
+		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+		Desc.eRotationState = InteractJson[i]["RotationType"];
+		Desc.bArrival = InteractJson[i]["Arrival"];
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
+		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
+		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+		Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
+
+		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
+		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
+		CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
+
+		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+		_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
+
+		for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+		{
+			Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+		}
+
+		if (Desc.bOwner == true)
+		{
+			CEnvironment_Interact* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAINBOSS, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+		}
+		else
+			continue;
 	}
 
 	json InstanceJson = Stage1MapJson["Instance_Json"];

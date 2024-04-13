@@ -44,7 +44,7 @@ HRESULT CObject_Manager::Add_Prototype(const wstring & strPrototypeTag, CGameObj
 	
 	if (true == pPrototype->Is_PoolObject()) 
 	{
-		for (_uint i = 0; i < 100; ++i)
+		for (_uint i = 0; i < 200; ++i)
 		{
 			ObjectList.push_back(pPrototype->Pool());
 		}

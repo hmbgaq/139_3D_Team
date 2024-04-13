@@ -49,7 +49,7 @@ CState<CPlayer>* CPlayer_MeleeFollowUp::Update(CPlayer* pActor, _float fTimeDelt
 		if (true == m_bFlags[0])
 		{
 			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_L, true);
-			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK2", L"player_punch_basic_whoosh002.wav", CHANNELID::SOUND_PLAYER_ATTACK2, 10.f);
+			m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"player_punch_basic_whoosh002.wav", CHANNELID::SOUND_PLAYER_ATTACK2, 10.f);
 		}
 	}
 	else if (false == m_bFlags[1])

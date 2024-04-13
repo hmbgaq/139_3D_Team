@@ -45,7 +45,8 @@ private:
 
 private:
 	CEffect* m_pMapEffect = { nullptr }; // TEST
-
+	CEffect* m_pEffect = { nullptr };
+	CEffect* m_pChimEffect = { nullptr };
 public:
 	CGameObject* m_pMonster1 = { nullptr };
 	CGameObject* m_pMonster2 = { nullptr };
@@ -56,15 +57,17 @@ public:
 	_bool m_bStun = true;
 	_bool m_bStunCheck1 = true;
 	_bool m_bStunCheck2 = true;
+	_bool m_bDeadState = false;
 	//motherweakness
 	_bool m_bWeakness1 = false;
 	_bool m_bWeakness2 = false;
-
+	_bool m_bChimCheck = false;
 	_uint m_iSonDead = 0;
 	_uint m_iLoopCount = 0;
 	_uint m_iShootingCount = 0;
 	_float m_fTimeDelta = 0.f;
 	_float m_fTimeDelta2 = 0.f;
+	_float m_fTimeAcc = 0.f;
 public:
 	/* 원형객체를 생성한다. */
 	static CMother* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

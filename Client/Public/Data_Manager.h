@@ -110,6 +110,16 @@ public:
 	void	Set_MouseCenter(_bool bCenter) { m_bCenter = bCenter; }
 	_bool	Get_MouseCenter() { return m_bCenter; }
 
+	// Player Money
+	void	Set_Money(_int iMoney) { m_iMoney = iMoney; }
+	void	Add_Money(_int iMoney) { m_iMoney += iMoney; }
+	_int	Get_Money() { return m_iMoney; }
+
+	// Player SkillPoint
+	void	Set_SkillPoint(_int iSkillPoint) { m_iSkillPoint = iSkillPoint; }
+	void	Add_SkillPoint(_int iSkillPoint) { m_iSkillPoint += iSkillPoint; }
+	_int	Get_SkillPoint() { return m_iSkillPoint; }
+
 private:
 	_bool	m_bCenter = false;
 	_bool	m_bFix = false;
@@ -118,11 +128,14 @@ private: /* _float */
 	_float	m_fMaxHP = 100.f;
 	_float	m_fCurHP = 100.f;
 
-	_float	m_fMaxEXP = 1000000000.f;
+	_float	m_fMaxEXP = 100.f;
 	_float	m_fCurEXP = 0.f;
 
 	_float	m_fMaxEnergyGuige = 100.f;
 	_float	m_fCurEnergyGuige = 0.f;
+
+	_int	m_iMoney = 1000.f;
+	_int	m_iSkillPoint = 1;
 
 	GAME_STATE m_eGame_State = GAME_STATE::GAMEPLAY;
 
@@ -264,17 +277,24 @@ public: /* ========================== Player Info ========================== */
 	// =>총을 발사했을 때 Crosshair발사 애니메이션 활성화 여부를 결정하는 Get함수
 	void	Set_TriggerCrosshair(_bool bTriggerCrosshair) { m_bTriggerCrosshair = bTriggerCrosshair; }
 
+
+public:
+	vector<pair<_int, _bool>>*			Get_LevelSwitchContainer() { return &m_vecLevelSwitch; }
+	void								Set_LevelSwitchForIndex(_int iIndex, _bool bSwitch) { m_vecLevelSwitch[iIndex, bSwitch] = make_pair(iIndex, bSwitch);	}
+
 private:
-	CMasterCamera* m_pMasterCamera = { nullptr };
-	CPlayer* m_pPlayer = { nullptr };
-	CMother* m_pMother = { nullptr };
-	CGameObject* m_pSon = { nullptr };
-	CGameObject* m_pSon2 = { nullptr };
+	CMasterCamera*						m_pMasterCamera = { nullptr };
+	CPlayer*							m_pPlayer = { nullptr };
+	CMother*							m_pMother = { nullptr };
+	CGameObject*						m_pSon = { nullptr };
+	CGameObject*						m_pSon2 = { nullptr };
 
-	CSky* m_pSky = { nullptr };
-	CNavigation* m_pNavigation = { nullptr };
-	CEnvironment_Interact* m_pSnowMountainWagon = { nullptr };
+	CSky*								m_pSky = { nullptr };
+	CNavigation*						m_pNavigation = { nullptr };
+	CEnvironment_Interact*				m_pSnowMountainWagon = { nullptr };
 
+
+	vector<pair<_int, _bool>>			m_vecLevelSwitch; //! 특정 레벨에서 필요한 스위치 개수만큼 푸시 해주고 On, Off 시켜주자.
 
 private:
 	CCamera* m_pCamera = { nullptr };

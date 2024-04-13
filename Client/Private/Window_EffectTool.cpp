@@ -32,6 +32,7 @@
 #include "Bone.h"
 #include "Player.h"
 #include "VampireCommander.h"
+#include "Mother.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -377,17 +378,20 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 	tDesc.strProtoTag = { TEXT("Prototype_GameObject_Model_Preview") };
 	tDesc.strModelTag = { strModelTag };
 
-	if (strModelTag == TEXT("Prototype_Component_Model_Rentier"))
+	if (strModelTag == TEXT("Prototype_Component_Model_Rentier"))	// 플레이어
 	{
-		tDesc.iAnimIndex = { 41 };	// 플레이어 Idle애니메이션은 8번
+		tDesc.iAnimIndex = { CPlayer::Player_IdleLoop };	
 	}
 
-	if (strModelTag == TEXT("Prototype_Component_Model_VampireCommander"))
+	if (strModelTag == TEXT("Prototype_Component_Model_VampireCommander")) // 뱀파이어 보스
 	{
-		tDesc.iAnimIndex = { 9 };	// 보스 Idle애니메이션은 9번 VampireCommander_Idle
+		tDesc.iAnimIndex = { CVampireCommander::VampireCommander_Idle };	
 	}
 
-
+	if (strModelTag == TEXT("Prototype_Component_Model_MotherMouth"))	// 기생체 마더
+	{
+		tDesc.iAnimIndex = { CMother::Parasiter_Idle_01 };
+	}
 
 
 	CGameObject* pObj = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, TEXT("Layer_Model_Preview"), TEXT("Prototype_GameObject_Model_Preview"), &tDesc);
@@ -401,6 +405,16 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 	}
 
 	return S_OK;
+}
+
+void CWindow_EffectTool::Attach_Tool(string strBoneTag)
+{
+	m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
+	m_pCurEffect->Get_Desc()->bParentPivot = true;
+
+	m_pCurEffect->Get_Desc()->bAttachTool = true;
+	m_pCurEffect->Get_Desc()->matPivot_Tool = m_pModel_Preview->Get_ModelCom()->Get_BonePtr(strBoneTag.c_str())->Get_CombinedTransformationMatrix();
+
 }
 
 
@@ -5627,6 +5641,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			Ready_Model_Preview(TEXT("Prototype_Component_Model_Effect_Torch"));
 		}
 
+		if (ImGui::Button("Create Model_Mother"))	// 모델 생성
+		{
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_Mother"));
+		}
+
 	}
 	else
 	{
@@ -5697,21 +5716,30 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 			if (ImGui::Button(" Attach Bone "))
 			{
-				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
 				{
-					m_pCurEffect->Set_Object_Owner(m_pModel_Preview);
-					m_pCurEffect->Get_Desc()->bParentPivot = true;
+					Attach_Tool("lips_H_close_upnode");
+				}
 
-					m_pCurEffect->Get_Desc()->bAttachTool = true;
-					m_pCurEffect->Get_Desc()->matPivot_Tool = m_pModel_Preview->Get_ModelCom()->Get_BonePtr("lips_H_close_upnode")->Get_CombinedTransformationMatrix();
 
+				if (TEXT("Prototype_Component_Model_Mother") == pDesc->strModelTag)	// 마더 뼈에 붙여보기
+				{
+					Attach_Tool("Jaws_Center");
+				}
+
+				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag) // 뱀파이어 뼈에 붙이기
+				{
+					Attach_Tool("Head");
 				}
 			}
 
 
 			if (ImGui::Button(" Detach Bone "))
 			{
-				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				// 플레이어, 마더
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag
+					|| TEXT("Prototype_Component_Model_Mother")
+					|| TEXT("Prototype_Component_Model_VampireCommander"))
 				{
 					m_pCurEffect->Delete_Object_Owner();
 					m_pCurEffect->Get_Desc()->bParentPivot = false;
@@ -5757,6 +5785,12 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				{
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_01);
 				}
+
+				if (TEXT("Prototype_Component_Model_Mother") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CMother::Parasiter_Vomit_Loop_02);
+				}
+
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Attack_1"))
@@ -5798,11 +5832,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				}
 			}
 
-			if (ImGui::Button("Revolver_01"))
+			if (ImGui::Button("TeleportPunch_01"))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
 				{
-					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_Bandit_Special_01);
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_TeleportPunch_L01_Alt);
 				}
 
 				if (TEXT("Prototype_Component_Model_VampireCommander") == pDesc->strModelTag)
@@ -5835,6 +5869,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 
 	// 테스트용 투사체 생성
+	ImGui::SeparatorText("");
 	if (nullptr == m_pTestProjectile)
 	{
 		if (ImGui::Button("Create Son_Projectile"))	// 모델 생성
@@ -6709,6 +6744,15 @@ void CWindow_EffectTool::Update_EffectList_Window()
 		//else if (2 == m_iType_Dead)
 		//	m_pCurEffectDesc->eType_Dead = CEffect::DEAD_NONE;
 
+
+		/* 부모 피봇 사용할건지 정하기 */
+		ImGui::SeparatorText(" ParentPivot_EFFECT ");			
+		ImGui::RadioButton("Use ParentPivot", &m_iParentPivot, 0);		
+		ImGui::RadioButton("UnUse ParentPivot", &m_iParentPivot, 1);
+		if (0 == m_iParentPivot)
+			m_pCurEffectDesc->bParentPivot = true;
+		else if (1 == m_iParentPivot)
+			m_pCurEffectDesc->bParentPivot = false;
 
 	}
 }
@@ -7983,6 +8027,8 @@ void CWindow_EffectTool::Update_CurParameters()
 
 
 		m_iType_Dead = pDesc->eType_Dead;
+
+		m_iParentPivot = pDesc->bParentPivot;
 
 	}
 

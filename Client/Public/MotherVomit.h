@@ -33,8 +33,8 @@ public:
 	_float				m_fEffectTimeAcc = 0.f;
 
 private:
-	CEffect* m_pEffect = { nullptr };
 	CMother* m_pMother = { nullptr };
+
 public:
 	static CMotherVomit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg);

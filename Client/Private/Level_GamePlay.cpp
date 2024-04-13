@@ -23,6 +23,7 @@
 #include "Environment_Instance.h"
 #include "Environment_Interact.h"
 #include "Environment_LightObject.h"
+#include "Environment_SpecialObject.h"
 #include "Event_Trigger.h"
 #include "Event_MonsterSpawnTrigger.h"
 #include "Light.h"
@@ -46,21 +47,16 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
 	m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
+	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Shader.json");
 
 	FAILED_CHECK(Ready_LightDesc());
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-
-	//FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
-
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
-
-	//CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-	//pPlayer->Set_InitPosition(_float3(250.66f, 0.f, 2.38f));
 
 	return S_OK;
 }
@@ -69,18 +65,7 @@ void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_GRAVE))
 	{
-		//m_pGameInstance->Get_Renderer()->Set_HBAO_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_BloomBlur_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_Fog_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_HDR_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_FXAA_Active(false);
-		//m_pGameInstance->Get_Renderer()->Set_HSV_Active(false);
-
-
 		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
-		//m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
 	}
 
 }
@@ -106,7 +91,7 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		m_pGameInstance->Remove_Light(pDirectionalLight->Get_LightIndex());
 	}
 
-	json Stage1MapJson = {};
+	json Stage1MapJson = {};     
 
 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
 	{
@@ -125,6 +110,7 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 		LightDesc.bEnable = LightJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightJson[i]["Type"];
 		CJson_Utility::Load_Float4(LightJson[i]["Direction"], LightDesc.vDirection);
@@ -185,14 +171,13 @@ HRESULT CLevel_GamePlay::Ready_LightDesc()
 
 		LightObjectDesc.WorldMatrix = WorldMatrix;
 
-
-
 		LIGHT_DESC LightDesc = {};
 
 		LightDesc.iLightIndex = LightObjectJson[i]["LightIndex"];
 		LightDesc.bEnable = LightObjectJson[i]["LightEnable"];
 		LightDesc.fCutOff = LightObjectJson[i]["CutOff"];
 		LightDesc.fOuterCutOff = LightObjectJson[i]["OuterCutOff"];
+		LightDesc.fIntensity = LightObjectJson[i]["Intensity"]; // ◀ 여기 추가됨 
 
 		LightDesc.eType = LightObjectJson[i]["LightType"];
 		CJson_Utility::Load_Float4(LightObjectJson[i]["Direction"], LightDesc.vDirection);
@@ -346,61 +331,58 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const wstring & strLayerTag)
 
 	return S_OK;
 }
-
-HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 {
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Terrain")));
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Sky")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_SkyDome")));
 
- 	json Stage1MapJson = {};
- 
- 	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
- 	{
- 		MSG_BOX("맵 불러오기 실패");
- 		return E_FAIL;
- 	}
- 
- 	json BasicJson = Stage1MapJson["Basic_Json"];
- 	_int iBasicJsonSize = (_int)BasicJson.size();
- 
- 	for (_int i = 0; i < iBasicJsonSize; ++i)
- 	{
- 		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
- 
- 		Desc.bAnimModel = BasicJson[i]["AnimType"];
- 
- 		wstring strLoadModelTag;
- 		string strJsonModelTag = BasicJson[i]["ModelTag"];
- 
- 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
- 		Desc.strModelTag = strLoadModelTag;
- 
- 		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
- 		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
- 		Desc.bPreview = false;
- 
- 		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
- 		_float4x4 WorldMatrix;
- 
- 		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
- 		{
- 			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
- 			{
- 				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
- 			}
- 		}
+	json Stage1MapJson = {};
 
- 
- 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
- 		Desc.WorldMatrix = WorldMatrix;
+	if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+	{
+		MSG_BOX("맵 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json BasicJson = Stage1MapJson["Basic_Json"];
+	_int iBasicJsonSize = (_int)BasicJson.size();
+
+	for (_int i = 0; i < iBasicJsonSize; ++i)
+	{
+		CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+		Desc.bAnimModel = BasicJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = BasicJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+
+		Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+		Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+		Desc.bPreview = false;
+
+		const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
 
 
 		string strJsonObjectTag = BasicJson[i]["ObjectTag"];
 
 		if ("Prototype_Component_Model_TNTCrate" == strJsonModelTag || "TNTCrate" == strJsonObjectTag)
 		{
-			CGameObject* pObject =  m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_DestructableProps_TNTCrate");
+			CGameObject* pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_DestructableProps_TNTCrate");
 			pObject->Set_WorldMatrix(WorldMatrix);
 		}
 		else if ("Prototype_Component_Model_Crane" == strJsonModelTag || "Crane" == strJsonObjectTag)
@@ -408,43 +390,76 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 			CGameObject* pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Crane");
 			pObject->Set_WorldMatrix(WorldMatrix);
 		}
-		else 
+		else
 		{
 			CEnvironment_Object* pObject = { nullptr };
 
 			pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
 
 		}
- 
- 	}
- 
- 
+
+	}
+
+
 	json InteractJson = Stage1MapJson["Interact_Json"];
 	_int InteractJsonSize = (_int)InteractJson.size();
 
+
 	for (_int i = 0; i < InteractJsonSize; ++i)
 	{
+
 		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
 
 		Desc.bAnimModel = InteractJson[i]["AnimType"];
 
 		wstring strLoadModelTag;
 		string strJsonModelTag = InteractJson[i]["ModelTag"];
-
 		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
 		Desc.strModelTag = strLoadModelTag;
 		Desc.bPreview = false;
 		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
 		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
-		Desc.bLevelChange = InteractJson[i]["LevelChange"];
-		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 		Desc.eInteractState = InteractJson[i]["InteractState"];
 		Desc.eInteractType = InteractJson[i]["InteractType"];
-		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		//Desc.bLevelChange = false;
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
 
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.bEnable = InteractJson[i]["Enable"];
+		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
+		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
+		Desc.bOffset = InteractJson[i]["Offset"];
+		Desc.bOwner = InteractJson[i]["Owner"];
+		Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
+		Desc.bRotate = InteractJson[i]["Rotate"];
+		Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
+		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+		Desc.eRotationState = InteractJson[i]["RotationType"];
+		Desc.bArrival = InteractJson[i]["Arrival"];
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
+		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
+		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
 		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
 		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
+
+		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
+		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
+		CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
 
 		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
 		_float4x4 WorldMatrix;
@@ -460,10 +475,117 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
 		Desc.WorldMatrix = WorldMatrix;
 
-		CEnvironment_Interact* pObject = { nullptr };
+		json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+		_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
 
-		pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+		for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+		{
+			Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+		}
 
+		if (Desc.bOwner == false)
+		{
+			CEnvironment_Interact* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+			if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
+			{
+				CData_Manager::GetInstance()->Set_SnowMountainWagon(pObject);
+			}
+
+		}
+		else
+			continue;
+	}
+
+	for (_int i = 0; i < InteractJsonSize; ++i)
+	{
+
+		CEnvironment_Interact::ENVIRONMENT_INTERACTOBJECT_DESC Desc = {};
+
+		Desc.bAnimModel = InteractJson[i]["AnimType"];
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = InteractJson[i]["ModelTag"];
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+		Desc.bPreview = false;
+		Desc.iPlayAnimationIndex = InteractJson[i]["PlayAnimationIndex"];
+		Desc.iShaderPassIndex = InteractJson[i]["ShaderPassIndex"];
+		Desc.eInteractState = InteractJson[i]["InteractState"];
+		Desc.eInteractType = InteractJson[i]["InteractType"];
+		Desc.bLevelChange = InteractJson[i]["LevelChange"];
+		//Desc.bLevelChange = false;
+		Desc.eChangeLevel = (LEVEL)InteractJson[i]["InteractLevel"];
+
+		Desc.strSplineJsonPath = InteractJson[i]["SplineJsonPath"];
+		Desc.bEnable = InteractJson[i]["Enable"];
+		Desc.strEnableJsonPath = InteractJson[i]["EnableJsonPath"];
+		Desc.iInteractGroupIndex = InteractJson[i]["InteractGroupIndex"];
+		Desc.bOffset = InteractJson[i]["Offset"];
+		Desc.bOwner = InteractJson[i]["Owner"];
+		Desc.bRootTranslate = InteractJson[i]["RootTranslate"];
+		Desc.bRotate = InteractJson[i]["Rotate"];
+		Desc.fRotationAngle = InteractJson[i]["RotationAngle"];
+		Desc.fRotationSpeed = InteractJson[i]["RotationSpeed"];
+		Desc.eRotationState = InteractJson[i]["RotationType"];
+		Desc.bArrival = InteractJson[i]["Arrival"];
+		Desc.bInteractMoveMode = InteractJson[i]["InteractMove"];
+		Desc.iLadderCount = InteractJson[i]["InteractLadderCount"];
+		Desc.iReverseLadderCount = InteractJson[i]["InteractReverseLadderCount"];
+		//Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
+		//Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
+
+		Desc.bUseGravity = InteractJson[i]["UseGravity"];
+		CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
+		CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderSize"], Desc.vBodyColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["ColliderCenter"], Desc.vBodyColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderSize"], Desc.vInteractColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractColliderCenter"], Desc.vInteractColliderCenter);
+
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderSize"], Desc.vMoveRangeColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["MoveColliderCenter"], Desc.vMoveRangeColliderCenter);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderSize"], Desc.vInteractMoveColliderSize);
+		CJson_Utility::Load_Float3(InteractJson[i]["InteractMoveColliderCenter"], Desc.vInteractMoveColliderCenter);
+
+		CJson_Utility::Load_Float4(InteractJson[i]["OffsetPosition"], Desc.vOffset);
+		CJson_Utility::Load_Float4(InteractJson[i]["EnablePosition"], Desc.vEnablePosition);
+		CJson_Utility::Load_Float4(InteractJson[i]["ArrivalPosition"], Desc.vArrivalPosition);
+
+		const json& TransformJson = InteractJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+		json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
+		_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
+
+		for (_int i = 0; i < iUpdateCellJsonSize; ++i)
+		{
+			Desc.vecUpdateCellIndex.push_back(UpdateCellJson[i]["UpdateCellIndex"]);
+		}
+
+		if (Desc.bOwner == true)
+		{
+			CEnvironment_Interact* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+
+		}
+		else
+			continue;
 	}
  
  	json InstanceJson = Stage1MapJson["Instance_Json"];
@@ -510,7 +632,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring & strLayerTag)
 	return S_OK;
 
 }
-
 HRESULT CLevel_GamePlay::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_GAMEPLAY, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));

@@ -47,6 +47,19 @@ private:
 	_float4				m_vRimColor = {};
 	_float3				m_vBloomPower = {};
 
+private:
+	CTexture* m_pDissolveTexture = { nullptr };
+	_bool		m_bDissolve = { false };
+	_bool		m_bOutLine = { false };
+
+	/* Dissolve */
+	_float		m_fDissolveWeight = 0.f;
+	_float		m_fDissolve_feather = 0.f;
+	_float3		m_vDissolve_Color = { 0.f, 0.f, 0.f };
+	_float		m_fDissolve_Discard = 0.f;
+	_float		m_fTimeAcc = 0.f;
+
+	_bool               m_bDeadState = { false };
 	_int			iDiscardMeshNumber = 0;
 private:
 	HRESULT Ready_Components();

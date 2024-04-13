@@ -153,8 +153,10 @@ public: /* For.Light_Manager */
 	HRESULT			Ready_StaticLightMatrix(_float3 vPos, _float3 vLook);
 
 
+
 	HRESULT		Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	_bool		Remove_Light(const _uint& iIndex);
+	_bool		Remove_AllLight();
 	HRESULT		Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp);
 	HRESULT		Add_ShadowLight_View(_uint iLevelIndex, _vector vEye, _vector vAt, _vector vUp);
 	HRESULT		Add_ShadowLight_Proj(_uint iLevelIndex, _float fFovAngleY, _float fAspectRatio, _float fNearZ, _float fFarZ);
@@ -263,7 +265,9 @@ public:
 	void Update_Hitlag(_float fTimeDelta);
 
 	void Set_RadialBlurTime(_float fTime = 0.3f) { m_fRadialBlurTime = max(m_fRadialBlurTime, fTime); };
+	void Set_ChromaBlurTime(_float fTime = 0.3f) { m_fChromaTime = max(m_fChromaTime, fTime); };
 	void Update_RadialBlurTime(_float fTimeDelta);
+	void Update_ChromaTime(_float fTimeDelta);
 #pragma endregion
 
 private:
@@ -290,6 +294,7 @@ private:
 	_float m_fHitlag_Time = { 0.f };
 	_float m_fTimeDelta = { 0.f };
 	_float m_fRadialBlurTime = { 0.f };
+	_float m_fChromaTime = { 0.f };
 
 private:
 	_uint m_iCurrentLevelIndex = { 0 };

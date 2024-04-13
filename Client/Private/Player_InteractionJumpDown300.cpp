@@ -14,6 +14,8 @@ CState<CPlayer>* CPlayer_InteractionJumpDown300::Update(CPlayer* pActor, _float 
 {
 	__super::Update(pActor, fTimeDelta);
 
+	pActor->Set_UseGravity(true);
+
 	if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(24);

@@ -2,6 +2,8 @@
 #include "Mother_VomitEnd.h"
 #include "GameInstance.h"
 
+#include "Effect_Manager.h"
+
 void CMother_VomitLoop::Initialize(CMother* pActor)
 {
 	__super::Initialize(pActor);
@@ -19,7 +21,6 @@ CState<CMother>* CMother_VomitLoop::Update(CMother* pActor, _float fTimeDelta)
 	{
 		m_fCloneTime = 0.f;
 		m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAINBOSS, L"Layer_Boss", L"Prototype_GameObject_MotherVomit");
-
 	}
 
 	if (m_fTimeDelta >= 7.f)

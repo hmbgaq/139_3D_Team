@@ -49,7 +49,7 @@ HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 	{
 		FAILED_CHECK(pShader->Bind_RawValue("g_vLightDir", &m_LightDesc.vDirection, sizeof(_float4)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vPosition, sizeof(_float4)));
-		FAILED_CHECK(pShader->Bind_RawValue("g_fRange", &m_LightDesc.fRange, sizeof(_float)));
+		FAILED_CHECK(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fCutOff", &m_LightDesc.fCutOff, sizeof(_float)));
 		FAILED_CHECK(pShader->Bind_RawValue("g_fOuterCutOff", &m_LightDesc.fOuterCutOff, sizeof(_float)));
 

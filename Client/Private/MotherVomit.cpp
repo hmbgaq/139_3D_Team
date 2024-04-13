@@ -56,8 +56,9 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// 이펙트 생성
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath3.json", this);
-
+	EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath4.json", this, false);
+	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_08.json", this, false);
+	//EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", this);
 
 	return S_OK;
 }
@@ -92,6 +93,9 @@ void CMotherVomit::Tick(_float fTimeDelta)
 		return;
 
 	__super::Tick(fTimeDelta);
+
+	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.08f, fTimeDelta, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", Get_Position(), true, m_vPlayerPos);
+
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	//if (m_pTransformCom->Get_Position().y >= 0.f)
@@ -143,7 +147,6 @@ void CMotherVomit::OnCollisionEnter(CCollider* other)
 
 	}
 	this->Set_Enable(false);
-
 	//m_pCollider->Set_Enable(false);
 	//this->Set_Dead(true);
 }
@@ -174,7 +177,7 @@ HRESULT CMotherVomit::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER_ATTACK);
-	BoundingDesc.fRadius = { 70.f };
+	BoundingDesc.fRadius = { 100.f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
@@ -219,7 +222,5 @@ void CMotherVomit::Free()
 {
 	__super::Free();
 
-
-	Safe_Release(m_pEffect);
 
 }

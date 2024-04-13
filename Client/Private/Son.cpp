@@ -71,7 +71,6 @@ HRESULT CSon::Initialize(void* pArg)
 	CData_Manager::GetInstance()->Set_Son(this);
 
 	// !UI : HUD_Create
-	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
 	return S_OK;
 }
@@ -79,6 +78,8 @@ HRESULT CSon::Initialize(void* pArg)
 void CSon::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+
+
 }
 
 void CSon::Tick(_float fTimeDelta)
@@ -87,6 +88,14 @@ void CSon::Tick(_float fTimeDelta)
 		return;
 
 	__super::Tick(fTimeDelta);
+
+	if (m_bfirst)
+	{
+		Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
+		m_bfirst = false;
+	}
+
+	m_fTimeDelta2 += fTimeDelta;
 
 	// !UI : HUD_Position									오프셋 조절
 	Check_EnemyHUD_World(m_pTransformCom->Get_WorldMatrix()/*, Offset*/);
@@ -101,11 +110,11 @@ void CSon::Tick(_float fTimeDelta)
 		}
 		m_fTimeDelta += fTimeDelta;
 
-		if (m_fTimeDelta >= 1.f)
-		{
-			cout << "SonHP:" << m_fHp << endl;
-			m_fTimeDelta = 0.f;
-		}
+		//if (m_fTimeDelta >= 1.f)
+		//{
+		//	cout << "SonHP:" << m_fHp << endl;
+		//	m_fTimeDelta = 0.f;
+		//}
 		_float fAngle = Target_Contained_Angle(Get_Transform()->Get_Look(), CData_Manager::GetInstance()->Get_Player()->Get_Transform()->Get_Pos());
 
 		//cout << "Son : " << fAngle << endl;
@@ -141,6 +150,12 @@ void CSon::Tick(_float fTimeDelta)
 
 			//여기서 UI체력도 꺼버렸다가 켜지면 다 같이 켜지게 만들어야 함 ! 
 			m_pActor->Set_State(new CSon_Dead);
+		}
+		if (m_fTimeDelta2 >= 0.3f && m_fHp <= 0.f)
+		{
+			m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Monster_Blood4.json", this, true, "Bone020");
+			//cout << "MotherBossHP:" << m_fHp << endl;
+			m_fTimeDelta2 = 0.f;
 		}
 	}
 	
@@ -267,6 +282,9 @@ void CSon::Free()
 	{
 		Safe_Delete(m_pActor);
 	}
+
+	if (nullptr != m_pEffect)
+		Safe_Release(m_pEffect);
 
 // 	if (nullptr != m_pMapEffect)
 // 	{

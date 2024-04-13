@@ -609,7 +609,7 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 			m_tBufferDesc.bEmitFinished = false;
 			m_tBufferDesc.iEmitCount = 0;
 
-			for (_uint i = 0; i < m_iNumInstance; i++)	// 방출안할걸로 초기화
+			for (_uint i = 0; i < m_iNumInstance; i++)	// 방출안한걸로 초기화
 			{
 				m_vecParticleInfoDesc[i].bEmit = false;
 			}

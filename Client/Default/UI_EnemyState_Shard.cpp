@@ -59,13 +59,7 @@ void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 	//if (m_pCharacterOwner == nullptr)
 	//	return;
 
-	if (m_pCharacterOwner != nullptr)
-	{
-		if (m_pCharacterOwner->Get_MonsterAttackState() == true)
-		{
-			return;
-		}
-	}
+
 
 	if (m_pGameInstance->Key_Down(DIK_V))
 		m_fOffsetY -= 0.1f;
@@ -83,13 +77,19 @@ void CUI_EnemyState_Shard::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		if (m_bAppear == false) // 안보이는 상태니까
+		if (m_pCharacterOwner != nullptr)
 		{
-			m_bAppear = Alpha_Minus(fTimeDelta); // 보이게 알파가 생기게 해준다.
-		}
-		else // 보이는 상태니까
-		{
-			m_bAppear = Alpha_Plus(fTimeDelta); // 안보이게 알파가 지워지게 해준다.
+			if (m_pCharacterOwner->Get_MonsterAttackState() == true)
+			{
+				if (m_bAppear == false) // 안보이는 상태니까
+				{
+					m_bAppear = Alpha_Minus(fTimeDelta); // 보이게 알파가 생기게 해준다.
+				}
+				else // 보이는 상태니까
+				{
+					m_bAppear = Alpha_Plus(fTimeDelta); // 안보이게 알파가 지워지게 해준다.
+				}
+			}
 		}
 	}
 }
@@ -101,26 +101,38 @@ void CUI_EnemyState_Shard::Late_Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
-			return;
+		if (m_pCharacterOwner != nullptr)
+		{
+			if (m_pCharacterOwner->Get_MonsterAttackState() == true)
+			{
+				if (FAILED(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tUIInfo.iRenderGroup, this)))
+					return;
+			}
+		}
 	}
 }
 
 HRESULT CUI_EnemyState_Shard::Render()
 {
-	if (m_bActive == true)
+	if (m_pCharacterOwner != nullptr)
 	{
-		if (FAILED(Bind_ShaderResources()))
-			return E_FAIL;
+		if (m_pCharacterOwner->Get_MonsterAttackState() == true)
+		{
+			if (m_bActive == true)
+			{
+				if (FAILED(Bind_ShaderResources()))
+					return E_FAIL;
 
-		//! 이 셰이더에 0번째 패스로 그릴거야.
-		m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
+				//! 이 셰이더에 0번째 패스로 그릴거야.
+				m_pShaderCom->Begin(0); //! Shader_PosTex 7번 패스 = VS_MAIN,  PS_UI_HP
 
-		//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
-		m_pVIBufferCom->Bind_VIBuffers();
+				//! 내가 그리려고 하는 정점, 인덱스 버퍼를 장치에 바인딩해
+				m_pVIBufferCom->Bind_VIBuffers();
 
-		//! 바인딩된 정점, 인덱스를 그려
-		m_pVIBufferCom->Render();
+				//! 바인딩된 정점, 인덱스를 그려
+				m_pVIBufferCom->Render();
+			}
+		}
 	}
 
 	return S_OK;

@@ -906,6 +906,13 @@ _bool CGameInstance::Remove_Light(const _uint& iIndex)
 	return m_pLight_Manager->Remove_Light(iIndex);
 }
 
+_bool CGameInstance::Remove_AllLight()
+{
+	
+	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	return m_pLight_Manager->Remove_AllLight();
+}
+
 HRESULT CGameInstance::Set_ShadowLight(_uint iLevelIndex, _float4 vEye, _float4 vAt, _float4 vUp)
 {
 	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
@@ -1402,6 +1409,15 @@ void CGameInstance::Update_RadialBlurTime(_float fTimeDelta)
 
 	_bool bIsActivateRadialBlur = 0 < m_fRadialBlurTime;
 	Get_Renderer()->Set_Radial_Blur_Active(bIsActivateRadialBlur);
+}
+
+void CGameInstance::Update_ChromaTime(_float fTimeDelta)
+{
+	m_fChromaTime = m_fChromaTime - fTimeDelta > 0 ? m_fChromaTime - fTimeDelta : 0.f;
+
+	_bool bIsActivateChroma = 0 < m_fChromaTime;
+
+	Get_Renderer()->Set_Chroma_Active(bIsActivateChroma);
 }
 
 wstring CGameInstance::SliceObjectTag(const wstring& strObjectTag) //! 마지막 _ 기준으로 잘라서 오브젝트 이름만 가져오자 - TO 승용

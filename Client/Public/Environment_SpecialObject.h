@@ -227,6 +227,7 @@ private: //!For. Elevator
 	_bool							m_bFirstCollision = false;
 	
 
+
 private:
 	HRESULT				Ready_Components();
 	HRESULT				Bind_ShaderResources();

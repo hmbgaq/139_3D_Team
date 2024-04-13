@@ -29,7 +29,7 @@ CState<CPlayer>* CPlayer_SlamTwoHand_TEMP::Update(CPlayer* pActor, _float fTimeD
 		pSpringCam->Set_ShakeCameraTime(0.1f);
 		pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 
-		EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "SlamDown_v2_26_Rock.json", pActor->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "SlamDown_v2_26_Rock.json", nullptr, pActor->Get_Position());
 		pActor->Apply_Shake_And_Blur(Power::Heavy);
 		pActor->Slam();
 

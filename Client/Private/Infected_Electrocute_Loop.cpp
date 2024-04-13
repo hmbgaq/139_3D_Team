@@ -36,7 +36,7 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 			{
 				pActor->Explosion();
 				pActor->Set_EnemyHUD_Dead();
-				EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", pActor->Get_Position());
+				EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", nullptr, pActor->Get_Position());
 
 				m_bFlags[0] = true;
 			}

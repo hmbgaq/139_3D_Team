@@ -12,6 +12,7 @@ float4    g_vCamPosition;
 float     g_fCamFar;
 float     g_fLightFar;
 float     g_TimeDelta;
+float4    g_vDirectionalDir;
 
 bool      g_bORM_Available;
 bool      g_bEmissive_Available;
@@ -437,6 +438,32 @@ PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
     return Out;
 }
 
+/* ------------------- Pixel Shader(8) -------------------*/
+PS_OUT PS_MAIN_HAIR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    //float4 vDir = In.vPosition - g_vCamPosition;
+    //float dotTL = dot(In.vTangent, g_vDirectionalDir);
+    //float dotTV = dot(In.vTangent,)
+    // sinTL = sqrt(1 - dotTL * dotTL);
+    // sinTV = sqrt(1 - dotTV * dotTV);
+    
+    // calculate diffuse term
+    // float3 diffuse = Kd * 
+    
+    /* --------------- */ 
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); /* -1 ~ 1 -> 0 ~ 1 */
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+ 
+    return Out;
+}
 /*=============================================================
  
                           Technique
@@ -551,4 +578,15 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_D();
     }
 
+    pass Hair
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_HAIR();
+    }
 }

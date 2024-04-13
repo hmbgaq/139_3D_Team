@@ -46,6 +46,10 @@ HRESULT CUI_SkillWindow_Button::Initialize(void* pArg)
 
 	if (m_tUIInfo.strProtoTag == "SkillButton")
 		m_bSelectButton = true;
+	else
+	{
+		m_bSelectButton = false;
+	}
 
 	return S_OK;
 }
@@ -132,24 +136,30 @@ void CUI_SkillWindow_Button::Check_Picking(_float fTimeDelta)
 			{
 				m_bSelectButton = true;
 				m_pUIManager->Select_SkillWindowButton("WeaponButton", false); // 선택한 버튼을 제외하고 모두 꺼준다.
+				//m_pUIManager->ActiveWeapon();
+				//m_pUIManager->NonActiveSkill();
 				m_pUIManager->Active_WeaponIcon(true);
 				m_pUIManager->Active_WeaponFrame(true);
 				m_pUIManager->Active_WeaponActiveGuige();
 				m_pUIManager->NonActive_SkillIcon();
 				m_pUIManager->NonActive_SkillFrame();
 				m_pUIManager->NonActive_SkillActiveGuige();
+				m_pUIManager->Skill_NotPicking();
 			}
 			else if (m_tUIInfo.strProtoTag == "SkillButton" ||
 				m_tUIInfo.strProtoTag == "SkillButtonActive")
 			{
 				m_bSelectButton = true;
 				m_pUIManager->Select_SkillWindowButton("SkillButton", false); // 선택한 버튼을 제외하고 모두 꺼준다.
+				//m_pUIManager->ActiveSkill();
+				//m_pUIManager->NonActiveWeapon();
 				m_pUIManager->Active_SkillIcon(true);
 				m_pUIManager->Active_SkillFrame(true);
 				m_pUIManager->Active_SkillActiveGuige();
 				m_pUIManager->NonActive_WeaponIcon();
 				m_pUIManager->NonActive_WeaponFrame();
 				m_pUIManager->NonActive_WeaponActiveGuige();
+				m_pUIManager->Weapon_NotPicking();
 			}
 		}
 	}
@@ -164,7 +174,7 @@ void CUI_SkillWindow_Button::Check_State(_float fTimeDelta)
 			if (m_fScaleX < 170.f)
 				Change_SizeX((+m_fChangeScale * 1.5f));
 
-			if (m_fScaleY < 90.f)
+			if (m_fScaleY < 80.f)
 				Change_SizeY((+m_fChangeScale * 1.5f));
 		}
 		else
@@ -172,7 +182,7 @@ void CUI_SkillWindow_Button::Check_State(_float fTimeDelta)
 			if (m_fScaleX > 140.f)
 				Change_SizeX((-m_fChangeScale * 1.5f));
 
-			if (m_fScaleY > 70.f)
+			if (m_fScaleY > 60.f)
 				Change_SizeY((-m_fChangeScale * 1.5f));
 		}
 
@@ -184,7 +194,7 @@ void CUI_SkillWindow_Button::Check_State(_float fTimeDelta)
 			if (m_fScaleX < 170.f)
 				Change_SizeX((+m_fChangeScale * 1.5f));
 
-			if (m_fScaleY < 90.f)
+			if (m_fScaleY < 80.f)
 				Change_SizeY((+m_fChangeScale * 1.5f));
 		}
 		else
@@ -192,7 +202,7 @@ void CUI_SkillWindow_Button::Check_State(_float fTimeDelta)
 			if (m_fScaleX > 140.f)
 				Change_SizeX((-m_fChangeScale * 1.5f));
 
-			if (m_fScaleY > 70.f)
+			if (m_fScaleY > 60.f)
 				Change_SizeY((-m_fChangeScale * 1.5f));
 		}
 	}

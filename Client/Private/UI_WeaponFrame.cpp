@@ -42,7 +42,10 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Top", true); // 해금
+	//m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Top", true); // 해금
+
+	Check_State();
+
 	return S_OK;
 }
 
@@ -57,6 +60,8 @@ void CUI_WeaponFrame::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
+		//m_pUIManager->Active_WeaponActiveGuige();
+
 		if (m_pGameInstance->Key_Down(DIK_7))
 			m_eUI_Level = LEVEL0;
 		if (m_pGameInstance->Key_Down(DIK_8))
@@ -65,14 +70,17 @@ void CUI_WeaponFrame::Tick(_float fTimeDelta)
 			m_eUI_Level = LEVEL2;
 
 		Check_Picking(fTimeDelta);
-		Check_State(fTimeDelta);
 		Check_LevelChange(fTimeDelta);
 
 		/* Animation */
-		if (m_eUI_Level >= UI_LEVEL::LEVEL1 && m_bFirstFrame == true)
+		if (m_eUI_Level >= UI_LEVEL::LEVEL2 && m_bFirstFrame == true)
 			m_pTransformCom->RotationZaxis(fTimeDelta * 0.4f);
 
 		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else
+	{
+		//m_pUIManager->NonActive_WeaponActiveGuige();
 	}
 }
 
@@ -315,6 +323,8 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 				// UI 선택
 				m_pUIManager->Select_Weapon("Rifle");
 
+				_int test = m_pUIManager->Get_Select_WeaponLevel();
+
 				// 선택한 UI의 레벨
 				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Rifle");
@@ -355,54 +365,48 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 				if (m_pUIManager->Get_Select_WeaponLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("Shotgun_Skill1");
 			}
+			else
+			{
+				//if (g_UIMouseDownLB == true)
+				//	m_pUIManager->Weapon_NotPicking();
+			}
 		}
 	}
 }
 
-void CUI_WeaponFrame::Check_State(_float fTimeDelta)
+void CUI_WeaponFrame::Check_State()
 {
 #pragma region 1
-	if (m_tUIInfo.strUIName == "Kick")
+	if (m_tUIInfo.strUIName == "Revolver")
 	{
-		
-
+		m_iPrice = 1000;
+		m_iSkillPoint =  1;
 	}
-	else if (m_tUIInfo.strUIName == "ElectricDash")
+	else if (m_tUIInfo.strUIName == "Rifle")
 	{
-
+		m_iPrice = 1000;
+		m_iSkillPoint = 0;
 	}
-	else if (m_tUIInfo.strUIName == "DashShock")
+	else if (m_tUIInfo.strUIName == "Shotgun")
 	{
-
-	}
-	else if (m_tUIInfo.strUIName == "ElectricCord")
-	{
-
-	}
-	else if (m_tUIInfo.strUIName == "PowerUP")
-	{
-
+		m_iPrice = 1000;
+		m_iSkillPoint = 0;
 	}
 #pragma region 2
-	else if (m_tUIInfo.strUIName == "UpperCut")
+	else if (m_tUIInfo.strUIName == "Revolver_Skill1")
 	{
-
+		m_iPrice = 0;
+		m_iSkillPoint = 500;
 	}
-	else if (m_tUIInfo.strUIName == "OneTouch")
+	else if (m_tUIInfo.strUIName == "Rifle_skill1")
 	{
-
+		m_iPrice = 0;
+		m_iSkillPoint = 500;
 	}
-	else if (m_tUIInfo.strUIName == "TwoTouch")
+	else if (m_tUIInfo.strUIName == "Shotgun_Skill1")
 	{
-
-	}
-	else if (m_tUIInfo.strUIName == "ThreeTouch")
-	{
-
-	}
-	else if (m_tUIInfo.strUIName == "ComboPunch")
-	{
-
+		m_iPrice = 0;
+		m_iSkillPoint = 500;
 	}
 }
 
@@ -413,10 +417,9 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 #pragma region 1
 		if (m_tUIInfo.strUIName == "Rifle")
 		{
-			if(m_eUI_Level < UI_LEVEL::LEVEL1)
-				m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+			m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
 
-			if (m_eUI_Level == UI_LEVEL::LEVEL1) // 스킬을 배웠을 경우
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
 			{
 				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::RIFLE, true); // 스킬 효과 활성화
 				m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Top", true); // 해금
@@ -424,10 +427,9 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 		}
 		else if (m_tUIInfo.strUIName == "Revolver")
 		{
-			if (m_eUI_Level < UI_LEVEL::LEVEL1)
-				m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+			m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
 
-			if (m_eUI_Level == UI_LEVEL::LEVEL1) // 스킬을 배웠을 경우
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
 			{
 				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::REVOLVER, true); // 스킬 효과 활성화
 				m_pUIManager->Change_LeftHUD_SkillUnlock("LeftHUD_Bottom", true); // 해금
@@ -435,10 +437,9 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 		}
 		else if (m_tUIInfo.strUIName == "Shotgun")
 		{
-			if (m_eUI_Level < UI_LEVEL::LEVEL1)
-				m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
+			m_pUIManager->Change_WeaponIcon_Level(m_tUIInfo.strUIName, m_eUI_Level);
 
-			if (m_eUI_Level == UI_LEVEL::LEVEL1) // 스킬을 배웠을 경우
+			if (m_eUI_Level == UI_LEVEL::LEVEL2) // 스킬을 배웠을 경우
 			{
 				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::SHOTGUN, true); // 스킬 효과 활성화
 				m_pUIManager->Change_LeftHUD_SkillUnlock("LeftHUD_Left", true); // 해금
