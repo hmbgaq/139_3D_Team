@@ -69,8 +69,7 @@ HRESULT CSound_Manager::Ready_Sound()
 
 	Load_SoundFile_GroupAsync(L"ZENU_ATTACK", "../Bin/Resources/Sound/Enemy/ZenuGiant/Attack/LongDistance/");
 	Load_SoundFile_GroupAsync(L"ZENU_THROWAXE", "../Bin/Resources/Sound/Enemy/ZenuGiant/AxeThrowProjectTile/");
-	Load_SoundFile_GroupAsync(L"ZENU_BODYMOVE", "../Bin/Resources/Sound/Enemy/ZenuGiant/BodyMove/");
-	Load_SoundFile_GroupAsync(L"ZENU_ATTACK", "../Bin/Resources/Sound/Enemy/ZenuGiant/Hit/");
+	Load_SoundFile_GroupAsync(L"ZENU_BODYMOVE", "../Bin/Resources/Sound/Enemy/ZenuGiant/BodyMove/");	
 	Load_SoundFile_GroupAsync(L"ZENU_DEATH", "../Bin/Resources/Sound/Enemy/ZenuGiant/Death/");
 	Load_SoundFile_GroupAsync(L"ZENU_FOOTSTEP", "../Bin/Resources/Sound/Enemy/ZenuGiant/FootStep/");
 	Load_SoundFile_GroupAsync(L"ZENU_HIT", "../Bin/Resources/Sound/Enemy/ZenuGiant/Hit/");
