@@ -4,6 +4,7 @@
 #include "MasterCamera.h"
 #include "SpringCamera.h"
 #include "Data_Manager.h"
+#include "SMath.h"
 
 CPlayer_Weapon_ELWinchester::CPlayer_Weapon_ELWinchester(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CWeapon_Player(pDevice, pContext,strPrototypeTag)
@@ -103,6 +104,131 @@ HRESULT CPlayer_Weapon_ELWinchester::Render()
 void CPlayer_Weapon_ELWinchester::Fire(_float3 vTargetPos, CCharacter* pTarget)
 {
 	__super::Fire(L"Prototype_GameObject_Bullet_Winchester", LAYER_PLAYER_BULLET, vTargetPos, pTarget);
+}
+
+void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_UnHolster()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"HolsterUnholster_Winchester_01.wav";
+		break;
+	case 1:
+		strFileName = L"HolsterUnholster_Winchester_03.wav";
+		break;
+	case 2:
+		strFileName = L"HolsterUnholster_Winchester_04.wav";
+		break;
+	default:
+		strFileName = L"HolsterUnholster_Winchester_01.wav";
+		break;
+
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 10.f);
+
+}
+
+void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Holster()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"HM_Winchester_AimOff_01.wav";
+		break;
+	case 1:
+		strFileName = L"HM_Winchester_AimOff_02.wav";
+		break;
+	case 2:
+		strFileName = L"HM_Winchester_AimOff_03.wav";
+		break;
+	default:
+		strFileName = L"HM_Winchester_AimOff_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 15.f);
+
+}
+
+void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Aim()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"HM_Winchester_AimOn_01.wav";
+		break;
+	case 1:
+		strFileName = L"HM_Winchester_AimOn_02.wav";
+		break;
+	case 2:
+		strFileName = L"HM_Winchester_AimOn_03.wav";
+		break;
+	case 3:
+		strFileName = L"HM_Winchester_AimOn_04.wav";
+		break;
+	case 4:
+		strFileName = L"HM_Winchester_AimOn_05.wav";
+		break;
+	case 5:
+		strFileName = L"HM_Winchester_AimOn_06.wav";
+		break;
+	default:
+		strFileName = L"HM_Winchester_AimOn_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 15.f);
+
+}
+
+void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Reload()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Winchester_Full_Reload_01.wav";
+		break;
+	case 1:
+		strFileName = L"Winchester_Full_Reload_02.wav";
+		break;
+	case 2:
+		strFileName = L"Winchester_Full_Reload_03.wav";
+		break;
+	default:
+		strFileName = L"Winchester_Full_Reload_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_WEAPON", strFileName, CHANNELID::SOUND_PLAYER_WEAPON, 10.f);
+
+}
+
+void CPlayer_Weapon_ELWinchester::Play_Weapon_Sound_Fire()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Winchester_Fire_Player_01.wav";
+		break;
+	case 1:
+		strFileName = L"Winchester_Fire_Player_02.wav";
+		break;
+	case 2:
+		strFileName = L"Winchester_Fire_Player_03.wav";
+		break;
+	default:
+		strFileName = L"Winchester_Fire_Player_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
+
 }
 
 //void CPlayer_Weapon_ELWinchester::Fire(_float3 vTargetPos)
