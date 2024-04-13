@@ -29,7 +29,13 @@ namespace Engine
 		ANIM_SHADOW,				// 2 - 그림자
 		ANIM_CASCADE,				// 3 - CSM
 		ANIM_INTRO_BOSS,			// 4 - INTRO STAGE 보스 
-		ANIM_EXAMPLE,				// 5 - Bloom , Rim 사용하는 예시
+		ANIM_EXAMPLE_A,				// 5 - Bloom , Rim 사용하는 예시
+		ANIM_EXAMPLE_B,				// 6 - Bloom , Rim 사용하는 예시
+		ANIM_EXAMPLE_C,				// 7 - Bloom , Rim 사용하는 예시
+		ANIM_EXAMPLE_D,				// 8 - Bloom , Rim 사용하는 예시
+		ANIM_FUR_SHADER,			// 9 - 털셰이더 할까 했었음 - 시간나면... 찾아는놓음
+		ANIM_OUTLINE,				// 10 - 아웃라인용도 
+		ANIM_RIMBLOOM,				// 11 - 플레이어 림라이트용도 
 		ANIM_SHADER_END };
 
 	enum class MONSTER_SHADER {

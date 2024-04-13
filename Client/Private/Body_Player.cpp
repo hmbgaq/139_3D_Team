@@ -30,10 +30,7 @@ HRESULT CBody_Player::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
-		m_bRim = true;
-	else
-		m_bRim = false;
+	FAILED_CHECK(Ready_ShaderOption());
 
 	return S_OK;
 }
@@ -78,7 +75,8 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 
 	__super::Late_Tick(fTimeDelta);
 	
-	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_SHADOW, this), );
+	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 }
 
 HRESULT CBody_Player::Render()
@@ -86,20 +84,63 @@ HRESULT CBody_Player::Render()
 	FAILED_CHECK(Bind_ShaderResources());
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	_uint		iPass = m_iShaderPass;
 
-	for (size_t i = 0; i < iNumMeshes; i++)
+	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_ORIGIN)
 	{
-		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
-		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
-		m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
-		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
 
-		m_pModelCom->Render((_uint)i);
+			m_pModelCom->Render((_uint)i);
+		}
 	}
+	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
+	{
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
+			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+
+			m_pModelCom->Render((_uint)i);
+		}
+	}
+	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SNOWMOUNTAIN)
+	{
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+
+			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+
+			m_pModelCom->Render((_uint)i);
+		}
+	}
+	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
+	{
+		for (size_t i = 0; i < iNumMeshes; i++)
+		{
+			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+
+			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+
+			m_pModelCom->Render((_uint)i);
+		}
+	}
 	return S_OK;
 }
 
@@ -121,6 +162,27 @@ HRESULT CBody_Player::Render_Shadow()
 
 		m_pShaderCom->Begin(2);
 
+		m_pModelCom->Render((_uint)i);
+	}
+
+	return S_OK;
+}
+
+HRESULT CBody_Player::Render_OutLine()
+{
+	FAILED_CHECK(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW)));
+	FAILED_CHECK(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ)));
+
+	m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+	m_pShaderCom->Bind_RawValue("g_LineThick",	&m_fLineThick, sizeof(_float));
+	m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fLineTimeAcc, sizeof(_float));
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_CASCADE));
 		m_pModelCom->Render((_uint)i);
 	}
 
@@ -152,14 +214,10 @@ HRESULT CBody_Player::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Rentier"), // Prototype_Component_Model_Fiona
-		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Model_Rentier"), TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom)));
 
 	/* For.Com_Collider */
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
@@ -167,10 +225,7 @@ HRESULT CBody_Player::Ready_Components()
 	BoundingDesc.vExtents = _float3(0.2f, 1.f, 0.2f);
 	BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y, 0.f);
 
-
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc)))
-		return E_FAIL;
+	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_AABB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	
 	//m_pTrail = EFFECT_MANAGER->Ready_Trail("Monster_Bullet_Trail.json", this);
 	//m_pTrail->Set_Play(true); // 시작 때 트레일 켜기
@@ -201,6 +256,26 @@ HRESULT CBody_Player::Bind_ShaderResources()
 void CBody_Player::Check_Frustum()
 {
 	m_bIsInFrustum = true;
+}
+
+HRESULT CBody_Player::Ready_ShaderOption()
+{
+	/* 레벨에 따른 셰이더 옵션 조절 */
+	if (m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
+		m_ePlayerRenderPass = RENDER_PASS::RENDER_SNOWMOUNTAIN;
+	else
+		m_ePlayerRenderPass = RENDER_PASS::RENDER_ORIGIN;
+
+	/* 셰이더에 올릴 값들에 대한 옵션값 조절 */
+	// 1. OutLine
+	m_vLineColor		= { 1.f, 0.f, 0.f, 0.f };
+	m_fLineThick		= { 0.5f };
+	m_fLineTimeAcc		= { 0.f };
+
+	// 2. RimLight 
+
+
+	return S_OK;
 }
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

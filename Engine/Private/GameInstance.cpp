@@ -97,7 +97,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	Update_Hitlag(fTimeDelta);
 	Update_RadialBlurTime(m_fTimeDelta);
-
+	Update_ChromaTime(m_fTimeDelta);
 
 	m_pInput_Device->Tick();
 
@@ -492,6 +492,20 @@ HRESULT CGameInstance::Add_CascadeObject(_uint iIndex, CGameObject* pObject)
 	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
 
 	return m_pRenderer->Add_CascadeObject(iIndex, pObject);
+}
+
+void CGameInstance::Set_PlayerDead(_bool bOption)
+{
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	return m_pRenderer->Set_PlayerDeadState(bOption);
+}
+
+void CGameInstance::Set_PlayerRebirthState(_bool bOption)
+{
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	return m_pRenderer->Set_PlayerRebirthState(bOption);
 }
 
 #ifdef _DEBUG

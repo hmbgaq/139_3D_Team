@@ -68,7 +68,6 @@ private:
 	HRESULT Render_Effect_Distortion();
 	HRESULT Render_Effect_Priority_Distortion();
 	HRESULT Render_Effect_Distortion_Blur();
-	HRESULT Render_Effect_Combine();
 	HRESULT Render_Effect_Final();
 
 	HRESULT Render_OutLine();
@@ -104,6 +103,8 @@ private:
 	HRESULT Ready_CascadeShadow();
 	wstring Current_Target(POST_TYPE eType);
 	
+	HRESULT Check_RenderEffect();
+
 public:
 	/* 렌더옵션 초기화 */
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
@@ -156,12 +157,18 @@ public:
 	void Set_MotionBlur_Option(MOTIONBLUR_DESC desc) { m_tMotionBlur_Desc = desc; }
 	void Set_LumaSharpen_Option(LUMASHARPEN_DESC desc) { m_tLumaSharpen_Desc = desc; }
 
+public:
+	void Set_PlayerDeadState(_bool bOption);
+	void Set_PlayerRebirthState(_bool bOption);
+//	void Set_PlayerDead(_bool bOption);
+
 private: // Debug
 	ID3DBlob* CompileShader(const std::wstring& filename, const string& entrypoint, const string& target);
 
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
-	_bool						bTest = { true };
+	_bool						bTest						= { true };
+	_bool						m_bPlayerDead				= { false };
 	_float4x4					m_matPreCameraView = {};
 
 	PBR_DESC					m_tPBR_Option				= {};
@@ -186,6 +193,7 @@ private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
 	_int						m_iCurrentLevel				= {};
 	wstring						strCurrentTarget			= TEXT("Target_Effect_Final");
+	_float						m_fBackupData				= {};
 
 	_bool						m_bBloomBlur_Clear			= false;
 	_bool						m_bRimBlur_Clear			= false;

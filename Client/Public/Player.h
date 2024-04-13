@@ -152,7 +152,6 @@ public:
 	void SetState_CrouchUnder();
 	void SetState_CrouchUnderGate();
 
-
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
 
@@ -263,6 +262,8 @@ private:
 private:
 	_float m_MaxCooltimes[ECast(HUD::HUD_END)];
 
+
+private:
 
 
 public:

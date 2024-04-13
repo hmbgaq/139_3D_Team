@@ -1,5 +1,5 @@
-#include "..\Public\Player_DeathNormal_F_01.h"
-
+#include "Player_DeathNormal_F_01.h"
+#include "GameInstance.h"
 #include "Player_Empowered_Idle.h"
 
 void CPlayer_DeathNormal_F_01::Initialize(CPlayer* pActor)
@@ -19,6 +19,7 @@ CState<CPlayer>* CPlayer_DeathNormal_F_01::Update(CPlayer* pActor, _float fTimeD
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_DiedScreen(true);
+			m_pGameInstance->Set_PlayerRebirthState(true);
 			pActor->Set_Animation(CPlayer::Player_State::Player_IdleLoop, CModel::ANIM_STATE::ANIM_STATE_NORMAL, false, false, 0);
 		}
 	}

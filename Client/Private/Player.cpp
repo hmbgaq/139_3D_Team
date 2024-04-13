@@ -937,7 +937,7 @@ void CPlayer::KeyInput(_float fTimeDelta)
 HRESULT CPlayer::Ready_Components()
 {
 	/* ¼û½¬´Â ÀÌÆåÆ® Ãß°¡ */
-	if(m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN) | m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS) )
+	if(m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN) || m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS) )
 		m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
 	
 	return S_OK;

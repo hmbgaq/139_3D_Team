@@ -55,8 +55,8 @@ public: /* For.Timer_Manager */
 	_float		Compute_TimeDelta(const wstring& strTimeTag);
 
 public: /* For.Level_Manager */
-	HRESULT		Request_Level_Opening(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
-	HRESULT		Open_Requested_Level();
+	HRESULT		Request_Level_Opening(_uint iCurrentLevelIndex, class CLevel* pNewLevel); /* 말그대로 오픈요청 - 다음레벨에 대한 정보를 저장 */
+	HRESULT		Open_Requested_Level();  /* 실질적으로 다음레벨로 넘기는용도 */
 
 	HRESULT		Open_Level(_uint iCurrentLevelIndex, class CLevel* pNewLevel);
 	_uint		Get_NextLevel();
@@ -90,6 +90,8 @@ public: /* For.Renderer */
 	HRESULT		Off_Shader();
 	void		Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture);
 	HRESULT		Add_CascadeObject(_uint iIndex, CGameObject* pObject);
+	void		Set_PlayerDead(_bool bOption);
+	void		Set_PlayerRebirthState(_bool bOption);
 
 #ifdef _DEBUG
 	void		Set_RenderDebugCom(_bool _bRenderDebug);

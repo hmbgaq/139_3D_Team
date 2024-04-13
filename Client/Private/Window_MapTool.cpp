@@ -929,7 +929,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.WorldMatrix = WorldMatrix;
 			//
 			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-			_int iUpdateCellJsonSize = UpdateCellJson.size();
+			_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
 			
 			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
 			{

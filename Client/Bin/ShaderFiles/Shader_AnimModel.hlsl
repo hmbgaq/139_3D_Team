@@ -205,6 +205,34 @@ VS_OUT_SHADOW VS_SHADOW_DEPTH(VS_IN In)
     return Out;
 }
 
+VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
+{
+    VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
+    
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    float4 OutPos = vector(vPosition.xyz + vNormal.xyz * g_LineThick, 1);
+    Out.vPosition = mul(OutPos, matWVP);
+    Out.vPosition.z -= 0.001f;
+    Out.vTexcoord = In.vTexcoord;
+	
+    //Out.vPosition = vector(vPosition.xyz + vNormal.xyz * g_LineThick, 1);
+    return Out;
+}
+
 VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
@@ -227,6 +255,8 @@ VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
     
     return Out;
 }
+
+
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
 
@@ -438,7 +468,7 @@ PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(8) -------------------*/
+/* ------------------- Pixel Shader(9) : HAIR  -------------------*/
 PS_OUT PS_MAIN_HAIR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -464,6 +494,30 @@ PS_OUT PS_MAIN_HAIR(PS_IN In)
  
     return Out;
 }
+
+/* ------------------- Pixel Shader(10) : OutLine -------------------*/
+PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    float4 vColor = lerp(g_vLineColor, mul(g_vLineColor, float4(0.f, 0.f, 0.f, 0.f)), g_TimeDelta);
+    
+    Out.vColor = g_vLineColor;
+    
+    return Out;
+}
+
+/* ------------------- Pixel Shader(11) : RimBloom -------------------*/
+PS_OUT PS_MAIN_PLAYERRIM(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    return Out;
+}
+
+/* ------------------- Pixel Shader(12) : -------------------*/
+
+/* ------------------- Pixel Shader(13) :  -------------------*/
 /*=============================================================
  
                           Technique
@@ -578,7 +632,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_D();
     }
 
-    pass Hair
+    pass Hair // 9
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -588,5 +642,29 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_HAIR();
+    }
+
+    pass OUTLINE
+    {
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 1.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
+    }
+
+    pass RIMBLOOM
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PLAYERRIM();
     }
 }

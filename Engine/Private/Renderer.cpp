@@ -69,8 +69,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	if (true == m_bDebugCom)
 		FAILED_CHECK(Render_DebugCom()) /* Debug Component -> MRT 타겟에 저장해서 Finaml 에서 추가연산한다. */
 #endif // _DEBUG
-	
-	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	FAILED_CHECK(Check_RenderEffect());
 
 	FAILED_CHECK(Render_Priority());	/* MRT_Priority - Target_Priority  */
 	
@@ -1609,6 +1609,26 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 	return strCurrentTarget;
 }
 
+HRESULT CRenderer::Check_RenderEffect()
+{
+	/* OPEN LEVEL 로 인해 레벨바뀌니까 체크 - 그림자용 Light구분용으로 사용  */
+	m_iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	/* 플레이어 죽었는지 확인 */
+	if (true == m_bPlayerDead)
+	{
+		m_tHSV_Option.bScreen_Active = true;
+		m_tHSV_Option.fFinal_Saturation <= 0 ? m_bPlayerDead = false : m_tHSV_Option.fFinal_Saturation -= 0.01;
+	}
+	else
+	{
+		return S_OK;
+	}
+
+	//cout << "Satureation : " <<  m_tHSV_Option.fFinal_Saturation << endl;
+	return S_OK;
+}
+
 HRESULT CRenderer::Off_Shader()
 {
 	/* OFF 셰이더 리스트 */
@@ -1656,6 +1676,23 @@ HRESULT CRenderer::Clear_RenderTarget(const wstring& RenderTag)
 	}
 
 	return S_OK;
+}
+
+
+void CRenderer::Set_PlayerDeadState(_bool bOption)
+{
+	m_bPlayerDead = bOption;
+
+	/* 살아나면 원래대로 돌아가야하므로 초기값 저장 */
+	m_fBackupData = m_tHSV_Option.fFinal_Saturation;
+}
+
+void CRenderer::Set_PlayerRebirthState(_bool bOption)
+{
+	m_bPlayerDead = !bOption;
+
+	/* 저장했던 원래값으로 되돌아가기*/
+	m_tHSV_Option.fFinal_Saturation = m_fBackupData;
 }
 
 ID3DBlob* CRenderer::CompileShader(const std::wstring& filename, const string& entrypoint, const string& target)

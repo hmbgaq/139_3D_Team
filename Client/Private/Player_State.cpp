@@ -1,6 +1,7 @@
-#include "..\Public\Player_State.h"
+#include "Player_State.h"
 #include "GameInstance.h"
 #include "Data_Manager.h"
+#include "Body_Player.h"
 
 #pragma region 플레이어 상태 헤더
 
@@ -968,9 +969,12 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
 		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SUPER_CHARGE);
+		pActor->Get_Body()->Set_RenderPass(ECast(CBody_Player::RENDER_PASS::RENDER_SUPERCHARGE));
 		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+
 		if (true == bIsCooltimeEnd)
 		{
+			pActor->Get_Body()->Set_RenderPass(ECast(CBody_Player::RENDER_PASS::RENDER_ORIGIN));
 			pActor->Activate_SuperCharge(); /* 발동 - 림라이트 넣기 ☆*/
 		}
 	}
@@ -1128,10 +1132,13 @@ CState<CPlayer>* CPlayer_State::Heal(CPlayer* pActor, _float fTimeDelta, _uint _
 {
 	if (m_pGameInstance->Key_Down(DIK_C))
 	{
+		pActor->Get_Body()->Set_RenderPass(ECast(CBody_Player::RENDER_PASS::RENDER_HEAL));
+
 		_bool bIsCootimeEnd = pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::HEAL)); //CPlayer::HUD::LEFT_RIGHT
 		if (true == bIsCootimeEnd)
 		{
-			/* 힐할때 플레이어 렌더 바꾸기 */
+			pActor->Get_Body()->Set_RenderPass(ECast(CBody_Player::RENDER_PASS::RENDER_ORIGIN));
+
 			if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
 				return new CPlayer_InteractionGlamour_Activate();
 		}
