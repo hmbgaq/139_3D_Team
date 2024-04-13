@@ -209,10 +209,7 @@ public:
 public:
 	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
 	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
-	void Update_SuperCharge(_float fTimeDelta) { 
-		_float fTime = m_fSuperChargeTime - fTimeDelta;
-		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
-	};
+	void Update_SuperCharge(_float fTimeDelta);
 
 public:
 	void Search_LockOn_Target();
@@ -264,6 +261,8 @@ private:
 	_float m_MaxCooltimes[ECast(HUD::HUD_END)];
 
 
+private:
+	_float				m_fEffectTimeAcc = { 0.f };
 
 public:
 	/* 원형객체를 생성한다. */
