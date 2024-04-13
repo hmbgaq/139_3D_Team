@@ -44,7 +44,8 @@ protected:
 	HRESULT			Bind_ShaderResources();
 private:
 	CEffect*				m_pEffect = { nullptr };
-	class CEffect_Trail*	m_pTrail = { nullptr };	//! 유정 : 트레일 추가
+	class CEffect_Trail*	m_pTrail		= { nullptr };	//! 유정 : 트레일 추가
+	class CEffect_Trail*	m_pTrail_Post	= { nullptr };	//! 유정 : 트레일 추가 // 포스트 디스토션 트레일
 
 public:
 	_bool m_bAttack = false;
