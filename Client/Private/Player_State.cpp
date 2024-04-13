@@ -976,7 +976,8 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 			pActor->Activate_SuperCharge();
 
 			//! 유정 : 슈퍼차지 이펙트 재생
-			EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_05.json", nullptr, pActor->Get_Position());
+			//EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_05.json", nullptr, pActor->Get_Position());
+			EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_06.json", pActor, false);
 		}
 
 

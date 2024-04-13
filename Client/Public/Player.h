@@ -173,6 +173,7 @@ private:
 	/* Effect 추가 */
 private:
 	class CEffect* m_pEffect				= { nullptr };
+	class CEffect* m_pChargeEffect			= { nullptr };
 
 public:
 	CActor<CPlayer>* Get_Actor() { return m_pActor; }
@@ -263,6 +264,7 @@ private:
 
 private:
 	_float				m_fEffectTimeAcc = { 0.f };
+	_bool				m_bFirst_SuperCharge = { true };
 
 public:
 	/* 원형객체를 생성한다. */

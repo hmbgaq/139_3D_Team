@@ -17,6 +17,8 @@ CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
+	// ÀÌÆåÆ®
+	EFFECT_MANAGER->Generate_Effect_AttachBone(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_02.json", pActor, true, "Head");
 
 	if (pActor->Is_Inputable_Front(59))
 	{
@@ -41,7 +43,7 @@ CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 			pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 
 			pActor->Apply_Shake_And_Blur(Power::Medium);
-			EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "SlamDown_v2_24_Rock.json", nullptr, pActor->Get_Position());
+			EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "New_SlamDown_v3_01.json", nullptr, pActor->Get_Position()); // ÀÌÆåÆ®
 			pActor->Slam();
 		}
 	}
@@ -53,6 +55,8 @@ CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 	{
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
+
+
 
 	return nullptr;
 }

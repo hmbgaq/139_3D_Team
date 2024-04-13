@@ -4,6 +4,9 @@
 #include "SMath.h"
 #include "GameInstance.h"
 
+#include "Effect_Manager.h"
+#include "Effect.h"
+
 void CVampireCommander_BloodRange_Start::Initialize(CVampireCommander* pActor)
 {
 	__super::Initialize(pActor);
