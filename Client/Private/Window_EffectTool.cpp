@@ -6177,6 +6177,13 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					// 보스 아이들 // Index 9
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_Idle);
 				}
+
+				if (TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie") == pDesc->strModelTag)
+				{
+					// 보스 아이들 // Index 9
+					m_pModel_Preview->Set_AnimIndex(CBandit_Heavy::BanditHeavy_Idle);
+				}
+
 			}
 			if (ImGui::Button("Attack_0"))
 			{
