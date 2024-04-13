@@ -1189,35 +1189,35 @@ HRESULT CLevel_GamePlay::Ready_Event()
 
 	json TriggerJson = LoadJson["Trigger_Json"];
 
-	//json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
-	//_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
-	//
-	//for (_int i = 0; i < iMonsterTriggerSize; ++i)
-	//{
-	//	CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
-	//	MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
-	//	MonsterTriggerDesc.strSpawnMonsterJsonPath = m_strStage1MapLoadPath;
-	//	MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
-	//	MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
-	//	CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
-	//	CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
-	//
-	//	CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
-	//
-	//	pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
-	//
-	//	if (pMonsterTrigger == nullptr)
-	//	{
-	//		MSG_BOX("몬스터 트리거 불러오기 실패");
-	//		return E_FAIL;
-	//	}
-	//	else
-	//	{
-	//		m_pGameInstance->Add_Event(pMonsterTrigger);
-	//	}
-	//
-	//
-	//}
+	json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
+	_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
+	
+	for (_int i = 0; i < iMonsterTriggerSize; ++i)
+	{
+		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+		MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
+		MonsterTriggerDesc.strSpawnMonsterJsonPath = m_strStage1MapLoadPath;
+		MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
+		MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+	
+		CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+	
+		pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
+	
+		if (pMonsterTrigger == nullptr)
+		{
+			MSG_BOX("몬스터 트리거 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+		{
+			m_pGameInstance->Add_Event(pMonsterTrigger);
+		}
+	
+	
+	}
 
 	json UITriggerJson = TriggerJson["UITriggerJson"];
 	_int iUITriggerJsonSize = (_int)UITriggerJson.size();

@@ -383,9 +383,9 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
 	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
 	//}
-	if (m_pPlayer != nullptr && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true && m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_InteractionJumpDown300)
+	if (m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true && m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
-		if (m_pPlayer->Is_Animation_End() == TRUE && m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_SNOWMOUNTAIN)
+		if (m_pPlayer->Is_Animation_End() == TRUE)
 		{
 			list<CGameObject*> vecBackgroundObjects = *m_pGameInstance->Get_GameObjects(m_pGameInstance->Get_NextLevel(), LAYER_BACKGROUND);
 			
