@@ -91,7 +91,12 @@ void CWeapon_Heavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 
 	if (m_bAttack)
 	{
-		EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json",nullptr,m_pTransformCom->Get_Position());
+		
+
+		_float3 vPosition = { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43};
+		//m_pTransformCom->Get_Position();
+		//EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, vPosition);
 		m_bAttack = false;
 	}
 	//if (m_pGameInstance->Key_Down(DIK_F))
