@@ -17,6 +17,8 @@ void CTank_MeleeDynamicShield_04::Initialize(CTank* pActor)
 
 	pWeapon->Set_Enable_Collisions(false);
 
+	pActor->Play_Sound_Voice_Attack();
+
 }
 
 CState<CTank>* CTank_MeleeDynamicShield_04::Update(CTank* pActor, _float fTimeDelta)
@@ -29,6 +31,7 @@ CState<CTank>* CTank_MeleeDynamicShield_04::Update(CTank* pActor, _float fTimeDe
 		if (true == m_bFlags[0])
 		{
 			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(TANK_WEAPON_PUNCH_L, true);
+			pActor->Play_Sound_Attack_Shield();
 		}
 	}
 	else if (false == m_bFlags[1])

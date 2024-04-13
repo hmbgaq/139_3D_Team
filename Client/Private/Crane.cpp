@@ -114,8 +114,12 @@ void CCrane::Activate()
 	if (false == m_bIsActivated) 
 	{
 		Set_Animation(0, CModel::ANIM_STATE::ANIM_STATE_NORMAL, true, false, 0);
+		m_pGameInstance->Play_Sound(L"ETC", L"Oilfields_Crane_Start_Anim.wav", CHANNELID::SOUND_SYSTEM_EFFECT, 10.f);
+
 		m_bIsActivated = true;
 	}
+
+
 		
 }
 

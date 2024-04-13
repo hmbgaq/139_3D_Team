@@ -15,6 +15,8 @@ void CTank_ShieldRegain::Initialize(CTank* pActor)
 	}
 
 	pActor->Set_MonsterAttackState(false);
+
+	pActor->Play_Sound_Shield_PickUp();
 }
 
 CState<CTank>* CTank_ShieldRegain::Update(CTank* pActor, _float fTimeDelta)

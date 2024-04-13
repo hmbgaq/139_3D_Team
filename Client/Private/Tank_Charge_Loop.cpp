@@ -19,6 +19,8 @@ void CTank_Charge_Loop::Initialize(CTank* pActor)
 
 	//pWeapon->Set_Enable_Collisions(true);
 
+	pActor->Play_Sound_Voice_Attack();
+
 }
 
 CState<CTank>* CTank_Charge_Loop::Update(CTank* pActor, _float fTimeDelta)

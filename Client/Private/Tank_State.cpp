@@ -78,6 +78,7 @@ CState<CTank>* CTank_State::Death_State(CTank* pActor, _float fTimeDelta, _uint 
 {
 	if (pActor->Is_Animation_End())
 	{
+		pActor->Set_EnemyHUD_Dead();
 		pActor->Set_Dead(true);
 	}
 

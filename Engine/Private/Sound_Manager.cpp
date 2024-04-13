@@ -34,6 +34,8 @@ HRESULT CSound_Manager::Ready_Sound()
 
 	Load_SoundFile_GroupAsync(L"BGM_LOADING", "../Bin/Resources/Sound/LoadingBGM/");
 	
+	Load_SoundFile_GroupAsync(L"ETC", "../Bin/Resources/Sound/ETC/");
+
 
 	Load_SoundFile_GroupAsync(L"PLAYER_ATTACK", "../Bin/Resources/Sound/Player/Attack/");
 	Load_SoundFile_GroupAsync(L"PLAYER_IMPACT", "../Bin/Resources/Sound/Player/Impact/");
@@ -71,6 +73,19 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"ZENU_SPAWN", "../Bin/Resources/Sound/Enemy/ZenuGiant/Spawn/");
 	Load_SoundFile_GroupAsync(L"ZENU_WHOOSH", "../Bin/Resources/Sound/Enemy/ZenuGiant/Whoosh/");
 	Load_SoundFile_GroupAsync(L"ZENU_EFFORT", "../Bin/Resources/Sound/Enemy/ZenuGiant/Effort/");
+
+
+	Load_SoundFile_GroupAsync(L"TANK_ATTACK_MELEE", "../Bin/Resources/Sound/Enemy/Tank/Attack_Melee/");
+	Load_SoundFile_GroupAsync(L"TANK_ATTACK_SHIELD", "../Bin/Resources/Sound/Enemy/Tank/Attack_Shield/");
+	Load_SoundFile_GroupAsync(L"TANK_ATTACK_SHIELD_IMPACT", "../Bin/Resources/Sound/Enemy/Tank/Attack_Shield_Impact/");
+	Load_SoundFile_GroupAsync(L"TANK_WAVE", "../Bin/Resources/Sound/Enemy/Tank/Attack_Wave/");
+	Load_SoundFile_GroupAsync(L"TANK_BODYFALL", "../Bin/Resources/Sound/Enemy/Tank/Bodyfall/");
+	Load_SoundFile_GroupAsync(L"TANK_FOOTSTEP", "../Bin/Resources/Sound/Enemy/Tank/Footstep/");
+	Load_SoundFile_GroupAsync(L"TANK_HIT", "../Bin/Resources/Sound/Enemy/Tank/Hit/");
+	Load_SoundFile_GroupAsync(L"TANK_SHIELD", "../Bin/Resources/Sound/Enemy/Tank/Shield/");
+	Load_SoundFile_GroupAsync(L"TANK_VOICE_ATTACK", "../Bin/Resources/Sound/Enemy/Tank/Voice_Attack/");
+	Load_SoundFile_GroupAsync(L"TANK_VOICE_CHARGE", "../Bin/Resources/Sound/Enemy/Tank/Voice_Charge/");
+	
 
 
 	return S_OK;

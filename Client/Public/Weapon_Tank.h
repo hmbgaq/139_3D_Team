@@ -32,6 +32,7 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
+
 public:
 	//void	Set_Animation(
 	//	_uint _iNextAnimation

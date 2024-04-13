@@ -50,6 +50,22 @@ public:
 public:
 	void Create_GroundWave();
 
+
+public:
+	void Play_Sound_Attack_Melee();
+	void Play_Sound_Attack_Shield();
+	void Play_Sound_Wave();
+	void Play_Sound_Bodyfall();
+	void Play_Sound_Footstep();
+	void Play_Sound_Hit();
+	void Play_Sound_Shield_Crash();
+	void Play_Sound_Shield_PickUp();
+
+	void Play_Sound_Voice_Attack();
+	void Play_Sound_Voice_Charge();
+	void Play_Sound_Shield_Impact();
+
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
