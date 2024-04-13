@@ -9,6 +9,14 @@ CState<CPlayer>* CPlayer_State_Walk::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
+	m_fWalkDelay += fTimeDelta;
+
+	if (0.55f <= m_fWalkDelay)
+	{
+		pActor->Play_Walk_Sound();
+		m_fWalkDelay = 0.f;
+	}
+
 	return nullptr;
 }
 

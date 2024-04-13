@@ -518,6 +518,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 	{
 		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
 		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
+
 		if (0 == iTargetKeyFrameIndex)
 		{
 			m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, false);
@@ -525,12 +526,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 			m_bReset = true;
 		}
 	}
-	//else 
-	//{
-	//	m_iCurrentAnimIndex = _iAnimationIndex;
-	//	_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
-	//	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
-	//}
+
 }
 
 void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -563,6 +559,7 @@ void CModel::Set_AnimState(CModel::ANIM_STATE _eAnimState)
 {
 	m_eAnimState = _eAnimState;
 }
+
 
 void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {

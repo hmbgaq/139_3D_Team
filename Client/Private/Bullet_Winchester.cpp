@@ -118,41 +118,44 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 	}
 
 	CCharacter* pTarget_Character = Get_Target_Character(other);
+	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 
-	//if (nullptr != pTarget_Character)// 일반 타격 
+
+	m_eHitDirection = Direction::Front;
+	m_eHitPower = Power::Medium;
+	m_fForce = 0.f;
+
+
+	if (nullptr != pTarget_Character)
 	{
-		m_eHitDirection = Direction::Front;
-		m_eHitPower = Power::Medium;
-		m_fForce = 0.f;
-		if (nullptr != pTarget_Character)
+		_float fDamage = m_fDamage;
+
+		CData_Manager* pDataManager = CData_Manager::GetInstance();
+		if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::RIFLE_UPGRADE))
 		{
-			_float fDamage = m_fDamage;
-
-			CData_Manager* pDataManager = CData_Manager::GetInstance();
-			if (true == pDataManager->Is_AdditionalWeapon_Acquired(Additional_Weapon::RIFLE_UPGRADE))
-			{
-				fDamage += 5.f;
-			}
-
-			CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
-			_vector vPlayerPos = pPlayer->Get_Position_Vector();
-			_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
-			//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
-			pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
-
-
-			_float3 vPos = m_pTransformCom->Get_Position();
-			_float3 vTargetPos = pPlayer->Get_Position();
-			vTargetPos.y = vPos.y;
-			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
-
-			//EFFECT_MANAGER->Play_Effect("Hit/","Hit_Distortion.json", m_pTransformCom->Get_Position());
+			fDamage += 5.f;
 		}
-		
+
+			
+		_vector vPlayerPos = pPlayer->Get_Position_Vector();
+		_vector vDir = pTarget_Character->Calc_Look_Dir_XZ(vPlayerPos);
+		//_vector vDir = pTarget_Character->Calc_Look_Dir(m_pTransformCom->Get_Position());
+		pTarget_Character->Set_Hitted(fDamage, vDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 
-		
+		_float3 vPos = m_pTransformCom->Get_Position();
+		_float3 vTargetPos = pPlayer->Get_Position();
+		vTargetPos.y = vPos.y;
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", nullptr, vPos, true, vTargetPos);
+
+
+		pPlayer->Play_Voice_Winchester();
+
+
+		//EFFECT_MANAGER->Play_Effect("Hit/","Hit_Distortion.json", m_pTransformCom->Get_Position());
 	}
+		
+	
 
 	m_pTrail->Set_Play(false);
 	Set_Dead(true);
@@ -180,7 +183,7 @@ HRESULT CBullet_Winchester::Ready_Components()
 	///* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC BoundingDesc = {};
 	BoundingDesc.iLayer = ECast(COLLISION_LAYER::PLAYER_ATTACK);
-	BoundingDesc.fRadius = { 0.4f };
+	BoundingDesc.fRadius = { 2.0f };
 	BoundingDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),

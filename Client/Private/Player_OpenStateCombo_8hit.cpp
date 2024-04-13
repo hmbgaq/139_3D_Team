@@ -36,7 +36,13 @@ void CPlayer_OpenStateCombo_8hit::Initialize(CPlayer* pActor)
 	if (pTarget)
 	{
 		pTarget->Set_Position(pActor->Calc_Front_Pos());
+
+
+		//pActor->Play_Voice_Melee();
+
 	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"OpenState_Start_01.wav", CHANNELID::SOUND_PLAYER_ATTACK, 15.f);
 }
 
 CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTimeDelta)
@@ -49,6 +55,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Update(CPlayer* pActor, _float fTi
 	{
 		return new CPlayer_IdleLoop();
 	}	
+
 
 	_uint iTiming = 8;
 
@@ -154,6 +161,130 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Hit(CPlayer* pActor, _uint iHitCou
 			pTarget->Hitted_Opened(Direction::Right);
 		}
 		pTarget->Get_Damaged(3.f);
+
+		wstring strFileName = L"";
+
+		switch (iHitCount)
+		{
+		case 0:
+			strFileName = L"player_attack_melee_e-combo_layer3_001.wav";
+			break;
+		case 1:
+			strFileName = L"player_attack_melee_e-combo_layer3_003.wav";
+			break;
+		case 2:
+			strFileName = L"player_attack_melee_e-combo_layer3_005.wav";
+			break;
+		case 3:
+			strFileName = L"player_attack_melee_e-combo_layer3_007.wav";
+			break;
+		case 4:
+			strFileName = L"player_attack_melee_e-combo_layer3_009.wav";
+			break;
+		case 5:
+			strFileName = L"player_attack_melee_e-combo_layer3_011.wav";
+			break;
+		case 6:
+			strFileName = L"player_attack_melee_e-combo_layer3_013.wav";
+			break;
+		case 7:
+			strFileName = L"player_attack_melee_e-combo_layer3_014.wav";
+			break;
+		default:
+			strFileName = L"player_attack_melee_e-combo_layer3_001.wav";
+			break;
+		}
+
+		m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", strFileName, CHANNELID::SOUND_PLAYER_WHOOSH, 10.f);
+
+
+
+		switch (iHitCount)
+		{
+		case 0:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh001.wav";
+			break;
+		case 1:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh002.wav";
+			break;
+		case 2:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh003.wav";
+			break;
+		case 3:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh004.wav";
+			break;
+		case 4:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh001.wav";
+			break;
+		case 5:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh002.wav";
+			break;
+		case 6:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh003.wav";
+			break;
+		case 7:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh004.wav";
+			break;
+		default:
+			strFileName = L"player_e-combo_punch_whoosh_whoosh004.wav";
+			break;
+		}
+
+		m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", strFileName, CHANNELID::SOUND_PLAYER_WHOOSH2, 10.f);
+
+
+
+
+		switch (iHitCount)
+		{
+		case 0:
+			strFileName = L"player_e-combo_punch_impact_layer1_001.wav";
+			break;
+		case 1:
+			strFileName = L"player_e-combo_punch_impact_layer1_002.wav";
+			break;
+		case 2:
+			strFileName = L"player_e-combo_punch_impact_layer1_003.wav";
+			break;
+		case 3:
+			strFileName = L"player_e-combo_punch_impact_layer1_004.wav";
+			break;
+		case 4:
+			strFileName = L"player_e-combo_punch_impact_layer1_005.wav";
+			break;
+		default:
+			strFileName = L"player_e-combo_punch_impact_layer1_001.wav";
+			break;
+		}
+
+		m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", strFileName, CHANNELID::SOUND_PLAYER_IMPACT, 10.f);
+
+
+
+		switch (iHitCount)
+		{
+		case 0:
+			strFileName = L"player_e-combo_punch_impact_layer2_001.wav";
+			break;
+		case 1:
+			strFileName = L"player_e-combo_punch_impact_layer2_002.wav";
+			break;
+		case 2:
+			strFileName = L"player_e-combo_punch_impact_layer2_003.wav";
+			break;
+		case 3:
+			strFileName = L"player_e-combo_punch_impact_layer2_004.wav";
+			break;
+		case 4:
+			strFileName = L"player_e-combo_punch_impact_layer2_005.wav";
+			break;
+		default:
+			strFileName = L"player_e-combo_punch_impact_layer2_001.wav";
+			break;
+		}
+
+		m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", strFileName, CHANNELID::SOUND_PLAYER_IMPACT2, 10.f);
+
 
 
 		//pActor->Set_Invincible(true);

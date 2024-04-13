@@ -30,6 +30,12 @@ CState<CPlayer>* CPlayer_MeleeCombo_04::Update(CPlayer* pActor, _float fTimeDelt
 		if (true == m_bFlags[0])
 		{
 			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
+			pActor->Play_Whoosh_Sound();
+
+			if (pActor->Get_Target())
+			{
+				pActor->Play_Voice_Melee();
+			}
 		}
 	}
 	else if (false == m_bFlags[1])

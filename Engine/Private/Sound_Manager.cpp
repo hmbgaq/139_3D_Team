@@ -37,19 +37,33 @@ HRESULT CSound_Manager::Ready_Sound()
 
 	//Wait_GroupAsync();
 
-	Load_SoundFile_GroupAsync(L"AMBIENCE", "../Bin/Resources/Sound/Ambience/");
-	//Wait_GroupAsync();
-
 	Load_SoundFile_GroupAsync(L"PLAYER_ATTACK", "../Bin/Resources/Sound/Player/Attack/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT", "../Bin/Resources/Sound/Player/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_IMPACT", "../Bin/Resources/Sound/Player/Impact/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT2", "../Bin/Resources/Sound/Player/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_WHOOSH", "../Bin/Resources/Sound/Player/Whoosh/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_HITTED", "../Bin/Resources/Sound/Player/Hitted/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_DEAD", "../Bin/Resources/Sound/Player/Dead/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"PLAYER_FOOTSTEP", "../Bin/Resources/Sound/Player/Footstep/");
 	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_WEAPON", "../Bin/Resources/Sound/Player/Weapon/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_VOICE", "../Bin/Resources/Sound/Player/Voice/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_EFFECT", "../Bin/Resources/Sound/Player/Effect/");
+	////Wait_GroupAsync();
+
+
+
+
+
 
 	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK", "../Bin/Resources/Sound/Attack/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK2", "../Bin/Resources/Sound/Attack/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"ENEMY_HIT", "../Bin/Resources/Sound/Hit/");
 	////Wait_GroupAsync();
@@ -59,7 +73,14 @@ HRESULT CSound_Manager::Ready_Sound()
 	////Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"CRITICAL", "../Bin/Resources/Sound/Hit/");
+	////Wait_GroupAsync();
 
+
+	Load_SoundFile_GroupAsync(L"HITTED", "../Bin/Resources/Sound/Hitted/");
+	////Wait_GroupAsync();
+
+	Load_SoundFile_GroupAsync(L"SUPER_CHARGE", "../Bin/Resources/Sound/Player/SuperCharge/");
+	////Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"SNIPER_ATTACKLONG", "../Bin/Resources/Sound/Enemy/Sniper/Attack/LongDistance/");
 	Load_SoundFile_GroupAsync(L"SNIPER_ATTACKSHORT", "../Bin/Resources/Sound/Enemy/Sniper/Attack/ShotDistance/");

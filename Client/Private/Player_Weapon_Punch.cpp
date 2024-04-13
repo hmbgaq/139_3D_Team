@@ -6,6 +6,7 @@
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "Effect_Manager.h"
+#include "SMath.h"
 
 CPlayer_Weapon_Punch::CPlayer_Weapon_Punch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CWeapon_Player(pDevice, pContext, strPrototypeTag)
@@ -85,6 +86,13 @@ HRESULT CPlayer_Weapon_Punch::Ready_Components()
 void CPlayer_Weapon_Punch::Attack(CCollider* other)
 {
 	CCharacter* pTarget_Character = Get_Target_Character(other);
+
+	CGameObject* pTarget_Object = Get_Target_Object(other);
+	if (nullptr != pTarget_Object)
+	{
+		Play_Hit_Sound(m_eHitPower);
+	}
+
 	if (nullptr != pTarget_Character)
 	{
 		_vector vTargetPos = pTarget_Character->Get_Position_Vector();
@@ -110,10 +118,85 @@ void CPlayer_Weapon_Punch::Attack(CCollider* other)
 
 			//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Distortion.json", Get_WorldPosition(), true, pTarget_Character->Get_Position());
 			CData_Manager::GetInstance()->Apply_Shake_And_Blur(m_eHitPower);
+
+			
+
+
 		}
 
 		Set_Enable_Collisions(false);
 	}
+
+
+	
+
+}
+
+
+void CPlayer_Weapon_Punch::Play_Hit_Sound_Normal()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 6);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_Punch_Regular_Impact_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_Punch_Regular_Impact_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_Punch_Regular_Impact_03.wav";
+		break;
+	case 3:
+		strFileName = L"Player_Punch_Regular_Impact_04.wav";
+		break;
+	case 4:
+		strFileName = L"Player_Punch_Regular_Impact_05.wav";
+		break;
+	case 5:
+		strFileName = L"Player_Punch_Regular_Impact_06.wav";
+		break;
+	default:
+		strFileName = L"Player_Punch_Regular_Impact_01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", strFileName, CHANNELID::SOUND_PLAYER_IMPACT, 10.f);
+}
+
+void CPlayer_Weapon_Punch::Play_Hit_Sound_Heavy()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 6);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_Punch_Heavy_Impact_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_Punch_Heavy_Impact_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_Punch_Heavy_Impact_03.wav";
+		break;
+	case 3:
+		strFileName = L"Player_Punch_Heavy_Impact_04.wav";
+		break;
+	case 4:
+		strFileName = L"Player_Punch_Heavy_Impact_05.wav";
+		break;
+	case 5:
+		strFileName = L"Player_Punch_Heavy_Impact_06.wav";
+		break;
+	default:
+		strFileName = L"Player_Punch_Heavy_Impact_01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", strFileName, CHANNELID::SOUND_PLAYER_IMPACT, 10.f);
 }
 
 void CPlayer_Weapon_Punch::OnCollisionEnter(CCollider* other)

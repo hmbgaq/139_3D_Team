@@ -7,6 +7,7 @@
 #include "GameInstance.h"
 #include "UI_Manager.h"
 #include "UI_EnemyHUD_Shard.h"
+#include "SMath.h"
 
 CMonster_Character::CMonster_Character(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CCharacter_Client(pDevice, pContext, strPrototypeTag)
@@ -120,6 +121,39 @@ CPlayer* CMonster_Character::Set_Finish_Pos(_float3 vPos)
 void CMonster_Character::Check_Frustum()
 {
 	m_bIsInFrustum = m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 2.f);
+}
+
+void CMonster_Character::Play_Hitted_Sound()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 6);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Jesse_Impact_default_01.wav";
+		break;
+	case 1:
+		strFileName = L"Jesse_Impact_default_02.wav";
+		break;
+	case 2:
+		strFileName = L"Jesse_Impact_default_03.wav";
+		break;
+	case 3:
+		strFileName = L"Jesse_Impact_default_04.wav";
+		break;
+	case 4:
+		strFileName = L"Jesse_Impact_default_05.wav";
+		break;
+	case 5:
+		strFileName = L"Jesse_Impact_default_06.wav";
+		break;
+	default:
+		strFileName = L"Jesse_Impact_default_01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"HITTED", strFileName, CHANNELID::SOUND_HITTED, 15.f);
+
 }
 
 // 몬스터 HUD를 준비합니다. (생성 : Level, Owner)

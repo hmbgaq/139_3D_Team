@@ -58,7 +58,7 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
     FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
-    FAILED_CHECK(Ready_Shader());
+    //FAILED_CHECK(Ready_Shader());
     
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));

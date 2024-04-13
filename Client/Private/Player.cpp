@@ -6,6 +6,7 @@
 #include "Data_Manager.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
+#include "SMath.h"
 
 // Add_UIManager
 #include "UI_Manager.h"
@@ -213,6 +214,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	Update_ChargingTime(fTimeDelta);
 
 	Update_SuperCharge(fTimeDelta);
+
+	Update_Voice_Cooltime(fTimeDelta);
 
 	m_pDataManager->Set_CurHP(m_fHp);
 
@@ -576,7 +579,7 @@ _bool CPlayer::Is_HUD_Cooltime_End(HUD eHUD, _float fCost)
 	{
 		_float fDiff = 0.f;
 
-		if (fCooltime >= fMaxCooltime)
+		if (fCooltime >= fMaxCooltime || 0.f >= fCooltime )
 		{
 			fDiff = fCost + 1.f;
 		}
@@ -1076,7 +1079,55 @@ void CPlayer::Update_SuperCharge(_float fTimeDelta)
 		m_fEffectTimeAcc = 0.f;
 	}
 
-	//m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
+void CPlayer::Play_Sound_SuperCharge_Enter()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_EnergyMode_Enter_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_EnergyMode_Enter_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_EnergyMode_Enter_03.wav";
+		break;
+	default:
+		strFileName = L"Player_EnergyMode_Enter_01.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"SUPER_CHARGE", strFileName, CHANNELID::SOUND_SUPER_CHARGE, 10.f);
+
+}
+
+void CPlayer::Play_Sound_SuperCharge_Exit()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_supercharged_energy_mode_off_001.wav";
+		break;
+	case 1:
+		strFileName = L"player_supercharged_energy_mode_off_002.wav";
+		break;
+	case 2:
+		strFileName = L"player_supercharged_energy_mode_off_003.wav";
+		break;
+	case 3:
+		strFileName = L"player_supercharged_energy_mode_off_004.wav";
+		break;
+	case 4:
+		strFileName = L"player_supercharged_energy_mode_off_005.wav";
+		break;
+	default:
+		strFileName = L"player_supercharged_energy_mode_off_001.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"SUPER_CHARGE", strFileName, CHANNELID::SOUND_SUPER_CHARGE, 10.f);
 }
 
 void CPlayer::Search_LockOn_Target()
@@ -1169,6 +1220,877 @@ void CPlayer::Hitted_Dead(Power ePower)
 	default:
 		m_pActor->Set_State(new CPlayer_DeathNormal_F_01());
 		break;
+	}
+}
+
+void CPlayer::Play_Whoosh_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 4);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_Punch_Whoosh_01_new.wav";
+		break;
+	case 1:
+		strFileName = L"Player_Punch_Whoosh_02_new.wav";
+		break;
+	case 2:
+		strFileName = L"Player_Punch_Whoosh_03_new.wav";
+		break;
+	case 3:
+		strFileName = L"Player_Punch_Whoosh_04_new.wav";
+		break;
+	default:
+		strFileName = L"Player_Punch_Whoosh_01_new.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", strFileName, CHANNELID::SOUND_PLAYER_WHOOSH, 10.f);
+}
+
+void CPlayer::Play_Hitted_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 23);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"VO_Jesse_TakingDamageHitA01.wav";
+		break;
+	case 1:
+		strFileName = L"VO_Jesse_TakingDamageHitA02.wav";
+		break;
+	case 2:
+		strFileName = L"VO_Jesse_TakingDamageHitA03.wav";
+		break;
+	case 3:
+		strFileName = L"VO_Jesse_TakingDamageHitA04.wav";
+		break;
+	case 4:
+		strFileName = L"VO_Jesse_TakingDamageHitA05.wav";
+		break;
+	case 5:
+		strFileName = L"VO_Jesse_TakingDamageHitA06.wav";
+		break;
+	case 6:
+		strFileName = L"VO_Jesse_TakingDamageHitA07.wav";
+		break;
+	case 7:
+		strFileName = L"VO_Jesse_TakingDamageHitA08.wav";
+		break;
+	case 8:
+		strFileName = L"VO_Jesse_TakingDamageHitA09.wav";
+		break;
+	case 9:
+		strFileName = L"VO_Jesse_TakingDamageHitA10.wav";
+		break;
+	case 10:
+		strFileName = L"VO_Jesse_TakingDamageHitA11.wav";
+		break;
+	case 11:
+		strFileName = L"VO_Jesse_TakingDamageHitA12.wav";
+		break;
+	case 12:
+		strFileName = L"VO_Jesse_TakingDamageHitA13.wav";
+		break;
+	case 13:
+		strFileName = L"VO_Jesse_TakingDamageHitA14.wav";
+		break;
+	case 14:
+		strFileName = L"VO_Jesse_TakingDamageHitA15.wav";
+		break;
+	case 15:
+		strFileName = L"VO_Jesse_TakingDamageHitA16.wav";
+		break;
+	case 16:
+		strFileName = L"VO_Jesse_TakingDamageHitA17.wav";
+		break;
+	case 17:
+		strFileName = L"VO_Jesse_TakingDamageHitA18.wav";
+		break;
+	case 18:
+		strFileName = L"VO_Jesse_TakingDamageHitA19.wav";
+		break;
+	case 19:
+		strFileName = L"VO_Jesse_TakingDamageHitA20.wav";
+		break;
+	case 20:
+		strFileName = L"VO_Jesse_TakingDamageHitA21.wav";
+		break;
+	case 21:
+		strFileName = L"VO_Jesse_TakingDamageHitA22.wav";
+		break;
+	case 22:
+		strFileName = L"VO_Jesse_TakingDamageHitA23.wav";
+		break;
+	default:
+		strFileName = L"VO_Jesse_TakingDamageHitA01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_HITTED", strFileName, CHANNELID::SOUND_PLAYER_HITTED, 10.f);
+}
+
+void CPlayer::Play_Dead_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Jesse_Die_VO_01.wav";
+		break;
+	case 1:
+		strFileName = L"Jesse_Die_VO_02.wav";
+		break;
+	case 2:
+		strFileName = L"Jesse_Die_VO_03.wav";
+		break;
+	case 3:
+		strFileName = L"Jesse_Die_VO_04.wav";
+		break;
+	case 4:
+		strFileName = L"Jesse_Die_VO_05.wav";
+		break;
+	default:
+		strFileName = L"Jesse_Die_VO_01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_DEAD", strFileName, CHANNELID::SOUND_PLAYER_DEAD, 10.f);
+
+}
+
+void CPlayer::Play_Kick_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_kick_layer1_001.wav";
+		break;
+	case 1:
+		strFileName = L"player_kick_layer1_002.wav";
+		break;
+	case 2:
+		strFileName = L"player_kick_layer1_003.wav";
+		break;
+	case 3:
+		strFileName = L"player_kick_layer1_004.wav";
+		break;
+	case 4:
+		strFileName = L"player_kick_layer1_005.wav";
+		break;
+	default:
+		strFileName = L"player_kick_layer1_001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", strFileName, CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
+}
+
+void CPlayer::Play_Walk_Sound()
+{
+	_bool bIsSnow = (
+		ECast(LEVEL::LEVEL_SNOWMOUNTAIN) == m_iCurrnetLevel
+		|| ECast(LEVEL::LEVEL_SNOWMOUNTAIN) == m_iCurrnetLevel
+		);
+
+	wstring strFileName = L"";
+
+	if (true == bIsSnow) 
+	{
+		_uint iRand = SMath::Random(0, 10);
+		switch (iRand)
+		{
+		case 0:
+			strFileName = L"Player_footstep_snow_walk_01.wav";
+			break;
+		case 1:
+			strFileName = L"Player_footstep_snow_walk_02.wav";
+			break;
+		case 2:
+			strFileName = L"Player_footstep_snow_walk_03.wav";
+			break;
+		case 3:
+			strFileName = L"Player_footstep_snow_walk_04.wav";
+			break;
+		case 4:
+			strFileName = L"Player_footstep_snow_walk_05.wav";
+			break;
+		case 5:
+			strFileName = L"Player_footstep_snow_walk_06.wav";
+			break;
+		case 6:
+			strFileName = L"Player_footstep_snow_walk_07.wav";
+			break;
+		case 7:
+			strFileName = L"Player_footstep_snow_walk_08.wav";
+			break;
+		case 8:
+			strFileName = L"Player_footstep_snow_walk_09.wav";
+			break;
+		case 9:
+			strFileName = L"Player_footstep_snow_walk_10.wav";
+			break;
+		default:
+			strFileName = L"Player_footstep_snow_walk_01.wav";
+			break;
+		}
+
+	}
+	else 
+	{
+		_uint iRand = SMath::Random(0, 9);
+		switch (iRand)
+		{
+		case 0:
+			strFileName = L"Player_footstep_soil_walk_01.wav";
+			break;
+		case 1:
+			strFileName = L"Player_footstep_soil_walk_02.wav";
+			break;
+		case 2:
+			strFileName = L"Player_footstep_soil_walk_03.wav";
+			break;
+		case 3:
+			strFileName = L"Player_footstep_soil_walk_04.wav";
+			break;
+		case 4:
+			strFileName = L"Player_footstep_soil_walk_05.wav";
+			break;
+		case 5:
+			strFileName = L"Player_footstep_soil_walk_06.wav";
+			break;
+		case 6:
+			strFileName = L"Player_footstep_soil_walk_07.wav";
+			break;
+		case 7:
+			strFileName = L"Player_footstep_soil_walk_08.wav";
+			break;
+		case 8:
+			strFileName = L"Player_footstep_soil_walk_09.wav";
+			break;
+		default:
+			strFileName = L"Player_footstep_soil_walk_01.wav";
+			break;
+		}
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_FOOTSTEP", strFileName, CHANNELID::SOUND_PLAYER_FOOTSTEP, 10.f);
+
+
+}
+
+void CPlayer::Play_Run_Sound()
+{
+	_bool bIsSnow = (
+		ECast(LEVEL::LEVEL_SNOWMOUNTAIN) == m_iCurrnetLevel
+		|| ECast(LEVEL::LEVEL_SNOWMOUNTAIN) == m_iCurrnetLevel
+		);
+
+	wstring strFileName = L"";
+
+	if (true == bIsSnow)
+	{
+		_uint iRand = SMath::Random(0, 10);
+		switch (iRand)
+		{
+		case 0:
+			strFileName = L"Player_footstep_snow_run_01.wav";
+			break;
+		case 1:
+			strFileName = L"Player_footstep_snow_run_02.wav";
+			break;
+		case 2:
+			strFileName = L"Player_footstep_snow_run_03.wav";
+			break;
+		case 3:
+			strFileName = L"Player_footstep_snow_run_04.wav";
+			break;
+		case 4:
+			strFileName = L"Player_footstep_snow_run_05.wav";
+			break;
+		case 5:
+			strFileName = L"Player_footstep_snow_run_06.wav";
+			break;
+		case 6:
+			strFileName = L"Player_footstep_snow_run_07.wav";
+			break;
+		case 7:
+			strFileName = L"Player_footstep_snow_run_08.wav";
+			break;
+		case 8:
+			strFileName = L"Player_footstep_snow_run_09.wav";
+			break;
+		case 9:
+			strFileName = L"Player_footstep_snow_run_10.wav";
+			break;
+		case 10:
+			strFileName = L"Player_footstep_snow_run_11.wav";
+			break;
+		case 11:
+			strFileName = L"Player_footstep_snow_run_12.wav";
+			break;
+		case 12:
+			strFileName = L"Player_footstep_snow_run_13.wav";
+			break;
+		default:
+			strFileName = L"Player_footstep_snow_run_01.wav";
+			break;
+		}
+
+	}
+	else
+	{
+		_uint iRand = SMath::Random(0, 9);
+		switch (iRand)
+		{
+		case 0:
+			strFileName = L"Player_footstep_soil_run_01.wav";
+			break;
+		case 1:
+			strFileName = L"Player_footstep_soil_run_02.wav";
+			break;
+		case 2:
+			strFileName = L"Player_footstep_soil_run_03.wav";
+			break;
+		case 3:
+			strFileName = L"Player_footstep_soil_run_04.wav";
+			break;
+		case 4:
+			strFileName = L"Player_footstep_soil_run_05.wav";
+			break;
+		case 5:
+			strFileName = L"Player_footstep_soil_run_06.wav";
+			break;
+		case 6:
+			strFileName = L"Player_footstep_soil_run_07.wav";
+			break;
+		case 7:
+			strFileName = L"Player_footstep_soil_run_08.wav";
+			break;
+		case 8:
+			strFileName = L"Player_footstep_soil_run_09.wav";
+			break;
+		default:
+			strFileName = L"Player_footstep_soil_run_01.wav";
+			break;
+		}
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_FOOTSTEP", strFileName, CHANNELID::SOUND_PLAYER_FOOTSTEP, 10.f);
+
+}
+
+void CPlayer::Play_Dodge_Sound()
+{
+
+	wstring strFileName = L"";
+	
+	_uint iRand = SMath::Random(0, 9);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_doge_foley_fast_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_doge_foley_fast_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_doge_foley_fast_03.wav";
+		break;
+	case 3:
+		strFileName = L"Player_doge_foley_fast_04.wav";
+		break;
+	case 4:
+		strFileName = L"Player_doge_foley_fast_05.wav";
+		break;
+	case 5:
+		strFileName = L"Player_doge_foley_fast_06.wav";
+		break;
+	case 6:
+		strFileName = L"Player_doge_foley_fast_07.wav";
+		break;
+	case 7:
+		strFileName = L"Player_doge_foley_fast_08.wav";
+		break;
+	case 8:
+		strFileName = L"Player_doge_foley_fast_09.wav";
+		break;
+	default:
+		strFileName = L"Player_doge_foley_fast_01.wav";
+		break;
+	}
+	
+	m_pGameInstance->Play_Sound(L"PLAYER_FOOTSTEP", strFileName, CHANNELID::SOUND_PLAYER_FOOTSTEP, 10.f);
+
+}
+
+void CPlayer::Play_Roll_Sound()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 9);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"Player_Doge_Full_01.wav";
+		break;
+	case 1:
+		strFileName = L"Player_Doge_Full_02.wav";
+		break;
+	case 2:
+		strFileName = L"Player_Doge_Full_03.wav";
+		break;
+	case 3:
+		strFileName = L"Player_Doge_Full_04.wav";
+		break;
+	default:
+		strFileName = L"Player_Doge_Full_01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_FOOTSTEP", strFileName, CHANNELID::SOUND_PLAYER_FOOTSTEP, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Melee()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::MELEE);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = 7.f;
+	m_fVoiceCooltime = 1.f;
+
+
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 10);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"oneliner_gauntletattack_jesse_1.wav";
+		break;
+	case 1:
+		strFileName = L"oneliner_gauntletattack_jesse_1_ALT01.wav";
+		break;
+	case 2:
+		strFileName = L"oneliner_gauntletattack_jesse_2.wav";
+		break;
+	case 3:
+		strFileName = L"oneliner_gauntletattack_jesse_2_ALT01.wav";
+		break;
+	case 4:
+		strFileName = L"oneliner_gauntletattack_jesse_3.wav";
+		break;
+	case 5:
+		strFileName = L"oneliner_gauntletattack_jesse_3_ALT01.wav";
+		break;
+	case 6:
+		strFileName = L"oneliner_gauntletattack_jesse_3_ALT02.wav";
+		break;
+	case 7:
+		strFileName = L"oneliner_gauntletattack_jesse_4.wav";
+		break;
+	case 8:
+		strFileName = L"oneliner_gauntletattack_jesse_4_ALT01.wav";
+		break;
+	case 9:
+		strFileName = L"oneliner_gauntletattack_jesse_5.wav";
+		break;
+	default:
+		strFileName = L"oneliner_gauntletattack_jesse_1.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Melee_Heavy()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::MELEE_HEAVY);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+	m_fVoiceCooltime = 1.f;
+
+
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"oneliner_cannonballpunch_jesse_1.wav";
+		break;
+	case 1:
+		strFileName = L"oneliner_cannonballpunch_jesse_1_ALT01.wav";
+		break;
+	case 2:
+		strFileName = L"oneliner_cannonballpunch_jesse_1_ALT02.wav";
+		break;
+	case 3:
+		strFileName = L"oneliner_cannonballpunch_jesse_2.wav";
+		break;
+	case 4:
+		strFileName = L"oneliner_cannonballpunch_jesse_2_ALT01.wav";
+		break;
+	case 5:
+		strFileName = L"oneliner_cannonballpunch_jesse_3.wav";
+		break;
+	case 6:
+		strFileName = L"oneliner_cannonballpunch_jesse_3_ALT01.wav";
+		break;
+	case 7:
+		strFileName = L"oneliner_cannonballpunch_jesse_3_ALT02.wav";
+		break;
+	case 8:
+		strFileName = L"oneliner_cannonballpunch_jesse_4.wav";
+		break;
+	case 9:
+		strFileName = L"oneliner_cannonballpunch_jesse_4_ALT01.wav";
+		break;
+	default:
+		strFileName = L"oneliner_cannonballpunch_jesse_1.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Winchester()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::WINCHESTER);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+	m_fVoiceCooltime = 1.f;
+
+
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"oneliner_perfectdodge_jesse_1.wav";
+		break;
+	case 1:
+		strFileName = L"oneliner_perfectdodge_jesse_1_alt.wav";
+		break;
+	case 2:
+		strFileName = L"oneliner_perfectdodge_jesse_1_ALT01.wav";
+		break;
+	default:
+		strFileName = L"oneliner_perfectdodge_jesse_1_ALT01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Shotgun()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::SHOTGUN);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+	m_fVoiceCooltime = 1.f;
+
+	wstring strFileName = L"oneliner_shotgun_jesse_3_ALT01.wav";
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Revolver()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::REVOLVER);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+
+
+	//wstring strFileName = L"";
+
+	//_uint iRand = SMath::Random(0, 3);
+	//switch (iRand)
+	//{
+	//case 0:
+	//	strFileName = L"oneliner_perfectdodge_jesse_1.wav";
+	//	break;
+	//case 1:
+	//	strFileName = L"oneliner_perfectdodge_jesse_1_alt.wav";
+	//	break;
+	//case 2:
+	//	strFileName = L"oneliner_perfectdodge_jesse_1_ALT01.wav";
+	//	break;
+	//default:
+	//	strFileName = L"oneliner_perfectdodge_jesse_1_ALT01.wav";
+	//	break;
+	//}
+
+	//m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Zapper_Block()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::ZAPPER_BLOCK);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+	m_fVoiceCooltime = 1.f;
+
+
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 9);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"oneliner_zapperblock_jesse_1.wav";
+		break;
+	case 1:
+		strFileName = L"oneliner_zapperblock_jesse_1_ALT01.wav";
+		break;
+	case 2:
+		strFileName = L"oneliner_zapperblock_jesse_2.wav";
+		break;
+	case 3:
+		strFileName = L"oneliner_zapperblock_jesse_2_ALT01.wav";
+		break;
+	case 4:
+		strFileName = L"oneliner_zapperblock_jesse_3.wav";
+		break;
+	case 5:
+		strFileName = L"oneliner_zapperblock_jesse_3_ALT01.wav";
+		break;
+	case 6:
+		strFileName = L"oneliner_zapperblock_jesse_4.wav";
+		break;
+	case 7:
+		strFileName = L"oneliner_zapperblock_jesse_1_ALT01.wav";
+		break;
+	case 8:
+		strFileName = L"oneliner_zapperblock_jesse_2.wav";
+		break;
+	default:
+		strFileName = L"oneliner_perfectdodge_jesse_1_ALT01.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Zapper_Dash()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::ZAPPER_DASH);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+	m_fVoiceCooltime = 1.f;
+
+
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 4);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"oneliner_zapperdash_jesse_1.wav";
+		break;
+	case 1:
+		strFileName = L"oneliner_zapperdash_jesse_2.wav";
+		break;
+	case 2:
+		strFileName = L"oneliner_zapperdash_jesse_2_ALT01.wav";
+		break;
+	case 3:
+		strFileName = L"oneliner_zapperdash_jesse_2_ALT02.wav";
+		break;
+	default:
+		strFileName = L"oneliner_zapperdash_jesse_1.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Zapper_Pull()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::ZAPPER_PULL);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+	m_fVoiceCooltime = 1.f;
+
+
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 4);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"oneliner_zapperpull_jesse_1.wav";
+		break;
+	case 1:
+		strFileName = L"oneliner_zapperpull_jesse_2.wav";
+		break;
+	case 2:
+		strFileName = L"oneliner_zapperpull_jesse_2_ALT01.wav";
+		break;
+	case 3:
+		strFileName = L"oneliner_zapperpull_jesse_2_ALT02.wav";
+		break;
+	default:
+		strFileName = L"oneliner_zapperpull_jesse_1.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Super_Charge()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::SUPER_CHARGE);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+
+	//wstring strFileName = L"oneliner_zapperslam_jesse_1.wav";
+	//m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Slam()
+{
+	if (0.f < m_fVoiceCooltime)
+		return;
+
+	_uint iIndex = ECast(Player_Voice_Cooltime::SLAM);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+	m_fVoiceCooltime = 1.f;
+
+	wstring strFileName = L"oneliner_zapperslam_jesse_1.wav";
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_E_Combo()
+{
+	_uint iIndex = ECast(Player_Voice_Cooltime::E_COMBO);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+
+	//wstring strFileName = L"oneliner_zapperslam_jesse_1.wav";
+	//m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Play_Voice_Heal()
+{
+	_uint iIndex = ECast(Player_Voice_Cooltime::HEAL);
+	if (0.f < m_VoiceCooltime[iIndex])
+		return;
+
+	m_VoiceCooltime[iIndex] = PLAYER_VOICE_DELAY;
+
+
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 6);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"oneliner_healingkit_jesse_1.wav";
+		break;
+	case 1:
+		strFileName = L"oneliner_healingkit_jesse_1_ALT01.wav";
+		break;
+	case 2:
+		strFileName = L"oneliner_healingkit_jesse_2.wav";
+		break;
+	case 3:
+		strFileName = L"oneliner_healingkit_jesse_2_ALT01.wav";
+		break;
+	case 4:
+		strFileName = L"oneliner_healingkit_jesse_2_ALT02.wav";
+		break;
+	case 5:
+		strFileName = L"oneliner_healingkit_jesse_2_ALT03.wav";
+		break;
+	default:
+		strFileName = L"oneliner_healingkit_jesse_1.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_VOICE", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+}
+
+void CPlayer::Update_Voice_Cooltime(_float fTimeDelta)
+{
+	_float fResult = m_fVoiceCooltime - fTimeDelta;
+	m_fVoiceCooltime = fResult > 0.f ? fResult : 0.f;
+	
+	for (_uint i = 0; i < ECast(Player_Voice_Cooltime::Player_Voice_Cooltime_End); ++i)
+	{
+		_float fResult = m_VoiceCooltime[i] - fTimeDelta;
+		m_VoiceCooltime[i] = fResult > 0.f ? fResult : 0.f;
 	}
 }
 

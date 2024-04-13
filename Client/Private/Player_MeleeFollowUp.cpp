@@ -49,21 +49,35 @@ CState<CPlayer>* CPlayer_MeleeFollowUp::Update(CPlayer* pActor, _float fTimeDelt
 		if (true == m_bFlags[0])
 		{
 			CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_L, true);
+			m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", L"player_punch_basic_whoosh002.wav", CHANNELID::SOUND_PLAYER_WHOOSH2, 10.f);
 		}
 	}
 	else if (false == m_bFlags[1])
 	{
 		pActor->Chasing_Attack(fTimeDelta);
+
+		if (pActor->Get_Target())
+		{
+			pActor->Play_Voice_Melee();
+		}
+
 		m_bFlags[1] = pActor->Is_Inputable_Front(9);
 		if (true == m_bFlags[1])
 		{
 			pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_L, false);
 			pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
+			pActor->Play_Whoosh_Sound();
 		}
 	}
 	else if (false == m_bFlags[2])
 	{
 		pActor->Chasing_Attack(fTimeDelta);
+
+		if (pActor->Get_Target())
+		{
+			pActor->Play_Voice_Melee();
+		}
+
 		m_bFlags[2] = pActor->Is_Inputable_Front(16);
 		if (true == m_bFlags[2])
 		{

@@ -14,6 +14,10 @@ public:
 public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_EnergyWhip_CloseRange_01;
 
+public:
+	void Sound_Whoosh_Up();
+	void Sound_Whoosh_Down();
+
 };
 
 END

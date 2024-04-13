@@ -11,6 +11,9 @@ void CPlayer_Revolver_WeaponHolster::Initialize(CPlayer* pActor)
 	pActor->Set_Splitted(true);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
+
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_REVOLVER, true);
+	pWeapon->Play_Weapon_Sound_Holster();
 }
 
 CState<CPlayer>* CPlayer_Revolver_WeaponHolster::Update(CPlayer* pActor, _float fTimeDelta)
