@@ -226,19 +226,7 @@ public:
 public:
 	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
 	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
-	void Update_SuperCharge(_float fTimeDelta) { 
-		_bool bIs_SuperCharge = Is_SuperCharge();
-		if (false == bIs_SuperCharge)
-			return;
-
-		_float fTime = m_fSuperChargeTime - fTimeDelta;
-		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
-
-		if (false == m_fSuperChargeTime) 
-		{
-			Play_Sound_SuperCharge_Exit();
-		}
-	};
+	void Update_SuperCharge(_float fTimeDelta);
 
 	void Play_Sound_SuperCharge_Enter();
 	void Play_Sound_SuperCharge_Exit();
