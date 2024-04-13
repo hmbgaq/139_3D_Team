@@ -41,15 +41,24 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 	{
 		m_bFlags[0] = pActor->Is_Upper_Inputable_Front(24);
 		if (true == m_bFlags[0])
-		{		
+		{
+			pActor->Set_BodyRender(1); // Heal RenderPass 
 			pActor->Set_Hp(CData_Manager::GetInstance()->Get_HpRegen());
 		}
 	}
 	
-	//if (pActor->Is_Animation_End())
+	if (false == m_bFlags[1])
+	{
+		if (true == pActor->Is_Upper_Inputable_Front(34)) // 44 °¡ ³¡ 
+		{
+			pActor->Set_BodyRender(0); // Origin RenderPass 
+			m_bFlags[1] = true;
+		}
+	}
+
 	if (pActor->Is_UpperAnimation_End())
 	{
-		pActor->Set_BodyRender(0); // Origin RenderPass 
+		//pActor->Set_BodyRender(0); // Origin RenderPass 
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 

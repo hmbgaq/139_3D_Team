@@ -28,28 +28,6 @@ Texture2D g_DissolveTexture;
 Texture2D g_MaskingTexture;
 
 /* =========== Value =========== */
-
-float g_ViewPortWidth = 1280.f;
-float g_ViewPortHeight = 720.f;
-
-// Laplacian Filter
-float mask[9] ={
-    -1.f, -1.f, -1.f,
-    -1.f, 8.f, -1.f,
-    -1.f, -1.f, -1.f};
-
-// 근처 픽셀
-float coord[3] ={ -1.f, 0.f, 1.f };
-
-float Blur_mask[9] ={
-    1.f, 1.f, 1.f,
-    1.f, 1.f, 1.f,
-    1.f, 1.f, 1.f};
-
-
-float g_Divider = 1.f;
-
-
 float   g_fDissolveWeight;      /* Dissolve  */
 
 float4  g_vLineColor;           /* OutLine */
@@ -58,6 +36,7 @@ float   g_LineThick;            /* OutLine */
 float3  g_vBloomPower   = { 0.f, 0.f, 0.f };        /* Bloom */
 float4  g_vRimColor     = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
 float   g_fRimPower     = 5.f;                      /* RimLight */
+float4  g_fRimLightPos  = { 0.f, 0.f, 0.f, 0.f };
 
 matrix g_CascadeProj; /* Cascade */
 /*=============================================================
@@ -73,6 +52,7 @@ float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
     float4 vRimColor = g_vRimColor * fRimPower;
     
     return vRimColor;
+    
 }
 
 float4 Calculation_Brightness(float4 Out_Diffuse)
@@ -368,7 +348,7 @@ PS_OUT PS_BOSS(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     /* g_vBloomPower */
@@ -399,7 +379,7 @@ PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     Out.vRimBloom += g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
@@ -428,7 +408,7 @@ PS_OUT PS_MAIN_RIMBLOOM_B(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) ;
     
     
@@ -457,7 +437,7 @@ PS_OUT PS_MAIN_RIMBLOOM_C(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse);
     
@@ -485,7 +465,7 @@ PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     
@@ -595,9 +575,12 @@ PS_OUT PS_MAIN_HEAL(PS_IN In)
     if (true == g_bEmissive_Available)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    // 버텍스에서 바라보는 카메라의 방향  
+    //float Rim = dot(Out.vNormal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
-    Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    Out.vRimBloom = vector(0.f, 0.f, 0.f, 0.f);
+    //Calculation_Brightness(Out.vDiffuse) + vRimColor;
     
     return Out;
 }

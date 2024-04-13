@@ -51,15 +51,7 @@ void CBody_Player::Tick(_float fTimeDelta)
 		Update_ShootingReaction(fTimeDelta);
 	}
 
-	//if (m_pGameInstance->Key_Down(DIK_H))
-	//{
-	//	iTemp += 1;
-	//	if (iTemp > (_int)m_pModelCom->Get_NumMeshes())
-	//	{
-	//		iTemp = 0;
-	//	}
-	//	cout << iTemp << endl;
-	//}
+	//if()
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
@@ -280,8 +272,8 @@ HRESULT CBody_Player::Ready_ShaderOption()
 
 	// 2. RimLight 
 	m_vBloomPower = { 1.f, 0.f, 0.f };
-	m_vRimColor   = { 1.f, 1.f, 1.f, 1.f };
-	m_fRimPower   = 5.f;
+	m_vRimColor   = { 0.7f, 0.f, 0.f, 1.f };
+	m_fRimPower   = 2.f;
 
 	return S_OK;
 }

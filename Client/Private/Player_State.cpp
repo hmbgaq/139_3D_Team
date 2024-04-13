@@ -1136,7 +1136,6 @@ CState<CPlayer>* CPlayer_State::Heal(CPlayer* pActor, _float fTimeDelta, _uint _
 		_bool bIsCootimeEnd = pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::HEAL)); //CPlayer::HUD::LEFT_RIGHT
 		if (true == bIsCootimeEnd)
 		{
-			pActor->Set_BodyRender(1); // Heal RenderPass 
 
 			if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
 				return new CPlayer_InteractionGlamour_Activate();
