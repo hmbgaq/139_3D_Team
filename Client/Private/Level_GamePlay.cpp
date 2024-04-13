@@ -26,6 +26,7 @@
 #include "Environment_SpecialObject.h"
 #include "Event_Trigger.h"
 #include "Event_MonsterSpawnTrigger.h"
+#include "Event_UITrigger.h"
 #include "Light.h"
 #pragma endregion
 
@@ -1216,6 +1217,46 @@ HRESULT CLevel_GamePlay::Ready_Event()
 		}
 
 
+	}
+
+	json UITriggerJson = TriggerJson["UITriggerJson"];
+	_int iUITriggerJsonSize = (_int)UITriggerJson.size();
+	
+	for (_int i = 0; i < iUITriggerJsonSize; ++i)
+	{
+		CEvent_UITrigger::UI_TRIGGERDESC UITriggerDesc = {};
+		UITriggerDesc.bOnTrigger = UITriggerJson[i]["OnTrigger"];
+		UITriggerDesc.strSpawnMonsterJsonPath = UITriggerJson[i]["JsonPath"];
+		UITriggerDesc.strTriggerNameTag = UITriggerJson[i]["NameTag"];
+		UITriggerDesc.iSpawnGroupIndex = UITriggerJson[i]["SpawnGroupIndex"];
+		UITriggerDesc.eTriggerType = CEvent_Trigger::TRIGGER_UI;
+		CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderSize"], UITriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderCenter"], UITriggerDesc.vColliderCenter);
+	
+		CEvent_UITrigger* pUITrigger = CEvent_UITrigger::Create(m_pDevice, m_pContext, &UITriggerDesc);
+	
+		const json& TransformJson = UITriggerJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+	
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+	
+		pUITrigger->Load_FromJson(UITriggerJson[i]);
+	
+		if (pUITrigger == nullptr)
+		{
+			MSG_BOX("UI 트리거 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+		{
+			m_pGameInstance->Add_Event(pUITrigger);
+		}
 	}
 
 

@@ -69,7 +69,9 @@ void CPlayer_State_TeleportPunch::Release(CPlayer* pActor)
 	__super::Release(pActor);
 
 	if (m_pEffect != nullptr)	// ÀÌÆåÆ® ÇØÁ¦
+	{		
 		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+	}
 
 	pActor->Set_Target(nullptr);
 }

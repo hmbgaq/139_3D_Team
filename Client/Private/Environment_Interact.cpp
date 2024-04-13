@@ -223,11 +223,14 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		{
 			UnEnable_UpdateCells();
 		}
-
-		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_ZipLine_Stop && m_pPlayer->Is_Animation_End() == true)
+		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_ZipLine_Stop && m_pPlayer->Is_Animation_End() == true)
 		{
 			UnEnable_UpdateCells();
 			m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
+		}
+		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionWhipSwing && m_pPlayer->Is_Animation_End() == true)
+		{
+			UnEnable_UpdateCells();
 		}
 
 		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
@@ -239,10 +242,11 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		if(m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
 			m_bInteractMoveMode = true;
 
-		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
+		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
 		{
 			UnEnable_UpdateCells();
 		}
+		
 		//else if (m_pPlayer->Is_Interection() == false && m_tEnvironmentDesc.bInteractMoveMode == true)
 		//	m_bInteractMoveMode = true;
 	}

@@ -309,7 +309,7 @@ HRESULT CEnvironment_SpecialObject::TrackLeverInit()
 
 	m_pLeverWeaknessUI->Set_Active(true);
 
-	dynamic_cast<CUI_Weakness*>(m_pLeverWeaknessUI)->Set_ColliderRadius(3.f);
+	dynamic_cast<CUI_Weakness*>(m_pLeverWeaknessUI)->Set_ColliderRadius(1.f);
 
 	if(nullptr == m_pLeverWeaknessUI)
 		return E_FAIL;
@@ -458,14 +458,14 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 						m_bLeverOn = true;
 
 						if(m_pLightObject != nullptr)
-							m_pLightObject->Set_Enable(true);
+							m_pLightObject->Set_Enable(false);
 					}
 					else
 					{
 						m_pLeverWeaknessUI->Set_Enable(true);
 
 						if (m_pLightObject != nullptr)
-							m_pLightObject->Set_Enable(false);
+							m_pLightObject->Set_Enable(true);
 
 					}
 					
