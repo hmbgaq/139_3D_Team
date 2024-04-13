@@ -418,7 +418,11 @@ public: /* =========================== Animation ============================== 
 	_int			m_iTextureNum = 0;
 	_int			m_iLoopAnimIndex = 0;
 
-	void			Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
+	void			Set_AnimPlay(_bool bPlay) 
+	{
+		m_bPlayAnim = bPlay;
+		m_fCurrTime = 0.f;
+	}
 	_bool			Get_AnimPlay() { return m_bPlayAnim; }
 	_bool			m_bPlayAnim = false;
 

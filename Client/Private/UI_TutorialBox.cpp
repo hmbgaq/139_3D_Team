@@ -160,6 +160,9 @@ HRESULT CUI_TutorialBox::Bind_ShaderResources()
 	if (FAILED(m_pTextureCom[TEXTBOX]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;
 
+	if (m_iTextNum > m_iMaxTextNum)
+		m_iTextNum = m_iMaxTextNum;
+
 	if (FAILED(m_pTextureCom[TUTORIALTEXT]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Front", m_iTextNum)))
 		return E_FAIL;
 

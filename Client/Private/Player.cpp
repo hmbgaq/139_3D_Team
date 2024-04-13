@@ -1071,11 +1071,18 @@ void CPlayer::Update_SuperCharge(_float fTimeDelta)
 	}
 	else 
 	{
+		m_pUIManager->NonActive_SuperChargeMod(); // !¼ºÈñ : ½´ÆÛÂ÷Áö ¸ðµå UI ²ô±â
 		m_fSuperChargeTime = 0.f;
 		m_fEffectTimeAcc = 0.f;
 	}
 
 	//m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
+}
+
+// !¼ºÈñ : ½´ÆÛÂ÷Áö ¸ðµå UI ON
+void CPlayer::Activate_SuperChargeUI()
+{
+	m_pUIManager->Active_SuperChargeMod();
 }
 
 void CPlayer::Search_LockOn_Target()

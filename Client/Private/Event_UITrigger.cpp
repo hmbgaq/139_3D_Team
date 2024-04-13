@@ -38,12 +38,12 @@ void CEvent_UITrigger::Activate()
 	}
 	if (m_tUITriggerDesc.iSpawnGroupIndex == 1)
 	{// Crane 설명
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE); // 메세지 변경
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
 	else if (m_tUITriggerDesc.iSpawnGroupIndex == 2)
 	{// 좀비 설명
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE); // 메세지 변경
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
 	else if (m_tUITriggerDesc.iSpawnGroupIndex == 3)

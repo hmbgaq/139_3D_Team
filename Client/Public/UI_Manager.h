@@ -362,8 +362,10 @@ public:
 	void			Active_SkillWindow(_bool bActive);
 	void			NonActive_SkillWindow();
 	void			Change_SkillWindow(const string& strUIName);
+	void			Change_MessageBox(const _uint iTextNum);
 private:
 	vector<CUI*>	m_vecSkillWindow;
+	CUI*			m_pReward_MessageBox = nullptr;
 
 public:
 	/* SkillIcon */

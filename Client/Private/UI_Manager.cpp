@@ -19,6 +19,7 @@
 #include "UI_Skill_Preview.h"
 #include "UI_SkillFrame.h"
 #include "UI_WeaponFrame.h"
+#include "UI_TextImage.h"
 #pragma endregion
 #include "Data_Manager.h"
 
@@ -563,7 +564,7 @@ void CUI_Manager::NonActive_PlayerHUD()
 	{
 
 		if (iter->Get_UIDesc().strUIName == "Fog" ||
-			iter->Get_UIDesc().strUIName == "Linghtning")
+			iter->Get_UIDesc().strUIName == "Lightning")
 		{
 			iter->Set_Active(false);	// UI 활성화
 			iter->Set_AnimPlay(false);	// UI Animation 재생
@@ -584,7 +585,7 @@ void CUI_Manager::NonActive_PlayerHUD()
 	for (auto& iter : m_vecRightHUD)
 	{
 		if (iter->Get_UIDesc().strUIName == "Fog" ||
-			iter->Get_UIDesc().strUIName == "Linghtning")
+			iter->Get_UIDesc().strUIName == "Lightning")
 		{
 			iter->Set_Active(false);	// UI 활성화
 			iter->Set_AnimPlay(false);	// UI Animation 재생
@@ -706,10 +707,10 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			return E_FAIL;
 
 		if (tUI_Info.strUIName == "Fog" ||
-			tUI_Info.strUIName == "Linghtning")
+			tUI_Info.strUIName == "Lightning")
 		{
 			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-			pUI_Object->Set_LifeTime(2600.f);					// UI LifeTime
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
 			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 		}
 		else
@@ -1389,10 +1390,10 @@ HRESULT CUI_Manager::Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			return E_FAIL;
 
 		if (tUI_Info.strUIName == "Fog" ||
-			tUI_Info.strUIName == "Linghtning")
+			tUI_Info.strUIName == "Lightning")
 		{
 			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-			pUI_Object->Set_LifeTime(2600.f);					// UI LifeTime
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
 			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 		}
 		else
@@ -1543,6 +1544,11 @@ HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerT
 			return E_FAIL;
 
 		m_vecTutorialBox.push_back(pUI_Object);
+
+		if (pUI_Object->Get_UIDesc().strUIName == "Fog")
+		{
+			int test = 10;
+		}
 
 		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
 		pUI_Object->Set_LifeTime(7000.f);					// UI LifeTime
@@ -4205,6 +4211,14 @@ void CUI_Manager::Change_SkillWindow(const string& strUIName)
 {
 }
 
+void CUI_Manager::Change_MessageBox(const _uint iTextNum)
+{
+	if (m_pReward_MessageBox == nullptr)
+		return;
+
+	dynamic_cast<CUI_TextImage*>(m_pReward_MessageBox)->Change_RewardMassege(iTextNum);
+}
+
 HRESULT CUI_Manager::Add_SkillIcon(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 	json json_in;
@@ -4590,6 +4604,11 @@ HRESULT CUI_Manager::Add_SkillPreview(_uint iLevelIndex, const wstring& strLayer
 			return E_FAIL;
 
 		m_vecSkillPreview.push_back(pUI_Object);
+
+		if (pUI_Object->Get_UIDesc().strUIName == "RewardMessageBox")
+		{
+			m_pReward_MessageBox = pUI_Object;
+		}
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 		pUI_Object->Load_FromJson(object); // 18. Load Data
