@@ -21,16 +21,14 @@
 
 CEnvironment_Interact::CEnvironment_Interact(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
-	//, m_pUIManager(CUI_Manager::GetInstance())
+	,m_pUIManager(CUI_Manager::GetInstance())
 {
-		//Safe_AddRef(m_pUIManager);
 }
 
 CEnvironment_Interact::CEnvironment_Interact(const CEnvironment_Interact & rhs)
 	: CGameObject(rhs)
 	, m_pUIManager(CUI_Manager::GetInstance())
 {
-	Safe_AddRef(m_pUIManager);
 }
 
 HRESULT CEnvironment_Interact::Initialize_Prototype()
@@ -125,7 +123,7 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 
 	// !UI Add UI_Interaction
 	if(m_iCurrnetLevel != (_uint)LEVEL_TOOL)
-	Find_UI_For_InteractType();
+		Find_UI_For_InteractType();
 
 
 	if (m_tEnvironmentDesc.bInteractMoveMode == true)
@@ -152,9 +150,6 @@ HRESULT CEnvironment_Interact::Initialize(void* pArg)
 
 	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_LEVER)
 	{
-		
-		
-		
 		vector<pair<_int, _bool>>* pvecLevelSwitch = CData_Manager::GetInstance()->Get_LevelSwitchContainer();
 		
 		pvecLevelSwitch->push_back(make_pair(m_tEnvironmentDesc.iSwitchIndex, false));
@@ -172,182 +167,183 @@ void CEnvironment_Interact::Priority_Tick(_float fTimeDelta)
 
 void CEnvironment_Interact::Tick(_float fTimeDelta)
 {
-	if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
+	if (m_bOpenLevel == false)
 	{
-		if (m_pGameInstance->Key_Down(DIK_F7))
+		if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
 		{
-			Start_SplineEvent();
-			m_pPlayer->SetState_InteractCartRideLoop();
-		}
-		if(m_pGameInstance->Key_Down(DIK_NUMPAD1))
-			m_vecPointChecks[0] = true;
-		if (m_pGameInstance->Key_Down(DIK_NUMPAD2))
-			m_vecPointChecks[1] = true;
-		if (m_pGameInstance->Key_Down(DIK_NUMPAD3))
-			m_vecPointChecks[2] = true;
-		if (m_pGameInstance->Key_Down(DIK_NUMPAD4))
-			m_vecPointChecks[3] = true;
-		if (m_pGameInstance->Key_Down(DIK_NUMPAD5))
-			Reset_TestEvent();
-	}
-
-	
-
-	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL && m_bFindPlayer == false)
-	{	
-		m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
-
-		if(m_pPlayer != nullptr)
-		{
-			Safe_AddRef(m_pPlayer);
-			m_bFindPlayer = true;
-		}
-	}
-
-
-	if (true == m_tEnvironmentDesc.bAnimModel)// && true == m_bPlay)
-	{
-		//if(m_tEnvironmentDesc.eInteractType != CEnvironment_Interact::INTERACT_ZIPLINE)
-			m_pModelCom->Play_Animation(fTimeDelta, _float3());
-	}
-
-	
-
-
-	if(m_bInteractEnable == true && m_tEnvironmentDesc.eInteractType != CEnvironment_Interact::INTERACT_NONE)
-		Interact();
-
-	if(m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == true && m_bFindPlayer == true)
-	{
-		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
-		{
-			UnEnable_UpdateCells();
-		}
-		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_ZipLine_Stop && m_pPlayer->Is_Animation_End() == true)
-		{
-			UnEnable_UpdateCells();
-			m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
-		}
-		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionWhipSwing && m_pPlayer->Is_Animation_End() == true)
-		{
-			UnEnable_UpdateCells();
-		}
-
-		if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
-			m_bInteractMoveMode = true;
-		
-	}
-	else if(m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP && m_bInteractMoveMode == false && m_bFindPlayer == true)
-	{
-		if(m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
-			m_bInteractMoveMode = true;
-
-		else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
-		{
-			UnEnable_UpdateCells();
-		}
-		
-		//else if (m_pPlayer->Is_Interection() == false && m_tEnvironmentDesc.bInteractMoveMode == true)
-		//	m_bInteractMoveMode = true;
-	}
-
-	if(m_bInteractMoveMode == true)
-		Check_InteractMoveCollider();
-
-	// !UI Add UI_Interaction
-	if (m_bEnable == true)
-	{
-		if (m_pUI_Interaction != nullptr)
-		{
-			if (m_pGameInstance->Get_CurrentLevel() != LEVEL_LOADING)
+			if (m_pGameInstance->Key_Down(DIK_F7))
 			{
-				try 
-				{
-					// 각 상호작용 객체에 맞게 vOffset 조절해줘야함.
-					m_pUI_Interaction->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix(), m_tEnvironmentDesc.vInteractColliderCenter/*, vOffset*/); // 위치 갱신
-					m_pUI_Interaction->Set_OnInteraction(m_bInteract);	// 상호작용을 했는지
-				}
-				catch (_uint e) 
-				{
-					_int a = 0;
-				}
+				Start_SplineEvent();
+				m_pPlayer->SetState_InteractCartRideLoop();
+			}
+			if (m_pGameInstance->Key_Down(DIK_NUMPAD1))
+				m_vecPointChecks[0] = true;
+			if (m_pGameInstance->Key_Down(DIK_NUMPAD2))
+				m_vecPointChecks[1] = true;
+			if (m_pGameInstance->Key_Down(DIK_NUMPAD3))
+				m_vecPointChecks[2] = true;
+			if (m_pGameInstance->Key_Down(DIK_NUMPAD4))
+				m_vecPointChecks[3] = true;
+			if (m_pGameInstance->Key_Down(DIK_NUMPAD5))
+				Reset_TestEvent();
+		}
 
+
+
+		if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL && m_bFindPlayer == false)
+		{
+			m_pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
+
+			if (m_pPlayer != nullptr)
+			{
+				Safe_AddRef(m_pPlayer);
+				m_bFindPlayer = true;
 			}
 		}
-	}
+
+
+		if (true == m_tEnvironmentDesc.bAnimModel)// && true == m_bPlay)
+		{
+			//if(m_tEnvironmentDesc.eInteractType != CEnvironment_Interact::INTERACT_ZIPLINE)
+			m_pModelCom->Play_Animation(fTimeDelta, _float3());
+		}
+
+
+
+
+		if (m_bInteractEnable == true && m_tEnvironmentDesc.eInteractType != CEnvironment_Interact::INTERACT_NONE)
+			Interact();
+
+		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == true && m_bFindPlayer == true)
+		{
+			if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
+			{
+				UnEnable_UpdateCells();
+			}
+			else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_ZipLine_Stop && m_pPlayer->Is_Animation_End() == true)
+			{
+				UnEnable_UpdateCells();
+				m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
+			}
+			else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionWhipSwing && m_pPlayer->Is_Animation_End() == true)
+			{
+				UnEnable_UpdateCells();
+			}
+
+			if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
+				m_bInteractMoveMode = true;
+
+		}
+		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP && m_bInteractMoveMode == false && m_bFindPlayer == true)
+		{
+			if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionClimb200 && m_pPlayer->Is_Animation_End() == true && m_tEnvironmentDesc.bInteractMoveMode == true)
+				m_bInteractMoveMode = true;
+
+			else if (m_pPlayer->Get_CurrentAnimIndex() == (_uint)CPlayer::Player_State::Player_InteractionJumpDown300 && m_pPlayer->Is_Animation_End() == true)
+			{
+				UnEnable_UpdateCells();
+			}
+
+			//else if (m_pPlayer->Is_Interection() == false && m_tEnvironmentDesc.bInteractMoveMode == true)
+			//	m_bInteractMoveMode = true;
+		}
+
+		if (m_bInteractMoveMode == true)
+			Check_InteractMoveCollider();
+
+		// !UI Add UI_Interaction
+		if (m_bEnable == true)
+		{
+			if (m_pUI_Interaction != nullptr)
+			{
+				if (m_pGameInstance->Get_CurrentLevel() != LEVEL_LOADING)
+				{
+					if (m_bOpenLevel == true)
+					{
+						return;
+					}
+
+					try
+					{
+						// 각 상호작용 객체에 맞게 vOffset 조절해줘야함.
+						m_pUI_Interaction->SetUp_WorldToScreen(m_pTransformCom->Get_WorldMatrix(), m_tEnvironmentDesc.vInteractColliderCenter/*, vOffset*/); // 위치 갱신
+						m_pUI_Interaction->Set_OnInteraction(m_bInteract);	// 상호작용을 했는지
+					}
+					catch (_uint e)
+					{
+						_int a = 0;
+					}
+
+				}
+			}
+		}
+
+
+
+
+		if (m_bSpline == true)
+		{
+			Spline_Loop(fTimeDelta);
+			//Spline_LoopDoublePoint(fTimeDelta);
+		}
+
+		if (m_tEnvironmentDesc.bRotate == true && m_bInteractEnable == true)
+		{
+			if (true == RotationCheck(fTimeDelta))
+			{
+				StartGroupInteract();
+				m_bInteractEnable = false;
+				m_bInteract = true;
+				Enable_UpdateCells();
+			}
+		}
+
+		if (m_tEnvironmentDesc.bOffset == true)
+		{
+			Move_For_Offset();
+		}
+
+		if (m_tEnvironmentDesc.bRootTranslate == true)
+		{
+			//Move_For_PlayerOffset();
+			Move_For_PlayerRootMotion();
+		}
+
+		if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB || m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPEDOWN)
+		{
+			Rope_ChainFunction(fTimeDelta);
+		}
+		//if (m_tEnvironmentDesc.bOwner == false && m_pOwnerInteract != nullptr)
+		//{
+		//	if (true == Check_OwnerEnablePosition())
+		//		m_bInteractEnable = true;
+		//	else
+		//		m_bInteractEnable = false;
+		//}
+
+		// 소영 - 렌더 필요사항
+		if (m_bRenderOutLine)
+		{
+			m_fTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
+			m_bIncrease = (m_fTimeAcc >= 0.7f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
+		}
+
+		if (m_pColliderCom != nullptr)
+			m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+
+		if (m_pInteractColliderCom != nullptr)
+			m_pInteractColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+
+		if (m_pInteractMoveColliderCom != nullptr)
+			m_pInteractMoveColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+
+		if (m_pMoveRangeColliderCom != nullptr)
+			m_pMoveRangeColliderCom->Update(XMMatrixIdentity());
+
+
 		
-	
-
-
-	if (m_bSpline == true)
-	{
-		Spline_Loop(fTimeDelta);
-		//Spline_LoopDoublePoint(fTimeDelta);
 	}
 
-	if (m_tEnvironmentDesc.bRotate == true && m_bInteractEnable == true)
-	{
-		if (true == RotationCheck(fTimeDelta))
-		{
-			StartGroupInteract();
-			m_bInteractEnable = false;
-			m_bInteract = true;
-			Enable_UpdateCells();
-		}
-	}
-
-	if (m_tEnvironmentDesc.bOffset == true)
-	{
-		Move_For_Offset();
-	}
-
-	if (m_tEnvironmentDesc.bRootTranslate == true)
-	{
-		//Move_For_PlayerOffset();
-		Move_For_PlayerRootMotion();
-	}
-
-	if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPECLIMB || m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_ROPEDOWN)
-	{
-		Rope_ChainFunction(fTimeDelta);
-	}
-	//if (m_tEnvironmentDesc.bOwner == false && m_pOwnerInteract != nullptr)
-	//{
-	//	if (true == Check_OwnerEnablePosition())
-	//		m_bInteractEnable = true;
-	//	else
-	//		m_bInteractEnable = false;
-	//}
-
-	// 소영 - 렌더 필요사항
-	if (m_bRenderOutLine)
-	{
-		m_fTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
-		m_bIncrease = (m_fTimeAcc >= 0.7f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
-	}
-	
-	if (m_pColliderCom != nullptr)
-		m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
-
-	if(m_pInteractColliderCom != nullptr)
-		m_pInteractColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
-
-	if(m_pInteractMoveColliderCom != nullptr)
-		m_pInteractMoveColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
-
-	if(m_pMoveRangeColliderCom != nullptr)
-		m_pMoveRangeColliderCom->Update(XMMatrixIdentity());
-
-	
-	if (m_pPlayer != nullptr && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true && true == m_pPlayer->Is_Animation_End())
-	{
-		if(m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_InteractionJumpDown300)
-		{
-			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-			m_bInteract = false;
-		}
-
-	}
 }
 	
 
@@ -387,6 +383,47 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(0, this), );
 	//	//FAILED_CHECK_RETURN(m_pGameInstance->Add_CascadeObject(1, this), );
 	//}
+	if (m_pPlayer != nullptr && m_tEnvironmentDesc.bLevelChange == true && m_bInteract == true && m_pPlayer->Get_CurrentAnimIndex() == (_int)CPlayer::Player_State::Player_InteractionJumpDown300)
+	{
+		if (m_pPlayer->Is_Animation_End() == TRUE && m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_SNOWMOUNTAIN)
+		{
+			list<CGameObject*> vecBackgroundObjects = *m_pGameInstance->Get_GameObjects(m_pGameInstance->Get_NextLevel(), LAYER_BACKGROUND);
+			
+			for (auto iter : vecBackgroundObjects)
+			{
+				if (typeid(*iter) == typeid(CEnvironment_Interact))
+				{
+					dynamic_cast<CEnvironment_Interact*>(iter)->Set_OpenLevel(true);
+				}
+			}
+
+
+			m_bOpenLevel = true;
+			m_bInteract = false;
+			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+		}
+
+	}
+
+	if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true && m_pGameInstance->Get_NextLevel() == (_uint)LEVEL_GAMEPLAY)
+	{
+		if (m_pPlayer->Is_Inputable_Front(32) && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
+		{
+			list<CGameObject*> vecBackgroundObjects = *m_pGameInstance->Get_GameObjects(m_pGameInstance->Get_NextLevel(), LAYER_BACKGROUND);
+
+			for (auto iter : vecBackgroundObjects)
+			{
+				if (typeid(*iter) == typeid(CEnvironment_Interact))
+				{
+					dynamic_cast<CEnvironment_Interact*>(iter)->Set_OpenLevel(true);
+				}
+			}
+
+			m_bOpenLevel = true;
+			m_bInteract = false;
+			m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
+		}
+	}
 }
 
 HRESULT CEnvironment_Interact::Render()
@@ -1293,14 +1330,7 @@ void CEnvironment_Interact::Interact()
 
 			m_bInteract = true;
 
-			if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true)
-			{
-				if (m_pPlayer->Is_Inputable_Front(32) && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL)
-				{
-					m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-					m_bInteract = false;
-				}
-			}
+			
 
 		}
 		else if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_ONCE && m_bInteract == false)
@@ -1776,26 +1806,24 @@ void CEnvironment_Interact::Interact()
 			}
 		}
 
+		m_bInteract = true;
+
+		
+
+		
+
+
 			if(m_tEnvironmentDesc.bUseGravity == false)
 				m_pPlayer->Set_UseGravity(false);
 			
-			m_bInteract = true;
+			
 		
 
-		if (true == m_tEnvironmentDesc.bLevelChange && m_bInteract == true)
-		{
-			if (m_pPlayer->Is_Inputable_Front(32) && m_pGameInstance->Get_NextLevel() != (_uint)LEVEL_TOOL && m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_JUMP200)
-			{
-				m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-				//m_pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, m_tEnvironmentDesc.eChangeLevel));
-				m_bInteract = false;
-			}
-
 		
-		}
 	}
 	else
-	{
+	{	
+		
 		if (m_tEnvironmentDesc.eInteractState == CEnvironment_Interact::INTERACTSTATE_LOOP)
 		{
 			if(m_tEnvironmentDesc.eInteractType != CEnvironment_Interact::INTERACT_JUMP300)
@@ -1803,8 +1831,12 @@ void CEnvironment_Interact::Interact()
 			m_bInteract = false;
 
 
+			if (m_bOpenLevel == true)
+			{
+				return;
+			}
 			// !UI Add
-			if (m_pUI_Interaction != nullptr)
+			if (m_pUI_Interaction != nullptr && m_bOpenLevel == false)
 			{
 				m_pUI_Interaction->Set_OnCollision(false);	// 상호작용을 할 수 있는 범위에서 나갔는지 (Collision)
 				m_pUI_Interaction->Reset_Interaction_UI();	// 나가면서 UI 리셋
@@ -3398,6 +3430,11 @@ void CEnvironment_Interact::Free()
 	if(m_pPlayer != nullptr)
 		Safe_Release(m_pPlayer);
 
+	if (m_pUI_Interaction != nullptr)
+	{
+		m_pUI_Interaction->Set_Enable(false);
+		Safe_Release(m_pUI_Interaction);
+	}
 
 	if (m_pUIManager != nullptr)
 		Safe_Release(m_pUIManager);

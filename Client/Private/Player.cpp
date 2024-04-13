@@ -106,8 +106,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
 
-	GameObjectDesc.fSpeedPerSec = 7.f;
-	//GameObjectDesc.fSpeedPerSec = 22.f;
+	//GameObjectDesc.fSpeedPerSec = 7.f;
+	GameObjectDesc.fSpeedPerSec = 22.f;
 	GameObjectDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 
 	FAILED_CHECK(__super::Initialize(&GameObjectDesc));
