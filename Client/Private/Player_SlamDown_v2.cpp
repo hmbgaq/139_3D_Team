@@ -14,7 +14,7 @@ void CPlayer_SlamDown_v2::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 7);
 
-	m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", L"Player_GroundSlamAttack_Impact_01.wav", CHANNELID::SOUND_PLAYER_IMPACT, 10.f);
+	m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", L"Player_GroundSlamAttack_Impact_02.wav", CHANNELID::SOUND_PLAYER_IMPACT, 10.f);
 }
 
 CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)

@@ -15,6 +15,8 @@ class CPart_Preview final : public CGameObject
 public:
 	typedef struct tagPartPreviewDesc : public CGameObject::GAMEOBJECT_DESC
 	{
+		wstring			strOwnerModelTag = TEXT("");
+
 		 CBone*			pSocketBone			= { nullptr };
 		 CTransform*		pParentTransform	= { nullptr };
 		 CGameObject*		pOwner				= { nullptr };
@@ -47,11 +49,14 @@ private:
 	CEffect_Trail*		m_pTrail = { nullptr };
 	_bool				m_bTrailPlay = { TRUE };
 
+	CShader* m_pShaderCom = { nullptr };
+	CModel* m_pModelCom = { nullptr };
+
 private:
 	CTransform*			m_pParentTransform	= { nullptr };
 	CBone*				m_pSocketBone		= { nullptr };
 	_float4x4			m_WorldMatrix		= {};
-
+	wstring				m_strOwnerModelTag = TEXT("");
 
 private:
 	HRESULT Ready_Components();

@@ -33,6 +33,7 @@
 #include "Player.h"
 #include "VampireCommander.h"
 #include "Mother.h"
+#include "Bandit_Heavy.h"
 
 CWindow_EffectTool::CWindow_EffectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImgui_Window(pDevice, pContext)
@@ -391,6 +392,12 @@ HRESULT CWindow_EffectTool::Ready_Model_Preview(wstring strModelTag)
 	if (strModelTag == TEXT("Prototype_Component_Model_MotherMouth"))	// 기생체 마더
 	{
 		tDesc.iAnimIndex = { CMother::Parasiter_Idle_01 };
+	}
+
+
+	if (strModelTag == TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"))	// 제누거인
+	{
+		tDesc.iAnimIndex = { CBandit_Heavy::BanditHeavy_Idle };
 	}
 
 
@@ -6027,6 +6034,11 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			Ready_Model_Preview(TEXT("Prototype_Component_Model_Mother"));
 		}
 
+		if (ImGui::Button("Create Model_Vampiric_Zombie"))	// 모델 생성
+		{
+			Ready_Model_Preview(TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"));
+		}
+
 	}
 	else
 	{
@@ -6186,6 +6198,12 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					m_pModel_Preview->Set_AnimIndex(CMother::Parasiter_Vomit_Loop_02);
 				}
 
+				if (TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CBandit_Heavy::BanditHeavy_Melee_LD);
+				}
+
+			
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Attack_1"))
@@ -6225,6 +6243,15 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				{
 					m_pModel_Preview->Set_AnimIndex(CVampireCommander::VampireCommander_AttackRanged_03_d);
 				}
+			}
+
+			if (ImGui::Button("Shotgun_01"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag)
+				{
+					m_pModel_Preview->Set_AnimIndex(CPlayer::Player_ShotgunElectric_Fire_ShortRange);
+				}
+
 			}
 
 			if (ImGui::Button("TeleportPunch_01"))

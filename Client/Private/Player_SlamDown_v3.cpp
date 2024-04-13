@@ -45,7 +45,7 @@ CState<CPlayer>* CPlayer_SlamDown_v3::Update(CPlayer* pActor, _float fTimeDelta)
 			pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.5f));
 
 			pActor->Apply_Shake_And_Blur(Power::Medium);
-			EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "New_SlamDown_v3_01.json", nullptr, pActor->Get_Position()); // ÀÌÆåÆ®
+			EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "New_SlamDown_v3_02.json", nullptr, pActor->Get_Position()); // ÀÌÆåÆ®
 			pActor->Slam();
 		}
 	}

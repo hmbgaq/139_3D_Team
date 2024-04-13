@@ -843,7 +843,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 	/* ------------------ Player ------------------ */
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	FAILED_CHECK(Loading_Player(LEVEL_TOOL));
+	//FAILED_CHECK(Loading_Player(LEVEL_TOOL));
 
 	//TODO VampireCommander
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));

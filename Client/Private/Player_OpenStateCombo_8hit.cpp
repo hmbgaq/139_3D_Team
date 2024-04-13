@@ -2,6 +2,7 @@
 #include "Weapon.h"
 #include "GameInstance.h"
 #include "Clone_Manager.h"
+#include "Effect_Manager.h"
 #include "Effect.h"
 #include "Bone.h"
 
@@ -154,10 +155,18 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Hit(CPlayer* pActor, _uint iHitCou
 		_bool bIsEven = (iHitCount + 1) % 2 == 0;
 		if (bIsEven) 
 		{
+			// 전기 타격 이펙트 생성
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_L);
+			EFFECT_MANAGER->Play_Effect_StaticPivot("Hit/", "Hit_8hit.json", pActor, pWeapon->Get_WeaponWorldMatrix());
+
 			pTarget->Hitted_Opened(Direction::Left);
 		}
 		else 
 		{
+			// 전기 타격 이펙트 생성 
+			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_R);
+			EFFECT_MANAGER->Play_Effect_StaticPivot("Hit/", "Hit_8hit.json", pActor, pWeapon->Get_WeaponWorldMatrix());
+
 			pTarget->Hitted_Opened(Direction::Right);
 		}
 		pTarget->Get_Damaged(3.f);

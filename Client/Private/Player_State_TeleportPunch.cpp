@@ -63,6 +63,9 @@ CState<CPlayer>* CPlayer_State_TeleportPunch::Update(CPlayer* pActor, _float fTi
 		pActor->Hit_Direct(pTarget, fDamage, fForce, eDir, ePower, bIsMelee);
 
 
+		// 텔레포트 펀치 피격 이펙트 생성
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_TeleportPunch.json", pActor, pActor->Calc_Front_Pos(_float3(0.f, 0.f, 0.1f)), true, pActor->Get_Position());	//pActor->Calc_Front_Pos() // 플레이어 앞 위치 계산
+
 		Sound_Impact_Layer1();
 		Sound_Impact_Layer2();
 		Sound_Hit();

@@ -52,7 +52,6 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 			EFFECT_MANAGER->Play_Effect("Player/Revolver/", "Revolver_13.json", pActor);
 
 
-
 			return new CPlayer_Winchester_Ironsights_Reload_01();
 		}
 
