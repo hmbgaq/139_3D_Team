@@ -1,8 +1,11 @@
 #include "..\Public\Bandit_Heavy_State_Walk.h"
+#include "GameInstance.h"
 
 void CBandit_Heavy_State_Walk::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
+	
+	
 }
 
 CState<CBandit_Heavy>* CBandit_Heavy_State_Walk::Update(CBandit_Heavy* pActor, _float fTimeDelta)

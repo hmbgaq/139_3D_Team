@@ -38,6 +38,8 @@ void CEvent_MosnterSpawnTrigger::Activate()
 	{
 		CMonster_Character* pMonster = { nullptr };
 			
+
+
 		wstring strLayerTag = L"Layer_Monster";
 
 			if (iCurrentLevel == _uint(LEVEL_INTRO_BOSS) || iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
@@ -46,6 +48,15 @@ void CEvent_MosnterSpawnTrigger::Activate()
 			}
 
 			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, strLayerTag, m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
+
+			if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_INTRO_BOSS))
+			{
+				m_pGameInstance->Play_BGM(L"BGM", L"IntroBossTriggerBGM.wav", 5.f);
+			}
+			else if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
+			{
+				m_pGameInstance->Play_BGM(L"BGM", L"SnowMountainBossTriggerBGM.wav", 5.f);
+			}
 
 		if (pMonster == nullptr)
 		{

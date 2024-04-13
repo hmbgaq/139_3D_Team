@@ -186,15 +186,19 @@ void CBandit_Sniper::Hitted_Left(Power ePower)
 	{
 	case Engine::Light:
 		m_pActor->Set_State(new CSniper_HitNormal_FL_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_1.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	case Engine::Medium:
 		m_pActor->Set_State(new CSniper_HitNormal_FL_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_2.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	case Engine::Heavy:
 		m_pActor->Set_State(new CSniper_HitHeavy_FL());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_3.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	default:
 		m_pActor->Set_State(new CSniper_HitNormal_FL_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_1.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	}
 }
@@ -205,15 +209,19 @@ void CBandit_Sniper::Hitted_Right(Power ePower)
 	{
 	case Engine::Light:
 		m_pActor->Set_State(new CSniper_HitNormal_FR_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_1.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	case Engine::Medium:
 		m_pActor->Set_State(new CSniper_HitNormal_FR_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_2.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	case Engine::Heavy:
 		m_pActor->Set_State(new CSniper_HitHeavy_FR_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_3.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	default:
 		m_pActor->Set_State(new CSniper_HitNormal_FR_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_1.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	}
 }
@@ -224,15 +232,19 @@ void CBandit_Sniper::Hitted_Front(Power ePower)
 	{
 	case Engine::Light:
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_02());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_1.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	case Engine::Medium:
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_2.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	case Engine::Heavy:
 		m_pActor->Set_State(new CSniper_HitHeavy_F_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_3.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	default:
 		m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_1.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 		break;
 	}
 }
@@ -241,6 +253,7 @@ void CBandit_Sniper::Hitted_Knock(_bool bIsCannonball)
 {
 	/* 발차기 */
 	m_pActor->Set_State(new CSniper_KnockFrontLight_F_01());
+	m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_7.wav", SOUND_ENEMY_HIT2, 3.f);
 
 }
 
@@ -249,6 +262,28 @@ void CBandit_Sniper::Hitted_Dead(Power ePower)
 	m_pBody->Collider_Off(); // 바디콜라이더 비활성화 
 	m_bDeadState = true;
 
+	wstring strSoundKey = L"";
+
+	_int iRandomSound = m_pGameInstance->Random_Int(1, 5);
+	switch (iRandomSound)
+	{
+		case 1:
+			strSoundKey = L"bandit01_death_1.wav";
+			break;
+		case 2:
+			strSoundKey = L"bandit01_death_2.wav";
+			break;
+		case 3:
+			strSoundKey = L"bandit01_death_3.wav";
+			break;
+		case 4:
+			strSoundKey = L"bandit01_death_4.wav";
+			break;
+		case 5:
+			strSoundKey = L"bandit01_death_5.wav";
+			break;
+	}
+	
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -262,41 +297,49 @@ void CBandit_Sniper::Hitted_Dead(Power ePower)
 		break;
 	default:
 		m_pActor->Set_State(new CSniper_DeathNormal_F_01());
+		
 		break;
 	}
 
+	m_pGameInstance->Play_Sound(L"SNIPER_DEATH", strSoundKey, SOUND_ENEMY_DEAD, 3.f);
 	//CSniper_Weakspot_Death_01는 약점공격으로 죽을때 
 }
 
-void CBandit_Sniper::Hitted_Electrocute()
+void CBandit_Sniper::Hitted_Electrocute() //! 돌진감전
 {
 	m_pActor->Set_State(new CSniper_Electrocute_Loop_TEMP());
+	m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hitlong_5.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 }
 
-void CBandit_Sniper::Hitted_OpenState_Pull()
+void CBandit_Sniper::Hitted_OpenState_Pull() //! 끌어 당김
 {
 	m_pActor->Set_State(new CSniper_OpenStatePull_F_01());
+	m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_2.wav", SOUND_ENEMY_HIT_GROUND, 3.f);
 }
 
-void CBandit_Sniper::Hitted_Opened(Direction eDirection)
+void CBandit_Sniper::Hitted_Opened(Direction eDirection) //! 끌고 마구공격
 {
 	switch (eDirection)
 	{
 	case Engine::Left:
 		m_pActor->Set_State(new CSniper_HitLightOpened_L01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_2.wav", SOUND_ENEMY_HIT_GROUND, 2.f);
 		break;
 	case Engine::Right:
 		m_pActor->Set_State(new CSniper_HitLightOpened_R_01());
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_2.wav", SOUND_ENEMY_HIT_GROUND, 2.f);
 		break;
 	case Engine::Front:
 		m_pActor->Set_State(new CSniper_HitLightOpened_R_01()); // ? Front도 있음?
+		m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_2.wav", SOUND_ENEMY_HIT_GROUND, 2.f);
 		break;
 	}
 }
 
-void CBandit_Sniper::Hitted_KnockUp()
+void CBandit_Sniper::Hitted_KnockUp() //! 공중 띄워짐
 {
 	m_pActor->Set_State(new CSniper_KnockUp_Low_Fixed());
+	m_pGameInstance->Play_Sound(L"SNIPER_HIT", L"bandit01_hit_7.wav", SOUND_ENEMY_HIT2, 3.f);
 }
 
 CBandit_Sniper* CBandit_Sniper::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
