@@ -11,6 +11,7 @@ class CLight;
 END
 
 BEGIN(Client)
+class CAnimalObject;
 class CEnvironment_Object;
 class CEnvironment_Interact;
 class CEnvironment_Instance;
@@ -23,6 +24,7 @@ class CMasterCamera;
 class CSky;
 class CEvent_MosnterSpawnTrigger;
 class CEvent_Trigger;
+class CHawk;
 //TODO 추후 추가 class CNPC;
 
 class CWindow_MapTool final : public CImgui_Window
@@ -32,7 +34,7 @@ private:
 	enum class MODE_TYPE { MODE_CREATE, MODE_SELECT, MODE_DELETE, MODE_END };
 	enum class PICKING_TYPE { PICKING_FIELD, PICKING_MESH, PICKING_INSTANCE, PICKING_NONE, PICKING_END };
 	enum class PICKING_MODE { MOUSE_PRESSING, MOUSE_DOWN, MOUSE_UP};
-	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER, OBJECTMODE_NAVIGATION, OBJECTMODE_TRIGGER };
+	enum class OBJECTMODE_TYPE { OBJECTMODE_ENVIRONMENT, OBJECTMODE_CHARACTER, OBJECTMODE_NAVIGATION, OBJECTMODE_TRIGGER, OBJECTMODE_HAWKCAMERA };
 	enum class LIGHT_CREATEMODE { LIGHT_MODE, LIGHT_OBJECTMODE };
 	enum class ANIM_TYPE { TYPE_NONANIM, TYPE_ANIM };
 	enum class INSTANCE_ALLMOVETYPE { ALLMOVE_X, ALLMOVE_Y, ALLMOVE_Z };
@@ -143,10 +145,14 @@ private:
 
 	//!For. Trigger
 	void			Trigger_CreateTab();
+		void			Monster_TriggerFunction();
+		void			UI_TriggerFunction();
 	void			Trigger_SelectTab();
 	void			Trigger_DeleteTab();
 
 	
+	//!For. HawkCamera
+	void			HawkCamera_Function();
 
 private:
 	#ifdef _DEBUG
@@ -232,6 +238,7 @@ private:
 	CPlayer*		m_pPlayer = nullptr;
 	CMasterCamera*	m_pToolCamera = { nullptr };
 	CSky*			m_pSkybox = { nullptr };
+	CHawk*			m_pHawk = { nullptr };
 	_float			m_fCamaraSpeed = { 60.f };
 	_bool			m_bCreateCamera = false;
 	_int			m_iSkyTextureIndex = { 0 };
@@ -256,10 +263,15 @@ private: //!For. Environment
 private: //!For. Character
 	vector<string>				m_vecMonsterTag;
 	vector<string>				m_vecBossTag;
-	vector<string>				m_vecNpcTag;
+	
 
 	_uint						m_iSelectCharacterTag = {};
 	CGameObject*				m_pPreviewCharacter = { nullptr };
+
+private: //!For. NPC
+	vector<string>				m_vecNpcTag;
+	_uint						m_iSelectNPCTag = {};
+	
 
 private:   //!For Navigation
 	_int						m_iNavigationTargetIndex = 0;
@@ -285,6 +297,8 @@ private:   //!For Navigation
 
 private:  //!For Trigger
 	_int						m_iMonsterSpawnGroupIndex = 0;
+	_int						m_iNPCSpawnGroupIndex = 0;
+	_int						m_iUIGroupIndex = 0;
 	class CEvent_Trigger*		m_pPickingTrigger = {nullptr};
 	_char						m_strSelectTriggerNameTag[32] = "";
 
@@ -295,8 +309,8 @@ private:  //! For Public
 	_int							m_iAnimIndex = 0;
 
 private:
-		
-		CNavigation* m_pNavigation = { nullptr };
+	_bool							m_bCreateHawk = false;
+	CNavigation*					m_pNavigation = { nullptr };
 
 private:
 	PrimitiveBatch<DirectX::VertexPositionColor>* m_pBatch = { nullptr };
@@ -390,6 +404,12 @@ private: //!For.Interact //! 상호작용
 	_int							m_iSplineListIndex = 0;
 	_int							m_iSplineDivergingCount = 0;
 
+	vector<_float4>					m_vecSplineAtPoints;
+	vector<string>					m_vecSplineAtListBox;
+
+	_int							m_iSplineAtPickingIndex = 0;
+	_int							m_iSplineAtListIndex = 0;
+
 	_int							m_iInteractSwitchIndex = -1;
 
 private: //!For.Light//! 라이트
@@ -477,7 +497,8 @@ private: //!For.CreateTrigger
 	vector<string>						 m_vecCreateMonsterTriggerTag;
 	_int								 m_iSelectMonsterTriggerIndex = 0;
 	_int								 m_iSelectMonsterSpawnGroupIndex = 0;
-
+	_int								 m_iSelectAnimalSpawnGroupIndex = 0;
+	
 
 private:  //!For. CreateCharacter
 	
@@ -489,9 +510,13 @@ private:  //!For. CreateCharacter
 	_int								m_iSelectCharacterIndex = {};
 
 private:  /*!For.CreateNPC*/	/*TODO 추후 NPC추가되면 작성*/
-	//!vector<CNPC*>					m_vecCreateNPC;
-	//!vector<string>					m_vecCreateNPCTag ;
-	//!_int							m_iCreateNPCIndex = {};
+	vector<CAnimalObject*>				m_vecCreateNPC;
+	vector<string>						m_vecCreateNPCTag;
+	_int								m_iSelectNPCGroupIndex = 0;
+	_int								m_iSelectNPCNaviIndex = -1;
+	_int								m_iCreateNPCIndex = {};
+	_int								m_iSelectNPCIndex = {};
+	_int								m_iNPCAnimationIndex = 0;
 
 public:
 	static CWindow_MapTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

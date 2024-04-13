@@ -72,6 +72,24 @@ public: /* Ready_Preset */
 	CUI_EnemyHUD_Shard* Ready_EnemyHUD_Shard(_uint iLevelIndex, CGameObject* pOwner = nullptr);
 
 	void			BasicUI_Off();
+	void			BasicUI_Enable(_bool bEnable);
+	void			DiedPreset_Enable(_bool bEnable);
+	void			SkillWindowPreset_Enable(_bool bEnable);
+
+public:
+	void	Enable_PlayerHUD(_bool bEnable);		// PlayerHUD Off
+	void	Enable_SkillWindowAll(_bool bEnable);	// SkillWindow Off
+	void	Enable_BossHUD_Bar(_bool bEnable);		// Boss1
+	void	Enable_BossHUD_Shard(_bool bEnable);	// Boss2
+	void	Enable_Crosshair(_bool bEnable);		// Crosshair
+	void	Enable_DiedScreen(_bool bEnable);		// DiedScreen
+	void	Enable_Distortion(_bool bEnable);		// Distortion
+	void	Enable_EnemyHUD_Shard(_bool bEnable);	// EnemyHUD
+	void	Enable_HitUI(_bool bEnable);			// Hit
+	void	Enable_LevelUp(_bool bEnable);			// LevelUP
+	void	Enable_Option(_bool bEnable);			// Option
+	void	Enable_TutorialBox(_bool bEnable);		// TutorialBox
+
 public:
 	void			NonActive_SkillWindowAll();
 
@@ -447,6 +465,14 @@ public:
 	void			NonActive_LetterBox();
 private:
 	vector<CUI*>	m_vecLetterBox;
+
+public:
+	/* LetterBox */
+	HRESULT			Add_SuperChargeMod(_uint iLevelIndex, const wstring& strLayerTag);
+	void			Active_SuperChargeMod();
+	void			NonActive_SuperChargeMod();
+private:
+	vector<CUI*>	m_vecSuperChargeMod;
 
 public:
 	void			Select_Skill(const string& strSelecSkill);

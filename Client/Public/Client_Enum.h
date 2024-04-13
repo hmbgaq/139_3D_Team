@@ -63,6 +63,7 @@ namespace Client
 		EXIT,
 		PLAYER_HUD,
 		TUTORIAL_BOX,
+		DEIDSCREEN,
 		STATE_END
 	};
 
@@ -127,7 +128,14 @@ namespace Client
 	enum class TUTORIAL_TEXT // 튜토리얼 텍스트 번호
 	{
 		START,					//				시작
-		PUNCH,					//				스킬 1번
+		CRANE,					//				크레인
+		ZOMBIE,					//				좀비
+		JENU,					//				제누거인 설명
+		ZOMBIE_OVER,			//				좀비무리
+		SNIPER,					//				스나이퍼
+		SNOW_START,				//				설산시작
+		TANK,					//				탱크 설명
+		REWARD,					//				습득
 		TUTORIALTEXT_END		//				End
 	};
 

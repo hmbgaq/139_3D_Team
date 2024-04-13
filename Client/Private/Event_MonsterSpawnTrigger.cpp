@@ -80,11 +80,13 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 
 		if (iCurrentLevel == (_uint)LEVEL_GAMEPLAY)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData3.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_INTRO_BOSS)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+			//strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1BossTest_MapData202404_12_22_13.json";
+			
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAIN)
 		{

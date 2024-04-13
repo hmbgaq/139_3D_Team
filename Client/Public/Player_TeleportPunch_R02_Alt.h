@@ -13,7 +13,6 @@ public:
 
 public:
 	static const _uint g_iAnimIndex = CPlayer::Player_State::Player_TeleportPunch_R02_Alt;
-
 };
 
 END

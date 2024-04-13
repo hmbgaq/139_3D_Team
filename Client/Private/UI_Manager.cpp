@@ -74,6 +74,7 @@ HRESULT CUI_Manager::Ready_Interface(_uint iLevelIndex)
 	Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
 	Add_RewardBox(iLevelIndex, TEXT("Layer_RewardBox"));
 	Add_QuestBox(iLevelIndex, TEXT("Layer_QuestBox"));
+	Add_SuperChargeMod(iLevelIndex, TEXT("Layer_SuperChargeMod"));
 
 	return S_OK;
 }
@@ -153,6 +154,202 @@ void CUI_Manager::BasicUI_Off()
 	NonActive_LevelUp();			// LevelUP
 	NonActive_Option();				// Option
 	NonActive_TutorialBox();		// TutorialBox
+	NonActive_SuperChargeMod();		// SuperChargeMod
+}
+
+void CUI_Manager::BasicUI_Enable(_bool bEnable)
+{
+	Enable_PlayerHUD(bEnable);			// PlayerHUD Off
+	Enable_SkillWindowAll(bEnable);		// SkillWindow Off
+	Enable_BossHUD_Bar(bEnable);		// Boss1
+	Enable_BossHUD_Shard(bEnable);		// Boss2
+	Enable_Crosshair(bEnable);			// Crosshair
+	Enable_DiedScreen(bEnable);			// DiedScreen
+	Enable_Distortion(bEnable);			// Distortion
+	Enable_EnemyHUD_Shard(bEnable);		// EnemyHUD
+	Enable_HitUI(bEnable);				// Hit
+	Enable_LevelUp(bEnable);			// LevelUP
+	Enable_Option(bEnable);				// Option
+	Enable_TutorialBox(bEnable);		// TutorialBox
+}
+
+void CUI_Manager::DiedPreset_Enable(_bool bEnable)
+{
+	Enable_PlayerHUD(bEnable);			// PlayerHUD Off
+	Enable_SkillWindowAll(bEnable);		// SkillWindow Off
+	Enable_BossHUD_Bar(bEnable);		// Boss1
+	Enable_BossHUD_Shard(bEnable);		// Boss2
+	Enable_Crosshair(bEnable);			// Crosshair
+	//Enable_DiedScreen(bEnable);			// DiedScreen
+	Enable_Distortion(bEnable);			// Distortion
+	Enable_EnemyHUD_Shard(bEnable);		// EnemyHUD
+	Enable_HitUI(bEnable);				// Hit
+	Enable_LevelUp(bEnable);			// LevelUP
+	Enable_Option(bEnable);				// Option
+	Enable_TutorialBox(bEnable);		// TutorialBox
+}
+
+void CUI_Manager::SkillWindowPreset_Enable(_bool bEnable)
+{
+	Enable_PlayerHUD(bEnable);			// PlayerHUD Off
+	//Enable_SkillWindowAll(bEnable);		// SkillWindow Off
+	Enable_BossHUD_Bar(bEnable);		// Boss1
+	Enable_BossHUD_Shard(bEnable);		// Boss2
+	Enable_Crosshair(bEnable);			// Crosshair
+	Enable_DiedScreen(bEnable);			// DiedScreen
+	Enable_Distortion(bEnable);			// Distortion
+	Enable_EnemyHUD_Shard(bEnable);		// EnemyHUD
+	Enable_HitUI(bEnable);				// Hit
+	Enable_LevelUp(bEnable);			// LevelUP
+	Enable_Option(bEnable);				// Option
+	Enable_TutorialBox(bEnable);		// TutorialBox
+}
+
+void CUI_Manager::Enable_PlayerHUD(_bool bEnable)
+{
+	if (m_vecLeftHUD.empty())
+		return;
+
+	for (auto& iter : m_vecLeftHUD)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+
+	if (m_vecRightHUD.empty())
+		return;
+
+	for (auto& iter : m_vecRightHUD)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+
+	if (m_vecLeftSkill.empty())
+		return;
+
+	for (auto& iter : m_vecLeftSkill)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+
+	if (m_vecRightSkill.empty())
+		return;
+
+	for (auto& iter : m_vecRightSkill)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_SkillWindowAll(_bool bEnable)
+{
+	NonActive_SkillWindowAll();
+}
+
+void CUI_Manager::Enable_BossHUD_Bar(_bool bEnable)
+{
+	if (m_vecBossHUD_Bar.empty())
+		return;
+
+	for (auto& iter : m_vecBossHUD_Bar)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_BossHUD_Shard(_bool bEnable)
+{
+	if (m_vecBossHUD_Shard.empty())
+		return;
+
+	for (auto& iter : m_vecBossHUD_Shard)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_Crosshair(_bool bEnable)
+{
+	if (m_vecCrosshair.empty())
+		return;
+
+	for (auto& iter : m_vecCrosshair)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_DiedScreen(_bool bEnable)
+{
+	if (m_vecDiedScreen.empty())
+		return;
+
+	for (auto& iter : m_vecDiedScreen)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_Distortion(_bool bEnable)
+{
+	if (m_vecDistortion.empty())
+		return;
+
+	for (auto& iter : m_vecDistortion)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_EnemyHUD_Shard(_bool bEnable)
+{
+	if (m_vecEnemyHUD_Shard.empty())
+		return;
+
+	for (auto& iter : m_vecEnemyHUD_Shard)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_HitUI(_bool bEnable)
+{
+	if (m_pHitUI == nullptr)
+		return;
+
+	m_pHitUI->Set_Enable(bEnable);		// Enable
+}
+
+void CUI_Manager::Enable_LevelUp(_bool bEnable)
+{
+	if (m_vecLevelUP.empty())
+		return;
+
+	for (auto& iter : m_vecLevelUP)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_Option(_bool bEnable)
+{
+	if (m_vecOption.empty())
+		return;
+
+	for (auto& iter : m_vecOption)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
+}
+
+void CUI_Manager::Enable_TutorialBox(_bool bEnable)
+{
+	if (m_vecTutorialBox.empty())
+		return;
+
+	for (auto& iter : m_vecTutorialBox)
+	{
+		iter->Set_Enable(bEnable);		// Enable
+	}
 }
 
 void CUI_Manager::NonActive_SkillWindowAll()
@@ -1282,11 +1479,11 @@ HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerT
 		m_vecTutorialBox.push_back(pUI_Object);
 
 		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
-		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		pUI_Object->Set_LifeTime(7000.f);					// UI LifeTime
+		pUI_Object->Set_UIState(UISTATE::TUTORIAL_BOX);		// UI State
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
-		pUI_Object->Load_FromJson(object); // 18. Load Data
+		pUI_Object->Load_FromJson(object);					// 18. Load Data
 	}
 
 	return S_OK;
@@ -1436,6 +1633,7 @@ void CUI_Manager::Active_LevelUp()
 		iter->Set_Active(true);		// UI 활성화
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_Disappear(false); // UI 사라짐 Off
+		iter->ResetTime();
 	}
 }
 
@@ -2858,6 +3056,8 @@ CUI_EnemyHUD_Shard* CUI_Manager::Add_EnemyHUD_Shard(_uint iLevelIndex, const wst
 
 	CUI_EnemyHUD_Shard* pEnemyHUD = dynamic_cast<CUI_EnemyHUD_Shard*>(pUI_Object);
 
+	pEnemyHUD->Set_RenderGroup(CRenderer::RENDERGROUP::RENDER_UI_WORLD); // World
+
 	/* 부품들 생성 */
 	pEnemyHUD->Ready_ChildHUD();
 
@@ -2999,6 +3199,10 @@ HRESULT CUI_Manager::Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTa
 
 		m_vecDiedScreen.push_back(pUI_Object);
 
+		pUI_Object->Set_LifeTimeUI(true);					// LifeTime True
+		pUI_Object->Set_LifeTime(6000.f);					// UI LifeTime
+		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 		pUI_Object->Load_FromJson(object); // 18. Load Data
 
@@ -3019,6 +3223,7 @@ void CUI_Manager::Active_DiedScreen()
 		iter->Set_AnimPlay(true);	// UI Animation 재생
 		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
 		iter->Set_Disappear(false);	// UI 사라짐 Off
+		iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
 	}
 }
 
@@ -5507,6 +5712,127 @@ void CUI_Manager::Check_UIPicking(_float fTimeDelta)
 
 }
 
+HRESULT CUI_Manager::Add_SuperChargeMod(_uint iLevelIndex, const wstring& strLayerTag)
+{
+	json json_in;
+
+	//char filePath[MAX_PATH];
+
+	string strFile;
+
+	strFile = "../Bin/DataFiles/Data_UI/Distortion/SuperChargeLightning.json";
+
+	CJson_Utility::Load_Json(strFile.c_str(), json_in);
+
+	for (auto& item : json_in.items())
+	{
+		json object = item.value();
+		CUI::UI_DESC tUI_Info;
+
+		/* 저장순서랑 맞는지 확인하기 */
+		if (object.contains("Parent"))
+			tUI_Info.bParent = object["Parent"];					// 1. Parent
+		if (object.contains("World"))
+			tUI_Info.bWorld = object["World"];						// 2. World
+		if (object.contains("Group"))
+			tUI_Info.bGroup = object["Group"];						// 3. Group
+		if (object.contains("Alpha"))
+			tUI_Info.fAlpha = object["Alpha"];						// 4. Alpha
+		if (object.contains("AlphaTrue"))
+			tUI_Info.fAlphaTrue = object["AlphaTrue"];				// 0. Alpha
+		if (object.contains("ObjectNum"))
+			tUI_Info.iObjectNum = object["ObjectNum"];				// 5. ObjectNum
+		if (object.contains("ShaderNum"))
+			tUI_Info.iShaderNum = object["ShaderNum"];				// 6. ShaderPathNum
+		if (object.contains("UINum"))								// "ObjectName" 키가 있으면
+			tUI_Info.iUINum = object["UINum"];
+		if (object.contains("UIName"))								// "ObjectName" 키가 있으면
+			tUI_Info.strUIName = object["UIName"];
+		if (object.contains("ObjectName"))							// "ObjectName" 키가 있으면
+			tUI_Info.strObjectName = object["ObjectName"];			// 7. ObjectName
+		if (object.contains("LayerTag"))
+			tUI_Info.strLayerTag = object["LayerTag"];				// 8. LayerTag
+		if (object.contains("CloneTag"))
+			tUI_Info.strCloneTag = object["CloneTag"];				// 9. CloneTag
+		if (object.contains("ProtoTag"))
+			tUI_Info.strProtoTag = object["ProtoTag"];				// 10. ProtoTag
+		if (object.contains("FilePath"))
+			tUI_Info.strFilePath = object["FilePath"];				// 11. FilePath
+		if (object.contains("MapTextureTag"))
+			tUI_Info.strMapTextureTag = object["MapTextureTag"];	// 12. MapTexture
+		if (object.contains("ColorR"))
+			tUI_Info.vColor.m128_f32[0] = object["ColorR"];			// 13. R
+		if (object.contains("ColorG"))
+			tUI_Info.vColor.m128_f32[1] = object["ColorG"];			// 14. G
+		if (object.contains("ColorB"))
+			tUI_Info.vColor.m128_f32[2] = object["ColorB"];			// 15. B
+		if (object.contains("ColorA"))
+			tUI_Info.vColor.m128_f32[3] = object["ColorA"];			// 16. A
+		if (object.contains("ColorMode"))
+			tUI_Info.eColorMode = object["ColorMode"];				// 16. Mode
+		if (object.contains("RenderGroup"))
+			tUI_Info.iRenderGroup = object["RenderGroup"];			// 16. RenderGroup
+		if (object.contains("Level"))
+			tUI_Info.iLevel = object["Level"];						// 19. RenderGroup
+		if (object.contains("MaxLevel"))
+			tUI_Info.iMaxLevel = object["MaxLevel"];				// 20. RenderGroup
+
+		wstring wstrClonetag;
+		m_pGameInstance->String_To_WString(tUI_Info.strCloneTag, wstrClonetag);
+
+		wstring wstrPrototag;
+		m_pGameInstance->String_To_WString(tUI_Info.strProtoTag, wstrPrototag);
+
+		wstring wstrFilePath;
+		m_pGameInstance->String_To_WString(tUI_Info.strFilePath, wstrFilePath);
+
+		CGameObject* pGameObject = m_pGameInstance->Add_CloneObject_And_Get(iLevelIndex, strLayerTag, wstrClonetag, &tUI_Info);
+		if (pGameObject == nullptr)
+			return E_FAIL;
+
+		CUI* pUI_Object = dynamic_cast<CUI*>(pGameObject);
+		if (pUI_Object == nullptr)
+			return E_FAIL;
+
+		m_vecSuperChargeMod.push_back(pUI_Object);
+
+		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
+		pUI_Object->Load_FromJson(object); // 18. Load Data
+	}
+
+	return S_OK;
+}
+
+void CUI_Manager::Active_SuperChargeMod()
+{
+	if (m_vecSuperChargeMod.empty())
+		return;
+
+	for (auto& iter : m_vecSuperChargeMod)
+	{
+		iter->Set_Alpha(0.f);		// UI 알파값 초기화
+		iter->Set_Active(true);		// UI 활성화
+		iter->Set_AnimPlay(true);	// UI Animation 재생
+		iter->Set_CurrTime(0.f);	// UI Animation 시간 초기화
+		iter->Set_Disappear(false);	// UI 사라짐 Off
+	}
+}
+
+void CUI_Manager::NonActive_SuperChargeMod()
+{
+	if (m_vecSuperChargeMod.empty())
+		return;
+
+	for (auto& iter : m_vecSuperChargeMod)
+	{
+		iter->Set_Alpha(1.f);			// UI 알파값 초기화
+		iter->Set_Active(false);		// UI 활성화
+		iter->Set_AnimPlay(false);		// UI Animation 재생
+		iter->Set_CurrTime(0.f);		// UI Animation 시간 초기화
+		iter->Set_Disappear(true);		// UI 사라짐 Off
+	}
+}
+
 //// Add_CloneUI == Add_CloneObject_And_Get
 //CUI* CUI_Manager::Add_CloneUI(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strPrototypeTag, void* pArg)
 //{
@@ -5715,8 +6041,28 @@ void CUI_Manager::Free()
 		{
 			Safe_Release(iter);
 		}
+	if (!m_vecWeaponFrame.empty())
+		for (auto& iter : m_vecWeaponFrame)
+		{
+			Safe_Release(iter);
+		}
+	if (!m_vecWeaponIcon.empty())
+		for (auto& iter : m_vecWeaponIcon)
+		{
+			Safe_Release(iter);
+		}
 	if (!m_vecSkillWindowButton.empty())
 		for (auto& iter : m_vecSkillWindowButton)
+		{
+			Safe_Release(iter);
+		}
+	if (!m_vecLetterBox.empty())
+		for (auto& iter : m_vecLetterBox)
+		{
+			Safe_Release(iter);
+		}
+	if (!m_vecSuperChargeMod.empty())
+		for (auto& iter : m_vecSuperChargeMod)
 		{
 			Safe_Release(iter);
 		}

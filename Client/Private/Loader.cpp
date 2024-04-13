@@ -702,7 +702,15 @@ HRESULT CLoader::Loading_For_SnowMountain_Level()
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Mother/Mother", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
-
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Infected_C"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/C/Infected_C", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Infected_D"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/D/Infected_D", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Model/Bandit_Sniper", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Bandit_Sniper_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Weapon/Sniper_Weapon", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Tank_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Tank/Shield/Shield", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Tank"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Tank/Tank", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Heavy_Vampiric_Zombie", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_SNOWMOUNTAIN, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Weapon/Axe", PivotMatrix)));
 
 	lstrcpy(m_szLoadingText, TEXT("아이템, 장비를 로드하는 중입니다."));
 	//! Player Weapon
@@ -835,33 +843,18 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 	/* ------------------ Player ------------------ */
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//FAILED_CHECK(Loading_Player(LEVEL_TOOL));
+	FAILED_CHECK(Loading_Player(LEVEL_TOOL));
 
 	//TODO VampireCommander
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_VampireCommander"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/VampireCommander/VampireCommander", PivotMatrix)));
+	
 	//TODO Parasiter
-	// 
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Mother/Mother", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_MotherMouth"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/MotherMouth/MotherMouth", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix))); 
-	//
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_C"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/C/Infected_C", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_D"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/D/Infected_D", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Model/Bandit_Sniper", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Weapon/Sniper_Weapon", PivotMatrix)));
-	//
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Tank"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Tank/Tank", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Tank_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Tank/Shield/Shield", PivotMatrix)));
-	//
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Heavy_Vampiric_Zombie", PivotMatrix)));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Weapon/Axe", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Mother/Mother", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_MotherMouth"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/MotherMouth/MotherMouth", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Son"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Parasiter/Son/Son", PivotMatrix)));
 
+	//TODO Monster
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_B"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/B/Infected_B", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Infected_C"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/C/Infected_C", PivotMatrix)));
@@ -869,46 +862,28 @@ HRESULT CLoader::Loading_For_Tool_Level()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Model/Bandit_Sniper", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Sniper_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Bandit_Sniper/Weapon/Sniper_Weapon", PivotMatrix)));
 
+	//TODO MiddleBoss
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Tank"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Tank/Tank", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Tank_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Tank/Shield/Shield", PivotMatrix)));
-
+	
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Heavy_Vampiric_Zombie", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Heavy_Vampiric_Zombie_Weapon"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Monster/Heavy_Vampiric_Zombie/Weapon/Axe", PivotMatrix)));
 
-	//!//! 터짐 텍스처 찾아야됨 FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Infected_E"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/E/CharacterBase_Skeleton", PivotMatrix)));
-	//!
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Assassin"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Assassin/ReverseFootBase_Skeleton", PivotMatrix)));
-	//!
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_BeastBoss_Phase1"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Beast/Phase1/Beast_Skeleton", PivotMatrix)));
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_BeastBoss_Phase2"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Beast/Phase2/Beast_Skeleton", PivotMatrix)));
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_BeastBoss_Phase3"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Boss/Beast/Phase3/Beast_Skeleton", PivotMatrix)));
-	//!
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Heavy"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/ManHeavyBase_Skeleton", PivotMatrix)));
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bandit_Heavy_Vampiric"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Bandit_Heavy/Bandit_Heavy_Vampiric/ManHeavyBase_Skeleton", PivotMatrix)));
-	//!//
-	//! 캐릭터 모델
 
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_BooHag"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/BooHag/ReverseFootBase_Skeleton", PivotMatrix)));
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Digger"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Digger/ReverseFootBase_Skeleton", PivotMatrix)));
-	//!//
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Gambit"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Gambit/Gambit_Skeleton", PivotMatrix)));
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Gambit_Egg"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Gambit/GambitEgg/Gambit_WeakspotEgg_Skeleton", PivotMatrix)));
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Gambit_XRay"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Gambit/XRay/Gambit_Skeleton", PivotMatrix)));
-	//!
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Ranger"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Ranger/Normal/Ranger_Skeleton", PivotMatrix)));
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Ranger_Finisher"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Ranger/Finisher/Ranger_Skeleton", PivotMatrix)));
-	//!//
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Stalker"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Stalker/Normal/ReverseFootBase_Skeleton", PivotMatrix)));
-
-	//TODO보류 애니메이션 찾아야됨
-	//!FAILED_CHECK(m_pGameInstance->Add_Prototype(eLEVEL, TEXT("Prototype_Component_Model_Spider"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Stalker/Spider/StalkerSpider01_Death_01", PivotMatrix)));
-
+	//TODO NPC
+	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Bull"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Bull/Bull", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Hawk"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Hawk/Hawk", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chicken"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Chicken/Chicken", PivotMatrix)));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Young"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Young/Young", PivotMatrix)));
+	
+	
 
 #pragma endregion 캐릭터 모델 : 주석 풀고 병합해야함!!! 끝 
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
-	//Ready_Environment_Model(LEVEL_TOOL);
+	Ready_Environment_Model(LEVEL_TOOL);
 #pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));
@@ -1455,10 +1430,10 @@ HRESULT CLoader::Read_FBXModelPath(const _tchar* StartDirectoryPath, LEVEL eLeve
 			string strConvertFBXPath;
 			m_pGameInstance->WString_To_String(wstrFBXPath, strConvertFBXPath);
 			
-			//if (strConvertFBXPath == "../Bin/Resources/Models/Map/Road\\Track\\Track_Switch_Module20m\\Track_Module20m") 디버깅용
-			//{
-			//	_int i = 0;
-			//}
+			if (strConvertFBXPath == "../Bin/Resources/Models/Map/SnowMountain/NonAnim/Interact\\InteractTeslaAerialTramCart1")// 디버깅용
+			{
+				_int i = 0;
+			}
 
 			FAILED_CHECK(m_pGameInstance->Add_Prototype(eLevel, wstrSliceModelTag, CModel::Create(m_pDevice, m_pContext, (CModel::TYPE)iAnimType, strConvertFBXPath, PivotMatrix)));
 
@@ -1669,29 +1644,29 @@ HRESULT CLoader::Ready_Effect_Model()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Spring_Bullet"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/Spring_Bullet/Spring_Bullet", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Twist"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/Twist/Twist", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_VFX_Cylinder"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/VFX_Cylinder/VFX_Cylinder", PivotMatrix)));
-
-
+	
+	
 	//! 파티클 이펙트 모델
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Rock_01"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Particle_Mesh/Rock_01/Rock_01", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Rock_02"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Particle_Mesh/Rock_02/Rock_02", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Rock_03"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Particle_Mesh/Rock_03/Rock_03", PivotMatrix)));
-
+	
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_LightningParticle_00"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Particle_Mesh/LightningParticle_00/LightningParticle_00", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_LightningParticle_01"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Particle_Mesh/LightningParticle_01/LightningParticle_01", PivotMatrix)));
-
+	
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_LeafPlane"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Particle_Mesh/LeafPlane/LeafPlane", PivotMatrix)));
-
-
+	
+	
 	//! 일반 몬스터용 이펙트 모델
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Bioball_00"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/Bioball_00/Bioball_00", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Bioball_01"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/Bioball_01/Bioball_01", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Bioball_02"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Static_Mesh/Bioball_02/Bioball_02", PivotMatrix)));
-
-
+	
+	
 	//! 인트로보스용 이펙트 모델
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_BatStorm_01"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/BatStorm/BatStorm_01/BatStorm_01", PivotMatrix)));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_BatStorm_02"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/VampireCommander/BatStorm/BatStorm_02/BatStorm_02", PivotMatrix)));
-
+	
 	//! 두번째 보스용 이펙트 모델
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_Effect_Egg_Mother"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Effect_Mesh/Parasiter/Egg_Mother/Egg_Mother", PivotMatrix)));
 #pragma region 이펙트 만드는거 아니면 주석 가능 끝

@@ -415,6 +415,7 @@ void CWindow_EffectTool::Attach_Tool(string strBoneTag)
 	m_pCurEffect->Get_Desc()->bAttachTool = true;
 	m_pCurEffect->Get_Desc()->matPivot_Tool = m_pModel_Preview->Get_ModelCom()->Get_BonePtr(strBoneTag.c_str())->Get_CombinedTransformationMatrix();
 
+	m_strBoneTag = strBoneTag;
 }
 
 
@@ -3974,11 +3975,77 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 		/* UV 값 조절 */
 		if (ImGui::CollapsingHeader("UV Option_Trail"))
 		{
+			if (ImGui::DragFloat2(" UV_Offset_Trail ", m_fUV_Offset_Trail, 1.f, -100.f, 100.f))
+			{
+				m_pVoidTrailDesc->vUV_Offset.x = m_fUV_Offset_Trail[0];
+				m_pVoidTrailDesc->vUV_Offset.y = m_fUV_Offset_Trail[1];
+			}ImGui::SameLine();
+			HelpMarker(u8"UV 이동");
 
+			if (ImGui::DragFloat2(" UV_Scale_Trail ", m_vUV_Scale_Trail, 1.f, -100.f, 100.f))
+			{
+				m_pVoidTrailDesc->vUV_Scale.x = m_vUV_Scale_Trail[0];
+				m_pVoidTrailDesc->vUV_Scale.y = m_vUV_Scale_Trail[1];
+			}ImGui::SameLine();
+			HelpMarker(u8"UV 크기(타일링)");
+
+
+			/* 텍스처 UV회전_트레일 */
+			if (ImGui::DragFloat(" UV Degree_Trail ", &m_fUV_RotDegree_Trail, 1.f, -360.f, 360.f))
+			{
+				m_pVoidTrailDesc->fUV_RotDegree = m_fUV_RotDegree_Trail;
+
+			}ImGui::SameLine();
+			HelpMarker(u8"회전");
 
 
 			ImGui::SeparatorText("");
 		}
+
+
+		/* 마스크 UV 값 조절 */
+		if (ImGui::CollapsingHeader(" UV Mask_Trail "))
+		{
+			// 마스크 웨이브
+			ImGui::SeparatorText(u8"UV 스크롤_마스크_트레일");
+			ImGui::RadioButton(u8"UV 스크롤 사용_트레일", &m_iUV_Wave_Trail, 0);
+			ImGui::RadioButton(u8"UV 스크롤 사용 안함_트레일", &m_iUV_Wave_Trail, 1);
+
+			if (0 == m_iUV_Wave_Trail)
+				m_pVoidTrailDesc->bUV_Wave = true;
+			else if (1 == m_iUV_Wave_Trail)
+				m_pVoidTrailDesc->bUV_Wave = false;
+
+
+			if (0 == m_iUV_Wave)
+			{
+				ImGui::SeparatorText(u8"UV 스크롤 속도_트레일");
+				if (ImGui::DragFloat2("UV_WaveSpeed_Trail", m_fUV_WaveSpeed_Trail, 0.1f, -100.f, 100.f))
+				{
+					m_pVoidTrailDesc->vUV_WaveSpeed.x = m_fUV_WaveSpeed_Trail[0];
+					m_pVoidTrailDesc->vUV_WaveSpeed.y = m_fUV_WaveSpeed_Trail[1];
+				}
+			}
+
+
+			ImGui::SeparatorText(u8"UV 이동_마스크_트레일");
+			if (ImGui::DragFloat2("UV_Offset_Mask_Trail", m_fUV_Offset_Mask_Trail, 1.f, 0.f, 100.f))
+			{
+				m_pVoidTrailDesc->vUV_Offset_Mask.x = m_fUV_Offset_Mask_Trail[0];
+				m_pVoidTrailDesc->vUV_Offset_Mask.y = m_fUV_Offset_Mask_Trail[1];
+			}
+
+			ImGui::SeparatorText(u8"UV 크기(타일링)_마스크_트레일");
+			if (ImGui::DragFloat2("UV_Scale_Mask_Trail", m_fUV_Scale_Mask_Trail, 1.f, 0.f, 100.f))
+			{
+				m_pVoidTrailDesc->vUV_Scale_Mask.x = m_fUV_Scale_Mask_Trail[0];
+				m_pVoidTrailDesc->vUV_Scale_Mask.y = m_fUV_Scale_Mask_Trail[1];
+			}
+
+
+			ImGui::SeparatorText("");
+		}
+
 
 
 		if (ImGui::CollapsingHeader("Shader & RenderGroup_Trail"))
@@ -4078,6 +4145,199 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 		}
 
 
+
+#pragma region 디스토션_트레일
+		// 디스토션 값 변경
+		if (ImGui::CollapsingHeader(" Distortion_Trail "))
+		{
+			CEffect_Void::DISTORTION_DESC* pDistortionDesc = m_pTrail->Get_Distortion_Desc();
+			if (ImGui::TreeNode(" Distortion Preset "))
+			{
+				if (ImGui::Button("  ZERO  "))
+				{
+					pDistortionDesc->eType_Scroll = { CEffect_Void::TYPE_SCROLL_END };
+
+					pDistortionDesc->vScrollSpeeds = { 0.f, 0.f, 0.f };
+					pDistortionDesc->vScales = { 0.f, 0.f, 0.f };
+
+					pDistortionDesc->vDistortion1 = { 0.f, 0.f };
+					pDistortionDesc->vDistortion2 = { 0.f, 0.f };
+					pDistortionDesc->vDistortion3 = { 0.f, 0.f };
+
+					pDistortionDesc->fDistortionScale = { 0.f };
+					pDistortionDesc->fDistortionBias = { 0.f };
+
+					Update_CurParameters_Trail();
+				}
+
+				if (ImGui::Button("   FIRE   "))
+				{
+					pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_COL };
+
+					pDistortionDesc->vScrollSpeeds = { 1.f, 1.f, 1.f };
+					pDistortionDesc->vScales = { 1.f, 1.f, 1.f };
+
+					pDistortionDesc->vDistortion1 = { 0.1f, 0.1f };
+					pDistortionDesc->vDistortion2 = { 0.f, 0.f };
+					pDistortionDesc->vDistortion3 = { 0.f, 0.1f };
+
+					pDistortionDesc->fDistortionScale = { 1.f };
+					pDistortionDesc->fDistortionBias = { 1.f };
+
+					Update_CurParameters_Trail();
+				}
+
+				ImGui::TreePop();
+			}
+
+			/* 디스토션 스크롤 방향 변경 */
+			ImGui::SeparatorText("Scroll_Distortion_Trail");
+			ImGui::RadioButton("Row_Scroll_Trail", &m_iType_Scroll_Trail, 0);  ImGui::SameLine();
+			ImGui::RadioButton("Col_Scroll_Trail", &m_iType_Scroll_Trail, 1);
+			ImGui::RadioButton("Both_Scroll_Trail", &m_iType_Scroll_Trail, 2);
+			ImGui::RadioButton("Rotate_Scroll_Trail", &m_iType_Scroll_Trail, 3);
+			ImGui::RadioButton("End_Scroll_Trail", &m_iType_Scroll_Trail, 4);
+			if (0 == m_iType_Scroll_Trail)
+				pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROW };
+			else if (1 == m_iType_Scroll_Trail)
+				pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_COL };
+			else if (2 == m_iType_Scroll_Trail)
+				pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_BOTH };
+			else if (3 == m_iType_Scroll_Trail)
+				pDistortionDesc->eType_Scroll = { CEffect_Void::SCROLL_ROTATE };
+			else if (4 == m_iType_Scroll_Trail)
+				pDistortionDesc->eType_Scroll = { CEffect_Void::TYPE_SCROLL_END };
+
+
+			ImGui::SeparatorText("Values_Distortion_Trail");
+			if (ImGui::DragFloat3("ScrollSpeeds", m_vScrollSpeeds_Trail, 0.1f, -100.f))
+			{
+				pDistortionDesc->vScrollSpeeds.x = m_vScrollSpeeds_Trail[0];
+				pDistortionDesc->vScrollSpeeds.y = m_vScrollSpeeds_Trail[1];
+				pDistortionDesc->vScrollSpeeds.z = m_vScrollSpeeds_Trail[2];
+			}
+			if (ImGui::DragFloat3("Distortion_Scales", m_vScales_Distortion_Trail, 0.1f, 0.f))
+			{
+				pDistortionDesc->vScales.x = m_vScales_Distortion_Trail[0];
+				pDistortionDesc->vScales.y = m_vScales_Distortion_Trail[1];
+				pDistortionDesc->vScales.z = m_vScales_Distortion_Trail[2];
+			}
+			if (ImGui::DragFloat2("Distortion1", m_vDistortion1_Trail, 0.1f, 0.f))
+			{
+				pDistortionDesc->vDistortion1.x = m_vDistortion1_Trail[0];
+				pDistortionDesc->vDistortion1.y = m_vDistortion1_Trail[1];
+			}
+			if (ImGui::DragFloat2("Distortion2", m_vDistortion2_Trail, 0.1f, 0.f))
+			{
+				pDistortionDesc->vDistortion2.x = m_vDistortion2_Trail[0];
+				pDistortionDesc->vDistortion2.y = m_vDistortion2_Trail[1];
+			}
+			if (ImGui::DragFloat2("Distortion3", m_vDistortion3_Trail, 0.1f, 0.f))
+			{
+				pDistortionDesc->vDistortion3.x = m_vDistortion3_Trail[0];
+				pDistortionDesc->vDistortion3.y = m_vDistortion3_Trail[1];
+			}
+			if (ImGui::DragFloat("Distortion_Scale", &m_fDistortionScale_Trail, 1.f, 0.f))
+			{
+				pDistortionDesc->fDistortionScale = m_fDistortionScale_Trail;
+			}
+			if (ImGui::DragFloat("DistortionBias", &m_fDistortionBias_Trail, 1.f, 0.f))
+			{
+				pDistortionDesc->fDistortionBias = m_fDistortionBias_Trail;
+			}
+
+			ImGui::SeparatorText("");
+		}
+
+#pragma endregion 디스토션_트레일 끝
+
+
+		// 트레일 곱해줄 컬러
+		if (ImGui::CollapsingHeader("Color_Trail"))
+		{
+			/* 디퓨즈 색상혼합 모드_Trail */
+			ImGui::SeparatorText("Color Blend Mode_Trail");
+			ImGui::RadioButton(u8"곱하기_Trail", &m_iColor_Mode_Trail, 0);
+			ImGui::RadioButton(u8"스크린_Trail", &m_iColor_Mode_Trail, 1);
+			ImGui::RadioButton(u8"오버레이_Trail", &m_iColor_Mode_Trail, 2);
+			ImGui::RadioButton(u8"더하기_Trail", &m_iColor_Mode_Trail, 3);
+			ImGui::RadioButton(u8"번_Trail", &m_iColor_Mode_Trail, 4);
+			ImGui::RadioButton(u8"비비드 라이트_Trail", &m_iColor_Mode_Trail, 5);
+			ImGui::RadioButton(u8"소프트 라이트_Trail", &m_iColor_Mode_Trail, 6);
+			ImGui::RadioButton(u8"하드 라이트_Trail", &m_iColor_Mode_Trail, 7);
+			ImGui::RadioButton(u8"컬러 닷지_Trail", &m_iColor_Mode_Trail, 8);
+			ImGui::RadioButton(u8"혼합 번_Trail", &m_iColor_Mode_Trail, 9);
+			ImGui::RadioButton(u8"혼합안함_Trail", &m_iColor_Mode_Trail, 10);
+
+
+			if (0 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::MUL;
+			else if (1 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::SCREEN;
+			else if (2 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::OVERLAY;
+			else if (3 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::ADD;
+			else if (4 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::BURN;
+			else if (5 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::VIVID_RIGHT;
+			else if (6 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::SOFT_RIGHT;
+			else if (7 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::HARD_RIGHT;
+			else if (8 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::COLOR_DODGE;
+			else if (9 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::MIX_BURN;
+			else if (10 == m_iColor_Mode_Trail)
+				m_pVoidTrailDesc->eMode_Color = MODE_COLOR::MODE_COLOR_END;
+
+
+			/* 쉐이더에 던질 곱하기 컬러 값_트레일 */
+			if (ImGui::ColorEdit4("Color_Mul_Trail", m_fColor_Mul_Trail, ImGuiColorEditFlags_None))
+			{
+				m_pVoidTrailDesc->vColor_Mul.x = m_fColor_Mul_Trail[0];
+				m_pVoidTrailDesc->vColor_Mul.y = m_fColor_Mul_Trail[1];
+				m_pVoidTrailDesc->vColor_Mul.z = m_fColor_Mul_Trail[2];
+				m_pVoidTrailDesc->vColor_Mul.w = m_fColor_Mul_Trail[3];
+			}
+
+			ImGui::SeparatorText("");
+		}
+
+
+#pragma region Rim & Bloom 값 조절_트레일
+
+		/* 림라이트 & 블룸 */
+		if (ImGui::CollapsingHeader("Rim Bloom_Trail"))
+		{
+			if (ImGui::ColorEdit4("RimColor_Trail", m_fRimColor_Trail, ImGuiColorEditFlags_None))
+			{
+				m_pVoidTrailDesc->vRimColor.x = m_fRimColor_Trail[0];
+				m_pVoidTrailDesc->vRimColor.y = m_fRimColor_Trail[1];
+				m_pVoidTrailDesc->vRimColor.z = m_fRimColor_Trail[2];
+				m_pVoidTrailDesc->vRimColor.w = m_fRimColor_Trail[3];
+			}
+
+			if (ImGui::DragFloat("RimPower_Trail", &m_fRimPower_Trail, 1.f, 0.f, 5000.f))
+			{
+				m_pVoidTrailDesc->fRimPower = m_fRimPower_Trail;
+			}
+
+			if (ImGui::ColorEdit3("BloomPower_Trail", m_vBloomPower_Trail, ImGuiColorEditFlags_None))
+			{
+				m_pVoidTrailDesc->vBloomPower.x = m_vBloomPower_Trail[0];
+				m_pVoidTrailDesc->vBloomPower.y = m_vBloomPower_Trail[1];
+				m_pVoidTrailDesc->vBloomPower.z = m_vBloomPower_Trail[2];
+			}
+
+			ImGui::SeparatorText("");
+		}
+#pragma endregion Rim & Bloom 값 조절_트레일 끝
+
+
+
 #pragma region 버퍼 Desc 값 조절_트레일
 
 		if (ImGui::CollapsingHeader("Trail_Buffer"))
@@ -4109,10 +4369,10 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 				m_pTrailBufferDesc->vPos_1.z = m_vPos_1[2];
 			}
 
-			//if (ImGui::DragInt("iMaxCnt_Trail", &m_iMaxCnt_Trail, 1, 2.f, 100.f))
-			//{
-			//	m_pTrailBufferDesc->iMaxCnt = m_iMaxCnt_Trail;
-			//}
+			if (ImGui::DragInt("iMaxCnt_Trail", &m_iMaxCnt_Trail, 1, 2.f, 100.f))
+			{
+				m_pTrailBufferDesc->iMaxCnt = m_iMaxCnt_Trail;
+			}
 
 			if (ImGui::DragInt("iLerpPointNum_Trail", &m_iLerpPointNum, 1, 2, 100))
 			{
@@ -4124,47 +4384,6 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 #pragma endregion 버퍼 Desc 값 조절_트레일 끝
 
 
-		if (ImGui::CollapsingHeader("Color_Trail"))
-		{
-			/* 쉐이더에 던질 곱하기 컬러 값_트레일 */
-			if (ImGui::ColorEdit4("Color_Mul_Trail", m_fColor_Mul_Trail, ImGuiColorEditFlags_None))
-			{
-				m_pVoidTrailDesc->vColor_Mul.x = m_fColor_Mul_Trail[0];
-				m_pVoidTrailDesc->vColor_Mul.y = m_fColor_Mul_Trail[1];
-				m_pVoidTrailDesc->vColor_Mul.z = m_fColor_Mul_Trail[2];
-				m_pVoidTrailDesc->vColor_Mul.w = m_fColor_Mul_Trail[3];
-			}
-
-			ImGui::SeparatorText("");
-		}
-
-#pragma region Rim & Bloom 값 조절_트레일
-
-		/* 림라이트 & 블룸 */
-		if (ImGui::CollapsingHeader("Rim Bloom_Trail"))
-		{
-			if (ImGui::ColorEdit4("RimColor_Trail", m_fRimColor_Trail, ImGuiColorEditFlags_None))
-			{
-				m_pVoidTrailDesc->vRimColor.x = m_fRimColor_Trail[0];
-				m_pVoidTrailDesc->vRimColor.y = m_fRimColor_Trail[1];
-				m_pVoidTrailDesc->vRimColor.z = m_fRimColor_Trail[2];
-				m_pVoidTrailDesc->vRimColor.w = m_fRimColor_Trail[3];
-			}
-
-			if (ImGui::DragFloat("RimPower_Trail", &m_fRimPower_Trail, 1.f, 0.f, 5000.f))
-			{
-				m_pVoidTrailDesc->fRimPower = m_fRimPower_Trail;
-			}
-
-			if (ImGui::ColorEdit3("BloomPower_Trail", m_vBloomPower_Trail, ImGuiColorEditFlags_None))
-			{
-				m_pVoidTrailDesc->vBloomPower.x = m_vBloomPower_Trail[0];
-				m_pVoidTrailDesc->vBloomPower.y = m_vBloomPower_Trail[1];
-				m_pVoidTrailDesc->vBloomPower.z = m_vBloomPower_Trail[2];
-			}
-
-			ImGui::SeparatorText("");
-		}
 
 
 	} // nullptr != m_pTrail
@@ -5165,6 +5384,168 @@ void CWindow_EffectTool::Update_CurParameters_Parts()
 
 }
 
+void CWindow_EffectTool::Update_CurParameters_Trail()
+{
+	if (nullptr != m_pTrail)
+	{
+		// 트레일이 nullptr이 아닐 때 트레일 전용 Desc들 얻어오기
+		m_pVoidTrailDesc = m_pTrail->Get_Desc();
+		m_pTrailDesc = m_pTrail->Get_TrailDesc();
+		CEffect_Void::DISTORTION_DESC* pDistortionDesc = m_pTrail->Get_Distortion_Desc();	// 트레일의 디스토션 Desc 얻어오기
+		CVIBuffer_Trail* pVIBuffer = m_pTrail->Get_VIBufferCom();
+		m_pTrailBufferDesc = pVIBuffer->Get_Desc();
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		/* 버퍼 값 업데이트 */
+		m_vPos_0[0] = m_pTrailBufferDesc->vPos_0.x;
+		m_vPos_0[1] = m_pTrailBufferDesc->vPos_0.y;
+		m_vPos_0[2] = m_pTrailBufferDesc->vPos_0.z;
+
+		m_vPos_1[0] = m_pTrailBufferDesc->vPos_1.x;
+		m_vPos_1[1] = m_pTrailBufferDesc->vPos_1.y;
+		m_vPos_1[2] = m_pTrailBufferDesc->vPos_1.z;
+
+		m_iMaxCnt_Trail = m_pTrailBufferDesc->iMaxCnt;
+		m_iLerpPointNum = m_pTrailBufferDesc->iLerpPointNum;
+
+
+		// 텍스쳐 업데이트
+		m_iTexIndex_Trail[CEffect_Void::TEXTURE_DIFFUSE] = m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_DIFFUSE];
+		m_iTexIndex_Trail[CEffect_Void::TEXTURE_MASK] = m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_MASK];
+		m_iTexIndex_Trail[CEffect_Void::TEXTURE_NOISE] = m_pVoidTrailDesc->iTextureIndex[CEffect_Void::TEXTURE_NOISE];
+
+
+		m_iShaderPassIndex_Trail = m_pVoidTrailDesc->iShaderPassIndex;		// 쉐이더 패스 인덱스 업데이트
+		m_iRenderGroup_Trail = m_pVoidTrailDesc->iRenderGroup;				// 렌더그룹 업데이트
+
+
+
+		/* 컬러 블렌딩 모드 업데이트 */
+		if (MODE_COLOR::MUL == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 0;
+		else if (MODE_COLOR::SCREEN == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 1;
+		else if (MODE_COLOR::OVERLAY == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 2;
+		else if (MODE_COLOR::ADD == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 3;
+		else if (MODE_COLOR::BURN == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 4;
+		else if (MODE_COLOR::VIVID_RIGHT == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 5;
+		else if (MODE_COLOR::SOFT_RIGHT == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 6;
+		else if (MODE_COLOR::HARD_RIGHT == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 7;
+		else if (MODE_COLOR::COLOR_DODGE == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 8;
+		else if (MODE_COLOR::MIX_BURN == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 9;
+		else if (MODE_COLOR::MODE_COLOR_END == m_pVoidTrailDesc->eMode_Color)
+			m_iColor_Mode_Trail = 10;
+
+
+		/* 쉐이더에 던져서 자를 값 */
+		m_vColor_Clip_Trail[0] = m_pVoidTrailDesc->vColor_Clip.x;
+		m_vColor_Clip_Trail[1] = m_pVoidTrailDesc->vColor_Clip.y;
+		m_vColor_Clip_Trail[2] = m_pVoidTrailDesc->vColor_Clip.z;
+		m_vColor_Clip_Trail[3] = m_pVoidTrailDesc->vColor_Clip.w;
+
+
+		/* 쉐이더에 던질 곱하기 컬러 값_트레일 */
+		m_fColor_Mul_Trail[0] = m_pVoidTrailDesc->vColor_Mul.x;
+		m_fColor_Mul_Trail[1] = m_pVoidTrailDesc->vColor_Mul.y;
+		m_fColor_Mul_Trail[2] = m_pVoidTrailDesc->vColor_Mul.z;
+		m_fColor_Mul_Trail[3] = m_pVoidTrailDesc->vColor_Mul.w;
+
+
+		/* UV 옵션 */
+		m_fUV_Offset_Trail[0] = m_pVoidTrailDesc->vUV_Offset.x;
+		m_fUV_Offset_Trail[1] = m_pVoidTrailDesc->vUV_Offset.y;
+
+		m_vUV_Scale_Trail[0] = m_pVoidTrailDesc->vUV_Scale.x;
+		m_vUV_Scale_Trail[1] = m_pVoidTrailDesc->vUV_Scale.y;
+
+		m_fUV_RotDegree_Trail = m_pVoidTrailDesc->fUV_RotDegree;
+
+
+
+		/* UV 마스크 업데이트 */
+		if (true == m_pVoidTrailDesc->bUV_Wave)
+			m_iUV_Wave_Trail = 0;
+		else if (false == m_pVoidTrailDesc->bUV_Wave)
+			m_iUV_Wave_Trail = 1;
+
+		// UV 스크롤 스피드
+		m_fUV_WaveSpeed_Trail[0] = m_pVoidTrailDesc->vUV_WaveSpeed.x;
+		m_fUV_WaveSpeed_Trail[1] = m_pVoidTrailDesc->vUV_WaveSpeed.y;
+
+		// Offset 
+		m_fUV_Offset_Mask_Trail[0] = m_pVoidTrailDesc->vUV_Offset_Mask.x;
+		m_fUV_Offset_Mask_Trail[1] = m_pVoidTrailDesc->vUV_Offset_Mask.y;
+
+		// Scale
+		m_fUV_Scale_Mask_Trail[0] = m_pVoidTrailDesc->vUV_Scale_Mask.x;
+		m_fUV_Scale_Mask_Trail[1] = m_pVoidTrailDesc->vUV_Scale_Mask.y;
+
+
+
+		/* Rim Bloom 림블룸 관련 */
+		m_vBloomPower_Trail[0] = m_pVoidTrailDesc->vBloomPower.x;
+		m_vBloomPower_Trail[1] = m_pVoidTrailDesc->vBloomPower.y;
+		m_vBloomPower_Trail[2] = m_pVoidTrailDesc->vBloomPower.z;
+
+		m_fRimColor_Trail[0] = m_pVoidTrailDesc->vRimColor.x;
+		m_fRimColor_Trail[1] = m_pVoidTrailDesc->vRimColor.y;
+		m_fRimColor_Trail[2] = m_pVoidTrailDesc->vRimColor.z;
+		m_fRimColor_Trail[3] = m_pVoidTrailDesc->vRimColor.w;
+
+		m_fRimPower_Trail = m_pVoidTrailDesc->fRimPower;
+
+
+		/* 디스토션_메쉬 값 업데이트 */
+		// 디스토션 스크롤 방향 업데이트
+		if (CEffect_Void::SCROLL_ROW == pDistortionDesc->eType_Scroll)
+			m_iType_Scroll_Trail = 0;
+		else if (CEffect_Void::SCROLL_COL == pDistortionDesc->eType_Scroll)
+			m_iType_Scroll_Trail = 1;
+		else if (CEffect_Void::SCROLL_BOTH == pDistortionDesc->eType_Scroll)
+			m_iType_Scroll_Trail = 2;
+		else if (CEffect_Void::SCROLL_ROTATE == pDistortionDesc->eType_Scroll)
+			m_iType_Scroll_Trail = 3;
+		else if (CEffect_Void::TYPE_SCROLL_END == pDistortionDesc->eType_Scroll)
+			m_iType_Scroll_Trail = 4;
+
+
+		m_vScrollSpeeds_Trail[0] = pDistortionDesc->vScrollSpeeds.x;
+		m_vScrollSpeeds_Trail[1] = pDistortionDesc->vScrollSpeeds.y;
+		m_vScrollSpeeds_Trail[2] = pDistortionDesc->vScrollSpeeds.z;
+
+
+		m_vScales_Distortion_Trail[0] = pDistortionDesc->vScales.x;
+		m_vScales_Distortion_Trail[1] = pDistortionDesc->vScales.y;
+		m_vScales_Distortion_Trail[2] = pDistortionDesc->vScales.z;
+
+
+		m_vDistortion1_Trail[0] = pDistortionDesc->vDistortion1.x;
+		m_vDistortion1_Trail[1] = pDistortionDesc->vDistortion1.y;
+
+		m_vDistortion2_Trail[0] = pDistortionDesc->vDistortion2.x;
+		m_vDistortion2_Trail[1] = pDistortionDesc->vDistortion2.y;
+
+		m_vDistortion3_Trail[0] = pDistortionDesc->vDistortion3.x;
+		m_vDistortion3_Trail[1] = pDistortionDesc->vDistortion3.y;
+
+		m_fDistortionScale_Trail = pDistortionDesc->fDistortionScale;
+		m_fDistortionBias_Trail = pDistortionDesc->fDistortionBias;
+
+
+	}
+
+
+}
+
 void CWindow_EffectTool::Select_EasingType(EASING_TYPE* eType)
 {
 	/* Easing Type : 이징 타입 */
@@ -5718,7 +6099,8 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
 				{
-					Attach_Tool("lips_H_close_upnode");
+					//Attach_Tool("lips_H_close_upnode");
+					Attach_Tool("Head");
 				}
 
 
@@ -5746,9 +6128,14 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 
 					m_pCurEffect->Get_Desc()->bAttachTool = false;
 					m_pCurEffect->Get_Desc()->matPivot_Tool = XMMatrixIdentity();
-
 				}
 			}
+
+			if (m_pCurEffect->Get_Desc()->bAttachTool)
+			{
+				m_pCurEffect->Get_Desc()->matPivot_Tool = m_pModel_Preview->Get_ModelCom()->Get_BonePtr(m_strBoneTag.c_str())->Get_CombinedTransformationMatrix();
+			}
+
 		}
 
 
@@ -6829,11 +7216,22 @@ void CWindow_EffectTool::Update_EffectTrail_Window()
 
 
 				// 현재 모델의 파트에 트레일 달아주기
-				ImGui::Text(u8"모델에 트레일 달기 버튼");
-				if (ImGui::Button("Set Trail_On Model", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 25)))
+				if (nullptr != m_pPart_Preview->Get_Trail())
 				{
-					m_pPart_Preview->Set_Trail(m_pTrail);
+					if (ImGui::Button("Detach Trail_On Model", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 25)))
+					{
+						m_pPart_Preview->Set_Trail(nullptr);
+					}
 				}
+				else
+				{
+					ImGui::Text(u8"모델에 트레일 달기 버튼");
+					if (ImGui::Button("Attach Trail_On Model", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 25)))
+					{
+						m_pPart_Preview->Set_Trail(m_pTrail);
+					}
+				}
+
 
 
 				/* 재생, 일시정지 (모델, 트레일 둘 다) */
@@ -6904,11 +7302,23 @@ void CWindow_EffectTool::Update_EffectTrail_Window()
 		if (ImGui::CollapsingHeader("Trail For Effect"))	// 이펙트에 트레일 달아주기
 		{
 			// 이펙트에 트레일 달아주기
-			ImGui::Text(u8"이펙트에 트레일 달기 버튼");
-			if (ImGui::Button("Set Trail_On Effect", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 25)))
+
+			if (nullptr != m_pCurEffect->Get_Trail())
 			{
-				m_pCurEffect->Set_Trail(m_pTrail);
+				if (ImGui::Button("Detach Trail_On Effect", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 25)))
+				{
+					m_pCurEffect->Set_Trail(nullptr);
+				}
 			}
+			else
+			{
+				ImGui::Text(u8"이펙트에 트레일 달기 버튼");
+				if (ImGui::Button("Set Trail_On Effect", ImVec2(ImGui::GetWindowContentRegionMax().x - style.WindowPadding.x, 25)))
+				{
+					m_pCurEffect->Set_Trail(m_pTrail);
+				}
+			}
+
 
 			/* 재생, 일시정지 */
 			if (ImGui::Button("   Play_Effect & Trail    "))
@@ -8408,7 +8818,6 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 	// 트레일 로드
 	if (FILE_TRAIL == m_eFile)
 	{
-
 		if (nullptr != m_pTrail) // nullptr이 아니면 경고창
 		{
 			// 경고 팝업 열기
@@ -8419,10 +8828,12 @@ HRESULT CWindow_EffectTool::Load_Function(string strPath, string strFileName)
 			Create_Trail();
 			m_pTrail->Load_FromJson(In_Json);
 
-			if (nullptr != m_pPart_Preview) // 현재 파트 프리뷰가 nullptr이 아니면 Set해주기
-			{
-				m_pPart_Preview->Set_Trail(m_pTrail);
-			}
+			//if (nullptr != m_pPart_Preview) // 현재 파트 프리뷰가 nullptr이 아니면 Set해주기
+			//{
+			//	m_pPart_Preview->Set_Trail(m_pTrail);
+			//}
+
+			Update_CurParameters_Trail(); // 트레일 정보 업데이트
 
 			return S_OK;
 		}

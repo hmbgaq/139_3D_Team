@@ -18,6 +18,8 @@ public:
 	{
 		//_bool		bTrailOn; // EFFECTVOID_DESCÀÇ bPlay
 
+		_uint		iMaxCnt = { 32 };
+		_uint		iLerpPointNum = { 12 };
 
 	}TRAIL_DESC;
 
@@ -45,7 +47,9 @@ public:
 
 public:
 	void	Set_Play(_bool bPlay) { m_tVoidDesc.bPlay = bPlay; }
-	_bool	Get_Play() { m_tVoidDesc.bPlay; }
+	_bool	Get_Play() { return m_tVoidDesc.bPlay; }
+
+	void	Reset_Trail();
 
 	void	Set_Pause(_bool bPause) { m_bPause = bPause; }
 	_bool	Get_Pause() { m_bPause; }
@@ -56,7 +60,8 @@ public:
 
 /* For.Desc */
 public:
-	TRAIL_DESC* Get_TrailDesc() { return &m_tTrailDesc; }
+	TRAIL_DESC*			Get_TrailDesc() { return &m_tTrailDesc; }
+	DISTORTION_DESC*	Get_Distortion_Desc() { return &m_tDistortionDesc; }
 
 public:
 	CVIBuffer_Trail* Get_VIBufferCom() { return m_pVIBufferCom; }

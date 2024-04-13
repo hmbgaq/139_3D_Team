@@ -973,6 +973,9 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 		{
 			pActor->Activate_SuperCharge();
 		}
+
+		//! 유정 : 슈퍼차지 이펙트 재생
+
 	}
 
 	_bool bIsLearned = CData_Manager::GetInstance()->Is_AdditionalSkill_Learned(Additional_Skill::TELEPORT_PUNCH);

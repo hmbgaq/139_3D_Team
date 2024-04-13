@@ -22,6 +22,7 @@
 
 #pragma region Monster
 #include "Monster_Character.h"
+#include "Event_MonsterSpawnTrigger.h"
 #pragma endregion
 
 #pragma region MAP
@@ -523,37 +524,6 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 	}
 
-	json MonsterJson = Stage1MapJson["Monster_Json"];
-	_int iMonsterJsonSize = (_int)MonsterJson.size();
-
-	for (_int i = 0; i < iMonsterJsonSize; ++i)
-	{
-		CMonster_Character::MONSTER_DESC MonsterDesc = {};
-
-		string LoadMonsterTag = (string(MonsterJson[i]["PrototypeTag"]));
-
-		m_pGameInstance->String_To_WString(LoadMonsterTag, MonsterDesc.strProtoTypeTag);
-		MonsterDesc.bPreview = false;
-		MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
-
-		const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-		_float4x4 WorldMatrix;
-
-		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-		{
-			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-			{
-				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-			}
-		}
-
-		MonsterDesc.WorldMatrix = WorldMatrix;
-
-		if (FAILED(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, L"Layer_Monster", MonsterDesc.strProtoTypeTag, &MonsterDesc)))
-			return E_FAIL;
-
-	}
-
 	json SpecialJson = Stage1MapJson["Special_Json"];
 	_int iSpecialJsonSize = (_int)SpecialJson.size();
 
@@ -844,6 +814,47 @@ HRESULT CLevel_SnowMountain::Ready_Layer_UI_Player(const wstring& strLayerTag, v
 
 HRESULT CLevel_SnowMountain::Ready_Event()
 {
+	json LoadJson;
+
+	if (FAILED(CJson_Utility::Load_Json(m_strMapLoadPath.c_str(), LoadJson)))
+	{
+		MSG_BOX("이벤트 불러오기 실패");
+		return E_FAIL;
+	}
+
+	json TriggerJson = LoadJson["Trigger_Json"];
+
+	json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
+	_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
+
+	for (_int i = 0; i < iMonsterTriggerSize; ++i)
+	{
+		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
+		MonsterTriggerDesc.bOnTrigger = MonsterTriggerJson[i]["OnTrigger"];
+		MonsterTriggerDesc.strSpawnMonsterJsonPath = m_strMapLoadPath;
+		MonsterTriggerDesc.strTriggerNameTag = MonsterTriggerJson[i]["NameTag"];
+		MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
+
+		CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
+
+		pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
+
+		if (pMonsterTrigger == nullptr)
+		{
+			MSG_BOX("몬스터 트리거 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+		{
+			m_pGameInstance->Add_Event(pMonsterTrigger);
+		}
+
+
+	}
+
+
 	return S_OK;
 }
 

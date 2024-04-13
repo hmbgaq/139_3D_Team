@@ -72,6 +72,8 @@ HRESULT CBandit_Sniper::Initialize(void* pArg)
 	
 	m_fHp = 20.f;
 	m_pTransformCom->Set_Look(0.f, 0.f, -1.f);
+
+	m_pRigidBody->Set_UseGravity(false);
 	///* !성희 추가 : 몬스터 HUD 생성 */
 	//Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 	return S_OK;
