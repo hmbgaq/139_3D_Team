@@ -211,9 +211,6 @@ public:
 	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
 	void Update_SuperCharge(_float fTimeDelta);
 
-public: // !¼ºÈñ Ãß°¡
-	void Activate_SuperChargeUI();
-
 public:
 	void Search_LockOn_Target();
 	CCharacter* Get_LockOn_Target() { return m_pLockOnTarget; };

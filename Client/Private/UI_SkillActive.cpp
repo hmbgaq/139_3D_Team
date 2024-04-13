@@ -80,7 +80,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 			{
 				if (m_pUIManager->Get_Select_SkillPoint() > m_pData_Manager->Get_SkillPoint()) // 요구포인트 > 가진포인트
 				{
-					m_pUIManager->Change_MessageBox(1); // 포인트 부족
+					// 습득불가
 					return;
 				}
 

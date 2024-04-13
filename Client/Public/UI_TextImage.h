@@ -32,12 +32,11 @@ public:
 	//virtual void			Change_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor) override;
 
 public:
-	void					Change_RewardMassege(_int iTextNum)
+	void					Change_TutorialMassege(_int iTextNum)
 	{
-		if (0 > iTextNum || m_iMaxTextNum < iTextNum)
+		if (0 > iTextNum || m_iMaxTextNum <= iTextNum)
 			return;
 
-		m_fTime = GetTickCount64();
 		m_iTextNum = iTextNum;
 	}
 	_int					Get_TutorialMassege() { return m_iTextNum; }
@@ -51,7 +50,7 @@ private:
 	void					Compute_OwnerCamDistance();
 	_bool					In_Frustum();
 	_int					m_iTextNum = 0;
-	_int					m_iMaxTextNum = 2; // !!!!!!! 메세지 추가시 최대 숫자 확인 !!!!!!!!!!!!!!!!!!
+	_int					m_iMaxTextNum = (_int)TUTORIAL_TEXT::TUTORIALTEXT_END;
 
 public:
 	virtual json			Save_Desc(json& out_json);

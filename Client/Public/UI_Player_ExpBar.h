@@ -2,10 +2,6 @@
 #include "Client_Defines.h"
 #include "UI.h"
 
-BEGIN(Client)
-class CPlayer;
-END
-
 /* 체력 프레임 */
 class CUI_Player_ExpBar final : public CUI
 {
@@ -56,8 +52,6 @@ private:
 	_float					m_fTimeAcc = 0.f;
 	_int					m_iPreLevel = 1;
 	_int					m_iCurLevel = 1;
-
-	CPlayer*				m_pPlayer = nullptr;
 
 public:
 	virtual json			Save_Desc(json& out_json);
