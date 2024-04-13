@@ -226,14 +226,11 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
-    vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
+    //vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
     
     float4 MainObject = vFinal + vDebug + vRimBloom;
     
     Out.vColor = vUI;
-       
-   if (Out.vColor.a == 0)
-        Out.vColor = vIndep ;
     
     if(Out.vColor.a == 0)
         Out.vColor = vOutLine;
@@ -269,18 +266,14 @@ PS_OUT PS_MAIN_FINAL_SEPHIA(PS_IN In)
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
-    vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
+   // vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
     
     float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom;
     
     MainObject = Sepia(MainObject);
-    vIndep = Sepia(vIndep);
     
     Out.vColor = vUI;
    
-    if (Out.vColor.a == 0)
-        Out.vColor = vIndep;
-    
     if (Out.vColor.a == 0)
         Out.vColor = MainObject;
        
@@ -300,17 +293,12 @@ PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
-    vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
     
     float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom;
     
     MainObject = MonochromePass(MainObject);
-    vIndep = MonochromePass(vIndep);
     
     Out.vColor = vUI;
-    
-    if (Out.vColor.a == 0)
-        Out.vColor = vIndep;
     
     if (Out.vColor.a == 0)
         Out.vColor = MainObject;

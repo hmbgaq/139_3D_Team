@@ -54,6 +54,7 @@ HRESULT CLevel_SnowMountain::Initialize()
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
 	FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
 	FAILED_CHECK(Ready_Layer_Test(TEXT("Layer_Test")));
+	FAILED_CHECK(Ready_Effect());
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
@@ -195,9 +196,6 @@ HRESULT CLevel_SnowMountain::Ready_LightDesc()
 		}
 	}
 
-
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", nullptr, _float3(0.f, 0.f, 0.f));
-
 	return S_OK;
 }
 
@@ -224,15 +222,6 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 	//   return E_FAIL;
 
 	//m_pGameInstance->Set_Player(pPlayer);
-
-	return S_OK;
-}
-
-HRESULT CLevel_SnowMountain::Ready_Layer_Effect(const wstring& strLayerTag)
-{
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
-	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
 
 	return S_OK;
 }
@@ -774,12 +763,17 @@ HRESULT CLevel_SnowMountain::Ready_Layer_BackGround(const wstring& strLayerTag)
 }
 
 
-
-
 HRESULT CLevel_SnowMountain::Ready_Layer_Test(const wstring& strLayerTag)
 {
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Interact_Chain")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Screamer")));
+
+	return S_OK;
+}
+
+HRESULT CLevel_SnowMountain::Ready_Effect()
+{
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_SnowMap.json", nullptr, _float3(0.f, 0.f, 0.f));
 
 	return S_OK;
 }

@@ -30,6 +30,11 @@ HRESULT CBody_Player::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	if (m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
+		m_bRim = true;
+	else
+		m_bRim = false;
+
 	return S_OK;
 }
 

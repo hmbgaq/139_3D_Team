@@ -100,8 +100,6 @@ void CCharacter::Late_Tick(_float fTimeDelta)
 			Pair.second->Late_Tick(fTimeDelta);	
 	}
 
-	//Character_Client·Î ¿Å±è
-	
 }
 
 HRESULT CCharacter::Render()
@@ -113,17 +111,34 @@ HRESULT CCharacter::Render()
 
 CBody* CCharacter::Get_Body()
 {
-	return dynamic_cast<CBody*>(Find_PartObject(TEXT("Part_Body")));
+	CBody* pBody = dynamic_cast<CBody*>(Find_PartObject(TEXT("Part_Body")));
+
+	if (pBody == nullptr)
+		return nullptr;
+
+	return pBody;
 }
 
 CWeapon* CCharacter::Get_Weapon(const wstring& strWeaponTag)
 {
-	return dynamic_cast<CWeapon*>(Find_PartObject(strWeaponTag));
+	CWeapon* pWeapon = dynamic_cast<CWeapon*>(Find_PartObject(strWeaponTag));
+
+	if (pWeapon == nullptr)
+		return nullptr;
+
+	return pWeapon;
 }
 
 CCollider* CCharacter::Get_Collider()
 {
-	return m_pBody->Get_Collider();
+	CCollider* pCollider = nullptr;
+
+	if (nullptr != m_pBody)
+	{
+		pCollider = m_pBody->Get_Collider();
+	}
+
+	return pCollider;
 }
 
 CNavigation* CCharacter::Get_Navigation()

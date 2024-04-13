@@ -311,6 +311,7 @@ HRESULT CGameInstance::Open_Requested_Level()
 	if (true == m_bIsRequestOpenLevel)
 	{
 		m_bIsRequestOpenLevel = false;
+		Off_Shader();					 /* ¼ÎÀÌ´õ ¿É¼Ç ´Ù ²ô°í ¿ÀÇÂÇÏµµ·Ï ÇÔ*/
 		return m_pLevel_Manager->Open_Level(m_iCurrentLevelIndex, m_pNewLevel);
 	}
 

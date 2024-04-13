@@ -527,7 +527,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma region 맵에 전역으로 깔리는 이펙트
 
-		FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
+	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
+	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_IntroBoss_01.json", 1));
 
 #pragma endregion // 맵에 전역으로 깔리는 이펙트
 

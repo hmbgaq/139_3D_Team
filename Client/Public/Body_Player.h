@@ -37,14 +37,15 @@ private:
 	virtual void Check_Frustum() override;
 	_int iTemp = 0;
 
-public:
-	/* 원형객체를 생성한다. */
-	static CBody_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
+	/* 소영 추가 - 림라이트용 */
+private:
+	_bool m_bRim = { false };
 
-	/* 사본객체를 생성한다. */
+
+public:
+	static CBody_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool() override;
-
 	virtual void Free() override;
 
 };
