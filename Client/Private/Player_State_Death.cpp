@@ -1,7 +1,9 @@
-#include "..\Public\Player_State_Death.h"
+#include "Player_State_Death.h"
 #include "SpringCamera.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "GameInstance.h"
+#include "Renderer.h"
 
 void CPlayer_State_Death::Initialize(CPlayer* pActor)
 {
@@ -10,6 +12,7 @@ void CPlayer_State_Death::Initialize(CPlayer* pActor)
 	pActor->Set_Splitted(false);
 	pActor->Set_UseMouseMove(false);
 	pActor->Set_Weapons_Enable_False();
+	m_pGameInstance->Set_PlayerDead(true); 
 
 	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
 	if (pSpringCam)

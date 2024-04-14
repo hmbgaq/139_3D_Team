@@ -7,9 +7,6 @@
     <Filter Include="01.Utility">
       <UniqueIdentifier>{8d1d710a-2b5b-4929-974e-97740f39f91d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Defines">
-      <UniqueIdentifier>{d0e54a09-198b-4260-ade5-c39ff5b26346}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\99.SuperClass">
       <UniqueIdentifier>{44a8a7cb-d2da-403d-87ee-1a2874baef33}</UniqueIdentifier>
     </Filter>
@@ -336,6 +333,9 @@
     </Filter>
     <Filter Include="01.Utility\94. Sound_Manaher\fmod">
       <UniqueIdentifier>{24332950-05c7-4287-a508-d844ab020cf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{d0e54a09-198b-4260-ade5-c39ff5b26346}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

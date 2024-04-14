@@ -50,6 +50,10 @@ private:
 	_bool		m_bHSV_Active = false;
 	_bool		m_bPBR_Active = false;
 
+	_bool		m_bLuma_Active = false;
+	_bool		m_bScreen_Active = false;
+	_bool		m_bFXAA_Active = false;
+
 public:
 	static CUI_ElementList* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag); //! 盔屈按眉 积己
 	virtual CGameObject* Clone(void* pArg) override; //! 荤夯按眉 积己

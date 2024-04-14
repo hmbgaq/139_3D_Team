@@ -1,6 +1,6 @@
 #include "..\Public\Player_InteractionGlamour_Activate.h"
 #include "Data_Manager.h"
-
+#include "Body_Player.h"
 #include "Bone.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
@@ -52,16 +52,28 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 		m_bFlags[1] = pActor->Is_Upper_Inputable_Front(24);
 		if (true == m_bFlags[1])
 		{		
+			pActor->Set_BodyRender(1); // Heal RenderPass 
 			pActor->Set_Hp(CData_Manager::GetInstance()->Get_HpRegen());
 			pActor->Play_Voice_Heal();
 		}
 	}
 	
+	if (false == m_bFlags[2])
+	{
+		if (true == pActor->Is_Upper_Inputable_Front(34)) // 44 °¡ ³¡ 
+		{
+			if(ECast(LEVEL::LEVEL_SNOWMOUNTAIN) == m_pGameInstance->Get_NextLevel())
+				pActor->Set_BodyRender(3); // SnowMountain RenderPass 
+			else
+				pActor->Set_BodyRender(0); // Origin RenderPass 
 
+			m_bFlags[1] = true;
+		}
+	}
 
-	//if (pActor->Is_Animation_End())
 	if (pActor->Is_UpperAnimation_End())
 	{
+		//pActor->Set_BodyRender(0); // Origin RenderPass 
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 

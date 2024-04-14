@@ -156,7 +156,7 @@ private: //!For Hawk
 	vector<_float4> m_vecAtPoints;
 	_float			m_fSplineTimeAcc = 0.f;
 	_float			m_fSplineMoveSpeed = 12.f;
-	_float			m_fSplineMoveInterpolate = 0.1;
+	_float			m_fSplineMoveInterpolate = 0.1f;
 	_bool			m_bFixAt = false;
 	_bool			m_bOnceAt = false;
 	_int			m_iCurrentAtPoint = 0;

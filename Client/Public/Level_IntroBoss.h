@@ -19,15 +19,14 @@ public:
 private:
 	HRESULT Ready_LightDesc();
 	HRESULT Ready_Layer_Camera(const wstring& strLayerTag);
-	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
 	HRESULT Ready_Layer_BackGround(const wstring& strLayerTag);
-	HRESULT Ready_LandObjects();
 	HRESULT Ready_Layer_Player(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Monster(const wstring& strLayerTag, void* pArg);
-	HRESULT Ready_Layer_Building(const wstring& strLayerTag, void* pArg);
 	HRESULT Ready_Layer_Test(const wstring& strLayerTag);
+	HRESULT Ready_LandObjects();
 	HRESULT Ready_Shader();
 	HRESULT Ready_Event();
+	HRESULT Ready_Effect();
 
 private: /* UI */
 	HRESULT Ready_UI();
@@ -53,7 +52,8 @@ private:
 	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData.json";
 	
 private:
-	CEffect* m_pMapEffect = { nullptr };
+	CEffect*		m_pMapEffect = { nullptr };
+	class CEffect*  m_pEffect = { nullptr };
 
 public:
 	static CLevel_IntroBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

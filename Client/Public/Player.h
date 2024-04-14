@@ -169,7 +169,6 @@ public:
 	void SetState_CrouchUnder();
 	void SetState_CrouchUnderGate();
 
-
 public:
 	void Search_Target(_float fMaxDistance = 10.f);
 
@@ -213,8 +212,6 @@ public:
 	void Throw_Dynamite();
 	void Teleport();
 
-	
-
 public:
 	_bool Is_Exist_Ladder_Count() { return m_iLadderCount > 0; }
 	void Remove_Ladder_Count() { m_iLadderCount = m_iLadderCount - 1 > 0 ? m_iLadderCount - 1 : 0; };
@@ -226,7 +223,7 @@ public:
 
 public:
 	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
-	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
+	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; m_bSuperCharge_State = true; };
 
 	void Update_SuperCharge(_float fTimeDelta);
 	void Play_Sound_SuperCharge_Enter();
@@ -324,6 +321,11 @@ private:
 private:
 	_float				m_fEffectTimeAcc = { 0.f };
 	_bool				m_bFirst_SuperCharge = { true };
+/* 소영 추가 */
+public:
+	void Set_BodyRender(_uint iOption);
+	_bool m_bSuperCharge_State = { false };
+	
 
 public:
 	/* 원형객체를 생성한다. */

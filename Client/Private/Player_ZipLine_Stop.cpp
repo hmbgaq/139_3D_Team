@@ -1,4 +1,5 @@
-#include "..\Public\Player_ZipLine_Stop.h"
+#include "GameInstance.h"
+#include "Player_ZipLine_Stop.h"
 
 void CPlayer_ZipLine_Stop::Initialize(CPlayer* pActor)
 {
@@ -11,9 +12,13 @@ void CPlayer_ZipLine_Stop::Initialize(CPlayer* pActor)
 
 CState<CPlayer>* CPlayer_ZipLine_Stop::Update(CPlayer* pActor, _float fTimeDelta)
 {
-	__super::Update(pActor, fTimeDelta);
-
-	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	if (pActor->Is_Animation_End())
+	{
+		m_pGameInstance->Get_Renderer()->Set_Chroma_Active(false);
+		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
+	}
+	
+	return nullptr;
 }
 
 void CPlayer_ZipLine_Stop::Release(CPlayer* pActor)

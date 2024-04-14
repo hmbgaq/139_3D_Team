@@ -11,10 +11,8 @@ void CPlayer_ZipLine_Start::Initialize(CPlayer* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true);
-
+	m_pGameInstance->Get_Renderer()->Set_Chroma_Active(true);
 	pActor->Set_Interection(true);
-
-	
 
 	CEnvironment_Interact* pInteractObject = pActor->Get_InteractObject();
 
@@ -23,7 +21,6 @@ void CPlayer_ZipLine_Start::Initialize(CPlayer* pActor)
 	_float4 vBonePos = { BoneMatrix._41, BoneMatrix._42, BoneMatrix._43, 1.f };
 	_vector vWorldPos = XMVector3TransformCoord(vBonePos, pInteractObject->Get_Transform()->Get_WorldMatrix());
 	vWorldPos.m128_f32[3] = 1.f;
-
 
 	m_vArrivalPosition = vWorldPos;
 
@@ -37,10 +34,6 @@ void CPlayer_ZipLine_Start::Initialize(CPlayer* pActor)
 	_float3 vActorPosition = { vZipLinePosition.x + 0.5f, pActor->Get_Position().y, vZipLinePosition.z + 1.5f};
 	pActor->Set_Position(vActorPosition);
 	pActor->Get_Transform()->Look_At(XMLoadFloat4(&m_vArrivalPosition));
-
-
-	
-
 }
 
 CState<CPlayer>* CPlayer_ZipLine_Start::Update(CPlayer* pActor, _float fTimeDelta)

@@ -97,7 +97,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	Update_Hitlag(fTimeDelta);
 	Update_RadialBlurTime(m_fTimeDelta);
-
+	Update_ChromaTime(m_fTimeDelta);
 
 	m_pInput_Device->Tick();
 
@@ -311,6 +311,7 @@ HRESULT CGameInstance::Open_Requested_Level()
 	if (true == m_bIsRequestOpenLevel)
 	{
 		m_bIsRequestOpenLevel = false;
+		Off_Shader();					 /* ¼ÎÀÌ´õ ¿É¼Ç ´Ù ²ô°í ¿ÀÇÂÇÏµµ·Ï ÇÔ*/
 		return m_pLevel_Manager->Open_Level(m_iCurrentLevelIndex, m_pNewLevel);
 	}
 
@@ -491,6 +492,20 @@ HRESULT CGameInstance::Add_CascadeObject(_uint iIndex, CGameObject* pObject)
 	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
 
 	return m_pRenderer->Add_CascadeObject(iIndex, pObject);
+}
+
+void CGameInstance::Set_PlayerDead(_bool bOption)
+{
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	return m_pRenderer->Set_PlayerDeadState(bOption);
+}
+
+void CGameInstance::Set_PlayerRebirthState(_bool bOption)
+{
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	return m_pRenderer->Set_PlayerRebirthState(bOption);
 }
 
 #ifdef _DEBUG
@@ -908,8 +923,8 @@ _bool CGameInstance::Remove_Light(const _uint& iIndex)
 
 _bool CGameInstance::Remove_AllLight()
 {
-	
-	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	NULL_CHECK_RETURN(m_pLight_Manager, false);
+
 	return m_pLight_Manager->Remove_AllLight();
 }
 

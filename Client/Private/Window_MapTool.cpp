@@ -939,8 +939,6 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.iSwitchIndex = InteractJson[i]["LeverSwitchIndex"];
 			Desc.iArrivalCellIndex = InteractJson[i]["iArrivalCellIndex"];
 
-			
-
 			 Desc.bUseGravity = InteractJson[i]["UseGravity"];
 			 CJson_Utility::Load_Float3(InteractJson[i]["RootMoveRate"], Desc.vPlayerRootMoveRate);
 			 CJson_Utility::Load_Float3(InteractJson[i]["ReverseRootMoveRate"], Desc.vPlayerReverseRootMoveRate);
@@ -974,7 +972,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 			Desc.WorldMatrix = WorldMatrix;
 			//
 			json UpdateCellJson = InteractJson[i]["UpdateCellJson"];
-			_int iUpdateCellJsonSize = UpdateCellJson.size();
+			_int iUpdateCellJsonSize = (_int)UpdateCellJson.size();
 			
 			for (_int i = 0; i < iUpdateCellJsonSize; ++i)
 			{

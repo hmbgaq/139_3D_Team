@@ -420,7 +420,7 @@ private:	// !성희 추가
 
 
 private: //! 소영 추가
-	HRESULT						Classification_Model(); 
+	HRESULT							Classification_Model(); 
 	vector<_int>					m_vChainMesh = {};
 	_bool							m_bIncrease = true;
 	_bool							m_bRenderOutLine = { false };

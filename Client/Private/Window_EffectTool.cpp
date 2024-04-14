@@ -4376,7 +4376,7 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 				m_pTrailBufferDesc->vPos_1.z = m_vPos_1[2];
 			}
 
-			if (ImGui::DragInt("iMaxCnt_Trail", &m_iMaxCnt_Trail, 1, 2.f, 100.f))
+			if (ImGui::DragInt("iMaxCnt_Trail", &m_iMaxCnt_Trail, 1, 2, 100))
 			{
 				m_pTrailBufferDesc->iMaxCnt = m_iMaxCnt_Trail;
 			}

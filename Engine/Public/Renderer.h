@@ -17,7 +17,7 @@ public:
 		/* UI */
 		RENDER_UI_BACK, RENDER_UI, RENDER_UI_FRONT, RENDER_UI_FIRST, RENDER_UI_SECOND, RENDER_UI_THIRD, RENDER_UI_FOURTH, RENDER_UI_POPUP, RENDER_CURSOR, RENDER_UI_WORLD,
 		/* RenderGroup*/
-		RENDER_BLEND, RENDER_CASCADE, RENDER_END
+		RENDER_BLEND, RENDER_CASCADE, RENDER_OUTLINE_BLUR, RENDER_END
 	};
 
 	enum class POST_TYPE { DEFERRED, FOG, GODRAY, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
@@ -68,10 +68,10 @@ private:
 	HRESULT Render_Effect_Distortion();
 	HRESULT Render_Effect_Priority_Distortion();
 	HRESULT Render_Effect_Distortion_Blur();
-	HRESULT Render_Effect_Combine();
 	HRESULT Render_Effect_Final();
 
 	HRESULT Render_OutLine();
+	HRESULT Render_OutLine_Blur();
 	HRESULT Render_RadialBlur(); 
 	HRESULT Render_HDR();
 	HRESULT Render_DOF(); // 일반적으로 HDR적용이후에 적용됨 
@@ -104,6 +104,8 @@ private:
 	HRESULT Ready_CascadeShadow();
 	wstring Current_Target(POST_TYPE eType);
 	
+	HRESULT Check_RenderEffect();
+
 public:
 	/* 렌더옵션 초기화 */
 	HRESULT Off_Shader(); /* 모든 셰이더옵션 다 끔 */
@@ -133,6 +135,7 @@ public:
 	void Set_Vignette_Active(_bool _Vignette_active) { m_tVignette_Option.bVignette_Active = _Vignette_active; }
 	void Set_Gray_Active(_bool _Gray_active) { m_tScreenDEffect_Desc.bGrayScale_Active = _Gray_active; }
 	void Set_Sephia_Active(_bool _Sephia_active) { m_tScreenDEffect_Desc.bSephia_Active = _Sephia_active; }
+	void Set_Luma_Active(_bool _luma_active) { m_tLumaSharpen_Desc.bLumaSharpen_Active = _luma_active; }
 
 	//Temp
 	_float Get_MotionBlur_float() { return m_tMotionBlur_Desc.fMotionBlur_Intensity; }
@@ -156,12 +159,18 @@ public:
 	void Set_MotionBlur_Option(MOTIONBLUR_DESC desc) { m_tMotionBlur_Desc = desc; }
 	void Set_LumaSharpen_Option(LUMASHARPEN_DESC desc) { m_tLumaSharpen_Desc = desc; }
 
+public:
+	void Set_PlayerDeadState(_bool bOption);
+	void Set_PlayerRebirthState(_bool bOption);
+//	void Set_PlayerDead(_bool bOption);
+
 private: // Debug
 	ID3DBlob* CompileShader(const std::wstring& filename, const string& entrypoint, const string& target);
 
 private:
 	_bool						m_bInit						= { true }; /* 없으면 터짐 건들지마세요 */
-	_bool						bTest = { true };
+	_bool						bTest						= { true };
+	_bool						m_bPlayerDead				= { false };
 	_float4x4					m_matPreCameraView = {};
 
 	PBR_DESC					m_tPBR_Option				= {};
@@ -186,6 +195,7 @@ private:
 	POST_TYPE					m_ePrevTarget				= POST_TYPE::FINAL;
 	_int						m_iCurrentLevel				= {};
 	wstring						strCurrentTarget			= TEXT("Target_Effect_Final");
+	_float						m_fBackupData				= {};
 
 	_bool						m_bBloomBlur_Clear			= false;
 	_bool						m_bRimBlur_Clear			= false;
@@ -197,6 +207,9 @@ private:
 	_bool 						m_bHDR_Clear				= false;
 	_bool 						m_bRadialBlur_Clear			= false;
 	_bool 						m_bFxaa_Clear				= false;
+	_bool						m_bHSV_Clear = false;
+	_bool						m_bVignette_Clear = false;
+
 	_bool 						m_Chroma_Clear				= false;
 	_bool 						m_bLumaSharpen_Clear		= false;
 
@@ -236,11 +249,11 @@ private:
 	class CTexture* m_pTool_2_PreFilteredTextureCom[10] = { nullptr };
 
 public:
-	_bool			m_bUI_MRT = false;
+	_bool			m_bUI_MRT						= { false };	
 	void			Render_UI_MRT(_bool bMRT) { m_bUI_MRT = bMRT;}
 	void			Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture) { m_iPBRTexture_InsteadLevel = iPBRTexture; }
-	_bool			m_bToolLevel = { false };
-	_int			m_iPBRTexture_InsteadLevel = { 0 };
+	_bool			m_bToolLevel					= { false };
+	_int			m_iPBRTexture_InsteadLevel		= { 0 };
 
 #ifdef _DEBUG
 public:

@@ -1,8 +1,9 @@
-#include "..\Public\Player_State.h"
+#include "Player_State.h"
 #include "GameInstance.h"
 #include "Data_Manager.h"
 #include "Effect_Manager.h"
 #include "Effect.h"
+#include "Body_Player.h"
 
 #pragma region 플레이어 상태 헤더
 
@@ -977,6 +978,7 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 	{
 		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SUPER_CHARGE);
 		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
+
 		if (true == bIsCooltimeEnd)
 		{
 			pActor->Activate_SuperCharge();
@@ -1005,6 +1007,7 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 		if (nullptr == pTarget)
 			return nullptr;
 
+		pActor->Set_BodyRender(2); // SuperCharge RenderPass 
 		CPlayer::TeleportPunch_State eState = pActor->Get_TeleportPunch_State();
 
 		switch (eState)
@@ -1039,6 +1042,7 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 	if (pActor->Is_Animation_End())
 	{
+		pActor->Set_BodyRender(0); // Origin RenderPass 
 		return new CPlayer_IdleLoop();
 	}
 
@@ -1143,12 +1147,13 @@ CState<CPlayer>* CPlayer_State::Kick(CPlayer* pActor, _float fTimeDelta, _uint _
 
 CState<CPlayer>* CPlayer_State::Heal(CPlayer* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
-
 	if (m_pGameInstance->Key_Down(DIK_C))
 	{
+
 		_bool bIsCootimeEnd = pActor->Activate_HUD_Skill(pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::HEAL)); //CPlayer::HUD::LEFT_RIGHT
 		if (true == bIsCootimeEnd)
 		{
+
 			if (CPlayer_InteractionGlamour_Activate::g_iAnimIndex != _iAnimIndex)
 				return new CPlayer_InteractionGlamour_Activate();
 		}

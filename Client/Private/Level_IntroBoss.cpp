@@ -1,10 +1,17 @@
 #include "stdafx.h"
-#include "Level_IntroBoss.h"
 #include "GameInstance.h"
-#include "Player.h"
+#include "Level_IntroBoss.h"
+
+#include "MasterCamera.h"
+#include "SpringCamera.h"
 #include "Camera_Dynamic.h"
-#include "Environment_Instance.h"
-#include "Effect_Instance.h"
+
+#include "Player.h"
+#include "LandObject.h"
+
+#include "Light.h"
+
+#include "Data_Manager.h"
 
 #pragma region UI
 #include "UI_Player_HPBar.h"
@@ -14,9 +21,6 @@
 #include "UI_Manager.h"
 #pragma endregion
 
-#include "LandObject.h"
-#include "Monster_Character.h"
-
 #pragma region MAP
 #include "Environment_Object.h"
 #include "Environment_Instance.h"
@@ -25,19 +29,20 @@
 #include "Event_MonsterSpawnTrigger.h"
 #pragma endregion
 
-
-#pragma region Test
+#pragma region Monster
 #include "Monster.h"
 #include "Screamer.h"  
 #include "InstanceMonster.h"
 #include "VampireCommander.h"
+#include "Monster_Character.h"
 #pragma endregion
 
 #pragma region Effect
 #include "Effect.h"
+#include "Effect_Manager.h"
+#include "Effect_Instance.h"
 #pragma endregion
 
-#include "Effect_Manager.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
@@ -59,10 +64,10 @@ HRESULT CLevel_IntroBoss::Initialize()
     Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
 
     FAILED_CHECK(Ready_LightDesc());
-    FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_LandObjects());
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
+    FAILED_CHECK(Ready_Effect());
     FAILED_CHECK(Ready_UI());
     FAILED_CHECK(Ready_Event());
     
@@ -279,7 +284,7 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Player(const wstring& strLayerTag, void* p
     return S_OK;
 }
 
-HRESULT CLevel_IntroBoss::Ready_Layer_Effect(const wstring& strLayerTag)
+HRESULT CLevel_IntroBoss::Ready_Effect()
 {
 
     _float3 vPos = { 60.f, 0.f, 54.f };
@@ -288,6 +293,7 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Effect(const wstring& strLayerTag)
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
+    m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_IntroBoss_01.json", nullptr, _float3(0.f, 0.f, 0.f));
 
     return S_OK;
 }
@@ -505,17 +511,10 @@ HRESULT CLevel_IntroBoss::Ready_LandObjects()
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
     FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
 
-    FAILED_CHECK(Ready_Layer_Building(TEXT("Layer_Building"), &LandObjectDesc));
 
     return S_OK;
 }
 
-HRESULT CLevel_IntroBoss::Ready_Layer_Building(const wstring& strLayerTag, void* pArg)
-{
-    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_ForkLift"), pArg));
-
-    return S_OK;
-}
 
 HRESULT CLevel_IntroBoss::Ready_Layer_Test(const wstring& strLayerTag)
 {
@@ -531,8 +530,6 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Test(const wstring& strLayerTag)
     //desc.fPositionX = (_float)g_iWinSizeX / 2 + 20.f;
     //desc.fPositionY = (_float)g_iWinSizeY / 2 + 20.f;
     //m_pGameInstance->Add_CloneObject(LEVEL_STATIC, strLayerTag, TEXT("Prototype_GameObject_UI_Player_HPBar"), &desc);
-
-
 
     return S_OK;
 }
@@ -1117,5 +1114,12 @@ void CLevel_IntroBoss::Free()
         Safe_Release(m_pMapEffect);
         //m_pMapEffect = nullptr;
     }	
+
+    if (nullptr != m_pEffect)
+    {
+        m_pEffect->End_Effect_ForPool();
+        Safe_Release(m_pEffect);
+        //m_pEffect = nullptr;
+    }
 
 }

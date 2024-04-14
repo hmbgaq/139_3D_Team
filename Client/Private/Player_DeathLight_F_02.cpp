@@ -1,5 +1,5 @@
-#include "..\Public\Player_DeathLight_F_02.h"
-
+#include "Player_DeathLight_F_02.h"
+#include "GameInstance.h"
 #include "Player_Empowered_Idle.h"
 
 void CPlayer_DeathLight_F_02::Initialize(CPlayer* pActor)
@@ -19,6 +19,7 @@ CState<CPlayer>* CPlayer_DeathLight_F_02::Update(CPlayer* pActor, _float fTimeDe
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_DiedScreen(true);
+			m_pGameInstance->Set_PlayerRebirthState(true);
 			pActor->Set_Animation(CPlayer::Player_State::Player_IdleLoop, CModel::ANIM_STATE::ANIM_STATE_NORMAL, false, false, 0);
 		}
 	}

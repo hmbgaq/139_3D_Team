@@ -228,8 +228,6 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	m_pDataManager->Set_CurHP(m_fHp);
 
-
-
 	if (m_pGameInstance->Key_Down(DIK_T))
 	{
 		Teleport();
@@ -855,12 +853,14 @@ void CPlayer::KeyInput(_float fTimeDelta)
 	
 		if (m_bShowOption == true)
 		{
+			m_pGameInstance->Get_Renderer()->Set_DOF_Active(true);
 			m_pUIManager->Active_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::UI);
 		}
 		else
 		{
+			m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
 			m_pUIManager->NonActive_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
@@ -1001,11 +1001,9 @@ void CPlayer::KeyInput(_float fTimeDelta)
 HRESULT CPlayer::Ready_Components()
 {
 	/* 숨쉬는 이펙트 추가 */
-	//m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath02.json", this, TRUE, "lips_H_close_upnode");
-	m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
-
-
-
+	if(m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN) || m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAINBOSS) )
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Player/Breath/", "SY_Player_Breath04.json", this, true, "lips_H_close_upnode");
+	
 	return S_OK;
 }
 
@@ -1121,6 +1119,7 @@ void CPlayer::Update_SuperCharge(_float fTimeDelta)
 	if (fTime > 0.f) 
 	{
 		m_fSuperChargeTime = fTime;
+		Set_BodyRender(2); // SuperCharge Renderpass
 
 		// 슈퍼차지 상시 이펙트 생성
 		if (m_bFirst_SuperCharge)
@@ -1145,9 +1144,16 @@ void CPlayer::Update_SuperCharge(_float fTimeDelta)
 
 		if (false == m_bFirst_SuperCharge) // 슈퍼차지가 끝났으면 이펙트 반환하기
 		{
+			/* Bdoy 기본렌더링으로 반환 */
+			if (m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
+				Set_BodyRender(3);
+			else
+				Set_BodyRender(0);
+
 			EFFECT_MANAGER->Return_ToPool(m_pChargeEffect);
 			m_pChargeEffect = nullptr;
 			m_bFirst_SuperCharge = true;
+			m_bSuperCharge_State = false;
 		}
 			
 	}
@@ -2179,6 +2185,25 @@ void CPlayer::Update_Voice_Cooltime(_float fTimeDelta)
 	{
 		_float fResult = m_VoiceCooltime[i] - fTimeDelta;
 		m_VoiceCooltime[i] = fResult > 0.f ? fResult : 0.f;
+	}
+}
+
+void CPlayer::Set_BodyRender(_uint iOption)
+{
+	switch (iOption)
+	{
+	case 0:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_ORIGIN);
+		break;
+	case 1:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_HEAL);
+		break;
+	case 2:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_SUPERCHARGE);
+		break;
+	case 3:
+		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_SNOWMOUNTAIN);
+		break;
 	}
 }
 

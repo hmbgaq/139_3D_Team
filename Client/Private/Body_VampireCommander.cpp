@@ -193,10 +193,10 @@ HRESULT CBody_VampireCommander::Bind_ShaderResources()
 		m_vBloomPower = _float3(0.5f, 0.5f, 0.5f);
 		m_fRimPower = 5.f;
 
-		m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
-		m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
-		m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
-		m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+				m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_vCamPos, sizeof(_float4));
+				m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+				m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+				m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
 	}
 
 	return S_OK;

@@ -36,8 +36,12 @@ float   g_LineThick;            /* OutLine */
 float3  g_vBloomPower   = { 0.f, 0.f, 0.f };        /* Bloom */
 float4  g_vRimColor     = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
 float   g_fRimPower     = 5.f;                      /* RimLight */
+float4  g_fRimLightPos  = { 0.f, 0.f, 0.f, 0.f };
 
-matrix g_CascadeProj; /* Cascade */
+matrix  g_CascadeProj; /* Cascade */
+
+float   g_fTimeDelta;
+float4 g_vBlinkColor = { 0.f, 0.f, 0.f, 0.f };
 /*=============================================================
  
                              Function 
@@ -51,6 +55,7 @@ float4 Calculation_RimColor(float4 In_Normal, float4 In_Pos)
     float4 vRimColor = g_vRimColor * fRimPower;
     
     return vRimColor;
+    
 }
 
 float4 Calculation_Brightness(float4 Out_Diffuse)
@@ -127,6 +132,7 @@ struct PS_IN_OUTLINE
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
+
 
 struct PS_OUT
 {
@@ -205,6 +211,34 @@ VS_OUT_SHADOW VS_SHADOW_DEPTH(VS_IN In)
     return Out;
 }
 
+VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
+{
+    VS_OUT_OUTLINE Out = (VS_OUT_OUTLINE) 0;
+    
+    float fWeightW = 1.f - (In.vBlendWeights.x + In.vBlendWeights.y + In.vBlendWeights.z);
+    
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndices.x] * In.vBlendWeights.x +
+		                g_BoneMatrices[In.vBlendIndices.y] * In.vBlendWeights.y +
+		                g_BoneMatrices[In.vBlendIndices.z] * In.vBlendWeights.z +
+		                g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+    
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    float4 OutPos = vector(vPosition.xyz + vNormal.xyz * g_LineThick, 1);
+    Out.vPosition = mul(OutPos, matWVP);
+    //Out.vPosition.z -= 0.001f;
+    Out.vTexcoord = In.vTexcoord;
+	
+	
+    return Out;
+}
+
 VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
 {
     VS_OUT_SHADOW Out = (VS_OUT_SHADOW) 0;
@@ -227,6 +261,8 @@ VS_OUT_SHADOW VS_CASCADE_SHADOW(VS_IN In)
     
     return Out;
 }
+
+
 
 /* ------------------- Base Pixel Shader (0) -------------------*/
 
@@ -305,6 +341,9 @@ PS_OUT PS_BOSS(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
+    
     if (true == g_bORM_Available)
         Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
@@ -312,7 +351,7 @@ PS_OUT PS_BOSS(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     /* g_vBloomPower */
@@ -343,7 +382,7 @@ PS_OUT PS_MAIN_RIMBLOOM_A(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     Out.vRimBloom += g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
@@ -372,7 +411,7 @@ PS_OUT PS_MAIN_RIMBLOOM_B(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) ;
     
     
@@ -401,7 +440,7 @@ PS_OUT PS_MAIN_RIMBLOOM_C(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse);
     
@@ -429,7 +468,7 @@ PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
     /* ---------------- New ---------------- */
-    float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
     
@@ -438,7 +477,7 @@ PS_OUT PS_MAIN_RIMBLOOM_D(PS_IN In)
     return Out;
 }
 
-/* ------------------- Pixel Shader(8) -------------------*/
+/* ------------------- Pixel Shader(9) : HAIR  -------------------*/
 PS_OUT PS_MAIN_HAIR(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -462,6 +501,168 @@ PS_OUT PS_MAIN_HAIR(PS_IN In)
     if (true == g_bEmissive_Available)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
  
+    return Out;
+}
+
+/* ------------------- Pixel Shader(10) : OutLine -------------------*/
+PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    vector vColor = g_vLineColor;
+    Out.vColor = vColor;
+
+    return Out;
+}
+
+/* ------------------- Pixel Shader(11) : Player SnowMountain  -------------------*/
+PS_OUT PS_MAIN_PLAYER_STAGE2(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    /* Normal */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    /* 값 채우기 */ 
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
+    
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
+    vRimColor *= 0.75;
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = vector(0.f, 0.f, 0.f, 0.f);
+    //Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    return Out;
+}
+
+/* ------------------- Pixel Shader(12) : Player Skill - Heal -------------------*/
+PS_OUT PS_MAIN_HEAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    // 전체적으로 약간 붉은톤으로 변환
+    vMtrlDiffuse = vMtrlDiffuse * 0.5 * float4(1.f, 0.3f, 0.3f, 1.0f);
+    
+    /* Normal */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
+    
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    // 버텍스에서 바라보는 카메라의 방향  
+    //float Rim = dot(Out.vNormal, normalize((-1.f * (In_Pos - g_vCamPosition)))));
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = vector(0.f, 0.f, 0.f, 0.f);
+    //Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    
+    return Out;
+}
+
+
+/* ------------------- Pixel Shader(13) : Player Skill - SUPER CHARGE -------------------*/
+PS_OUT PS_MAIN_SUPERCHARGE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    /* Normal */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    // 파란톤
+    vMtrlDiffuse = vMtrlDiffuse * 0.5 * g_vRimColor;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
+    
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    // 버텍스에서 바라보는 카메라의 방향  
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    //Out.vRimBloom = Calculation_Brightness(float4(1.f, 1.f, 1.f, 1.f)) + vRimColor;
+    
+    
+    return Out;
+}
+
+/* ------------------- Pixel Shader(14) : Interact Chain - White Blink  -------------------*/
+PS_OUT PS_MAIN_CHAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.0f)
+        discard;
+    
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    /* Normal */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    
+    vector vColor;
+    vColor = lerp(vMtrlDiffuse, mul(vMtrlDiffuse, g_vBlinkColor), g_fTimeDelta);
+    
+    Out.vDiffuse = vColor;
+    
+    Out.vORM        = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vDepth      = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vEmissive   = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = vector(0.f, 0.f, 0.f, 0.f);
     return Out;
 }
 /*=============================================================
@@ -578,7 +779,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_RIMBLOOM_D();
     }
 
-    pass Hair
+    pass Hair // 9
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -589,4 +790,68 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_HAIR();
     }
+
+    pass OUTLINE // 10
+    {
+        //SetRasterizerState(RS_Cull_None);
+        //SetDepthStencilState(DSS_Default, 0);
+        //SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        SetRasterizerState(RS_Cull_CW);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
+    }
+
+    pass PLAYER_SNOWMOUNTAIN // 11
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PLAYER_STAGE2();
+    }
+
+    pass HEAL // 12
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_HEAL();
+    }
+
+    pass SUPER_CHARGE // 13
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SUPERCHARGE();
+    }
+
+    pass CHAIN_WHITEBLINK // 14
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_CHAIN();
+    }
+
 }
