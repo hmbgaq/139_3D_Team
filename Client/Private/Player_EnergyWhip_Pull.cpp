@@ -31,6 +31,10 @@ CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDe
 
 		Sound_Pull();
 		pActor->Play_Voice_Zapper_Dash();
+
+		// 당겨졌을 때 이펙트 생성
+		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_TeleportPunch.json", pActor, pActor->Calc_Front_Pos(_float3(0.f, 0.f, 1.2f)), true, pActor->Get_Position());	//pActor->Calc_Front_Pos() // 플레이어 앞 위치 계산
+
 		m_bFlags[0] = true;
 	}
 	else if (false == m_bFlags[1])
@@ -48,7 +52,6 @@ CState<CPlayer>* CPlayer_EnergyWhip_Pull::Update(CPlayer* pActor, _float fTimeDe
 
 		_float3 vFront = pActor->Calc_Front_Pos(_float3(0.f, 0.f, fDistance / 2.f));
 		pTarget->Dragged(fTimeDelta, vFront);
-
 	}
 
 	if (pActor->Is_Animation_End())

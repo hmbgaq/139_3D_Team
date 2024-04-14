@@ -65,10 +65,10 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 
 	//! 유정: 트레일
 	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_03.json");
-	m_pTrail->Set_Play(false);		// 시작은 끄기
+	m_pTrail->Set_Play(true);		// 시작은 끄기
 
 	m_pTrail_Post = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_Distortion_02.json");
-	m_pTrail_Post->Set_Play(false);		// 시작은 끄기
+	m_pTrail_Post->Set_Play(true);		// 시작은 끄기
 
 
 	return S_OK;

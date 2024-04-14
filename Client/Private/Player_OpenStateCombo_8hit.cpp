@@ -157,7 +157,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Hit(CPlayer* pActor, _uint iHitCou
 		{
 			// 전기 타격 이펙트 생성
 			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_L);
-			EFFECT_MANAGER->Play_Effect_StaticPivot("Hit/", "Hit_8hit.json", pActor, pWeapon->Get_WeaponWorldMatrix());
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_8hit.json", nullptr, pActor->Calc_Front_Pos(_float3(0.f, 0.f, 0.8f)), true, pActor->Get_Position());
 
 			pTarget->Hitted_Opened(Direction::Left);
 		}
@@ -165,7 +165,7 @@ CState<CPlayer>* CPlayer_OpenStateCombo_8hit::Hit(CPlayer* pActor, _uint iHitCou
 		{
 			// 전기 타격 이펙트 생성 
 			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_PUNCH_R);
-			EFFECT_MANAGER->Play_Effect_StaticPivot("Hit/", "Hit_8hit.json", pActor, pWeapon->Get_WeaponWorldMatrix());
+			EFFECT_MANAGER->Play_Effect("Hit/", "Hit_8hit.json", nullptr, pActor->Calc_Front_Pos(_float3(0.f, 0.f, 0.8f)), true, pActor->Get_Position());
 
 			pTarget->Hitted_Opened(Direction::Right);
 		}

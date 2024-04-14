@@ -452,28 +452,28 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 #pragma endregion Hit 이펙트 끝
 
 
-//#pragma region 보스1 이펙트 시작
-//	/* Boos 1 */
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json"));
-//
-//	/* BloodRange */
-//	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Start_01.json"));
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
-//
-//
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
-//
-//
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
-//
-//
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
-//
-//	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "MonsterSoundWaveVampire.json", 20));
-//#pragma endregion 보스1 이펙트 끝
-//
-//
+#pragma region 보스1 이펙트 시작
+	/* Boos 1 */
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_10.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json"));
+
+	/* BloodRange */
+	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Start_01.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "MonsterSoundWaveVampire.json", 20));
+#pragma endregion 보스1 이펙트 끝
+
+
 //#pragma region 보스2 이펙트 시작
 //	/* Boos 2 */
 //	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_Map_05.json", 2));
@@ -571,21 +571,18 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", 100));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_Down_04.json", 100));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_Up_04.json", 100));
-
-
 #pragma endregion 플레이어 이펙트 끝
+
 
 #pragma region 탱크 이펙트 시작
 	//rush
 	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Projectile2.json", 50));
-
 
 	//Projectile
 	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Rush.json", 50));
 
 	//제누거인
 	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Vampire_Zombie_GroundAttack.json", 100));
-
 
 #pragma endregion 탱크 이펙트 끝
 

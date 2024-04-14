@@ -44,9 +44,9 @@ public:
 private:
 	CActor<CVampireCommander>* m_pActor = { nullptr };
 
-public:
-	CEffect* m_pMapEffect = { nullptr }; // TEST
-	CEffect* m_pAuraEffect = { nullptr }; // TEST
+private:
+	CEffect* m_pAuraEffect = { nullptr }; 
+
 public://»À 13°³ 
 	vector<string> m_vRandomBones = {"LeftHandIK","RightHandIK" ,"Hips","Spine1","Head","Neck","RightShoulder","LeftElbowRoll","LeftShoulderRoll_01","Right_BigWing_03","Left_BigWing_03","LeftLeg","RightLeg"};
 public:
