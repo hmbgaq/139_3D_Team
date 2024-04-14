@@ -5,6 +5,9 @@ void CTank_GroundSlam_AoE_Stomp_01::Initialize(CTank* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	pActor->Play_Sound_Voice_Attack();
+	//pActor->Play_Sound_Attack_Melee();
 }
 
 CState<CTank>* CTank_GroundSlam_AoE_Stomp_01::Update(CTank* pActor, _float fTimeDelta)

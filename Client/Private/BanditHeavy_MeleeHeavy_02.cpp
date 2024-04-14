@@ -16,18 +16,30 @@ void CBanditHeavy_MeleeHeavy_02::Initialize(CBandit_Heavy* pActor)
 		;
 
 	pWeapon->Set_Enable_Collisions(false);
+
 }
 
 CState<CBandit_Heavy>* CBanditHeavy_MeleeHeavy_02::Update(CBandit_Heavy* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
-	if (false == m_bFlags[0])
+	if (false == m_bFlags[10])
+	{
+		m_bFlags[10] = pActor->Is_Inputable_Front(16);
+		if (true == m_bFlags[10])
+		{
+			pActor->Play_Sound_Effort();
+		}
+		
+	}
+
+	else if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(20);
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
+			pActor->Play_Sound_Whoosh();
 		}
 	}
 	else if (false == m_bFlags[1])

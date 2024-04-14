@@ -6,6 +6,8 @@ void CTank_GroundWaveNoShield_01::Initialize(CTank* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
+	pActor->Play_Sound_Voice_Attack();
+
 }
 
 CState<CTank>* CTank_GroundWaveNoShield_01::Update(CTank* pActor, _float fTimeDelta)

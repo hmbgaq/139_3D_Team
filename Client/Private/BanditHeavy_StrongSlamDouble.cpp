@@ -27,6 +27,7 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
+			pActor->Play_Sound_Whoosh();
 		}
 	}
 	else if (false == m_bFlags[1])
@@ -37,6 +38,14 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
 		}
 	}
+	else if (false == m_bFlags[10]) 
+	{
+		m_bFlags[10] = pActor->Is_Inputable_Front(48);
+		if (true == m_bFlags[10])
+		{
+			pActor->Play_Sound_Effort();
+		}
+	}
 	else if (false == m_bFlags[2])
 	{
 		pActor->Look_At_Target_Lerp(fTimeDelta);
@@ -45,6 +54,7 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 		if (true == m_bFlags[2])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
+			pActor->Play_Sound_Whoosh();
 		}
 	}
 	else if (false == m_bFlags[3])

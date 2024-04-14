@@ -33,6 +33,9 @@ public:
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
 public:
+	void Play_Sound_Attack();
+
+public:
 	void	Play_Trail(_bool bPlay);
 
 private:

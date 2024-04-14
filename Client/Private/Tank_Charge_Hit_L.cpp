@@ -15,6 +15,9 @@ void CTank_Charge_Hit_L::Initialize(CTank* pActor)
 		;
 
 	pWeapon->Set_Enable_Collisions(true);
+
+	pActor->Play_Sound_Voice_Attack();
+	pActor->Play_Sound_Attack_Shield();
 }
 
 CState<CTank>* CTank_Charge_Hit_L::Update(CTank* pActor, _float fTimeDelta)

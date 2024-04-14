@@ -8,6 +8,7 @@ void CTank_Charge_Fail_L::Initialize(CTank* pActor)
 
 	CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
 
+	pActor->Play_Sound_Hit();
 }
 
 CState<CTank>* CTank_Charge_Fail_L::Update(CTank* pActor, _float fTimeDelta)

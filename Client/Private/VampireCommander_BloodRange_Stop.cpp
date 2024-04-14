@@ -1,5 +1,6 @@
 #include "VampireCommander_BloodRange_Stop.h"
 #include "VampireCommander_Idle.h"
+#include "GameInstance.h"
 
 void CVampireCommander_BloodRange_Stop::Initialize(CVampireCommander* pActor)
 {
@@ -10,6 +11,13 @@ void CVampireCommander_BloodRange_Stop::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Stop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
+	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(55))
+	{
+		m_pGameInstance->Play_Sound(L"VAMPIRE_TAUNT", L"commander_lesser_vo_taunt005.wav", SOUND_ENEMY_VOICE, 7.f);
+		m_bFlags[0] = true;
+	}
+
+	
 	if (pActor->Is_Animation_End())
 	{
 		return new CVampireCommander_Idle();

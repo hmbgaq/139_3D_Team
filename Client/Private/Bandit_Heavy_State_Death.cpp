@@ -5,6 +5,8 @@ void CBandit_Heavy_State_Death::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
 	CData_Manager::GetInstance()->Add_CurEXP(BANDIT_HEAVY_EXP);
+
+	pActor->Play_Sound_Death();
 }
 
 CState<CBandit_Heavy>* CBandit_Heavy_State_Death::Update(CBandit_Heavy* pActor, _float fTimeDelta)

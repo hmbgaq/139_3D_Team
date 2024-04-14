@@ -11,6 +11,17 @@ CState<CBandit_Heavy>* CBandit_Heavy_State_Run::Update(CBandit_Heavy* pActor, _f
 
 	pActor->Look_At_Target();
 
+
+	m_fWalkDelay += fTimeDelta;
+
+	if (0.40f <= m_fWalkDelay)
+	{
+		pActor->Play_Sound_FootStep();
+		//pActor->Play_Sound_FootStep();
+
+		m_fWalkDelay = 0.f;
+	}
+
 	return nullptr;
 }
 

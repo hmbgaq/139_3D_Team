@@ -64,6 +64,8 @@ void CTNTCrate::Explode()
 	_float3 vSpawnPos = Get_Position();
 	pBullet->Set_Position(vSpawnPos);
 	Set_Dead(true);
+	m_pGameInstance->Play_Sound(L"EFFECT", L"Grenade_Explosion_WithFire_03.wav", SOUND_SUBEFFECT2, 10.f);
+	
 }
 
 void CTNTCrate::OnCollision(CCollider* other)
