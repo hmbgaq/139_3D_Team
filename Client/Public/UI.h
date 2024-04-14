@@ -256,7 +256,12 @@ public: /* ============================== Get / Set ============================
 	UI_KIND			Get_Kind() { return m_eKind; }
 
 	// =>Active
-	void			Set_Active(_bool bActive) { m_bActive = bActive; }
+	void			Set_Active(_bool bActive)
+	{ 
+		m_bActive = bActive;
+
+		Set_ResetSound();
+	}
 	_bool			Get_Active() { return m_bActive; }
 
 	_int			Get_AnimCurrentIndex() { return iFrameIndex; }
@@ -344,9 +349,19 @@ public:
 	void			ResetTime();
 	_bool			Get_LifeTimeUI() { return m_bLifeTimeUI; }
 
+	void			Set_ResetSound() 
+	{
+		m_bSoundOk = false;
+		m_bSoundOk2 = false;
+		m_bSoundOk3 = false;
+	}
+
 protected:
 	_bool			m_bLifeTimeUI = false;
 	_float			m_fActive_Distance = 35.f;
+	_bool			m_bSoundOk = false;
+	_bool			m_bSoundOk2 = false;
+	_bool			m_bSoundOk3 = false;
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
@@ -418,7 +433,11 @@ public: /* =========================== Animation ============================== 
 	_int			m_iTextureNum = 0;
 	_int			m_iLoopAnimIndex = 0;
 
-	void			Set_AnimPlay(_bool bPlay) { m_bPlayAnim = bPlay; }
+	void			Set_AnimPlay(_bool bPlay) 
+	{
+		m_bPlayAnim = bPlay;
+		m_fCurrTime = 0.f;
+	}
 	_bool			Get_AnimPlay() { return m_bPlayAnim; }
 	_bool			m_bPlayAnim = false;
 

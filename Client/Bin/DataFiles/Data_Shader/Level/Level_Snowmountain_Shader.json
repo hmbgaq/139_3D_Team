@@ -10,7 +10,7 @@
   },
   "Deferred": {
     "bRimBloom_Blur_Active": true,
-    "bShadow_Active": true
+    "bShadow_Active": false
   },
   "Fog": {
     "bFog_Active": true,

@@ -987,6 +987,8 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 			//EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_05.json", nullptr, pActor->Get_Position());
 			EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_06.json", pActor, false);
 			pActor->Play_Sound_SuperCharge_Enter();
+			// !성희 왔다감 : 슈퍼차지 UI 켜기
+			pActor->Activate_SuperChargeUI();
 		}
 
 

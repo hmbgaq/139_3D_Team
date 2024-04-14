@@ -43,6 +43,10 @@
 #include "Effect_Instance.h"
 #pragma endregion
 
+#include "Data_Manager.h"
+#include "MasterCamera.h"
+#include "SpringCamera.h"
+#include "Light.h"
 
 
 
@@ -74,10 +78,10 @@ HRESULT CLevel_IntroBoss::Initialize()
 void CLevel_IntroBoss::Tick(_float fTimeDelta)
 {
 
-	if (m_pGameInstance->Key_Down(DIK_GRAVE))
-	{
-		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
-	}
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	//{
+	//	m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
+	//}
 
 }
 
@@ -282,6 +286,13 @@ HRESULT CLevel_IntroBoss::Ready_Layer_Player(const wstring& strLayerTag, void* p
 
 HRESULT CLevel_IntroBoss::Ready_Effect()
 {
+
+    _float3 vPos = { 60.f, 0.f, 54.f };
+    m_pMapEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/", "Map_Blood_10.json", nullptr, vPos);
+
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
+    //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
     m_pEffect = EFFECT_MANAGER->Play_Effect("Fog/", "SY_IntroBoss_01.json", nullptr, _float3(0.f, 0.f, 0.f));
 
     return S_OK;
@@ -498,7 +509,8 @@ HRESULT CLevel_IntroBoss::Ready_LandObjects()
     LandObjectDesc.pTerrainTransform = dynamic_cast<CTransform*>(m_pGameInstance->Get_Component(LEVEL_INTRO_BOSS, TEXT("Layer_BackGround"), TEXT("Com_Transform")));
 
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player"), &LandObjectDesc));
-    //FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster"), &LandObjectDesc));
+
 
     return S_OK;
 }
@@ -1094,5 +1106,20 @@ CLevel_IntroBoss* CLevel_IntroBoss::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 void CLevel_IntroBoss::Free()
 {
     __super::Free();
+
+
+    if (nullptr != m_pMapEffect)
+    {
+        m_pMapEffect->End_Effect_ForPool();
+        Safe_Release(m_pMapEffect);
+        //m_pMapEffect = nullptr;
+    }	
+
+    if (nullptr != m_pEffect)
+    {
+        m_pEffect->End_Effect_ForPool();
+        Safe_Release(m_pEffect);
+        //m_pEffect = nullptr;
+    }
 
 }

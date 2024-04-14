@@ -62,7 +62,29 @@ void CUI_LevelUp_SunBeacon::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
+		if (m_bPlayAnim == true)
+		{
+			if (iFrameIndex == 0 && m_bSoundOk == false)
+			{
+				wstring strFileName = L"";
+				strFileName = L"ui_level_up001.wav";
 
+				m_pGameInstance->Play_Sound(L"UI_LevelUP", strFileName, CHANNELID::SOUND_UI_LEVELUP, 10.f);
+
+				m_bSoundOk = true;
+			}
+			if (iFrameIndex == 3 && m_bSoundOk2 == false)
+			{
+				wstring strFileName = L"";
+				strFileName = L"Player_Level_Up_v2.wav";
+
+				//m_pGameInstance->Stop_Sound(CHANNELID::SOUND_UI_LEVELUP);
+				m_pGameInstance->Play_Sound(L"UI_LevelUP", strFileName, CHANNELID::SOUND_UI_LEVELUP, 10.f);
+
+				m_bSoundOk2 = true;
+			}
+
+		}
 	}
 }
 

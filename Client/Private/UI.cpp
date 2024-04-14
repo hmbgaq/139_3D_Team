@@ -586,6 +586,12 @@ void CUI::LifeOff(_float fTimeDelta)
 		{
 			m_bActive = Alpha_Plus(fTimeDelta); // 안보이게 알파가 지워지게 해준다.
 
+			if (m_tUIInfo.strUIName == "Backgound" ||
+				m_tUIInfo.strUIName == "Lightning" ||
+				m_tUIInfo.strUIName == "Fog")
+			{
+				m_bActive = false;
+			}
 			//m_fTime = GetTickCount64();
 		}
 	}
@@ -1025,7 +1031,14 @@ void CUI::TutorialBox(_float fTimeDelta)
 	}
 	else                                                     
 	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
-		LifeOff(fTimeDelta);
+			/* LifeTime이 있는 UI일 경우 */
+		if (m_bLifeTimeUI == true)
+		{
+			if (m_fTime + m_fLifeTime < GetTickCount64())
+			{
+				m_bActive = false;
+			}
+		}
 	}
 }
 

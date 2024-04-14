@@ -58,7 +58,27 @@ void CUI_TutorialBox::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
+		if (iFrameIndex == 0 && m_bSoundOk == false)
+		{
+			wstring strFileName = L"";
+			strFileName = L"tutorial_hint_start.wav";
 
+			m_pGameInstance->Play_Sound(L"UI_TutorialBox", strFileName, CHANNELID::SOUND_UI_TUTORIALBOX, 10.f);
+
+			m_bSoundOk = true;
+		}
+	}
+	else
+	{
+		if (m_bSoundOk2 == false)
+		{
+			wstring strFileName = L"";
+			strFileName = L"tutorial_hint_stop.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_TutorialBox", strFileName, CHANNELID::SOUND_UI_TUTORIALBOX, 10.f);
+
+			m_bSoundOk2 = true;
+		}
 	}
 }
 
@@ -159,6 +179,9 @@ HRESULT CUI_TutorialBox::Bind_ShaderResources()
 
 	if (FAILED(m_pTextureCom[TEXTBOX]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 		return E_FAIL;
+
+	if (m_iTextNum > m_iMaxTextNum)
+		m_iTextNum = m_iMaxTextNum;
 
 	if (FAILED(m_pTextureCom[TUTORIALTEXT]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Front", m_iTextNum)))
 		return E_FAIL;

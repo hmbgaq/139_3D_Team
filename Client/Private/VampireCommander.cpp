@@ -79,8 +79,7 @@ HRESULT CVampireCommander::Initialize(void* pArg)
 
 	m_vWeaknessPos_Local = _float3(0.f, 2.f, 0.f);
 
-	 
-	m_pMapEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Map_Blood/", "Map_Blood_09.json", nullptr, m_pTransformCom->Get_Position());
+	
 
 	if (nullptr == m_pTarget)
 	{
@@ -110,13 +109,9 @@ void CVampireCommander::Tick(_float fTimeDelta)
 
 	if (m_bAuraDead == false && m_fHp <= 0.f)
 	{
-		EFFECT_MANAGER->Return_ToPool(m_pAuraEffect);
 		m_pAuraEffect->Set_Object_Owner(nullptr);
+		EFFECT_MANAGER->Return_ToPool(m_pAuraEffect);
 		m_pAuraEffect = nullptr;
-
-		EFFECT_MANAGER->Return_ToPool(m_pMapEffect);
-		m_pMapEffect->Set_Object_Owner(nullptr);
-		m_pMapEffect = nullptr;
 		
 		m_bAuraDead = true;
 	}
@@ -311,9 +306,4 @@ void CVampireCommander::Free()
 		Safe_Delete(m_pActor);
 	}
 
-	//if(nullptr != m_pMapEffect)
-	//	Safe_Release(m_pMapEffect);
-	//Safe_Release(m_pAuraEffect);
-
-	
 }

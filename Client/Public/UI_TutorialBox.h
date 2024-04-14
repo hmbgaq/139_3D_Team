@@ -50,7 +50,7 @@ private:
 	void					Compute_OwnerCamDistance();
 	_bool					In_Frustum();
 	_int					m_iTextNum = 0;
-	_int					m_iMaxTextNum = (_int)TUTORIAL_TEXT::TUTORIALTEXT_END;
+	_int					m_iMaxTextNum = (_int)7; /*(_int)TUTORIAL_TEXT::TUTORIALTEXT_END;*/
 
 public:
 	virtual json			Save_Desc(json& out_json);

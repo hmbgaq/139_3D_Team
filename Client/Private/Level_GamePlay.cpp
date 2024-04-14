@@ -65,10 +65,10 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_GRAVE))
-	{
-		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
-	}
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	//{
+	//	m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_INTRO_BOSS));
+	//}
 
 }
 

@@ -189,6 +189,15 @@ void CPlayer::Tick(_float fTimeDelta)
 		//EFFECT_MANAGER->Play_Effect("Player/TeleportPunch/", "TeleportPunch_01.json", this, true, "Head");
 		m_bfirstcheck = false;
 	}
+
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	//{
+	//	_float3 vPos = Get_Position();
+	//	EFFECT_MANAGER->Play_Effect("Hit/", "Hit_8hit.json", nullptr, Calc_Front_Pos(_float3(0.f, 0.f, 1.f)), true, Get_Position());
+
+	//	// 텔레포트 펀치 피격 이펙트 생성
+	//	//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_TeleportPunch.json", this, Calc_Front_Pos(_float3(0.f, 0.f, 1.2f)), true, Get_Position());	//pActor->Calc_Front_Pos() // 플레이어 앞 위치 계산
+	//}
 	//! 유정 테스트 공간 끝
 
 	if (m_pGameInstance->Key_Down(DIK_NUMPAD7))
@@ -231,7 +240,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	//}
 
 
-	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) || (false == Is_Splitted()));
+	_bool bIsNotIdle = (m_pBody->Get_CurrentAnimIndex() != ECast(Player_State::Player_IdleLoop) || (true == Is_Splitted()));
 	
 	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		m_pDataManager->Set_ShowInterface(bIsNotIdle);
@@ -818,6 +827,11 @@ void CPlayer::Set_DiedScreen(_bool _bShowDiedScreen)
 
 	if (m_bShowDiedScreen == true)
 	{
+		wstring strFileName = L"";
+		strFileName = L"HM_UI_YouDiedScreen_Continue.wav";
+
+		m_pGameInstance->Play_Sound(L"UI_MouseOver", strFileName, CHANNELID::SOUND_UI_MOUSEOVER, 10.f);
+
 		m_pUIManager->Active_DiedScreen();
 		m_pDataManager->Set_GameState(GAME_STATE::UI);
 	}
@@ -869,6 +883,36 @@ void CPlayer::KeyInput(_float fTimeDelta)
 
 		if (m_bShowSkillWindow == true)
 		{
+			/* Sound */
+			wstring strFileName = L"";
+			strFileName = L"Player_Rage_On_01.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWON, 13.f);
+
+			/* voice */
+			_uint iRand = SMath::Random(0, 3);
+			switch (iRand)
+			{
+			case 0:
+				strFileName = L"oneliner_dynamite_jesse_1.wav";
+				break;
+			case 1:
+				strFileName = L"oneliner_healingkit_jesse_1.wav";
+				break;
+			case 2:
+				strFileName = L"oneliner_zapperdash_jesse_2_ALT01.wav";
+				break;
+			default:
+				strFileName = L"oneliner_zapperblock_jesse_1_ALT01.wav";
+				break;
+			}
+			m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_PLAYER_VOICE, 10.f);
+
+			//oneliner_dynamite_jesse_1
+			//oneliner_healingkit_jesse_1
+			//oneliner_zapperdash_jesse_2_ALT01
+			//oneliner_zapperblock_jesse_1_ALT01
+
 			m_pUIManager->Active_SkillWindowBackground();
 			m_pUIManager->NonActive_PlayerHUD(); // PlayerHUD Off
 			m_pUIManager->NonActive_MouseCursor(); // MouseCursor Off
@@ -877,6 +921,11 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 		else
 		{
+			wstring strFileName = L"";
+			strFileName = L"Player_Rage_Full.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWON, 13.f);
+
 			m_pUIManager->NonActive_SkillWindowAll();
 			m_pUIManager->Active_Crosshair(true); // Crosshair On
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);
@@ -1088,6 +1137,7 @@ void CPlayer::Update_SuperCharge(_float fTimeDelta)
 	}
 	else
 	{
+		m_pUIManager->NonActive_SuperChargeMod(); // !성희 : 슈퍼차지 모드 UI 끄기
 		m_fSuperChargeTime = 0.f;
 
 		m_fEffectTimeAcc = 0.f;
@@ -1166,6 +1216,12 @@ void CPlayer::Play_Sound_SuperCharge_Exit()
 		break;
 	}
 	m_pGameInstance->Play_Sound(L"SUPER_CHARGE", strFileName, CHANNELID::SOUND_SUPER_CHARGE, 10.f);
+}
+
+// !성희 : 슈퍼차지 모드 UI ON
+void CPlayer::Activate_SuperChargeUI()
+{
+	m_pUIManager->Active_SuperChargeMod();
 }
 
 void CPlayer::Search_LockOn_Target()

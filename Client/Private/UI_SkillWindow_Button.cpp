@@ -129,8 +129,28 @@ void CUI_SkillWindow_Button::Check_Picking(_float fTimeDelta)
 {
 	if (m_bPick == true)
 	{
+		if (m_bSoundOk == false)
+		{
+			wstring strFileName = L"";
+			strFileName = L"menu_options_highlight.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_MouseOver", strFileName, CHANNELID::SOUND_UI_MOUSEOVER, 10.f);
+
+			m_bSoundOk = true;
+		}
+
 		if (g_UIMouseDownLB == true)
 		{
+			if (m_bSoundOk2 == false)
+			{
+				wstring strFileName = L"";
+				strFileName = L"HM_UI_Unlock_Upgrade_1s_01.wav";
+
+				m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_MOUSECLICK, 10.f);
+
+				m_bSoundOk2 = true;
+			}
+
 			if (m_tUIInfo.strProtoTag == "WeaponButton" ||
 				m_tUIInfo.strProtoTag == "WeaponButtonActive")
 			{
@@ -162,6 +182,11 @@ void CUI_SkillWindow_Button::Check_Picking(_float fTimeDelta)
 				m_pUIManager->Weapon_NotPicking();
 			}
 		}
+	}
+	else
+	{
+		m_bSoundOk = false;
+		m_bSoundOk2 = false;
 	}
 }
 

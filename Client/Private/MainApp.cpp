@@ -97,15 +97,15 @@ HRESULT CMainApp::Render()
 //#ifdef _DEBUG
     ++m_iNumRender;
     
-    	if (1.f <= m_fTimeAcc)
-    	{
-    		wsprintf(m_szFPS, TEXT("FPS:%d"), m_iNumRender);
-    		m_iNumRender = 0;
-    		m_fTimeAcc = 0.f;
-    	}
+    	//if (1.f <= m_fTimeAcc)
+    	//{
+    	//	wsprintf(m_szFPS, TEXT("FPS:%d"), m_iNumRender);
+    	//	m_iNumRender = 0;
+    	//	m_fTimeAcc = 0.f;
+    	//}
     	
     	// MakeSpriteFont "³Ø½¼lv1°íµñ Bold" /FontSize:30 /FastPack /CharacterRegion:0x0020-0x00FF /CharacterRegion:0x3131-0x3163 /CharacterRegion:0xAC00-0xD800 /DefaultCharacter:0xAC00 140.spritefont
-    	m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(600.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+    	//m_pGameInstance->Render_Font(TEXT("Font_Default"), m_szFPS, _float2(600.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 //#endif // _DEBUG
 	m_pGameInstance->Present();
 
@@ -190,22 +190,22 @@ HRESULT CMainApp::Ready_UITexture()
 	
 	/* NonActive Option */
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HDR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_HDR.dds"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_DOF"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_DOF.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_DOF"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/Screen_Effect.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_FOG"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_FOG.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_FXAA"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_FXAA.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HBAO"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_HBAO.dds"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HSV"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_HSV.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_HSV"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/Luma_Sharpen.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_PBR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_PBR.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_RADIAL"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_RADIAL.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_SSR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_SSR.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_tab_SHADOW"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_tab_SHADOW.dds"))));
-	
+
 	/* Active Option */
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_DOF"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_DOF.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_DOF"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/Screen_Effect_Active.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_FOG"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_FOG.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_HDR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_HDR.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_HBAO"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_HBAO.dds"))));
-	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_HSV"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_HSV.dds"))));
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_HSV"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/Luma_Sharpen_Active.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_SHADOW"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_SHADOW.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_RADIAL"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_RADIAL.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("ui_element_list_navigation_SSR"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/Option/ui_element_list_navigation_SSR.dds"))));
@@ -260,6 +260,12 @@ HRESULT CMainApp::Ready_UITexture()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shotgun_Skill1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Shotgun_Skill1.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rifle_Skill1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Rifle_Skill1.dds"))));
 	
+	// SkillWindow Text
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Button_Message"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/Button_Message (%d).dds"), 3)));
+	
+	// LevelUp Message
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LevelUpMessage"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD/LevelUpMessage.dds"))));
+
 	return S_OK;
 }
 

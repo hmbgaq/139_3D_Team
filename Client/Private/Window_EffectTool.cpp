@@ -4376,7 +4376,7 @@ void CWindow_EffectTool::Update_TrailTab(_float fTimeDelta)
 				m_pTrailBufferDesc->vPos_1.z = m_vPos_1[2];
 			}
 
-			if (ImGui::DragInt("iMaxCnt_Trail", &m_iMaxCnt_Trail, 1, 2.f, 100.f))
+			if (ImGui::DragInt("iMaxCnt_Trail", &m_iMaxCnt_Trail, 1, 2, 100))
 			{
 				m_pTrailBufferDesc->iMaxCnt = m_iMaxCnt_Trail;
 			}
@@ -6107,7 +6107,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 
 
-			if (ImGui::Button(" Attach Head"))
+			if (ImGui::Button(" Attach Head "))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
 				{
@@ -6135,6 +6135,24 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 					Attach_Tool("Hips");
 				}
 			}
+
+
+			if (ImGui::Button(" Attach Hand_L"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
+				{
+					Attach_Tool("LeftHandIK");
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button(" Attach Hand_R"))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
+				{
+					Attach_Tool("RightHandIK");
+				}
+			}
+
 
 			if (ImGui::Button(" Detach Bone "))
 			{

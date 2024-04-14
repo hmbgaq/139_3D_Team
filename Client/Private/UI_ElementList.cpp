@@ -128,20 +128,22 @@ void CUI_ElementList::Check_Picking(_float fTimeDelta)
 			m_bFOG_Active = !m_bFOG_Active;
 			m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_bFOG_Active);
 		}
-		else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
+		else if (m_tUIInfo.strUIName == "SCREEN_EFFECT")
 		{
-			m_bRadial_Blur_Active = !m_bRadial_Blur_Active;
-			m_pGameInstance->Get_Renderer()->Set_Radial_Blur_Active(m_bRadial_Blur_Active);
+			m_bScreen_Active = !m_bScreen_Active;
+			m_pGameInstance->Get_Renderer()->Set_Sephia_Active(m_bScreen_Active);	// 세피아 효과 
+			m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bScreen_Active);		// 명도 채도 관리 
+			m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bScreen_Active);		// 안티앨리어싱 
 		}
-		else if (m_tUIInfo.strUIName == "DOF")
+		else if (m_tUIInfo.strUIName == "LUMA_SHARPEN")
 		{
-			m_bDof_Active = !m_bDof_Active;
-			m_pGameInstance->Get_Renderer()->Set_DOF_Active(m_bDof_Active);
+			m_bLuma_Active = !m_bLuma_Active;
+			m_pGameInstance->Get_Renderer()->Set_DOF_Active(m_bLuma_Active);
 		}
-		else if (m_tUIInfo.strUIName == "HDR")
+		else if (m_tUIInfo.strUIName == "FXAA")
 		{
-			m_bHDR_Active = !m_bHDR_Active;
-			m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bHDR_Active);
+			m_bFXAA_Active = !m_bFXAA_Active;
+			m_pGameInstance->Get_Renderer()->Set_FXAA_Active(m_bFXAA_Active);
 		}
 		else if (m_tUIInfo.strUIName == "SHADOW")
 		{
