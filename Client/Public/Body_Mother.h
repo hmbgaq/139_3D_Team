@@ -34,6 +34,7 @@ public:
 
 public:
 	void SetUp_Animation(_uint iAnimIndex);
+	void Set_Dissolve(_bool bOption) { m_bDissolve = bOption; }
 
 public: /* For. RenderState */
 	void	Set_RenderState(RENDER_STATE _state) { m_eRender_State = _state; }
@@ -48,7 +49,7 @@ private:
 	_float3				m_vBloomPower = {};
 
 private:
-	CTexture* m_pDissolveTexture = { nullptr };
+	CTexture*	m_pDissolveTexture = { nullptr };
 	_bool		m_bDissolve = { false };
 	_bool		m_bOutLine = { false };
 
