@@ -30,6 +30,9 @@ HRESULT CBody_Infected_C::Initialize(void* pArg)
 
 HRESULT CBody_Infected_C::OptionSetting()
 {
+	/* For. Texture */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_Dissolve"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pDissolveTexture)));
+
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 6 }; // ÇÇ¶± 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 0, 1, 10 }; // ¹«±â 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 2, 3, 5, }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 

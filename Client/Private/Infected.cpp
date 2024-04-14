@@ -373,43 +373,7 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
-
-	wstring strSoundKey = L"";
-
-	_int iRandomSound = m_pGameInstance->Random_Int(1, 8);
-	switch (iRandomSound)
-	{
-	case 1:
-		strSoundKey = L"death_1_turned01.wav";
-		break;
-	case 2:
-		strSoundKey = L"death_2_turned01.wav";
-		break;
-	case 3:
-		strSoundKey = L"death_3_turned01.wav";
-		break;
-	case 4:
-		strSoundKey = L"death_4_turned01.wav";
-		break;
-	case 5:
-		strSoundKey = L"death_5_turned01.wav";
-		break;
-
-	case 6:
-		strSoundKey = L"death_6_turned01.wav";
-		break;
-
-	case 7:
-		strSoundKey = L"death_7_turned01.wav";
-		break;
-
-	case 8:
-		strSoundKey = L"death_8_turned01.wav";
-		break;
-	}
-
-	m_pGameInstance->Play_Sound(L"INFECTED_DEATH", strSoundKey, SOUND_ENEMY_DEAD, 3.f);
-
+	dynamic_cast<CBody_Infected*>(m_pBody)->Set_Dissolve(true);
 	//if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
 	//{
 	//	

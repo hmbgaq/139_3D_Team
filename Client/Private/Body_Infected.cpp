@@ -24,6 +24,13 @@ HRESULT CBody_Infected::Initialize(void* pArg)
 {
 	FAILED_CHECK(__super::Initialize(pArg));
 
+	/* Dissolve */
+	m_bDissolve = false;
+	m_fDissolveWeight = 0.f;
+	m_fDissolve_feather = 0.1f;
+	m_vDissolve_Color = { 1.f, 0.f, 0.f };
+	m_fDissolve_Discard = 0.2f;
+
 	return S_OK;
 }
 
@@ -35,6 +42,14 @@ void CBody_Infected::Priority_Tick(_float fTimeDelta)
 void CBody_Infected::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
+
+	if (m_bDissolve)
+	{
+		if (m_fDissolveWeight <= 3.f)
+			m_fDissolveWeight += fTimeDelta * 0.5f;
+		else
+			m_bDissolve = false;
+	}
 }
 
 void CBody_Infected::Late_Tick(_float fTimeDelta)
@@ -81,16 +96,29 @@ HRESULT CBody_Infected::Render()
 			}
 			else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
 			{
-				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 				
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
-				
-				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+	
+				if (m_bDissolve)
+				{
+					m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+					m_pShaderCom->Bind_RawValue("g_Dissolve_Weight", &m_fDissolveWeight, sizeof(_float));
+					m_pShaderCom->Bind_RawValue("g_Dissolve_feather", &m_fDissolve_feather, sizeof(_float));
+					m_pShaderCom->Bind_RawValue("g_Dissolve_Color", &m_vDissolve_Color, sizeof(_float));
+					m_pShaderCom->Bind_RawValue("g_Dissolve_ColorRange", &m_fDissolve_Discard, sizeof(_float));
+
+					m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_DISSOLVE));
+				}
+				else
+					m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+
 				m_pModelCom->Render((_uint)i);
 			}
 		}
+		
 	}
 
 	return S_OK;

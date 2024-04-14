@@ -119,8 +119,8 @@ HRESULT CUI_LevelFont::Render()
 			m_fScale = 0.6f;
 			_float fX = 0.f;
 			_float fY = 0.f;
-			m_fX = 6.14;
-			m_fY = 18.7;
+			m_fX = 6.14f;
+			m_fY = 18.7f;
 			fX = (m_pTransformCom->Get_Position().x + (_float)g_iWinSizeX * 0.5f) - m_fX;
 			fY = (-m_pTransformCom->Get_Position().y + (_float)g_iWinSizeY * 0.5f) - m_fY;
 

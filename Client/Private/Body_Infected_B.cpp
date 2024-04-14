@@ -66,6 +66,9 @@ HRESULT CBody_Infected_B::Render_CSM(_uint i)
 
 HRESULT CBody_Infected_B::OptionSetting()
 {
+	/* For. Texture */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_Dissolve"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pDissolveTexture)));
+
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 9, 10, 11, 12, 13, 14, 15 }; // ÇÇ¶± 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::ATTACK] = { 4 }; // ¹«±â 
 	m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 0, 1, 2, 5, 7 }; // °Ñ°¡Á× + ÀÇ»ó + ¹«±â + ±âÅ¸ 

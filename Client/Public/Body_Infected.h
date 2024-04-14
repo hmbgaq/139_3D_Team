@@ -31,7 +31,7 @@ public: /* For. RenderState */
 	void	Set_RenderState(RENDER_STATE _state) { m_eRender_State = _state; }
 	HRESULT Set_StateHit();
 	HRESULT Set_StateDead();
-
+	void Set_Dissolve(_bool bDissolve) { m_bDissolve = bDissolve; }
 
 protected:
 	HRESULT Ready_Components();
@@ -46,6 +46,16 @@ protected:
 	_float				m_fRimPower		= {};
 	_float4				m_vRimColor		= {};
 	_float3				m_vBloomPower	= {};
+
+	CTexture*			m_pDissolveTexture = { nullptr };
+	_bool				m_bDissolve = { false };
+
+	/* Dissolve */
+	_float				m_fDissolveWeight = 0.f;
+	_float				m_fDissolve_feather = 0.f;
+	_float3				m_vDissolve_Color = { 0.f, 0.f, 0.f };
+	_float				m_fDissolve_Discard = 0.f;
+	_float				m_fTimeAcc = 0.f;
 
 public:
 	virtual CGameObject*	Clone(void* pArg) PURE;
