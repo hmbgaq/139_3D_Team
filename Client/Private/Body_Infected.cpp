@@ -29,7 +29,7 @@ HRESULT CBody_Infected::Initialize(void* pArg)
 	m_fDissolveWeight = 0.f;
 	m_fDissolve_feather = 0.1f;
 	m_vDissolve_Color = { 1.f, 0.f, 0.f };
-	m_fDissolve_Discard = 0.2f;
+	m_fDissolve_Discard = 0.5f;
 
 	return S_OK;
 }

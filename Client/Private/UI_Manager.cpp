@@ -710,13 +710,13 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.strUIName == "Lightning")
 		{
 			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_LifeTime(1500.f);					// UI LifeTime
 			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 		}
 		else
 		{
 			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_LifeTime(1500.f);					// UI LifeTime
 			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 		}
 
@@ -929,7 +929,7 @@ HRESULT CUI_Manager::Add_LeftSkill(_uint iLevelIndex, const wstring& strLayerTag
 			return E_FAIL;
 
 		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+		pUI_Object->Set_LifeTime(1500.f);					// UI LifeTime
 		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 
 		m_vecLeftSkill.push_back(pUI_Object);

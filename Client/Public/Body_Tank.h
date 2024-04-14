@@ -35,6 +35,20 @@ protected:
 	HRESULT Bind_ShaderResources();
 	virtual void Check_Frustum() override;
 
+	/* Dissolve*/
+public:
+	void Set_Dissolve(_bool bDissolve) { m_bDissolve = bDissolve; }
+
+private:
+	CTexture*				m_pDissolveTexture = { nullptr };
+	_bool					m_bDissolve = { false };
+
+	_float				m_fDissolveWeight = 0.f;
+	_float				m_fDissolve_feather = 0.f;
+	_float3				m_vDissolve_Color = { 0.f, 0.f, 0.f };
+	_float				m_fDissolve_Discard = 0.f;
+	_float				m_fTimeAcc = 0.f;
+
 public:
 	static CBody_Tank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

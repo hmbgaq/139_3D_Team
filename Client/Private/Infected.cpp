@@ -5,6 +5,8 @@
 #include "Infected_Idle.h"
 #include "Infected_SpawnGround.h"
 #include "Data_Manager.h"
+#include "Effect.h"
+#include "Effect_Manager.h"
 
 //#include "Infected_HitLight_F_01_NEW.h"
 //#include "Infected_HitLight_FL_01_NEW.h"
@@ -84,6 +86,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	{
 		m_pActor = new CActor<CInfected>(this);
 		m_pActor->Set_State(new CInfected_SpawnCrawl_01());
+
 	}
 
 	/* Target ¼³Á¤ */
@@ -374,15 +377,10 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 void CInfected::Hitted_Dead(Power ePower)
 {
 	dynamic_cast<CBody_Infected*>(m_pBody)->Set_Dissolve(true);
-	//if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
-	//{
-	//	
-	//	m_pActor->Set_State(new CInfected_Electrocute_Loop());
-	//}
-	//else
-	{
-		m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
-	}
+	
+	EFFECT_MANAGER->Play_Effect("Hit/", "Dead_Monster_01.json", nullptr, Get_Position());
+	
+	m_pActor->Set_State(new CInfected_DeathHeavy_F_01_NEW());
 }
 
 void CInfected::Hitted_Electrocute()
@@ -556,5 +554,6 @@ void CInfected::Free()
 	{
 		Safe_Delete(m_pActor);
 	}
+
 
 }

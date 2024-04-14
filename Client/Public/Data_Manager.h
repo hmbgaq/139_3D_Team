@@ -140,8 +140,8 @@ private: /* _float */
 	_float	m_fMaxEnergyGuige = 100.f;
 	_float	m_fCurEnergyGuige = 0.f;
 
-	_int	m_iMoney = 50000.f;
-	_int	m_iSkillPoint = 99;
+	_int	m_iMoney = 2000.f;
+	_int	m_iSkillPoint = 4;
 
 	GAME_STATE m_eGame_State = GAME_STATE::GAMEPLAY;
 

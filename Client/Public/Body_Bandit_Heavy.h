@@ -30,14 +30,22 @@ public:
 	virtual void	OnCollisionStay(CCollider* other)	override;
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
+	void 			Set_Dissolve(_bool bOption) {m_bDissolve = bOption; }
 
+private:
+	_bool m_bDissolve = { false };
+
+	CTexture*			m_pDissolveTexture = { nullptr };
+
+	_float				m_fDissolveWeight = 0.f;
+	_float				m_fDissolve_feather = 0.f;
+	_float3				m_vDissolve_Color = { 0.f, 0.f, 0.f };
+	_float				m_fDissolve_Discard = 0.f;
+	_float				m_fTimeAcc = 0.f;
 
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
-
-
 
 public:
 	/* 원형객체를 생성한다. */
