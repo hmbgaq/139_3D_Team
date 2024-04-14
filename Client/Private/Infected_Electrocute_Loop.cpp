@@ -39,7 +39,6 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 
 			if (false == m_bFlags[0])
 			{
-
 				if (m_pEffect != nullptr)	// ÀÌÆåÆ® ÇØÁ¦
 				{
 					EFFECT_MANAGER->Return_ToPool(m_pEffect);

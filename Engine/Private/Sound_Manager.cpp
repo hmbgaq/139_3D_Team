@@ -128,6 +128,16 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"SON_HIT", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Hit/");
 	Load_SoundFile_GroupAsync(L"SON_DEAD", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Dead/");
 	Load_SoundFile_GroupAsync(L"SON_BODYFALL", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/BodyFall/");
+
+	Load_SoundFile_GroupAsync(L"INFECTED_ATTACK", "../Bin/Resources/Sound/Enemy/INFECTED/Attack/");
+	Load_SoundFile_GroupAsync(L"INFECTED_HIT", "../Bin/Resources/Sound/Enemy/INFECTED/Hit/");
+	Load_SoundFile_GroupAsync(L"INFECTED_DEATH", "../Bin/Resources/Sound/Enemy/INFECTED/Death/");
+	Load_SoundFile_GroupAsync(L"INFECTED_EFFORT", "../Bin/Resources/Sound/Enemy/INFECTED/Effort/");
+	Load_SoundFile_GroupAsync(L"INFECTED_EXPLOSION", "../Bin/Resources/Sound/Enemy/INFECTED/Explosion/");
+	Load_SoundFile_GroupAsync(L"INFECTED_FINISHER", "../Bin/Resources/Sound/Enemy/INFECTED/Finisher/");
+	Load_SoundFile_GroupAsync(L"INFECTED_IDLEDISTANCE", "../Bin/Resources/Sound/Enemy/INFECTED/IdleDistance/");
+	Load_SoundFile_GroupAsync(L"INFECTED_SPAWN", "../Bin/Resources/Sound/Enemy/INFECTED/Spawn/");
+	Load_SoundFile_GroupAsync(L"INFECTED_BODYMOVE", "../Bin/Resources/Sound/Enemy/INFECTED/BodyMove/");
 	
 	Load_SoundFile_GroupAsync(L"EFFECT", "../Bin/Resources/Sound/Effect/");
 	Load_SoundFile_GroupAsync(L"INTERACT_OBJECT", "../Bin/Resources/Sound/InteractObject/");

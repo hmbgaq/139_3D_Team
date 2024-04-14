@@ -161,8 +161,9 @@ void CMother::Tick(_float fTimeDelta)
 
 	if (true == m_bDeadState)
 	{
+		dynamic_cast<CBody_Mother*>(m_pBody)->Set_Dissolve(true);
 		m_fTimeAcc += fTimeDelta;
-		if (m_fTimeAcc >= 2.f)
+		if (m_fTimeAcc >= 3.f)
 		{
 			Set_Dead(true);
 		}
@@ -196,13 +197,8 @@ HRESULT CMother::Ready_PartObjects()
 	if (FAILED(Add_Body(TEXT("Prototype_GameObject_Body_Mother"), BodyDesc)))
 		return E_FAIL;
 
-
-
-
 	return S_OK;
 }
-
-
 
 void CMother::Hitted_Front(Power ePower)
 {

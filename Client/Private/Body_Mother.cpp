@@ -55,15 +55,15 @@ void CBody_Mother::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	if (true == m_bDeadState)
-	{
-		m_fTimeAcc += fTimeDelta;
-		if (m_fTimeAcc >= 2.f)
-		{
-			//Set_EnemyHUD_Dead();
-			Set_Dead(true);
-		}
-	}
+// 	if (true == m_bDeadState)
+// 	{
+// 		m_fTimeAcc += fTimeDelta;
+// 		if (m_fTimeAcc >= 2.f)
+// 		{
+// 			//Set_EnemyHUD_Dead();
+// 			Set_Dead(true);
+// 		}
+// 	}
 
 }
 
@@ -158,7 +158,7 @@ HRESULT CBody_Mother::Ready_Components()
 	_uint iNextLevel = m_pGameInstance->Get_NextLevel();
 
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_AnimModel"),
+	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Monster"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
@@ -167,8 +167,8 @@ HRESULT CBody_Mother::Ready_Components()
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	/* Dissolve */
 	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_Dissolve"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pDissolveTexture)));
-
 
 	/* For.Com_Collider */
 	CBounding_Sphere::BOUNDING_SPHERE_DESC		BoundingDesc = {};
