@@ -6,7 +6,7 @@
   },
   "DOF": {
     "bDOF_Active": false,
-    "fDOF_Distance": 0.0
+    "fDOF_Distance": 3.0
   },
   "Deferred": {
     "bRimBloom_Blur_Active": true,
