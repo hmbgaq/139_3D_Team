@@ -1250,6 +1250,7 @@ void CEnvironment_Interact::Interact()
 					{
 						m_pPlayer->SetState_InteractWhipSwing();
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Interaction_WhipSwing_2_03.wav", SOUND_INTERACTOBJECT, 7.f);
 					}
 
 					break;
@@ -1275,6 +1276,7 @@ void CEnvironment_Interact::Interact()
 
 						StartGroupInteract();
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"HM_ValveRoate_Mechanism_04.wav", SOUND_INTERACTOBJECT, 7.f);
 					}
 
 					break;
@@ -1288,6 +1290,8 @@ void CEnvironment_Interact::Interact()
 						m_pPlayer->SetState_InteractZipLine();
 						m_pPlayer->Set_Ladder_Count(m_tEnvironmentDesc.iLadderCount);
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerRootMoveRate);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"1st_Arena_UnderBridge_Spot_Wind_Heavy_loop.wav", SOUND_INTERACTBGM, 7.f);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Cart_Ride_loop_faster.wav", SOUND_INTERACTOBJECT, 7.f);
 					}
 
 					break;
@@ -1732,6 +1736,7 @@ void CEnvironment_Interact::Interact()
 					{
 						m_pPlayer->SetState_InteractWhipSwing();
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerReverseRootMoveRate);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Interaction_WhipSwing_2_03.wav", SOUND_INTERACTOBJECT, 7.f);
 					}
 
 
@@ -1756,6 +1761,7 @@ void CEnvironment_Interact::Interact()
 					{
 						m_pPlayer->SetState_InteractRotationValve();
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerReverseRootMoveRate);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"HM_ValveRoate_Mechanism_04.wav", SOUND_INTERACTOBJECT, 7.f);
 					}
 
 
@@ -1770,6 +1776,8 @@ void CEnvironment_Interact::Interact()
 						m_pPlayer->Set_Ladder_Count(m_tEnvironmentDesc.iLadderCount);
 						m_pPlayer->SetState_InteractZipLine();
 						m_pPlayer->Set_RootMoveRate(m_tEnvironmentDesc.vPlayerReverseRootMoveRate);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"1st_Arena_UnderBridge_Spot_Wind_Heavy_loop.wav", SOUND_INTERACTBGM, 7.f);
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Cart_Ride_loop_faster.wav", SOUND_INTERACTOBJECT, 7.f);
 					}
 
 					break;
@@ -1859,6 +1867,7 @@ void CEnvironment_Interact::Rope_ChainFunction(const _float fTimeDelta)
 		{
 			m_pModelCom->Set_Animation(5, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
 			//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
+			m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Interaction_Shoot_Chain900_01.wav", SOUND_INTERACTOBJECT2, 7.f);
 			m_bChainEnable = true;
 		}
 		else
@@ -2024,10 +2033,15 @@ void CEnvironment_Interact::Move_For_PlayerRootMotion()
 		vPlayerRootMotion.x = 0.f;
 
 		m_pTransformCom->Add_RootBone_ForTarget(vPlayerRootMotion, m_pNavigationCom, m_pPlayer->Get_Transform());
+
+		m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Cart_Mechanism_loop.wav", SOUND_INTERACTOBJECT2, 7.f);
+
+		
 	}
 	else
 	{
-		
+		m_pGameInstance->Stop_Sound(SOUND_INTERACTOBJECT2);
+
 		switch (m_pPlayer->Get_CurrentAnimIndex())
 		{
 			case CPlayer::Player_State::Player_InteractionPush_Rock_Loop:
@@ -2147,6 +2161,11 @@ _bool CEnvironment_Interact::RotationCheck(const _float fTimeDelta)
 	{
 		if (m_pOwnerInteract->Is_OwnerInteract() == true)
 		{
+			if (m_bPlaySound == false)
+			{
+				m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"GateMulti_DoorOpen_03.wav", SOUND_INTERACTOBJECT, 7.f);
+				m_bPlaySound = true;
+			}
 			return m_pTransformCom->Rotation_LerpAxis(XMConvertToRadians(m_tEnvironmentDesc.fRotationAngle), fTimeDelta, m_tEnvironmentDesc.eRotationState);
 		}
 		

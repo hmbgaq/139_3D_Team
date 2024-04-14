@@ -227,6 +227,7 @@ private: //!For. Elevator
 	_bool							m_bFirstCollision = false;
 	
 
+	_bool							m_bPlaySound = false;
 
 private:
 	HRESULT				Ready_Components();

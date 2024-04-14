@@ -437,6 +437,7 @@ private: //! 소영 추가
 	_float							m_fLineTimeAcc			= 0.f;
 	_float							m_fLineThick_Ratio		= 0.f;
 
+	_bool							m_bPlaySound = false;
 public:
 	/* 원형객체를 생성한다. */
 	static CEnvironment_Interact* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
