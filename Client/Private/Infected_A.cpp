@@ -44,6 +44,8 @@ HRESULT CInfected_A::Initialize(void* pArg)
 
 	m_pTarget = m_pGameInstance->Get_Player();
 
+	m_pGameInstance->Play_Sound(L"INFECTED_SPAWN", L"InfectedRange_Introduction_VO_A.wav", SOUND_ENEMY_DEAD, 3.f);
+
 	return S_OK;
 }
 

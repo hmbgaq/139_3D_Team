@@ -86,6 +86,7 @@ HRESULT CInfected::Initialize(void* pArg)
 	{
 		m_pActor = new CActor<CInfected>(this);
 		m_pActor->Set_State(new CInfected_SpawnCrawl_01());
+
 	}
 
 	/* Target ¼³Á¤ */
