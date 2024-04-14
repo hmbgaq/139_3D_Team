@@ -270,18 +270,12 @@ public:
 protected:
 	void Update_Voice_Cooltime(_float fTimeDelta);
 
-
-
-	
 protected:
 	virtual void Hitted_Left(Power ePower)	override;
 	virtual void Hitted_Right(Power ePower) override;
 	virtual void Hitted_Front(Power ePower) override;
 	virtual void Hitted_Knock(_bool bIsCannonball) override;
 	virtual void Hitted_Dead(Power ePower)	override;
-
-
-
 
 
 private:

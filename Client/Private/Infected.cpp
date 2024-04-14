@@ -218,6 +218,7 @@ void CInfected::Hitted_Knock(_bool bIsCannonball)
 
 void CInfected::Hitted_Dead(Power ePower)
 {
+	dynamic_cast<CBody_Infected*>(m_pBody)->Set_Dissolve(true);
 	//if (m_eInfo.eType == INFECTED_TYPE::INFECTED_WASTER)
 	//{
 	//	
