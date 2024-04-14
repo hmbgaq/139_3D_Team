@@ -6095,7 +6095,7 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 
 
-			if (ImGui::Button(" Attach Bone "))
+			if (ImGui::Button(" Attach Head"))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
 				{
@@ -6115,6 +6115,14 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 				}
 			}
 
+
+			if (ImGui::Button(" Attach Hips "))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
+				{
+					Attach_Tool("Hips");
+				}
+			}
 
 			if (ImGui::Button(" Detach Bone "))
 			{

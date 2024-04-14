@@ -295,6 +295,12 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 	{
 		if (g_UIMouseDownLB == true)
 		{
+			{
+				wstring strFileName = L"";
+				strFileName = L"HM_UI_ShowWeaponEffect_06.wav";
+
+				m_pGameInstance->Play_Sound(L"UI_Weapon", strFileName, CHANNELID::SOUND_UI_WEAPON, 13.f);
+			}
 #pragma region 1
 			if (m_tUIInfo.strUIName == "Kick")
 			{

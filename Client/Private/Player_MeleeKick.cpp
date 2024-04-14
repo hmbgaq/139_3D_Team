@@ -8,7 +8,7 @@
 void CPlayer_MeleeKick::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 2);
 
 	CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_KICK);
 	pWeapon
@@ -27,10 +27,11 @@ CState<CPlayer>* CPlayer_MeleeKick::Update(CPlayer* pActor, _float fTimeDelta)
 
 	if (false == m_bFlags[0]) 
 	{
-		m_bFlags[0] = pActor->Is_Inputable_Front(14);
+		m_bFlags[0] = pActor->Is_Inputable_Front(12);
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_KICK, true);
+			pActor->Play_Whoosh_Sound();
 		}
 	}
 	else if (false == m_bFlags[1])
@@ -38,7 +39,8 @@ CState<CPlayer>* CPlayer_MeleeKick::Update(CPlayer* pActor, _float fTimeDelta)
 		m_bFlags[1] = pActor->Is_Inputable_Front(22);
 		if (true == m_bFlags[1])
 		{
-			pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_KICK, false);
+			//pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_KICK, false);
+			pActor->Set_Weapon_Enable(PLAYER_WEAPON_KICK, false);
 		}
 	}
 	else if (false == m_bFlags[2])
@@ -59,5 +61,6 @@ void CPlayer_MeleeKick::Release(CPlayer* pActor)
 	__super::Release(pActor);
 
 	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_KICK, false);
+	//pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_KICK, false);
 	pActor->Set_Target(nullptr);
 }

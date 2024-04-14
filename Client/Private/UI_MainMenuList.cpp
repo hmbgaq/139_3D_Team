@@ -133,8 +133,25 @@ void CUI_MainMenuList::Check_Picking(_float fTimeDelta)
 {
 	if (m_bPick == true)
 	{
+		//menu_options_highlight
+		if (m_bSoundOk == false)
+		{
+			wstring strFileName = L"";
+			strFileName = L"menu_options_highlight.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_MouseOver", strFileName, CHANNELID::SOUND_UI_MOUSEOVER, 10.f);
+
+			m_bSoundOk = true;
+		}
+
 		if (g_UIMouseDownLB == true)
 		{
+
+			wstring strFileName = L"";
+			strFileName = L"HM_UI_ShowWeaponEffect_06.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_Weapon", strFileName, CHANNELID::SOUND_UI_WEAPON, 13.f);
+
 			if (m_tUIInfo.strUIName == "GAMEPLAY")
 			{
 				m_pUIManager->Active_LevelList();
@@ -165,6 +182,10 @@ void CUI_MainMenuList::Check_Picking(_float fTimeDelta)
 				//g_CloseWindow = true; // Close Window
 			}
 		}
+	}
+	else
+	{
+		m_bSoundOk = false;
 	}
 }
 

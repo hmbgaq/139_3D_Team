@@ -118,6 +118,12 @@ void CUI_WeaponActiveGuige::Tick(_float fTimeDelta)
 					m_bCoolDown = false;
 					m_bMaxCoolDown = true;
 
+					/* Sound */
+					wstring strFileName = L"";
+					strFileName = L"HM_UI_Screen_NewWeapon.wav";
+
+					m_pGameInstance->Play_Sound(L"UI_Weapon", strFileName, CHANNELID::SOUND_UI_SKILLACTIVE, 13.f);
+
 					// È°¼ºÈ­
 					Check_SkillActive(fTimeDelta, SKILLSTATE::ACTIVE);
 				}

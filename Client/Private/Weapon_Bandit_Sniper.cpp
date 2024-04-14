@@ -143,6 +143,65 @@ void CWeapon_Bandit_Sniper::Sniping(_float4 vTargetPos, _float3 StartfPos)
 
 	pBullet->Set_Position(StartfPos);
 	pBullet->Get_Transform()->Look_At(vTargetPos);
+
+	wstring strGroupKey = L"";
+	wstring strSoundKey = L"";
+	_float fVolume = 8.5f;
+
+	_vector		vDir = vTargetPos - StartfPos;
+	_float		fDistance = XMVectorGetX(XMVector3Length(vDir));
+
+	_int iRandomSound = m_pGameInstance->Random_Int(1, 5);
+
+	if (fDistance >= 15.f)
+	{
+		strGroupKey = L"SNIPER_ATTACKLONG";
+		fVolume = 7.f;
+
+		switch (iRandomSound)
+		{
+		case 1:
+			strSoundKey = L"bandit_attack_revolver_shotA_distant001.wav";
+			break;
+		case 2:
+			strSoundKey = L"bandit_attack_revolver_shotA_distant002.wav";
+			break;
+		case 3:
+			strSoundKey = L"bandit_attack_revolver_shotA_distant003.wav";
+			break;
+		case 4:
+			strSoundKey = L"bandit_attack_revolver_shotA_distant004.wav";
+			break;
+		case 5:
+			strSoundKey = L"bandit_attack_revolver_shotA_distant005.wav";
+			break;
+		}
+	}
+	else
+	{
+		strGroupKey = L"SNIPER_ATTACKSHORT";
+
+		switch (iRandomSound)
+		{
+		case 1:
+			strSoundKey = L"bandit_attack_revolver_shotA_close001.wav";
+			break;
+		case 2:
+			strSoundKey = L"bandit_attack_revolver_shotA_close002.wav";
+			break;
+		case 3:
+			strSoundKey = L"bandit_attack_revolver_shotA_close003.wav";
+			break;
+		case 4:
+			strSoundKey = L"bandit_attack_revolver_shotA_close004.wav";
+			break;
+		case 5:
+			strSoundKey = L"bandit_attack_revolver_shotA_close005.wav";
+			break;
+		}
+	}
+
+	m_pGameInstance->Play_Sound(strGroupKey, strSoundKey, SOUND_ENEMY_ATTACK, fVolume);
 }
 
 #pragma region Create, Clone, Pool, Free

@@ -1,8 +1,8 @@
 #include "..\Public\Bandit_Heavy_State_Run.h"
-
+#include "GameInstance.h"
 void CBandit_Heavy_State_Run::Initialize(CBandit_Heavy* pActor)
 {
-	__super::Initialize(pActor);
+	__super::Initialize(pActor);	
 }
 
 CState<CBandit_Heavy>* CBandit_Heavy_State_Run::Update(CBandit_Heavy* pActor, _float fTimeDelta)

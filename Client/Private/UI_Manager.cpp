@@ -1551,7 +1551,7 @@ HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerT
 		}
 
 		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(7000.f);					// UI LifeTime
+		pUI_Object->Set_LifeTime(8000.f);					// UI LifeTime
 		pUI_Object->Set_UIState(UISTATE::TUTORIAL_BOX);		// UI State
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
@@ -4918,6 +4918,12 @@ void CUI_Manager::Check_SkillWindowTrigger()
 	{
 		if (m_pSkillWindowBackground->Get_AnimTrigger() == true && m_bShowSkillWindow == false)
 		{
+			/* Sound */
+			wstring strFileName = L"";
+			strFileName = L"HM_MUS_LS_PreGatling_Main_Dm_102bpm_16.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWBGM, 13.f);
+
 			Active_SkillWindow(true);
 			Active_SkillIcon(true);
 			Active_SkillFrame(true);

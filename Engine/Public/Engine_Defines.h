@@ -100,7 +100,6 @@ namespace Engine
 	// XMVectorSet(-20.f, 20.f, -20.f, 1.f), 
 	// XMVectorSet(0.f, 0.f, 0.f, 1.f),
 	// XMVectorSet(0.f, 1.f, 0.f, 0.f)));
-	
 }
 
 using namespace Engine;

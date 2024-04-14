@@ -359,10 +359,10 @@ void CEffect::Update_PivotMat()
 			{
 				// 주인의 매트릭스를 사용할거면 받아오기
 				m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-				if (typeid(*m_pOwner) == typeid(CSon_Projectile))
-				{
-					_int i = 0;
-				}
+				//if (typeid(*m_pOwner) == typeid(CSon_Projectile))
+				//{
+				//	_int i = 0;
+				//}
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
 			}
 
@@ -372,6 +372,10 @@ void CEffect::Update_PivotMat()
 			// 주인이 있지만 주인 피봇을 사용하지 않을거면 컴바인 매트릭스에 자신의 월드만 저장하기
 			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix());	
 		}
+
+	}
+	else
+	{
 
 	}
 
@@ -461,8 +465,9 @@ void CEffect::End_Effect_ForPool()
 
 	Init_ReSet_Effect();			// 리셋
 
-	// 주인이 존재하면 지워줌
-	Delete_Object_Owner();
+
+	Set_Object_Owner(nullptr); // 주인 해제
+	//Delete_Object_Owner();
 
 	m_tEffectDesc.Reset_Pivot();
 }
@@ -593,7 +598,7 @@ void CEffect::Free()
 {
 	__super::Free();
 
-	Delete_Object_Owner();
+	Set_Object_Owner(nullptr);
 
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);
@@ -604,7 +609,8 @@ void CEffect::Free()
 	if (nullptr != m_pTrail)
 	{
 		m_pTrail->Set_Object_Owner(nullptr);
-		Safe_Release(m_pTrail);
+		m_pTrail = nullptr;
+		//Safe_Release(m_pTrail);
 	}
 }
 

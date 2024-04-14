@@ -58,7 +58,27 @@ void CUI_TutorialBox::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
+		if (iFrameIndex == 0 && m_bSoundOk == false)
+		{
+			wstring strFileName = L"";
+			strFileName = L"tutorial_hint_start.wav";
 
+			m_pGameInstance->Play_Sound(L"UI_TutorialBox", strFileName, CHANNELID::SOUND_UI_TUTORIALBOX, 10.f);
+
+			m_bSoundOk = true;
+		}
+	}
+	else
+	{
+		if (m_bSoundOk2 == false)
+		{
+			wstring strFileName = L"";
+			strFileName = L"tutorial_hint_stop.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_TutorialBox", strFileName, CHANNELID::SOUND_UI_TUTORIALBOX, 10.f);
+
+			m_bSoundOk2 = true;
+		}
 	}
 }
 

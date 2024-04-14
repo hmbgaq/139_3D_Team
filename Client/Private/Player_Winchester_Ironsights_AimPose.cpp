@@ -12,6 +12,7 @@
 
 #include "Effect_Manager.h"
 #include "Bone.h"
+#include "SMath.h"
 
 void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 {
@@ -24,15 +25,9 @@ void CPlayer_Winchester_Ironsights_AimPose::Initialize(CPlayer* pActor)
 	pActor->Set_UseMouseMove(true);
 	//pActor->Set_StiffnessRate_Upper(0.5f);
 
-	pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
 	
-	//CSpringCamera* pCamera = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
-	//pCamera->Reset_Angle();
-
-
-	//CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_Winchester"));
-	//pWeapon->Set_Enable(true);
-	
+	pWeapon->Play_Weapon_Sound_Aim();
 }
 
 CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, _float fTimeDelta)
@@ -49,11 +44,14 @@ CState<CPlayer>* CPlayer_Winchester_Ironsights_AimPose::Update(CPlayer* pActor, 
 		{
 			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_WINCHESTER);
 			pWeapon->Fire();
+			pWeapon->Play_Weapon_Sound_Fire();
 			pActor->Apply_Shake_And_Blur(Power::Medium);
 			CUI_Manager::GetInstance()->Trigger_Crosshair(true);
 			pActor->Activate_ShootingReaction();
 
 			EFFECT_MANAGER->Play_Effect("Player/Revolver/", "Revolver_13.json", pActor);
+
+
 
 			return new CPlayer_Winchester_Ironsights_Reload_01();
 		}

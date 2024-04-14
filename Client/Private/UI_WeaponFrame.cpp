@@ -322,6 +322,11 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 		if (g_UIMouseDownLB == true)
 		{
 #pragma region 1
+			wstring strFileName = L"";
+			strFileName = L"HM_UI_ShowWeaponEffect_06.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_Weapon", strFileName, CHANNELID::SOUND_UI_WEAPON, 13.f);
+
 			if (m_tUIInfo.strUIName == "Rifle")
 			{
 				// UI º±≈√

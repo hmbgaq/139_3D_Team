@@ -38,6 +38,8 @@ void CEvent_MosnterSpawnTrigger::Activate()
 	{
 		CMonster_Character* pMonster = { nullptr };
 			
+
+
 		wstring strLayerTag = L"Layer_Monster";
 
 			if (iCurrentLevel == _uint(LEVEL_INTRO_BOSS) || iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
@@ -47,17 +49,26 @@ void CEvent_MosnterSpawnTrigger::Activate()
 
 			pMonster = dynamic_cast<CMonster_Character*>(m_pGameInstance->Add_CloneObject_And_Get(iCurrentLevel, strLayerTag, m_vecCreateMonsterDesc[i].strProtoTypeTag, &m_vecCreateMonsterDesc[i]));
 
-			if(pMonster == nullptr)
+			if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_INTRO_BOSS))
 			{
-				MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
+				m_pGameInstance->Play_BGM(L"BGM", L"IntroBossTriggerBGM.wav", 5.f);
 			}
-			else if (iCurrentLevel == (_uint)LEVEL_TOOL)
+			else if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
 			{
-
-				CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
-
-				pMapTool->Add_Monster_ForTrigger(pMonster);
+				m_pGameInstance->Play_BGM(L"BGM", L"SnowMountainBossTriggerBGM.wav", 5.f);
 			}
+
+		if (pMonster == nullptr)
+		{
+			MSG_BOX("Event_MonsterTrigger.cpp, 몬스터 스폰실패");
+		}
+		else if (iCurrentLevel == (_uint)LEVEL_TOOL)
+		{
+
+			CWindow_MapTool* pMapTool = dynamic_cast<CWindow_MapTool*>(CImgui_Manager::GetInstance()->Find_Window(CImgui_Manager::IMGUI_WINDOW_TYPE::IMGUI_MAPTOOL_WINDOW));
+
+			pMapTool->Add_Monster_ForTrigger(pMonster);
+		}
 
 	}
 
@@ -89,7 +100,7 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 
 		if (iCurrentLevel == (_uint)LEVEL_GAMEPLAY)
 		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Fianal_MapData202404_13_17_42.json";
+			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
 		}
 		else if (iCurrentLevel == (_uint)LEVEL_INTRO_BOSS)
 		{

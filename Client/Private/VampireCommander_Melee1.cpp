@@ -2,6 +2,7 @@
 #include "VampireCommander_Idle.h"
 #include "Body_VampireCommander.h"
 #include "VampireCommander_Weapon.h"
+#include "GameInstance.h"
 
 void CVampireCommander_Melee1::Initialize(CVampireCommander* pActor)
 {
@@ -23,7 +24,8 @@ void CVampireCommander_Melee1::Initialize(CVampireCommander* pActor)
 	pBody->Set_RenderState(CBody_VampireCommander::RENDER_STATE::ATTACK);
 
 	pActor->m_bLookAt = false;
-
+	m_pGameInstance->Play_Sound(L"VAMPIRE_ATTACK", L"commander_lesser_vo_attackB003.wav", SOUND_ENEMY_VOICE, 8.f);
+	
 
 }
 
@@ -39,6 +41,7 @@ CState<CVampireCommander>* CVampireCommander_Melee1::Update(CVampireCommander* p
 	{
 		m_bFlags[1] = true;
 		pWeapon->Set_Enable(true);
+		m_pGameInstance->Play_Sound(L"VAMPIRE_ATTACK", L"william_attack_melee_whoosh005.wav", SOUND_ENEMY_ATTACK, 8.f);
 
 	}
 	else if (pActor->Is_Inputable_Front(25))

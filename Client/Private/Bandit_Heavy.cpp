@@ -124,8 +124,8 @@ void CBandit_Heavy::Hitted_Left(Power ePower)
 {
 	switch (ePower)
 	{
-	case Engine::Medium:
-		m_pActor->Set_State(new CBanditHeavy_HitNormal_L_01());
+	//case Engine::Medium:
+	//	m_pActor->Set_State(new CBanditHeavy_HitNormal_L_01());
 	case Engine::Heavy:
 		m_pActor->Set_State(new CBanditHeavy_HitHeavy_F_01());
 	}
@@ -135,8 +135,8 @@ void CBandit_Heavy::Hitted_Right(Power ePower)
 {
 	switch (ePower)
 	{
-	case Engine::Medium:
-		m_pActor->Set_State(new CBanditHeavy_HitNormal_R_01());
+	//case Engine::Medium:
+	//	m_pActor->Set_State(new CBanditHeavy_HitNormal_R_01());
 	case Engine::Heavy:
 		m_pActor->Set_State(new CBanditHeavy_HitHeavy_F_01());
 	}
@@ -148,11 +148,11 @@ void CBandit_Heavy::Hitted_Front(Power ePower)
 
 	switch (ePower)
 	{
-	case Engine::Medium:
-		if (1 == iRand)
-			m_pActor->Set_State(new CBanditHeavy_HitNormal_F_02());
-		else 
-			m_pActor->Set_State(new CBanditHeavy_HitNormal_F_01());
+	//case Engine::Medium:
+	//	if (1 == iRand)
+	//		m_pActor->Set_State(new CBanditHeavy_HitNormal_F_02());
+	//	else 
+	//		m_pActor->Set_State(new CBanditHeavy_HitNormal_F_01());
 	case Engine::Heavy:
 		m_pActor->Set_State(new CBanditHeavy_HitHeavy_F_01());
 	}

@@ -5,6 +5,7 @@
 #include "Effect.h"
 #include "Bone.h"
 #include "Data_Manager.h"
+#include "SMath.h"
 
 #include "Player_EnergyWhip_Leap.h"
 #include "Player_EnergyWhip_LongRange.h"
@@ -46,6 +47,8 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 			//EFFECT_MANAGER->Create_Effect("Player/Zapper_Shield/", "Zapper_Shield_20_distortionTest.json", pActor);
 			EFFECT_MANAGER->Play_Effect("Player/Zapper_Shield/", "Zapper_Shield_22_distortionTest.json", pActor);
 
+			Sound_Whoosh_Up();
+
 			//pActor->Get_Body()->Collider_Off();
 		}
 	}
@@ -56,6 +59,8 @@ CState<CPlayer>* CPlayer_EnergyWhip_CloseRange_01::Update(CPlayer* pActor, _floa
 		{
 			pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_ZAPPER, false);
 			//pActor->Get_Body()->Get_Collider()->Set_Enable(true);
+
+			Sound_Whoosh_Down();
 		}
 	}
 	else if (false == m_bFlags[2])
@@ -110,4 +115,61 @@ void CPlayer_EnergyWhip_CloseRange_01::Release(CPlayer* pActor)
 	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_ZAPPER, false);
 
 	
+}
+
+void CPlayer_EnergyWhip_CloseRange_01::Sound_Whoosh_Up()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_supercharged_energy_whoosh_up_001.wav";
+		break;
+	case 1:
+		strFileName = L"player_supercharged_energy_whoosh_up_002.wav";
+		break;
+	case 2:
+		strFileName = L"player_supercharged_energy_whoosh_up_003.wav";
+		break;
+	case 3:
+		strFileName = L"player_supercharged_energy_whoosh_up_004.wav";
+		break;
+	case 4:
+		strFileName = L"player_supercharged_energy_whoosh_up_005.wav";
+		break;
+	default:
+		strFileName = L"player_supercharged_energy_whoosh_up_001.wav";
+		break;
+	}
+	m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", strFileName, CHANNELID::SOUND_PLAYER_WHOOSH, 10.f);
+}
+
+void CPlayer_EnergyWhip_CloseRange_01::Sound_Whoosh_Down()
+{
+	wstring strFileName = L"";
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_supercharged_energy_whoosh_down_001.wav";
+		break;
+	case 1:
+		strFileName = L"player_supercharged_energy_whoosh_down_002.wav";
+		break;
+	case 2:
+		strFileName = L"player_supercharged_energy_whoosh_down_003.wav";
+		break;
+	case 3:
+		strFileName = L"player_supercharged_energy_whoosh_down_004.wav";
+		break;
+	case 4:
+		strFileName = L"player_supercharged_energy_whoosh_down_005.wav";
+		break;
+	default:
+		strFileName = L"player_supercharged_energy_whoosh_down_001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_WHOOSH", strFileName, CHANNELID::SOUND_PLAYER_WHOOSH2, 10.f);
 }

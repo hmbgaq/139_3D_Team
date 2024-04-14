@@ -564,7 +564,7 @@ HRESULT CLoader::Loading_For_Intro_Level()
 	/* ---------------------- Test Model 추가 라인 ---------------------- */
 	//TODO VampireCommander
 	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Bull"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Bull/Bull", PivotMatrix))); // 
+	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Bull"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Bull/Bull", PivotMatrix)));
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Hawk"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Animals/Hawk/Hawk", PivotMatrix)));
 
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_INTRO, TEXT("Prototype_Component_Model_Infected_A"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../Bin/Resources/Models/Monster/Infected/A/Infected_A", PivotMatrix)));
@@ -885,7 +885,7 @@ HRESULT CLoader::Loading_For_Tool_Level()
 
 #pragma region 환경 : 주석 풀고 병합해야함!!!
 	//! 환경 모델
-	//주석풀기 Ready_Environment_Model(LEVEL_TOOL);
+	//Ready_Environment_Model(LEVEL_TOOL);
 #pragma endregion 환경 : 주석 풀고 병합해야함!!! 끝 
 
 	//FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_TOOL, TEXT("Prototype_Component_Model_Chain"), CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Models/Chain/Chain", PivotMatrix)));

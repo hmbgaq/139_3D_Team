@@ -4,8 +4,9 @@
 #include "Weapon_Heavy_Vampiric_Zombie.h"
 #include "Model.h"
 #include "AttackObject.h"
-#include "Tank.h"
 #include "Data_Manager.h"
+#include "Effect_Manager.h"
+#include "Effect.h"
 
 CWeapon_Heavy_Vampiric_Zombie::CWeapon_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -88,6 +89,16 @@ void CWeapon_Heavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (m_bAttack)
+	{
+		
+
+		_float3 vPosition = { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43};
+		//m_pTransformCom->Get_Position();
+		//EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, vPosition);
+		m_bAttack = false;
+	}
 	//if (m_pGameInstance->Key_Down(DIK_F))
 	//{
 	//	string path = "../Bin/DataFiles/Data_Weapon/Monster/Bandit_Heavy/Axe.json";

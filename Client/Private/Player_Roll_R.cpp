@@ -7,7 +7,7 @@ void CPlayer_Roll_R::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 2);
 
 
 	// 이펙트 생성

@@ -69,6 +69,9 @@ public:
 	virtual void Check_Frustum() override;
 
 public:
+	virtual void Play_Hitted_Sound() override;
+
+public:
 	void Set_Monster_State(Monster_State _eMonster_State) { m_eMonster_State = _eMonster_State; };
 	_bool Is_Attack_State() { return Monster_State::ATTACK == m_eMonster_State; }
 	_int iMeshNumber = 0;

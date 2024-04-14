@@ -21,7 +21,7 @@ HRESULT CSound_Manager::Ready_Sound()
 	result = FMOD_System_SetOutput(m_pSystem, FMOD_OUTPUTTYPE_ALSA);
 
 	// 1. 시스템 포인터, 2. 사용할 가상채널 수 , 초기화 방식) 
-	result = FMOD_System_Init(m_pSystem, 32, FMOD_INIT_NORMAL, NULL);
+	result = FMOD_System_Init(m_pSystem, MAXCHANNEL, FMOD_INIT_NORMAL, NULL);
 
 	result = FMOD_System_CreateChannelGroup(m_pSystem, "BGM_Group", &m_pChannelGroup[BGM_GROUP]);
 	result = FMOD_System_CreateChannelGroup(m_pSystem, "SND1_Group", &m_pChannelGroup[SND1_GROUP]);
@@ -31,21 +31,39 @@ HRESULT CSound_Manager::Ready_Sound()
 
 	/* For. BGM */
 	Load_SoundFile_GroupAsync(L"BGM", "../Bin/Resources/Sound/BGM/");
-	//Wait_GroupAsync();
 
-	Load_SoundFile_GroupAsync(L"AMBIENCE", "../Bin/Resources/Sound/Ambience/");
+	Load_SoundFile_GroupAsync(L"BGM_LOADING", "../Bin/Resources/Sound/LoadingBGM/");
+	
+
 	//Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"PLAYER_ATTACK", "../Bin/Resources/Sound/Player/Attack/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT", "../Bin/Resources/Sound/Player/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_IMPACT", "../Bin/Resources/Sound/Player/Impact/");
 	////Wait_GroupAsync();
-	Load_SoundFile_GroupAsync(L"PLAYER_HIT2", "../Bin/Resources/Sound/Player/Hit/");
+	Load_SoundFile_GroupAsync(L"PLAYER_WHOOSH", "../Bin/Resources/Sound/Player/Whoosh/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_HITTED", "../Bin/Resources/Sound/Player/Hitted/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_DEAD", "../Bin/Resources/Sound/Player/Dead/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"PLAYER_FOOTSTEP", "../Bin/Resources/Sound/Player/Footstep/");
 	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_WEAPON", "../Bin/Resources/Sound/Player/Weapon/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_VOICE", "../Bin/Resources/Sound/Player/Voice/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"PLAYER_EFFECT", "../Bin/Resources/Sound/Player/Effect/");
+	////Wait_GroupAsync();
+
+
+
+
+
 
 	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK", "../Bin/Resources/Sound/Attack/");
+	////Wait_GroupAsync();
+	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK2", "../Bin/Resources/Sound/Attack/");
 	////Wait_GroupAsync();
 	Load_SoundFile_GroupAsync(L"ENEMY_HIT", "../Bin/Resources/Sound/Hit/");
 	////Wait_GroupAsync();
@@ -55,8 +73,55 @@ HRESULT CSound_Manager::Ready_Sound()
 	////Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"CRITICAL", "../Bin/Resources/Sound/Hit/");
+	////Wait_GroupAsync();
 
 
+	Load_SoundFile_GroupAsync(L"HITTED", "../Bin/Resources/Sound/Hitted/");
+	////Wait_GroupAsync();
+
+	Load_SoundFile_GroupAsync(L"SUPER_CHARGE", "../Bin/Resources/Sound/Player/SuperCharge/");
+	////Wait_GroupAsync();
+
+	Load_SoundFile_GroupAsync(L"SNIPER_ATTACKLONG", "../Bin/Resources/Sound/Enemy/Sniper/Attack/LongDistance/");
+	Load_SoundFile_GroupAsync(L"SNIPER_ATTACKSHORT", "../Bin/Resources/Sound/Enemy/Sniper/Attack/ShotDistance/");
+	Load_SoundFile_GroupAsync(L"SNIPER_DEATH", "../Bin/Resources/Sound/Enemy/Sniper/Death/");
+	Load_SoundFile_GroupAsync(L"SNIPER_HIT", "../Bin/Resources/Sound/Enemy/Sniper/Hit/");
+	Load_SoundFile_GroupAsync(L"SNIPER_RELOAD", "../Bin/Resources/Sound/Enemy/Sniper/Reload/");
+
+	Load_SoundFile_GroupAsync(L"ZENU_ATTACK", "../Bin/Resources/Sound/Enemy/ZenuGiant/Attack/LongDistance/");
+	Load_SoundFile_GroupAsync(L"ZENU_THROWAXE", "../Bin/Resources/Sound/Enemy/ZenuGiant/AxeThrowProjectTile/");
+	Load_SoundFile_GroupAsync(L"ZENU_BODYMOVE", "../Bin/Resources/Sound/Enemy/ZenuGiant/BodyMove/");	
+	Load_SoundFile_GroupAsync(L"ZENU_DEATH", "../Bin/Resources/Sound/Enemy/ZenuGiant/Death/");
+	Load_SoundFile_GroupAsync(L"ZENU_FOOTSTEP", "../Bin/Resources/Sound/Enemy/ZenuGiant/FootStep/");
+	Load_SoundFile_GroupAsync(L"ZENU_HIT", "../Bin/Resources/Sound/Enemy/ZenuGiant/Hit/");
+	Load_SoundFile_GroupAsync(L"ZENU_SPAWN", "../Bin/Resources/Sound/Enemy/ZenuGiant/Spawn/");
+
+	Load_SoundFile_GroupAsync(L"VAMPIRE_ATTACKWAVE", "../Bin/Resources/Sound/Enemy/VampireCommander/AttackWave/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_BLOODRANGE", "../Bin/Resources/Sound/Enemy/VampireCommander/BloodTornado/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_BODYFALL", "../Bin/Resources/Sound/Enemy/VampireCommander/BodyFall/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_DEATH", "../Bin/Resources/Sound/Enemy/VampireCommander/Death/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_HIT", "../Bin/Resources/Sound/Enemy/VampireCommander/Hit/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_IDLE", "../Bin/Resources/Sound/Enemy/VampireCommander/Idle/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_WING", "../Bin/Resources/Sound/Enemy/VampireCommander/Wing/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_GROUNDSLAM", "../Bin/Resources/Sound/Enemy/VampireCommander/GroundSlam/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_TAUNT", "../Bin/Resources/Sound/Enemy/VampireCommander/Taunt/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_BATTHROW", "../Bin/Resources/Sound/Enemy/VampireCommander/BatThrow/");
+	Load_SoundFile_GroupAsync(L"VAMPIRE_ATTACK", "../Bin/Resources/Sound/Enemy/VampireCommander/ATTACK/");
+	
+	
+	Load_SoundFile_GroupAsync(L"EFFECT", "../Bin/Resources/Sound/Effect/");
+
+	/* UI */
+	Load_SoundFile_GroupAsync(L"UI_MouseOver", "../Bin/Resources/Sound/UI/Button/MouseOver/");
+	Load_SoundFile_GroupAsync(L"UI_DiedScreen", "../Bin/Resources/Sound/UI/DiedScreen/");
+	Load_SoundFile_GroupAsync(L"UI_LevelUP", "../Bin/Resources/Sound/UI/LevelUP/");
+	Load_SoundFile_GroupAsync(L"UI_GunSound", "../Bin/Resources/Sound/UI/GunSound/");
+	Load_SoundFile_GroupAsync(L"UI_LevelStart", "../Bin/Resources/Sound/UI/MainMenu/LevelStart/");
+	Load_SoundFile_GroupAsync(L"UI_Background", "../Bin/Resources/Sound/UI/SkillWindow/Background/");
+	Load_SoundFile_GroupAsync(L"UI_UnLock", "../Bin/Resources/Sound/UI/SkillWindow/UnLock/");
+	Load_SoundFile_GroupAsync(L"UI_Weapon", "../Bin/Resources/Sound/UI/SkillWindow/Weapon/");
+	Load_SoundFile_GroupAsync(L"UI_TutorialBox", "../Bin/Resources/Sound/UI/TutorialBox/");
+	Load_SoundFile_GroupAsync(L"UI_SkillWindow", "../Bin/Resources/Sound/UI/SkillWindow/");
 
 
 	return S_OK;

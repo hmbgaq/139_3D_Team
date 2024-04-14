@@ -7,6 +7,7 @@
 #include "Effect_Void.h"
 #include "Effect_Trail.h"
 
+
 IMPLEMENT_SINGLETON(CEffect_Manager);
 
 CEffect_Manager::CEffect_Manager()
@@ -137,6 +138,8 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 
 	EffectPool->pop();
 
+	//Play_EffectSound_ForFileName(strFileName);
+
 	return pEffect;
 }
 
@@ -247,11 +250,11 @@ HRESULT CEffect_Manager::Generate_Effect_AttachBone(_float* fTimeAcc, _float fGe
 
 		if (nullptr == pEffect)
 		{
-			//#ifdef _DEBUG
-						//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
-						//return S_OK;
+//#ifdef _DEBUG
+			//MSG_BOX("nullptr : CEffect_Manager::Play_Effect() / 경로에 이펙트 데이터가 없거나, 준비한 이펙트 개수를 초과했습니다.");
+			//return S_OK;
 			return S_OK;
-			//#endif // _DEBUG
+//#endif // _DEBUG
 		}
 
 	}
@@ -370,6 +373,22 @@ CEffect* CEffect_Manager::Create_Effect_ForDebug_StaticPivot(string strAddPath, 
 
 	return pEffect;
 }
+
+// void CEffect_Manager::Play_EffectSound_ForFileName(string strFileName)
+// {
+// 	//TODO 승용
+// 	//! 이 함수는 아래 채널만 사용할거임
+// 	//! 	SOUND_EFFECT,
+// 	//!	SOUND_SUBEFFECT,
+// 	//!	SOUND_SUBEFFECT1,
+// 	//!	SOUND_SUBEFFECT2,
+// 
+// 	if (strFileName == "landing_Rock_01.json")
+// 	{
+// 		m_pGameInstance->Play_Sound(L"VAMPIRE_HIT", L"commander_lesser_attack_ground_slam_impact001", SOUND_SUBEFFECT, 7.f);
+// 	}
+// 	
+// }
 
 
 CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& strLayerTag, string strFileName, CGameObject* pOwner)
@@ -558,16 +577,27 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	/* SuperCharge */
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_05.json", 5));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_02.json", 100));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", 100));
 
 
 #pragma endregion 플레이어 이펙트 끝
 
-	
+#pragma region 탱크 이펙트 시작
+	//rush
+	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Projectile2.json", 50));
 
+
+	//Projectile
+	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Rush.json", 50));
+
+	//제누거인
+	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Vampire_Zombie_GroundAttack.json", 100));
+
+
+#pragma endregion 탱크 이펙트 끝
 #pragma region 맵에 전역으로 깔리는 이펙트
 
-		FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
+	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
 
 #pragma endregion // 맵에 전역으로 깔리는 이펙트
 

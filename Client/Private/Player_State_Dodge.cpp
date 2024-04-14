@@ -6,6 +6,8 @@ void CPlayer_State_Dodge::Initialize(CPlayer* pActor)
 	pActor->Set_Invincible(true);
 
 	pActor->Set_RootMoveRate(_float3(1.5f, 1.f, 1.5f));
+
+	pActor->Play_Dodge_Sound();
 }
 
 CState<CPlayer>* CPlayer_State_Dodge::Update(CPlayer* pActor, _float fTimeDelta)

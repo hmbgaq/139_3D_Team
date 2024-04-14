@@ -26,6 +26,9 @@ public:
 	virtual void	OnCollisionExit(CCollider* other);
 
 public:
+	void Hit(CCollider* other);
+
+public:
 	virtual HRESULT Ready_Components();
 
 public:

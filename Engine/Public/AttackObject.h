@@ -23,6 +23,7 @@ public:
 	virtual HRESULT Render() override;
 
 public:
+	CGameObject* Get_Target_Object(CCollider * other);
 	CCharacter* Get_Target_Character(CCollider * other);
 	CAttackObject* Get_Target_AttackObject(CCollider * other);
 

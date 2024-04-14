@@ -4,6 +4,7 @@
 #include "Bone.h"
 #include "Effect.h"
 #include "Effect_Manager.h"
+#include "SMath.h"
 
 void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 {
@@ -24,25 +25,35 @@ void CPlayer_InteractionGlamour_Activate::Initialize(CPlayer* pActor)
 	EFFECT_MANAGER->Play_Effect("Player/Heal/", "Heal_Particle_07.json", pActor);
 
 
-	//pActor->Activate_HUD_Skill(CPlayer::HUD::LEFT_RIGHT);
+	
 
+	//m_pGameInstance->Play_Sound(L"PLAYER_ATTACK", L"", CHANNELID::SOUND_PLAYER_ATTACK, 10.f);
 
-	//pActor->Set_HUD_Cooltime(CPlayer::HUD::LEFT_RIGHT, 5.f);
-	//pActor->Set_HUD_MaxCooltime(CPlayer::HUD::LEFT_RIGHT, 5.f);
 }
 
 CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	__super::Update(pActor, fTimeDelta);
 
+
 	pActor->Aim_Walk(fTimeDelta);
+
 
 	if (false == m_bFlags[0])
 	{
-		m_bFlags[0] = pActor->Is_Upper_Inputable_Front(24);
+		m_bFlags[0] = pActor->Is_Upper_Inputable_Front(19);
 		if (true == m_bFlags[0])
+		{
+			Sound_Heal();
+		}
+	}
+	else if (false == m_bFlags[1])
+	{
+		m_bFlags[1] = pActor->Is_Upper_Inputable_Front(24);
+		if (true == m_bFlags[1])
 		{		
 			pActor->Set_Hp(CData_Manager::GetInstance()->Get_HpRegen());
+			pActor->Play_Voice_Heal();
 		}
 	}
 	
@@ -61,4 +72,35 @@ void CPlayer_InteractionGlamour_Activate::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
 	pActor->Set_Splitted(false);
+}
+
+void CPlayer_InteractionGlamour_Activate::Sound_Heal()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"player_health_regeneration001.wav";
+		break;
+	case 1:
+		strFileName = L"player_health_regeneration002.wav";
+		break;
+	case 2:
+		strFileName = L"player_health_regeneration003.wav";
+		break;
+	case 3:
+		strFileName = L"player_health_regeneration004.wav";
+		break;
+	case 4:
+		strFileName = L"player_health_regeneration005.wav";
+		break;
+	default:
+		strFileName = L"player_health_regeneration001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"PLAYER_EFFECT", strFileName, CHANNELID::SOUND_PLAYER_EFFECT, 10.f);
+
 }

@@ -54,5 +54,7 @@ CState<CTank>* CTank_Charge_Loop::Update(CTank* pActor, _float fTimeDelta)
 void CTank_Charge_Loop::Release(CTank* pActor)
 {
 	__super::Release(pActor);
+
+	pActor->m_bRushStop = true;
 	//CWeapon* pWeapon = pActor->Set_Weapon_Enable(TANK_WEAPON_PUNCH_L, false);
 }
