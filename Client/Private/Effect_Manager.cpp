@@ -474,62 +474,6 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma region 보스1 이펙트 시작
 	/* Boos 1 */
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json"));
-
-	/* BloodRange */
-	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Start_01.json"));
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
-
-
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
-
-
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
-
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_10.json", 100));
-
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
-
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "MonsterSoundWaveVampire.json", 20));
-#pragma endregion 보스1 이펙트 끝
-
-
-#pragma region 보스2 이펙트 시작
-	/* Boos 2 */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_Map_05.json", 2));
-
-	/* SnowBoss Falling Leaves */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_02.json", 30));
-
-	/* Boss2 Monster_Explosion */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_ExplosionNonLoop.json", 50));
-	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_Blood3.json", 50));
-
-
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 500));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
-	
-	/* Boss2 MotherShakeTreeProjectile */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "Circle_Floor_05.json", 200));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherProjectileDead_08.json", 200));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherShakeTreeProjectile1.json", 200));
-
-	//Mother_Egg
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead3.json", 20));
-
-	/* Mother Breath */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 500));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08.json", 400));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", 1000));
-	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", 400));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Ready_01.json", 2));
-
-	//BossSoundWave
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherSoundWave.json", 20));
-
-#pragma region 보스1 이펙트 시작
-	/* Boos 1 */
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_10.json"));
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json"));
 
@@ -543,6 +487,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
 
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_10.json", 50));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
 
@@ -668,6 +613,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
 	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_IntroBoss_01.json", 1));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "Snow/", "Snow_05.json", 1));
 
 #pragma endregion // 맵에 전역으로 깔리는 이펙트
 

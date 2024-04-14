@@ -34,9 +34,14 @@
 #pragma endregion
 
 #include "Light.h"
+#include "Effect_Manager.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
+
+
+#include "Level_Loading.h"
+
 
 CLevel_SnowMountain::CLevel_SnowMountain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -66,7 +71,10 @@ HRESULT CLevel_SnowMountain::Initialize()
 
 void CLevel_SnowMountain::Tick(_float fTimeDelta)
 {
-
+	if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	{
+		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAINBOSS));
+	}
 }
 
 HRESULT CLevel_SnowMountain::Render()
@@ -756,6 +764,9 @@ HRESULT CLevel_SnowMountain::Ready_UI()
 
 	FAILED_CHECK(Ready_Layer_UI_Player(TEXT("Layer_UI_Player"), nullptr));
 
+	_float3 vPos = { 14.87f, 0.f, -8.06f };
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Snow/", "Snow_05.json", nullptr, vPos);
+
 	return S_OK;
 }
 
@@ -984,5 +995,12 @@ CLevel_SnowMountain* CLevel_SnowMountain::Create(ID3D11Device* pDevice, ID3D11De
 void CLevel_SnowMountain::Free()
 {
 	__super::Free();
+
+	if (nullptr != m_pMapEffect)
+	{
+		m_pMapEffect->End_Effect_ForPool();
+		Safe_Release(m_pMapEffect);
+		//m_pMapEffect = nullptr;
+	}
 
 }
