@@ -120,30 +120,29 @@ void CUI_ElementList::Check_Picking(_float fTimeDelta)
 	{
 		if (m_tUIInfo.strUIName == "HBAO")
 		{
-			m_bHABO_Active = !m_bHABO_Active;
-			m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_bHABO_Active);
+			m_bPBR_Active = !m_bPBR_Active;
+			m_pGameInstance->Get_Renderer()->Set_PBR_Active(m_bPBR_Active);
 		}
 		else if (m_tUIInfo.strUIName == "FOG")
 		{
+			m_bHABO_Active = !m_bHABO_Active;
+			m_pGameInstance->Get_Renderer()->Set_HBAO_Active(m_bHABO_Active);
+		}
+		else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
+		{
 			m_bFOG_Active = !m_bFOG_Active;
 			m_pGameInstance->Get_Renderer()->Set_Fog_Active(m_bFOG_Active);
+
 		}
-		else if (m_tUIInfo.strUIName == "SCREEN_EFFECT")
-		{
-			m_bScreen_Active = !m_bScreen_Active;
-			m_pGameInstance->Get_Renderer()->Set_Sephia_Active(m_bScreen_Active);	// 세피아 효과 
-			m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bScreen_Active);		// 명도 채도 관리 
-			m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bScreen_Active);		// 안티앨리어싱 
-		}
-		else if (m_tUIInfo.strUIName == "LUMA_SHARPEN")
-		{
-			m_bLuma_Active = !m_bLuma_Active;
-			m_pGameInstance->Get_Renderer()->Set_DOF_Active(m_bLuma_Active);
-		}
-		else if (m_tUIInfo.strUIName == "FXAA")
+		else if (m_tUIInfo.strUIName == "DOF")
 		{
 			m_bFXAA_Active = !m_bFXAA_Active;
 			m_pGameInstance->Get_Renderer()->Set_FXAA_Active(m_bFXAA_Active);
+		}
+		else if (m_tUIInfo.strUIName == "HDR")
+		{
+			m_bLuma_Active = !m_bLuma_Active;
+			m_pGameInstance->Get_Renderer()->Set_Luma_Active(m_bLuma_Active);
 		}
 		else if (m_tUIInfo.strUIName == "SHADOW")
 		{
@@ -152,8 +151,10 @@ void CUI_ElementList::Check_Picking(_float fTimeDelta)
 		}
 		else if (m_tUIInfo.strUIName == "PBR")
 		{
-			m_bPBR_Active = !m_bPBR_Active;
-			m_pGameInstance->Get_Renderer()->Set_PBR_Active(m_bPBR_Active);
+			m_bScreen_Active = !m_bScreen_Active;
+			m_pGameInstance->Get_Renderer()->Set_Sephia_Active(m_bScreen_Active);	// 세피아 효과 
+			m_pGameInstance->Get_Renderer()->Set_HSV_Active(m_bScreen_Active);		// 명도 채도 관리 
+			m_pGameInstance->Get_Renderer()->Set_HDR_Active(m_bScreen_Active);		// 안티앨리어싱 
 		}
 	}
 }

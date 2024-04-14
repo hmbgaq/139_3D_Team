@@ -135,6 +135,7 @@ public:
 	void Set_Vignette_Active(_bool _Vignette_active) { m_tVignette_Option.bVignette_Active = _Vignette_active; }
 	void Set_Gray_Active(_bool _Gray_active) { m_tScreenDEffect_Desc.bGrayScale_Active = _Gray_active; }
 	void Set_Sephia_Active(_bool _Sephia_active) { m_tScreenDEffect_Desc.bSephia_Active = _Sephia_active; }
+	void Set_Luma_Active(_bool _luma_active) { m_tLumaSharpen_Desc.bLumaSharpen_Active = _luma_active; }
 
 	//Temp
 	_float Get_MotionBlur_float() { return m_tMotionBlur_Desc.fMotionBlur_Intensity; }

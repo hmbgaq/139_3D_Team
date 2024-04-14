@@ -86,7 +86,6 @@ HRESULT CBody_Player::Render()
 
 	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_ORIGIN)
 	{
-		cout << "render Origin " << endl;
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
@@ -123,7 +122,6 @@ HRESULT CBody_Player::Render()
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SNOWMOUNTAIN)
 	{
-			cout << "render SnowMountain" << endl;
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
 			m_vRimColor = { 1.f, 1.f, 1.f, 1.f };   /* RimLight */
@@ -146,7 +144,6 @@ HRESULT CBody_Player::Render()
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
 	{
-		cout << "render Super Charge" << endl;
 
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
