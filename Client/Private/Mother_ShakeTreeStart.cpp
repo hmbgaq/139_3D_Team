@@ -12,6 +12,7 @@ void CMother_ShakeTreeStart::Initialize(CMother* pActor)
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	m_pGameInstance->Play_Sound(L"MOTHER_TAUNT", L"grand_parasiter_vo_mind_tauntA002.wav", SOUND_ENEMY_VOICE, 10.f);
 }
 
 CState<CMother>* CMother_ShakeTreeStart::Update(CMother* pActor, _float fTimeDelta)
@@ -24,7 +25,8 @@ CState<CMother>* CMother_ShakeTreeStart::Update(CMother* pActor, _float fTimeDel
 		pActor->Apply_Shake_And_Blur(Power::Medium);
 
 		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_02.json", nullptr, CData_Manager::GetInstance()->Get_Player()->Get_Position());
-
+		m_pGameInstance->Play_Sound(L"MOTHER_FALLINGLOOP", L"FallingParasite_Falling_Loop_1.wav", SOUND_EFFECT7, 7.f);
+		
 		CGameObject* pObjcet = { nullptr };
 		for (int i = 0; i <2; ++i)
 		{
@@ -68,3 +70,4 @@ void CMother_ShakeTreeStart::Release(CMother* pActor)
 {
 	__super::Release(pActor);
 }
+

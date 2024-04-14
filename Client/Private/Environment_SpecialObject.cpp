@@ -465,7 +465,10 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 						m_pLeverWeaknessUI->Set_Enable(true);
 
 						if (m_pLightObject != nullptr)
+						{
 							m_pLightObject->Set_Enable(true);
+							m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Lamp_On_01.wav", SOUND_INTERACTOBJECT3, 7.f);
+						}
 
 					}
 					
@@ -546,6 +549,12 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 
 		if (true == m_pElevatorColliderCom->Is_Collision(m_pPlayer->Get_Collider())) //! 충돌 중이라면 플레이어  y값 고정
 		{
+			if (m_bPlaySound == false)
+			{
+				m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"CablePlatform_Engine_02.wav", SOUND_SPECIALOBJECT, 10.f);
+				m_bPlaySound = true;
+			}
+			
 			m_pPlayer->Get_Navigation()->Set_InteractMoveMode(true);
 			
 			if (m_bFirstCollision == false)
@@ -571,7 +580,8 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 						m_pPlayer->Set_UseGravity(true);
 						m_bFirstCollision = false;
-						
+						m_bPlaySound = false;
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"CablePlatform_Engine_Stop.wav", SOUND_SPECIALOBJECT2, 7.f);
 					}
 
 					break;
@@ -585,12 +595,14 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 					}
 					else
 					{
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"CablePlatform_Engine_Stop.wav", SOUND_SPECIALOBJECT2, 7.f);
 						m_bArrival = true;
 						m_bElevatorOn = false;
 						m_pPlayer->Get_Navigation()->Set_CurrentIndex(m_tEnvironmentDesc.iArrivalCellIndex);
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 						m_pPlayer->Set_UseGravity(true);
 						m_bFirstCollision = false;
+						m_bPlaySound = false;
 					}
 
 					break;
@@ -612,6 +624,8 @@ void CEnvironment_SpecialObject::ElevatorFunction(const _float fTimeDelta)
 						m_pPlayer->Get_Navigation()->Set_InteractMoveMode(false);
 						m_pPlayer->Set_UseGravity(true);
 						m_bFirstCollision = false;
+						m_bPlaySound = false;
+						m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"CablePlatform_Engine_Stop.wav", SOUND_SPECIALOBJECT2, 7.f);
 					}
 
 					break;
@@ -671,6 +685,7 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
 					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
 					m_iInitCellIndex = iSwapCellIndex;
+					m_bPlaySound = false;
 				}
 				
 
@@ -686,6 +701,7 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
 					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
 					m_iInitCellIndex = iSwapCellIndex;
+					m_bPlaySound = false;
 				}
 
 				break;
@@ -703,6 +719,7 @@ void CEnvironment_SpecialObject::Set_ElevatorOn(_bool bElevatorOn)
 					_int iSwapCellIndex = m_tEnvironmentDesc.iArrivalCellIndex;
 					m_tEnvironmentDesc.iArrivalCellIndex = m_iInitCellIndex;
 					m_iInitCellIndex = iSwapCellIndex;
+					m_bPlaySound = false;
 				}
 				
 				

@@ -8,6 +8,7 @@
 #include "Effect_Manager.h"
 #include "Son.h"
 #include "Bone.h"
+#include "GameInstance.h"
 
 CSon_Projectile::CSon_Projectile(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
@@ -69,7 +70,7 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
 
-
+	m_pGameInstance->Play_Sound(L"SON_ATTACK", L"grand_parasiter_mvm_slime_mediumA001", SOUND_ENEMY_SKILL3, 7.f);
 	return S_OK;
 }
 

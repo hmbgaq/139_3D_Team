@@ -32,6 +32,8 @@ public:
 
 	_float				m_fRadian = 0.f;
 	_bool				m_bFirst = true;
+
+	_bool				m_bCollision = false;
 private:
 	CEffect* m_pEffect = { nullptr };
 

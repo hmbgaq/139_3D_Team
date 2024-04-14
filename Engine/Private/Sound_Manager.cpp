@@ -129,8 +129,10 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"SON_ATTACK", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Attack/");
 	Load_SoundFile_GroupAsync(L"SON_HIT", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Hit/");
 	Load_SoundFile_GroupAsync(L"SON_DEAD", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/Dead/");
+	Load_SoundFile_GroupAsync(L"SON_BODYFALL", "../Bin/Resources/Sound/Enemy/GrandParasite/Son/BodyFall/");
 	
 	Load_SoundFile_GroupAsync(L"EFFECT", "../Bin/Resources/Sound/Effect/");
+	Load_SoundFile_GroupAsync(L"INTERACT_OBJECT", "../Bin/Resources/Sound/InteractObject/");
 
 
 	return S_OK;

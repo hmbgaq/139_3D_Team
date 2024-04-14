@@ -18,5 +18,6 @@ CState<CPlayer>* CPlayer_ZipLine_Stop::Update(CPlayer* pActor, _float fTimeDelta
 
 void CPlayer_ZipLine_Stop::Release(CPlayer* pActor)
 {
+	m_pGameInstance->Stop_Sound(SOUND_INTERACTBGM);
 	__super::Release(pActor);
 }
