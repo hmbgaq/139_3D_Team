@@ -274,10 +274,10 @@ void CWeapon_Heavy_Vampiric_Zombie::Free()
 
 	if (nullptr != m_pTrail_Post)
 	{
-		m_pTrail->Set_Play(false);
-		m_pTrail->Get_Desc()->bRender = false;
-		m_pTrail->Set_Object_Owner(nullptr);
-		m_pTrail = nullptr;
+		m_pTrail_Post->Set_Play(false);
+		m_pTrail_Post->Get_Desc()->bRender = false;
+		m_pTrail_Post->Set_Object_Owner(nullptr);
+		m_pTrail_Post = nullptr;
 		//Safe_Release(m_pTrail);
 	}
 
