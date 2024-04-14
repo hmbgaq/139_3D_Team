@@ -132,6 +132,18 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"EFFECT", "../Bin/Resources/Sound/Effect/");
 	Load_SoundFile_GroupAsync(L"INTERACT_OBJECT", "../Bin/Resources/Sound/InteractObject/");
 
+	/* UI */
+	Load_SoundFile_GroupAsync(L"UI_MouseOver", "../Bin/Resources/Sound/UI/Button/MouseOver/");
+	Load_SoundFile_GroupAsync(L"UI_DiedScreen", "../Bin/Resources/Sound/UI/DiedScreen/");
+	Load_SoundFile_GroupAsync(L"UI_LevelUP", "../Bin/Resources/Sound/UI/LevelUP/");
+	Load_SoundFile_GroupAsync(L"UI_GunSound", "../Bin/Resources/Sound/UI/GunSound/");
+	Load_SoundFile_GroupAsync(L"UI_LevelStart", "../Bin/Resources/Sound/UI/MainMenu/LevelStart/");
+	Load_SoundFile_GroupAsync(L"UI_Background", "../Bin/Resources/Sound/UI/SkillWindow/Background/");
+	Load_SoundFile_GroupAsync(L"UI_UnLock", "../Bin/Resources/Sound/UI/SkillWindow/UnLock/");
+	Load_SoundFile_GroupAsync(L"UI_Weapon", "../Bin/Resources/Sound/UI/SkillWindow/Weapon/");
+	Load_SoundFile_GroupAsync(L"UI_TutorialBox", "../Bin/Resources/Sound/UI/TutorialBox/");
+	Load_SoundFile_GroupAsync(L"UI_SkillWindow", "../Bin/Resources/Sound/UI/SkillWindow/");
+
 
 	return S_OK;
 }

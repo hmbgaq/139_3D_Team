@@ -53,7 +53,7 @@ HRESULT CUI_Interaction::Initialize(void* pArg)
 
 	m_fActive_Distance = 10.f;
 
-	m_tUIInfo.iRenderGroup = 9; // Back
+	m_tUIInfo.iRenderGroup = 18; // Back
 
 	return S_OK;
 }

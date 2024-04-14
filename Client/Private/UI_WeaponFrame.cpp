@@ -32,9 +32,11 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
 	// Level 0으로 시작
-	//m_eUI_Level = UI_LEVEL::LEVEL0;
+	m_eUI_Level = UI_LEVEL::LEVEL0;
 	// Test Level 1로 시작
-	m_eUI_Level = UI_LEVEL::LEVEL2;
+	//m_eUI_Level = UI_LEVEL::LEVEL1;
+	// Test Level 2로 시작
+	//m_eUI_Level = UI_LEVEL::LEVEL2;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -70,7 +72,9 @@ void CUI_WeaponFrame::Tick(_float fTimeDelta)
 			m_eUI_Level = LEVEL2;
 
 		Check_Picking(fTimeDelta);
+		//Check_Unlock(fTimeDelta);
 		Check_LevelChange(fTimeDelta);
+		Check_LevelPre(fTimeDelta);
 
 		/* Animation */
 		if (m_eUI_Level >= UI_LEVEL::LEVEL2 && m_bFirstFrame == true)
@@ -176,8 +180,8 @@ HRESULT CUI_WeaponFrame::Ready_Components()
 	{
 		m_bFirstFrame = true;
 
-		// 첫번째 기본 스킬들은 Level1로  시작 (바로 배울 수 있게)
-		m_eUI_Level = UI_LEVEL::LEVEL1;
+		// 첫번째 기본 스킬들은 Level1로  시작 (바로 배울 수 있게) XXX
+		//m_eUI_Level = UI_LEVEL::LEVEL1;
 
 		//! For.Com_Texture // 잠김
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_perks_empowered_slot"),
@@ -318,6 +322,11 @@ void CUI_WeaponFrame::Check_Picking(_float fTimeDelta)
 		if (g_UIMouseDownLB == true)
 		{
 #pragma region 1
+			wstring strFileName = L"";
+			strFileName = L"HM_UI_ShowWeaponEffect_06.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_Weapon", strFileName, CHANNELID::SOUND_UI_WEAPON, 13.f);
+
 			if (m_tUIInfo.strUIName == "Rifle")
 			{
 				// UI 선택
@@ -472,6 +481,94 @@ void CUI_WeaponFrame::Check_LevelChange(_float fTimeDelta)
 				m_pData_Manager->Set_AdditionalWeapon(Additional_Weapon::SHOTGUN_UPGRADE, true); // 스킬 효과 활성화
 			}
 		}
+	}
+}
+
+void CUI_WeaponFrame::Check_Unlock(_float fTimeDelta)
+{
+	if (m_pData_Manager->Get_CurLevel() == 1)
+	{
+		if (m_tUIInfo.strUIName == "Rifle" && m_bUnlockOk == false)
+		{
+			m_eUI_Level = LEVEL1; // 해금
+
+			m_bUnlockOk = true;
+		}
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 2)
+	{
+		if (m_tUIInfo.strUIName == "Revolver" && m_bUnlockOk == false)
+		{
+			m_eUI_Level = LEVEL1; // 해금
+
+			m_bUnlockOk = true;
+		}
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 3)
+	{
+		if (m_tUIInfo.strUIName == "Rifle_Skill1" && m_bUnlockOk == false)
+		{
+			m_eUI_Level = LEVEL1; // 해금
+
+			m_bUnlockOk = true;
+		}
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 4)
+	{
+		if (m_tUIInfo.strUIName == "Revolver_Skill1" && m_bUnlockOk == false)
+		{
+			m_eUI_Level = LEVEL1; // 해금
+
+			m_bUnlockOk = true;
+		}
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 5)
+	{
+		if (m_tUIInfo.strUIName == "Shotgun" && m_bUnlockOk == false)
+		{
+			m_eUI_Level = LEVEL1; // 해금
+
+			m_bUnlockOk = true;
+		}
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 6)
+	{
+		if (m_tUIInfo.strUIName == "Shotgun_Skill1" && m_bUnlockOk == false)
+		{
+			m_eUI_Level = LEVEL1; // 해금
+
+			m_bUnlockOk = true;
+		}
+	}
+}
+
+void CUI_WeaponFrame::Check_LevelPre(_float fTimeDelta)
+{
+#pragma region 1
+	if (m_tUIInfo.strUIName == "Revolver")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "Rifle")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "Shotgun")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+#pragma region 2
+	else if (m_tUIInfo.strUIName == "Revolver_Skill1")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "Rifle_skill1")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "Shotgun_Skill1")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
 	}
 }
 

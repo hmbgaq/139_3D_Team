@@ -38,12 +38,12 @@ void CEvent_UITrigger::Activate()
 	}
 	if (m_tUITriggerDesc.iSpawnGroupIndex == 1)
 	{// Crane 설명
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE); // 메세지 변경
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
 	else if (m_tUITriggerDesc.iSpawnGroupIndex == 2)
 	{// 좀비 설명
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE); // 메세지 변경
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
 	else if (m_tUITriggerDesc.iSpawnGroupIndex == 3)
@@ -51,24 +51,29 @@ void CEvent_UITrigger::Activate()
 		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::JENU); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
+	//else if (m_tUITriggerDesc.iSpawnGroupIndex == 4)
+	//{// 좀비무리 설명
+	//	m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE_OVER); // 메세지 변경
+	//	m_pUIManager->Active_TutorialBox(); // Active 활성화
+	//}
 	else if (m_tUITriggerDesc.iSpawnGroupIndex == 4)
-	{// 좀비무리 설명
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::ZOMBIE_OVER); // 메세지 변경
-		m_pUIManager->Active_TutorialBox(); // Active 활성화
-	}
-	else if (m_tUITriggerDesc.iSpawnGroupIndex == 5)
 	{// 스나이퍼 설명
 		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::SNIPER); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
-	else if (m_tUITriggerDesc.iSpawnGroupIndex == 6)
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 5)
 	{// 설산 시작 설명
 		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::SNOW_START); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
-	else if (m_tUITriggerDesc.iSpawnGroupIndex == 7)
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 6)
 	{// 탱커 설명
 		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::TANK); // 메세지 변경
+		m_pUIManager->Active_TutorialBox(); // Active 활성화
+	}
+	else if (m_tUITriggerDesc.iSpawnGroupIndex == 7)
+	{// 기술 습득
+		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::REWARD); // 메세지 변경
 		m_pUIManager->Active_TutorialBox(); // Active 활성화
 	}
 

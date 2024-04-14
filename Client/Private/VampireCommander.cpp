@@ -110,12 +110,12 @@ void CVampireCommander::Tick(_float fTimeDelta)
 
 	if (m_bAuraDead == false && m_fHp <= 0.f)
 	{
-		EFFECT_MANAGER->Return_ToPool(m_pAuraEffect);
 		m_pAuraEffect->Set_Object_Owner(nullptr);
+		EFFECT_MANAGER->Return_ToPool(m_pAuraEffect);
 		m_pAuraEffect = nullptr;
 
-		EFFECT_MANAGER->Return_ToPool(m_pMapEffect);
 		m_pMapEffect->Set_Object_Owner(nullptr);
+		EFFECT_MANAGER->Return_ToPool(m_pMapEffect);
 		m_pMapEffect = nullptr;
 		
 		m_bAuraDead = true;

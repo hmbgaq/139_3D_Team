@@ -102,14 +102,14 @@ namespace Client
 
 
 
-	#define SUPER_CHARGE_MAXCOOLTIME		0.f	//30.f
-	#define HEAL_MAXCOOLTIME				0.f	//5.f
-	#define REVOLVER_MAXCOOLTIME			0.f	//7.f
-	#define SHOTGUN_MAXCOOLTIME				0.f	//10.f
-	#define RIFLE_MAXCOOLTIME				0.f	//2.f
-	#define SLAM_MAXCOOLTIME				0.f	//10.f
-	#define KICK_MAXCOOLTIME				0.f	//1.f
-	#define WHIP_MAXCOOLTIME				0.f	//1.f
+	#define SUPER_CHARGE_MAXCOOLTIME		30.f	//0.f
+	#define HEAL_MAXCOOLTIME				5.f		//0.f
+	#define REVOLVER_MAXCOOLTIME			7.f		//0.f
+	#define SHOTGUN_MAXCOOLTIME				10.f	//0.f
+	#define RIFLE_MAXCOOLTIME				2.f		//0.f
+	#define SLAM_MAXCOOLTIME				10.f	//0.f
+	#define KICK_MAXCOOLTIME				1.f		//0.f
+	#define WHIP_MAXCOOLTIME				1.f		//0.f
 
 
 

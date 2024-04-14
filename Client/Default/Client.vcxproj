@@ -1303,6 +1303,7 @@
     <ClInclude Include="..\Public\UI_Skill_Preview.h" />
     <ClInclude Include="..\Public\UI_Sprite.h" />
     <ClInclude Include="..\Public\UI_TalkBox.h" />
+    <ClInclude Include="..\Public\UI_TextImage.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
     <ClInclude Include="..\Public\UI_WeaponActiveGuige.h" />
@@ -2364,6 +2365,7 @@
     <ClCompile Include="..\Private\UI_Skill_Preview.cpp" />
     <ClCompile Include="..\Private\UI_Sprite.cpp" />
     <ClCompile Include="..\Private\UI_TalkBox.cpp" />
+    <ClCompile Include="..\Private\UI_TextImage.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />
     <ClCompile Include="..\Private\UI_WeaponActiveGuige.cpp" />

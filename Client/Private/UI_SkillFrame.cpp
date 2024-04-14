@@ -32,9 +32,10 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
 	// Level 0으로 시작
-	//m_eUI_Level = UI_LEVEL::LEVEL0;
+	m_eUI_Level = UI_LEVEL::LEVEL0;
 	// Test 1로 시작
-	m_eUI_Level = UI_LEVEL::LEVEL2;
+	//m_eUI_Level = UI_LEVEL::LEVEL1;
+	//m_eUI_Level = UI_LEVEL::LEVEL2;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -61,18 +62,20 @@ void CUI_SkillFrame::Tick(_float fTimeDelta)
 	{
 		//m_pUIManager->Active_SkillActiveGuige();
 
-		if (m_pGameInstance->Key_Down(DIK_7))
-			m_eUI_Level = LEVEL0;
-		if (m_pGameInstance->Key_Down(DIK_8))
-			m_eUI_Level = LEVEL1;
-		if (m_pGameInstance->Key_Down(DIK_9))
-			m_eUI_Level = LEVEL2;
+		//if (m_pGameInstance->Key_Down(DIK_7))
+		//	m_eUI_Level = LEVEL0;
+		//if (m_pGameInstance->Key_Down(DIK_8))
+		//	m_eUI_Level = LEVEL1;
+		//if (m_pGameInstance->Key_Down(DIK_9))
+		//	m_eUI_Level = LEVEL2;
 
 		Check_Picking(fTimeDelta);
 		//Check_State();
+		//Check_Unlock(fTimeDelta);
 		Check_LevelChange(fTimeDelta);
+		Check_LevelPre(fTimeDelta);
 
-		m_eUI_PreLevel = m_eUI_Level;
+		/*m_eUI_PreLevel = m_eUI_Level;*/
 	}
 	else
 	{
@@ -292,6 +295,12 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 	{
 		if (g_UIMouseDownLB == true)
 		{
+			{
+				wstring strFileName = L"";
+				strFileName = L"HM_UI_ShowWeaponEffect_06.wav";
+
+				m_pGameInstance->Play_Sound(L"UI_Weapon", strFileName, CHANNELID::SOUND_UI_WEAPON, 13.f);
+			}
 #pragma region 1
 			if (m_tUIInfo.strUIName == "Kick")
 			{
@@ -535,6 +544,94 @@ void CUI_SkillFrame::Check_State()
 	}
 }
 
+void CUI_SkillFrame::Check_LevelPre(_float fTimeDelta)
+{
+#pragma region 1
+	if (m_tUIInfo.strUIName == "Kick")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "ElectricDash")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "DashShock")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "ElectricCord")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "PowerUP")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+#pragma region 2
+	else if (m_tUIInfo.strUIName == "UpperCut")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "OneTouch")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "TwoTouch")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "ThreeTouch")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "ComboPunch")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+#pragma region 3
+	else if (m_tUIInfo.strUIName == "Punch")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "SuperChargeMod")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "TeleportPunch")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseEXP")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "NPCPowerUP")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+#pragma region 4
+	else if (m_tUIInfo.strUIName == "Heal")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "RecoveryEnergy")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseHP")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "IncreaseEnergy")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+	else if (m_tUIInfo.strUIName == "MaxHP")
+	{
+		m_eUI_PreLevel = m_eUI_Level;
+	}
+}
+
 void CUI_SkillFrame::Check_LevelChange(_float fTimeDelta)
 {
 	if (m_eUI_PreLevel != m_eUI_Level)
@@ -729,6 +826,157 @@ void CUI_SkillFrame::Check_LevelChange(_float fTimeDelta)
 			}
 		}
 	}
+}
+
+void CUI_SkillFrame::Check_Unlock(_float fTimeDelta)
+{
+#pragma region 1
+	if (m_pData_Manager->Get_CurLevel() == 1)
+	{
+		if (m_tUIInfo.strUIName == "Kick" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "UpperCut" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "OneTouch" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "Heal" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 2)
+	{
+		if (m_tUIInfo.strUIName == "ElectricDash" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "DashShock" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "ElectricCord" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "PowerUP" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+	
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 3)
+	{
+		if (m_tUIInfo.strUIName == "TwoTouch" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+	
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 4)
+	{
+		if (m_tUIInfo.strUIName == "ThreeTouch" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 5)
+	{
+		if (m_tUIInfo.strUIName == "Punch" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+		
+			m_bUnlock = true;
+		}
+		
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 6)
+	{
+		if (m_tUIInfo.strUIName == "ComboPunch" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 7)
+	{
+		if (m_tUIInfo.strUIName == "SuperChargeMod" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "TeleportPunch" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEXP" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "NPCPowerUP" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 8)
+	{
+		if (m_tUIInfo.strUIName == "RecoveryEnergy" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseHP" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "IncreaseEnergy" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+		else if (m_tUIInfo.strUIName == "MaxHP" && m_bUnlock == false)
+		{
+			m_eUI_Level = UI_LEVEL::LEVEL1; // 해금
+			m_bUnlock = true;
+		}
+
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 9 && m_bUnlock == false)
+	{
+
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 10 && m_bUnlock == false)
+	{
+
+	}
+	else if (m_pData_Manager->Get_CurLevel() == 11 && m_bUnlock == false)
+	{
+
+	}
+
 }
 
 void CUI_SkillFrame::Compute_OwnerCamDistance()

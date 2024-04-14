@@ -234,6 +234,9 @@ public:
 
 
 
+public: // !¼ºÈñ Ãß°¡
+	void Activate_SuperChargeUI();
+
 public:
 	void Search_LockOn_Target();
 	CCharacter* Get_LockOn_Target() { return m_pLockOnTarget; };

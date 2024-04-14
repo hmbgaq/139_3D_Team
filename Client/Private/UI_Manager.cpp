@@ -19,6 +19,7 @@
 #include "UI_Skill_Preview.h"
 #include "UI_SkillFrame.h"
 #include "UI_WeaponFrame.h"
+#include "UI_TextImage.h"
 #pragma endregion
 #include "Data_Manager.h"
 
@@ -486,11 +487,24 @@ void CUI_Manager::Active_PlayerHUD()
 
 	for (auto& iter : m_vecLeftHUD)
 	{
-		iter->Set_Alpha(0.f);		// UI 알파값 초기화
-		iter->Set_Active(true);		// UI 활성화
-		iter->Set_AnimPlay(true);	// UI Animation 재생
-		iter->Set_Disappear(false); // UI 사라짐 Off
-		iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		if (iter->Get_UIDesc().strUIName == "Fog" ||
+			iter->Get_UIDesc().strUIName == "Lightning")
+		{
+			//iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
+		else
+		{
+			iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
+
 	}
 
 	if (m_vecRightHUD.empty())
@@ -498,11 +512,22 @@ void CUI_Manager::Active_PlayerHUD()
 
 	for (auto& iter : m_vecRightHUD)
 	{
-		iter->Set_Alpha(0.f);		// UI 알파값 초기화
-		iter->Set_Active(true);		// UI 활성화
-		iter->Set_AnimPlay(true);	// UI Animation 재생
-		iter->Set_Disappear(false); // UI 사라짐 Off
-		iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		if (iter->Get_UIDesc().strUIName == "Fog")
+		{
+			//iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
+		else
+		{
+			iter->Set_Alpha(0.f);		// UI 알파값 초기화
+			iter->Set_Active(true);		// UI 활성화
+			iter->Set_AnimPlay(true);	// UI Animation 재생
+			iter->Set_Disappear(false); // UI 사라짐 Off
+			iter->ResetTime();			// ! (LifeTime UI일 경우) UI TimeReset
+		}
 	}
 
 	if (m_vecLeftSkill.empty())
@@ -537,10 +562,21 @@ void CUI_Manager::NonActive_PlayerHUD()
 
 	for (auto& iter : m_vecLeftHUD)
 	{
-		iter->Set_Alpha(1.f);		// UI 알파값 초기화
-		iter->Set_Active(false);	// UI 활성화
-		iter->Set_AnimPlay(false);	// UI Animation 재생
-		iter->Set_Disappear(true);	// UI 사라짐 Off
+
+		if (iter->Get_UIDesc().strUIName == "Fog" ||
+			iter->Get_UIDesc().strUIName == "Lightning")
+		{
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
+		else
+		{
+			iter->Set_Alpha(1.f);		// UI 알파값 초기화
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
 	}
 
 	if (m_vecRightHUD.empty())
@@ -548,10 +584,20 @@ void CUI_Manager::NonActive_PlayerHUD()
 
 	for (auto& iter : m_vecRightHUD)
 	{
-		iter->Set_Alpha(1.f);		// UI 알파값 초기화
-		iter->Set_Active(false);	// UI 활성화
-		iter->Set_AnimPlay(false);	// UI Animation 재생
-		iter->Set_Disappear(true);	// UI 사라짐 Off
+		if (iter->Get_UIDesc().strUIName == "Fog" ||
+			iter->Get_UIDesc().strUIName == "Lightning")
+		{
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
+		else
+		{
+			iter->Set_Alpha(1.f);		// UI 알파값 초기화
+			iter->Set_Active(false);	// UI 활성화
+			iter->Set_AnimPlay(false);	// UI Animation 재생
+			iter->Set_Disappear(true);	// UI 사라짐 Off
+		}
 	}
 
 	if (m_vecLeftSkill.empty())
@@ -660,9 +706,20 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
-		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		if (tUI_Info.strUIName == "Fog" ||
+			tUI_Info.strUIName == "Lightning")
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
+		else
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
+
 
 		m_vecLeftHUD.push_back(pUI_Object);
 
@@ -1332,9 +1389,19 @@ HRESULT CUI_Manager::Add_RightHUD(_uint iLevelIndex, const wstring& strLayerTag)
 		if (pUI_Object == nullptr)
 			return E_FAIL;
 
-		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
-		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		if (tUI_Info.strUIName == "Fog" ||
+			tUI_Info.strUIName == "Lightning")
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
+		else
+		{
+			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
+			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		}
 
 		m_vecRightHUD.push_back(pUI_Object);
 
@@ -1478,8 +1545,13 @@ HRESULT CUI_Manager::Add_TutorialBox(_uint iLevelIndex, const wstring& strLayerT
 
 		m_vecTutorialBox.push_back(pUI_Object);
 
+		if (pUI_Object->Get_UIDesc().strUIName == "Fog")
+		{
+			int test = 10;
+		}
+
 		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(7000.f);					// UI LifeTime
+		pUI_Object->Set_LifeTime(8000.f);					// UI LifeTime
 		pUI_Object->Set_UIState(UISTATE::TUTORIAL_BOX);		// UI State
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
@@ -4139,6 +4211,14 @@ void CUI_Manager::Change_SkillWindow(const string& strUIName)
 {
 }
 
+void CUI_Manager::Change_MessageBox(const _uint iTextNum)
+{
+	if (m_pReward_MessageBox == nullptr)
+		return;
+
+	dynamic_cast<CUI_TextImage*>(m_pReward_MessageBox)->Change_RewardMassege(iTextNum);
+}
+
 HRESULT CUI_Manager::Add_SkillIcon(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 	json json_in;
@@ -4525,6 +4605,11 @@ HRESULT CUI_Manager::Add_SkillPreview(_uint iLevelIndex, const wstring& strLayer
 
 		m_vecSkillPreview.push_back(pUI_Object);
 
+		if (pUI_Object->Get_UIDesc().strUIName == "RewardMessageBox")
+		{
+			m_pReward_MessageBox = pUI_Object;
+		}
+
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 		pUI_Object->Load_FromJson(object); // 18. Load Data
 	}
@@ -4833,6 +4918,12 @@ void CUI_Manager::Check_SkillWindowTrigger()
 	{
 		if (m_pSkillWindowBackground->Get_AnimTrigger() == true && m_bShowSkillWindow == false)
 		{
+			/* Sound */
+			wstring strFileName = L"";
+			strFileName = L"HM_MUS_LS_PreGatling_Main_Dm_102bpm_16.wav";
+
+			m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWBGM, 13.f);
+
 			Active_SkillWindow(true);
 			Active_SkillIcon(true);
 			Active_SkillFrame(true);

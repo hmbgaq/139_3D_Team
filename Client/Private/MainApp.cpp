@@ -260,6 +260,12 @@ HRESULT CMainApp::Ready_UITexture()
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Shotgun_Skill1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Shotgun_Skill1.dds"))));
 	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Rifle_Skill1"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/WeaponDescription/Rifle_Skill1.dds"))));
 	
+	// SkillWindow Text
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Button_Message"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/SkillWindow/Button_Message (%d).dds"), 3)));
+	
+	// LevelUp Message
+	FAILED_CHECK(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("LevelUpMessage"), CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Textures/PlayerHUD/LevelUpMessage.dds"))));
+
 	return S_OK;
 }
 

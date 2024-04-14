@@ -42,6 +42,8 @@ HRESULT CUI_SkillIcon::Initialize(void* pArg)
 	// Size Check
 	Check_IconSize();
 
+	m_eUI_Level = LEVEL0;
+
 	return S_OK;
 }
 

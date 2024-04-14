@@ -80,7 +80,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 			{
 				if (m_pUIManager->Get_Select_SkillPoint() > m_pData_Manager->Get_SkillPoint()) // 요구포인트 > 가진포인트
 				{
-					// 습득불가
+					m_pUIManager->Change_MessageBox(1); // 포인트 부족
 					return;
 				}
 
@@ -110,6 +110,12 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 					m_pUIManager->Select_SkillLevelUP(); // 레벨업
 					m_bCoolDown = false;
 					m_bMaxCoolDown = true;
+
+					/* Sound */
+					wstring strFileName = L"";
+					strFileName = L"HM_UI_Screen_NewWeapon.wav";
+
+					m_pGameInstance->Play_Sound(L"UI_Weapon", strFileName, CHANNELID::SOUND_UI_SKILLACTIVE, 13.f);
 
 					// 활성화
 					Check_SkillActive(fTimeDelta, SKILLSTATE::ACTIVE);

@@ -136,10 +136,6 @@ HRESULT CUI_TalkBox::Ready_Components()
 {
 	FAILED_CHECK(__super::Ready_Components()); // Ready : Texture / MapTexture
 
-	//! For.Com_Texture
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("ui_element_bcg_tut_new"),
-		TEXT("Com_Texture_TextBox"), reinterpret_cast<CComponent**>(&m_pTextureCom[TEXTBOX]))))
-		return E_FAIL;
 
 	//! For.Com_Texture
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("TutorialText"),
@@ -156,8 +152,6 @@ HRESULT CUI_TalkBox::Bind_ShaderResources()
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(m_pTextureCom[TEXTBOX]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
-		return E_FAIL;
 
 	if (FAILED(m_pTextureCom[TUTORIALTEXT]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture_Front", m_iTextNum)))
 		return E_FAIL;

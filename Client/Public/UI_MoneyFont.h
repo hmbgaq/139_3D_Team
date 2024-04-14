@@ -41,7 +41,10 @@ public:
 	void				 Add_Text(string strTextKey, string strFontTag, string strText, _float fPosX, _float fPosY, _vector vColor, _float fScale, _float2 vOrigin, _float fRotation);
 	HRESULT				 Find_Change(const string& strTextTag);
 	_float				 m_fChangeScale = 1.f;
-	_float				 m_fOffsetX, m_fOffsetY;
+	_float				 m_fOffsetX = 0.f;
+	_float				 m_fOffsetY = 0.f;
+	_float				 m_fX = 0.f;
+	_float				 m_fY = 0.f;
 
 private:
 	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };

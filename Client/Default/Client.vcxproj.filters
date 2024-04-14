@@ -4069,6 +4069,9 @@
     <Filter Include="02.GameObjects\UI\02. System\00. Text\02. TalkBox">
       <UniqueIdentifier>{a3721189-fd31-402e-a1a1-13e8253aceb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\02. System\00. Text\03. TextImage">
+      <UniqueIdentifier>{fa933417-03ea-48ed-8411-4f4f1331dfa5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\BloodLoop">
       <UniqueIdentifier>{1b31c7ad-e28c-483f-bd20-26eeac075148}</UniqueIdentifier>
     </Filter>
@@ -7986,6 +7989,9 @@
     <ClInclude Include="..\Public\UI_TalkBox.h">
       <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_TextImage.h">
+      <Filter>02.GameObjects\UI\02. System\00. Text\03. TextImage</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\VampireCommander_Projectile_BloodLoop.h">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\BloodLoop</Filter>
     </ClInclude>
@@ -11370,6 +11376,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_TalkBox.cpp">
       <Filter>02.GameObjects\UI\02. System\00. Text\02. TalkBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_TextImage.cpp">
+      <Filter>02.GameObjects\UI\02. System\00. Text\03. TextImage</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_Projectile_BloodLoop.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\BloodLoop</Filter>
