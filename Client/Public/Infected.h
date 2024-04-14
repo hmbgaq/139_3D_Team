@@ -89,6 +89,7 @@ protected:
 private:
 	CActor<CInfected>* m_pActor = { nullptr };
 
+
 public:
 	virtual CGameObject* Clone(void* pArg) PURE;
 	virtual CGameObject* Pool() PURE;

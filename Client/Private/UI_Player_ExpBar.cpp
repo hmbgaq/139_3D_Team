@@ -131,64 +131,67 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 
 				// 레벨업 보상
 				{
-					m_pData_Manager->Add_Money(500);
-					m_pData_Manager->Add_SkillPoint(2);
+					m_pData_Manager->Add_Money(1000);
+					m_pData_Manager->Add_SkillPoint(3);
 
 					// 기본 제공
 					/*if (m_tUIInfo.strUIName == "Kick")
 					{
-						m_eUI_PreLevel = m_eUI_Level;
+					   m_eUI_PreLevel = m_eUI_Level;
 					}
 					else if (m_tUIInfo.strUIName == "UpperCut")
 					{
-						m_eUI_PreLevel = m_eUI_Level;
+					   m_eUI_PreLevel = m_eUI_Level;
 					}
 					else if (m_tUIInfo.strUIName == "Heal")
 					{
-						m_eUI_PreLevel = m_eUI_Level;
+					   m_eUI_PreLevel = m_eUI_Level;
 					}
 					else if (m_tUIInfo.strUIName == "Punch")
 					{
-						m_eUI_PreLevel = m_eUI_Level;
+					   m_eUI_PreLevel = m_eUI_Level;
 					}*/
 
 					if (m_pData_Manager->Get_CurLevel() == 2)
 					{
 						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("ElectricDash", 1);	// 대쉬
-						m_pUIManager->Set_SkillLevel("OneTouch", 1);		// 1터치
-						m_pUIManager->Set_SkillLevel("ComboPunch", 1);		// 콤보펀치
+						m_pUIManager->Set_SkillLevel("OneTouch", 1);      // 1터치
+						m_pUIManager->Set_SkillLevel("ElectricDash", 1);   // 대쉬
 
 						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Rifle_skill1", 1);		// 라이플 스킬
+						m_pUIManager->Set_WeaponLevel("Rifle_skill1", 1);      // 라이플 스킬
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 3)
 					{
 						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("TwoTouch", 1);		// 2터치
-						m_pUIManager->Set_SkillLevel("DashShock", 1);		// 대쉬감전 효과
+						m_pUIManager->Set_SkillLevel("TwoTouch", 1);      // 2터치
+						m_pUIManager->Set_SkillLevel("DashShock", 1);      // 대쉬감전 효과
 
 						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Revolver", 1);			// 리볼버
+						m_pUIManager->Set_WeaponLevel("Revolver", 1);         // 리볼버
 
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 4)
 					{
 						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("ElectricCord", 1);	// 전기줄 당기기
-						m_pUIManager->Set_SkillLevel("ThreeTouch", 1);		// 3터치
+						m_pUIManager->Set_SkillLevel("ComboPunch", 1);      // 콤보펀치
+						m_pUIManager->Set_SkillLevel("ThreeTouch", 1);      // 3터치
 
 						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Revolver_Skill1", 1);	// 리볼버 스킬
+						m_pUIManager->Set_WeaponLevel("Revolver_Skill1", 1);   // 리볼버 스킬
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 5)
 					{
 						/* 스킬 해금 */
+						m_pUIManager->Set_SkillLevel("ElectricCord", 1);   // 전기줄 당기기
 						m_pUIManager->Set_SkillLevel("IncreaseHP", 1);
 						m_pUIManager->Set_SkillLevel("IncreaseEnergy", 1);
+
+						/* 무기 해금 */
+						m_pUIManager->Set_WeaponLevel("Shotgun", 1);         // 샷건
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 6)
@@ -197,8 +200,6 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 						m_pUIManager->Set_SkillLevel("IncreaseEXP", 1);
 						m_pUIManager->Set_SkillLevel("NPCPowerUP", 1);
 
-						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Shotgun", 1);			// 샷건
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 7)
@@ -206,35 +207,28 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 						/* 스킬 해금 */
 						m_pUIManager->Set_SkillLevel("SuperChargeMod", 1);
 						m_pUIManager->Set_SkillLevel("TeleportPunch", 1);
+						m_pUIManager->Set_SkillLevel("MaxHP", 1);
 
 						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Shotgun_Skill1", 1);		// 샷건 스킬
-			
+						m_pUIManager->Set_WeaponLevel("Shotgun_Skill1", 1);      // 샷건 스킬
+
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 8)
 					{
 						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("MaxHP", 1);
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 9)
 					{
 
 					}
-					
-					//// Player
-					//if (m_pPlayer != nullptr)
-					//{
-					//	m_pPlayer = m_pData_Manager->Get_Player();
-					//	m_pPlayer->Set_Hp(m_pPlayer->Get_MaxHP());
-					//}
-				}
 
-				//m_pData_Manager->Set_ShowLevelBox(true);
-				m_pUIManager->Active_LevelUp();
-				m_fTimeAcc = 0.f;
-				m_bLerp = true;
+					//m_pData_Manager->Set_ShowLevelBox(true);
+					m_pUIManager->Active_LevelUp();
+					m_fTimeAcc = 0.f;
+					m_bLerp = true;
+				}
 			}
 		}
 	}

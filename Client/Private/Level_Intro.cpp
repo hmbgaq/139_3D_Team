@@ -60,8 +60,8 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
     //FAILED_CHECK(Ready_Shader());
     
-    if (m_bMonsterTest == true)
-        FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
+    //if (m_bMonsterTest == true)
+    FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 
     FAILED_CHECK(Ready_UI());
 
@@ -218,10 +218,10 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     //pMonster->Set_InitPosition(_float3(0.0f, 0.f, 2.f));
 
 
- //   //! 유정 트레일 테스트 스나이퍼 소환
-	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
-	//NULL_CHECK_RETURN(pMonster, E_FAIL);
-	//pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+ // //! 유정 트레일 테스트 스나이퍼 소환
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
 
  //   //! 유정 트레일 테스트 제누거인 소환
 	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));

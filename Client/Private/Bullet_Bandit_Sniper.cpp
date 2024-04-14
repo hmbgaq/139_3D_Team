@@ -188,7 +188,7 @@ void CBullet_Bandit_Sniper::Free()
 		m_pTrail->Set_Play(false);
 		m_pTrail->Get_Desc()->bRender = false;
 		m_pTrail->Set_Object_Owner(nullptr);
-		m_pTrail = nullptr;
+		//m_pTrail = nullptr;
 		//Safe_Release(m_pTrail);
 	}
 

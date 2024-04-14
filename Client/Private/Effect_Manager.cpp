@@ -469,6 +469,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_TeleportPunch.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_8hit.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Electrocute_01.json", 300));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Dead_Monster_01.json", 300));
 #pragma endregion Hit ¿Ã∆Â∆Æ ≥°
 
 

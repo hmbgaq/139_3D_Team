@@ -71,7 +71,6 @@ HRESULT CTank::Initialize(void* pArg)
 
 	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
-
 	if (pArg == nullptr)
 	{
 		CGameObject::GAMEOBJECT_DESC		GameObjectDesc = {};
@@ -240,6 +239,8 @@ void CTank::Hitted_Finish()
 
 void CTank::Hitted_Dead(Power ePower)
 {
+	dynamic_cast<CBody_Tank*>(m_pBody)->Set_Dissolve(true);
+
 	m_pActor->Set_State(new CTank_DeathNormal_F_01());
 }
 
