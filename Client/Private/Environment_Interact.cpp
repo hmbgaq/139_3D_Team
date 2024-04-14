@@ -3199,7 +3199,6 @@ HRESULT CEnvironment_Interact::Ready_Components()
 		FAILED_CHECK(__super::Add_Component(m_iCurrentLevelIndex, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 	}
 	
-
 	//if (m_tEnvironmentDesc.eInteractType == CEnvironment_Interact::INTERACT_WAGONPUSH)
 	//{
 	//	/* For.Com_Model */
@@ -3209,9 +3208,6 @@ HRESULT CEnvironment_Interact::Ready_Components()
 	//
 	//	
 	//}
-
-
-	
 
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(m_iCurrentLevelIndex, m_tEnvironmentDesc.strModelTag,
@@ -3329,9 +3325,7 @@ HRESULT CEnvironment_Interact::Classification_Model()
 			 TEXT("Prototype_Component_Model_ChainLadder2") == strTemp||
 			 TEXT("Prototype_Component_Model_ChainMod1") == strTemp ||
 			 TEXT("Prototype_Component_Model_InteractHangingChain900") == strTemp ||
-			 TEXT("Prototype_Component_Model_InteractZipLineRope") == strTemp
-		
-		)
+			 TEXT("Prototype_Component_Model_InteractZipLineRope") == strTemp)
 	{
 		m_bRenderOutLine = true;
 		m_vChainMesh.push_back(0);

@@ -150,7 +150,7 @@ HRESULT CBody_Player::Render()
 
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
-			m_vRimColor = { 0.f, 0.0f, 0.7f, 1.f };   /* RimLight */
+			m_vRimColor = { 0.f, 0.84f, 1.f, 1.f };   /* RimLight */
 			m_fRimPower = 2.f;                         /* RimLight */
 			m_vBloomPower = { 0.f, 0.f, 0.8f};
 
@@ -208,7 +208,7 @@ HRESULT CBody_Player::Render_OutLine()
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
 	{
-		m_vLineColor = { 0.7f, 0.7f, 0.7f, 1.f };
+		m_vLineColor = { 0.f, 0.84f, 1.f, 1.f };
 		m_fLineThick = { 0.3f };
 		m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
 		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));

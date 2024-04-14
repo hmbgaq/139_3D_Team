@@ -835,14 +835,14 @@ void CPlayer::KeyInput(_float fTimeDelta)
 	
 		if (m_bShowOption == true)
 		{
-			
+			m_pGameInstance->Get_Renderer()->Set_DOF_Active(true);
 			m_pUIManager->Active_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::UI);
 		}
 		else
 		{
-			
+			m_pGameInstance->Get_Renderer()->Set_DOF_Active(false);
 			m_pUIManager->NonActive_Option();
 			m_pUIManager->Active_MouseCursor();
 			m_pDataManager->Set_GameState(GAME_STATE::GAMEPLAY);

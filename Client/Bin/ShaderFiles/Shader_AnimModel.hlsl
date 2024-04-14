@@ -611,7 +611,7 @@ PS_OUT PS_MAIN_SUPERCHARGE(PS_IN In)
     vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
     // ÆÄ¶õÅæ
-    vMtrlDiffuse = vMtrlDiffuse * 0.5 * float4(0.3f, 0.3f, 0.8f, 1.0f);
+    vMtrlDiffuse = vMtrlDiffuse * 0.5 * g_vRimColor;
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
@@ -629,7 +629,8 @@ PS_OUT PS_MAIN_SUPERCHARGE(PS_IN In)
     float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
     Out.vDiffuse += vRimColor;
     // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
-    // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse);
+    //Out.vRimBloom = Calculation_Brightness(float4(1.f, 1.f, 1.f, 1.f)) + vRimColor;
+    
     
     return Out;
 }

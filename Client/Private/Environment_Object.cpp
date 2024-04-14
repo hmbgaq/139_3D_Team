@@ -109,28 +109,6 @@ HRESULT CEnvironment_Object::Render()
 			m_pModelCom->Render((_uint)i);
 		}
 	}
-	else if (true == bRenderIce && false == bIcarusTexture)	// Ice 
-	{
-		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-		for (size_t i = 0; i < iNumMeshes; i++)
-		{
-			if (m_tEnvironmentDesc.bAnimModel == true)
-			{
-				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-			}
-			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
-			m_pIceNoise->Bind_ShaderResource(m_pShaderCom, "g_NoiseTexture");
-			m_pIceDiffuse->Bind_ShaderResource(m_pShaderCom, "g_ColorDiffuse");
-
-			if (i == m_iIceMeshNumber)
-				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ICICLE));
-			else
-				m_pShaderCom->Begin(m_tEnvironmentDesc.iShaderPassIndex);
-
-			m_pModelCom->Render((_uint)i);
-		}
-	}
 	else
 	{
 		_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();

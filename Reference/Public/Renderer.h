@@ -206,6 +206,9 @@ private:
 	_bool 						m_bHDR_Clear				= false;
 	_bool 						m_bRadialBlur_Clear			= false;
 	_bool 						m_bFxaa_Clear				= false;
+	_bool						m_bHSV_Clear = false;
+	_bool						m_bVignette_Clear = false;
+
 	_bool 						m_Chroma_Clear				= false;
 	_bool 						m_bLumaSharpen_Clear		= false;
 
