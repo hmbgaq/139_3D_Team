@@ -243,7 +243,7 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 HRESULT CLevel_SnowMountain::Ready_Layer_Effect(const wstring& strLayerTag)
 {
 	_float3 vPos = { 14.87f, 0.f, -8.06f };
-	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Snow/", "Snow_04.json", nullptr, vPos);
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Snow/", "Snow_05.json", nullptr, vPos);
 
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));

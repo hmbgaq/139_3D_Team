@@ -593,7 +593,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));
 
-	FAILED_CHECK(Add_ToPool(iLevel, "Snow/", "Snow_04.json", 1));
+	FAILED_CHECK(Add_ToPool(iLevel, "Snow/", "Snow_05.json", 1));
 
 #pragma endregion // ¸Ê¿¡ Àü¿ªÀ¸·Î ±ò¸®´Â ÀÌÆåÆ®
 
