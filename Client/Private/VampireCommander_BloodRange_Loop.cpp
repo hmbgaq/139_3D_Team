@@ -29,7 +29,7 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 {
 	m_bBloodLoopTime += fTimeDelta;
 
-	if (m_bBloodLoopTime >=3.f)
+	if (m_bBloodLoopTime >=0.5f)
 	{
 		m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BossProjectile", L"Prototype_GameObject_VampireCommander_Projectile_BloodLoop");
 		m_bBloodLoopTime = 0.f;
@@ -164,6 +164,13 @@ void CVampireCommander_BloodRange_Loop::Release(CVampireCommander* pActor)
 		pActor->m_pWeakneesUIs[i]->Set_Dead(true);
 	}
 	pActor->m_pWeakneesUIs.clear();
+
+	list<CGameObject*>* _pMTargets = m_pGameInstance->Get_GameObjects(LEVEL_INTRO_BOSS, TEXT("Layer_BossProjectile"));
+
+	for (CGameObject* pGameObject : *_pMTargets)
+	{
+		pGameObject->Set_Dead(true);
+	}
 
 	m_fSoundTimeAcc = 0.f;
 }

@@ -45,7 +45,7 @@ HRESULT CVampireCommander_Projectile_BloodLoop::Initialize(void* pArg)
 	{
 
 		m_pMonster = dynamic_cast<CCharacter*>(pGameObject);
-		m_vMonsterPos = m_pMonster->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 8 * m_pMonster->Get_Transform()->Get_State(CTransform::STATE_LOOK);
+		m_vMonsterPos = m_pMonster->Get_Transform()->Get_State(CTransform::STATE_POSITION) + 9 * m_pMonster->Get_Transform()->Get_State(CTransform::STATE_LOOK);
 		m_pTransformCom->Set_WorldMatrix(m_pMonster->Get_Transform()->Get_WorldMatrix());
 	}
 
@@ -59,7 +59,7 @@ HRESULT CVampireCommander_Projectile_BloodLoop::Initialize(void* pArg)
 
 
 	// 이펙트 생성
-	//m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range3/", "Projectile_Range3_02.json", this);
+	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/Projectile_Range3/", "Projectile_Pillar_10.json", this);
 
 	return S_OK;
 }
@@ -73,15 +73,16 @@ void CVampireCommander_Projectile_BloodLoop::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
 	m_pTransformCom->Look_At(m_pMonster->Get_Position_Vector());
 
-	m_pTransformCom->Go_Straight(fTimeDelta);
+	m_pTransformCom->Go_Right(fTimeDelta);
 	m_fSoundTimeAcc += fTimeDelta;
 
 	if (m_fSoundTimeAcc >= 0.32f && m_iPlaySoundCount < m_iMaxSoundCount)
 	{
-		m_pGameInstance->Play_Sound(L"EFFECT", L"dynamite_explosion_player_04.wav", SOUND_EFFECT6, 10.f);
+		m_pGameInstance->Play_Sound(L"EFFECT", L"dynamite_explosion_player_04.wav", SOUND_EFFECT6, 8.f);
 		m_pGameInstance->Play_Sound(L"VAMPIRE_GROUNDSLAM", L"commander_lesser_attack_ground_slam_impact002.wav", SOUND_EFFECT7, 8.f);
 		m_iPlaySoundCount++;
 		m_fSoundTimeAcc = 0.f;
@@ -89,7 +90,7 @@ void CVampireCommander_Projectile_BloodLoop::Tick(_float fTimeDelta)
 
 	//! 유정 : 두두두두 이펙트 생성 테스트
 	//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.18f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Range3_Tick_03.json", Get_Position(), true, m_vPlayerPos);
-	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.32f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", Get_Position(), true, m_pMonster->Get_Position_Vector());
+	//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.32f, fTimeDelta, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", Get_Position(), true, m_pMonster->Get_Position_Vector());
 }
 
 void CVampireCommander_Projectile_BloodLoop::Late_Tick(_float fTimeDelta)
@@ -125,8 +126,8 @@ void CVampireCommander_Projectile_BloodLoop::OnCollisionEnter(CCollider* other)
 		//CEffect* pEffect = EFFECT_MANAGER->Create_Effect("Hit/", "Hit_Normal.json", m_pTransformCom->Get_Position(), TRUE, m_pGameInstance->Get_Player()->Get_Position());
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", nullptr, m_pGameInstance->Get_Player()->Get_Position());
 	}
-	//m_pCollider->Set_Enable(false);
-	//this->Set_Dead(true);
+	m_pCollider->Set_Enable(false);
+	this->Set_Dead(true);
 
 }
 
