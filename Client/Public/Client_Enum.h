@@ -37,6 +37,8 @@ namespace Engine
 		ANIM_OUTLINE,				// 10 - ¾Æ¿ô¶óÀÎ¿ëµµ 
 		ANIM_PLAYER_SNOWMOUNTAIN,	// 11 - Player SnouMountain¿¡¼­ idle ·»´õ¿ë 
 		ANIM_PLAYER_HEAL,			// 12 - Player Skill - Heal 
+		ANIM_SUPER_CHARGE,			// 13 - Player Skill - SuperCharge
+		ANIM_WHITE_BLINK,			// 14 - Interact Chain ¿¡¼­ Ã¶ºÎºÐ Èò»ö ±ôºý°Å¸² 
 		ANIM_SHADER_END };
 
 	enum class MONSTER_SHADER {

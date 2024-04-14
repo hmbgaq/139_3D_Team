@@ -923,8 +923,8 @@ _bool CGameInstance::Remove_Light(const _uint& iIndex)
 
 _bool CGameInstance::Remove_AllLight()
 {
-	
-	NULL_CHECK_RETURN(m_pLight_Manager, E_FAIL);
+	NULL_CHECK_RETURN(m_pLight_Manager, false);
+
 	return m_pLight_Manager->Remove_AllLight();
 }
 

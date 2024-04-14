@@ -15,6 +15,7 @@ Texture2D g_Effect_Target;
 Texture2D g_RimBlur_Target;
 Texture2D g_OutLine_Target;
 Texture2D g_Independent_Target;
+Texture2D g_OutLine_Blur_Target;
 
 
 /* ------------------ Value ------------------ */ 
@@ -226,9 +227,10 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vBlurOutLine = g_OutLine_Blur_Target.Sample(LinearSampler, In.vTexcoord);
     //vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
     
-    float4 MainObject = vFinal + vDebug + vRimBloom;
+    float4 MainObject = vFinal + vDebug + vRimBloom + vBlurOutLine;
     
     Out.vColor = vUI;
     
@@ -269,9 +271,10 @@ PS_OUT PS_MAIN_FINAL_SEPHIA(PS_IN In)
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vBlurOutLine = g_OutLine_Blur_Target.Sample(LinearSampler, In.vTexcoord);
    // vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
     
-    float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom;
+    float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom + vBlurOutLine;
     
     MainObject = Sepia(MainObject);
     
@@ -296,8 +299,9 @@ PS_OUT PS_MAIN_FINAL_GRAY(PS_IN In)
     vector vUI = g_UI_Target.Sample(LinearSampler, In.vTexcoord);
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vBlurOutLine = g_OutLine_Blur_Target.Sample(LinearSampler, In.vTexcoord);
     
-    float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom;
+    float4 MainObject = vFinal + vDebug + vOutLine + vRimBloom + vBlurOutLine;
     
     MainObject = MonochromePass(MainObject);
     

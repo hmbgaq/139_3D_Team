@@ -83,6 +83,8 @@ HRESULT CRenderer::Draw_RenderGroup()
 	FAILED_CHECK(Render_NonBlend());	/* MRT_GameObjects - Diffuse, Normal, Depth, Bloom */
 
 	FAILED_CHECK(Render_OutLine()); /* MRT_OutLine -> Target_OutLine 에 저장 */
+	
+	FAILED_CHECK(Render_OutLine_Blur());
 
 	if (true == m_tDeferred_Option.bShadow_Active)
 		FAILED_CHECK(Bake_ViewShadow());		/* 디퍼드에서 하던 shadow 연산 : Target_ViewShadow 에 저장  + 블러 : Target_Blur_ViewShadow 에 저장됨  */
@@ -939,12 +941,12 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_OutLine"), m_pShader_Final, "g_OutLine_Target"));
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_Independent"), m_pShader_Final, "g_Independent_Target")); /* Deferred에서 그린 Independent */
 	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_RB_BlurActive"), m_pShader_Final, "g_RimBlur_Target")); /* Deferred에서 그린 RimBloom */
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(TEXT("Target_OutLine_Blur"), m_pShader_Final, "g_OutLine_Blur_Target")); /* Deferred에서 그린 RimBloom */
 	
 	/* 타겟만들기 아까워서 한가지만 사용가능한채로 여러가지 루트로 팜 */
 	if (true == m_tScreenDEffect_Desc.bGrayScale_Active && false == m_tScreenDEffect_Desc.bSephia_Active)
 	{
 		FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_SCREEN_GRAY)));
-		cout << "Final Gray " << endl;
 	}
 	else if (false == m_tScreenDEffect_Desc.bGrayScale_Active && true == m_tScreenDEffect_Desc.bSephia_Active)
 	{
@@ -954,13 +956,11 @@ HRESULT CRenderer::Render_Final()
 		FAILED_CHECK(m_pShader_Final->Bind_RawValue("g_GreyPower", &GreyPower, sizeof(_float)));
 		FAILED_CHECK(m_pShader_Final->Bind_RawValue("g_SepiaPower", &SepiaPower, sizeof(_float)));
 		FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_SCREEN_SEPHIA)));
-		cout << "Sephia Gray " << endl;
 	}
 	else
 	{
 		/* 둘다 true인경우 적용안됨 하나만 가능 */
 		FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL)));
-		cout << "Final render " << endl;
 	}
 
 	// Test
@@ -1168,6 +1168,8 @@ HRESULT CRenderer::Render_Effect_Priority_Distortion()
 	FAILED_CHECK(m_pVIBuffer->Render());
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Deferred_UI()
@@ -1301,6 +1303,33 @@ HRESULT CRenderer::Render_OutLine()
 	m_RenderObjects[RENDER_OUTLINE].clear();
 
 	FAILED_CHECK(m_pGameInstance->End_MRT());
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_OutLine_Blur()
+{
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_OutLine_B")));
+
+	for (auto& pGameObject : m_RenderObjects[RENDER_OUTLINE_BLUR])
+	{
+		if (nullptr != pGameObject && true == pGameObject->Get_Enable())
+			pGameObject->Render_OutLine_Blur();
+
+		Safe_Release(pGameObject);
+	}
+
+	m_RenderObjects[RENDER_OUTLINE_BLUR].clear();
+
+	FAILED_CHECK(m_pGameInstance->End_MRT()); /* Target_OutLine_B 에 저장 */
+
+	/* 해당 아웃라인에 블러 먹이기 */
+	Render_Blur(TEXT("Target_OutLine_B"), TEXT("MRT_OutLine_Blur"),
+		ECast(BLUR_SHADER::BLUR_HORIZON_MIDDLE),
+		ECast(BLUR_SHADER::BLUR_VERTICAL_MIDDLE),
+		ECast(BLUR_SHADER::BLUR_UP_ADD), true);
+
+	/* Target_OutLine_Blur 에 저장되어나옴 */
 
 	return S_OK;
 }
@@ -1621,7 +1650,7 @@ HRESULT CRenderer::Check_RenderEffect()
 	if (true == m_bPlayerDead)
 	{
 		m_tHSV_Option.bScreen_Active = true;
-		m_tHSV_Option.fFinal_Saturation <= 0 ? m_bPlayerDead = false : m_tHSV_Option.fFinal_Saturation -= 0.01;
+		m_tHSV_Option.fFinal_Saturation <= 0.f ? m_bPlayerDead = false : m_tHSV_Option.fFinal_Saturation -= 0.01f;
 	}
 	else
 	{
@@ -2001,6 +2030,12 @@ HRESULT CRenderer::Create_RenderTarget()
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_OutLine"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_OutLine"), TEXT("Target_OutLine")));
 
+	/* MRT_OutLine_Blur*/
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_OutLine_B"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_OutLine_B"), TEXT("Target_OutLine_B")));
+	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_OutLine_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
+	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_OutLine_Blur"), TEXT("Target_OutLine_Blur")));
+
 	/* MRT_Final */
 	FAILED_CHECK(m_pGameInstance->Add_RenderTarget(TEXT("Target_Final"), (_uint)Viewport.Width, (_uint)Viewport.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f)))
 	FAILED_CHECK(m_pGameInstance->Add_MRT(TEXT("MRT_Final"), TEXT("Target_Final")));
@@ -2147,6 +2182,8 @@ HRESULT CRenderer::Ready_DebugRender()
 	
 	/* outline + cascade(Render_CSM()) */
 	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine_B"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine_Blur"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade1"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade2"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade3"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
@@ -2202,7 +2239,7 @@ HRESULT CRenderer::Render_DebugTarget()
 	// 아래의 목록에서 자기가 렌더타겟으로 볼 타겟이 
 	// Add되어있는 MRT만 활성화 시키기 
 	// 디버그에서 프레임관리하기위함임
-	// 찾는법 : Create_RenderTarget함수에서 찾을 타겟 검색
+	// 찾는법 : Create_RenderTarget함수에서 찾을 타겟 검색하면 어느 MRT에 속한타겟인지 알 수 있음. 
 	/*===============================================*/
 	m_pShader_Deferred->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
 	m_pShader_Deferred->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
@@ -2218,6 +2255,8 @@ HRESULT CRenderer::Render_DebugTarget()
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_OutLine"),			m_pShader_Deferred, m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Shadow_Blur"),		m_pShader_Deferred, m_pVIBuffer);
 	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Blur_ViewShadow"),	m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_OutLine_B"),		m_pShader_Deferred, m_pVIBuffer);
+	m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_OutLine_Blur"),	m_pShader_Deferred, m_pVIBuffer);
 
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Cascade1"),		m_pShader_Deferred, m_pVIBuffer);
 	//m_pGameInstance->Render_Debug_RTVs(TEXT("MRT_Cascade2"),		m_pShader_Deferred, m_pVIBuffer);

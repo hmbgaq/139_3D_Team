@@ -212,9 +212,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	Update_SuperCharge(fTimeDelta);
 
+	//if()
 	m_pDataManager->Set_CurHP(m_fHp);
-
-
 
 	if (m_pGameInstance->Key_Down(DIK_T))
 	{
@@ -1044,6 +1043,31 @@ void CPlayer::Teleport()
 	pTeleport->Get_Transform()->Look_At_OnLand(vTargetPos);
 }
 
+void CPlayer::Update_SuperCharge(_float fTimeDelta)
+{
+	_float fTime = m_fSuperChargeTime - fTimeDelta;
+
+	m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
+
+	/* 차지모드 임을 확인 -> 다른 Set도 계속해서 검사중이기떄문에 여기서 계속 Set하면안됨. */
+	if (fTime > 0.f)
+	{
+		Set_BodyRender(2); // SuperCharge RenderPass 
+	}
+
+	/* 레벨에 따라 Idle에서 돌리는게 다름*/
+	if( true == m_bSuperCharge_State && fTime <= 0.f)
+	{
+		m_bSuperCharge_State = false;
+
+		if (m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
+			Set_BodyRender(3);
+		else
+			Set_BodyRender(0);
+	}
+
+}
+
 void CPlayer::Search_LockOn_Target()
 {
 	m_pLockOnTarget = Select_The_Nearest_Enemy(LAYER_MONSTER);
@@ -1152,12 +1176,6 @@ void CPlayer::Set_BodyRender(_uint iOption)
 		break;
 	case 3:
 		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_SNOWMOUNTAIN);
-		break;
-	case 4: /* 미정 */
-		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_ORIGIN);
-		break;
-	case 5:
-		dynamic_cast<CBody_Player*>(m_pBody)->Set_PlayerRender(CBody_Player::RENDER_PASS::RENDER_ORIGIN);
 		break;
 	}
 }

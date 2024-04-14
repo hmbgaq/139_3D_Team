@@ -205,11 +205,8 @@ public:
 
 public:
 	_bool Is_SuperCharge() { return 0 < m_fSuperChargeTime; }
-	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; };
-	void Update_SuperCharge(_float fTimeDelta) { 
-		_float fTime = m_fSuperChargeTime - fTimeDelta;
-		m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
-	};
+	void Activate_SuperCharge() { m_fSuperChargeTime = 10.f; m_bSuperCharge_State= true;	};
+	void Update_SuperCharge(_float fTimeDelta);
 
 public:
 	void Search_LockOn_Target();
@@ -263,6 +260,7 @@ private:
 /* 소영 추가 */
 public:
 	void Set_BodyRender(_uint iOption);
+	_bool m_bSuperCharge_State = { false };
 	
 
 public:

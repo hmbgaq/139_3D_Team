@@ -969,13 +969,11 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 	if (m_pGameInstance->Key_Down(DIK_Z))
 	{
 		CPlayer::HUD eSelectedHUD = pActor->Get_Skill_HUD_Enum(CPlayer::Player_Skill::SUPER_CHARGE);
-		pActor->Get_Body()->Set_RenderPass(ECast(CBody_Player::RENDER_PASS::RENDER_SUPERCHARGE));
 		_bool bIsCooltimeEnd = pActor->Activate_HUD_Skill(eSelectedHUD);
 
 		if (true == bIsCooltimeEnd)
 		{
-			pActor->Get_Body()->Set_RenderPass(ECast(CBody_Player::RENDER_PASS::RENDER_ORIGIN));
-			pActor->Activate_SuperCharge(); /* 발동 - 림라이트 넣기 ☆*/
+			pActor->Activate_SuperCharge();
 		}
 	}
 
@@ -992,6 +990,7 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 		if (nullptr == pTarget)
 			return nullptr;
 
+		pActor->Set_BodyRender(2); // SuperCharge RenderPass 
 		CPlayer::TeleportPunch_State eState = pActor->Get_TeleportPunch_State();
 
 		switch (eState)
@@ -1026,6 +1025,7 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 	if (pActor->Is_Animation_End())
 	{
+		pActor->Set_BodyRender(0); // Origin RenderPass 
 		return new CPlayer_IdleLoop();
 	}
 

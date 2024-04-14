@@ -43,6 +43,7 @@ float           g_fRimPower = 5.f;
 float           g_fReflectionScale = 0.05f;                 /* Icicle */ 
 
 matrix          g_CascadeProj;                              /* Cascade */
+float4          g_vBlinkColor;
 /*=============================================================
  
                              Function 
@@ -405,7 +406,7 @@ PS_OUT PS_MAIN_WHITE_BLINK(PS_IN In)
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vNormal = mul(vNormal, WorldMatrix);
     
-    vColor = lerp(vMtrlDiffuse, mul(vMtrlDiffuse, float4(0.6f, 0.6f, 0.6f, 0.7f)), g_fTimeDelta);
+    vColor = lerp(vMtrlDiffuse, mul(vMtrlDiffuse, g_vBlinkColor), g_fTimeDelta);
 
     Out.vDiffuse = vColor;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
@@ -671,7 +672,6 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE_KEEP(PS_IN_OUTLINE In)
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
     float4 color = g_vLineColor;
-    
     Out.vColor = color;
    
     return Out;

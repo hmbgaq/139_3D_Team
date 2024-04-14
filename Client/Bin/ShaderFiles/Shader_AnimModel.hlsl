@@ -38,7 +38,10 @@ float4  g_vRimColor     = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
 float   g_fRimPower     = 5.f;                      /* RimLight */
 float4  g_fRimLightPos  = { 0.f, 0.f, 0.f, 0.f };
 
-matrix g_CascadeProj; /* Cascade */
+matrix  g_CascadeProj; /* Cascade */
+
+float   g_fTimeDelta;
+float4 g_vBlinkColor = { 0.f, 0.f, 0.f, 0.f };
 /*=============================================================
  
                              Function 
@@ -513,7 +516,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 }
 
 /* ------------------- Pixel Shader(11) : Player SnowMountain  -------------------*/
-PS_OUT PS_MAIN_PLAYERRIM(PS_IN In)
+PS_OUT PS_MAIN_PLAYER_STAGE2(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
@@ -522,18 +525,18 @@ PS_OUT PS_MAIN_PLAYERRIM(PS_IN In)
     if (vMtrlDiffuse.a == 0.f)
         discard;
     
-    // 전체적으로 약간 붉은톤으로 변환
-    vMtrlDiffuse.rgb *= float3(1.0, 0.0, 0.0) * 0.5f;
-    
     /* Normal */
     float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
     vPixelNormal = vPixelNormal * 2.f - 1.f;
     float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
     vPixelNormal = mul(vPixelNormal, WorldMatrix);
     
+    /* 값 채우기 */ 
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
     
     if (true == g_bORM_Available)
         Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
@@ -541,6 +544,11 @@ PS_OUT PS_MAIN_PLAYERRIM(PS_IN In)
     if (true == g_bEmissive_Available)
         Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
+    vRimColor *= 0.75;
+    Out.vDiffuse += vRimColor;
+    Out.vRimBloom = vector(0.f, 0.f, 0.f, 0.f);
+    //Calculation_Brightness(Out.vDiffuse) + vRimColor;
     return Out;
 }
 
@@ -586,7 +594,76 @@ PS_OUT PS_MAIN_HEAL(PS_IN In)
 }
 
 
-/* ------------------- Pixel Shader(13) :  -------------------*/
+/* ------------------- Pixel Shader(13) : Player Skill - SUPER CHARGE -------------------*/
+PS_OUT PS_MAIN_SUPERCHARGE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    /* Normal */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    // 파란톤
+    vMtrlDiffuse = vMtrlDiffuse * 0.5 * float4(0.3f, 0.3f, 0.8f, 1.0f);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
+    
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    // 버텍스에서 바라보는 카메라의 방향  
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    // Out.vRimBloom = Calculation_Brightness(Out.vDiffuse);
+    
+    return Out;
+}
+
+/* ------------------- Pixel Shader(14) : Interact Chain - White Blink  -------------------*/
+PS_OUT PS_MAIN_CHAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.0f)
+        discard;
+    
+    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    /* Normal */
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    
+    vector vColor;
+    vColor = lerp(vMtrlDiffuse, mul(vMtrlDiffuse, g_vBlinkColor), g_fTimeDelta);
+    
+    Out.vDiffuse = vColor;
+    
+    Out.vORM        = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vDepth      = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vEmissive   = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = vector(0.f, 0.f, 0.f, 0.f);
+    return Out;
+}
 /*=============================================================
  
                           Technique
@@ -722,14 +799,13 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
-        //VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 
-    pass RIMBLOOM // 11
+    pass PLAYER_SNOWMOUNTAIN // 11
     {
         SetRasterizerState(RS_Cull_None);
         SetDepthStencilState(DSS_Default, 0);
@@ -738,7 +814,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_PLAYERRIM();
+        PixelShader = compile ps_5_0 PS_MAIN_PLAYER_STAGE2();
     }
 
     pass HEAL // 12
@@ -752,4 +828,29 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_HEAL();
     }
+
+    pass SUPER_CHARGE // 13
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SUPERCHARGE();
+    }
+
+    pass CHAIN_WHITEBLINK // 14
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_CHAIN();
+    }
+
 }

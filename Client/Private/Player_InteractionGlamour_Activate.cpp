@@ -51,7 +51,11 @@ CState<CPlayer>* CPlayer_InteractionGlamour_Activate::Update(CPlayer* pActor, _f
 	{
 		if (true == pActor->Is_Upper_Inputable_Front(34)) // 44 °¡ ³¡ 
 		{
-			pActor->Set_BodyRender(0); // Origin RenderPass 
+			if(ECast(LEVEL::LEVEL_SNOWMOUNTAIN) == m_pGameInstance->Get_NextLevel())
+				pActor->Set_BodyRender(3); // SnowMountain RenderPass 
+			else
+				pActor->Set_BodyRender(0); // Origin RenderPass 
+
 			m_bFlags[1] = true;
 		}
 	}

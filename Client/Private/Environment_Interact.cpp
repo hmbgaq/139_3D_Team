@@ -308,7 +308,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 	if (m_bRenderOutLine)
 	{
 		m_fTimeAcc += (m_bIncrease ? fTimeDelta : -fTimeDelta);
-		m_bIncrease = (m_fTimeAcc >= 0.7f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
+		m_bIncrease = (m_fTimeAcc >= 0.9f) ? false : (m_fTimeAcc <= 0.f) ? true : m_bIncrease;
 	}
 	
 	if (m_pColliderCom != nullptr)
@@ -379,26 +379,32 @@ HRESULT CEnvironment_Interact::Render()
 	FAILED_CHECK(Bind_ShaderResources());
 	
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
 	if (true == m_bRenderOutLine)
 	{
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
-			if (m_tEnvironmentDesc.bAnimModel == true)
-			{
-				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-			}
-
 			auto& iter = find(m_vChainMesh.begin(), m_vChainMesh.end(), i);
 			if (iter != m_vChainMesh.end())
 			{
+				_float4		BlinkColor = { 1.f, 1.f, 1.f, 1.f };
 				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE); // 1
 				m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS); // 6
 				m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float));
-				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_WHITEBLINK));
+				m_pShaderCom->Bind_RawValue("g_vBlinkColor", &BlinkColor, sizeof(_float4));
+
+				if (m_tEnvironmentDesc.bAnimModel == true)
+				{
+					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+					m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_WHITE_BLINK));
+				}
+				else
+				{
+					m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_WHITEBLINK));
+				}
 			}
 			else 
-			{
+			{	
+				/* 체인을 찾지 못함 -> 일반렌더링 */
 				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
@@ -458,14 +464,14 @@ HRESULT CEnvironment_Interact::Render_OutLine()
 	if (false == m_bRenderOutLine)
 		return S_OK;
 
-	_float Dist = XMVectorGetX(XMVector4Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_Pos()));
-	m_fLineThick_Ratio = m_fLineThick / Dist;
+	m_vLineColor = { 1.f, 1.f, 1.f, 1.f };
+	m_fLineThick = { 0.3f };
 
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4)));
-	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick_Ratio, sizeof(_float)));
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fTimeDelta", &m_fTimeAcc, sizeof(_float)));
 
 	FAILED_CHECK(Bind_ShaderResources());
+
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
@@ -473,7 +479,15 @@ HRESULT CEnvironment_Interact::Render_OutLine()
 		auto& iter = find(m_vChainMesh.begin(), m_vChainMesh.end(), i);
 		if (iter != m_vChainMesh.end())
 		{
-			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE_BLINK));
+
+			if (m_tEnvironmentDesc.bAnimModel == true)
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+				m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+			}
+			else
+				m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_OUTLINE_KEEP));
+
 			m_pModelCom->Render((_uint)i);
 		}
 	}
@@ -3216,8 +3230,6 @@ HRESULT CEnvironment_Interact::Ready_Components()
 
 HRESULT CEnvironment_Interact::Ready_InteractCollider(INTERACT_TYPE eInteractType)
 {
-	
-
 	CBounding_AABB::BOUNDING_AABB_DESC		BoundingDesc = {};
 	/* For.Com_Collider */
 	
@@ -3283,6 +3295,9 @@ HRESULT CEnvironment_Interact::Bind_ShaderResources()
 	m_gCamFar = m_pGameInstance->Get_CamFar();
 	m_pShaderCom->Bind_RawValue("g_fCamFar", &m_gCamFar, sizeof(_float));
 
+	_float4 fCamPos = m_pGameInstance->Get_CamPosition();
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &fCamPos, sizeof(_float4)));
+
 	return S_OK;
 }
 
@@ -3312,7 +3327,11 @@ HRESULT CEnvironment_Interact::Classification_Model()
 			 TEXT("Prototype_Component_Model_ChainJumpDown1") == strTemp||
 			 TEXT("Prototype_Component_Model_ChainLadder1") == strTemp||
 			 TEXT("Prototype_Component_Model_ChainLadder2") == strTemp||
-			 TEXT("Prototype_Component_Model_ChainMod1") == strTemp )
+			 TEXT("Prototype_Component_Model_ChainMod1") == strTemp ||
+			 TEXT("Prototype_Component_Model_InteractHangingChain900") == strTemp ||
+			 TEXT("Prototype_Component_Model_InteractZipLineRope") == strTemp
+		
+		)
 	{
 		m_bRenderOutLine = true;
 		m_vChainMesh.push_back(0);

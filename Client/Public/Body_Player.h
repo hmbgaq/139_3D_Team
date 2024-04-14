@@ -25,8 +25,11 @@ public:
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+public:
 	virtual HRESULT Render_Shadow() override;
 	virtual HRESULT Render_OutLine() override;
+	virtual HRESULT Render_OutLine_Blur() override;
 	virtual HRESULT Render_CSM(_uint i)  override;
 
 public:
@@ -41,21 +44,27 @@ private:
 	HRESULT Ready_ShaderOption();
 	_int iTemp = 0;
 
-	/* 소영 추가 - 렌더링용 */
+	/* 소영 추가 - 렌더링용 - 각각 테스트중이라 값다있는데 나중에 하나로 통일가능 */
 public:
 	void Set_PlayerRender(RENDER_PASS eRender) { m_ePlayerRenderPass = eRender; }
 	
 private:
 	RENDER_PASS m_ePlayerRenderPass = RENDER_PASS::RENDER_END;
 
-	_float4 m_vLineColor = { 0.f, 0.f, 0.f, 0.f };
-	_float m_fLineThick = { 0.f };
-	_float m_fLineTimeAcc = { 0.f };
+	_float4 m_vLineColor		= { 0.f, 0.f, 0.f, 0.f };
+	_float m_fLineThick			= { 0.f };
+	_float m_fLineTimeAcc		= { 0.f };
 
-	_float3  m_vBloomPower = { 0.f, 0.f, 0.f };        /* Bloom */
 	_float4  m_vRimColor = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
 	_float   m_fRimPower = 5.f;                      /* RimLight */
+	_float3 m_vBloomPower = {};
 
+	/* Test */
+	_float4  m_vHealRimColor	= { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
+	_float   m_fHealRimPower	= 5.f;                      /* RimLight */
+
+	_float4  m_vSnowRimColor	= { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
+	_float   m_fSnowRimPower	= 5.f;                      /* RimLight */
 
 public:
 	static CBody_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

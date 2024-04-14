@@ -43,6 +43,7 @@ public: /* For. Additional Render */
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_CSM(_uint i) { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
+	virtual HRESULT Render_OutLine_Blur() { return S_OK; }
 	virtual HRESULT Render_Ice() { return S_OK; }
 
 public: /* For. Picking */

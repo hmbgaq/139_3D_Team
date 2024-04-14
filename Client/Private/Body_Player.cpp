@@ -66,9 +66,16 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 	}
 
 	__super::Late_Tick(fTimeDelta);
-	
+
 	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
+	{
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+	}
+	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
+	{
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE_BLUR, this), );
+	}
 }
 
 HRESULT CBody_Player::Render()
@@ -79,6 +86,7 @@ HRESULT CBody_Player::Render()
 
 	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_ORIGIN)
 	{
+		cout << "render Origin " << endl;
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
@@ -90,18 +98,21 @@ HRESULT CBody_Player::Render()
 
 			m_pModelCom->Render((_uint)i);
 		}
-		cout << "Origin Pass " << endl;
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
 	{
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
+			m_vRimColor = { 0.7f, 0.f, 0.f, 1.f };   /* RimLight */
+			m_fRimPower = 2.f;                      /* RimLight */
+
 			/* ±âº» */
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
-			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_vBloomPower, sizeof(_float3));
+
+			/* RimLight*/
 			m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
 			m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
 
@@ -109,37 +120,55 @@ HRESULT CBody_Player::Render()
 
 			m_pModelCom->Render((_uint)i);
 		}
-		cout << "Heal Pass " << endl;
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SNOWMOUNTAIN)
 	{
+			cout << "render SnowMountain" << endl;
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
+			m_vRimColor = { 1.f, 1.f, 1.f, 1.f };   /* RimLight */
+			m_fRimPower = 4.f;                         /* RimLight */
+
+			/* Base */
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
-			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+			/* RimLight */
+			m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+			m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+
+			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_PLAYER_SNOWMOUNTAIN));
 
 			m_pModelCom->Render((_uint)i);
 		}
-		cout << "SnowMountain Pass " << endl;
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
 	{
+		cout << "render Super Charge" << endl;
+
 		for (size_t i = 0; i < iNumMeshes; i++)
 		{
+			m_vRimColor = { 0.f, 0.0f, 0.7f, 1.f };   /* RimLight */
+			m_fRimPower = 2.f;                         /* RimLight */
+			m_vBloomPower = { 0.f, 0.f, 0.8f};
+
+			/* Base */
 			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 			m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 			m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 			m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
 
-			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_ORIGIN));
+			/* RimLight */
+			m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+			m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_vBloomPower", &m_vBloomPower, sizeof(_float3));
+
+			m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_SUPER_CHARGE));
 
 			m_pModelCom->Render((_uint)i);
 		}
-		cout << "SuperCharge Pass " << endl;
 	}
 	return S_OK;
 }
@@ -166,18 +195,62 @@ HRESULT CBody_Player::Render_Shadow()
 
 HRESULT CBody_Player::Render_OutLine()
 {
-	cout << "OutLine " << endl;
+	cout << "render outline " << endl;
 
 	FAILED_CHECK(Bind_ShaderResources());
-	m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
-	m_pShaderCom->Bind_RawValue("g_LineThick",	&m_fLineThick, sizeof(_float));
+
+	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
+	{
+		m_vLineColor = { 0.5f, 0.f, 0.f, 1.f };
+		m_fLineThick = { 0.3f };
+		m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+	}
+	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
+	{
+		m_vLineColor = { 0.7f, 0.7f, 0.7f, 1.f };
+		m_fLineThick = { 0.3f };
+		m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+	}
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", (_uint)i, aiTextureType_DIFFUSE);
+		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
+		m_pModelCom->Render((_uint)i);
+	}
+
+	return S_OK;
+}
+
+HRESULT CBody_Player::Render_OutLine_Blur()
+{
+	cout << "render outline blur " << endl;
+
+	FAILED_CHECK(Bind_ShaderResources());
+
+	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
+	{
+		m_vLineColor = { 0.5f, 0.f, 0.f, 1.f }; // Red
+		m_fLineThick = { 0.3f };
+		m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+	}
+	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
+	{
+		m_vLineColor = { 0.7f, 0.7f, 0.7f, 1.f }; // White 
+		m_fLineThick = { 0.3f };
+		m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
+		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));
+	}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (size_t i = 0; i < iNumMeshes; i++)
+	{
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 		m_pShaderCom->Begin(ECast(ANIM_SHADER::ANIM_OUTLINE));
 		m_pModelCom->Render((_uint)i);
 	}
@@ -271,9 +344,11 @@ HRESULT CBody_Player::Ready_ShaderOption()
 	m_fLineThick		= { 0.3f };
 
 	// 2. RimLight 
-	m_vBloomPower = { 1.f, 0.f, 0.f };
-	m_vRimColor   = { 0.7f, 0.f, 0.f, 1.f };
-	m_fRimPower   = 2.f;
+	//m_vHealRimColor = { 0.7f, 0.f, 0.f, 1.f };
+	//m_fHealRimPower = 2.f;
+
+	//m_vSnowRimColor = { 0.7f, 0.7f, 0.7f, 1.f };
+	//m_fSnowRimPower = 2.f;
 
 	return S_OK;
 }
