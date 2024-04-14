@@ -64,6 +64,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 			break;
 		case Client::LEVEL_SNOWMOUNTAIN:
 			//m_pUIManager->Ready_Loading_SnowMountain(LEVEL_SNOWMOUNTAIN);
+			m_pUIManager->BossClear(); // 보스 HUD 삭제
 			m_pUIManager->Ready_Loading_SnowMountain(LEVEL_SNOWMOUNTAIN);	 // Loading UI 생성
 			m_pUIManager->Active_Loading_SnowMountain(true);			 // UI ON
 			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI

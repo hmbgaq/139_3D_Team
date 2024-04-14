@@ -75,6 +75,7 @@ public: /* Ready_Preset */
 	void			BasicUI_Enable(_bool bEnable);
 	void			DiedPreset_Enable(_bool bEnable);
 	void			SkillWindowPreset_Enable(_bool bEnable);
+	void			BossClear();
 
 public:
 	void	Enable_PlayerHUD(_bool bEnable);		// PlayerHUD Off

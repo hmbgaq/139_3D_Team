@@ -2048,7 +2048,7 @@ void CEnvironment_Interact::Move_For_PlayerRootMotion()
 
 		m_pTransformCom->Add_RootBone_ForTarget(vPlayerRootMotion, m_pNavigationCom, m_pPlayer->Get_Transform());
 
-		m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Cart_Mechanism_loop.wav", SOUND_INTERACTOBJECT2, 7.f);
+		
 
 		
 	}

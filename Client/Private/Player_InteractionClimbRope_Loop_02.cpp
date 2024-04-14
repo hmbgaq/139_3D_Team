@@ -10,6 +10,7 @@ void CPlayer_InteractionClimbRope_Loop_02::Initialize(CPlayer* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	//pActor->Set_Animation_End(false);
+	m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"MoF_ChainFall_01.wav", SOUND_INTERACTOBJECT, 7.f);
 }
 
 CState<CPlayer>* CPlayer_InteractionClimbRope_Loop_02::Update(CPlayer* pActor, _float fTimeDelta)

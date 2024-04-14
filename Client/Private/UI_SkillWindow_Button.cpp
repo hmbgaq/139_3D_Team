@@ -156,7 +156,7 @@ void CUI_SkillWindow_Button::Check_Picking(_float fTimeDelta)
 			{
 				m_bSelectButton = true;
 				m_pUIManager->Select_SkillWindowButton("WeaponButton", false); // 선택한 버튼을 제외하고 모두 꺼준다.
-				//m_pUIManager->ActiveWeapon();
+				//m_pUIManager->ActiveWeapon();O
 				//m_pUIManager->NonActiveSkill();
 				m_pUIManager->Active_WeaponIcon(true);
 				m_pUIManager->Active_WeaponFrame(true);

@@ -67,7 +67,7 @@ CState<CSon>* CSon_RangeAttackFar::Update(CSon* pActor, _float fTimeDelta)
 		m_bFlags[1] = pActor->Is_Inputable_Front(39);
 		if (true == m_bFlags[1])
 		{
-			m_pGameInstance->Play_Sound(L"SON_BODYFALL", L"boohag_mvm_bodyfall006", SOUND_ENEMY_BODYMOVE2, 7.f);
+			m_pGameInstance->Play_Sound(L"SON_BODYFALL", L"boohag_mvm_bodyfall006.wav", SOUND_ENEMY_BODYMOVE2, 7.f);
 		}
 	}
 

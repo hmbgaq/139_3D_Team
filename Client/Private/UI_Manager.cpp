@@ -72,7 +72,7 @@ HRESULT CUI_Manager::Ready_Interface(_uint iLevelIndex)
 	Add_LeftSkill(iLevelIndex, TEXT("Layer_LeftSkill"));
 	Add_RightSkill(iLevelIndex, TEXT("Layer_RightSkill"));
 	Add_TutorialBox(iLevelIndex, TEXT("Layer_TutorialBox"));
-	Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
+	//Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
 	Add_RewardBox(iLevelIndex, TEXT("Layer_RewardBox"));
 	Add_QuestBox(iLevelIndex, TEXT("Layer_QuestBox"));
 	Add_SuperChargeMod(iLevelIndex, TEXT("Layer_SuperChargeMod"));
@@ -3061,6 +3061,16 @@ void CUI_Manager::NonActive_BossHUD_Bar()
 	}
 }
 
+void CUI_Manager::BossClear()
+{
+	if (m_vecBossHUD_Bar.empty())
+		return;
+		
+	if(!m_vecBossHUD_Bar.empty())
+		m_vecBossHUD_Bar.clear();
+}
+
+
 HRESULT CUI_Manager::Add_BossHUD_Shard(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pOwner)
 {
 
@@ -3271,9 +3281,10 @@ HRESULT CUI_Manager::Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTa
 
 		m_vecDiedScreen.push_back(pUI_Object);
 
-		pUI_Object->Set_LifeTimeUI(true);					// LifeTime True
-		pUI_Object->Set_LifeTime(6000.f);					// UI LifeTime
-		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		pUI_Object->Set_LifeTimeUI(true);               // LifeTime True
+		pUI_Object->Set_LifeTime(5000.f);               // UI LifeTime
+		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);      // UI State
+		pUI_Object->Set_RenderGroup(CRenderer::RENDERGROUP::RENDER_UI_POPUP);
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 		pUI_Object->Load_FromJson(object); // 18. Load Data

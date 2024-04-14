@@ -67,7 +67,7 @@ HRESULT CMother::Initialize(void* pArg)
 		m_pActor->Set_State(new CMother_Spawn);
 	}
 	//HP
-	m_fMaxHp = 1500;	
+	m_fMaxHp = 1430;	
 	m_fHp = m_fMaxHp;
 
 	//m_fMaxHP = 1000.f;

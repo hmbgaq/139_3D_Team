@@ -34,7 +34,6 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 	// Level 0으로 시작
 	//m_eUI_Level = UI_LEVEL::LEVEL0;
 	// Test 1로 시작
-	//m_eUI_Level = UI_LEVEL::LEVEL2;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -44,7 +43,8 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 
 	Check_State();
 
-	m_eUI_Level = UI_LEVEL::LEVEL1;
+	m_eUI_Level = UI_LEVEL::LEVEL2;
+	//m_eUI_Level = UI_LEVEL::LEVEL1;
 
 	return S_OK;
 }
