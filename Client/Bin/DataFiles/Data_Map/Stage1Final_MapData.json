@@ -28519,7 +28519,7 @@
     },
     {
       "AnimalType": 4,
-      "AnimationIndex": 0,
+      "AnimationIndex": 1 ,
       "Component": {
         "Transform": [
           [ -0.8720031380653381, 1.5869810567892273e-06, 0.4895003139972687, 0.0 ],
