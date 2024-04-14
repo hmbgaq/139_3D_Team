@@ -248,11 +248,11 @@ private:
 	class CTexture* m_pTool_2_PreFilteredTextureCom[10] = { nullptr };
 
 public:
-	_bool			m_bUI_MRT = false;
+	_bool			m_bUI_MRT						= { false };	
 	void			Render_UI_MRT(_bool bMRT) { m_bUI_MRT = bMRT;}
 	void			Set_ToolPBRTexture_InsteadLevel(_int iPBRTexture) { m_iPBRTexture_InsteadLevel = iPBRTexture; }
-	_bool			m_bToolLevel = { false };
-	_int			m_iPBRTexture_InsteadLevel = { 0 };
+	_bool			m_bToolLevel					= { false };
+	_int			m_iPBRTexture_InsteadLevel		= { 0 };
 
 #ifdef _DEBUG
 public:
@@ -263,7 +263,7 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { true };
+	_bool			m_bDebugRenderTarget	= { false };
 	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
