@@ -15,23 +15,23 @@ void CSon_Hit::Initialize(CSon* pActor)
 	switch (iRandomSound)
 	{
 	case 1 :
-		strSoundKey = L"grand_parasiter_vo_worms_hit001";
+		strSoundKey = L"grand_parasiter_vo_worms_hit001.wav";
 		break;
 	case 2:
-		strSoundKey = L"grand_parasiter_vo_worms_hit002";
+		strSoundKey = L"grand_parasiter_vo_worms_hit002.wav";
 		break;
 	case 3:
-		strSoundKey = L"grand_parasiter_vo_worms_hit003";
+		strSoundKey = L"grand_parasiter_vo_worms_hit003.wav";
 		break;
 	case 4:
-		strSoundKey = L"grand_parasiter_vo_worms_hit004";
+		strSoundKey = L"grand_parasiter_vo_worms_hit004.wav";
 		break;
 	case 5:
-		strSoundKey = L"grand_parasiter_vo_worms_hit005";
+		strSoundKey = L"grand_parasiter_vo_worms_hit005.wav";
 		break;
 	}
 
-	m_pGameInstance->Play_Sound(L"SON_HIT", strSoundKey, SOUND_ENEMY_HIT2, 7.f);
+	m_pGameInstance->Play_Sound(L"SON_HIT", strSoundKey, SOUND_ENEMY_HIT3, 7.f);
 }
 
 CState<CSon>* CSon_Hit::Update(CSon* pActor, _float fTimeDelta)

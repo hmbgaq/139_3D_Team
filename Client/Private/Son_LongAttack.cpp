@@ -17,19 +17,19 @@ void CSon_LongAttack::Initialize(CSon* pActor)
 	switch (iRandomSound)
 	{
 	case 1:
-		strSoundKey = L"grand_parasiter_worms_vo_attack_slam001";
+		strSoundKey = L"grand_parasiter_worms_vo_attack_slam001.wav";
 		break;
 	case 2:
-		strSoundKey = L"grand_parasiter_worms_vo_attack_slam002";
+		strSoundKey = L"grand_parasiter_worms_vo_attack_slam002.wav";
 		break;
 	case 3:
-		strSoundKey = L"grand_parasiter_worms_vo_attack_slam003";
+		strSoundKey = L"grand_parasiter_worms_vo_attack_slam003.wav";
 		break;
 	case 4:
-		strSoundKey = L"grand_parasiter_worms_vo_attack_slam004";
+		strSoundKey = L"grand_parasiter_worms_vo_attack_slam004.wav";
 		break;
 	case 5:
-		strSoundKey = L"grand_parasiter_worms_vo_attack_slam005";
+		strSoundKey = L"grand_parasiter_worms_vo_attack_slam005.wav";
 		break;
 	}
 

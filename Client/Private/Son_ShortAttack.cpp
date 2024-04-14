@@ -16,19 +16,19 @@ void CSon_ShortAttack::Initialize(CSon* pActor)
 	switch (iRandomSound)
 	{
 	case 1:
-		strSoundKey = L"grand_parasiter_worms_attack_whoosh001";
+		strSoundKey = L"grand_parasiter_worms_attack_whoosh001.wav";
 		break;
 	case 2:
-		strSoundKey = L"grand_parasiter_worms_attack_whoosh002";
+		strSoundKey = L"grand_parasiter_worms_attack_whoosh002.wav";
 		break;
 	case 3:
-		strSoundKey = L"grand_parasiter_worms_attack_whoosh003";
+		strSoundKey = L"grand_parasiter_worms_attack_whoosh003.wav";
 		break;
 	case 4:
-		strSoundKey = L"grand_parasiter_worms_attack_whoosh004";
+		strSoundKey = L"grand_parasiter_worms_attack_whoosh004.wav";
 		break;
 	case 5:
-		strSoundKey = L"grand_parasiter_worms_attack_whoosh005";
+		strSoundKey = L"grand_parasiter_worms_attack_whoosh005.wav";
 		break;
 	}
 

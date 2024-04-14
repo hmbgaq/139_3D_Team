@@ -18,13 +18,13 @@ void CSon_CrossAttack::Initialize(CSon* pActor)
 	switch (iRandomSound)
 	{
 	case 1:
-		strSoundKey = L"Tentacle_Attack_01";
+		strSoundKey = L"Tentacle_Attack_01.wav";
 		break;
 	case 2:
-		strSoundKey = L"Tentacle_Attack_02";
+		strSoundKey = L"Tentacle_Attack_02.wav";
 		break;
 	case 3:
-		strSoundKey = L"Tentacle_Attack_03";
+		strSoundKey = L"Tentacle_Attack_03.wav";
 		break;
 	}
 
