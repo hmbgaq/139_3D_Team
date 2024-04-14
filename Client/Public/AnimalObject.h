@@ -14,6 +14,7 @@ class CUI_Weakness;
 class CAnimalObject final : public CGameObject
 {
 public:
+	enum ANIMALTYPE { ANIMAL_COW, ANIMAL_CHIKEN, ANIMAL_YOUNGCHIKEN, ANIMAL_HAWK, ANIMALTYPE_END };
 	typedef struct tagAnimalObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		_float4		vPos = { 0.f, 0.f, 0.f, 0.f };
@@ -24,9 +25,9 @@ public:
 
 		_int		iStartNaviIndex = -1;
 		_int		iAnimalGroupIndex = -1;
-		_bool		bAnimModel = { false };
 		_int		iPlayAnimationIndex = { 0 };
 		_bool		bPreview = true; //! 미리보기용 오브젝트인지 확인
+		ANIMALTYPE  eAnimalType = ANIMALTYPE_END;
 
 	}Animal_OBJECT_DESC;
 

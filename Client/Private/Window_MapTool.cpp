@@ -565,23 +565,25 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 
 		//todo 추후 작성 npc
 
-		//json NPCJson;
-		//
-		//if (false == m_vecCreateNPC.empty())
-		//{
-		//	_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
-		//
-		//	for (_int i = 0; i < iCreateNPCSize; ++i)
-		//	{
-		//		CNPC::NPC_DESC Desc;
-		//
-		//		Desc = *m_vecCreateNPC[i]->Get_NPCDesc();
-		//
-		//		string strProtoTag = m_pGameInstance->Wstring_To_UTF8(Desc.strProtoTypeTag);
-		//		NPCJson[i].emplace("PrototypeTag", strProtoTag);
-		//		m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
-		//	}
-		//}
+		json NPCJson;
+		
+		if (false == m_vecCreateNPC.empty())
+		{
+			_int iCreateNPCSize = (_int)m_vecCreateNPC.size();
+		
+			for (_int i = 0; i < iCreateNPCSize; ++i)
+			{
+				CAnimalObject::Animal_OBJECT_DESC Desc;
+		
+				Desc = *m_vecCreateNPC[i]->Get_AnimalDesc();
+		
+				string strModelTag = m_pGameInstance->Wstring_To_UTF8(Desc.strModelTag);
+				NPCJson[i].emplace("ModelTag", strModelTag);
+				NPCJson[i].emplace("AnimationIndex", Desc.iPlayAnimationIndex);
+				NPCJson[i].emplace("AnimalType", Desc.eAnimalType);
+				m_vecCreateNPC[i]->Write_Json(NPCJson[i]);
+			}
+		}
 
 		
 
@@ -774,7 +776,7 @@ HRESULT CWindow_MapTool::Save_Function(string strPath, string strFileName)
 		SaveJson.emplace("Light_Json", LightJson);
 		SaveJson.emplace("LightObject_Json", LightObjectJson);
 		SaveJson.emplace("Special_Json", SpecialJson);
-
+		SaveJson.emplace("NPC_Json", NPCJson);
 
 
 		auto now = std::chrono::system_clock::now();
@@ -1696,6 +1698,10 @@ HRESULT CWindow_MapTool::Ready_ModelTags()
 		}
 	}
 
+	m_vecNpcTag.push_back("Prototype_Component_Model_Bull");
+	m_vecNpcTag.push_back("Prototype_Component_Model_Hawk");
+	m_vecNpcTag.push_back("Prototype_Component_Model_Chicken");
+	m_vecNpcTag.push_back("Prototype_Component_Model_Young");
 	
 	return S_OK;
 }
@@ -1716,8 +1722,9 @@ HRESULT CWindow_MapTool::Ready_PrototypeTags()
 	m_vecMonsterTag.push_back("Prototype_GameObject_Mother");
 	m_vecMonsterTag.push_back("Prototype_GameObject_Son");
 
-	m_vecNpcTag.push_back("Prototype_GameObject_Edgar");
-	m_vecNpcTag.push_back("Prototype_GameObject_Hawk");
+
+	
+	
 			
 	//m_vecMonsterTag.push_back("Prototype_GameObject_Screamer");
 
@@ -8886,9 +8893,23 @@ void CWindow_MapTool::Change_PreViewObject(TAP_TYPE eTabType)
 			if (strPrototypeTag != L"")
 			{
 				
-				CGameObject::GAMEOBJECT_DESC Desc = {};
+				if (eTabType != TAP_TYPE::TAB_NPC)
+				{
+					CGameObject::GAMEOBJECT_DESC Desc = {};
 
-				m_pPreviewCharacter = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strPrototypeTag, &Desc);
+					m_pPreviewCharacter = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_Monster", strPrototypeTag, &Desc);
+				}
+				else
+				{
+					CAnimalObject::Animal_OBJECT_DESC Desc = {};
+					
+					Desc.strModelTag = strPrototypeTag;
+
+					m_pPreviewCharacter = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_NPC", L"Prototype_GameObject_AnimalObject", &Desc);
+				}
+				
+
+				
 
 				if (m_ePickingType == CWindow_MapTool::PICKING_TYPE::PICKING_FIELD)
 				{
@@ -10361,13 +10382,13 @@ void CWindow_MapTool::NPC_CreateFunction()
 	Desc.iAnimalGroupIndex = m_iNPCSpawnGroupIndex;
 	Desc.iPlayAnimationIndex = m_iNPCAnimationIndex;
 
-	wstring strProtoTag;
-	m_pGameInstance->String_To_WString(m_vecNpcTag[m_iSelectModelTag], strProtoTag);
+	wstring strModelTag;
+	m_pGameInstance->String_To_WString(m_vecNpcTag[m_iSelectModelTag], strModelTag);
 
-	Desc.strProtoTypeTag = strProtoTag;
+	Desc.strModelTag = strModelTag;
 	Desc.eDescType = CGameObject::MONSTER_DESC;
 
-	CAnimalObject* pAnimal = dynamic_cast<CAnimalObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_NPC", strProtoTag, &Desc));
+	CAnimalObject* pAnimal = dynamic_cast<CAnimalObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_NPC", L"Prototype_GameObject_AnimalObject", &Desc));
 
 	m_vecCreateNPC.push_back(pAnimal);
 

@@ -189,14 +189,9 @@ _bool CAnimalObject::Picking_VerJSY(RAY* pRay, _float3* vPickedPos)
 HRESULT CAnimalObject::Ready_Components()
 {
 
-	if (true == m_tAnimalDesc.bAnimModel)
-	{
-		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
-	}
-	else
-	{
-		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
-	}
+	
+	FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Shader_AnimModel"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
+	
 	
 	/* For.Com_Model */
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_NextLevel(), m_tAnimalDesc.strModelTag,
