@@ -26,7 +26,7 @@ HRESULT CLevel_Logo::Initialize()
 	
 	m_pDataManager = CData_Manager::GetInstance();
 
-	//FAILED_CHECK(Ready_Static_UI());
+	FAILED_CHECK(Ready_Static_UI());
 
 
 	FAILED_CHECK(m_pUIManager->Ready_MainMenu(LEVEL_LOGO));
@@ -42,9 +42,9 @@ HRESULT CLevel_Logo::Initialize()
 	ShowCursor(false);
 
 
-	//FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
+	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
 
-	//m_pGameInstance->Play_BGM(L"BGM_LOADING", L"LogoLoading.wav", 10.f);
+	m_pGameInstance->Play_BGM(L"BGM_LOADING", L"LogoLoading.wav", 10.f);
 
 	return S_OK;
 }

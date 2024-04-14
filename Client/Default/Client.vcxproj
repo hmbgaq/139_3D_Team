@@ -1327,6 +1327,7 @@
     <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee1.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee2.h" />
+    <ClInclude Include="..\Public\VampireCommander_Projectile_BloodLoop.h" />
     <ClInclude Include="..\Public\VampireCommander_Projectile_Range1.h" />
     <ClInclude Include="..\Public\VampireCommander_Projectile_Range3.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged1.h" />
@@ -2387,6 +2388,7 @@
     <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Projectile_BloodLoop.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Projectile_Range3.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged1.cpp" />

@@ -21,6 +21,15 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
+	m_bBloodLoopTime += fTimeDelta;
+
+	if (m_bBloodLoopTime >=3.f)
+	{
+		m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BossProjectile", L"Prototype_GameObject_VampireCommander_Projectile_BloodLoop");
+		m_bBloodLoopTime = 0.f;
+	}
+
+
 	if (m_fHealHP>=200.f) //  && false == pActor->Is_Revealed_Weakness()
 	{
 		return new CVampireCommander_BloodRange_Stop();
