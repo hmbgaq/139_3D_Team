@@ -28506,7 +28506,7 @@
   "NPC_Json": [
     {
       "AnimalType": 4,
-      "AnimationIndex": 3,
+      "AnimationIndex": 2,
       "Component": {
         "Transform": [
           [ -0.7064875960350037, 1.2857550473199808e-06, -0.7077252864837646, 0.0 ],
