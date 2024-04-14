@@ -28698,7 +28698,7 @@
         "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
         "NameTag": "MonsterSpawn6",
         "OnTrigger": false,
-        "SpawnGroupIndex": 5,
+        "SpawnGroupIndex": 7,
         "TriggerType": 0
       },
       {
