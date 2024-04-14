@@ -157,7 +157,7 @@ void CBullet_Winchester::OnCollisionEnter(CCollider* other)
 		
 	
 
-	m_pTrail->Set_Play(false);
+	//m_pTrail->Set_Play(false);
 	Set_Dead(true);
 
 }
@@ -235,6 +235,6 @@ void CBullet_Winchester::Free()
 	__super::Free();
 
 
-	Safe_Release(m_pTrail);
+	//Safe_Release(m_pTrail);
 
 }

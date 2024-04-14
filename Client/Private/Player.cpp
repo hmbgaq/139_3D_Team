@@ -1069,25 +1069,46 @@ void CPlayer::Update_SuperCharge(_float fTimeDelta)
 
 	_float fTime = m_fSuperChargeTime - fTimeDelta;
 
-	if (fTime > 0)
+	if (fTime > 0.f) 
 	{
 		m_fSuperChargeTime = fTime;
 
 		// 슈퍼차지 상시 이펙트 생성
-		EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", Get_Position());
-		//EFFECT_MANAGER->Generate_Effect_AttachBone(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", this, true, "Head");
+		if (m_bFirst_SuperCharge)
+		{
+			if (nullptr == m_pChargeEffect)
+			{
+				m_pChargeEffect = EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_Always_10SC_03.json", this, true, "Head");
+				m_bFirst_SuperCharge = false;
+			}
+		}
+		//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc[0], 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_Down_04.json", Get_Position());
+		//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc[1], 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_Up_04.json", Get_Position());
+		//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", Get_Position());
+		//EFFECT_MANAGER->Generate_Effect_AttachBone(&m_fEffectTimeAcc, 0.5f, fTimeDelta, "Player/SuperCharge/", "SuperCharge_Always_02.json", this, true, "Head");
 	}
 	else
 	{
 		m_fSuperChargeTime = 0.f;
+
 		m_fEffectTimeAcc = 0.f;
+
+		if (false == m_bFirst_SuperCharge) // 슈퍼차지가 끝났으면 이펙트 반환하기
+		{
+			EFFECT_MANAGER->Return_ToPool(m_pChargeEffect);
+			m_pChargeEffect = nullptr;
+			m_bFirst_SuperCharge = true;
+		}
+			
 	}
+
 
 	if (0.f == m_fSuperChargeTime)
 	{
 		Play_Sound_SuperCharge_Exit();
 	}
 
+	//m_fSuperChargeTime = fTime > 0 ? fTime : 0.f;
 }
 
 void CPlayer::Play_Sound_SuperCharge_Enter()
@@ -1105,7 +1126,7 @@ void CPlayer::Play_Sound_SuperCharge_Enter()
 	case 2:
 		strFileName = L"Player_EnergyMode_Enter_03.wav";
 		break;
-	default:
+	default:	
 		strFileName = L"Player_EnergyMode_Enter_01.wav";
 		break;
 	}
@@ -1116,7 +1137,7 @@ void CPlayer::Play_Sound_SuperCharge_Enter()
 void CPlayer::Play_Sound_SuperCharge_Exit()
 {
 	wstring strFileName = L"";
-	_uint iRand = SMath::Random(0, 5);
+	_uint iRand = SMath::Random(0, 5);		
 	switch (iRand)
 	{
 	case 0:
@@ -2151,5 +2172,11 @@ void CPlayer::Free()
 		Safe_Release(m_pEffect);
 	}
 
+
+	if (nullptr != m_pChargeEffect)
+	{
+		m_pChargeEffect->Delete_Object_Owner();
+		Safe_Release(m_pChargeEffect);
+	}
 
 }

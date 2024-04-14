@@ -2,6 +2,9 @@
 #include "GameInstance.h"
 #include "Data_Manager.h"
 
+#include "Effect.h"
+#include "Effect_Manager.h"
+
 void CPlayer_ShotgunElectric_Fire_ShortRange::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
@@ -27,6 +30,9 @@ CState<CPlayer>* CPlayer_ShotgunElectric_Fire_ShortRange::Update(CPlayer* pActor
 		m_bFlags[0] = pActor->Is_Inputable_Front(9);
 		if (true == m_bFlags[0]) 
 		{
+
+			EFFECT_MANAGER->Play_Effect("Player/Shotgun/", "Shotgun_02.json", pActor);	// ¼¦°Ç ÀÌÆåÆ®
+
 			CWeapon* pWeapon = pActor->Get_Weapon(PLAYER_WEAPON_SHOTGUN);
 			pWeapon->Fire(_float3(-0.3f, 0.f, 1.f));
 			pWeapon->Play_Weapon_Sound_Fire();

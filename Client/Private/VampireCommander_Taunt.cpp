@@ -13,6 +13,8 @@ void CVampireCommander_Taunt::Initialize(CVampireCommander* pActor)
 	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
 	pActor->Apply_Shake_And_Blur(Power::Medium);
 	pActor->m_bAuraStart = true;
+	m_pGameInstance->Play_Sound(L"VAMPIRE_TAUNT", L"commander_lesser_vo_taunt001.wav", SOUND_ENEMY_VOICE, 10.f);
+
 }
 
 CState<CVampireCommander>* CVampireCommander_Taunt::Update(CVampireCommander* pActor, _float fTimeDelta)

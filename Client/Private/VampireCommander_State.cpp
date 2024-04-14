@@ -91,12 +91,12 @@ CState<CVampireCommander>* CVampireCommander_State::Walk_State(CVampireCommander
 CState<CVampireCommander>* CVampireCommander_State::Attack_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
 {
 	
-	_int iAttackRandom = SMath::Random(0, 1); // 공격과 체력 회복 
+	_int iAttackRandom = SMath::Random(0, 3); // 공격과 체력 회복 
 	_int iRandom =  SMath::Random(0,3); // 근접용 랜덤 
 	_int iRandomRange = SMath::Random(0, 2);//원거리용 랜덤 
 	
 	//근접 공격!! 
-	if (iAttackRandom == 0)
+	if (iAttackRandom != 1)
 	{
 		if (8.f > pActor->Calc_Distance() && 0.1f < pActor->Calc_Distance())
 		{

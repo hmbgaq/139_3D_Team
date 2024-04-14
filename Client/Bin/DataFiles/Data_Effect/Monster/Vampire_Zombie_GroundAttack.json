@@ -11,7 +11,7 @@
   "Effect": {
     "bFinished": false,
     "bLoop": false,
-    "bParentPivot": false,
+    "bParentPivot": true,
     "bPlay": true,
     "bRender": true,
     "bReverse": false,
@@ -326,8 +326,8 @@
         ]
       },
       "bBillBoard": false,
-      "bDissolve": true,
-      "bLoop": false,
+      "bDissolve": false,
+      "bLoop": true,
       "bParentPivot": true,
       "bPlay": true,
       "bRender": true,
@@ -351,7 +351,7 @@
       "fSequenceTerm": 0.05000000074505806,
       "fSequenceTime": 2.0,
       "fUV_RotDegree": 0.0,
-      "fWaitingTime": 0.0,
+      "fWaitingTime": 0.3499999940395355,
       "iCurNumInstance": 50,
       "iRenderGroup": 6,
       "iShaderPassIndex": 4,

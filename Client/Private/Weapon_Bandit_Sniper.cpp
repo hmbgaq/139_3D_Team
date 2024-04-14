@@ -2,6 +2,7 @@
 #include "Bone.h"
 #include "GameInstance.h"
 #include "Weapon_Bandit_Sniper.h"
+#include "Effect_Manager.h"
 
 CWeapon_Bandit_Sniper::CWeapon_Bandit_Sniper(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -200,6 +201,7 @@ void CWeapon_Bandit_Sniper::Sniping(_float4 vTargetPos, _float3 StartfPos)
 			break;
 		}
 	}
+
 
 	m_pGameInstance->Play_Sound(strGroupKey, strSoundKey, SOUND_ENEMY_ATTACK, fVolume);
 }

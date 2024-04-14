@@ -42,6 +42,10 @@
 #include "SpringCamera.h"
 #include "Light.h"
 
+
+
+#include "Level_Loading.h"
+
 CLevel_IntroBoss::CLevel_IntroBoss(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel(pDevice, pContext)
 {
@@ -67,6 +71,11 @@ HRESULT CLevel_IntroBoss::Initialize()
 
 void CLevel_IntroBoss::Tick(_float fTimeDelta)
 {
+
+	if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	{
+		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAIN));
+	}
 
 }
 

@@ -26,7 +26,7 @@ HRESULT CLevel_Logo::Initialize()
 	
 	m_pDataManager = CData_Manager::GetInstance();
 
-	//FAILED_CHECK(Ready_Static_UI());
+	FAILED_CHECK(Ready_Static_UI());
 
 
 	FAILED_CHECK(m_pUIManager->Ready_MainMenu(LEVEL_LOGO));

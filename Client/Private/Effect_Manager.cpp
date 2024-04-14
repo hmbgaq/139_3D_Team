@@ -76,6 +76,8 @@ CEffect* CEffect_Manager::Play_Effect(string strAddPath, string strFileName, CGa
 	pEffect->Get_Desc()->bPlay = true;
 	pEffect->Set_Enable(true);
 
+
+
 	EffectPool->pop();
 
 	return pEffect;
@@ -423,7 +425,7 @@ CEffect_Trail* CEffect_Manager::Ready_Trail(_uint iLevelIndex, const wstring& st
 	pTrail->Load_FromJson(In_Json);
 
 
-	Safe_AddRef(pTrail);
+	//Safe_AddRef(pTrail);
 
 	return pTrail;
 
@@ -447,39 +449,44 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 #pragma region 테스트 이펙트 시작
 
-	/* Circle_Floor */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
-
-	/* Test Explosion */
-	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05.json"));
-	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05_Big.json"));
-
-#pragma endregion 테스트 이펙트 끝
+//	/* Circle_Floor */
+//	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
+//
+//	/* Test Explosion */
+//	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05.json"));
+//	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05_Big.json"));
+//
+//#pragma endregion 테스트 이펙트 끝
 
 	/* Light */
-	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
+//	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
 
 
 #pragma region Hit 이펙트 시작
 	/* Hit */
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Distortion.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_TeleportPunch.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_8hit.json", 200));
 #pragma endregion Hit 이펙트 끝
 
-	
+
 #pragma region 보스1 이펙트 시작
 	/* Boos 1 */
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_09.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json"));
 
-	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json")); 
+	/* BloodRange */
+	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Start_01.json"));
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
 
-	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_04.json", 50));
+
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
 
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
 
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_10.json", 100));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
 
@@ -550,17 +557,16 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Zapper_Dash/", "Zapper_Dash_31.json", 2));
 
 	/* SlamDown */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v1_03_Rock.json", 2));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_24_Rock.json", 2));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "SlamDown_v2_26_Rock.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "New_SlamDown_v2_02.json", 5));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "New_SlamDown_v3_02.json", 5));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "New_SlamTwoHand_TEMP_02.json", 5));
 
 	/* DodgeBlink */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_18.json", 2));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_18.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_20.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_20.json", 2));
 
 	/* Roll */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "Roll_R_04.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "New_Roll_Side_01.json", 2));
 
 	/* Revolver */
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13.json", 10));
@@ -570,14 +576,21 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
 
+	/* Shotgun */
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Shotgun/", "Shotgun_02.json", 50));
+
 
 	/* TeleportPunch */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/TeleportPunch/", "TeleportPunch_01.json", 30, true, "TeleportPunch_Trail_01.json"));
-
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/TeleportPunch/", "TeleportPunch_01.json", 30, true, "TeleportPunch_Trail_02.json"));
 
 	/* SuperCharge */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_05.json", 5));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", 100));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_06.json", 5));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_02.json", 50));	// 다른 스킬에서 사용중
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_10SC_03.json", 50));	
+	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", 100));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_Down_04.json", 100));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_Up_04.json", 100));
 
 
 #pragma endregion 플레이어 이펙트 끝
@@ -595,6 +608,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 
 #pragma endregion 탱크 이펙트 끝
+
+
 #pragma region 맵에 전역으로 깔리는 이펙트
 
 	FAILED_CHECK(Add_ToPool(iLevel, "Fog/", "SY_SnowMap.json", 1));

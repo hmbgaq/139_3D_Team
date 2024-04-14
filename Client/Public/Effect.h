@@ -108,7 +108,7 @@ public:
 	void	End_Effect();
 	void	End_Effect_ForPool();
 
-	_bool	Is_End_Effect() { return m_tEffectDesc.bFinished; }
+	_bool	Get_Finished() { return m_tEffectDesc.bFinished; }
 
 
 public:

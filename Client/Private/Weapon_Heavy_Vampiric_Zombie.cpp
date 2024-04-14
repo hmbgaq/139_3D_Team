@@ -10,6 +10,8 @@
 #include "SMath.h"
 #include "Character.h"
 
+#include "Effect_Trail.h"
+
 CWeapon_Heavy_Vampiric_Zombie::CWeapon_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
 {
@@ -60,6 +62,15 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 	if (FAILED(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc)))
 		return E_FAIL;
+
+
+
+	//! 유정: 트레일
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_03.json");
+	m_pTrail->Set_Play(false);		// 시작은 끄기
+
+	m_pTrail_Post = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_Distortion_02.json");
+	m_pTrail_Post->Set_Play(false);		// 시작은 끄기
 
 
 	return S_OK;
@@ -118,6 +129,17 @@ void CWeapon_Heavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
+		//! 유정: 트레일 
+		if (nullptr != m_pTrail)
+		{
+			m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+		}
+
+		if (nullptr != m_pTrail_Post)
+		{
+			m_pTrail_Post->Tick_Trail(fTimeDelta, m_WorldMatrix);
+		}
+
 		m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
 	}
 
@@ -230,6 +252,15 @@ void CWeapon_Heavy_Vampiric_Zombie::Play_Sound_Attack()
 	m_pGameInstance->Play_Sound(L"ZENU_ATTACK", strFileName, CHANNELID::SOUND_ENEMY_ATTACK, 10.f);
 }
 
+void CWeapon_Heavy_Vampiric_Zombie::Play_Trail(_bool bPlay)
+{
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Play(bPlay);
+
+	if (nullptr != m_pTrail_Post)
+		m_pTrail_Post->Set_Play(bPlay);
+}
+
 #pragma region Create, Clone, Pool, Free
 
 CWeapon_Heavy_Vampiric_Zombie* CWeapon_Heavy_Vampiric_Zombie::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -264,6 +295,26 @@ CGameObject* CWeapon_Heavy_Vampiric_Zombie::Pool()
 void CWeapon_Heavy_Vampiric_Zombie::Free()
 {
 	__super::Free();
+
+
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Play(false);
+		m_pTrail->Get_Desc()->bRender = false;
+		m_pTrail->Set_Object_Owner(nullptr);
+		m_pTrail = nullptr;
+		//Safe_Release(m_pTrail);
+	}
+
+	if (nullptr != m_pTrail_Post)
+	{
+		m_pTrail->Set_Play(false);
+		m_pTrail->Get_Desc()->bRender = false;
+		m_pTrail->Set_Object_Owner(nullptr);
+		m_pTrail = nullptr;
+		//Safe_Release(m_pTrail);
+	}
+
 }
 
 

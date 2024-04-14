@@ -4,6 +4,7 @@
 #include "Sniper_CoverLow_Over_AimPose.h"
 #include "Bullet_Bandit_Sniper.h"
 #include "Weapon_Bandit_Sniper.h"
+#include "Effect_Manager.h"
 
 void CSniper_CoverLow_Over_AimPose::Initialize(CBandit_Sniper* pActor)
 {
@@ -34,9 +35,17 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pA
 		{
 			fTimeAcc = 0.f;
 			pActor->Sniping_Target(vTargetPos);
+			if (m_bFlags[0] == false)
+			{
+				EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_13.json", pActor);
+				m_bFlags[0] = true;
+			}
+
 			return new CSniper_CoverLow_Over_Stop();
 		}
 	}
+
+	
 
 	return nullptr;
 }
