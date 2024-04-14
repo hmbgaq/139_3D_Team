@@ -1,5 +1,6 @@
 #include "Son_Dead.h"
 #include "Transform.h"
+#include "GameInstance.h"
 
 void CSon_Dead::Initialize(CSon* pActor)
 {
@@ -9,6 +10,7 @@ void CSon_Dead::Initialize(CSon* pActor)
 	_float3 Down = pActor->Get_Transform()->Get_State(CTransform::STATE_UP);
 	Temp = Temp -2*Down;
 	pActor->Set_Position(Temp);
+	m_pGameInstance->Play_Sound(L"SON_DEAD", L"VampireSpitter_VO_Spit_01.wav", SOUND_ENEMY_HIT_GROUND, 7.f);
 }
 
 CState<CSon>* CSon_Dead::Update(CSon* pActor, _float fTimeDelta)

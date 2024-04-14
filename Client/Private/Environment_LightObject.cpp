@@ -460,10 +460,10 @@ void CEnvironment_LightObject::Free()
 {
 	__super::Free();
 
-	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.iLightIndex);
+	CLight* pLight = m_pGameInstance->Find_Light(m_tEnvironmentDesc.LightDesc.iLightIndex);
 	
 	if (pLight != nullptr)
-		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.iLightIndex);
+		m_pGameInstance->Remove_Light(m_tEnvironmentDesc.LightDesc.iLightIndex);
 	
 
 	//if (m_pEffect != nullptr)

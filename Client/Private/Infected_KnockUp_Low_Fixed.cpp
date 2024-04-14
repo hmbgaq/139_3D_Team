@@ -6,14 +6,12 @@ void CInfected_KnockUp_Low_Fixed::Initialize(CInfected* pActor)
 
 	pActor->Set_KnockUp(true);
 
-	_uint iCurrentKeyFrameIndex = pActor->Get_CurrentKeyFrames();
-	_uint iTargetKeyFrameIndex = pActor->Get_CurrentAnimIndex() != g_iAnimIndex ? 0 : max(iCurrentKeyFrameIndex - 5, 0);
-
+	_int iCurrentKeyFrameIndex = pActor->Get_CurrentKeyFrames();
+	_int iTargetKeyFrameIndex = pActor->Get_CurrentAnimIndex() != g_iAnimIndex ? 0 : max(iCurrentKeyFrameIndex - 1, 8); 
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, iTargetKeyFrameIndex);
 	
-	//pActor->Set_StiffnessRate(1.2f);
-	//pActor->Set_RootMoveRate(_float3(1.f, 1.0f, 1.f));
+
 	pActor->Set_UseGravity(false);
 }
 
@@ -21,6 +19,7 @@ CState<CInfected>* CInfected_KnockUp_Low_Fixed::Update(CInfected* pActor, _float
 {
 	if (pActor->Is_Animation_End())
 	{
+		pActor->Set_KnockUp(false);
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}
 
@@ -30,6 +29,6 @@ CState<CInfected>* CInfected_KnockUp_Low_Fixed::Update(CInfected* pActor, _float
 void CInfected_KnockUp_Low_Fixed::Release(CInfected* pActor)
 {
 	__super::Release(pActor);
-	pActor->Set_KnockUp(false);
+	
 	pActor->Set_UseGravity(true);
 }

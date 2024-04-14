@@ -19,6 +19,8 @@ void CPlayer_State_Death::Initialize(CPlayer* pActor)
 	{
 		pSpringCam->Set_CameraOffset(_float3(1.f, 0.5f, -3.f));
 	}
+
+	pActor->Play_Dead_Sound();
 }
 
 CState<CPlayer>* CPlayer_State_Death::Update(CPlayer* pActor, _float fTimeDelta)

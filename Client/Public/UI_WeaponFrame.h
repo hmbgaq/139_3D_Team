@@ -35,7 +35,7 @@ public:
 
 public:
 	void					Check_Picking(_float fTimeDelta);
-	void					Check_State(_float fTimeDelta);
+	void					Check_State();
 	void					Check_LevelChange(_float fTimeDelta);
 
 private:
@@ -47,7 +47,7 @@ public:
 	void					Load_Desc();
 
 private:
-	CTexture* m_pTextureCom[TEXTURE_END] = { nullptr };
+	CTexture*				m_pTextureCom[TEXTURE_END] = { nullptr };
 	_bool					m_bFirstFrame = false;
 	UI_LEVEL				m_eUI_PreLevel = LEVEL0;
 

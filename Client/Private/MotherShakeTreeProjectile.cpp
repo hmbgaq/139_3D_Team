@@ -8,6 +8,7 @@
 #include "Mother.h"
 #include "Bone.h"
 #include "MasterCamera.h"
+#include "GameInstance.h"
 
 CMotherShakeTreeProjectile::CMotherShakeTreeProjectile(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	:CProjectile(pDevice, pContext, strPrototypeTag)
@@ -55,7 +56,7 @@ HRESULT CMotherShakeTreeProjectile::Initialize(void* pArg)
 	//Set_Enable(true);
 	// 이펙트 생성
 
-
+	m_pGameInstance->Play_Sound(L"MOTHER_ATTACK", L"fire_largeB002_loop.wav", SOUND_EFFECT, 7.f);
 	return S_OK;
 }
 
@@ -88,6 +89,29 @@ void CMotherShakeTreeProjectile::Tick(_float fTimeDelta)
 		//m_pEffect = nullptr;
 
 		EFFECT_MANAGER->Play_Effect("Parasiter/MotherShakeTree/", "MotherProjectileDead_08.json", nullptr, m_pTransformCom->Get_Position());
+		_int iRandomSound = m_pGameInstance->Random_Int(1, 5);
+		wstring strSoundKey = L"";
+
+		switch (iRandomSound)
+		{
+		case 1:
+			strSoundKey = L"grand_parasiter_attack_projectile_expl001.wav";
+			break;
+		case 2:
+			strSoundKey = L"grand_parasiter_attack_projectile_expl002.wav";
+			break;
+		case 3:
+			strSoundKey = L"grand_parasiter_attack_projectile_expl003.wav";
+			break;
+		case 4:
+			strSoundKey = L"grand_parasiter_attack_projectile_expl004.wav";
+			break;
+		case 5:
+			strSoundKey = L"grand_parasiter_attack_projectile_expl005.wav";
+			break;
+		}
+
+		m_pGameInstance->Play_Sound(L"MOTHER_ATTACK", strSoundKey, SOUND_ENEMY_FOOTSTEP, 7.f);
 		Set_Dead(true);
 	}
 
@@ -129,6 +153,30 @@ void CMotherShakeTreeProjectile::OnCollisionEnter(CCollider* other)
 
 		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Normal.json", nullptr, m_pTransformCom->Get_Position());
 	}
+
+	_int iRandomSound = m_pGameInstance->Random_Int(1, 5);
+	wstring strSoundKey = L"";
+
+	switch (iRandomSound)
+	{
+	case 1:
+		strSoundKey = L"grand_parasiter_attack_projectile_expl001.wav";
+		break;
+	case 2:
+		strSoundKey = L"grand_parasiter_attack_projectile_expl002.wav";
+		break;
+	case 3:
+		strSoundKey = L"grand_parasiter_attack_projectile_expl003.wav";
+		break;
+	case 4:
+		strSoundKey = L"grand_parasiter_attack_projectile_expl004.wav";
+		break;
+	case 5:
+		strSoundKey = L"grand_parasiter_attack_projectile_expl005.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"MOTHER_ATTACK", strSoundKey, SOUND_ENEMY_FOOTSTEP, 7.f);
 	this->Set_Enable(false);
 	//m_pCollider->Set_Enable(false);
 	//Set_Dead(true);
@@ -205,6 +253,7 @@ CGameObject* CMotherShakeTreeProjectile::Pool()
 void CMotherShakeTreeProjectile::Free()
 {
 	__super::Free();
+
 
 	if (nullptr != m_pEffect)
 		Safe_Release(m_pEffect);	// 동그라미 삭제

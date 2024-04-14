@@ -11,7 +11,9 @@ void CPlayer_DodgeBlink_R_03::Initialize(CPlayer* pActor)
 
 
 	// ÀÌÆåÆ® »ý¼º
-	EFFECT_MANAGER->Play_Effect("Player/DodgeBlink/", "DodgeBlink_R_18.json", pActor);
+	//EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_Always_02.json", pActor, true, "Head");
+	EFFECT_MANAGER->Play_Effect("Player/SuperCharge/", "SuperCharge_Always_02.json", nullptr, pActor->Get_Position());
+	EFFECT_MANAGER->Play_Effect("Player/DodgeBlink/", "DodgeBlink_R_20.json", pActor);
 
 }
 
@@ -25,4 +27,5 @@ CState<CPlayer>* CPlayer_DodgeBlink_R_03::Update(CPlayer* pActor, _float fTimeDe
 void CPlayer_DodgeBlink_R_03::Release(CPlayer* pActor)
 {
 	__super::Release(pActor);
+
 }

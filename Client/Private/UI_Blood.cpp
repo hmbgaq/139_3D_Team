@@ -132,7 +132,7 @@ void CUI_Blood::Tick(_float fTimeDelta)
 				}
 				else // 보이는 상태니까
 				{
-					m_bAppear = Alpha_Plus_Control(fTimeDelta, 0.4f); // 안보이게 알파가 지워지게 해준다.
+					m_bAppear = Alpha_Plus_Control(fTimeDelta, 0.3f); // 안보이게 알파가 지워지게 해준다.
 				}
 			}
 		}

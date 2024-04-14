@@ -77,7 +77,7 @@ void CImpact_Slam::OnCollisionEnter(CCollider* other)
 	{
 		m_eHitDirection = Direction::Front;
 		m_eHitPower = Power::Heavy;
-		m_fForce = 0.2f;
+		m_fForce = 0.0f;
 
 		_float fDamage = m_fDamage + CData_Manager::GetInstance()->Get_Additional_MeleeDamage();
 

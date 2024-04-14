@@ -5,7 +5,7 @@
 #include "Effect_Manager.h"
 
 #include "Effect_Particle.h"
-#include "Effect_Rect.h"
+//#include "Effect_Rect.h"
 #include "Effect_Instance.h"
 #include "Effect_Trail.h"
 
@@ -14,6 +14,9 @@
 #include "Weapon.h"
 #include "Son_Projectile.h"
 #include "MotherShakeTreeProjectile.h"
+
+
+#include "Data_Manager.h"
 
 CEffect::CEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CGameObject(pDevice, pContext, strPrototypeTag)
@@ -110,11 +113,13 @@ void CEffect::Tick(_float fTimeDelta)
 					if (m_tEffectDesc.bParentPivot)
 					{
 						// 주인의 매트릭스를 사용할거면 컴바인된 매트릭스 사용
+						m_pTrail->Set_Play(true);
 						m_pTrail->Tick_Trail(fTimeDelta, m_tEffectDesc.matCombined);
 					}
 					else
 					{
 						// 아니면 내 월드
+						m_pTrail->Set_Play(true);
 						m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
 					}
 				}
@@ -308,28 +313,14 @@ void CEffect::Load_FromJson(const json& In_Json)
 
 void CEffect::Update_PivotMat()
 {
+
 	if (nullptr != m_pOwner)	// 주인이 존재하고,
 	{
 		// 이펙트의 주인이 죽었다. 또는 비활성화 상태다.
-		if (m_pOwner->Is_Dead() || !m_pOwner->Get_Enable())
+		if (m_pOwner->Is_Dead() || false == m_pOwner->Get_Enable())
 		{
 			if (nullptr != m_pTrail)	// 트레일을 갖고있던 이펙트면 트레일 멈춤
 				m_pTrail->Set_Play(false);
-
-			if (m_tEffectDesc.strFileName == "Mother_Breath_08.json")
-			{
-				_int a = 0;
-			}
-
-			if (m_tEffectDesc.strFileName == "Mother_Breath_08_Tick_02.json")
-			{
-				_int a = 0;
-			}
-
-			if (m_tEffectDesc.strFileName == "Circle_Floor_05.json")
-			{
-				_int a = 0;
-			}
 
 			// 이펙트의 주인이 죽었으면 이펙트 풀에 반납
 			EFFECT_MANAGER->Return_ToPool(this);
@@ -347,8 +338,6 @@ void CEffect::Update_PivotMat()
 
 				if(pOwnerBone == nullptr)
 					return;
-
-					
 
 				m_tEffectDesc.matPivot = pOwnerBone->Get_CombinedTransformationMatrix();
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot * m_pOwner->Get_Transform()->Get_WorldFloat4x4());	// 나 * 소켓 * 주인	
@@ -371,10 +360,10 @@ void CEffect::Update_PivotMat()
 			{
 				// 주인의 매트릭스를 사용할거면 받아오기
 				m_tEffectDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
-				if (typeid(*m_pOwner) == typeid(CSon_Projectile))
-				{
-					_int i = 0;
-				}
+				//if (typeid(*m_pOwner) == typeid(CSon_Projectile))
+				//{
+				//	_int i = 0;
+				//}
 				XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tEffectDesc.matPivot);
 			}
 
@@ -384,6 +373,15 @@ void CEffect::Update_PivotMat()
 			// 주인이 있지만 주인 피봇을 사용하지 않을거면 컴바인 매트릭스에 자신의 월드만 저장하기
 			XMStoreFloat4x4(&m_tEffectDesc.matCombined, m_pTransformCom->Get_WorldMatrix());	
 		}
+
+	}
+	else
+	{
+
+		//if (m_tEffectDesc.eType_Dead)
+		//{
+		//	EFFECT_MANAGER->Return_ToPool(this);
+		//}
 
 	}
 
@@ -461,7 +459,10 @@ void CEffect::End_Effect()
 void CEffect::End_Effect_ForPool()
 {
 	if (nullptr != m_pTrail)
+	{
 		m_pTrail->Set_Play(false);
+		m_pTrail->Reset_Trail();
+	}
 
 	m_tEffectDesc.bFinished = true;	// 이펙트 종료
 
@@ -470,8 +471,9 @@ void CEffect::End_Effect_ForPool()
 
 	Init_ReSet_Effect();			// 리셋
 
-	// 주인이 존재하면 지워줌
-	Delete_Object_Owner();
+
+	Set_Object_Owner(nullptr); // 주인 해제
+	//Delete_Object_Owner();
 
 	m_tEffectDesc.Reset_Pivot();
 }
@@ -602,7 +604,7 @@ void CEffect::Free()
 {
 	__super::Free();
 
-	Delete_Object_Owner();
+	Set_Object_Owner(nullptr);
 
 	for (auto& Pair : m_PartObjects)
 		Safe_Release(Pair.second);
@@ -610,7 +612,11 @@ void CEffect::Free()
 	m_PartObjects.clear();
 
 
-	Safe_Release(m_pTrail);	
-
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Object_Owner(nullptr);
+		m_pTrail = nullptr;
+		//Safe_Release(m_pTrail);
+	}
 }
 

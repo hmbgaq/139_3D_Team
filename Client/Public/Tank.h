@@ -50,6 +50,22 @@ public:
 public:
 	void Create_GroundWave();
 
+
+public:
+	void Play_Sound_Attack_Melee();
+	void Play_Sound_Attack_Shield();
+	void Play_Sound_Wave();
+	void Play_Sound_Bodyfall();
+	void Play_Sound_Footstep();
+	void Play_Sound_Hit();
+	void Play_Sound_Shield_Crash();
+	void Play_Sound_Shield_PickUp();
+
+	void Play_Sound_Voice_Attack();
+	void Play_Sound_Voice_Charge();
+	void Play_Sound_Shield_Impact();
+
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_PartObjects();
@@ -58,7 +74,10 @@ private:
 	CActor<CTank>* m_pActor = { nullptr };
 	//_bool m_bIsShieldBroken = { true };
 	_float m_fShieldBrokenTime = { 0.f };
-
+	CEffect* m_pEffect = { nullptr };
+public:
+	_bool m_bRushStart = false;
+	_bool m_bRushStop = false;
 public:
 	static CTank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

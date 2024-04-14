@@ -4,8 +4,13 @@
 #include "Weapon_Heavy_Vampiric_Zombie.h"
 #include "Model.h"
 #include "AttackObject.h"
-#include "Tank.h"
 #include "Data_Manager.h"
+#include "Effect_Manager.h"
+#include "Effect.h"
+#include "SMath.h"
+#include "Character.h"
+
+#include "Effect_Trail.h"
 
 CWeapon_Heavy_Vampiric_Zombie::CWeapon_Heavy_Vampiric_Zombie(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
 	: CWeapon(pDevice, pContext, strPrototypeTag)
@@ -59,6 +64,15 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 		return E_FAIL;
 
 
+
+	//! 유정: 트레일
+	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_03.json");
+	m_pTrail->Set_Play(false);		// 시작은 끄기
+
+	m_pTrail_Post = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_Distortion_02.json");
+	m_pTrail_Post->Set_Play(false);		// 시작은 끄기
+
+
 	return S_OK;
 }
 
@@ -88,6 +102,16 @@ void CWeapon_Heavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 {
 	__super::Tick(fTimeDelta);
 
+	if (m_bAttack)
+	{
+		
+
+		_float3 vPosition = { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43};
+		//m_pTransformCom->Get_Position();
+		//EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, m_pTransformCom->Get_Position());
+		EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, vPosition);
+		m_bAttack = false;
+	}
 	//if (m_pGameInstance->Key_Down(DIK_F))
 	//{
 	//	string path = "../Bin/DataFiles/Data_Weapon/Monster/Bandit_Heavy/Axe.json";
@@ -105,6 +129,17 @@ void CWeapon_Heavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
 
 	if (true == m_pGameInstance->isIn_WorldPlanes(m_pParentTransform->Get_State(CTransform::STATE_POSITION), 2.f))
 	{
+		//! 유정: 트레일 
+		if (nullptr != m_pTrail)
+		{
+			m_pTrail->Tick_Trail(fTimeDelta, m_WorldMatrix);
+		}
+
+		if (nullptr != m_pTrail_Post)
+		{
+			m_pTrail_Post->Tick_Trail(fTimeDelta, m_WorldMatrix);
+		}
+
 		m_pModelCom->Play_Animation(fTimeDelta, _float3(0.f, 0.f, 0.f));
 	}
 
@@ -167,6 +202,8 @@ void CWeapon_Heavy_Vampiric_Zombie::Attack(CCollider* other)
 		pTarget_Character->Set_Hitted(m_fDamage, vHitDir, m_fForce, 1.f, m_eHitDirection, m_eHitPower);
 
 		Activate_Collisions(false);
+
+		Play_Sound_Attack();
 	}
 }
 
@@ -183,6 +220,45 @@ void CWeapon_Heavy_Vampiric_Zombie::OnCollisionStay(CCollider* other)
 void CWeapon_Heavy_Vampiric_Zombie::OnCollisionExit(CCollider* other)
 {
 
+}
+
+void CWeapon_Heavy_Vampiric_Zombie::Play_Sound_Attack()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact001.wav";
+		break;
+	case 1:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact002.wav";
+		break;
+	case 2:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact003.wav";
+		break;
+	case 3:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact004.wav";
+		break;
+	case 4:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact005.wav";
+		break;
+	default:
+		strFileName = L"bandit_heavy_attack_strong_slam_impact001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"ZENU_ATTACK", strFileName, CHANNELID::SOUND_ENEMY_ATTACK, 10.f);
+}
+
+void CWeapon_Heavy_Vampiric_Zombie::Play_Trail(_bool bPlay)
+{
+	if (nullptr != m_pTrail)
+		m_pTrail->Set_Play(bPlay);
+
+	if (nullptr != m_pTrail_Post)
+		m_pTrail_Post->Set_Play(bPlay);
 }
 
 #pragma region Create, Clone, Pool, Free
@@ -219,6 +295,26 @@ CGameObject* CWeapon_Heavy_Vampiric_Zombie::Pool()
 void CWeapon_Heavy_Vampiric_Zombie::Free()
 {
 	__super::Free();
+
+
+	if (nullptr != m_pTrail)
+	{
+		m_pTrail->Set_Play(false);
+		m_pTrail->Get_Desc()->bRender = false;
+		m_pTrail->Set_Object_Owner(nullptr);
+		m_pTrail = nullptr;
+		//Safe_Release(m_pTrail);
+	}
+
+	if (nullptr != m_pTrail_Post)
+	{
+		m_pTrail_Post->Set_Play(false);
+		m_pTrail_Post->Get_Desc()->bRender = false;
+		m_pTrail_Post->Set_Object_Owner(nullptr);
+		m_pTrail_Post = nullptr;
+		//Safe_Release(m_pTrail);
+	}
+
 }
 
 

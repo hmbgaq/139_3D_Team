@@ -23,6 +23,13 @@ public:
 public:
 	virtual void Fire(_float3 vTargetPos = _float3(0.f, 0.f, 1.f), CCharacter* pTarget = nullptr);
 
+public:
+	virtual void Play_Weapon_Sound_UnHolster() override;
+	virtual void Play_Weapon_Sound_Holster() override;
+	virtual void Play_Weapon_Sound_Aim() override;
+	virtual void Play_Weapon_Sound_Reload() override;
+	virtual void Play_Weapon_Sound_Fire() override;
+
 protected:
 	virtual HRESULT Ready_Components();
 public:

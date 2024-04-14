@@ -30,6 +30,7 @@ public:
 	CEffect* Play_Effect(string strAddPath, string strFileName, CGameObject* pOwner, _float3 vPos, _bool bLookTarget = false, _float3 vTargetPos = _float3(0.f, 0.f, 0.f));
 	CEffect* Play_Effect_StaticPivot(string strAddPath, string strFileName, CGameObject* pOwner, _float4x4 matPivot);
 
+	
 
 	// 두두두두 이펙트 지나간 자리에 이펙트 생성(누적시간 변수, 생성시간 텀, 타임델타, 생성할 이펙트 파일.json, 생성할 위치, 바라볼 타겟이 있는지, 타겟의 위치)
 	HRESULT Generate_Effect(_float* fTimeAcc, _float fGenerateTimeTerm, _float fTimeDelta, string strAddPath, string strFileName
@@ -37,6 +38,9 @@ public:
 						   , _bool bLookTarget = false, _float3 vTargetPos = _float3(0.f, 0.f, 0.f)
 							, _bool bScaleLerp = false, _float3* vScaleAcc = nullptr);
 
+
+	HRESULT Generate_Effect_AttachBone(_float* fTimeAcc, _float fGenerateTimeTerm, _float fTimeDelta, string strAddPath, string strFileName
+										, CGameObject* pOwner = nullptr, _bool bUseSocket = false, string strBoneTag = "");
 
 public:
 	// Trail ========================================================================================================================================
@@ -72,7 +76,8 @@ private:
 	CEffect*			Create_Effect_ForDebug_StaticPivot(string strAddPath, string strFileName, CGameObject* pOwner, _float4x4 matPivot);
 //#endif // _DEBUG
 
-
+//private: //! 승용 추가
+	//void				Play_EffectSound_ForFileName(string strFileName);
 
 private:
 	static const _uint iMaxManyEffect			= { 200 };

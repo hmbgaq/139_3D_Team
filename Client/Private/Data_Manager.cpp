@@ -8,6 +8,7 @@
 #include "MasterCamera.h"
 #include "Sky.h"
 #include "Son.h"
+#include "Hawk.h"
 #include "GameInstance.h"
 
 IMPLEMENT_SINGLETON(CData_Manager);
@@ -212,6 +213,11 @@ void CData_Manager::Set_SkyType(_uint iCastSkyType)
 void CData_Manager::Set_SkyTextureIndex(_uint iSkyTextureIndex)
 {
 	m_pSky->Set_TextureIndex(iSkyTextureIndex);
+}
+
+void CData_Manager::Start_HawkCutScene()
+{
+	m_pCutSceneHawk->Start_CutSceneHawk();
 }
 
 #pragma region SH_ADD

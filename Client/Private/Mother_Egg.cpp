@@ -94,6 +94,8 @@ void CMother_Egg::Tick(_float fTimeDelta)
 	}
 	else if (this->Get_Enable() == true && m_pTransformCom->Get_Position().y <= 0.f && m_fTimeDelta >= 5.f)
 	{
+		m_pGameInstance->Play_Sound(L"MOTHER_FALLINGLOOP", L"FallingParasite_Falling_Loop_2_SeungyongEdit.wav", SOUND_ENEMY_SKILL4, 10.f);
+		
 		for (int i = 0; i < 3; ++i)
 		{
 			_int randomX = SMath::Random(-2, 2);

@@ -33,6 +33,9 @@ public:
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
 public:
+	void Play_Sound_Shield_Impact();
+
+public:
 	static CWeapon_Punch_Tank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual CGameObject* Pool();

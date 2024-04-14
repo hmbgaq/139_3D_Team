@@ -12,7 +12,11 @@ public:
 
 public:
 	static const _uint g_iAnimIndex = CVampireCommander::VampireCommander_State::VampireCommander_Spawn_01;
-
+public:
+	_float m_fOffSetX = 1.f;
+	_float m_fOffSetY = 0.5f;
+	_float m_fOffSetZ = -3.f;
+	_float3 m_fOffSet = {};
 };
 
 END

@@ -26,7 +26,9 @@
 #include "Environment_SpecialObject.h"
 #include "Event_Trigger.h"
 #include "Event_MonsterSpawnTrigger.h"
+#include "Event_UITrigger.h"
 #include "Light.h"
+#include "AnimalObject.h"
 #pragma endregion
 
 #pragma region Test
@@ -487,7 +489,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		{
 			CEnvironment_Interact* pObject = { nullptr };
 
-			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 
 			if (Desc.eInteractType == CEnvironment_Interact::INTERACT_WAGONEVENT)
 			{
@@ -581,7 +583,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
 		{
 			CEnvironment_Interact* pObject = { nullptr };
 
-			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
+			pObject = dynamic_cast<CEnvironment_Interact*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_BackGround", L"Prototype_GameObject_Environment_InteractObject", &Desc));
 
 		}
 		else
@@ -628,6 +630,47 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
  
  	}
  
+	json AnimalJson = Stage1MapJson["NPC_Json"];
+	_int iAnimalJsonSize = (_int)AnimalJson.size();
+
+	for (_int i = 0; i < iAnimalJsonSize; ++i)
+	{
+		CAnimalObject::Animal_OBJECT_DESC Desc = {};
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = AnimalJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+
+		Desc.iPlayAnimationIndex = AnimalJson[i]["AnimationIndex"];
+		Desc.bPreview = false;
+
+		const json& TransformJson = AnimalJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+
+		
+		CAnimalObject* pObject = { nullptr };
+
+		pObject = dynamic_cast<CAnimalObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_NPC", L"Prototype_GameObject_AnimalObject", &Desc));
+
+		
+
+	}
+
  
 	return S_OK;
 
@@ -1190,7 +1233,7 @@ HRESULT CLevel_GamePlay::Ready_Event()
 
 	json MonsterTriggerJson = TriggerJson["MonsterTriggerJson"];
 	_int iMonsterTriggerSize = (_int)MonsterTriggerJson.size();
-
+	
 	for (_int i = 0; i < iMonsterTriggerSize; ++i)
 	{
 		CEvent_MosnterSpawnTrigger::MONSTERSPAWN_TRIGGERDESC MonsterTriggerDesc = {};
@@ -1200,11 +1243,11 @@ HRESULT CLevel_GamePlay::Ready_Event()
 		MonsterTriggerDesc.iSpawnGroupIndex = MonsterTriggerJson[i]["SpawnGroupIndex"];
 		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderSize"], MonsterTriggerDesc.vColliderSize);
 		CJson_Utility::Load_Float3(MonsterTriggerJson[i]["ColliderCenter"], MonsterTriggerDesc.vColliderCenter);
-
+	
 		CEvent_MosnterSpawnTrigger* pMonsterTrigger = CEvent_MosnterSpawnTrigger::Create(m_pDevice, m_pContext, &MonsterTriggerDesc);
-
+	
 		pMonsterTrigger->Load_FromJson(MonsterTriggerJson[i]);
-
+	
 		if (pMonsterTrigger == nullptr)
 		{
 			MSG_BOX("몬스터 트리거 불러오기 실패");
@@ -1214,8 +1257,48 @@ HRESULT CLevel_GamePlay::Ready_Event()
 		{
 			m_pGameInstance->Add_Event(pMonsterTrigger);
 		}
+	
+	
+	}
 
-
+	json UITriggerJson = TriggerJson["UITriggerJson"];
+	_int iUITriggerJsonSize = (_int)UITriggerJson.size();
+	
+	for (_int i = 0; i < iUITriggerJsonSize; ++i)
+	{
+		CEvent_UITrigger::UI_TRIGGERDESC UITriggerDesc = {};
+		UITriggerDesc.bOnTrigger = UITriggerJson[i]["OnTrigger"];
+		UITriggerDesc.strSpawnMonsterJsonPath = UITriggerJson[i]["JsonPath"];
+		UITriggerDesc.strTriggerNameTag = UITriggerJson[i]["NameTag"];
+		UITriggerDesc.iSpawnGroupIndex = UITriggerJson[i]["SpawnGroupIndex"];
+		UITriggerDesc.eTriggerType = CEvent_Trigger::TRIGGER_UI;
+		CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderSize"], UITriggerDesc.vColliderSize);
+		CJson_Utility::Load_Float3(UITriggerJson[i]["ColliderCenter"], UITriggerDesc.vColliderCenter);
+	
+		CEvent_UITrigger* pUITrigger = CEvent_UITrigger::Create(m_pDevice, m_pContext, &UITriggerDesc);
+	
+		const json& TransformJson = UITriggerJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+	
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+	
+		pUITrigger->Load_FromJson(UITriggerJson[i]);
+	
+		if (pUITrigger == nullptr)
+		{
+			MSG_BOX("UI 트리거 불러오기 실패");
+			return E_FAIL;
+		}
+		else
+		{
+			m_pGameInstance->Add_Event(pUITrigger);
+		}
 	}
 
 

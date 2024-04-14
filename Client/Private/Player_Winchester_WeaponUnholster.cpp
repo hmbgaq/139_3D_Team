@@ -5,6 +5,7 @@
 
 #include "Data_Manager.h"
 #include "MasterCamera.h"
+#include "SMath.h"
 
 void CPlayer_Winchester_WeaponUnholster::Initialize(CPlayer* pActor)
 {
@@ -13,6 +14,9 @@ void CPlayer_Winchester_WeaponUnholster::Initialize(CPlayer* pActor)
 	pActor->Set_Animation_Upper(g_iAnimIndex, CModel::ANIM_STATE_NORMAL);
 	pActor->Reset_UpperAngle();
 	pActor->Set_Splitted(true);
+
+	CWeapon* pWeapon = pActor->Set_Weapon_Enable(PLAYER_WEAPON_WINCHESTER, true);
+	pWeapon->Play_Weapon_Sound_UnHolster();
 
 
 }

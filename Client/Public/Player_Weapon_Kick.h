@@ -31,6 +31,14 @@ public:
 	virtual void	OnCollisionExit(CCollider* other)	override;
 
 public:
+	void Hit(CCollider* other);
+
+protected:
+	virtual void Play_Hit_Sound_Normal() override;
+
+
+
+public:
 	static CPlayer_Weapon_Kick* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 
 	virtual CGameObject* Clone(void* pArg) override;

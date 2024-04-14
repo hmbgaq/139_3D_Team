@@ -346,7 +346,7 @@ public:
 
 protected:
 	_bool			m_bLifeTimeUI = false;
-	_float			m_fActive_Distance = 16.f;
+	_float			m_fActive_Distance = 35.f;
 
 public: /* ============================== SetUp ============================== */
 	HRESULT			SetUp_UIRect(_float fPosX, _float fPosY, _float fSizeX = 1.f, _float fSizeY = 1.f);
@@ -371,6 +371,7 @@ public: /* ============================== SetUp ============================== *
 public:	// Tick
 	void			Player_HUD(_float fTimeDelta);
 	void			TutorialBox(_float fTimeDelta);
+	void			DiedScreen(_float fTimeDelta);
 
 public:
 	void			Check_Disappear(_float fTimeDelta);
@@ -437,6 +438,16 @@ public: /* =========================== Animation ============================== 
 	_float			Get_Alpha() { return m_fAlpha; }
 	_float*			Get_PointAlpha() { return &m_tUIInfo.fAlpha; }
 
+	void			Set_SkillPoint(_int iSkillPoint) { m_iSkillPoint = iSkillPoint; }
+	_int			Get_SkillPoint() { return m_iSkillPoint; }
+	void			Set_Price(_int iPrice) { m_iPrice = iPrice; }
+	_int			Get_Price() { return m_iPrice; }
+
+protected:
+	_int			m_iPrice = 0;
+	_int			m_iSkillPoint = 0;
+
+private:
 	// dt 값
 	_float			fFrameTimeDelta, fCurFrameTimeDelta;
 
@@ -479,6 +490,7 @@ public: /* =========================== Animation ============================== 
 	// 디스토션 Bias
 	_float			fDistortionBias_Delta = 0.f;
 
+protected:
 	_bool			m_bAnimChange = false;
 
 public:
@@ -496,6 +508,7 @@ protected:
 
 protected:
 	_bool				Alpha_Minus(_float fTimeDelta);
+	_bool				Alpha_Minus_Control(_float fTimeDelta, _float fAlpha);
 	_bool				Alpha_Plus(_float fTimeDelta);
 	_bool				Alpha_Plus_Control(_float fTimeDelta, _float fAlpha);
 	_float				m_fAlphaSpeed = 1.f;

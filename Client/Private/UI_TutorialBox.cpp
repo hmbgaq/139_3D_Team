@@ -40,7 +40,7 @@ HRESULT CUI_TutorialBox::Initialize(void* pArg)
 	if (FAILED(Find_Change("Default"))) //! 텍스트 세팅
 		return E_FAIL;
 
-	m_eType = UITYPE::CROSSHAIR;
+	m_eType = UITYPE::TUTORIALBOX;
 	m_bActive = false;
 
 	return S_OK;

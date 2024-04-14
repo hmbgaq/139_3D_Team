@@ -6,6 +6,9 @@ void CTank_State_Death::Initialize(CTank* pActor)
 	__super::Initialize(pActor);
 	pActor->Get_Collider()->Set_Enable(false);
 	CData_Manager::GetInstance()->Add_CurEXP(TANK_EXP);
+
+	pActor->Play_Sound_Bodyfall();
+	pActor->Play_Sound_Hit();
 }
 
 CState<CTank>* CTank_State_Death::Update(CTank* pActor, _float fTimeDelta)

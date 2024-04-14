@@ -47,7 +47,6 @@ HRESULT CExplosion_TNTCrate::Initialize(void* pArg)
 
 	// ÀÌÆåÆ® »ý¼º
 	//m_pEffect = EFFECT_MANAGER->Create_Effect(m_iCurrnetLevel, LAYER_EFFECT, "Test_Skull.json", this);
-	EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", nullptr, Get_Position());
 
 	return S_OK;
 }
@@ -55,6 +54,11 @@ HRESULT CExplosion_TNTCrate::Initialize(void* pArg)
 void CExplosion_TNTCrate::Priority_Tick(_float fTimeDelta)
 {
 	__super::Priority_Tick(fTimeDelta);
+	if (m_bfirst)
+	{
+		EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", nullptr, Get_Position());
+		m_bfirst = false;
+	}
 }
 
 void CExplosion_TNTCrate::Tick(_float fTimeDelta)

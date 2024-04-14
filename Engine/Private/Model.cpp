@@ -518,6 +518,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 	{
 		_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
 		m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
+
 		if (0 == iTargetKeyFrameIndex)
 		{
 			m_Animations[m_iCurrentAnimIndex]->Reset_Animation(m_Bones, false);
@@ -525,12 +526,7 @@ void CModel::Set_Animation(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimStat
 			m_bReset = true;
 		}
 	}
-	//else 
-	//{
-	//	m_iCurrentAnimIndex = _iAnimationIndex;
-	//	_float fTargetTrackPosition = (*m_Animations[m_iCurrentAnimIndex]->Get_Channels())[0]->Get_KeyFrame(iTargetKeyFrameIndex).fTrackPosition;
-	//	m_Animations[m_iCurrentAnimIndex]->Set_TrackPosition(fTargetTrackPosition);
-	//}
+
 }
 
 void CModel::Set_Animation_Transition(_uint _iAnimationIndex, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
@@ -563,6 +559,7 @@ void CModel::Set_AnimState(CModel::ANIM_STATE _eAnimState)
 {
 	m_eAnimState = _eAnimState;
 }
+
 
 void CModel::Set_Animation_Upper(_uint _iAnimationIndex, CModel::ANIM_STATE _eAnimState, _float _fTransitionDuration, _uint iTargetKeyFrameIndex)
 {
@@ -825,7 +822,7 @@ HRESULT CModel::Ready_Materials(const string& strModelFilePath)
 			strcat_s(szTmp, szEXT);
 
 			_tchar		szFullPath[MAX_PATH] = TEXT("");
-
+			//0x000000e86ff6c9b0 L"../Bin/Resources/Models/Map/SnowMountain/NonAnim/Interact\\T_WoodenPanels_03_BC.png"
 			MultiByteToWideChar((_uint)CP_ACP, 0, szTmp, (_int)strlen(szTmp), szFullPath, (_int)MAX_PATH);
 
 			if (szFileName == "M_Invisible") /* 현재 게임에서 이 텍스쳐를 가지면 투명한 텍스쳐라 가상으로 만들어줘도 터짐 */

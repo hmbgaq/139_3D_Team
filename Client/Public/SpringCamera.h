@@ -46,6 +46,9 @@ public:
 	void Lock_On(_float fTimeDelta);
 
 public:
+	void For_PlayerSpring(_float fTimeDelta);
+	void For_HawkSpring(_float fTimeDelta);
+
 	void RotatePlayer();
 	void Mouse_Fix();
 	void Reset_Angle() { 
@@ -79,6 +82,14 @@ public:
 
 	void Set_ShakeCameraTime(_float _Shaketime) { m_fShakeTime = _Shaketime; }
 	void Set_ShakeCameraMinMax(_float2 _fShakeMinMax) { m_fShakeMinMax = _fShakeMinMax; }
+
+public: //!For Hawk
+	void Set_CamAtPoints(vector<_float4>& vecCamAtPoints) { m_vecAtPoints = vecCamAtPoints; }
+	void Spline_At_LogicFunction(const _float fTimeDelta);
+	void Spline_At_Function(const _float fTimeDelta);
+	void Set_HawkSpring(_bool bHawkSpring) { m_bHawkSpring = bHawkSpring;}
+	void HawkLerp_CameraPosition(_float fTimeDelta);
+	void Set_Hawk(CHawk* pHawk);
 
 private:
 	// 	수평 , 수직 수행거리
@@ -122,6 +133,37 @@ private:
 private:
 	_bool	m_bIsGamePlay = { true };
 
+private: //!For Hawk
+// 	수평 , 수직 수행거리
+	_float  m_hHawkDist = 0.f;
+	_float  m_vHawkDist = 0.f;
+	_float  m_fHawkSpringConstant = 1000.f; //용수철 상수(spring constant)가 커지면 스프링의 탄력이 줄어든다.	//시작값은 카메라를 움직이고 싶은 범위에 따라 달라진다.
+	_float  m_fHawkDampConstant = 0.f;//용수철 상수를 바탕으로 한 감쇠(dampening)상수
+	_float3 m_vHawkVelocity = {};
+	_float3 m_vHawkActualPosition = {};//속도벡터와 카메라의 실제 위치를 나타내는 벡터
+	_float3 m_vHawkPreActualPosition = {};//카메라 보간을 위해 이전 프레임 포지션가져옴
+	_float3 m_vHawkTargetPosition = {};
+	_float3 m_vHawkNewTargetPosition = {};
+	_float3 m_vHawkCameraTickPos = {};// tick 에서 값이 자꾸 이상하게 초기화되서 이걸로 다시 값을 맞춰줘야함 
+	CTransform* m_pHawkTransform = { nullptr };//카메라가 따라다닐 타깃 오브젝트 //타깃 오브젝트는 위치, 방향벡터 , 타깃의 위쪽을 가리키는 벡터를 지닌다.
+
+	_float	m_fHawkAngle = 0.f;
+	_float  m_fHawkPitch = 0.f;
+
+	CHawk*			m_pHawk = { nullptr };
+	_bool			m_bHawkSpring = false;
+	_float3			m_vHawkTargetPositionTest = {};
+	vector<_float4> m_vecAtPoints;
+	_float			m_fSplineTimeAcc = 0.f;
+	_float			m_fSplineMoveSpeed = 12.f;
+	_float			m_fSplineMoveInterpolate = 0.1f;
+	_bool			m_bFixAt = false;
+	_bool			m_bOnceAt = false;
+	_int			m_iCurrentAtPoint = 0;
+	_float4			m_HawkOffset = {};
+
+	
+	
 public:
 	static CSpringCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

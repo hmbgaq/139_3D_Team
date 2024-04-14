@@ -17,6 +17,14 @@ private:
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::Parasiter_ShakeTree_Loop;
 
+private:
+	void	PlaySound_TreeHit();
+	void	PlaySound_TreeSubBGM(_float fTimeDelta);
+
+private:
+	_float	m_fSoundTimeAcc = 0.f;
+	_float  m_fAttackTreeLoopLength = 25.f;
+	_bool	m_bPlayTreeSubBGM = false;
 };
 
 END

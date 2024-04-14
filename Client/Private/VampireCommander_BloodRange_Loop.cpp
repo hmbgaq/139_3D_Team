@@ -15,13 +15,27 @@ void CVampireCommander_BloodRange_Loop::Initialize(CVampireCommander* pActor)
 	m_iLoopescape = 0;
 	m_fPreHP = pActor->Get_Hp();
 
-	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json", nullptr, pActor->Get_Position());
+	m_pEffect = EFFECT_MANAGER->Play_Effect("VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json", nullptr, pActor->Get_Position());
+
+	m_pGameInstance->Play_Sound(L"VAMPIRE_BLOODRANGE", L"commander_lesser_attack_tornado_absorb_loop003.wav", SOUND_EFFECT2, 4.f);
+	m_pGameInstance->Play_Sound(L"VAMPIRE_BLOODRANGE", L"BloodTornado.wav", SOUND_EFFECT3, 5.f);
+	m_pGameInstance->Play_Sound(L"VAMPIRE_BLOODRANGE", L"commander_lesser_attack_tornado_start003.wav", SOUND_EFFECT4, 6.f);
+	m_pGameInstance->Play_Sound(L"VAMPIRE_BLOODRANGE", L"Bats_Attack_Loop_Layer_Wings_Mixdown.wav", SOUND_EFFECT5, 4.f);
 	//m_pEffect = EFFECT_MANAGER->Create_Effect("VampireCommander/BloodRange_Loop/", "BloodRange_Loop_22_Smoke.json", pActor);
 
 }
 
 CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCommander* pActor, _float fTimeDelta)
 {
+	m_bBloodLoopTime += fTimeDelta;
+
+	if (m_bBloodLoopTime >=0.5f)
+	{
+		m_pGameInstance->Add_CloneObject(LEVEL_INTRO_BOSS, L"Layer_BossProjectile", L"Prototype_GameObject_VampireCommander_Projectile_BloodLoop");
+		m_bBloodLoopTime = 0.f;
+	}
+
+
 	if (m_fHealHP>=200.f) //  && false == pActor->Is_Revealed_Weakness()
 	{
 		return new CVampireCommander_BloodRange_Stop();
@@ -29,10 +43,15 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 	else if (m_bSuccessShooting == true)//총으로 약점 공격 성공했을시
 	{
 		pActor->Set_Hp(m_fPreHP);
+		m_pGameInstance->Play_Sound(L"VAMPIRE_HIT", L"commander_lesser_vo_hit_strong003.wav", SOUND_ENEMY_HIT, 7.f);
 		return new CVampireCommander_BloodRange_Stun_Start();
 	}
 	//체력회복 
 	m_fHealHP += 0.2f;
+
+	PlaySound_Healing(fTimeDelta);
+	
+
 
 	pActor->Set_Hp(m_fPreHP + m_fHealHP);
 
@@ -108,16 +127,19 @@ CState<CVampireCommander>* CVampireCommander_BloodRange_Loop::Update(CVampireCom
 		if (m_bFlags[3] == false && m_fHealHP >= 10.f &&  pActor->m_pWeakneesUIs[0]->Get_Enable() == false)
 		{
 			++m_iShootingCount;
+			m_pGameInstance->Play_Sound(L"VAMPIRE_HIT", L"commander_lesser_vo_hit_strong005.wav", SOUND_ENEMY_VOICE, 7.f);
 			m_bFlags[3] = true;
 		}
 		if (m_bFlags[4] == false && m_fHealHP >= 70.f && pActor->m_pWeakneesUIs[1]->Get_Enable() == false)
 		{
 			++m_iShootingCount;
+			m_pGameInstance->Play_Sound(L"VAMPIRE_HIT", L"commander_lesser_vo_hit_strong005.wav", SOUND_ENEMY_VOICE, 7.f);
 			m_bFlags[4] = true;
 		}
 		if (m_bFlags[5] == false && m_fHealHP >= 130.f && pActor->m_pWeakneesUIs[2]->Get_Enable() == false)
 		{
 			++m_iShootingCount;
+			m_pGameInstance->Play_Sound(L"VAMPIRE_HIT", L"commander_lesser_vo_hit_strong005.wav", SOUND_ENEMY_VOICE, 7.f);
 			m_bFlags[5] = true;
 		}
 
@@ -142,4 +164,25 @@ void CVampireCommander_BloodRange_Loop::Release(CVampireCommander* pActor)
 		pActor->m_pWeakneesUIs[i]->Set_Dead(true);
 	}
 	pActor->m_pWeakneesUIs.clear();
+
+	list<CGameObject*>* _pMTargets = m_pGameInstance->Get_GameObjects(LEVEL_INTRO_BOSS, TEXT("Layer_BossProjectile"));
+
+	for (CGameObject* pGameObject : *_pMTargets)
+	{
+		pGameObject->Set_Dead(true);
+	}
+
+	m_fSoundTimeAcc = 0.f;
+}
+
+void CVampireCommander_BloodRange_Loop::PlaySound_Healing(_float fTimeDelta)
+{
+	m_fSoundTimeAcc += fTimeDelta;
+
+
+	if (m_fSoundTimeAcc > m_fHealingPlayTime)
+	{
+		m_pGameInstance->Play_Sound(L"VAMPIRE_BLOODRANGE", L"commander_lesser_abi_heal_regeneration_flares003.wav", SOUND_ENEMY_SKILL4, 7.f);
+		m_fSoundTimeAcc = 0.f;
+	}
 }

@@ -197,6 +197,7 @@
     <ClInclude Include="..\..\Reference\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\..\Reference\Imgui\ImZoomSlider.h" />
     <ClInclude Include="..\Public\Actor.h" />
+    <ClInclude Include="..\Public\AnimalObject.h" />
     <ClInclude Include="..\Public\Assassin.h" />
     <ClInclude Include="..\Public\Assassin_AttackScream.h" />
     <ClInclude Include="..\Public\Assassin_DodgeRun_L_01.h" />
@@ -333,6 +334,7 @@
     <ClInclude Include="..\Public\Hawk_State.h" />
     <ClInclude Include="..\Public\Hawk_State_Normal.h" />
     <ClInclude Include="..\Public\Hawk_Trans_StandGround_to_FlyHeavy.h" />
+    <ClInclude Include="..\Public\Event_UITrigger.h" />
     <ClInclude Include="..\Public\HitPoint_Crane.h" />
     <ClInclude Include="..\Public\Body_Edgar.h" />
     <ClInclude Include="..\Public\Body_Heavy_Vampiric_Zombie.h" />
@@ -667,7 +669,6 @@
     <ClInclude Include="..\Public\Effect_Explosion.h" />
     <ClInclude Include="..\Public\Effect_Instance.h" />
     <ClInclude Include="..\Public\Effect_Particle.h" />
-    <ClInclude Include="..\Public\Effect_Rect.h" />
     <ClInclude Include="..\Public\Effect_Trail.h" />
     <ClInclude Include="..\Public\Environment_Instance.h" />
     <ClInclude Include="..\Public\Environment_Interact.h" />
@@ -1276,10 +1277,14 @@
     <ClInclude Include="..\Public\UI_EnemyHUD_Bar.h" />
     <ClInclude Include="..\Public\UI_EnemyHUD_Shard.h" />
     <ClInclude Include="..\Public\UI_EnemyState_Shard.h" />
+    <ClInclude Include="..\Public\UI_Icon_SelectAnim.h" />
     <ClInclude Include="..\Public\UI_Interaction.h" />
+    <ClInclude Include="..\Public\UI_LetterBox.h" />
+    <ClInclude Include="..\Public\UI_LevelFont.h" />
     <ClInclude Include="..\Public\UI_Loading_Icon.h" />
     <ClInclude Include="..\Public\UI_MainMenuList.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\Public\UI_MoneyFont.h" />
     <ClInclude Include="..\Public\UI_MoveEffect.h" />
     <ClInclude Include="..\Public\UI_Obtain_Button.h" />
     <ClInclude Include="..\Public\UI_Option_Button.h" />
@@ -1289,6 +1294,7 @@
     <ClInclude Include="..\Public\UI_SkillActive.h" />
     <ClInclude Include="..\Public\UI_SkillFrame.h" />
     <ClInclude Include="..\Public\UI_SkillIcon.h" />
+    <ClInclude Include="..\Public\UI_SkillPoint_Font.h" />
     <ClInclude Include="..\Public\UI_SkillPreview_Window.h" />
     <ClInclude Include="..\Public\UI_SkillScrew.h" />
     <ClInclude Include="..\Public\UI_SkillWindow_Button.h" />
@@ -1296,6 +1302,7 @@
     <ClInclude Include="..\Public\UI_Option_Title_Button.h" />
     <ClInclude Include="..\Public\UI_Skill_Preview.h" />
     <ClInclude Include="..\Public\UI_Sprite.h" />
+    <ClInclude Include="..\Public\UI_TalkBox.h" />
     <ClInclude Include="..\Public\UI_Video.h" />
     <ClInclude Include="..\Public\UI_Weakness.h" />
     <ClInclude Include="..\Public\UI_WeaponActiveGuige.h" />
@@ -1320,6 +1327,7 @@
     <ClInclude Include="..\Public\VampireCommander_Leap_Strat.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee1.h" />
     <ClInclude Include="..\Public\VampireCommander_Melee2.h" />
+    <ClInclude Include="..\Public\VampireCommander_Projectile_BloodLoop.h" />
     <ClInclude Include="..\Public\VampireCommander_Projectile_Range1.h" />
     <ClInclude Include="..\Public\VampireCommander_Projectile_Range3.h" />
     <ClInclude Include="..\Public\VampireCommander_Ranged1.h" />
@@ -1439,6 +1447,7 @@
     <ClCompile Include="..\..\Reference\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_internal.cpp" />
     <ClCompile Include="..\..\Reference\Imgui\imNeoSequencer\imgui_neo_sequencer.cpp" />
+    <ClCompile Include="..\Private\AnimalObject.cpp" />
     <ClCompile Include="..\Private\Assassin.cpp" />
     <ClCompile Include="..\Private\Assassin_AttackScream.cpp" />
     <ClCompile Include="..\Private\Assassin_DodgeRun_L_01.cpp" />
@@ -1652,6 +1661,7 @@
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\Event_MonsterSpawnTrigger.cpp" />
     <ClCompile Include="..\Private\Event_Trigger.cpp" />
+    <ClCompile Include="..\Private\Event_UITrigger.cpp" />
     <ClCompile Include="..\Private\Explosion_Dynamite.cpp" />
     <ClCompile Include="..\Private\Explosion_Infected_D.cpp" />
     <ClCompile Include="..\Private\Explosion_TNTCrate.cpp" />
@@ -1857,7 +1867,6 @@
     <ClCompile Include="..\Private\Effect_Explosion.cpp" />
     <ClCompile Include="..\Private\Effect_Instance.cpp" />
     <ClCompile Include="..\Private\Effect_Particle.cpp" />
-    <ClCompile Include="..\Private\Effect_Rect.cpp" />
     <ClCompile Include="..\Private\Effect_Trail.cpp" />
     <ClCompile Include="..\Private\Environment_Instance.cpp" />
     <ClCompile Include="..\Private\Environment_Interact.cpp" />
@@ -2329,10 +2338,14 @@
     <ClCompile Include="..\Private\UI_EnemyHP_Shard.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHUD_Bar.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHUD_Shard.cpp" />
+    <ClCompile Include="..\Private\UI_Icon_SelectAnim.cpp" />
     <ClCompile Include="..\Private\UI_Interaction.cpp" />
+    <ClCompile Include="..\Private\UI_LetterBox.cpp" />
+    <ClCompile Include="..\Private\UI_LevelFont.cpp" />
     <ClCompile Include="..\Private\UI_Loading_Icon.cpp" />
     <ClCompile Include="..\Private\UI_MainMenuList.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\Private\UI_MoneyFont.cpp" />
     <ClCompile Include="..\Private\UI_MoveEffect.cpp" />
     <ClCompile Include="..\Private\UI_Obtain_Button.cpp" />
     <ClCompile Include="..\Private\UI_Option_Button.cpp" />
@@ -2342,6 +2355,7 @@
     <ClCompile Include="..\Private\UI_SkillActive.cpp" />
     <ClCompile Include="..\Private\UI_SkillFrame.cpp" />
     <ClCompile Include="..\Private\UI_SkillIcon.cpp" />
+    <ClCompile Include="..\Private\UI_SkillPoint_Font.cpp" />
     <ClCompile Include="..\Private\UI_SkillPreview_Window.cpp" />
     <ClCompile Include="..\Private\UI_SkillScrew.cpp" />
     <ClCompile Include="..\Private\UI_SkillWindow_Button.cpp" />
@@ -2349,6 +2363,7 @@
     <ClCompile Include="..\Private\UI_Option_Title_Button.cpp" />
     <ClCompile Include="..\Private\UI_Skill_Preview.cpp" />
     <ClCompile Include="..\Private\UI_Sprite.cpp" />
+    <ClCompile Include="..\Private\UI_TalkBox.cpp" />
     <ClCompile Include="..\Private\UI_Video.cpp" />
     <ClCompile Include="..\Private\UI_Weakness.cpp" />
     <ClCompile Include="..\Private\UI_WeaponActiveGuige.cpp" />
@@ -2373,6 +2388,7 @@
     <ClCompile Include="..\Private\VampireCommander_Leap_Strat.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Melee2.cpp" />
+    <ClCompile Include="..\Private\VampireCommander_Projectile_BloodLoop.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Projectile_Range1.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Projectile_Range3.cpp" />
     <ClCompile Include="..\Private\VampireCommander_Ranged1.cpp" />

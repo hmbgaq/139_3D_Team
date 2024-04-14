@@ -203,6 +203,8 @@ HRESULT CUI_EnemyHUD_Shard::Ready_ChildHUD()
 			dynamic_cast<CUI_EnemyState_Shard*>(pUI_Object)->Setting_Owner();
 		}
 
+		pUI_Object->Set_RenderGroup(CRenderer::RENDERGROUP::RENDER_UI_WORLD); // World
+
 		m_vecEnemyHUD.push_back(pUI_Object);
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom

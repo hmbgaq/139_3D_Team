@@ -12,8 +12,9 @@ void CPlayer_SlamDown_v2::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
-	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true, true, 7);
 
+	m_pGameInstance->Play_Sound(L"PLAYER_IMPACT", L"Player_GroundSlamAttack_Impact_02.wav", CHANNELID::SOUND_PLAYER_IMPACT, 10.f);
 }
 
 CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)
@@ -37,7 +38,7 @@ CState<CPlayer>* CPlayer_SlamDown_v2::Update(CPlayer* pActor, _float fTimeDelta)
 		m_bFlags[1] = pActor->Is_Inputable_Front(20);
 		if (true == m_bFlags[1])
 		{
-			EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "SlamDown_v1_03_Rock.json", nullptr, pActor->Get_Position());
+			EFFECT_MANAGER->Play_Effect("Player/SlamDown/", "New_SlamDown_v2_01.json", nullptr, pActor->Get_Position());
 
 			//CameraSetting
 			CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();

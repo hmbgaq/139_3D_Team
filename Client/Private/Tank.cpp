@@ -22,6 +22,8 @@
 #include "Player.h"
 #include "Player_Finisher_Tank.h"
 
+#include "Effect_Manager.h"
+#include "SMath.h"
 
 
 CTank::CTank(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
@@ -51,6 +53,8 @@ void CTank::Set_ShieldBroken()
 	}
 		
 	m_fShieldBrokenTime = 20.f;
+
+	Play_Sound_Shield_Crash();
 }
 
 HRESULT CTank::Initialize_Prototype()
@@ -149,6 +153,17 @@ void CTank::Tick(_float fTimeDelta)
 	//{
 	//	m_pTarget = CData_Manager::GetInstance()->Get_Player();
 	//}
+	if (m_bRushStart)
+	{
+		m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "Tank_Rush.json", this);
+		m_bRushStart = false;
+	}
+	if (m_bRushStop == true && m_pEffect != nullptr)
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_pEffect = nullptr;
+		m_bRushStop = false;
+	}
 
 }
 
@@ -240,6 +255,328 @@ void CTank::Create_GroundWave()
 
 	CPlayer* pPlayer = CData_Manager::GetInstance()->Get_Player();
 	pGroundWave->Get_Transform()->Look_At(pPlayer->Get_Position_Vector());
+
+	Play_Sound_Wave();
+}
+
+void CTank::Play_Sound_Attack_Melee()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_attack_melee_punch001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_attack_melee_punch002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_attack_melee_punch003.wav";
+		break;
+	default:
+		strFileName = L"tank_attack_melee_punch001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_ATTACK_MELEE", strFileName, CHANNELID::SOUND_ENEMY_WHOOSH, 10.f);
+
+}
+
+void CTank::Play_Sound_Attack_Shield()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_attack_shield_whoosh001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_attack_shield_whoosh002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_attack_shield_whoosh003.wav";
+		break;
+	default:
+		strFileName = L"tank_attack_shield_whoosh001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_ATTACK_SHIELD", strFileName, CHANNELID::SOUND_ENEMY_WHOOSH, 10.f);
+
+}
+
+void CTank::Play_Sound_Wave()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_attack_wave_start001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_attack_wave_start002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_attack_wave_start003.wav";
+		break;
+	default:
+		strFileName = L"tank_attack_wave_start001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_WAVE", strFileName, CHANNELID::SOUND_ENEMY_WHOOSH, 10.f);
+
+}
+
+void CTank::Play_Sound_Bodyfall()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 6);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_bodyfall_generic001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_bodyfall_generic002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_bodyfall_generic003.wav";
+		break;
+	case 3:
+		strFileName = L"tank_bodyfall_generic004.wav";
+		break;
+	case 4:
+		strFileName = L"tank_bodyfall_generic005.wav";
+		break;
+	case 5:
+		strFileName = L"tank_bodyfall_generic006.wav";
+		break;
+	default:
+		strFileName = L"tank_bodyfall_generic001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_BODYFALL", strFileName, CHANNELID::SOUND_ENEMY_DEAD, 10.f);
+
+}
+
+void CTank::Play_Sound_Footstep()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 6);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_footsteps_generic001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_footsteps_generic002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_footsteps_generic003.wav";
+		break;
+	case 3:
+		strFileName = L"tank_footsteps_generic004.wav";
+		break;
+	case 4:
+		strFileName = L"tank_footsteps_generic005.wav";
+		break;
+	case 5:
+		strFileName = L"tank_footsteps_generic006.wav";
+		break;
+	default:
+		strFileName = L"tank_footsteps_generic001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_FOOTSTEP", strFileName, CHANNELID::SOUND_ENEMY_FOOTSTEP, 10.f);
+
+}
+
+void CTank::Play_Sound_Hit()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_vo_hit001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_vo_hit002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_vo_hit003.wav";
+		break;
+	case 3:
+		strFileName = L"tank_vo_hit004.wav";
+		break;
+	case 4:
+		strFileName = L"tank_vo_hit005.wav";
+		break;
+	default:
+		strFileName = L"tank_vo_hit001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_HIT", strFileName, CHANNELID::SOUND_ENEMY_HIT, 10.f);
+
+}
+
+void CTank::Play_Sound_Shield_Crash()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_stun_shield_crash001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_stun_shield_crash002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_stun_shield_crash003.wav";
+		break;
+	case 3:
+		strFileName = L"tank_stun_shield_crash004.wav";
+		break;
+	case 4:
+		strFileName = L"tank_stun_shield_crash005.wav";
+		break;
+	default:
+		strFileName = L"tank_stun_shield_crash001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_SHIELD", strFileName, CHANNELID::SOUND_ENEMY_HIT2, 10.f);
+}
+
+void CTank::Play_Sound_Shield_PickUp()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 3);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_stun_shield_pickup001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_stun_shield_pickup002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_stun_shield_pickup003.wav";
+		break;
+	default:
+		strFileName = L"tank_stun_shield_pickup001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_SHIELD", strFileName, CHANNELID::SOUND_ENEMY_HIT2, 10.f);
+}
+
+
+
+void CTank::Play_Sound_Voice_Attack()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_vo_attack001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_vo_attack002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_vo_attack003.wav";
+		break;
+	case 3:
+		strFileName = L"tank_vo_attack004.wav";
+		break;
+	case 4:
+		strFileName = L"tank_vo_attack005.wav";
+		break;
+	default:
+		strFileName = L"tank_vo_attack001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_VOICE_ATTACK", strFileName, CHANNELID::SOUND_ENEMY_EFFORT, 10.f);
+}
+
+void CTank::Play_Sound_Voice_Charge()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_vo_taunt_charge001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_vo_taunt_charge002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_vo_taunt_charge003.wav";
+		break;
+	case 3:
+		strFileName = L"tank_vo_taunt_charge004.wav";
+		break;
+	case 4:
+		strFileName = L"tank_vo_taunt_charge005.wav";
+		break;
+	default:
+		strFileName = L"tank_vo_taunt_charge001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_VOICE_CHARGE", strFileName, CHANNELID::SOUND_ENEMY_EFFORT, 10.f);
+}
+
+void CTank::Play_Sound_Shield_Impact()
+{
+	wstring strFileName = L"";
+
+	_uint iRand = SMath::Random(0, 5);
+	switch (iRand)
+	{
+	case 0:
+		strFileName = L"tank_attack_shield_impactA001.wav";
+		break;
+	case 1:
+		strFileName = L"tank_attack_shield_impactA002.wav";
+		break;
+	case 2:
+		strFileName = L"tank_attack_shield_impactA003.wav";
+		break;
+	case 3:
+		strFileName = L"tank_attack_shield_impactA004.wav";
+		break;
+	case 4:
+		strFileName = L"tank_attack_shield_impactA005.wav";
+		break;
+	default:
+		strFileName = L"tank_attack_shield_impactA001.wav";
+		break;
+	}
+
+	m_pGameInstance->Play_Sound(L"TANK_ATTACK_SHIELD_IMPACT", strFileName, CHANNELID::SOUND_ENEMY_ATTACK, 10.f);
 }
 
 HRESULT CTank::Ready_Components()

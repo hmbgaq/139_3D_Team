@@ -3,6 +3,7 @@
 #include "Collider.h"
 
 #include "Effect_Manager.h"
+#include "GameInstance.h"
 
 void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 {
@@ -24,6 +25,9 @@ void CVampireCommander_Leap_Strat::Initialize(CVampireCommander* pActor)
 	Temp.m[2][2] = 2.f;
 
 	pWeapon->Get_Colliders().back()->Get_Bounding()->Set_matScale(Temp);
+	m_pGameInstance->Play_Sound(L"VAMPIRE_GROUNDSLAM", L"commander_lesser_attack_ground_slam_start001.wav", SOUND_ENEMY_SKILL1, 10.f);
+	m_pGameInstance->Play_Sound(L"VAMPIRE_TAUNT", L"commander_lesser_vo_taunt005.wav", SOUND_ENEMY_SKILL2, 7.f);
+	
 	
 }
 
@@ -32,23 +36,34 @@ CState<CVampireCommander>* CVampireCommander_Leap_Strat::Update(CVampireCommande
 	CWeapon* pWeapon = pActor->Get_Weapon(TEXT("Weapon_hand_R"));
 	if (pActor->Is_Inputable_Front(34))
 	{
-		pActor->Move_In_Proportion_To_Enemy(fTimeDelta*0.5f,0.3f);// ÀÌ °ª °Çµå¸®Áö¸¶ µü ¸ÂÃç ³ù´Ù 
+		pActor->Move_In_Proportion_To_Enemy(fTimeDelta*0.5f,0.3f);/*ÀÌ °ª °Çµå¸®Áö¸¶ µü ¸ÂÃç ³ù´Ù*/ /*! ¾Æ ~~ °Çµå¸®°í ½Í´Ù~~*/
+		
 	}
 	else if (pActor->Is_Inputable_Front(58))
 	{
 		pActor->Move_In_Proportion_To_Enemy(0, 0);
 	}
 
+	if (m_bFlags[1] == false && pActor->Is_Inputable_Front(34))
+	{
+		// µ¹Æ¢±â±â ÀÌÆåÆ® Ãß°¡
+		m_pGameInstance->Play_Sound(L"VAMPIRE_BODYFALL", L"commander_lesser_mvm_bodyfall001.wav", SOUND_ENEMY_SKILL3, 10.f);
+		m_bFlags[1] = true;
+	}
+	
+
 	if (m_bFlags[0] == false && pActor->Is_Inputable_Front(68))
 	{
 		// µ¹Æ¢±â±â ÀÌÆåÆ® Ãß°¡
 		EFFECT_MANAGER->Play_Effect("VampireCommander/", "landing_Rock_01.json", nullptr, pActor->Get_Position_Vector());
+		m_pGameInstance->Play_Sound(L"VAMPIRE_GROUNDSLAM", L"commander_lesser_attack_ground_slam_impact001.wav", SOUND_ENEMY_SKILL4, 10.f);
 		m_bFlags[0] = true;
 	}
 
 	if (pActor->Is_Inputable_Front(55))
 	{
 		pWeapon->Set_Enable(true);
+		pActor->Set_UseGravity(true);
 	}
 	else if (pActor->Is_Inputable_Front(75))
 	{

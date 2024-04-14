@@ -7,6 +7,7 @@
 #include "MasterCamera.h"
 #include "Sky.h"
 #include "Navigation.h"
+#include "Hawk.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -99,8 +100,10 @@ HRESULT CLevel_Tool::Ready_Layer_BackGround(const wstring& strLayerTag)
 HRESULT CLevel_Tool::Ready_Layer_Camera(const wstring& strLayerTag)
 {
 	FAILED_CHECK(m_pGameInstance->Add_CloneObject(m_pGameInstance->Get_NextLevel(), strLayerTag, TEXT("Prototype_GameObject_MasterCamera")));
-
 	CData_Manager::GetInstance()->Get_MasterCamera()->Set_CameraType(CMasterCamera::DynamicCamera);
+
+
+
 	//if(pDynamicCam == nullptr)
 	//	return E_FAIL;
 	// 

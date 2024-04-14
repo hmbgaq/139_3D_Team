@@ -322,6 +322,7 @@ public: //! For RollerCoster Wagon && Spline
 
 	void								Set_SplineCheck(_int iIndex, _bool bCheck) { m_vecPointChecks[iIndex] = bCheck; }
 
+	void								Set_OpenLevel(_bool bOpenLevel) { m_bOpenLevel = bOpenLevel;}
 private:
 	HRESULT								Load_SplineJson();
 	HRESULT								Load_EnableJson();
@@ -329,6 +330,7 @@ private:
 	void								Change_WagonTrack(const _float fTimeDelta);
 	_vector								CatmullRomInterpolation(_fvector p0, _fvector p1, _fvector p2, _fvector p3, _float t);
 	vector<_float4>						CreateSmoothSpline(vector<_float4>& points, _int segments);
+	
 	
 
 private:
@@ -345,6 +347,7 @@ private:
 	_int								m_iCurrentLevelIndex = -1;
 	
 
+	_bool								m_bOpenLevel = false;
 private:
 	CPlayer*							m_pPlayer = { nullptr };
 	_bool								m_bFindPlayer = false;
@@ -434,6 +437,7 @@ private: //! 소영 추가
 	_float							m_fLineTimeAcc			= 0.f;
 	_float							m_fLineThick_Ratio		= 0.f;
 
+	_bool							m_bPlaySound = false;
 public:
 	/* 원형객체를 생성한다. */
 	static CEnvironment_Interact* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

@@ -66,19 +66,25 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 
 			//if (!m_pOwner->Is_Dead())
 			{
+				m_tVoidDesc.matPivot = _ParentMatrix;
+
 				if (false == m_tVoidDesc.bPlay)
 				{
 					m_tVoidDesc.bRender = false;
-					m_pVIBufferCom->Reset_Points(_ParentMatrix);
+					m_pVIBufferCom->Reset_Points(m_tVoidDesc.matPivot);
 					return;
 				}
 				else
 				{
+					// 쉐이더에 넘겨줄 시간 누적
+					m_tVoidDesc.fTimeAcc += _fTimeDelta;
+					m_tVoidDesc.fLifeTimeRatio = min(1.0f, m_tVoidDesc.fTimeAcc / m_tVoidDesc.fLifeTime);
+
 					m_tVoidDesc.bRender = true;
 
 					if (!m_bPause)	// 일시정지
 					{
-						m_pVIBufferCom->Update(_fTimeDelta, _ParentMatrix);
+						m_pVIBufferCom->Update(_fTimeDelta, m_tVoidDesc.matPivot);
 					}
 
 				}
@@ -89,6 +95,12 @@ void CEffect_Trail::Tick_Trail(_float _fTimeDelta, _float4x4 _ParentMatrix)
 		}
 	}
 #endif // _DEBUG
+}
+
+void CEffect_Trail::Reset_Trail()
+{
+	m_tVoidDesc.bRender = false;
+	m_pVIBufferCom->Reset_Points(m_tVoidDesc.matPivot);
 }
 
 
@@ -262,6 +274,25 @@ HRESULT CEffect_Trail::Bind_ShaderResources()
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDegree", &m_tVoidDesc.fUV_RotDegree, sizeof(_float)));
 
 
+	// 마스크 UV웨이브
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_bUV_Wave", &m_tVoidDesc.bUV_Wave, sizeof(_bool)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UV_WaveSpeed", &m_tVoidDesc.vUV_WaveSpeed, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVOffset_Mask", &m_tVoidDesc.vUV_Offset_Mask, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_UVScale_Mask", &m_tVoidDesc.vUV_Scale_Mask, sizeof(_float2)));
+
+
+	/* Distortion */
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fFrameTime", &m_tVoidDesc.fTimeAcc, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_iScrollType", &m_tDistortionDesc.eType_Scroll, sizeof(_int)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScrollSpeeds", &m_tDistortionDesc.vScrollSpeeds, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vScales", &m_tDistortionDesc.vScales, sizeof(_float3)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion1", &m_tDistortionDesc.vDistortion1, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion2", &m_tDistortionDesc.vDistortion2, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vDistortion3", &m_tDistortionDesc.vDistortion3, sizeof(_float2)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionScale", &m_tDistortionDesc.fDistortionScale, sizeof(_float)));
+	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_fDistortionBias", &m_tDistortionDesc.fDistortionBias, sizeof(_float)));
+
+
 	/* Camera ============================================================================================ */
 	FAILED_CHECK(m_pShaderCom->Bind_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4)));
 	_float3 vCamDirectionFloat3 = m_pGameInstance->Get_CamDirection();
@@ -317,10 +348,10 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Scale"], m_tVoidDesc.vUV_Scale);
 	Out_Json["Trail"]["fUV_RotDegree"] = m_tVoidDesc.fUV_RotDegree;
 
-	Out_Json["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
-	CJson_Utility::Write_Float2(Out_Json["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
-	CJson_Utility::Write_Float2(Out_Json["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
-	CJson_Utility::Write_Float2(Out_Json["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
+	Out_Json["Trail"]["bUV_Wave"] = m_tVoidDesc.bUV_Wave;
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
 
 
 	CJson_Utility::Write_Float4(Out_Json["Trail"]["vColor_Offset"], m_tVoidDesc.vColor_Offset);
@@ -340,6 +371,19 @@ _bool CEffect_Trail::Write_Json(json& Out_Json)
 
 	/* 주인 */
 	Out_Json["Trail"]["bParentPivot"] = m_tVoidDesc.bParentPivot;	// false여야함 
+
+
+	/* Distortion */
+	Out_Json["Trail"]["eType_Scroll"] = m_tDistortionDesc.eType_Scroll;
+
+	CJson_Utility::Write_Float3(Out_Json["Trail"]["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
+	CJson_Utility::Write_Float3(Out_Json["Trail"]["vScales"], m_tDistortionDesc.vScales);
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vDistortion1"], m_tDistortionDesc.vDistortion1);
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vDistortion2"], m_tDistortionDesc.vDistortion2);
+	CJson_Utility::Write_Float2(Out_Json["Trail"]["vDistortion3"], m_tDistortionDesc.vDistortion3);
+
+	Out_Json["Trail"]["fDistortionScale"] = m_tDistortionDesc.fDistortionScale;
+	Out_Json["Trail"]["fDistortionBias"] = m_tDistortionDesc.fDistortionBias;
 
 
 	return true;
@@ -382,11 +426,11 @@ void CEffect_Trail::Load_FromJson(const json& In_Json)
 	m_tVoidDesc.fUV_RotDegree = (_float)In_Json["Trail"]["fUV_RotDegree"];
 
 	m_tVoidDesc.bUV_Wave = (_bool)In_Json["Trail"]["bUV_Wave"];
-	if (In_Json.contains("vUV_WaveSpeed")) // 다시 저장 후 if문 삭제
+	if (In_Json["Trail"].contains("vUV_WaveSpeed")) // 다시 저장 후 if문 삭제
 	{
-		CJson_Utility::Load_Float2(In_Json["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
-		CJson_Utility::Load_Float2(In_Json["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
-		CJson_Utility::Load_Float2(In_Json["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
+		CJson_Utility::Load_Float2(In_Json["Trail"]["vUV_WaveSpeed"], m_tVoidDesc.vUV_WaveSpeed);
+		CJson_Utility::Load_Float2(In_Json["Trail"]["vUV_Offset_Mask"], m_tVoidDesc.vUV_Offset_Mask);
+		CJson_Utility::Load_Float2(In_Json["Trail"]["vUV_Scale_Mask"], m_tVoidDesc.vUV_Scale_Mask);
 	}
 
 
@@ -408,6 +452,23 @@ void CEffect_Trail::Load_FromJson(const json& In_Json)
 
 	/* 주인 */
 	m_tVoidDesc.bParentPivot = (_bool)In_Json["Trail"]["bParentPivot"];	// false여야함 
+
+
+
+	/* Distortion */
+	if (In_Json["Trail"].contains("eType_Scroll")) // 디스토션 정보가 있으면 읽기 (다시 저장 후 if문 삭제)
+	{
+		m_tDistortionDesc.eType_Scroll = In_Json["Trail"]["eType_Scroll"];
+
+		CJson_Utility::Load_Float3(In_Json["Trail"]["vScrollSpeeds"], m_tDistortionDesc.vScrollSpeeds);
+		CJson_Utility::Load_Float3(In_Json["Trail"]["vScales"], m_tDistortionDesc.vScales);
+		CJson_Utility::Load_Float2(In_Json["Trail"]["vDistortion1"], m_tDistortionDesc.vDistortion1);
+		CJson_Utility::Load_Float2(In_Json["Trail"]["vDistortion2"], m_tDistortionDesc.vDistortion2);
+		CJson_Utility::Load_Float2(In_Json["Trail"]["vDistortion3"], m_tDistortionDesc.vDistortion3);
+
+		m_tDistortionDesc.fDistortionScale = In_Json["Trail"]["fDistortionScale"];
+		m_tDistortionDesc.fDistortionBias = In_Json["Trail"]["fDistortionBias"];
+	}
 
 }
 
@@ -447,7 +508,7 @@ void CEffect_Trail::Free()
 {
 	__super::Free();
 
-	Delete_Object_Owner();	// 오너 해제
+	Set_Object_Owner(nullptr);	// 오너 해제
 
 	for (_int i = 0; i < (_int)TEXTURE_END; i++)
 		Safe_Release(m_pTextureCom[i]);

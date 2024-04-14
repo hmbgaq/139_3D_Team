@@ -29,6 +29,16 @@ public:
 
 	virtual void Set_Taunt() override;
 
+public:
+	void Play_Sound_Attack();
+	void Play_Sound_Whoosh();
+	void Play_Sound_Effort();
+	void Play_Sound_BodyMove();
+	void Play_Sound_FootStep();
+	void Play_Sound_Hit();
+	void Play_Sound_Death();
+
+
 
 protected:
 	HRESULT Ready_Components();

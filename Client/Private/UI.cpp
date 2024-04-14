@@ -114,7 +114,7 @@ void CUI::Tick(_float fTimeDelta)
 	//	return;
 	
 	/* World or Orthogonal */
-	//Check_Change_WorldUI(fTimeDelta);
+	Check_Change_WorldUI(fTimeDelta);
 
 	/* Check_MouseInput */
 	if(m_pData_Manager->Get_GameState() == GAME_STATE::UI)
@@ -148,7 +148,10 @@ void CUI::Tick(_float fTimeDelta)
 			Player_HUD(fTimeDelta);
 			break;
 		case Client::UISTATE::TUTORIAL_BOX:
-
+			TutorialBox(fTimeDelta);
+			break;
+		case Client::UISTATE::DEIDSCREEN:
+			DiedScreen(fTimeDelta);
 			break;
 		case Client::UISTATE::STATE_END:
 			break;
@@ -559,7 +562,14 @@ void CUI::Parts_Delete()
 
 _float CUI::Check_CamToTarget_Distance(_vector vTargetPos)
 {
-	_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+	_vector		vCamPosition;
+
+	m_pGameInstance = CGameInstance::GetInstance();
+
+	if (m_pGameInstance != nullptr)
+	{
+		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+	}
 	_float		fDistance = 0.0f;
 
 	fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vCamPosition));
@@ -813,7 +823,10 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 		1.0f);
 
 	/* Distance Check */
-	m_fTarget_Distance = Check_CamToTarget_Distance(vTargetPos);
+	//if (m_pGameInstance->Get_NextLevel() != LEVEL_LOADING)
+	{
+		m_fTarget_Distance = Check_CamToTarget_Distance(vTargetPos);
+	}
 	if (m_fTarget_Distance >= m_fActive_Distance)
 	{
 		m_bActive = false;
@@ -832,8 +845,11 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 	//vTargetPos.m128_f32[1] *= scaleFactor;
 
 	//vTargetPos.m128_f32[1] += 2.f;
-	vTargetPos = XMVector3Transform(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
-	vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+	if (m_pGameInstance->Get_NextLevel() != LEVEL_LOADING)
+	{
+		vTargetPos = XMVector3Transform(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+		vTargetPos = XMVector3TransformCoord(vTargetPos, m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+	}
 
 	XMStoreFloat4(&vViewPort, vTargetPos);
 
@@ -918,7 +934,10 @@ void CUI::SetUp_WorldToScreen(_matrix matWorldPos, _float3 vOffsetPos)
 		//m_fWorldToScreenY = -300.f;
 	}
 
-	m_bActive = m_pTransformCom->Calc_FrontCheck(vTargetPos);
+	if (m_pGameInstance->Get_NextLevel() != LEVEL_LOADING)
+	{
+		m_bActive = m_pTransformCom->Calc_FrontCheck(vTargetPos);
+	}
 
 	m_pTransformCom->Set_Position({ m_fWorldToScreenX, m_fWorldToScreenY, 1.f });
 
@@ -1000,7 +1019,20 @@ void CUI::Player_HUD(_float fTimeDelta)
 void CUI::TutorialBox(_float fTimeDelta)
 {
 	/* LifeTime UI */
-	if (m_pData_Manager->Get_ShowInterface() == true)
+	if (m_pData_Manager->Get_ShowTutorialBox() == true)
+	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
+		LifeOn(fTimeDelta);
+	}
+	else                                                     
+	{// false : 현재 시간값이 true상태에 초기화된 마지막 시간(m_fTime) 값을 넘어가면 서서히 지워지게 한다. (안보이게한다)
+		LifeOff(fTimeDelta);
+	}
+}
+
+void CUI::DiedScreen(_float fTimeDelta)
+{
+	/* LifeTime UI */
+	if (m_pData_Manager->Get_ShowDiedScreen() == true)
 	{// treu : LifeTime의 시간(m_fTime) 값을 초기화해서 UI를 계속 살려둔다 (보이게한다)
 		LifeOn(fTimeDelta);
 	}
@@ -1468,8 +1500,11 @@ json CUI::Save_Animation(json& out_json)
 
 void CUI::Change_Animation(const string& strAnimPath)
 {
-	if (!m_vecChangAnimation.empty()) // 기존 애니메이션이 있는 경우
-		m_vecChangAnimation.clear();
+	//if (!m_vecChangAnimation.empty()) // 기존 애니메이션이 있는 경우
+	//	m_vecChangAnimation.clear();
+
+	if (!m_vecAnimation.empty()) // 기존 애니메이션이 있는 경우
+		m_vecAnimation.clear();
 
 	json In_Json;
 	string strFile;
@@ -1564,7 +1599,8 @@ void CUI::Change_Animation(const string& strAnimPath)
 			if (object["Keyframe"].contains("NoiseNum")) // 키가 있으면
 				m_tUIInfo.tKeyframe.iNoiseNum = object["Distortion"][i]["NoiseNum"];
 
-			m_vecChangAnimation.push_back(m_tUIInfo.tKeyframe);
+			//m_vecChangAnimation.push_back(m_tUIInfo.tKeyframe);
+			m_vecAnimation.push_back(m_tUIInfo.tKeyframe);
 		}
 	}
 }
@@ -1963,6 +1999,21 @@ _bool CUI::Alpha_Minus(_float fTimeDelta)
 	return false;
 }
 
+_bool CUI::Alpha_Minus_Control(_float fTimeDelta, _float fAlpha)
+{
+	if (m_fAlpha > fAlpha)
+	{
+		m_fAlpha -= m_fAlphaSpeed * fTimeDelta;
+	}
+	else
+	{
+		m_fAlpha = fAlpha;
+		return true;
+	}
+
+	return false;
+}
+
 _bool CUI::Alpha_Plus(_float fTimeDelta)
 {
 	if (m_fAlpha < 1.f)
@@ -2011,6 +2062,7 @@ void CUI::LifeTime_LevelUp(_float fTimeDelta)
 		m_bEventOn = true;
 		m_pData_Manager->Set_ShowLevelBox(false);
 	}
+
 	/* 레벨 변동이 있을 경우 */
 	else if (m_pData_Manager->Get_ShowLevelBox()/*m_pData_Manager->Limit_EXP()*/)
 	{
@@ -2037,8 +2089,8 @@ void CUI::LifeTime_LevelUp(_float fTimeDelta)
 	if (m_fAlpha >= 1.f)
 	{
 		m_bEventOn = false;
+		m_bActive = false;
 		//m_pData_Manager->Set_ShowLevelBox(false);
-		//m_bActive = false;
 		//m_bEventOn = false;
 		//m_bReset = true;
 	}

@@ -13,6 +13,8 @@ public:
 public:
 	virtual CState<CBandit_Heavy>* Update_State(CBandit_Heavy* pActor, _float fTimeDelta, _uint _iAnimIndex) override;
 
+private:
+	_float m_fWalkDelay = { 0.2f };
 
 };
 

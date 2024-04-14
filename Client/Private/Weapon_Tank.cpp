@@ -212,6 +212,7 @@ void CWeapon_Tank::OnCollisionExit(CCollider* other)
 {
 }
 
+
 #pragma region Create, Clone, Pool, Free
 
 CWeapon_Tank* CWeapon_Tank::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)

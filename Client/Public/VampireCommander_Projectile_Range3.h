@@ -33,6 +33,10 @@ private:
 	CEffect*			m_pEffect = { nullptr };
 	_float				m_fEffectTimeAcc = { 0.f };
 
+	_float				m_fSoundTimeAcc = { 0.f };
+
+	_int				m_iPlaySoundCount = 0;
+	_int				m_iMaxSoundCount = 4;
 public:
 	static CVampireCommander_Projectile_Range3* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg);

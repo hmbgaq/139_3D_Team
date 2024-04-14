@@ -1,0 +1,44 @@
+{
+  
+  "Component": {
+    "Com_VIBuffer": {
+      "iLerpPointNum": 12,
+      "iMaxCnt": 32,
+      "vPos_0": [ 0.0, 0.0, 0.10000000149011612, 0.0 ],
+      "vPos_1": [ -1.2999999523162842, 0.0, 0.10000000149011612, 0.0 ]
+    },
+    "Transform": [
+      [ 1.0, 0.0, 0.0, 0.0 ],
+      [ 0.0, 1.0, 0.0, 0.0 ],
+      [ 0.0, 0.0, 1.0, 0.0 ],
+      [ 0.0, 0.0, 0.0, 1.0 ]
+    ]
+  },
+  "Trail": {
+    "bParentPivot": false,
+    "bUseSpriteAnim": false,
+    "eType_Easing": 0,
+    "eType_Effect": 3,
+    "fRimPower": 0.0,
+    "fUV_RotDegree": 0.0,
+    "iRenderGroup": 6,
+    "iShaderPassIndex": 2,
+    "iTextureIndex": [ 1, 0, 126, 1, 0 ],
+    "strPartTag": "Effect_Trail",
+    "strProtoTag": "Prototype_GameObject_Effect_Trail",
+    "strTextureTag": [ "Prototype_Component_Texture_Effect_Diffuse", "", "Prototype_Component_Texture_Effect_Mask", "Prototype_Component_Texture_Effect_Noise", "" ],
+    "vBloomPower": [ 0.18216784298419952, 0.4789547920227051, 0.9073358774185181, 0.0 ],
+    "vColor_Clip": [ 0.0, 0.0, 0.0, 0.0 ],
+    "vColor_Mul": [ 0.18918919563293457, 0.539810061454773, 1.0, 1.0 ],
+    "vColor_Offset": [ 0.0, 0.0, 0.0, 0.0 ],
+    "vRimColor": [ 1.0, 1.0, 1.0, 1.0 ],
+    "vUV_Offset": [ 0.0, 0.0, 0.0, 0.0 ],
+    "vUV_Scale": [ 1.0, 1.0, 0.0, 0.0 ],
+    "bUV_Wave": false,
+    "eMode_Color": 0,
+    "vUV_Offset_Mask": [ 0.0, 0.0, 0.0, 0.0 ],
+    "vUV_Scale_Mask": [ 1.0, 1.0, 0.0, 0.0 ],
+    "vUV_WaveSpeed": [ 1.0, 1.0, 0.0, 0.0 ]
+  }
+
+}

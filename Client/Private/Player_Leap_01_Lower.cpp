@@ -28,11 +28,18 @@ CState<CPlayer>* CPlayer_Leap_01_Lower::Update(CPlayer* pActor, _float fTimeDelt
 	if (false == m_bFlags[1]) // true == m_bFlags[0] && 
 	{
 		pActor->Chasing_Attack(fTimeDelta, 10.f, 0);
+
+		if (pActor->Get_Target())
+		{
+			pActor->Play_Voice_Melee_Heavy();
+		}
 	}
 
 	if (false == m_bFlags[0] && pActor->Is_Inputable_Front(16))
 	{
 		CWeapon* pWeapon = pActor->Set_Weapon_Collisions_Enable(PLAYER_WEAPON_PUNCH_R, true);
+		pActor->Play_Whoosh_Sound();
+
 		m_bFlags[0] = true;
 	}
 

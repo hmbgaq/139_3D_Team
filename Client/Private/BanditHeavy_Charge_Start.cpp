@@ -33,6 +33,16 @@ CState<CBandit_Heavy>* CBanditHeavy_Charge_Start::Update(CBandit_Heavy* pActor, 
 		return new CBanditHeavy_Charge_Attack_Full();
 	}
 
+
+	if (false == m_bFlags[0])
+	{
+		m_bFlags[0] = pActor->Is_Inputable_Front(7);
+		if (true == m_bFlags[0])
+		{
+			pActor->Play_Sound_Effort();
+		}
+	}
+
 	if (pActor->Is_Animation_End())
 	{
 		return new CBanditHeavy_Charge_Attack_Full();

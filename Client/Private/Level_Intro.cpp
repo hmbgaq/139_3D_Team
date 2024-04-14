@@ -58,7 +58,7 @@ HRESULT CLevel_Intro::Initialize()
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
     FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
     FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
-    FAILED_CHECK(Ready_Shader());
+    //FAILED_CHECK(Ready_Shader());
     
     if (m_bMonsterTest == true)
         FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
@@ -68,7 +68,8 @@ HRESULT CLevel_Intro::Initialize()
     //FAILED_CHECK(Ready_Shader());
 
 
-    m_pGameInstance->Play_BGM(L"BGM", L"HM_MUS_Cargo_Lvl_combat_axe_95bpm_24.wav", 5.f);
+    //m_pGameInstance->Play_BGM(L"BGM_LOADING", L"Bon_Jovi_Its_My_Life.wav", 6.f);
+    
 
     return S_OK;
 }
@@ -146,10 +147,10 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
         return E_FAIL;
     }
 
-    _bool bSpawnSniper = false;
-    _bool bSpawnTanker = true; 
+    _bool bSpawnSniper = true;
+    _bool bSpawnTanker = false; 
     _bool bSpawnInfected = false;
-    _bool bSpawnZenuGiant = false;
+    _bool bSpawnZenuGiant = true;
     
 
     json MonsterJson = Stage1MapJson["Monster_Json"];
@@ -217,24 +218,31 @@ HRESULT CLevel_Intro::Ready_Layer_Monster(const wstring& strLayerTag)
     //pMonster->Set_InitPosition(_float3(0.0f, 0.f, 2.f));
 
 
+ //   //! 유정 트레일 테스트 스나이퍼 소환
+	//pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Bandit_Sniper"));
+	//NULL_CHECK_RETURN(pMonster, E_FAIL);
+	//pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+
+    //! 유정 트레일 테스트 제누거인 소환
+	pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
+	NULL_CHECK_RETURN(pMonster, E_FAIL);
+	pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
 
 
-
-
-
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
-    
-    pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
-    NULL_CHECK_RETURN(pMonster, E_FAIL);
-    pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+ //// 주석 풀기
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
+ //   
+ //   pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
+ //   NULL_CHECK_RETURN(pMonster, E_FAIL);
+ //   pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
 
     /* Intro Boss */
     {
@@ -276,15 +284,15 @@ HRESULT CLevel_Intro::Ready_Layer_NPC(const wstring& strLayerTag)
     NULL_CHECK_RETURN(pNPC, E_FAIL);
     pNPC->Set_InitPosition(_float3(10.f, 0.f, 35.f));
 
-    pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Hawk"));
-    NULL_CHECK_RETURN(pNPC, E_FAIL);
-    pNPC->Set_InitPosition(_float3(5.f, 0.f, 15.f));
-
-
-
-    pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
-    NULL_CHECK_RETURN(pNPC, E_FAIL);
-    pNPC->Set_Position(_float3(10.f, 0.f, 25.f));
+	// pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Hawk"));
+	// NULL_CHECK_RETURN(pNPC, E_FAIL);
+	// pNPC->Set_InitPosition(_float3(5.f, 0.f, 15.f));
+	//
+	//
+	//
+	// pNPC = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Screamer"));
+	// NULL_CHECK_RETURN(pNPC, E_FAIL);
+	// pNPC->Set_Position(_float3(10.f, 0.f, 25.f));
 
     return S_OK;
 }
@@ -702,7 +710,7 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
 
 
 
-    //CGameObject* pObject = { nullptr };
+    CGameObject* pObject = { nullptr };
     //pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
     //NULL_CHECK_RETURN(pObject, E_FAIL);
     //pObject->Set_Position(_float3(0.0f, 0.f, 10.f));
@@ -719,9 +727,9 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
     //NULL_CHECK_RETURN(pObject, E_FAIL);
     //pObject->Set_Position(_float3(0.0f, 0.f, 20.f));
 
-    //pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
-    //NULL_CHECK_RETURN(pObject, E_FAIL);
-    //pObject->Set_Position(_float3(-10.0f, 0.f, 50.f));
+    pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
+    NULL_CHECK_RETURN(pObject, E_FAIL);
+    pObject->Set_Position(_float3(-10.0f, 0.f, 50.f));
 
     return S_OK;
 

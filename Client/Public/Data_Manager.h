@@ -12,9 +12,11 @@ END
 
 BEGIN(Client)
 
+
 class CPlayer;
 class CMother;
 class CSon;
+class CHawk;
 class CCamera_Dynamic;
 class CMasterCamera;
 class CSky;
@@ -69,6 +71,10 @@ public:
 	CEnvironment_Interact* Get_SnowMountainWagon() { return m_pSnowMountainWagon;}
 	void				   Set_SnowMountainWagon(CEnvironment_Interact* pSnowWagon) { m_pSnowMountainWagon = pSnowWagon;}
 
+	CHawk*				   Get_Hawk() { return m_pCutSceneHawk; }
+	void				   Set_Hawk(CHawk* pHawk) { m_pCutSceneHawk = pHawk;}
+	void				   Start_HawkCutScene();
+
 public:
 	CNavigation* Get_Navigation() { return m_pNavigation; }
 	void		 Set_Navigation(CNavigation* pNavigation) { m_pNavigation = pNavigation; }
@@ -110,6 +116,16 @@ public:
 	void	Set_MouseCenter(_bool bCenter) { m_bCenter = bCenter; }
 	_bool	Get_MouseCenter() { return m_bCenter; }
 
+	// Player Money
+	void	Set_Money(_int iMoney) { m_iMoney = iMoney; }
+	void	Add_Money(_int iMoney) { m_iMoney += iMoney; }
+	_int	Get_Money() { return m_iMoney; }
+
+	// Player SkillPoint
+	void	Set_SkillPoint(_int iSkillPoint) { m_iSkillPoint = iSkillPoint; }
+	void	Add_SkillPoint(_int iSkillPoint) { m_iSkillPoint += iSkillPoint; }
+	_int	Get_SkillPoint() { return m_iSkillPoint; }
+
 private:
 	_bool	m_bCenter = false;
 	_bool	m_bFix = false;
@@ -118,11 +134,14 @@ private: /* _float */
 	_float	m_fMaxHP = 100.f;
 	_float	m_fCurHP = 100.f;
 
-	_float	m_fMaxEXP = 1000000000.f;
+	_float	m_fMaxEXP = 100.f;
 	_float	m_fCurEXP = 0.f;
 
 	_float	m_fMaxEnergyGuige = 100.f;
 	_float	m_fCurEnergyGuige = 0.f;
+
+	_int	m_iMoney = 1000.f;
+	_int	m_iSkillPoint = 1;
 
 	GAME_STATE m_eGame_State = GAME_STATE::GAMEPLAY;
 
@@ -141,6 +160,7 @@ private: /* _bool */
 	_bool	m_bShowLevelBox = false;		// 레벨 박스		On/Off
 	_bool	m_bShowInterface = false;		// 인터페이스	On/Off
 	_bool	m_bShowTutorial = false;		// 튜토리얼 박스 On/Off
+	_bool	m_bShowDiedScreen = false;		// DiedScreen	On/Off
 	_bool	m_bShowQuestBox = false;		// 퀘스트 박스	On/Off
 	_bool	m_bShowRewardBox = false;		// 리워드 박스	On/Off
 	_bool	m_bShowCrosshair = false;		// 크로스헤어	On/Off
@@ -242,6 +262,12 @@ public: /* ========================== Player Info ========================== */
 	// =>TutorialBox를 보여줄지 말지 세팅할 수 있는 Set함수
 	void	Set_ShowTutorialBox(_bool bShowTutorial) { m_bShowTutorial = bShowTutorial; }
 
+#pragma region =========> DiedScreen <=========
+	// =>DiedScreen를 보여줄지 말지 결정하는 Get함수
+	_bool	Get_ShowDiedScreen() { return m_bShowDiedScreen; };
+	// =>DiedScreen를 보여줄지 말지 세팅할 수 있는 Set함수
+	void	Set_ShowDiedScreen(_bool bDiedScreen) { m_bShowDiedScreen = bDiedScreen; }
+
 #pragma region =========> QuestBox <=========
 	// =>QuestBox를 보여줄지 말지 결정하는 Get함수
 	_bool	Get_ShowQuestBox() { return m_bShowQuestBox; };
@@ -279,6 +305,7 @@ private:
 	CSky*								m_pSky = { nullptr };
 	CNavigation*						m_pNavigation = { nullptr };
 	CEnvironment_Interact*				m_pSnowMountainWagon = { nullptr };
+	CHawk*								m_pCutSceneHawk = { nullptr };
 
 
 	vector<pair<_int, _bool>>			m_vecLevelSwitch; //! 특정 레벨에서 필요한 스위치 개수만큼 푸시 해주고 On, Off 시켜주자.

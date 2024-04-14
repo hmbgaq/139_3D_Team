@@ -16,6 +16,8 @@ void CBanditHeavy_MeleeDynamic_LD::Initialize(CBandit_Heavy* pActor)
 
 	pWeapon->Set_Enable_Collisions(false);
 
+	pActor->Play_Sound_Effort();
+
 }
 
 CState<CBandit_Heavy>* CBanditHeavy_MeleeDynamic_LD::Update(CBandit_Heavy* pActor, _float fTimeDelta)
@@ -28,6 +30,7 @@ CState<CBandit_Heavy>* CBanditHeavy_MeleeDynamic_LD::Update(CBandit_Heavy* pActo
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
+			pActor->Play_Sound_Whoosh();
 		}
 	}
 	else if (false == m_bFlags[1])

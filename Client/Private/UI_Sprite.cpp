@@ -90,8 +90,10 @@ void CUI_Sprite::Tick(_float fTimeDelta)
 
 		if (m_bMainStart_Finish == false && m_iCurrentFrame == 565)
 		{
+			//m_pUIManager->Ready_MouseCursor(LEVEL_STATIC);
 			m_pUIManager->Active_MainList();
 			m_pUIManager->Active_MainLogo();
+			m_pUIManager->Active_MouseCursor(); // MouseCursor
 		}
 
 		// MainStart Finish -> MainLoop Change

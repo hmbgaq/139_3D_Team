@@ -1,5 +1,5 @@
 #include "..\Public\BanditHeavy_StrongSlamDouble.h"
-
+#include "Weapon_Heavy_Vampiric_Zombie.h"
 void CBanditHeavy_StrongSlamDouble::Initialize(CBandit_Heavy* pActor)
 {
 	__super::Initialize(pActor);
@@ -27,6 +27,7 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
+			pActor->Play_Sound_Whoosh();
 		}
 	}
 	else if (false == m_bFlags[1])
@@ -37,6 +38,14 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, false);
 		}
 	}
+	else if (false == m_bFlags[10]) 
+	{
+		m_bFlags[10] = pActor->Is_Inputable_Front(48);
+		if (true == m_bFlags[10])
+		{
+			pActor->Play_Sound_Effort();
+		}
+	}
 	else if (false == m_bFlags[2])
 	{
 		pActor->Look_At_Target_Lerp(fTimeDelta);
@@ -45,6 +54,7 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 		if (true == m_bFlags[2])
 		{
 			pActor->Set_Weapon_Collisions_Enable(BANDIT_HEAVY_WEAPON, true);
+			pActor->Play_Sound_Whoosh();
 		}
 	}
 	else if (false == m_bFlags[3])
@@ -59,8 +69,20 @@ CState<CBandit_Heavy>* CBanditHeavy_StrongSlamDouble::Update(CBandit_Heavy* pAct
 	{
 		pActor->Look_At_Target_Lerp(fTimeDelta);
 	}
+	//Effect 끄고 키는거임 
+	if (m_bFlags[4] == false && pActor->Is_Inputable_Front(37))
+	{
+		CWeapon_Heavy_Vampiric_Zombie* pWeapon = dynamic_cast<CWeapon_Heavy_Vampiric_Zombie*>(pActor->Get_Weapon(BANDIT_HEAVY_WEAPON));
+		pWeapon->m_bAttack = true;
+		m_bFlags[4] = true;
+	}
 
-
+	if (m_bFlags[5] == false && pActor->Is_Inputable_Front(80))
+	{
+		CWeapon_Heavy_Vampiric_Zombie* pWeapon = dynamic_cast<CWeapon_Heavy_Vampiric_Zombie*>(pActor->Get_Weapon(BANDIT_HEAVY_WEAPON));
+		pWeapon->m_bAttack = true;
+		m_bFlags[5] = true;
+	}
 	return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 }
 

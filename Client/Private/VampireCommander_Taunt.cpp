@@ -1,4 +1,6 @@
 #include "VampireCommander_Taunt.h"
+#include "MasterCamera.h"
+#include "Data_Manager.h"
 #include "Effect_Manager.h"
 
 void CVampireCommander_Taunt::Initialize(CVampireCommander* pActor)
@@ -6,6 +8,12 @@ void CVampireCommander_Taunt::Initialize(CVampireCommander* pActor)
 	__super::Initialize(pActor);
 	
 	m_pEffect = EFFECT_MANAGER->Play_Effect("Parasiter/", "MonsterSoundWaveVampire.json", pActor, true, "Head");
+	CSpringCamera* pSpringCam = CData_Manager::GetInstance()->Get_MasterCamera()->Get_SpringCamera();
+	pSpringCam->Set_ShakeCameraTime(0.5f);
+	pSpringCam->Set_ShakeCameraMinMax(_float2(0.f, 0.2f));
+	pActor->Apply_Shake_And_Blur(Power::Medium);
+	pActor->m_bAuraStart = true;
+	m_pGameInstance->Play_Sound(L"VAMPIRE_TAUNT", L"commander_lesser_vo_taunt001.wav", SOUND_ENEMY_VOICE, 10.f);
 
 }
 
