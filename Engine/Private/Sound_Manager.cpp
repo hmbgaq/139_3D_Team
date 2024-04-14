@@ -46,6 +46,8 @@ HRESULT CSound_Manager::Ready_Sound()
 	Load_SoundFile_GroupAsync(L"PLAYER_WEAPON", "../Bin/Resources/Sound/Player/Weapon/");
 	Load_SoundFile_GroupAsync(L"PLAYER_VOICE", "../Bin/Resources/Sound/Player/Voice/");
 	Load_SoundFile_GroupAsync(L"PLAYER_EFFECT", "../Bin/Resources/Sound/Player/Effect/");
+	Load_SoundFile_GroupAsync(L"PLAYER_INTERACTION", "../Bin/Resources/Sound/Player/Interaction/");
+
 	////Wait_GroupAsync();
 
 	Load_SoundFile_GroupAsync(L"ENEMY_ATTACK", "../Bin/Resources/Sound/Attack/");

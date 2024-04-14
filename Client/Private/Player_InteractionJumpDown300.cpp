@@ -9,6 +9,8 @@ void CPlayer_InteractionJumpDown300::Initialize(CPlayer* pActor)
 
 	if(m_pGameInstance->Get_NextLevel() != _uint(LEVEL_GAMEPLAY) && m_pGameInstance->Get_NextLevel() != _uint(LEVEL_SNOWMOUNTAIN))
 		pActor->Set_UseGravity(true);
+
+	m_pGameInstance->Play_Sound(L"PLAYER_INTERACTION", L"interaction_jumpdown_4.wav", CHANNELID::SOUND_INTERACTION, 10.f);
 }
 
 CState<CPlayer>* CPlayer_InteractionJumpDown300::Update(CPlayer* pActor, _float fTimeDelta)
@@ -20,13 +22,28 @@ CState<CPlayer>* CPlayer_InteractionJumpDown300::Update(CPlayer* pActor, _float 
 		pActor->Set_UseGravity(true);
 	}
 
-
-	if (false == m_bFlags[0])
+	if (false == m_bFlags[10])
+	{
+		m_bFlags[10] = pActor->Is_Inputable_Front(18);
+		if (true == m_bFlags[10])
+		{
+			m_pGameInstance->Play_Sound(L"PLAYER_INTERACTION", L"HM_PlayerFoley_JumpOff_02.wav", CHANNELID::SOUND_INTERACTION, 10.f);
+		}
+	}
+	else if (false == m_bFlags[0])
 	{
 		m_bFlags[0] = pActor->Is_Inputable_Front(24);
 		if (true == m_bFlags[0])
 		{
 			pActor->Set_UseGravity(true);
+		}
+	}
+	else if (false == m_bFlags[11])
+	{
+		m_bFlags[11] = pActor->Is_Inputable_Front(33);
+		if (true == m_bFlags[11])
+		{
+			m_pGameInstance->Play_Sound(L"PLAYER_FOOTSTEP", L"Player_Doge_Full_01.wav", CHANNELID::SOUND_INTERACTION2, 10.f);
 		}
 	}
 
