@@ -41,7 +41,16 @@ HRESULT CUI_Weakness::Initialize(void* pArg)
 	//m_tUIInfo.bWorld = true;
 	m_vAxis = { 0.f, 0.f, 1.f, 0.f };
 
-	m_fActive_Distance = 60.f;
+	if(m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
+	{
+		m_fActive_Distance = 13.f;
+	}
+	else
+	{
+		m_fActive_Distance = 60.f;
+	}
+
+	
 
 	m_bActive = true;
 
