@@ -29,6 +29,10 @@ public:
 	_vector				m_vPlayerPos = {};
 	_vector				m_vMonsterPos = {};
 
+	_float				m_fSoundTimeAcc = { 0.f };
+
+	_int				m_iPlaySoundCount = 0;
+	_int				m_iMaxSoundCount = 4;
 private:
 	CCharacter* m_pMonster = { nullptr };
 	CEffect* m_pEffect = { nullptr };
