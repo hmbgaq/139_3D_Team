@@ -25,7 +25,7 @@
     "fUV_WaveSpeed": 1.0,
     "iRenderGroup": 6,
     "iShaderPassIndex": 0,
-    "iTextureIndex": [ 0, 0, 17, 0, 0 ],
+    "iTextureIndex": [ 1, 0, 17, 0, 0 ],
     "strPartTag": "Effect_Trail",
     "strProtoTag": "Prototype_GameObject_Effect_Trail",
     "strTextureTag": [ "Prototype_Component_Texture_Effect_Diffuse", "", "Prototype_Component_Texture_Effect_Mask", "Prototype_Component_Texture_Effect_Noise", "" ],
