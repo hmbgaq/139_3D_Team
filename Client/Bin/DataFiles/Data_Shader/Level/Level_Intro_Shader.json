@@ -14,16 +14,16 @@
   },
   "Fog": {
     "bFog_Active": false,
-    "fFogDistanceDensity": 0.05000000074505806,
-    "fFogDistanceValue": 30.0,
-    "fFogHeightDensity": 0.05000000074505806,
+    "fFogDistanceDensity": 0.05999999865889549,
+    "fFogDistanceValue": 20.0,
+    "fFogHeightDensity": 0.054999999701976776,
     "fFogHeightValue": 50.0,
-    "fFogStartDepth": 55.0,
-    "fFogStartDistance": 0.10000000149011612,
-    "vFogColor_w": 0.20000000298023224,
-    "vFogColor_x": 0.5,
-    "vFogColor_y": 0.5,
-    "vFogColor_z": 0.5
+    "fFogStartDepth": 115.88099670410156,
+    "fFogStartDistance": 4.353000164031982,
+    "vFogColor_w": 1.0,
+    "vFogColor_x": 0.3553614020347595,
+    "vFogColor_y": 0.43042996525764465,
+    "vFogColor_z": 0.5289574861526489
   },
   "HBAO": {
     "bHBAO_Active": true,
