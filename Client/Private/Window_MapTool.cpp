@@ -6609,8 +6609,7 @@ void CWindow_MapTool::NPC_SelectTab()
 			m_vecCreateNPC[m_iSelectNPCTag]->Set_AnimalGroupIndex(m_iSelectNPCGroupIndex);
 		}
 
-		ImGui::SameLine();
-
+		
 		_int iOriginAnimationIndex = m_iNPCAnimationIndex;
 
 		if (ImGui::InputInt(u8"애니메이션 인덱스", &m_iNPCAnimationIndex))

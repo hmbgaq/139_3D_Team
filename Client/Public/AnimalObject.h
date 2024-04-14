@@ -54,7 +54,7 @@ public:
 public:
 	Animal_OBJECT_DESC* Get_AnimalDesc() { return &m_tAnimalDesc; }
 	wstring&			Get_ModelTag() { return m_tAnimalDesc.strModelTag; }
-	_bool				Is_AnimModel() { return m_tAnimalDesc.bAnimModel; }
+	
 	
 	CModel*				Get_ModelCom() { return m_pModelCom; }
 	

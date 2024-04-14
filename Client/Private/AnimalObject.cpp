@@ -81,10 +81,9 @@ HRESULT CAnimalObject::Render()
 
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
-		if (m_tAnimalDesc.bAnimModel == true)
-		{
-			m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-		}
+		
+		m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+		
 
 		m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 		m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));

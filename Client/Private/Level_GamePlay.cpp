@@ -28,6 +28,7 @@
 #include "Event_MonsterSpawnTrigger.h"
 #include "Event_UITrigger.h"
 #include "Light.h"
+#include "AnimalObject.h"
 #pragma endregion
 
 #pragma region Test
@@ -629,6 +630,47 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const wstring& strLayerTag)
  
  	}
  
+	json AnimalJson = Stage1MapJson["NPC_Json"];
+	_int iAnimalJsonSize = (_int)AnimalJson.size();
+
+	for (_int i = 0; i < iAnimalJsonSize; ++i)
+	{
+		CAnimalObject::Animal_OBJECT_DESC Desc = {};
+
+		wstring strLoadModelTag;
+		string strJsonModelTag = AnimalJson[i]["ModelTag"];
+
+		m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+		Desc.strModelTag = strLoadModelTag;
+
+		Desc.iPlayAnimationIndex = AnimalJson[i]["AnimationIndex"];
+		Desc.bPreview = false;
+
+		const json& TransformJson = AnimalJson[i]["Component"]["Transform"];
+		_float4x4 WorldMatrix;
+
+		for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+		{
+			for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+			{
+				WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+			}
+		}
+
+
+		XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+		Desc.WorldMatrix = WorldMatrix;
+
+
+		
+		CAnimalObject* pObject = { nullptr };
+
+		pObject = dynamic_cast<CAnimalObject*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_GAMEPLAY, L"Layer_NPC", L"Prototype_GameObject_AnimalObject", &Desc));
+
+		
+
+	}
+
  
 	return S_OK;
 
