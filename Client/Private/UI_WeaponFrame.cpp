@@ -179,7 +179,7 @@ HRESULT CUI_WeaponFrame::Ready_Components()
 	if (found != std::wstring::npos)
 	{
 		m_bFirstFrame = true;
-
+		m_eUI_Level = UI_LEVEL::LEVEL1;
 		// 첫번째 기본 스킬들은 Level1로  시작 (바로 배울 수 있게) XXX
 		//m_eUI_Level = UI_LEVEL::LEVEL1;
 

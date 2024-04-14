@@ -4918,11 +4918,11 @@ void CUI_Manager::Check_SkillWindowTrigger()
 	{
 		if (m_pSkillWindowBackground->Get_AnimTrigger() == true && m_bShowSkillWindow == false)
 		{
-			/* Sound */
-			wstring strFileName = L"";
-			strFileName = L"HM_MUS_LS_PreGatling_Main_Dm_102bpm_16.wav";
+			///* Sound */
+			//wstring strFileName = L"";
+			//strFileName = L"HM_MUS_LS_PreGatling_Main_Dm_102bpm_16.wav";
 
-			m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWBGM, 13.f);
+			//m_pGameInstance->Play_Sound(L"UI_Background", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWBGM, 13.f);
 
 			Active_SkillWindow(true);
 			Active_SkillIcon(true);

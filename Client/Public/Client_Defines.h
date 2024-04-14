@@ -91,10 +91,10 @@ namespace Client
 	
 
 
-	#define INFECTED_EXP					115.f
-	#define BANDIT_SNIPER_EXP				120.f
-	#define BANDIT_HEAVY_EXP				145.f
-	#define TANK_EXP						160.f
+	#define INFECTED_EXP					20.f
+	#define BANDIT_SNIPER_EXP				25.f
+	#define BANDIT_HEAVY_EXP				35.f
+	#define TANK_EXP						50.f
 
 	#define VAMPIRE_COMMANDER_EXP			80.f
 	#define PARASITER_EXP					120.f
