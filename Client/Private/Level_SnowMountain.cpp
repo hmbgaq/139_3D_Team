@@ -34,9 +34,14 @@
 #pragma endregion
 
 #include "Light.h"
+#include "Effect_Manager.h"
 #include "Data_Manager.h"
 #include "MasterCamera.h"
 #include "SpringCamera.h"
+
+
+#include "Level_Loading.h"
+
 
 CLevel_SnowMountain::CLevel_SnowMountain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -50,6 +55,7 @@ HRESULT CLevel_SnowMountain::Initialize()
 	Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Shader.json");
 
 	FAILED_CHECK(Ready_LightDesc());
+	FAILED_CHECK(Ready_Layer_Effect(TEXT("Layer_Effect")));
 	FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
 	FAILED_CHECK(Ready_Layer_Monster(TEXT("Layer_Monster")));
 	FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
@@ -65,7 +71,10 @@ HRESULT CLevel_SnowMountain::Initialize()
 
 void CLevel_SnowMountain::Tick(_float fTimeDelta)
 {
-
+	if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	{
+		m_pGameInstance->Request_Level_Opening(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_SNOWMOUNTAINBOSS));
+	}
 }
 
 HRESULT CLevel_SnowMountain::Render()
@@ -233,6 +242,9 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 
 HRESULT CLevel_SnowMountain::Ready_Layer_Effect(const wstring& strLayerTag)
 {
+	_float3 vPos = { 14.87f, 0.f, -8.06f };
+	m_pMapEffect = EFFECT_MANAGER->Play_Effect("Snow/", "Snow_05.json", nullptr, vPos);
+
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Blue")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Particle_Red")));
 	//FAILED_CHECK(m_pGameInstance->Add_CloneObject(Level_SnowMountain, strLayerTag, TEXT("Prototype_GameObject_Effect_Explosion")));
@@ -990,5 +1002,12 @@ CLevel_SnowMountain* CLevel_SnowMountain::Create(ID3D11Device* pDevice, ID3D11De
 void CLevel_SnowMountain::Free()
 {
 	__super::Free();
+
+	if (nullptr != m_pMapEffect)
+	{
+		m_pMapEffect->End_Effect_ForPool();
+		Safe_Release(m_pMapEffect);
+		//m_pMapEffect = nullptr;
+	}
 
 }
