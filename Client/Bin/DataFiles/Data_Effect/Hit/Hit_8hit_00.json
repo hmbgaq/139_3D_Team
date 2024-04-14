@@ -63,7 +63,7 @@
           "vMinMaxLifeTime": [ 0.10000000149011612, 0.6000000238418579, 0.0, 0.0 ],
           "vMinMaxMass": [ 10.0, 10.0, 0.0, 0.0 ],
           "vMinMaxPosY": [ 0.10000000149011612, 3.0, 0.0, 0.0 ],
-          "vMinMaxPower": [ 40.0, 60.0, 0.0, 0.0 ],
+          "vMinMaxPower": [ 20.0, 40.0, 0.0, 0.0 ],
           "vMinMaxRadianSpeed_X": [ 0.0, 0.0, 0.0, 0.0 ],
           "vMinMaxRadianSpeed_Y": [ 0.0, 0.0, 0.0, 0.0 ],
           "vMinMaxRadianSpeed_Z": [ 0.0, 0.0, 0.0, 0.0 ],
@@ -89,7 +89,7 @@
         ]
       },
       "bBillBoard": false,
-      "bDissolve": true,
+      "bDissolve": false,
       "bLoop": true,
       "bParentPivot": true,
       "bPlay": true,

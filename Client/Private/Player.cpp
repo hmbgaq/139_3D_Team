@@ -190,14 +190,14 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_bfirstcheck = false;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_GRAVE))
-	{
-		_float3 vPos = Get_Position();
-		EFFECT_MANAGER->Play_Effect("Hit/", "Hit_8hit.json", nullptr, Calc_Front_Pos(_float3(0.f, 0.f, 1.f)), true, Get_Position());
+	//if (m_pGameInstance->Key_Down(DIK_GRAVE))
+	//{
+	//	_float3 vPos = Get_Position();
+	//	EFFECT_MANAGER->Play_Effect("Hit/", "Hit_8hit.json", nullptr, Calc_Front_Pos(_float3(0.f, 0.f, 1.f)), true, Get_Position());
 
-		// 텔레포트 펀치 피격 이펙트 생성
-		//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_TeleportPunch.json", this, Calc_Front_Pos(_float3(0.f, 0.f, 1.2f)), true, Get_Position());	//pActor->Calc_Front_Pos() // 플레이어 앞 위치 계산
-	}
+	//	// 텔레포트 펀치 피격 이펙트 생성
+	//	//EFFECT_MANAGER->Play_Effect("Hit/", "Hit_TeleportPunch.json", this, Calc_Front_Pos(_float3(0.f, 0.f, 1.2f)), true, Get_Position());	//pActor->Calc_Front_Pos() // 플레이어 앞 위치 계산
+	//}
 	//! 유정 테스트 공간 끝
 
 	if (m_pGameInstance->Key_Down(DIK_NUMPAD7))

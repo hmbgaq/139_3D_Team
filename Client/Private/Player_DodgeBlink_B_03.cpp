@@ -1,10 +1,15 @@
 #include "..\Public\Player_DodgeBlink_B_03.h"
 
+#include "Effect_Manager.h"
+#include "Effect.h"
+
 void CPlayer_DodgeBlink_B_03::Initialize(CPlayer* pActor)
 {
 	__super::Initialize(pActor);
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
+
+	EFFECT_MANAGER->Play_Effect("Player/DodgeBlink/", "DodgeBlink_FB_01.json", pActor);
 
 }
 
