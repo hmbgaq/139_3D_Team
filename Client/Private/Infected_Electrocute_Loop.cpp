@@ -2,7 +2,9 @@
 #include "Infected_Idle.h"
 #include "Body_Infected_D.h"
 #include "Weapon_Infected_D.h"
+
 #include "Effect_Manager.h"
+#include "Effect.h"
 
 void CInfected_Electrocute_Loop::Initialize(CInfected* pActor)
 {
@@ -14,6 +16,9 @@ void CInfected_Electrocute_Loop::Initialize(CInfected* pActor)
 		pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_LOOP, true, false);
 
 	pActor->Set_MonsterAttackState(true);
+
+	// 5초짜리 감전이펙트 생성
+	m_pEffect = EFFECT_MANAGER->Play_Effect("Hit/", "Hit_Electrocute_01.json", pActor, false);
 }
 
 CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float fTimeDelta)
@@ -51,6 +56,7 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 		{
 			return new CInfected_Idle();
 		}
+
 	}
 	return nullptr;
 }
@@ -58,4 +64,11 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 void CInfected_Electrocute_Loop::Release(CInfected* pActor)
 {
 	__super::Release(pActor);
+
+
+	if (m_pEffect != nullptr)	// 이펙트 해제
+	{
+		EFFECT_MANAGER->Return_ToPool(m_pEffect);
+		m_pEffect = nullptr;
+	}
 }

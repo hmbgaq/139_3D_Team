@@ -52,6 +52,8 @@ private:
 	//string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
 	string			m_strStage1MapLoadPath = "../Bin/DataFiles/Data_Map/Stage1BossTest_MapData202404_12_22_13.json";
 	
+private:
+	CEffect* m_pMapEffect = { nullptr };
 
 public:
 	static CLevel_IntroBoss* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -468,6 +468,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Normal.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_TeleportPunch.json", 200));
 	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_8hit.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Hit/", "Hit_Electrocute_01.json", 300));
 #pragma endregion Hit 이펙트 끝
 
 
@@ -487,6 +488,61 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_10.json", 100));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "MonsterSoundWaveVampire.json", 20));
+#pragma endregion 보스1 이펙트 끝
+
+
+#pragma region 보스2 이펙트 시작
+	/* Boos 2 */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_Map_05.json", 2));
+
+	/* SnowBoss Falling Leaves */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "SY_Falling_Leaves_02.json", 30));
+
+	/* Boss2 Monster_Explosion */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_ExplosionNonLoop.json", 50));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Monster_Blood3.json", 50));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_Test_07.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Son_ProjectilcTail.json", 500));
+	
+	/* Boss2 MotherShakeTreeProjectile */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "Circle_Floor_05.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherProjectileDead_08.json", 200));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/MotherShakeTree/", "MotherShakeTreeProjectile1.json", 200));
+
+	//Mother_Egg
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead3.json", 20));
+
+	/* Mother Breath */
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 500));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08.json", 400));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", 1000));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", 400));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Ready_01.json", 2));
+
+	//BossSoundWave
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherSoundWave.json", 20));
+
+#pragma region 보스1 이펙트 시작
+	/* Boos 1 */
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Map_Blood/", "Map_Blood_10.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "VampireCommanderAura_03.json"));
+
+	/* BloodRange */
+	//FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Start_01.json"));
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/BloodRange_Loop/", "New_BloodRange_Loop_02.json"));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range1/", "Projectile_Range1_Re_02.json", 200));
+
+
+	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/Projectile_Range3/", "Projectile_Pillar_Tick_10.json", 50));
+
 
 	FAILED_CHECK(Add_ToPool(iLevel, "VampireCommander/", "landing_Rock_01.json", 2));
 
@@ -562,8 +618,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/SlamDown/", "New_SlamTwoHand_TEMP_02.json", 5));
 
 	/* DodgeBlink */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_20.json", 2));
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_20.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_L_20.json", 4));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_R_20.json", 4));
+	//FAILED_CHECK(Add_ToPool(iLevel, "Player/DodgeBlink/", "DodgeBlink_FB_01.json", 4));
 
 	/* Roll */
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Roll/", "New_Roll_Side_01.json", 2));
@@ -573,7 +630,7 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver/", "Revolver_13_Tail_01.json", 10));
 
 	/* Revolver_Fire */
-	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 10));
+	FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_03.json", 50));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/Revolver_Fire/", "Revolver_Fire_02_Tail.json", 10));
 
 	/* Shotgun */
@@ -591,21 +648,18 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_03.json", 100));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_Down_04.json", 100));
 	//FAILED_CHECK(Add_ToPool(iLevel, "Player/SuperCharge/", "SuperCharge_Always_Pos_Up_04.json", 100));
-
-
 #pragma endregion 플레이어 이펙트 끝
+
 
 #pragma region 탱크 이펙트 시작
 	//rush
 	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Projectile2.json", 50));
-
 
 	//Projectile
 	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Tank_Rush.json", 50));
 
 	//제누거인
 	FAILED_CHECK(Add_ToPool(iLevel, "Monster/", "Vampire_Zombie_GroundAttack.json", 100));
-
 
 #pragma endregion 탱크 이펙트 끝
 

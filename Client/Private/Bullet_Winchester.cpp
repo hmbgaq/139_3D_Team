@@ -41,8 +41,8 @@ HRESULT CBullet_Winchester::Initialize(void* pArg)
 
 	//m_pTransformCom->Look_At(m_vPlayerPos);
 
-	m_fDamage = 50.f;
-	//m_fDamage = 1000;
+	//TODOm_fDamage = 50.f;
+	m_fDamage = 10;
 
 	EFFECT_MANAGER->Play_Effect_StaticPivot("Player/Revolver/", "Revolver_13_Tail_01.json", this, Get_Transform()->Get_WorldFloat4x4());
 

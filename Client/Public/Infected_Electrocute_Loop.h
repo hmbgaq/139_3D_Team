@@ -14,6 +14,9 @@ public:
 public:
 	static const _uint g_iAnimIndex = CInfected::Infected_State::Infected_Electrocute_Loop;
 
+private:
+	class CEffect* m_pEffect = {nullptr};
+
 };
 
 END
