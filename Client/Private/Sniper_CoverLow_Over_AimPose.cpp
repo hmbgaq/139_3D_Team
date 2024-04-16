@@ -34,7 +34,12 @@ CState<CBandit_Sniper>* CSniper_CoverLow_Over_AimPose::Update(CBandit_Sniper* pA
 		if (fTimeAcc > 3.5f)
 		{
 			fTimeAcc = 0.f;
-			pActor->Sniping_Target(vTargetPos);
+
+			if (m_bFlags[1] == false)
+			{
+				pActor->Sniping_Target(vTargetPos);
+				m_bFlags[1] == true;
+			}
 			if (m_bFlags[0] == false)
 			{
 				EFFECT_MANAGER->Play_Effect("Player/Revolver_Fire/", "Revolver_13.json", pActor);

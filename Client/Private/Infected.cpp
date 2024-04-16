@@ -153,49 +153,49 @@ HRESULT CInfected::Ready_Components()
 void CInfected::Hitted_Left(Power ePower)
 {
 
-	wstring strSoundKey = L"";
+	//wstring strSoundKey = L"";
 
-	_int iRandomSound = m_pGameInstance->Random_Int(1, 10);
-	switch (iRandomSound)
-	{
-	case 1:
-		strSoundKey = L"turned02_hit1.wav";
-		break;
-	case 2:
-		strSoundKey = L"turned02_hit2.wav";
-		break;
-	case 3:
-		strSoundKey = L"turned02_hit3.wav";
-		break;
-	case 4:
-		strSoundKey = L"turned02_hit4.wav";
-		break;
-	case 5:
-		strSoundKey = L"turned02_hit5.wav";
-		break;
+	//_int iRandomSound = m_pGameInstance->Random_Int(1, 10);
+	//switch (iRandomSound)
+	//{
+	//case 1:
+	//	strSoundKey = L"turned02_hit1.wav";
+	//	break;
+	//case 2:
+	//	strSoundKey = L"turned02_hit2.wav";
+	//	break;
+	//case 3:
+	//	strSoundKey = L"turned02_hit3.wav";
+	//	break;
+	//case 4:
+	//	strSoundKey = L"turned02_hit4.wav";
+	//	break;
+	//case 5:
+	//	strSoundKey = L"turned02_hit5.wav";
+	//	break;
 
-	case 6:
-		strSoundKey = L"turned02_hit6.wav";
-		break;
+	//case 6:
+	//	strSoundKey = L"turned02_hit6.wav";
+	//	break;
 
-	case 7:
-		strSoundKey = L"turned02_hitlong_1.wav";
-		break;
+	//case 7:
+	//	strSoundKey = L"turned02_hitlong_1.wav";
+	//	break;
 
-	case 8:
-		strSoundKey = L"turned02_hitlong_2.wav";
-		break;
+	//case 8:
+	//	strSoundKey = L"turned02_hitlong_2.wav";
+	//	break;
 
-	case 9:
-		strSoundKey = L"turned02_hitlong_3.wav";
-		break;
+	//case 9:
+	//	strSoundKey = L"turned02_hitlong_3.wav";
+	//	break;
 
-	case 10:
-		strSoundKey = L"turned02_hitlong_4.wav";
-		break;
-	}
+	//case 10:
+	//	strSoundKey = L"turned02_hitlong_4.wav";
+	//	break;
+	//}
 
-	m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_DEAD, 3.f);
+	//m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_DEAD, 3.f);
 
 	/* 무기 강도 */
 	switch (ePower)
@@ -217,49 +217,49 @@ void CInfected::Hitted_Left(Power ePower)
 
 void CInfected::Hitted_Right(Power ePower)
 {
-	wstring strSoundKey = L"";
+	//wstring strSoundKey = L"";
 
-	_int iRandomSound = m_pGameInstance->Random_Int(1, 10);
-	switch (iRandomSound)
-	{
-	case 1:
-		strSoundKey = L"turned02_hit1.wav";
-		break;
-	case 2:
-		strSoundKey = L"turned02_hit2.wav";
-		break;
-	case 3:
-		strSoundKey = L"turned02_hit3.wav";
-		break;
-	case 4:
-		strSoundKey = L"turned02_hit4.wav";
-		break;
-	case 5:
-		strSoundKey = L"turned02_hit5.wav";
-		break;
+	//_int iRandomSound = m_pGameInstance->Random_Int(1, 10);
+	//switch (iRandomSound)
+	//{
+	//case 1:
+	//	strSoundKey = L"turned02_hit1.wav";
+	//	break;
+	//case 2:
+	//	strSoundKey = L"turned02_hit2.wav";
+	//	break;
+	//case 3:
+	//	strSoundKey = L"turned02_hit3.wav";
+	//	break;
+	//case 4:
+	//	strSoundKey = L"turned02_hit4.wav";
+	//	break;
+	//case 5:
+	//	strSoundKey = L"turned02_hit5.wav";
+	//	break;
 
-	case 6:
-		strSoundKey = L"turned02_hit6.wav";
-		break;
+	//case 6:
+	//	strSoundKey = L"turned02_hit6.wav";
+	//	break;
 
-	case 7:
-		strSoundKey = L"turned02_hitlong_1.wav";
-		break;
+	//case 7:
+	//	strSoundKey = L"turned02_hitlong_1.wav";
+	//	break;
 
-	case 8:
-		strSoundKey = L"turned02_hitlong_2.wav";
-		break;
+	//case 8:
+	//	strSoundKey = L"turned02_hitlong_2.wav";
+	//	break;
 
-	case 9:
-		strSoundKey = L"turned02_hitlong_3.wav";
-		break;
+	//case 9:
+	//	strSoundKey = L"turned02_hitlong_3.wav";
+	//	break;
 
-	case 10:
-		strSoundKey = L"turned02_hitlong_4.wav";
-		break;
-	}
+	//case 10:
+	//	strSoundKey = L"turned02_hitlong_4.wav";
+	//	break;
+	//}
 
-	m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_HIT3, 3.f);
+	//m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_HIT3, 3.f);
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -279,49 +279,49 @@ void CInfected::Hitted_Right(Power ePower)
 
 void CInfected::Hitted_Front(Power ePower)
 {
-	wstring strSoundKey = L"";
+	//wstring strSoundKey = L"";
 
-	_int iRandomSound = m_pGameInstance->Random_Int(1, 10);
-	switch (iRandomSound)
-	{
-	case 1:
-		strSoundKey = L"turned02_hit1.wav";
-		break;
-	case 2:
-		strSoundKey = L"turned02_hit2.wav";
-		break;
-	case 3:
-		strSoundKey = L"turned02_hit3.wav";
-		break;
-	case 4:
-		strSoundKey = L"turned02_hit4.wav";
-		break;
-	case 5:
-		strSoundKey = L"turned02_hit5.wav";
-		break;
+	//_int iRandomSound = m_pGameInstance->Random_Int(1, 10);
+	//switch (iRandomSound)
+	//{
+	//case 1:
+	//	strSoundKey = L"turned02_hit1.wav";
+	//	break;
+	//case 2:
+	//	strSoundKey = L"turned02_hit2.wav";
+	//	break;
+	//case 3:
+	//	strSoundKey = L"turned02_hit3.wav";
+	//	break;
+	//case 4:
+	//	strSoundKey = L"turned02_hit4.wav";
+	//	break;
+	//case 5:
+	//	strSoundKey = L"turned02_hit5.wav";
+	//	break;
 
-	case 6:
-		strSoundKey = L"turned02_hit6.wav";
-		break;
+	//case 6:
+	//	strSoundKey = L"turned02_hit6.wav";
+	//	break;
 
-	case 7:
-		strSoundKey = L"turned02_hitlong_1.wav";
-		break;
+	//case 7:
+	//	strSoundKey = L"turned02_hitlong_1.wav";
+	//	break;
 
-	case 8:
-		strSoundKey = L"turned02_hitlong_2.wav";
-		break;
+	//case 8:
+	//	strSoundKey = L"turned02_hitlong_2.wav";
+	//	break;
 
-	case 9:
-		strSoundKey = L"turned02_hitlong_3.wav";
-		break;
+	//case 9:
+	//	strSoundKey = L"turned02_hitlong_3.wav";
+	//	break;
 
-	case 10:
-		strSoundKey = L"turned02_hitlong_4.wav";
-		break;
-	}
+	//case 10:
+	//	strSoundKey = L"turned02_hitlong_4.wav";
+	//	break;
+	//}
 
-	m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_HIT2, 3.f);
+	//m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_HIT2, 3.f);
 	switch (ePower)
 	{
 	case Engine::Light:
@@ -341,29 +341,29 @@ void CInfected::Hitted_Front(Power ePower)
 
 void CInfected::Hitted_Knock(_bool bIsCannonball)
 {
-	wstring strSoundKey = L"";
+	//wstring strSoundKey = L"";
 
-	_int iRandomSound = m_pGameInstance->Random_Int(1, 4);
-	switch (iRandomSound)
-	{
-	case 1:
-		strSoundKey = L"turned02_hitlong_1.wav";
-		break;
+	//_int iRandomSound = m_pGameInstance->Random_Int(1, 4);
+	//switch (iRandomSound)
+	//{
+	//case 1:
+	//	strSoundKey = L"turned02_hitlong_1.wav";
+	//	break;
 
-	case 2:
-		strSoundKey = L"turned02_hitlong_2.wav";
-		break;
+	//case 2:
+	//	strSoundKey = L"turned02_hitlong_2.wav";
+	//	break;
 
-	case 3:
-		strSoundKey = L"turned02_hitlong_3.wav";
-		break;
+	//case 3:
+	//	strSoundKey = L"turned02_hitlong_3.wav";
+	//	break;
 
-	case 4:
-		strSoundKey = L"turned02_hitlong_4.wav";
-		break;
-	}
+	//case 4:
+	//	strSoundKey = L"turned02_hitlong_4.wav";
+	//	break;
+	//}
 
-	m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_HIT, 3.f);
+	//m_pGameInstance->Play_Sound(L"INFECTED_HIT", strSoundKey, SOUND_ENEMY_HIT, 3.f);
 	if (bIsCannonball)
 	{
 		m_pActor->Set_State(new CInfected_KnockFrontCannonball_F_01_TEMP());

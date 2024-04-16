@@ -12,6 +12,8 @@ void CPlayer_InteractionPush_Rock_Loop::Initialize(CPlayer* pActor)
 	//pActor->Set_Animation_End(false);
 
 	pActor->Set_Rotate_In_CameraDir(false);
+	m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Cart_Mechanism_loop.wav", SOUND_INTERACTOBJECT2, 7.f);
+
 }
 
 CState<CPlayer>* CPlayer_InteractionPush_Rock_Loop::Update(CPlayer* pActor, _float fTimeDelta)

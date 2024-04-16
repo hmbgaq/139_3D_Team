@@ -467,7 +467,12 @@ void CEnvironment_SpecialObject::TrackLeverFunction()
 						if (m_pLightObject != nullptr)
 						{
 							m_pLightObject->Set_Enable(true);
-							m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Lamp_On_01.wav", SOUND_INTERACTOBJECT3, 7.f);
+							if (m_bPlaySound == false)
+							{
+								m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Lamp_On_01.wav", SOUND_INTERACTOBJECT3, 7.f);
+								m_bPlaySound = true;
+
+							}
 						}
 
 					}

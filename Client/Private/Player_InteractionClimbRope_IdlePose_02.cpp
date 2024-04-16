@@ -27,7 +27,7 @@ CState<CPlayer>* CPlayer_InteractionClimbRope_IdlePose_02::Update(CPlayer* pActo
 		}
 		else if (m_pGameInstance->Key_Pressing(DIK_W))
 		{
-			m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"MoF_ChainFall_01.wav", SOUND_INTERACTOBJECT, 7.f);
+			
 			return new CPlayer_InteractionClimbRope_Loop_02();
 		}
 	}

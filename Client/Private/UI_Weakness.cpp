@@ -43,7 +43,7 @@ HRESULT CUI_Weakness::Initialize(void* pArg)
 
 	if(m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
 	{
-		m_fActive_Distance = 13.f;
+		m_fActive_Distance = 10.f;
 	}
 	else
 	{

@@ -1881,7 +1881,11 @@ void CEnvironment_Interact::Rope_ChainFunction(const _float fTimeDelta)
 		{
 			m_pModelCom->Set_Animation(5, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
 			//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
-			m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Interaction_Shoot_Chain900_01.wav", SOUND_INTERACTOBJECT2, 7.f);
+			if (m_bPlaySound == false)
+			{
+				m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Interaction_Shoot_Chain900_01.wav", SOUND_INTERACTOBJECT2, 7.f);
+				m_bPlaySound = true;
+			}
 			m_bChainEnable = true;
 		}
 		else
@@ -2048,7 +2052,7 @@ void CEnvironment_Interact::Move_For_PlayerRootMotion()
 
 		m_pTransformCom->Add_RootBone_ForTarget(vPlayerRootMotion, m_pNavigationCom, m_pPlayer->Get_Transform());
 
-		m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Cart_Mechanism_loop.wav", SOUND_INTERACTOBJECT2, 7.f);
+		
 
 		
 	}

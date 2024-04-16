@@ -47,6 +47,9 @@ HRESULT CUI_Player_ExpBar::Initialize(void* pArg)
 
 	m_iShaderNum = 2;
 
+	/* 무기 해금 */
+	//m_pUIManager->Set_WeaponLevel("Revolver", 1);         // 리볼버
+
 	return S_OK;
 }
 
@@ -168,8 +171,7 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 						m_pUIManager->Set_SkillLevel("TwoTouch", 1);      // 2터치
 						m_pUIManager->Set_SkillLevel("DashShock", 1);      // 대쉬감전 효과
 
-						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Revolver", 1);         // 리볼버
+				
 
 					}
 
