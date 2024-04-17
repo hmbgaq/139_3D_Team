@@ -32,8 +32,8 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 
 	PlayerInfo_Setting();
 
-	m_AdditionalSkills[ECast(Additional_Skill::ELECTROCUTE)] = true;
-	m_AdditionalSkills[ECast(Additional_Skill::HIT_EIGHT)] = true;
+	//m_AdditionalSkills[ECast(Additional_Skill::ELECTROCUTE)] = true;
+	//m_AdditionalSkills[ECast(Additional_Skill::HIT_EIGHT)] = true;
 
 	for (_uint i = 0; i < (_uint)ECast(Additional_Skill::Additional_Skill_End); ++i)
 	{

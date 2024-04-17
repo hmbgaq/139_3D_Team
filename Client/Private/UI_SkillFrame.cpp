@@ -32,7 +32,7 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 		m_tUIInfo = *(UI_DESC*)pArg;
 
 	// Level 0으로 시작
-	//m_eUI_Level = UI_LEVEL::LEVEL0;
+	m_eUI_Level = UI_LEVEL::LEVEL0;
 	// Test 1로 시작
 
 	if (FAILED(Ready_Components()))

@@ -68,13 +68,6 @@ void CBullet_Bandit_Sniper::Priority_Tick(_float fTimeDelta)
 
 void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 {
-	__super::Tick(fTimeDelta);	
-	/* Super에서 m_fLifeTime 을 fTimeDelta 로 감소시키면서 0 이하로 내려가면 알아서 풀에 반납하도록함 + Collider Update */
-	/* -> 이동 코드 자체는 구현해야함 */
-	//m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
-
-
-
 
 	//! 유정: 트레일
 	if (nullptr != m_pTrail)
@@ -83,6 +76,10 @@ void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 		m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
 	}
 
+	__super::Tick(fTimeDelta);	
+	/* Super에서 m_fLifeTime 을 fTimeDelta 로 감소시키면서 0 이하로 내려가면 알아서 풀에 반납하도록함 + Collider Update */
+	/* -> 이동 코드 자체는 구현해야함 */
+	//m_pCollider->Update(m_pTransformCom->Get_WorldMatrix());
 
 	m_pTransformCom->Go_Straight(fTimeDelta);
 
@@ -127,8 +124,8 @@ void CBullet_Bandit_Sniper::OnCollisionEnter(CCollider* other)
 
 	if (nullptr != m_pTrail)		// 트레일 끄기
 	{
-		m_pTrail->Set_Play(false);
 		m_pTrail->Get_Desc()->bRender = false;
+		m_pTrail->Set_Play(false);
 		m_pTrail->Set_Object_Owner(nullptr);
 	}
 	Set_Dead(true);
@@ -185,8 +182,8 @@ void CBullet_Bandit_Sniper::Free()
 
 	if (nullptr != m_pTrail)		// 트레일 삭제
 	{
-		m_pTrail->Set_Play(false);
 		m_pTrail->Get_Desc()->bRender = false;
+		m_pTrail->Set_Play(false);
 		m_pTrail->Set_Object_Owner(nullptr);
 		//m_pTrail = nullptr;
 		//Safe_Release(m_pTrail);

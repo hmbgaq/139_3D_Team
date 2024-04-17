@@ -78,7 +78,7 @@ void CUI_SkillActive::Tick(_float fTimeDelta)
 				m_pUIManager->Get_Select_SkillLevel() >= UI_LEVEL::LEVEL1 &&	// 최소
 				m_pUIManager->Get_Select_SkillLevel() < UI_LEVEL::LEVEL2)		// 최대
 			{
-				if (m_pUIManager->Get_Select_SkillPoint() > m_pData_Manager->Get_SkillPoint()) // 요구포인트 > 가진포인트
+  				if (m_pUIManager->Get_Select_SkillPoint() > m_pData_Manager->Get_SkillPoint()) // 요구포인트 > 가진포인트
 				{
 					m_pUIManager->Change_MessageBox(1); // 포인트 부족
 					return;

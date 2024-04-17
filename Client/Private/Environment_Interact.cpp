@@ -1881,7 +1881,11 @@ void CEnvironment_Interact::Rope_ChainFunction(const _float fTimeDelta)
 		{
 			m_pModelCom->Set_Animation(5, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
 			//m_pModelCom->Set_Animation(3, CModel::ANIM_STATE::ANIM_STATE_NORMAL);
-			m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Interaction_Shoot_Chain900_01.wav", SOUND_INTERACTOBJECT2, 7.f);
+			if (m_bPlaySound == false)
+			{
+				m_pGameInstance->Play_Sound(L"INTERACT_OBJECT", L"Interaction_Shoot_Chain900_01.wav", SOUND_INTERACTOBJECT2, 7.f);
+				m_bPlaySound = true;
+			}
 			m_bChainEnable = true;
 		}
 		else
