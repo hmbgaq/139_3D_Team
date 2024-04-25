@@ -169,8 +169,6 @@ void CEffect_Instance::Late_Tick(_float fTimeDelta)
 		{
 			__super::Update_PivotMat();
 
-			Compute_CamDistance();
-
 			//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_EFFECT, this));
 			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 		}

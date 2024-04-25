@@ -135,8 +135,27 @@ void CEffect_Void::Update_PivotMat()
 				m_tVoidDesc.matPivot = m_pOwner->Get_Transform()->Get_WorldFloat4x4();
 				XMStoreFloat4x4(&m_tVoidDesc.matCombined, m_pTransformCom->Get_WorldMatrix() * m_tVoidDesc.matPivot);
 			}
+
+			_vector		vPosition = XMVectorSet(m_tVoidDesc.matCombined.m[3][0], m_tVoidDesc.matCombined.m[3][1], m_tVoidDesc.matCombined.m[3][2], 1.f);
+			Compute_CamDistance(vPosition);
+		}
+		else
+		{
+			__super::Compute_CamDistance();
 		}
 	}
+	else
+	{
+		__super::Compute_CamDistance();
+	}
+
+}
+
+void CEffect_Void::Compute_CamDistance(_fvector vPos)
+{
+	_vector		vCamPosition = XMLoadFloat4(&m_pGameInstance->Get_CamPosition());
+
+	m_fCamDistance = XMVectorGetX(XMVector3Length(vPos - vCamPosition));
 }
 
 _bool CEffect_Void::Write_Json(json& Out_Json)

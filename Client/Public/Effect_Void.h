@@ -183,7 +183,7 @@ public:
 
 public:
 	virtual void	Update_PivotMat();
-
+	void			Compute_CamDistance(_fvector vPos);
 
 public:
 	virtual void	ReSet_Effect();

@@ -31,7 +31,8 @@ void CSon_Hit::Initialize(CSon* pActor)
 		break;
 	}
 
-	m_pGameInstance->Play_Sound(L"SON_HIT", strSoundKey, SOUND_ENEMY_HIT3, 7.f);
+	//! 유정: 공유받은 리소스에 해당 파일 없음. 임시주석
+	//m_pGameInstance->Play_Sound(L"SON_HIT", strSoundKey, SOUND_ENEMY_HIT3, 7.f);
 }
 
 CState<CSon>* CSon_Hit::Update(CSon* pActor, _float fTimeDelta)

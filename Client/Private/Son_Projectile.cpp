@@ -70,7 +70,8 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
 
-	m_pGameInstance->Play_Sound(L"SON_ATTACK", L"grand_parasiter_mvm_slime_mediumA001", SOUND_ENEMY_SKILL3, 7.f);
+	//! 유정: 공유받은 리소스에 해당 파일 없음. 임시주석
+	//m_pGameInstance->Play_Sound(L"SON_ATTACK", L"grand_parasiter_mvm_slime_mediumA001", SOUND_ENEMY_SKILL3, 7.f);
 	return S_OK;
 }
 

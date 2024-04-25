@@ -56,8 +56,8 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// 이펙트 생성
-	EFFECT_MANAGER->Play_Effect("Parasiter/", "Mother_breath4.json", this, false);
-	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_08.json", this, false);
+	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_12.json", this, false);
+	//EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_08.json", this, false);
 	//EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", this);
 
 	return S_OK;
@@ -94,7 +94,7 @@ void CMotherVomit::Tick(_float fTimeDelta)
 
 	__super::Tick(fTimeDelta);
 
-	EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.08f, fTimeDelta, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", Get_Position(), true, m_vPlayerPos);
+	//EFFECT_MANAGER->Generate_Effect(&m_fEffectTimeAcc, 0.08f, fTimeDelta, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", Get_Position(), true, m_vPlayerPos);
 
 
 	//생성되는 위치에서 그냥 앞방향으로 ㄱㄱ 
