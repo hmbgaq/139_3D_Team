@@ -13,6 +13,9 @@ public:
 private:
 	_float m_fTimeDelta = 0.f;
 	_float m_fCloneTime = 0.f;
+
+	_bool m_bFirst = { false };
+
 public:
 	static const _uint g_iAnimIndex = CMother::Mother_State::Parasiter_Vomit_Loop_02;
 

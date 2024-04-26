@@ -35,7 +35,6 @@ private: /* Map*/
 
 private:
 	_int			TempLightNumber = 0;
-	class CEffect*  m_pMainEffect = nullptr;
 	string			m_strMapLoadPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData.json";
 	_bool			m_bTestMode = false;
 public:

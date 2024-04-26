@@ -56,7 +56,7 @@ HRESULT CMotherVomit::Initialize(void* pArg)
 
 
 	// ÀÌÆåÆ® »ý¼º
-	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_12.json", this, false);
+	EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_15.json", this, false);
 	//EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_08.json", this, false);
 	//EFFECT_MANAGER->Play_Effect("Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", this);
 
