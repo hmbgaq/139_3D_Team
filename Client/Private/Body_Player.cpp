@@ -74,8 +74,8 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
 	{
-		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
-		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE_BLUR, this), );
+		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
+		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE_BLUR, this), );
 	}
 
 	//Rolling(fTimeDelta, m_bPlayerRoll);
@@ -206,7 +206,7 @@ HRESULT CBody_Player::Render_OutLine()
 	}
 	else if (m_ePlayerRenderPass == RENDER_PASS::RENDER_SUPERCHARGE)
 	{
-		m_vLineColor = { 0.f, 0.84f, 1.f, 1.f };
+		m_vLineColor = { 0.40f, 0.75f, 1.f, 1.f };
 		m_fLineThick = { 0.3f };
 		m_pShaderCom->Bind_RawValue("g_vLineColor", &m_vLineColor, sizeof(_float4));
 		m_pShaderCom->Bind_RawValue("g_LineThick", &m_fLineThick, sizeof(_float));

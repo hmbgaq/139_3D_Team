@@ -8,14 +8,14 @@ void CPlayer_ZipLine_Stop::Initialize(CPlayer* pActor)
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 
 	pActor->Set_Interection(false);
-	cout << "Player_ZipLine_Stop Init " << endl;
+	//cout << "Player_ZipLine_Stop Init " << endl;
 }
 
 CState<CPlayer>* CPlayer_ZipLine_Stop::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	if (pActor->Is_Animation_End())
 	{
-		cout << "Set Chroma NoneActive / Player_ZipLine_Stop" << endl;
+		//cout << "Set Chroma NoneActive / Player_ZipLine_Stop" << endl;
 		m_pGameInstance->Get_Renderer()->Set_Chroma_Active(false);
 		return __super::Update_State(pActor, fTimeDelta, g_iAnimIndex);
 	}

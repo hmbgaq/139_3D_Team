@@ -220,13 +220,13 @@ HRESULT CLevel_SnowMountain::Ready_Layer_Player(const wstring& strLayerTag)
 {
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_SNOWMOUNTAIN, strLayerTag, TEXT("Prototype_GameObject_Player")));
 	NULL_CHECK_RETURN(pPlayer, E_FAIL);
-	//pPlayer->Set_InitPosition(_float3(14.87f, 0.f, -8.06f));
+	pPlayer->Set_InitPosition(_float3(14.87f, 0.f, -8.06f));
 
 	/* chroma test */
-	pPlayer->Set_InitPosition(_float3(45.077f, 12.5f, -57.028f));
-	CNavigation* pNavi = dynamic_cast<CCharacter*>(pPlayer)->Get_Navigation();
-	NULL_CHECK_RETURN(pNavi, E_FAIL);
-	pNavi->Set_CurrentIndex(499);
+	//pPlayer->Set_InitPosition(_float3(45.077f, 12.5f, -57.028f));
+	//CNavigation* pNavi = dynamic_cast<CCharacter*>(pPlayer)->Get_Navigation();
+	//NULL_CHECK_RETURN(pNavi, E_FAIL);
+	//pNavi->Set_CurrentIndex(499);
 
 	//pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 

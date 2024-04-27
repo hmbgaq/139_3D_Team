@@ -27,7 +27,7 @@ void CPlayer_ZipLine_Start_to_Loop::Initialize(CPlayer* pActor)
 	//m_vArrivalPosition.w = 1.f;
 	pActor->Get_Transform()->Look_At(XMLoadFloat4(&m_vArrivalPosition));
 
-	cout << "Player_ZipLine_Start_to_Loop Init " << endl;
+	//cout << "Player_ZipLine_Start_to_Loop Init " << endl;
 }
 
 CState<CPlayer>* CPlayer_ZipLine_Start_to_Loop::Update(CPlayer* pActor, _float fTimeDelta)

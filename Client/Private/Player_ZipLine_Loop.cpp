@@ -33,7 +33,7 @@ void CPlayer_ZipLine_Loop::Initialize(CPlayer* pActor)
 	m_fTimeAcc = 0.f;
 
 	//TODOAdd_RootBone_ForTarget
-	cout << "Player_ZipLine_Loop Init " << endl;
+	//cout << "Player_ZipLine_Loop Init " << endl;
 }
 
 CState<CPlayer>* CPlayer_ZipLine_Loop::Update(CPlayer* pActor, _float fTimeDelta)
