@@ -1042,7 +1042,6 @@ CState<CPlayer>* CPlayer_State::TeleportPunch(CPlayer* pActor, _float fTimeDelta
 
 	if (pActor->Is_Animation_End())
 	{
-		pActor->Set_BodyRender(0); // Origin RenderPass 
 		return new CPlayer_IdleLoop();
 	}
 

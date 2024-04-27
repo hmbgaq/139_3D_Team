@@ -51,7 +51,6 @@ void CBody_Player::Tick(_float fTimeDelta)
 		Update_ShootingReaction(fTimeDelta);
 	}
 
-	//if()
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
@@ -78,6 +77,8 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE, this), );
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE_BLUR, this), );
 	}
+
+	//Rolling(fTimeDelta, m_bPlayerRoll);
 }
 
 HRESULT CBody_Player::Render()
@@ -194,8 +195,6 @@ HRESULT CBody_Player::Render_Shadow()
 
 HRESULT CBody_Player::Render_OutLine()
 {
-	cout << "render outline " << endl;
-
 	FAILED_CHECK(Bind_ShaderResources());
 
 	if (m_ePlayerRenderPass == RENDER_PASS::RENDER_HEAL)
@@ -350,6 +349,15 @@ HRESULT CBody_Player::Ready_ShaderOption()
 	//m_fSnowRimPower = 2.f;
 
 	return S_OK;
+}
+
+void CBody_Player::Rolling(_float fTimeDelta, _bool bRoll)
+{
+	if (false == bRoll)
+		return;
+
+	// 플레이어 구르기때 각 프레임별 외곽선만 추가로 렌더하는거 
+	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_ROLLING, this), );
 }
 
 CBody_Player* CBody_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag)
