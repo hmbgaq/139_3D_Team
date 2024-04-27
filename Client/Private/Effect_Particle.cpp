@@ -166,11 +166,10 @@ void CEffect_Particle::Late_Tick(_float fTimeDelta)
 		{
 			__super::Update_PivotMat();
 
-			if (m_bSortZ)
-			{
-				//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
-			}
-			Compute_CamDistance();
+			//if (m_bSortZ)
+			//{
+			//	//m_pVIBufferCom->Sort_Z(m_pVIBufferCom->Get_NumInstance());
+			//}
 
 			FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup((CRenderer::RENDERGROUP)m_tVoidDesc.iRenderGroup, this), );
 		}

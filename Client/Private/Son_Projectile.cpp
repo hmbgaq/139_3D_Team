@@ -69,8 +69,8 @@ HRESULT CSon_Projectile::Initialize(void* pArg)
 
 	m_pTransformCom->Look_At(m_vPlayerPos);
 
-
 	m_pGameInstance->Play_Sound(L"SON_ATTACK", L"grand_parasiter_mvm_slime_mediumA001", SOUND_ENEMY_SKILL3, 7.f);
+
 	return S_OK;
 }
 

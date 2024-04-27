@@ -1031,7 +1031,8 @@ void CVIBuffer_Particle::Update(_float fTimeDelta)
 					}
 					else if (FADE_OUT == m_tBufferDesc.eType_Fade)
 					{
-						fAlpha = max(m_vecParticleInfoDesc[i].fLifeTime - m_vecParticleInfoDesc[i].fTimeAccs, 0.f);
+						//fAlpha = max(m_vecParticleInfoDesc[i].fLifeTime - m_vecParticleInfoDesc[i].fTimeAccs, 0.f);
+						fAlpha = max(min(m_vecParticleInfoDesc[i].fLifeTime - m_vecParticleInfoDesc[i].fTimeAccs, 1.0f), 0.0f);
 					}
 					else if (FADE_IN == m_tBufferDesc.eType_Fade)
 					{

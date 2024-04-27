@@ -80,7 +80,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 			break;
 		case Client::LEVEL_TOOL:
 			m_pDataManager->Set_GameState(GAME_STATE::UI); // KeyInput -> UI
-			m_pGameInstance->Play_BGM(L"BGM_LOADING", L"Bon_Jovi_Its_My_Life.wav", 10.f);
+			//m_pGameInstance->Play_BGM(L"BGM_LOADING", L"Bon_Jovi_Its_My_Life.wav", 10.f);
 			break;
 		case Client::LEVEL_LOADING:
 			break;

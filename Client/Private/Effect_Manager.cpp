@@ -446,20 +446,8 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 
 	_uint iLevel = LEVEL_STATIC;	//_uint iCurLevel = m_pGameInstance->Get_NextLevel();
 
-
-#pragma region 테스트 이펙트 시작
-
-//	/* Circle_Floor */
-//	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Circle_Floor_03_Solid.json"));
-//
-//	/* Test Explosion */
-//	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05.json"));
-//	FAILED_CHECK(Add_ToPool(iLevel, "Explosion/", "Explosion_05_Big.json"));
-//
-//#pragma endregion 테스트 이펙트 끝
-
 	/* Light */
-//	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
+	//	FAILED_CHECK(Add_ToPool(iLevel, "Fire/", "Fire_Torch_05.json", 50));
 
 
 #pragma region Hit 이펙트 시작
@@ -522,11 +510,9 @@ HRESULT CEffect_Manager::Ready_EffectPool()
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Egg_Dead3.json", 20));
 
 	/* Mother Breath */
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "Mother_breath4.json", 500));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08.json", 400));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_Tick.json", 1000));
-	//FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_08_02.json", 400));
-	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Ready_01.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Ready_02.json", 5));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_Static_02.json", 2));
+	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/Mother_Breath/", "Mother_Breath_15.json", 500));
 
 	//BossSoundWave
 	FAILED_CHECK(Add_ToPool(iLevel, "Parasiter/", "MotherSoundWave.json", 20));

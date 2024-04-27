@@ -72,8 +72,16 @@ void CBullet_Bandit_Sniper::Tick(_float fTimeDelta)
 	//! 유정: 트레일
 	if (nullptr != m_pTrail)
 	{
-		//m_pTrail->Set_Play(true); // 트레일 켜기
-		m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
+		if (0 >= m_fLifeTime)
+		{
+			m_pTrail->Get_Desc()->bRender = false;
+			m_pTrail->Set_Play(false);
+			m_pTrail->Set_Object_Owner(nullptr);
+		}
+		else
+		{
+			m_pTrail->Tick_Trail(fTimeDelta, m_pTransformCom->Get_WorldFloat4x4());
+		}	
 	}
 
 	__super::Tick(fTimeDelta);	
