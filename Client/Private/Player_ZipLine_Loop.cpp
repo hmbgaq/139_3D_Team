@@ -33,11 +33,15 @@ void CPlayer_ZipLine_Loop::Initialize(CPlayer* pActor)
 	m_fTimeAcc = 0.f;
 
 	//TODOAdd_RootBone_ForTarget
+	cout << "Player_ZipLine_Loop Init " << endl;
 }
 
 CState<CPlayer>* CPlayer_ZipLine_Loop::Update(CPlayer* pActor, _float fTimeDelta)
 {
 	//__super::Update(pActor, fTimeDelta);
+	
+	m_pGameInstance->Get_Renderer()->Set_Chroma_Active(true);
+
 	pActor->Get_Transform()->Look_At(XMLoadFloat4(&m_vArrivalPosition));
 
 	if (false == m_bFlags[0])
