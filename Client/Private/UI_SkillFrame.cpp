@@ -43,7 +43,7 @@ HRESULT CUI_SkillFrame::Initialize(void* pArg)
 
 	Check_State();
 
-	m_eUI_Level = UI_LEVEL::LEVEL2;
+	//m_eUI_Level = UI_LEVEL::LEVEL2;
 	//m_eUI_Level = UI_LEVEL::LEVEL1;
 
 	return S_OK;

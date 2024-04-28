@@ -32,7 +32,7 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
         m_tUIInfo = *(UI_DESC*)pArg;
 
     // Level 0으로 시작
-    //m_eUI_Level = UI_LEVEL::LEVEL0;
+    m_eUI_Level = UI_LEVEL::LEVEL0;
     // Test Level 1로 시작
     //m_eUI_Level = UI_LEVEL::LEVEL1;
     // Test Level 2로 시작
@@ -46,7 +46,7 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
     //m_pUIManager->Change_RightHUD_SkillUnlock("RightHUD_Top", true); // 해금
 
     Check_State();
-    m_eUI_Level = UI_LEVEL::LEVEL2;
+    //m_eUI_Level = UI_LEVEL::LEVEL2;
 
     //if (m_tUIInfo.strUIName == "Rifle")
     //{

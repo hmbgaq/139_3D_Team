@@ -29,6 +29,8 @@ HRESULT CUI_SkillIcon::Initialize(void* pArg)
 {
 	if (pArg != nullptr)
 		m_tUIInfo = *(UI_DESC*)pArg;
+	
+	m_eUI_Level = LEVEL0;
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -42,7 +44,6 @@ HRESULT CUI_SkillIcon::Initialize(void* pArg)
 	// Size Check
 	Check_IconSize();
 
-	m_eUI_Level = LEVEL0;
 
 	return S_OK;
 }
