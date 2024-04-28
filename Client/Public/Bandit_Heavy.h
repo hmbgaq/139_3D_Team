@@ -27,6 +27,11 @@ public:
 	virtual void Hitted_Front(Power ePower) override;
 	virtual void Hitted_Dead(Power ePower)	override;
 
+	virtual void Hitted_KnockUp() {
+		m_bIsKnockUp = false;
+		Hitted_Front(Power::Heavy);
+	};
+
 	virtual void Set_Taunt() override;
 
 public:

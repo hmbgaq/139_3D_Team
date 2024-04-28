@@ -36,6 +36,11 @@ protected:
 	virtual void Hitted_Stun(Power ePower) override;
 	virtual void Hitted_Finish() override;
 	virtual void Hitted_Weakness() override;
+
+	virtual void Hitted_KnockUp() {
+		m_bIsKnockUp = false;
+		Hitted_Front(Power::Heavy);
+	};
 	
 
 public:
