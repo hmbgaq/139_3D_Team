@@ -4,6 +4,7 @@
 #include "Body_Monster.h"
 
 BEGIN(Engine)
+class CTexture;
 END
 
 BEGIN(Client)

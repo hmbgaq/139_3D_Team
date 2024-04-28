@@ -37,7 +37,7 @@ public:
 		if (0 > iTextNum || m_iMaxTextNum < iTextNum)
 			return;
 
-		m_fTime = GetTickCount64();
+		m_fTime = (_float)GetTickCount64();
 		m_iTextNum = iTextNum;
 	}
 	_int					Get_TutorialMassege() { return m_iTextNum; }

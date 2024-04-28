@@ -20,6 +20,7 @@ namespace Engine
 		MODEL_OUTLINE_BLINK,		// 13 - OutLine 깜빡거림
 		MODEL_EX_EMISSIVE,			// 14 - Emissive 있음에도 안넣음
 		MODEL_MESH_BLOOM ,			// 15 - GLOW효과 그러니까 해당메시전체에 림블룸 주는거 
+		MODEL_DISSOLVE,				// 16 - Dissolve 적용 
 		MODEL_SHADER_END
 	};
 

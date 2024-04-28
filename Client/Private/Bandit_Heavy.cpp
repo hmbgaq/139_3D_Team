@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "SMath.h"
 #include "Effect_Manager.h"
+#include "Weapon_Heavy_Vampiric_Zombie.h"
 
 #include "BanditHeavy_HitNormal_F_01.h"
 #include "BanditHeavy_HitNormal_F_02.h"
@@ -161,8 +162,13 @@ void CBandit_Heavy::Hitted_Front(Power ePower)
 
 void CBandit_Heavy::Hitted_Dead(Power ePower)
 {
+	/* Bpdy Dissolve */
 	dynamic_cast<CBody_Bandit_Heavy*>(m_pBody)->Set_Dissolve(true);
 
+	/* Weapon Dissolve */
+	CWeapon* pWeapon = Get_Weapon(BANDIT_HEAVY_WEAPON);
+	dynamic_cast<CWeapon_Heavy_Vampiric_Zombie*>(pWeapon)->Set_Dissolve(true);
+	
 	EFFECT_MANAGER->Play_Effect("Hit/", "Dead_Monster_01.json", nullptr, Get_Position());
 
 	m_pActor->Set_State(new CBanditHeavy_DeathHeavy_F_01());

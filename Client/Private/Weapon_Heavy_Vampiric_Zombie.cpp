@@ -50,6 +50,9 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 	/* For. Com_Shader */
 	FAILED_CHECK(__super::Add_Component(iNextLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom)));
 
+	/* For. Texture */
+	FAILED_CHECK(__super::Add_Component(m_iCurrnetLevel, TEXT("Prototype_Component_Texture_Shader_Dissolve"), TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pDissolveTexture)));
+
 	///* For.Com_Collider */
 	m_iColliderSize = 1;
 	m_pColliders.resize(m_iColliderSize);
@@ -63,15 +66,12 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Ready_Components()
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliders[0]), &BoundingDesc)))
 		return E_FAIL;
 
-
-
 	//! 유정: 트레일
 	m_pTrail = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_03.json");
 	m_pTrail->Set_Play(true);		// 시작은 끄기
 
 	m_pTrail_Post = EFFECT_MANAGER->Ready_Trail(iNextLevel, LAYER_EFFECT, "Heavy_Vampiric_Zombie_Trail_Distortion_02.json");
 	m_pTrail_Post->Set_Play(true);		// 시작은 끄기
-
 
 	return S_OK;
 }
@@ -90,6 +90,17 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Option_Setting()
 {
 	m_iRenderPass = ECast(MONSTER_SHADER::COMMON_ORIGIN);
 
+	m_bDissolve = false;
+	m_fDissolveWeight = 0.f;
+	m_fDissolve_feather = 0.2f;
+	m_vDissolve_Color = { 1.f, 0.f, 1.f };
+	m_fDissolve_Discard = 0.8f;
+
+	if (m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
+		m_bRimLight = true;
+	else
+		m_bRimLight = false;
+
 	return S_OK;
 }
 
@@ -104,8 +115,6 @@ void CWeapon_Heavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 
 	if (m_bAttack)
 	{
-		
-
 		_float3 vPosition = { m_WorldMatrix._41, m_WorldMatrix._42, m_WorldMatrix._43};
 		//m_pTransformCom->Get_Position();
 		//EFFECT_MANAGER->Play_Effect("Monster/", "Vampire_Zombie_GroundAttack.json", nullptr, m_pTransformCom->Get_Position());
@@ -121,6 +130,14 @@ void CWeapon_Heavy_Vampiric_Zombie::Tick(_float fTimeDelta)
 	//		CJson_Utility::Save_Json(path.c_str(), Out_Json);
 	//	}
 	//}
+
+	if (m_bDissolve)
+	{
+		if (m_fDissolveWeight <= 3.f)
+			m_fDissolveWeight += fTimeDelta * 0.6f;
+		else
+			m_bDissolve = false;
+	}
 }
 
 void CWeapon_Heavy_Vampiric_Zombie::Late_Tick(_float fTimeDelta)
@@ -166,7 +183,18 @@ HRESULT CWeapon_Heavy_Vampiric_Zombie::Render()
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", (_uint)i, aiTextureType_NORMALS);
 		m_pModelCom->Bind_ShaderResource(m_pShaderCom, "g_SpecularTexture", (_uint)i, aiTextureType_SPECULAR);
 
-		m_pShaderCom->Begin(m_iRenderPass);
+		if (m_bDissolve)
+		{
+			m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
+			m_pShaderCom->Bind_RawValue("g_Dissolve_Weight", &m_fDissolveWeight, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_feather", &m_fDissolve_feather, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_Color", &m_vDissolve_Color, sizeof(_float));
+			m_pShaderCom->Bind_RawValue("g_Dissolve_ColorRange", &m_fDissolve_Discard, sizeof(_float));
+
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_DISSOLVE));
+		}
+		else
+			m_pShaderCom->Begin(ECast(MODEL_SHADER::MODEL_ORIGIN));
 
 		m_pModelCom->Render((_uint)i);
 	}

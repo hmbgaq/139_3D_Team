@@ -316,7 +316,7 @@ void CUI_SkillFrame::Check_Picking(_float fTimeDelta)
 			{
 				m_pUIManager->Select_Skill("ElectricDash");
 
-				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0);
+				if (m_pUIManager->Get_Select_SkillLevel() != UI_LEVEL::LEVEL0)
 					m_pUIManager->Change_SkillPreview("ElectricDash");
 			}
 			else if (m_tUIInfo.strUIName == "DashShock")
