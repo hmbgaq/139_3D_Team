@@ -102,7 +102,7 @@ void CBandit_Sniper::Tick(_float fTimeDelta)
 	if (true == m_bDeadState)
 	{
 		m_fTimeAcc += fTimeDelta;
-		if (m_fTimeAcc >= 2.f)
+		if (m_fTimeAcc >= 3.f)
 		{
 			Set_Dead(true);
 		}
