@@ -41,8 +41,7 @@ HRESULT CLevel_Logo::Initialize()
 	m_pDataManager->Set_GameState(GAME_STATE::UI);
 	ShowCursor(false);
 
-
-	//TODOFAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
+	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // ÀÌÆåÆ® Ç®
 
 	m_pGameInstance->Play_BGM(L"BGM_LOADING", L"LogoLoading.mp3", 10.f);
 

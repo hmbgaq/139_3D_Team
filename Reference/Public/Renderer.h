@@ -17,7 +17,7 @@ public:
 		/* UI */
 		RENDER_UI_BACK, RENDER_UI, RENDER_UI_FRONT, RENDER_UI_FIRST, RENDER_UI_SECOND, RENDER_UI_THIRD, RENDER_UI_FOURTH, RENDER_UI_POPUP, RENDER_CURSOR, RENDER_UI_WORLD,
 		/* RenderGroup*/
-		RENDER_BLEND, RENDER_CASCADE, RENDER_OUTLINE_BLUR, RENDER_END
+		RENDER_BLEND, RENDER_CASCADE, RENDER_OUTLINE_BLUR, RENDER_ROLLING, RENDER_END
 	};
 
 	enum class POST_TYPE { DEFERRED, FOG, GODRAY, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
@@ -219,6 +219,7 @@ private:
 	ID3D11DeviceContext*		m_pContext					= { nullptr };
 	class CGameInstance*		m_pGameInstance				= { nullptr };
 	list<class CGameObject*>	m_RenderObjects[RENDER_END];
+
 private:
 	class CShader*				m_pShader_Deferred			= { nullptr };
 	class CShader*				m_pShader_PostProcess		= { nullptr };

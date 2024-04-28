@@ -997,6 +997,7 @@ HRESULT CRenderer::Render_Chroma()
 {
 	if (true == m_tChroma_Option.bChroma_Active)
 	{
+		//cout << "Renderer - Chroma Active " << endl;
 		FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Chroma")));
 
 		FAILED_CHECK(m_pShader_PostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
@@ -1015,12 +1016,12 @@ HRESULT CRenderer::Render_Chroma()
 
 		m_Chroma_Clear = false;
 	}
-	else
+	else if(false == m_tChroma_Option.bChroma_Active)
 	{
 		if (false == m_Chroma_Clear)
 		{
+			//cout << "Renderer - Chroma NoneActive " << endl;
 			m_pGameInstance->Clear_MRT(TEXT("MRT_Chroma"));
-
 			m_Chroma_Clear = true;
 		}
 	}
