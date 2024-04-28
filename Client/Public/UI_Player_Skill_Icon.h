@@ -34,6 +34,7 @@ public:
 private:
 	virtual HRESULT			Ready_Components() override;
 	virtual HRESULT			Bind_ShaderResources() override;
+	void					Unlock_State(_bool bUnlock);
 
 public:
 	json					Save_Desc(json& out_json);

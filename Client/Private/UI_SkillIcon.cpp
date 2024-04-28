@@ -43,6 +43,8 @@ HRESULT CUI_SkillIcon::Initialize(void* pArg)
 	Check_IconSize();
 
 	m_eUI_Level = LEVEL0;
+	// Unlock_All
+	//m_eUI_Level = LEVEL2;
 
 	return S_OK;
 }

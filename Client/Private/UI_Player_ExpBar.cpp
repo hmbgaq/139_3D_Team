@@ -135,7 +135,7 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 				// 레벨업 보상
 				{
 					m_pData_Manager->Add_Money(1000);
-					m_pData_Manager->Add_SkillPoint(3);
+					m_pData_Manager->Add_SkillPoint(4);
 
 					// 기본 제공
 					/*if (m_tUIInfo.strUIName == "Kick")
@@ -160,6 +160,7 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 						/* 스킬 해금 */
 						m_pUIManager->Set_SkillLevel("OneTouch", 1);      // 1터치
 						m_pUIManager->Set_SkillLevel("ElectricDash", 1);   // 대쉬
+						m_pUIManager->Set_SkillLevel("SuperChargeMod", 1);
 
 						/* 무기 해금 */
 						m_pUIManager->Set_WeaponLevel("Rifle_skill1", 1);      // 라이플 스킬
@@ -170,49 +171,47 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 						/* 스킬 해금 */
 						m_pUIManager->Set_SkillLevel("TwoTouch", 1);      // 2터치
 						m_pUIManager->Set_SkillLevel("DashShock", 1);      // 대쉬감전 효과
-
-				
-
+						m_pUIManager->Set_SkillLevel("TeleportPunch", 1);
+						m_pUIManager->Set_SkillLevel("ElectricCord", 1);   // 전기줄 당기기
+						/* 스킬 해금 */
+						
+						/* 무기 해금 */
+						m_pUIManager->Set_WeaponLevel("Revolver_Skill1", 1);   // 리볼버 스킬
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 4)
 					{
 						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("ComboPunch", 1);      // 콤보펀치
 						m_pUIManager->Set_SkillLevel("ThreeTouch", 1);      // 3터치
+						m_pUIManager->Set_SkillLevel("ComboPunch", 1);      // 콤보펀치
+						m_pUIManager->Set_SkillLevel("NPCPowerUP", 1);
+						m_pUIManager->Set_SkillLevel("IncreaseEXP", 1);
 
-						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Revolver_Skill1", 1);   // 리볼버 스킬
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 5)
 					{
+						
 						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("ElectricCord", 1);   // 전기줄 당기기
 						m_pUIManager->Set_SkillLevel("IncreaseHP", 1);
 						m_pUIManager->Set_SkillLevel("IncreaseEnergy", 1);
+						m_pUIManager->Set_SkillLevel("RecoveryEnergy", 1);
+						m_pUIManager->Set_SkillLevel("MaxHP", 1);
 
 						/* 무기 해금 */
 						m_pUIManager->Set_WeaponLevel("Shotgun", 1);         // 샷건
+						/* 무기스킬 해금 */
+						m_pUIManager->Set_WeaponLevel("Shotgun_Skill1", 1);      // 샷건 스킬
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 6)
 					{
 						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("IncreaseEXP", 1);
-						m_pUIManager->Set_SkillLevel("NPCPowerUP", 1);
 
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 7)
 					{
-						/* 스킬 해금 */
-						m_pUIManager->Set_SkillLevel("SuperChargeMod", 1);
-						m_pUIManager->Set_SkillLevel("TeleportPunch", 1);
-						m_pUIManager->Set_SkillLevel("MaxHP", 1);
-
-						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Shotgun_Skill1", 1);      // 샷건 스킬
 
 					}
 

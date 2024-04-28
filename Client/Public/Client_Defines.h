@@ -90,15 +90,15 @@ namespace Client
 	#define PLAYER_VOICE_DELAY				3.f
 	
 
-
-	#define INFECTED_EXP					20.f
-	#define BANDIT_SNIPER_EXP				25.f
-	#define BANDIT_HEAVY_EXP				35.f
-	#define TANK_EXP						50.f
-
-	#define VAMPIRE_COMMANDER_EXP			80.f
-	#define PARASITER_EXP					120.f
-
+	//									 Unlock / Lock
+	#define INFECTED_EXP					2.f //20.f 
+	#define BANDIT_SNIPER_EXP				2.f //25.f 
+	#define BANDIT_HEAVY_EXP				2.f //35.f 
+	#define TANK_EXP						2.f //50.f 
+												   
+	#define VAMPIRE_COMMANDER_EXP			2.f //80.f 
+	#define PARASITER_EXP					2.f //120.f
+												   
 
 
 

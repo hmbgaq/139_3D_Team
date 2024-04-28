@@ -38,44 +38,10 @@ HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
-	/* Left */
-	if (m_tUIInfo.strUIName == "LeftHUD_Top")
-	{
-		m_bUnlock = true;
-	}
-	else if (m_tUIInfo.strUIName == "LeftHUD_Right")
-	{
-		// Test
-		m_bUnlock = true/*true*/;
-	}
-	else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
-	{
-		m_bUnlock = true;
-	}
-	else if (m_tUIInfo.strUIName == "LeftHUD_Left")
-	{
-		m_bUnlock = true;
-	}
-
-	/* Right */
-	if (m_tUIInfo.strUIName == "RightHUD_Top")
-	{
-		m_bUnlock = true;
-	}
-	else if (m_tUIInfo.strUIName == "RightHUD_Right")
-	{
-		m_bUnlock = true;
-	}
-	else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
-	{
-		m_bUnlock = true;
-	}
-	else if (m_tUIInfo.strUIName == "RightHUD_Left")
-	{
-		m_bUnlock = true;
-	}
-
-	m_bUnlock = true;
+	// Unlock_All
+	//Unlock_State(true);
+	Unlock_State(false);
+	
 	return S_OK;
 }
 
@@ -372,6 +338,47 @@ HRESULT CUI_Player_Skill_Icon::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CUI_Player_Skill_Icon::Unlock_State(_bool bUnlock)
+{
+	if (m_tUIInfo.strUIName == "LeftHUD_Top")
+	{
+		m_bUnlock = bUnlock;
+	}
+	else if (m_tUIInfo.strUIName == "LeftHUD_Right")
+	{
+		// Test
+		m_bUnlock = bUnlock/*true*/;
+	}
+	else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
+	{
+		m_bUnlock = bUnlock;
+	}
+	else if (m_tUIInfo.strUIName == "LeftHUD_Left")
+	{
+		m_bUnlock = bUnlock;
+	}
+
+	/* Right */
+	if (m_tUIInfo.strUIName == "RightHUD_Top")
+	{
+		m_bUnlock = bUnlock;
+	}
+	else if (m_tUIInfo.strUIName == "RightHUD_Right")
+	{
+		m_bUnlock = bUnlock;
+	}
+	else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
+	{
+		m_bUnlock = bUnlock;
+	}
+	else if (m_tUIInfo.strUIName == "RightHUD_Left")
+	{
+		m_bUnlock = bUnlock;
+	}
+
+	m_bUnlock = bUnlock;
 }
 
 json CUI_Player_Skill_Icon::Save_Desc(json& out_json)

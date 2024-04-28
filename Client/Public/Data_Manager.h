@@ -134,7 +134,10 @@ private: /* _float */
 	_float	m_fMaxHP = 100.f;
 	_float	m_fCurHP = 100.f;
 
-	_float	m_fMaxEXP = 100.f;
+	// Unlock_All
+	//_float	m_fMaxEXP = 1000000.f;
+	 _float	m_fMaxEXP = 100.f;
+	
 	_float	m_fCurEXP = 0.f;
 
 	_float	m_fMaxEnergyGuige = 100.f;
@@ -153,7 +156,7 @@ public:
 	LEVEL	Get_SelectLevel() { return m_eSelectLevel; }
 
 private: /* _int */
-	_int	m_iCurLevel = 4;
+	_int	m_iCurLevel = 0;
 
 private: /* _bool */
 	_bool	m_bLevelUp = false;				// ·¹º§¾÷		On/Off
