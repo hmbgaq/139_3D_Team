@@ -9,6 +9,7 @@ void CInfected_Idle::Initialize(CInfected* pActor)
 
 CState<CInfected>* CInfected_Idle::Update(CInfected* pActor, _float fTimeDelta)
 {
+	
 	/*if (pActor->Calc_Distance())
 	{
 		

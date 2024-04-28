@@ -2,6 +2,7 @@
 #include "Infected_Idle.h"
 #include "Body_Infected_D.h"
 #include "Weapon_Infected_D.h"
+#include "GameInstance.h"
 
 #include "Effect_Manager.h"
 #include "Effect.h"
@@ -47,8 +48,9 @@ CState<CInfected>* CInfected_Electrocute_Loop::Update(CInfected* pActor, _float 
 
 				pActor->Explosion();
 				pActor->Set_EnemyHUD_Dead();
-				EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", nullptr, pActor->Get_Position());
 
+				EFFECT_MANAGER->Play_Effect("Parasiter", "Monster_ExplosionNonLoop.json", nullptr, pActor->Get_Position());
+				m_pGameInstance->Play_Sound(L"INFECTED_EXPLOSION", L"TurnedCitizen_Explosion_01_A.wav", SOUND_ENEMY_DEAD, 10.f);
 
 				m_bFlags[0] = true;
 			}

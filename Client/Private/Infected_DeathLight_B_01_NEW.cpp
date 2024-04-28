@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Infected_DeathLight_B_01_NEW.h"
+#include "GameInstance.h"
 
 void CInfected_DeathLight_B_01_NEW::Initialize(CInfected* pActor)
 {
@@ -7,6 +8,7 @@ void CInfected_DeathLight_B_01_NEW::Initialize(CInfected* pActor)
 
 	pActor->Set_Animation(g_iAnimIndex, CModel::ANIM_STATE_NORMAL, true);
 	pActor->Get_Body()->Collider_Off();
+	m_pGameInstance->Play_Sound(L"INFECTED_DEATH", L"death_1_turned01.wav", SOUND_ENEMY_DEAD, 7.f);
 }
 
 CState<CInfected>* CInfected_DeathLight_B_01_NEW::Update(CInfected* pActor, _float fTimeDelta)

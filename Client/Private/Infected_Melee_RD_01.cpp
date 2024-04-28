@@ -1,5 +1,6 @@
 #include "Infected_Melee_RD_01.h"
 #include "Collider.h"
+#include "GameInstance.h"
 
 void CInfected_Melee_RD_01::Initialize(CInfected* pActor)
 {
@@ -40,8 +41,16 @@ CState<CInfected>* CInfected_Melee_RD_01::Update(CInfected* pActor, _float fTime
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
+		if (pActor->Is_Inputable_Front(1))
+		{
+			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", L"digger_attack_melee_whoosh001.wav", SOUND_ENEMY_ATTACK2, 7.f);
+		}
+
 		if (pActor->Is_Inputable_Front(30))
+		{
 			m_pWeapon->Set_Enable(true);
+
+		}
 
 		if (pActor->Is_Inputable_Front(41))
 			m_pWeapon->Set_Enable(false);

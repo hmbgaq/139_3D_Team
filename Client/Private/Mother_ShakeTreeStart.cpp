@@ -25,6 +25,7 @@ CState<CMother>* CMother_ShakeTreeStart::Update(CMother* pActor, _float fTimeDel
 		pActor->Apply_Shake_And_Blur(Power::Medium);
 
 		EFFECT_MANAGER->Play_Effect("Parasiter/", "SY_Falling_Leaves_02.json", nullptr, CData_Manager::GetInstance()->Get_Player()->Get_Position());
+		m_pGameInstance->Play_Sound(L"MOTHER_TREEHIT", L"grand_parasiter_attack_tree_loop001.wav", SOUND_EFFECT5, 7.f);
 		m_pGameInstance->Play_Sound(L"MOTHER_FALLINGLOOP", L"FallingParasite_Falling_Loop_1.wav", SOUND_EFFECT7, 7.f);
 		
 		CGameObject* pObjcet = { nullptr };
