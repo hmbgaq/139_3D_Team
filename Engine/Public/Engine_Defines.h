@@ -89,6 +89,8 @@ namespace Engine
 	//static float					g_iWinsizeY = 1080.f;
 	//static float					g_iWinsizeX = 2560.f;
 	//static float					g_iWinsizeY = 1440.f;
+	//static float					g_iWinsizeX = 3840.f;
+	//static float					g_iWinsizeY = 2160.f;
 
 	static float					g_fLightNear = 0.1f;
 	static float					g_fLightFar = 1500.f;

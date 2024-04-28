@@ -55,7 +55,7 @@ void CUI_Skill_Preview::Tick(_float fTimeDelta)
 
 	if (m_bActive == true)
 	{
-		TextureChange(fTimeDelta * 1.5); // 설명 텍스처 Fade InOut 속도
+		TextureChange(fTimeDelta * 1.5f); // 설명 텍스처 Fade InOut 속도
 	}
 
 }

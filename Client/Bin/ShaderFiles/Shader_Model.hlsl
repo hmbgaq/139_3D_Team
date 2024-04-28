@@ -29,9 +29,13 @@ Texture2D       g_NoiseTexture;
 Texture2D       g_ColorDiffuse;
 
 Texture2D       g_RADTexture;
+Texture2D       g_DissolveTexture;
 
 /* =========== Shader Value =========== */
-float           g_fDissolveWeight;                          /* Dissolve */
+float           g_Dissolve_Weight = 0.f; /* Dissolve - 디졸브 가중치  */
+float           g_Dissolve_feather = 0.1; /* Dissolve - 마스크의 테두리를 부드럽게 만드는 데 사용*/
+float3          g_Dissolve_Color = { 0.f, 0.f, 0.f }; /* Dissolve - 디졸브 사라지기 직전에 보이는 색상 */
+float           g_Dissolve_ColorRange = 0.1f; /* 위의 직전 보이는 색상이 어디까지 보일것인지 */
                                                             
 float4          g_vLineColor = { 1.f, 1.f, 1.f, 1.f };      /* OutLine */
 float           g_LineThick = 1.f;                          /* OutLine */
@@ -747,6 +751,56 @@ PS_OUT PS_MAIN_MESH_BLOOM(PS_IN In)
     
     return Out;
 }
+
+/* ------------------- (15) Mesh Bloom  -------------------*/
+PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.0f)
+        discard;
+    
+    /* Diffuse */ 
+    float4 DissolveTexture = g_DissolveTexture.Sample(LinearSampler, In.vTexcoord);
+    float fDissolve = DissolveTexture.r;
+  
+    float adjustedMask = fDissolve * (1 - g_Dissolve_feather) + g_Dissolve_feather / 2;
+    float alpha = saturate((adjustedMask - g_Dissolve_Weight) / g_Dissolve_feather + 0.5);
+    float4 FinalColor = vMtrlDiffuse * alpha;
+    
+    if (FinalColor.a == 0)
+        discard;
+    
+    if (FinalColor.a > 0.f && FinalColor.a <= g_Dissolve_ColorRange)
+        FinalColor.rgb = g_Dissolve_Color;
+    
+    Out.vDiffuse = FinalColor;
+    
+    /* Normla */ 
+    float3 vPixelNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vPixelNormal = vPixelNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vPixelNormal = mul(vPixelNormal, WorldMatrix);
+    
+    Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = float4(0.f, 0.f, 0.f, 0.f);
+            
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    //float4 vRimColor = Calculation_RimColor(In.vNormal, In.vWorldPos);
+    //Out.vDiffuse += vRimColor;
+    //Out.vRimBloom = Calculation_Brightness(Out.vDiffuse) + vRimColor;
+    
+    return Out;
+}
 /*=============================================================
  
                           Technique
@@ -952,5 +1006,16 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_MESH_BLOOM();
     }
 
+    pass DISSOLVE // 16 
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE();
+    }
 
 }

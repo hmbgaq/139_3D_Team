@@ -99,6 +99,8 @@ struct VS_OUT
     float2 vTexcoord    : TEXCOORD0;
     float4 vWorldPos    : TEXCOORD1;
     float4 vProjPos     : TEXCOORD2;
+    float4 vTangent     : TANGENT;
+    float4 vBinormal    : BINORMAL;
 }; 
 
 struct VS_OUT_SHADOW
@@ -127,6 +129,8 @@ struct PS_IN
     float2 vTexcoord    : TEXCOORD0;
     float4 vWorldPos    : TEXCOORD1;
     float4 vProjPos     : TEXCOORD2;
+    float4 vTangent     : TANGENT;
+    float4 vBinormal    : BINORMAL;
 };
 
 struct PS_IN_OUTLINE
@@ -185,6 +189,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix));
+    Out.vBinormal = normalize(vector(cross(Out.vNormal.xyz, Out.vTangent.xyz), 0.f));
 	
     return Out;
 }
@@ -277,18 +283,21 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
+    
     if (vMtrlDiffuse.a == 0.f)
         discard;
     
+    float3 vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vNormal = vNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+ 
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    
     Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
     Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = float4(0.f, 0.f, 0.f, 0.f);
             
     if (true == g_bORM_Available)
         Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
@@ -302,7 +311,6 @@ PS_OUT PS_MAIN(PS_IN In)
 /* ------------------- Pixel Shader(1) : 후면추리기x, 블랜드상태 등 -> 추가할거 추가할수있음   -------------------*/
 
 /* ------------------- Pixel Shader(2) : 가상의 빛의 위치에서 그림자 깊이 기록  -------------------*/
-
 PS_OUT_SHADOW PS_MAIN_SHADOW(VS_OUT_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
@@ -346,10 +354,18 @@ PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
         FinalColor.rgb = g_Dissolve_Color;
     
     Out.vDiffuse = FinalColor;
-    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3 vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vNormal = vNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = float4(0.f, 0.f, 0.f, 0.f);
+    
     if (true == g_bORM_Available)
         Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
@@ -400,15 +416,21 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
     if (vMtrlDiffuse.a < 0.3f)
         discard;
-
+    
+    float3 vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vNormal = vNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+    
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = float4(0.f, 0.f, 0.f, 0.f);
+    
     if (true == g_bORM_Available)
         Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     
@@ -422,17 +444,20 @@ PS_OUT PS_INFECTED_WEAPON(PS_IN In)
     return Out;
 }
 
+
 /* ------------------- Pixel Shader(9) : Infected -------------------*/
 PS_OUT PS_MAIN_EXCEPT(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
-    vector vNormalDesc = g_NormalTexture.Sample(LinearSampler, In.vTexcoord);
-    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
-
     if (vMtrlDiffuse.a == 0.f)
         discard;
+    
+    float3 vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vNormal = vNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
@@ -446,6 +471,44 @@ PS_OUT PS_MAIN_EXCEPT(PS_IN In)
     
     return Out;
 }
+
+/* ------------------- Pixel Shader(10) : RimLight - SnowMountain 전용맵 -------------------*/
+PS_OUT PS_MAIN_RIM(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a == 0.f)
+        discard;
+    
+    float3 vNormal = g_NormalTexture.Sample(LinearSampler, In.vTexcoord).xyz;
+    vNormal = vNormal * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal.xyz, In.vNormal.xyz);
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    // 파란톤
+    vMtrlDiffuse = vMtrlDiffuse * 0.5 * g_vRimColor;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vRimBloom = float4(0.f, 0.f, 0.f, 0.f);
+    
+    if (true == g_bORM_Available)
+        Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (true == g_bEmissive_Available)
+        Out.vEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    //버텍스에서 바라보는 카메라의 방향  
+    float4 vRimColor = Calculation_RimColor(Out.vNormal, In.vWorldPos);
+    Out.vDiffuse += vRimColor;
+    
+    return Out;
+}
+
 /*=============================================================
  
                           Technique
@@ -573,6 +636,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_EXCEPT();
+    }
+
+    pass SNOW_Rim // 10
+    {
+        SetRasterizerState(RS_Cull_None);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RIM();
     }
 
 }

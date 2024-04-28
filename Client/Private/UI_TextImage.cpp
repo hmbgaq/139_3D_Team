@@ -64,12 +64,12 @@ void CUI_TextImage::Tick(_float fTimeDelta)
 		if (m_pGameInstance->Key_Down(DIK_5))
 		{
 			m_iTextNum = 1;
-			m_fTime = GetTickCount64();
+			m_fTime = (_float)GetTickCount64();
 		}
 		if (m_pGameInstance->Key_Down(DIK_6))
 		{
 			m_iTextNum = 2;
-			m_fTime = GetTickCount64();
+			m_fTime = (_float)GetTickCount64();
 		}
 
 		if (m_iTextNum != 0)

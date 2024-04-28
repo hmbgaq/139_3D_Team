@@ -36,8 +36,6 @@ HRESULT CHeavy_Vampiric_Zombie::Initialize(void* pArg)
 	Ready_EnemyHUD_Shard(m_pGameInstance->Get_NextLevel(), this);
 
 	m_pTarget = CData_Manager::GetInstance()->Get_Player();
-	
-	
 
 	return S_OK;
 }

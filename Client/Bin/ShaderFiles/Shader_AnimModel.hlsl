@@ -286,7 +286,9 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vPixelNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fCamFar, 0.0f, 0.0f);
-    
+    Out.vORM = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vEmissive = float4(0.f, 0.f, 0.f, 0.f);
+            
     if (true == g_bORM_Available)
         Out.vORM = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
     

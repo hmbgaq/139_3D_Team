@@ -95,7 +95,7 @@ void CVampireCommander_Ranged3::PlaySound_Wing(CVampireCommander* pActor)
 {
 	if (m_bPlayWingSoundArray[0] == false)
 	{
-		if (pActor->Is_Inputable_Front(m_fWingTimeArray[0]))
+		if (pActor->Is_Inputable_Front((_uint)m_fWingTimeArray[0]))
 		{
 			m_pGameInstance->Play_Sound(L"VAMPIRE_WING", L"commander_lesser_mvm_wings004.wav", SOUND_ENEMY_BODYMOVE, 10.f);
 			m_bPlayWingSoundArray[0] = true;
@@ -104,7 +104,7 @@ void CVampireCommander_Ranged3::PlaySound_Wing(CVampireCommander* pActor)
 	
 	if (m_bPlayWingSoundArray[1] == false)
 	{
-		if (pActor->Is_Inputable_Front(m_fWingTimeArray[1]))
+		if (pActor->Is_Inputable_Front((_uint)m_fWingTimeArray[1]))
 		{
 			m_pGameInstance->Play_Sound(L"VAMPIRE_WING", L"commander_lesser_mvm_wings004.wav", SOUND_ENEMY_BODYMOVE2, 10.f);
 			m_bPlayWingSoundArray[1] = true;

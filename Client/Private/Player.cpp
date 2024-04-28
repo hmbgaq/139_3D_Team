@@ -2181,7 +2181,7 @@ void CPlayer::Update_Voice_Cooltime(_float fTimeDelta)
 	_float fResult = m_fVoiceCooltime - fTimeDelta;
 	m_fVoiceCooltime = fResult > 0.f ? fResult : 0.f;
 	
-	for (_uint i = 0; i < ECast(Player_Voice_Cooltime::Player_Voice_Cooltime_End); ++i)
+	for (_uint i = 0; i < (_uint)ECast(Player_Voice_Cooltime::Player_Voice_Cooltime_End); ++i)
 	{
 		_float fResult = m_VoiceCooltime[i] - fTimeDelta;
 		m_VoiceCooltime[i] = fResult > 0.f ? fResult : 0.f;

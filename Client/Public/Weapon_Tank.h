@@ -52,6 +52,26 @@ protected:
 	virtual HRESULT Ready_Components();
 	HRESULT			Bind_ShaderResources();
 
+	/* 소영 추가 */
+private:
+	CTexture* m_pDissolveTexture = { nullptr };
+
+private:
+	_bool				m_bDissolve = { false };
+	_bool				m_bRimLight = { false };
+
+	/* Dissolve */
+	_float				m_fDissolveWeight = 0.f;
+	_float				m_fDissolve_feather = 0.f;
+	_float3				m_vDissolve_Color = { 0.f, 0.f, 0.f };
+	_float				m_fDissolve_Discard = 0.f;
+	_float				m_fTimeAcc = 0.f;
+
+	/* RimLight */
+	_float4				m_vRimColor = { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
+	_float				m_fRimPower = 5.f;                      /* RimLight */
+	_float3				m_vBloomPower = {};
+
 public:
 	static CWeapon_Tank* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);
 	virtual CGameObject* Clone(void* pArg) override;

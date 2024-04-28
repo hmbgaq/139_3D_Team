@@ -13,6 +13,8 @@ namespace Client
 	//static const unsigned int	g_iWinSizeY = 1080;
 	//static const unsigned int	g_iWinSizeX = 2560;
 	//static const unsigned int	g_iWinSizeY = 1440;
+	//static const unsigned int	g_iWinSizeX = 3840.f;
+	//static const unsigned int	g_iWinSizeY = 2160.f;
 
 	// ! Close Window
 	_bool g_CloseWindow = false;
