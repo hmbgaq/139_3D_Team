@@ -111,7 +111,7 @@ void CLevel_Loading::Tick(_float fTimeDelta)
 		//if (GetKeyState(VK_RETURN) & 0x8000)
 		{
 			CLevel*		pNewLevel = { nullptr };
-
+			
 			switch (m_eNextLevelID)
 			{
 			case LEVEL_LOGO:
