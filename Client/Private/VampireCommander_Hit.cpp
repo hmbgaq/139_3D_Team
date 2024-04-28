@@ -49,6 +49,7 @@ CState<CVampireCommander>* CVampireCommander_Hit::Update(CVampireCommander* pAct
 void CVampireCommander_Hit::Release(CVampireCommander* pActor)
 {
 	__super::Release(pActor);
+	pActor->Set_KnockUp(false);
 }
 
 CState<CVampireCommander>* CVampireCommander_Hit::Update_State(CVampireCommander* pActor, _float fTimeDelta, _uint _iAnimIndex)
