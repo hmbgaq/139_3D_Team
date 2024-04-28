@@ -6128,6 +6128,16 @@ void CWindow_EffectTool::Update_LevelSetting_Window()
 			}
 
 
+			if (ImGui::Button(" Attach lips "))
+			{
+				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
+				{
+					Attach_Tool("lips_H_close_upnode");
+				}
+
+			}
+
+
 			if (ImGui::Button(" Attach Hips "))
 			{
 				if (TEXT("Prototype_Component_Model_Rentier") == pDesc->strModelTag) // 플레이어 뼈에 붙이기
