@@ -42,16 +42,17 @@ HRESULT CUI_WeaponIcon::Initialize(void* pArg)
 	// Size Check
 	Check_IconSize();
 
-	//TEST
-	if (m_bWeapon == true)
-	{
-		m_eUI_Level = LEVEL1;
-	}
-	else
-	{
-		m_eUI_Level = LEVEL1;
-	}
+	////TEST
+	//if (m_bWeapon == true)
+	//{
+	//	m_eUI_Level = LEVEL1;
+	//}
+	//else
+	//{
+	//	m_eUI_Level = LEVEL1;
+	//}
 		
+		m_eUI_Level = LEVEL2;
 
 	return S_OK;
 }
