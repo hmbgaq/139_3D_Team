@@ -35,15 +35,15 @@ HRESULT CData_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pC
 	//m_AdditionalSkills[ECast(Additional_Skill::ELECTROCUTE)] = true;
 	//m_AdditionalSkills[ECast(Additional_Skill::HIT_EIGHT)] = true;
 
-	for (_uint i = 0; i < (_uint)ECast(Additional_Skill::Additional_Skill_End); ++i)
-	{
-		m_AdditionalSkills[i] = true;
-	}
+	//for (_uint i = 0; i < (_uint)ECast(Additional_Skill::Additional_Skill_End); ++i)
+	//{
+	//	m_AdditionalSkills[i] = true;
+	//}
 
-	for (_uint i = 0; i < (_uint)ECast(Additional_Weapon::Additional_Weapon_End); ++i)
-	{
-		m_AdditionalWeapons[i] = true;
-	}
+	//for (_uint i = 0; i < (_uint)ECast(Additional_Weapon::Additional_Weapon_End); ++i)
+	//{
+	//	m_AdditionalWeapons[i] = true;
+	//}
 
 	//for (_uint i = 0; i < ECast(Additional_Weapon::SHOTGUN) + 1; ++i)
 	//{

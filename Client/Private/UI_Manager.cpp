@@ -72,7 +72,7 @@ HRESULT CUI_Manager::Ready_Interface(_uint iLevelIndex)
 	Add_LeftSkill(iLevelIndex, TEXT("Layer_LeftSkill"));
 	Add_RightSkill(iLevelIndex, TEXT("Layer_RightSkill"));
 	Add_TutorialBox(iLevelIndex, TEXT("Layer_TutorialBox"));
-	//Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
+	Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
 	Add_RewardBox(iLevelIndex, TEXT("Layer_RewardBox"));
 	Add_QuestBox(iLevelIndex, TEXT("Layer_QuestBox"));
 	Add_SuperChargeMod(iLevelIndex, TEXT("Layer_SuperChargeMod"));

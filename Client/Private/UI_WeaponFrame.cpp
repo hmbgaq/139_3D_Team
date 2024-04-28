@@ -48,14 +48,14 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
     Check_State();
     //m_eUI_Level = UI_LEVEL::LEVEL2;
 
-    //if (m_tUIInfo.strUIName == "Rifle")
-    //{
-    //    m_eUI_Level = LEVEL1;
-    //}
-    //else if (m_tUIInfo.strUIName == "Revolver")
-    //{
-    //    m_eUI_Level = LEVEL1;
-    //}
+    if (m_tUIInfo.strUIName == "Rifle")
+    {
+        m_eUI_Level = LEVEL1;
+    }
+    else if (m_tUIInfo.strUIName == "Revolver")
+    {
+        m_eUI_Level = LEVEL1;
+    }
     return S_OK;
 }
 
