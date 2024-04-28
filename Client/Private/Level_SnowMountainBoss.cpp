@@ -61,7 +61,7 @@ HRESULT CLevel_SnowMountainBoss::Initialize()
 	FAILED_CHECK(Ready_UI());
 	FAILED_CHECK(Ready_Event());
 
-	m_pGameInstance->Play_BGM(L"BGM", L"SnowMountainBossIntroBGM.wav", 5.f);
+	//m_pGameInstance->Play_BGM(L"BGM", L"SnowMountainBossIntroBGM.wav", 5.f);
 
 	return S_OK;
 }

@@ -51,11 +51,11 @@ void CEvent_MosnterSpawnTrigger::Activate()
 
 			if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_INTRO_BOSS))
 			{
-				m_pGameInstance->Play_BGM(L"BGM", L"IntroBossTriggerBGM.wav", 5.f);
+				//m_pGameInstance->Play_BGM(L"BGM", L"IntroBossTriggerBGM.wav", 5.f);
 			}
 			else if (strLayerTag == L"Layer_Boss" && iCurrentLevel == _uint(LEVEL_SNOWMOUNTAINBOSS))
 			{
-				m_pGameInstance->Play_BGM(L"BGM", L"SnowMountainBossTriggerBGM.wav", 5.f);
+				//m_pGameInstance->Play_BGM(L"BGM", L"SnowMountainBossTriggerBGM.wav", 5.f);
 			}
 
 		if (pMonster == nullptr)
