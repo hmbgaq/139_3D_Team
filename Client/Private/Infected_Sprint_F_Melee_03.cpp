@@ -50,6 +50,7 @@ CState<CInfected>* CInfected_Sprint_F_Melee_03::Update(CInfected* pActor, _float
 		{
 			m_pWeapon->Set_Enable(true);
 			m_bFlags[0] = true;
+			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", L"digger_attack_melee_whoosh005.wav", SOUND_ENEMY_ATTACK2, 7.f);
 		}
 		if ( pActor->Is_Inputable_Front(47) && m_bFlags[1] == false )
 		{

@@ -45,21 +45,12 @@ CState<CInfected>* CInfected_Sprint_F_Melee_02::Update(CInfected* pActor, _float
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
-		if (pActor->Is_Inputable_Front(1) && m_bFlags[5] == false)
-		{
-			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", L"digger_attack_melee_whoosh005.wav", SOUND_ENEMY_ATTACK2, 7.f);
-			m_bFlags[5] = true;
-		}
 
 		if ( pActor->Is_Inputable_Front(38) && m_bFlags[0] == false )
 		{
-			m_bFlags[0] = true;
+			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", L"digger_attack_melee_whoosh005.wav", SOUND_ENEMY_ATTACK2, 7.f);
 			m_pWeapon->Set_Enable(true);
-
-			_int iRandom = m_pGameInstance->Random_Int(1, 8);
-			wstring strSoundKey = L"";
-
-			
+			m_bFlags[0] = true;
 		}
 
 		if (pActor->Is_Inputable_Front(49) && m_bFlags[1] == false)

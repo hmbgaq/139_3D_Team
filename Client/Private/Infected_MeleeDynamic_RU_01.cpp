@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Transform.h"
 #include "Infected_MeleeDynamic_RU_01.h"
-#include "GameInstance.h"
 
 void CInfected_MeleeDynamic_RU_01::Initialize(CInfected* pActor)
 {
@@ -45,41 +44,7 @@ CState<CInfected>* CInfected_MeleeDynamic_RU_01::Update(CInfected* pActor, _floa
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
 		if (pActor->Is_Inputable_Front(22))
-		{
 			m_pWeapon->Set_Enable(true);
-			_int iRandom = m_pGameInstance->Random_Int(1, 8);
-			wstring strSoundKey = L"";
-
-			switch (iRandom)
-			{
-			case 1:
-				strSoundKey = L"Bats_Attack_Start_Layer_01_02.wav";
-				break;
-			case 2:
-				strSoundKey = L"Bats_Attack_Start_Layer_01_03.wav";
-				break;
-			case 3:
-				strSoundKey = L"Bats_Attack_Start_Layer_01_04.wav";
-				break;
-			case 4:
-				strSoundKey = L"digger_attack_melee_whoosh001.wav";
-				break;
-			case 5:
-				strSoundKey = L"digger_attack_melee_whoosh002.wav";
-				break;
-			case 6:
-				strSoundKey = L"digger_attack_melee_whoosh003.wav";
-				break;
-			case 7:
-				strSoundKey = L"digger_attack_melee_whoosh004.wav";
-				break;
-			case 8:
-				strSoundKey = L"digger_attack_melee_whoosh005.wav";
-				break;
-			}
-
-			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", strSoundKey, SOUND_ENEMY_ATTACK2, 7.f);
-		}
 
 		if (pActor->Is_Inputable_Front(34))
 			m_pWeapon->Set_Enable(false);

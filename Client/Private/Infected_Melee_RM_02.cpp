@@ -41,19 +41,20 @@ CState<CInfected>* CInfected_Melee_RM_02::Update(CInfected* pActor, _float fTime
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_B:
 	case CInfected::INFECTED_TYPE::INFECTED_VESSEL_C:
 	{
-		if (pActor->Is_Inputable_Front(20))
-		{
-			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", L"digger_attack_melee_whoosh001.wav", SOUND_ENEMY_ATTACK2, 7.f);
-		}
 
-		if (pActor->Is_Inputable_Front(27))
+		if (pActor->Is_Inputable_Front(27) && m_bFlags[0] == false)
 		{
 			m_pWeapon->Set_Enable(true);
+			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", L"digger_attack_melee_whoosh001.wav", SOUND_ENEMY_ATTACK2, 7.f);
+			m_bFlags[0] = true;
 			
 		}
 
-		if (pActor->Is_Inputable_Front(37))
+		if (pActor->Is_Inputable_Front(37) && m_bFlags[1] == false)
+		{
 			m_pWeapon->Set_Enable(false);
+			m_bFlags[1] = true;
+		}
 	}
 	break;
 
