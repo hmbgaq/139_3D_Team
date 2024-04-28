@@ -116,6 +116,16 @@ void CUI_ElementList::Check_Picking(_float fTimeDelta)
 	if (m_bPick == false)
 		return;
 
+	/*
+	HBAO	: 1 => PBR
+	FOG		: 2 => HBAO
+	HDR		: 3 => FOG
+	DOF		: 4 => FXAA
+	HSV		: 5 => Luma_Sharpen
+	SHADOW	: 6 => SHADOW
+	PBR		: 7 => Screen_Effect
+	*/
+
 	if (g_UIMouseDownLB == true)
 	{
 		if (m_tUIInfo.strUIName == "HBAO")
@@ -301,17 +311,17 @@ HRESULT CUI_ElementList::Bind_ShaderResources()
 			if (FAILED(m_pTextureCom[ACTIVE_HABO]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 		}
-		else if (m_tUIInfo.strUIName == "FOG")
+		else if (m_tUIInfo.strUIName == "FOG")//
 		{
 			if (FAILED(m_pTextureCom[ACTIVE_FOG]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 		}
-		else if (m_tUIInfo.strUIName == "RADIAL_BLUR")
+		else if (m_tUIInfo.strUIName == "RADIAL_BLUR")// HDR
 		{
 			if (FAILED(m_pTextureCom[ACTIVE_RADIAL_BLUR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 		}
-		else if (m_tUIInfo.strUIName == "DOF")
+		else if (m_tUIInfo.strUIName == "DOF")// SCREEN
 		{
 			if (FAILED(m_pTextureCom[ACTIVE_DOF]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
@@ -331,7 +341,7 @@ HRESULT CUI_ElementList::Bind_ShaderResources()
 			if (FAILED(m_pTextureCom[ACTIVE_PBR]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;
 		}
-		else if (m_tUIInfo.strUIName == "HSV")
+		else if (m_tUIInfo.strUIName == "HSV")// LUMA
 		{
 			if (FAILED(m_pTextureCom[ACTIVE_HSV]->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture")))
 				return E_FAIL;

@@ -355,6 +355,7 @@ public:
 		m_bSoundOk2 = false;
 		m_bSoundOk3 = false;
 	}
+	void			Set_Active_Distance(_float fDistance) { m_fActive_Distance = fDistance; }
 
 protected:
 	_bool			m_bLifeTimeUI = false;

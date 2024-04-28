@@ -38,6 +38,7 @@ HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&m_tUIInfo))) //!  트랜스폼 셋팅, m_tUIInfo의 bWorldUI 가 false 인 경우에만 직교위치 셋팅
 		return E_FAIL;
 
+	// Free.ver
 	/* Left */
 	if (m_tUIInfo.strUIName == "LeftHUD_Top")
 	{
@@ -74,6 +75,44 @@ HRESULT CUI_Player_Skill_Icon::Initialize(void* pArg)
 	{
 		m_bUnlock = true;
 	}
+
+
+	///* Left */
+	//if (m_tUIInfo.strUIName == "LeftHUD_Top")
+	//{
+	//	m_bUnlock = false;
+	//}
+	//else if (m_tUIInfo.strUIName == "LeftHUD_Right")
+	//{
+	//	// Test
+	//	m_bUnlock = false/*true*/;
+	//}
+	//else if (m_tUIInfo.strUIName == "LeftHUD_Bottom")
+	//{
+	//	m_bUnlock = false;
+	//}
+	//else if (m_tUIInfo.strUIName == "LeftHUD_Left")
+	//{
+	//	m_bUnlock = false;
+	//}
+
+	///* Right */
+	//if (m_tUIInfo.strUIName == "RightHUD_Top")
+	//{
+	//	m_bUnlock = false;
+	//}
+	//else if (m_tUIInfo.strUIName == "RightHUD_Right")
+	//{
+	//	m_bUnlock = false;
+	//}
+	//else if (m_tUIInfo.strUIName == "RightHUD_Bottom")
+	//{
+	//	m_bUnlock = false;
+	//}
+	//else if (m_tUIInfo.strUIName == "RightHUD_Left")
+	//{
+	//	m_bUnlock = false;
+	//}
 
 
 	return S_OK;

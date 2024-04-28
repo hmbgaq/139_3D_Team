@@ -48,6 +48,14 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
 
 	Check_State();
 
+	if (m_tUIInfo.strUIName == "Rifle")
+	{
+		m_eUI_Level = LEVEL1;
+	}
+	else if (m_tUIInfo.strUIName == "Revolver")
+	{
+		m_eUI_Level = LEVEL1;
+	}
 	return S_OK;
 }
 
@@ -405,17 +413,17 @@ void CUI_WeaponFrame::Check_State()
 	else if (m_tUIInfo.strUIName == "Revolver_Skill1")
 	{
 		m_iPrice = 0;
-		m_iSkillPoint = 500;
+		m_iSkillPoint = 1000;
 	}
 	else if (m_tUIInfo.strUIName == "Rifle_skill1")
 	{
 		m_iPrice = 0;
-		m_iSkillPoint = 500;
+		m_iSkillPoint = 1000;
 	}
 	else if (m_tUIInfo.strUIName == "Shotgun_Skill1")
 	{
 		m_iPrice = 0;
-		m_iSkillPoint = 500;
+		m_iSkillPoint = 1000;
 	}
 }
 

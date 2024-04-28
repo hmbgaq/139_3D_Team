@@ -72,7 +72,8 @@ HRESULT CUI_Manager::Ready_Interface(_uint iLevelIndex)
 	Add_LeftSkill(iLevelIndex, TEXT("Layer_LeftSkill"));
 	Add_RightSkill(iLevelIndex, TEXT("Layer_RightSkill"));
 	Add_TutorialBox(iLevelIndex, TEXT("Layer_TutorialBox"));
-	Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
+	// Free.Ver
+	// Add_LevelUp(iLevelIndex, TEXT("Layer_LevelUp"));
 	Add_RewardBox(iLevelIndex, TEXT("Layer_RewardBox"));
 	Add_QuestBox(iLevelIndex, TEXT("Layer_QuestBox"));
 	Add_SuperChargeMod(iLevelIndex, TEXT("Layer_SuperChargeMod"));
@@ -710,13 +711,13 @@ HRESULT CUI_Manager::Add_LeftHUD(_uint iLevelIndex, const wstring& strLayerTag)
 			tUI_Info.strUIName == "Lightning")
 		{
 			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_LifeTime(2000.f);					// UI LifeTime
 			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 		}
 		else
 		{
 			pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-			pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+			pUI_Object->Set_LifeTime(2000.f);					// UI LifeTime
 			pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 		}
 
@@ -929,7 +930,7 @@ HRESULT CUI_Manager::Add_LeftSkill(_uint iLevelIndex, const wstring& strLayerTag
 			return E_FAIL;
 
 		pUI_Object->Set_LifeTimeUI(true);					// LifeTime UI
-		pUI_Object->Set_LifeTime(3000.f);					// UI LifeTime
+		pUI_Object->Set_LifeTime(2000.f);					// UI LifeTime
 		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
 
 		m_vecLeftSkill.push_back(pUI_Object);
@@ -3272,8 +3273,9 @@ HRESULT CUI_Manager::Add_DiedScreen(_uint iLevelIndex, const wstring& strLayerTa
 		m_vecDiedScreen.push_back(pUI_Object);
 
 		pUI_Object->Set_LifeTimeUI(true);					// LifeTime True
-		pUI_Object->Set_LifeTime(6000.f);					// UI LifeTime
+		pUI_Object->Set_LifeTime(5000.f);					// UI LifeTime
 		pUI_Object->Set_UIState(UISTATE::PLAYER_HUD);		// UI State
+		pUI_Object->Set_RenderGroup(CRenderer::RENDERGROUP::RENDER_UI_POPUP);
 
 		pUI_Object->Get_Transform()->Load_FromJson(object); // 17. TransformCom
 		pUI_Object->Load_FromJson(object); // 18. Load Data
@@ -4918,11 +4920,11 @@ void CUI_Manager::Check_SkillWindowTrigger()
 	{
 		if (m_pSkillWindowBackground->Get_AnimTrigger() == true && m_bShowSkillWindow == false)
 		{
-			/* Sound */
-			wstring strFileName = L"";
-			strFileName = L"HM_MUS_LS_PreGatling_Main_Dm_102bpm_16.wav";
+			///* Sound */
+			//wstring strFileName = L"";
+			//strFileName = L"HM_MUS_LS_PreGatling_Main_Dm_102bpm_16.wav";
 
-			m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWBGM, 13.f);
+			//m_pGameInstance->Play_Sound(L"UI_SkillWindow", strFileName, CHANNELID::SOUND_UI_SKILLWINDOWBGM, 13.f);
 
 			Active_SkillWindow(true);
 			Active_SkillIcon(true);
