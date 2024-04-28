@@ -33,15 +33,24 @@ public:
 	void 			Set_Dissolve(_bool bOption) {m_bDissolve = bOption; }
 
 private:
-	_bool m_bDissolve = { false };
-
 	CTexture*			m_pDissolveTexture = { nullptr };
 
-	_float				m_fDissolveWeight = 0.f;
-	_float				m_fDissolve_feather = 0.f;
-	_float3				m_vDissolve_Color = { 0.f, 0.f, 0.f };
-	_float				m_fDissolve_Discard = 0.f;
-	_float				m_fTimeAcc = 0.f;
+private:
+	_bool				m_bDissolve = { false };
+	_bool				m_bRimLight = { false };
+
+	/* Dissolve */
+	_float				m_fDissolveWeight		= 0.f;
+	_float				m_fDissolve_feather		= 0.f;
+	_float3				m_vDissolve_Color		= { 0.f, 0.f, 0.f };
+	_float				m_fDissolve_Discard		= 0.f;
+	_float				m_fTimeAcc				= 0.f;
+
+	/* RimLight */
+	_float4				m_vRimColor				= { 0.f, 0.f, 0.f, 0.f };   /* RimLight */
+	_float				m_fRimPower				= 5.f;                      /* RimLight */
+	_float3				m_vBloomPower			= {};
+
 
 protected:
 	HRESULT Ready_Components();

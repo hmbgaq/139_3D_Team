@@ -52,6 +52,7 @@ namespace Engine
 		COMMON_OUTLINE_KEEP,		// 7 - 외곽선 계속 유지 
 		INFECTED_PUNCH,				// 8 - Infected - Attack에서 주먹변하기 
 		COMMON_EXCEPT_EMISSIVE,		// 9 - EMISSIVE텍스쳐 없앤버전 
+		COMMON_SNOW_RIMLIGHT,		// 10 - Snow맵에서 쓸 몬스터 공통 림라이트전용 
 		MONSTER_SHADER_END };
 
 	enum class UI_SHADER {UI_SHADER_END};

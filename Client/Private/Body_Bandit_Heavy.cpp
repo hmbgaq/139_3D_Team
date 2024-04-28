@@ -29,6 +29,15 @@ HRESULT CBody_Bandit_Heavy::Initialize(void* pArg)
 	m_vDissolve_Color = { 1.f, 0.f, 1.f };
 	m_fDissolve_Discard = 0.8f;
 
+	/* RimLight */
+	m_vRimColor = { 0.f, 0.3f, 0.5f, 1.f };   /* RimLight */
+	m_fRimPower = 5.f;                         /* RimLight */
+
+	if (m_iCurrnetLevel == ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
+		m_bRimLight = true;
+	else
+		m_bRimLight = false;
+
 	return S_OK;
 }
 
@@ -81,7 +90,18 @@ HRESULT CBody_Bandit_Heavy::Render()
 		}
 		else
 		{
-			m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+			if (true == m_bRimLight) // SnowMountain맵일때는 림라이트 적용 
+			{
+				cout << "monster rimlight " << endl;
+
+				m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimColor, sizeof(_float4));
+				m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimPower, sizeof(_float));
+
+				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_SNOW_RIMLIGHT));
+			}
+			else
+				m_pShaderCom->Begin(ECast(MONSTER_SHADER::COMMON_ORIGIN));
+
 		}
 		m_pModelCom->Render((_uint)i);
 	}

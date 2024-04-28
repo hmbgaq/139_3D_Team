@@ -29,6 +29,7 @@ HRESULT CMainApp::Initialize()
 
 	GraphicDesc.hWnd = g_hWnd;
 	GraphicDesc.eWinMode = GRAPHIC_DESC::WINMODE_WIN;
+	//GraphicDesc.eWinMode = GRAPHIC_DESC::WINMODE_FULL;
 	GraphicDesc.iBackBufferSizeX = g_iWinSizeX;
 	GraphicDesc.iBackBufferSizeY = g_iWinSizeY;
 
