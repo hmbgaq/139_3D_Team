@@ -1112,6 +1112,58 @@ HRESULT CWindow_ShaderTool::Load_Level(_int iLevel_Index)
 		ImGui::Text("wrong choice");
 		return S_OK;
 	}
+	else if (1 == iLevel_Index)
+	{
+		FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_TOOL, LAYER_BACKGROUND, TEXT("Prototype_GameObject_Sky")));
+
+		json Stage1MapJson = {};
+
+		if (FAILED(CJson_Utility::Load_Json(m_strStage1MapLoadPath.c_str(), Stage1MapJson)))
+		{
+			MSG_BOX("맵 불러오기 실패");
+			return E_FAIL;
+		}
+
+		json BasicJson = Stage1MapJson["Basic_Json"];
+		_int iBasicJsonSize = (_int)BasicJson.size();
+
+		for (_int i = 0; i < iBasicJsonSize; ++i)
+		{
+			CEnvironment_Object::ENVIRONMENT_OBJECT_DESC Desc;
+
+			Desc.bAnimModel = BasicJson[i]["AnimType"];
+
+			wstring strLoadModelTag;
+			string strJsonModelTag = BasicJson[i]["ModelTag"];
+
+			m_pGameInstance->String_To_WString(strJsonModelTag, strLoadModelTag);
+			Desc.strModelTag = strLoadModelTag;
+
+			Desc.iShaderPassIndex = BasicJson[i]["ShaderPassIndex"];
+			Desc.iPlayAnimationIndex = BasicJson[i]["PlayAnimationIndex"];
+			Desc.bPreview = false;
+
+			const json& TransformJson = BasicJson[i]["Component"]["Transform"];
+			_float4x4 WorldMatrix;
+
+			for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+			{
+				for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+				{
+					WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+				}
+			}
+
+			XMStoreFloat4(&Desc.vPos, XMLoadFloat4x4(&WorldMatrix).r[3]);
+			Desc.WorldMatrix = WorldMatrix;
+
+			CEnvironment_Object* pObject = { nullptr };
+
+			pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_TOOL, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
+		}
+
+		return S_OK;
+	}
 	
 	m_wstrLayerTag = TEXT("Layer_BackGround");
 
