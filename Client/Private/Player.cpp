@@ -950,41 +950,41 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
-	/* ! UI : TestText / Key : 6 */
-	if (m_pGameInstance->Key_Down(DIK_5))
-	{
-		m_pUIManager->Set_SkillLevel("ElectricCord", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
-	}
-	/* ! UI : TestText / Key : 7 */
-	if (m_pGameInstance->Key_Down(DIK_6))
-	{
-		m_pUIManager->Set_SkillLevel("ElectricDash", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
-	}
-
-	/* ! UI : TestText / Key : 7 */
-	if (m_pGameInstance->Key_Down(DIK_7))
-	{
-		/* 함수 이름 직관적이게 바꿨습니다. */
-
-		// !성희 추가 : =>특정 스킬의 쿨타임을 찾아서 CurrentCoolTime을 수정하는 방법 2가지<=
-		//CUI* pUI = m_pUIManager->Get_LeftHUD("LeftHUD_Right"); // 1. 첫번째 방법 : UI객체 받아오는 법 (받아서 수정가능)
-		m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Right", 5.f); // 2. 두번째 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
-		
-		// !성희 추가 : =>특정 스킬의 쿨타임을 찾아서 MaxCoolTime을 수정하는 방법<=
-		m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f); // 2. 두번째 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
-	}
+	///* ! UI : TestText / Key : 6 */
+	//if (m_pGameInstance->Key_Down(DIK_5))
+	//{
+	//	m_pUIManager->Set_SkillLevel("ElectricCord", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
+	//}
+	///* ! UI : TestText / Key : 7 */
+	//if (m_pGameInstance->Key_Down(DIK_6))
+	//{
+	//	m_pUIManager->Set_SkillLevel("ElectricDash", CUI::UI_LEVEL::LEVEL1); // LEVEL1 == 언락 가능 상태
+	//}
+	//
+	///* ! UI : TestText / Key : 7 */
+	//if (m_pGameInstance->Key_Down(DIK_7))
+	//{
+	//	/* 함수 이름 직관적이게 바꿨습니다. */
+	//
+	//	// !성희 추가 : =>특정 스킬의 쿨타임을 찾아서 CurrentCoolTime을 수정하는 방법 2가지<=
+	//	//CUI* pUI = m_pUIManager->Get_LeftHUD("LeftHUD_Right"); // 1. 첫번째 방법 : UI객체 받아오는 법 (받아서 수정가능)
+	//	m_pUIManager->Change_LeftHUD_CurrentCoolTime("LeftHUD_Right", 5.f); // 2. 두번째 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
+	//	
+	//	// !성희 추가 : =>특정 스킬의 쿨타임을 찾아서 MaxCoolTime을 수정하는 방법<=
+	//	m_pUIManager->Change_LeftHUD_MaxCoolTime("LeftHUD_Right", 5.f); // 2. 두번째 방법 : UI객체 찾아서 바로 수정하는 법 (안받고 수정가능)
+	//}
 	/* ! UI : TestText / Key : 8 */
-	if (m_pGameInstance->Key_Down(DIK_8))
-	{
-		m_pUIManager->Active_TutorialBox();
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::START);
-	}
+	//if (m_pGameInstance->Key_Down(DIK_8))
+	//{
+	//	m_pUIManager->Active_TutorialBox();
+	//	m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::START);
+	//}
 	/* ! UI : TestText / Key : 9 */
-	if (m_pGameInstance->Key_Down(DIK_9))
-	{
-		m_pUIManager->Active_TutorialBox();
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE);
-	}
+	//if (m_pGameInstance->Key_Down(DIK_9))
+	//{
+	//	m_pUIManager->Active_TutorialBox();
+	//	m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE);
+	//}
 
 	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */
 	if (m_pGameInstance->Key_Down(DIK_K))
