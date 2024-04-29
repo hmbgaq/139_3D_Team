@@ -56,6 +56,11 @@ HRESULT CUI_WeaponFrame::Initialize(void* pArg)
     {
         m_eUI_Level = LEVEL1;
     }
+    //else if (m_tUIInfo.strUIName == "Shotgun")
+    //{
+    //    m_eUI_Level = LEVEL1;
+    //}
+
     return S_OK;
 }
 

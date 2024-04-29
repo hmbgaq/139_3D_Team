@@ -168,7 +168,7 @@ void CUI_Player_ExpBar::Tick(_float fTimeDelta)
 						m_pUIManager->Set_SkillLevel("SuperChargeMod", 1);
 
 						/* 무기 해금 */
-						m_pUIManager->Set_WeaponLevel("Rifle_skill1", 1);      // 라이플 스킬
+						m_pUIManager->Set_WeaponLevel("Rifle_Skill1", 1);      // 라이플 스킬
 					}
 
 					if (m_pData_Manager->Get_CurLevel() == 3)
