@@ -1,5 +1,5 @@
 {
-
+  
   "Basic_Json": [
     {
       "AnimType": false,
@@ -28503,99 +28503,7 @@
       "StartNaviIndex": 773
     }
   ],
-  "NPC_Json": [
-    {
-      "AnimalType": 4,
-      "AnimationIndex": 2,
-      "Component": {
-        "Transform": [
-          [ -0.7064875960350037, 1.2857550473199808e-06, -0.7077252864837646, 0.0 ],
-          [ 5.319182037055725e-07, 1.0, 1.2857551610068185e-06, 0.0 ],
-          [ 0.7077252864837646, 5.319181468621537e-07, -0.7064875960350037, 0.0 ],
-          [ 238.96636962890625, 1.7432911363357562e-06, 33.69410705566406, 1.0 ]
-        ]
-      },
-      "ModelTag": "Prototype_Component_Model_Bull"
-    },
-    {
-      "AnimalType": 4,
-      "AnimationIndex": 1,
-      "Component": {
-        "Transform": [
-          [ -0.8720031380653381, 1.5869810567892273e-06, 0.4895003139972687, 0.0 ],
-          [ 2.7107801088277483e-06, 1.0, 1.5869810567892273e-06, 0.0 ],
-          [ -0.4895003139972687, 2.7107801088277483e-06, -0.8720031380653381, 0.0 ],
-          [ 230.52545166015625, 0.7115930914878845, 72.32778930664063, 1.0 ]
-        ]
-      },
-      "ModelTag": "Prototype_Component_Model_Chicken"
-    },
-    {
-      "AnimalType": 4,
-      "AnimationIndex": 1,
-      "Component": {
-        "Transform": [
-          [ 1.0, 0.0, 0.0, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ 0.0, 0.0, 1.0, 0.0 ],
-          [ 231.01126098632813, 0.7120000123977661, 72.52920532226563, 1.0 ]
-        ]
-      },
-      "ModelTag": "Prototype_Component_Model_Young"
-    },
-    {
-      "AnimalType": 4,
-      "AnimationIndex": 1,
-      "Component": {
-        "Transform": [
-          [ 0.7215374112129211, 0.0, 0.6923753023147583, 0.0 ],
-          [ 0.0, 1.0, 0.0, 0.0 ],
-          [ -0.6923753023147583, 0.0, 0.7215374112129211, 0.0 ],
-          [ 230.08982849121094, 0.7120000123977661, 72.23182678222656, 1.0 ]
-        ]
-      },
-      "ModelTag": "Prototype_Component_Model_Young"
-    },
-    {
-      "AnimalType": 4,
-      "AnimationIndex": 1,
-      "Component": {
-        "Transform": [
-          [ -0.2505141794681549, -4.55917216868329e-07, 0.9681129455566406, 0.0 ],
-          [ -6.120796570030507e-06, 1.0, -1.1129168342449702e-06, 0.0 ],
-          [ -0.9681129455566406, -6.204423698363826e-06, -0.2505141794681549, 0.0 ],
-          [ 231.14016723632813, 0.7120000123977661, 72.12495422363281, 1.0 ]
-        ]
-      },
-      "ModelTag": "Prototype_Component_Model_Young"
-    },
-    {
-      "AnimalType": 4,
-      "AnimationIndex": 1,
-      "Component": {
-        "Transform": [
-          [ -0.5159727931022644, -9.39032190672151e-07, -0.8566046953201294, 0.0 ],
-          [ -2.6096847705048276e-07, 1.0, -9.390324180458265e-07, 0.0 ],
-          [ 0.8566046953201294, -2.609684202070639e-07, -0.5159727931022644, 0.0 ],
-          [ 150.8002471923828, 5.916999816894531, 142.15419006347656, 1.0 ]
-        ]
-      },
-      "ModelTag": "Prototype_Component_Model_Young"
-    },
-    {
-      "AnimalType": 4,
-      "AnimationIndex": 1,
-      "Component": {
-        "Transform": [
-          [ -0.4190607964992523, 3.6601043120754184e-06, -0.9079581499099731, 0.0 ],
-          [ -3.3091082514147274e-06, 1.0, 5.558430075325305e-06, 0.0 ],
-          [ 0.9079581499099731, 5.3338526413426735e-06, -0.4190607964992523, 0.0 ],
-          [ 150.85214233398438, 5.91721248626709, 141.89715576171875, 1.0 ]
-        ]
-      },
-      "ModelTag": "Prototype_Component_Model_Chicken"
-    }
-  ],
+  "NPC_Json": null,
   "Special_Json": null,
   "Trigger_Json": {
     "MonsterTriggerJson": [
@@ -28610,7 +28518,7 @@
             [ 239.6129608154297, 0.6107544898986816, 42.0361328125, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn1",
         "OnTrigger": false,
         "SpawnGroupIndex": 1,
@@ -28627,7 +28535,7 @@
             [ 253.0107421875, 2.496873140335083, 11.082213401794434, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn2",
         "OnTrigger": false,
         "SpawnGroupIndex": 0,
@@ -28644,7 +28552,7 @@
             [ 228.68804931640625, 1.1457509994506836, 60.23256301879883, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn3",
         "OnTrigger": false,
         "SpawnGroupIndex": 2,
@@ -28661,7 +28569,7 @@
             [ 189.0815887451172, -8.666459083557129, 63.92729949951172, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn4",
         "OnTrigger": false,
         "SpawnGroupIndex": 3,
@@ -28678,7 +28586,7 @@
             [ 130.79710388183594, 0.23765693604946136, 102.0268325805664, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn5",
         "OnTrigger": false,
         "SpawnGroupIndex": 4,
@@ -28695,7 +28603,7 @@
             [ 159.40817260742188, 11.178049087524414, 196.69546508789063, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn6",
         "OnTrigger": false,
         "SpawnGroupIndex": 7,
@@ -28712,7 +28620,7 @@
             [ 158.6244354248047, 0.1811985969543457, 103.26138305664063, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn7",
         "OnTrigger": false,
         "SpawnGroupIndex": 5,
@@ -28729,7 +28637,7 @@
             [ 155.57403564453125, 4.019529342651367, 150.1522216796875, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "MonsterSpawn8",
         "OnTrigger": false,
         "SpawnGroupIndex": 6,
@@ -28748,7 +28656,7 @@
             [ 249.63121032714844, 0.5450118184089661, 8.348605155944824, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "UITutorialTrigger",
         "OnTrigger": false,
         "SpawnGroupIndex": 0,
@@ -28765,7 +28673,7 @@
             [ 243.95407104492188, 0.33377787470817566, 38.471126556396484, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "UICraneTrigger",
         "OnTrigger": false,
         "SpawnGroupIndex": 1,
@@ -28782,7 +28690,7 @@
             [ 249.3850860595703, 0.3711105287075043, 23.476675033569336, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "UIInfectedTrigger",
         "OnTrigger": false,
         "SpawnGroupIndex": 2,
@@ -28799,7 +28707,7 @@
             [ 153.99899291992188, 0.1809999942779541, 103.29235076904297, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "UIVampiricGiant",
         "OnTrigger": false,
         "SpawnGroupIndex": 3,
@@ -28816,7 +28724,7 @@
             [ 159.4080047607422, 11.178000450134277, 196.69500732421875, 1.0 ]
           ]
         },
-        "JsonPath": "C:\\Users\\PC\\Desktop\\3D_TeamPortpolio\\Client\\Bin\\DataFiles\\Data_Map\\tool/21212_MapData_MapData.json",
+        "JsonPath": "C:\\Users\\PC\\Desktop\\New_Team\\Client\\Bin\\DataFiles\\Data_Map\\tool/4214124124_MapData_MapData.json",
         "NameTag": "UISniper",
         "OnTrigger": false,
         "SpawnGroupIndex": 4,
