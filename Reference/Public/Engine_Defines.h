@@ -94,10 +94,9 @@ namespace Engine
 
 	static float					g_fLightNear = 0.1f;
 	static float					g_fLightFar = 1500.f;
-	static DirectX::XMFLOAT4		g_vLightEye = { 0.f, 120.f, -105.f, 1.f };
+	static DirectX::XMFLOAT4		g_vLightEye = { 150.f, 300.f, -300.f, 1.f };
 	static DirectX::XMFLOAT4		g_vLightAt = { 0.f, 0.f, 0.f, 1.f };
 	static DirectX::XMFLOAT4		g_vLightUp = { 0.f, 1.f, 0.f, 0.f };
-
 	/* 수업 코드 */
 	// XMVectorSet(-20.f, 20.f, -20.f, 1.f), 
 	// XMVectorSet(0.f, 0.f, 0.f, 1.f),
