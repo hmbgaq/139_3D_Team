@@ -7472,6 +7472,13 @@ void CWindow_MapTool::Trigger_SelectTab()
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "작업 해야함");
 	}
 
+	if (m_pPickingTrigger != nullptr)
+	{
+		CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
+	
+		if (pTriggerCollider != nullptr)
+			m_pGameInstance->Add_DebugRender(pTriggerCollider);
+	}
 }
 
 void CWindow_MapTool::Monster_SelectTriggerFunction()
@@ -7542,13 +7549,7 @@ void CWindow_MapTool::Monster_SelectTriggerFunction()
 
 	Trigger_GuizmoTick(m_pPickingTrigger);
 
-	//if (m_pPickingTrigger != nullptr)
-	//{
-	//	CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
-	//
-	//	if (pTriggerCollider != nullptr)
-	//		m_pGameInstance->Add_DebugRender(pTriggerCollider);
-	//}
+	
 }
 
 void CWindow_MapTool::UI_SelectTriggerFunction()

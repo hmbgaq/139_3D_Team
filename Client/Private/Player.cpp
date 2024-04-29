@@ -867,14 +867,14 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_P))
-	{
-		m_pUIManager->Active_LetterBox();
-	}
-	if (m_pGameInstance->Key_Down(DIK_O))
-	{
-		m_pUIManager->NonActive_LetterBox();
-	}
+	///if (m_pGameInstance->Key_Down(DIK_P))
+	///{
+	///	m_pUIManager->Active_LetterBox();
+	///}
+	///if (m_pGameInstance->Key_Down(DIK_O))
+	///{
+	///	m_pUIManager->NonActive_LetterBox();
+	///}
 
 	/* ! UI : SkillWindow / Key : K */
 	if (m_pGameInstance->Key_Down(DIK_K))
