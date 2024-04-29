@@ -47,17 +47,19 @@ CLevel_Intro::CLevel_Intro(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 }
 
+// ¡Ù ½Â¿ëÀÌÀÇ ³îÀÌÅÍ ¸Ê ¡Ù
 HRESULT CLevel_Intro::Initialize()
 {
     m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
     m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
-
+    Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_PlayGround_Shader.json");
+ 
     FAILED_CHECK(Ready_LightDesc());
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
     FAILED_CHECK(Ready_Layer_Camera(TEXT("Layer_Camera")));
     FAILED_CHECK(Ready_Layer_BackGround(TEXT("Layer_BackGround")));
-    FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
-    FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
+    //FAILED_CHECK(Ready_Layer_NPC(TEXT("Layer_NPC")));
+    //FAILED_CHECK(Ready_Layer_Gimic(TEXT("Layer_Gimic")));
     //FAILED_CHECK(Ready_Shader());
     
     //if (m_bMonsterTest == true)
@@ -109,31 +111,56 @@ void CLevel_Intro::Tick(_float fTimeDelta)
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
 
-
-
-    if (m_pGameInstance->Key_Down(DIK_N))
+    if (m_pGameInstance->Key_Down(DIK_1))
     {
+        _float3 vPlayerPos = m_pGameInstance->Get_Player()->Get_Position();
         wstring strLayerTag = TEXT("Layer_Monster");
         CGameObject* pMonster = { nullptr };
 
+        _float3 vEast = vPlayerPos + _float3(10.f, 0.f, 0.f);
+        _float3 vWest = vPlayerPos + _float3(-10.f, 0.f, 0.f);
+        _float3 vSouth = vPlayerPos + _float3(0.f, 0.f, -10.f);
+        _float3 vNorth = vPlayerPos + _float3(0.f, 0.f, 10.f);
+
         pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-        pMonster->Set_InitPosition(_float3(10.0f, 0.f, 30.f));
+        pMonster->Set_InitPosition(vEast);
+        
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+        pMonster->Set_InitPosition(vWest);
 
         pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-        pMonster->Set_InitPosition(_float3(20.0f, 0.f, 30.f));
+        pMonster->Set_InitPosition(vSouth);
 
         pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-        pMonster->Set_InitPosition(_float3(30.0f, 0.f, 30.f));
-        
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_D"));
-        pMonster->Set_InitPosition(_float3(40.0f, 0.f, 30.f));
+        pMonster->Set_InitPosition(vNorth);
 
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
+        //pMonster->Set_InitPosition(_float3(10.0f, 0.f, 50.f));
+        //
+        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
+        //pMonster->Set_InitPosition(_float3(20.0f, 0.f, 50.f));
+    }
+    if (m_pGameInstance->Key_Down(DIK_2))
+    {
+        _float3 vPlayerPos = m_pGameInstance->Get_Player()->Get_Position();
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pMonster = { nullptr };
+
+        _float3 vEast = vPlayerPos + _float3(10.f, 0.f, 0.f);
 
         pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
-        pMonster->Set_InitPosition(_float3(10.0f, 0.f, 50.f));
+        pMonster->Set_InitPosition(vEast);
+    }
+    if (m_pGameInstance->Key_Down(DIK_3))
+    {
+        _float3 vPlayerPos = m_pGameInstance->Get_Player()->Get_Position();
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pMonster = { nullptr };
+
+        _float3 vWest = vPlayerPos + _float3(-10.f, 0.f, 0.f);
 
         pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
-        pMonster->Set_InitPosition(_float3(20.0f, 0.f, 50.f));
+        pMonster->Set_InitPosition(vWest);
     }
 }
 
@@ -410,7 +437,6 @@ HRESULT CLevel_Intro::Ready_Layer_Player(const wstring& strLayerTag)
 
     pPlayer->Set_InitPosition(_float3(5.f,0.f,5.f));
     //pPlayer->Set_Position(_float3(3.0f, 0.f, 3.84f));
-    //
     //CNavigation* pNavigation = pPlayer->Get_Navigation();
     //pNavigation->Set_CurrentIndex(pNavigation->Get_SelectRangeCellIndex(pPlayer));
 
@@ -467,7 +493,7 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
         pObject = dynamic_cast<CEnvironment_Object*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_Object", &Desc));
     }
 
-
+    /*
     if (m_bInteractTest == true)
     {
         json InteractJson = Stage1MapJson["Interact_Json"];
@@ -688,7 +714,7 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
         pInstanceObject = dynamic_cast<CEnvironment_Instance*>(m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_Instance", &InstanceDesc));
 
     }
-
+    */
     
 
     //CEnvironment_LightObject::ENVIRONMENT_LIGHTOBJECT_DESC LightObjectDesc;
@@ -715,28 +741,11 @@ HRESULT CLevel_Intro::Ready_Layer_BackGround(const wstring& strLayerTag)
     //
     //FAILED_CHECK(m_pGameInstance->Add_CloneObject(LEVEL_INTRO, L"Layer_BackGround", L"Prototype_GameObject_Environment_LightObject", &LightObjectDesc));
 
-
-
-    CGameObject* pObject = { nullptr };
-    //pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
-    //NULL_CHECK_RETURN(pObject, E_FAIL);
-    //pObject->Set_Position(_float3(0.0f, 0.f, 10.f));
+    //CGameObject* pObject = { nullptr };
     //
-    //pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+    //pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
     //NULL_CHECK_RETURN(pObject, E_FAIL);
-    //pObject->Set_Position(_float3(5.0f, 0.f, 10.f));
-    //
-    //pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
-    //NULL_CHECK_RETURN(pObject, E_FAIL);
-    //pObject->Set_Position(_float3(0.0f, 0.f, 17.f));
-    //
-    //pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTPack"));
-    //NULL_CHECK_RETURN(pObject, E_FAIL);
-    //pObject->Set_Position(_float3(0.0f, 0.f, 20.f));
-
-    pObject = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
-    NULL_CHECK_RETURN(pObject, E_FAIL);
-    pObject->Set_Position(_float3(-10.0f, 0.f, 50.f));
+    //pObject->Set_Position(_float3(-10.0f, 0.f, 50.f));
 
     return S_OK;
 

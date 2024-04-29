@@ -25,7 +25,6 @@ private:
 	HRESULT Ready_Layer_NPC(const wstring& strLayerTag);
 	HRESULT Ready_Layer_Gimic(const wstring& strLayerTag);
 
-
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
 	HRESULT Ready_Shader_Json();
 	HRESULT Ready_Shader();

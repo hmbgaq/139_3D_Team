@@ -231,8 +231,8 @@ private:
 	class CVIBuffer_Rect*		m_pVIBuffer					= { nullptr };
 
 	class CTexture*				m_pPerlinNoiseTextureCom	= { nullptr };
-	class CTexture*				m_pIrradianceTextureCom[4]	= { nullptr };
-	class CTexture*				m_pPreFilteredTextureCom[4]	= { nullptr };
+	class CTexture*				m_pIrradianceTextureCom[5]	= { nullptr };
+	class CTexture*				m_pPreFilteredTextureCom[5]	= { nullptr };
 	class CTexture*				m_pBRDFTextureCom			= { nullptr };
 	class CTexture*				m_pVolumetrix_Voxel			= { nullptr };
 	class CTexture*				m_pSunTextureCom = { nullptr };
