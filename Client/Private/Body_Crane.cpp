@@ -50,7 +50,7 @@ HRESULT CBody_Crane::Render()
 
 HRESULT CBody_Crane::Render_Shadow()
 {
-	FAILED_CHECK(__super::Render_Shadow());
+	//FAILED_CHECK(__super::Render_Shadow());
 
 	return S_OK;
 }

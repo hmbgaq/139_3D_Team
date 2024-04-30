@@ -58,19 +58,19 @@ void CUI_TextImage::Tick(_float fTimeDelta)
 	//Check_Disappear(fTimeDelta);
 
 	if (m_bActive == true)
-	{
-		if (m_pGameInstance->Key_Down(DIK_4))
-			m_iTextNum = 0;
-		if (m_pGameInstance->Key_Down(DIK_5))
-		{
-			m_iTextNum = 1;
-			m_fTime = (_float)GetTickCount64();
-		}
-		if (m_pGameInstance->Key_Down(DIK_6))
-		{
-			m_iTextNum = 2;
-			m_fTime = (_float)GetTickCount64();
-		}
+	{	//
+		//if (m_pGameInstance->Key_Down(DIK_4))
+		//	m_iTextNum = 0;
+		//if (m_pGameInstance->Key_Down(DIK_5))
+		//{
+		//	m_iTextNum = 1;
+		//	m_fTime = (_float)GetTickCount64();
+		//}
+		//if (m_pGameInstance->Key_Down(DIK_6))
+		//{
+		//	m_iTextNum = 2;
+		//	m_fTime = (_float)GetTickCount64();
+		//}
 
 		if (m_iTextNum != 0)
 		{

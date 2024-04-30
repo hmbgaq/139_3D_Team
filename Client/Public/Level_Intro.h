@@ -28,7 +28,7 @@ private:
 	HRESULT Ready_Layer_Effect(const wstring& strLayerTag);
 	HRESULT Ready_Shader_Json();
 	HRESULT Ready_Shader();
-
+	HRESULT Ready_Summon();
 
 private: /* UI */
 	HRESULT Ready_UI();
@@ -53,6 +53,7 @@ private:
 
 	_bool			m_bMonsterTest = true;
 	_bool			m_bInteractTest = true;
+	_bool			bRenderCom_Active = false;
 
 public:
 	static CLevel_Intro* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

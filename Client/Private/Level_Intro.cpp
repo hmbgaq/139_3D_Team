@@ -53,6 +53,7 @@ HRESULT CLevel_Intro::Initialize()
     m_pGameInstance->Get_Renderer()->Render_UI_MRT(false);
     m_pGameInstance->Set_CurrentLevel(m_pGameInstance->Get_NextLevel());
     Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_PlayGround_Shader.json");
+    //Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Intro_Boss_Shader.json");
  
     FAILED_CHECK(Ready_LightDesc());
     FAILED_CHECK(Ready_Layer_Player(TEXT("Layer_Player")));
@@ -111,57 +112,8 @@ void CLevel_Intro::Tick(_float fTimeDelta)
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
 
-    if (m_pGameInstance->Key_Down(DIK_1))
-    {
-        _float3 vPlayerPos = m_pGameInstance->Get_Player()->Get_Position();
-        wstring strLayerTag = TEXT("Layer_Monster");
-        CGameObject* pMonster = { nullptr };
+    Ready_Summon();
 
-        _float3 vEast = vPlayerPos + _float3(10.f, 0.f, 0.f);
-        _float3 vWest = vPlayerPos + _float3(-10.f, 0.f, 0.f);
-        _float3 vSouth = vPlayerPos + _float3(0.f, 0.f, -10.f);
-        _float3 vNorth = vPlayerPos + _float3(0.f, 0.f, 10.f);
-
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-        pMonster->Set_InitPosition(vEast);
-        
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
-        pMonster->Set_InitPosition(vWest);
-
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
-        pMonster->Set_InitPosition(vSouth);
-
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
-        pMonster->Set_InitPosition(vNorth);
-
-        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
-        //pMonster->Set_InitPosition(_float3(10.0f, 0.f, 50.f));
-        //
-        //pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
-        //pMonster->Set_InitPosition(_float3(20.0f, 0.f, 50.f));
-    }
-    if (m_pGameInstance->Key_Down(DIK_2))
-    {
-        _float3 vPlayerPos = m_pGameInstance->Get_Player()->Get_Position();
-        wstring strLayerTag = TEXT("Layer_Monster");
-        CGameObject* pMonster = { nullptr };
-
-        _float3 vEast = vPlayerPos + _float3(10.f, 0.f, 0.f);
-
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
-        pMonster->Set_InitPosition(vEast);
-    }
-    if (m_pGameInstance->Key_Down(DIK_3))
-    {
-        _float3 vPlayerPos = m_pGameInstance->Get_Player()->Get_Position();
-        wstring strLayerTag = TEXT("Layer_Monster");
-        CGameObject* pMonster = { nullptr };
-
-        _float3 vWest = vPlayerPos + _float3(-10.f, 0.f, 0.f);
-
-        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
-        pMonster->Set_InitPosition(vWest);
-    }
 }
 
 HRESULT CLevel_Intro::Render()
@@ -1280,6 +1232,102 @@ HRESULT CLevel_Intro::Ready_Shader()
     Set_ShaderOption("../Bin/DataFiles/Data_Shader/Level/Level_Snowmountain_Boss_Shader.json");
 
     m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
+
+    return S_OK;
+}
+
+HRESULT CLevel_Intro::Ready_Summon()
+{
+    _float3 vPlayerPos = m_pGameInstance->Get_Player()->Get_Position();
+    _float3 vEast = vPlayerPos + _float3(10.f, 0.f, 0.f);
+    _float3 vWest = vPlayerPos + _float3(-10.f, 0.f, 0.f);
+    _float3 vSouth = vPlayerPos + _float3(0.f, 0.f, -10.f);
+    _float3 vNorth = vPlayerPos + _float3(0.f, 0.f, 10.f);
+ 
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD1))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pMonster = { nullptr };
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+        pMonster->Set_InitPosition(vEast);
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+        pMonster->Set_InitPosition(vWest);
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_B"));
+        pMonster->Set_InitPosition(vSouth);
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_C"));
+        pMonster->Set_InitPosition(vNorth);
+    }
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD2))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pMonster = { nullptr };
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Infected_A"));
+        pMonster->Set_InitPosition(vEast);
+    }
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD3))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pMonster = { nullptr };
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Tank"));
+        pMonster->Set_InitPosition(vEast);
+    }
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD4))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pMonster = { nullptr };
+
+        pMonster = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Heavy_Vampiric_Zombie"));
+        pMonster->Set_InitPosition(vWest);
+    }
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD5))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pTnT = { nullptr };
+
+        pTnT = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+        pTnT->Set_Position(vEast);
+
+    }
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD6))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+        CGameObject* pTnT = { nullptr };
+
+        pTnT = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_Crane"));
+        pTnT->Set_Position(vWest);
+    }
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD8))
+    {
+        wstring strLayerTag = TEXT("Layer_Monster");
+
+        _float3 vEast0 = vPlayerPos + _float3(10.f, 0.f, 0.f);
+        _float3 vEast1 = vPlayerPos + _float3(8.f, 0.f, 0.f);
+        _float3 vEast2 = vPlayerPos + _float3(12.f, 0.f, 0.f);
+        _float3 vEast3 = vPlayerPos + _float3(10.f, 0.f, 2.f);
+        _float3 vEast4 = vPlayerPos + _float3(10.f, 0.f, -2.f);
+
+        CGameObject* pTnT = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+        pTnT->Set_Position(vEast0);
+        CGameObject* pTnT2 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+        pTnT2->Set_Position(vEast1);
+        CGameObject* pTnT3 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+        pTnT3->Set_Position(vEast2);
+        CGameObject* pTnT4 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+        pTnT4->Set_Position(vEast3);
+        CGameObject* pTnT5 = m_pGameInstance->Add_CloneObject_And_Get(LEVEL_INTRO, strLayerTag, TEXT("Prototype_GameObject_DestructableProps_TNTCrate"));
+        pTnT5->Set_Position(vEast4);
+    }
+    if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
+    {
+        bRenderCom_Active = !bRenderCom_Active;
+        m_pGameInstance->Set_RenderDebugCom(bRenderCom_Active);
+    }
 
     return S_OK;
 }

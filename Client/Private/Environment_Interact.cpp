@@ -169,23 +169,23 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 {
 	if (m_bOpenLevel == false)
 	{
-		if (m_iCurrentLevelIndex == (_uint)LEVEL_SNOWMOUNTAIN)
+		if (m_iCurrentLevelIndex == (_uint)ECast(LEVEL::LEVEL_SNOWMOUNTAIN))
 		{
-			if (m_pGameInstance->Key_Down(DIK_F7))
-			{
-				Start_SplineEvent();
-				m_pPlayer->SetState_InteractCartRideLoop();
-			}
-			if (m_pGameInstance->Key_Down(DIK_NUMPAD1))
-				m_vecPointChecks[0] = true;
-			if (m_pGameInstance->Key_Down(DIK_NUMPAD2))
-				m_vecPointChecks[1] = true;
-			if (m_pGameInstance->Key_Down(DIK_NUMPAD3))
-				m_vecPointChecks[2] = true;
-			if (m_pGameInstance->Key_Down(DIK_NUMPAD4))
-				m_vecPointChecks[3] = true;
-			if (m_pGameInstance->Key_Down(DIK_NUMPAD5))
-				Reset_TestEvent();
+			//if (m_pGameInstance->Key_Down(DIK_F7))
+			//{
+			//	Start_SplineEvent();
+			//	m_pPlayer->SetState_InteractCartRideLoop();
+			//}
+			//if (m_pGameInstance->Key_Down(DIK_NUMPAD1))
+			//	m_vecPointChecks[0] = true;
+			//if (m_pGameInstance->Key_Down(DIK_NUMPAD2))
+			//	m_vecPointChecks[1] = true;
+			//if (m_pGameInstance->Key_Down(DIK_NUMPAD3))
+			//	m_vecPointChecks[2] = true;
+			//if (m_pGameInstance->Key_Down(DIK_NUMPAD4))
+			//	m_vecPointChecks[3] = true;
+			//if (m_pGameInstance->Key_Down(DIK_NUMPAD5))
+			//	Reset_TestEvent();
 		}
 
 

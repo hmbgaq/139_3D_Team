@@ -48,7 +48,7 @@
     "fLuma_strength": 0.800000011920929
   },
   "PBR": {
-    "bPBR_Active": true,
+    "bPBR_Active": false,
     "fPBR_Brightness": 0.0,
     "fPBR_Saturation": 1.0
   },
