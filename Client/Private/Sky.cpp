@@ -28,7 +28,7 @@ HRESULT CSky::Initialize(void* pArg)
 	{
 		case LEVEL::LEVEL_INTRO: // 사실상 여기가 테스트맵 
 		{
-			m_eSkyType = CSky::SKYTYPE::SKY8;
+			m_eSkyType = CSky::SKYTYPE::SKY_STAGE2;
 			break;
 		}
 		case  LEVEL::LEVEL_GAMEPLAY: // 시작 사막맵 ( 확정 ) 

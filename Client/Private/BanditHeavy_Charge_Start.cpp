@@ -28,7 +28,7 @@ CState<CBandit_Heavy>* CBanditHeavy_Charge_Start::Update(CBandit_Heavy* pActor, 
 
 	pActor->Look_At_Target();
 	_float fDistance = pActor->Calc_Distance();
-	if (5.f >= fDistance)
+	if (2.5f >= fDistance)
 	{
 		return new CBanditHeavy_Charge_Attack_Full();
 	}

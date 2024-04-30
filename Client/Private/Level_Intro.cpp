@@ -1325,8 +1325,8 @@ HRESULT CLevel_Intro::Ready_Summon()
     }
     if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
     {
-        bRenderCom_Active = !bRenderCom_Active;
-        m_pGameInstance->Set_RenderDebugCom(bRenderCom_Active);
+        //bRenderCom_Active = !bRenderCom_Active;
+        //m_pGameInstance->Set_RenderDebugCom(bRenderCom_Active);
     }
 
     return S_OK;
