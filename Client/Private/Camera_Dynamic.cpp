@@ -92,6 +92,7 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 		}
 	}
 
+	Ready_CameraAction(fTimeDelta);
 	//if (m_pGameInstance->Key_Down(DIK_NUMPAD9))
 	//{
 	//	CCharacter* pCharacter = m_pGameInstance->Get_Player();
@@ -111,6 +112,24 @@ void CCamera_Dynamic::Tick(_float fTimeDelta)
 
 void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 {
+}
+
+HRESULT CCamera_Dynamic::Ready_CameraAction(_float fTimeDelta)
+{
+	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD1))
+	{
+		//ÃÊ±âÈ­ 
+		fAction_X += fTimeDelta;
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD2))
+	{
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fMouseSensor * fAction_X * fTimeDelta);
+
+	}
+
+
+	return S_OK;
 }
 
 HRESULT CCamera_Dynamic::Ready_Components()

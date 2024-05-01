@@ -16,6 +16,7 @@ Texture2D g_RimBlur_Target;
 Texture2D g_OutLine_Target;
 Texture2D g_Independent_Target;
 Texture2D g_OutLine_Blur_Target;
+Texture2D g_DeferredTarget;
 
 
 /* ------------------ Value ------------------ */ 
@@ -125,6 +126,23 @@ float4 MonochromePass(float4 colorInput)
     return saturate(colorInput);
 }
 
+// 특정 영역에 대해 텍스처 좌표를 조정하는 함수
+bool AdjustTexCoord(float2 texCoord)
+{
+    // 원하는 영역에 해당하는 경우
+    if (texCoord.x >= -1.0 && texCoord.x <= 0.0)
+    {
+        return true; // TRUE를 반환하여 원래 OUT값 사용
+    }
+    
+    // 다른 영역에 해당하는 경우
+    else if (texCoord.x >= 0.0 && texCoord.x <= 1.0)
+    {
+        return false; // FALSE를 반환하여 다른 OUT값 사용
+    }
+
+    return false; 
+}
 /* ------------------ VS / PS ------------------ */ 
 
 struct VS_IN
@@ -228,22 +246,26 @@ PS_OUT PS_MAIN_FINAL(PS_IN In)
     vector vRimBloom = g_RimBlur_Target.Sample(LinearSampler, In.vTexcoord);
     vector vOutLine = g_OutLine_Target.Sample(LinearSampler, In.vTexcoord);
     vector vBlurOutLine = g_OutLine_Blur_Target.Sample(LinearSampler, In.vTexcoord);
+    vector vDeferred = g_DeferredTarget.Sample(LinearSampler, In.vTexcoord);
     //vector vIndep = g_Independent_Target.Sample(LinearSampler, In.vTexcoord);
     
     float4 MainObject = vFinal + vDebug + vRimBloom + vBlurOutLine;
     
-    Out.vColor = vUI;
+    vector Result = float4(0.f, 0.f, 0.f, 0.f);
+    Result = vUI;
     
-    if(Out.vColor.a == 0)
+    if (Result.a == 0)
     {
-        Out.vColor = vOutLine;
+        Result = vOutLine;
      
-        if (Out.vColor.a == 0)
-            Out.vColor = MainObject;
+        if (Result.a == 0)
+            Result = MainObject;
     }
     
-    if (Out.vColor.a == 0)
-    discard;
+    if (Result.a == 0)
+      discard;
+    
+    Out.vColor = Result;
     
     return Out;
 }

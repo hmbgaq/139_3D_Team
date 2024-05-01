@@ -24,10 +24,21 @@ public:
 	virtual void Priority_Tick(_float fTimeDelta) override;
 	virtual void Tick(_float fTimeDelta) override;
 	virtual void Late_Tick(_float fTimeDelta) override;
+
 public:
 	virtual HRESULT Ready_Components();
 private:
 	_float				m_fMouseSensor = { 0.0f };
+
+	/* 소영 추가 */
+public:
+	void Set_ActionSpeed(_float fSpeed) { fAction_Speed = fSpeed; }
+
+private:
+	HRESULT Ready_CameraAction(_float fTimeDelta);
+
+	_float fAction_X = 0.f;
+	_float fAction_Speed = 0.2f;
 
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

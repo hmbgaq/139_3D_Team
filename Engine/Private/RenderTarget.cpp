@@ -85,6 +85,9 @@ HRESULT CRenderTarget::Ready_Debug(const wstring& strTargetTag, _float fX, _floa
 	XMStoreFloat4(&m_vFontColor, (XMVectorSet(1.f, 1.f, 1.f, 1.f) - XMLoadFloat4(&m_vClearColor)));
 	m_vFontColor.w = 1.f;
 
+	if (L"Target_Blur_ViewShadow" == strTargetTag)
+		m_vFontColor = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+
 	return S_OK;
 }
 
