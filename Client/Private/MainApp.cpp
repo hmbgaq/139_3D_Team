@@ -83,8 +83,27 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pUIManager->Tick(fTimeDelta);
 
 	m_fTimeAcc += fTimeDelta;
-	
 
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD1))
+	{
+		bRenderTarget_Active = !bRenderTarget_Active;
+		m_pGameInstance->Set_RenderDebugTarget(bRenderTarget_Active);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD2))
+			m_pGameInstance->Change_DebugRenderTarget(CRenderer::TARGET_TYPE::ALL);
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD3))
+			m_pGameInstance->Change_DebugRenderTarget(CRenderer::TARGET_TYPE::DEFERRED);
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD4))
+			m_pGameInstance->Change_DebugRenderTarget(CRenderer::TARGET_TYPE::SHADOW);
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD5))
+			m_pGameInstance->Change_DebugRenderTarget(CRenderer::TARGET_TYPE::POSTPROCESSING);
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD6))
+			m_pGameInstance->Change_DebugRenderTarget(CRenderer::TARGET_TYPE::EFFECT);
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_Q))
+	{
+		bRenderTarget_UI_Active = !bRenderTarget_UI_Active;
+		m_pGameInstance->Get_Renderer()->Set_UIRender_Tool(bRenderTarget_UI_Active);
+	}
 	//m_pDevConsole->Tick();
 }
 

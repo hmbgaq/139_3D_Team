@@ -58,7 +58,8 @@ HRESULT CRenderer::Initialize()
 
 	/* 이거 픽스 */
 	m_tSSR_Option.bSSR_Active = false;
-	
+	m_bRenderUI_Tool = false;
+
 	return S_OK;
 }
 
@@ -146,7 +147,11 @@ HRESULT CRenderer::Draw_RenderGroup()
 	/* 최종 합성 */ 
 	FAILED_CHECK(Render_Final());
 
-	if (false == m_bUI_MRT)
+	/* 최종화면 전체 검수 */
+	FAILED_CHECK(Render_ShaderResult());
+	 
+
+	if (false == m_bUI_MRT && m_bRenderUI_Tool == false)
 		FAILED_CHECK(Render_UI()); /* GamePlay에서 확인할때 여기활성화 */
 
 #ifdef _DEBUG
@@ -577,8 +582,7 @@ HRESULT CRenderer::Render_MyPBR()
 		FAILED_CHECK(m_pPreFilteredTextureCom[3]->Bind_ShaderResource(m_pShader_Deferred, "g_PreFiltered"));
 		break;
 		
-
-	case 7:
+	case 7: // Tool
 		m_bToolLevel = true;
 		break;
 	}
@@ -1068,7 +1072,7 @@ HRESULT CRenderer::Render_LumaSharpen()
 
 HRESULT CRenderer::Render_Final()
 {
-	//FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Final")));
+	FAILED_CHECK(m_pGameInstance->Begin_MRT(TEXT("MRT_Final")));
 
 	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
@@ -1109,7 +1113,22 @@ HRESULT CRenderer::Render_Final()
 	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
 	FAILED_CHECK(m_pVIBuffer->Render());
 
-	//FAILED_CHECK(m_pGameInstance->End_MRT());  // Target_Chroma 에 저장 
+	FAILED_CHECK(m_pGameInstance->End_MRT());  // Target_Chroma 에 저장 
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_ShaderResult()
+{
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix));
+	FAILED_CHECK(m_pShader_Final->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix));
+
+	FAILED_CHECK(m_pGameInstance->Bind_RenderTarget_ShaderResource(Current_Target(POST_TYPE::RESULT), m_pShader_Final, "g_ResultTarget")); /* 이전까지 그린 타겟 */
+
+	FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::RESULT)));
+	FAILED_CHECK(m_pVIBuffer->Bind_VIBuffers());
+	FAILED_CHECK(m_pVIBuffer->Render());
 
 	return S_OK;
 }
@@ -1118,7 +1137,6 @@ HRESULT CRenderer::Render_Blend()
 {
 	return S_OK;
 }
-
 
 #pragma endregion
 
@@ -1785,6 +1803,10 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 			m_ePrevTarget = eCurrType;
 			break;
 
+		case POST_TYPE::RESULT:
+			strCurrentTarget = TEXT("Target_Final");
+			m_ePrevTarget = eCurrType;
+			break;
 
 		}
 	}
@@ -2005,22 +2027,22 @@ HRESULT CRenderer::Create_Texture()
 	NULL_CHECK_RETURN(m_pPerlinNoiseTextureCom, E_FAIL);
 
 	/* Tool */
-	m_pTool_IrradianceTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Intro_Irradiance.dds")); // Intro
+	m_pTool_IrradianceTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Intro_Irradiance.dds")); // GamePlay
 	m_pTool_IrradianceTextureCom[1] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/IntroBoss_Irradiance.dds")); // IntroBoss
 	m_pTool_IrradianceTextureCom[2] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Snow_Irradiance.dds")); // SnowMountain
 	m_pTool_IrradianceTextureCom[3] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/SnowBoss_Irradiance.dds")); // SnowMountainBoss
-	m_pTool_IrradianceTextureCom[4] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_8_Irradiance.dds"));
+	m_pTool_IrradianceTextureCom[4] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/PlayGround_Irradiance.dds")); // Intro
 	m_pTool_IrradianceTextureCom[5] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_9_Irradiance.dds"));
 	m_pTool_IrradianceTextureCom[6] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_10_Irradiance.dds")); 
 	m_pTool_IrradianceTextureCom[7] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_11_Irradiance.dds")); 
 	m_pTool_IrradianceTextureCom[8] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_12_Irradiance.dds")); 
 	m_pTool_IrradianceTextureCom[9] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Sky_13_Irradiance.dds")); 
 	
-	m_pTool_PreFilteredTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/Intro_PreFilteredTexture.dds")); // Intro
-	m_pTool_PreFilteredTextureCom[1] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/Skybox/IntroBoss_PreFilteredTexture.dds")); // IntroBoss
+	m_pTool_PreFilteredTextureCom[0] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Intro_PreFilteredTexture.dds")); // GamePlay
+	m_pTool_PreFilteredTextureCom[1] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/IntroBoss_PreFilteredTexture.dds")); // IntroBoss
 	m_pTool_PreFilteredTextureCom[2] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Snow_PreFilteredTexture.dds")); // SnowMountain
 	m_pTool_PreFilteredTextureCom[3] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/SnowBoss_PreFilteredTexture.dds")); // SnowMountainBoss
-	m_pTool_PreFilteredTextureCom[4] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Sky_8_PreFilteredTexture.dds"));
+	m_pTool_PreFilteredTextureCom[4] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/PlayGround_PreFilteredTexture.dds")); // Intro
 	m_pTool_PreFilteredTextureCom[5] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Sky_9_PreFilteredTexture.dds"));
 	m_pTool_PreFilteredTextureCom[6] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Sky_10_PreFilteredTexture.dds"));
 	m_pTool_PreFilteredTextureCom[7] = CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Shader/PBR/SkyBox/Sky_11_PreFilteredTexture.dds"));
@@ -2292,6 +2314,132 @@ HRESULT CRenderer::GraphicDebug_Shader()
 
 #ifdef _DEBUG
 
+HRESULT CRenderer::Change_DebugRenderTarget(TARGET_TYPE type)
+{
+	_float fSizeX = 150.f;
+	_float fSizeY = 100.f;
+	_float fBigX = 300.f;
+	_float fBigY = 200.f;
+
+	switch (type)
+	{
+	case Engine::CRenderer::TARGET_TYPE::NONE:
+		break;
+	case Engine::CRenderer::TARGET_TYPE::ALL:
+		{
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ORM"),				(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimBloom"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Emissive"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RB_BlurActive"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
+			
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"),			(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Ambient"),			(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+
+			/* Render_Shadow */
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY)); // Render_Shadow 결과 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_ViewShadow"),	((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
+
+			/* outline */
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine_Blur"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
+			
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Deferred"),			((fSizeX / 2.f * 5)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Final"),		((fSizeX / 2.f * 5)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+
+			/* 후처리 Shadow */
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Fog"),				((fSizeX / 2.f * 7)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_DOF"),				((fSizeX / 2.f * 7)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HDR"),				((fSizeX / 2.f * 9)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RadialBlur"),		((fSizeX / 2.f * 9)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_FXAA"),				((fSizeX / 2.f * 11)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HSV"),				((fSizeX / 2.f * 11)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Vignette"),			((fSizeX / 2.f * 13)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Chroma"),			((fSizeX / 2.f * 13)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LumaSharpen"),		((fSizeX / 2.f * 13)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY)); // 
+
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Priority"),			(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Debug"),			(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Final"),			(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+		}
+		break;
+	case Engine::CRenderer::TARGET_TYPE::DEFERRED:
+		{
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"),			((fSizeX / 2.f * 1.f)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"),			((fSizeX / 2.f * 1.f)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"),			((fSizeX / 2.f * 1.f)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ORM"),				((fSizeX / 2.f * 1.f)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimBloom"),			((fSizeX / 2.f * 1.f)), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Emissive"),			((fSizeX / 2.f * 1.f)), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
+
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Priority"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Final"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+		}
+		break;
+	case Engine::CRenderer::TARGET_TYPE::SHADOW:
+		FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 1.f), fBigX, fBigY)); // Render_Shadow 결과 
+		FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_ViewShadow"),		((fBigX / 2.f * 1)), (fBigY / 2.f * 3.f), fBigX, fBigY)); // 를 디퍼드에서 계산하던거 함 
+
+		break;
+	case Engine::CRenderer::TARGET_TYPE::POSTPROCESSING:
+		{
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Fog"),				((fSizeX / 2.f * 1 )), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_DOF"),				((fSizeX / 2.f * 1 )), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HDR"),				((fSizeX / 2.f * 1 )), (fSizeY / 2.f * 5.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RadialBlur"),		((fSizeX / 2.f * 1 )), (fSizeY / 2.f * 7.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_FXAA"),				((fSizeX / 2.f * 1 )), (fSizeY / 2.f * 9.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HSV"),				((fSizeX / 2.f * 1 )), (fSizeY / 2.f * 11.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Vignette"),			((fSizeX / 2.f * 1 )), (fSizeY / 2.f * 13.f), fSizeX, fSizeY)); // 
+
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Chroma"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LumaSharpen"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Priority"),			((fSizeX / 2.f * 5 )), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Debug"),			((fSizeX / 2.f * 5 )), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+			
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Final"),			((fSizeX / 2.f * 7 )), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+			//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Priority"),		(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Debug"),			(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+			//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Final"),			(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+
+		}
+		break;
+	case Engine::CRenderer::TARGET_TYPE::EFFECT:
+		{
+			/* 일반 Effect */
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Diffuse"),					((fSizeX / 2.f * 1)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Solid"),						((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Normal"),					((fSizeX / 2.f * 1)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Depth"),						((fSizeX / 2.f * 1)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_RimBloom"),					((fSizeX / 2.f * 1)), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+																													  
+			/* Effect Priority */																					  
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Priority_Diffuse"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Priority_Solid"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Priority_RimBloom"),			((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Priority_Distortion"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
+																													  
+			/* Blur 처리 + Distortion */																				
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_RR_Blur"),					((fSizeX / 2.f * 7)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Priority_RR_Blur"),			((fSizeX / 2.f * 7)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Distortion"),				((fSizeX / 2.f * 7)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+																													  
+			/* 최종결과 화면 */																						 
+			FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Final"),						((fSizeX / 2.f * 9)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+		}
+		break;
+	case Engine::CRenderer::TARGET_TYPE::TYPE_END:
+		break;
+	}
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Ready_DebugRender()
 {
 	/*===============================================*/
@@ -2308,8 +2456,8 @@ HRESULT CRenderer::Ready_DebugRender()
 	// 타겟의 위치별 (M , N) 의 번호 
 	// ┌────────────────────────────────┐
 	// │(1, 1) (3, 1) (5, 1) ...        │ <--- 모니터
-	// │(1, 3) (3, 3) (5, 3)            │
-	// │(1, 5) (3, 5) (5, 5)			│
+	// │(1, 3) (3, 3) (5, 3) ...        │
+	// │(1, 5) (3, 5) (5, 5) ...		│
 	// └────────────────────────────────┘
 	/*===============================================*/
 
@@ -2318,48 +2466,49 @@ HRESULT CRenderer::Ready_DebugRender()
 	_float fBigX = 300.f;
 	_float fBigY = 200.f;
 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ORM"),				(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimBloom"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RB_BlurActive"), (fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Emissive"),			(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Independent"),	(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"),				(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"),				(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Depth"),				(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ORM"),					(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RimBloom"),				(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Emissive"),				(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 13.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RB_BlurActive"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Independent"),		(fSizeX / 2.f * 1.f), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
 
 	/*Light*/
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"),			(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"),		(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Ambient"),		(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
-	
-	/* outline + cascade(Render_CSM()) */
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine_Blur"),	((fSizeX / 2.f * 3)), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine_B"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade1"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade2"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Cascade3"),		((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY));
-	
-	/* Render_Shadow */ 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"),			((fSizeX / 2.f * 1)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // Render_Shadow 결과 
-	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shadow_Blur"),			((fBigX / 2.f * 1)), (fBigY / 2.f * 3.f), fBigX, fBigY)); // 를 블러시킴 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_ViewShadow"),		((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
+	//FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"),				(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"),				(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Ambient"),				(fSizeX / 2.f * 3.f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+
+	/* Render_Shadow */
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_ShadowDepth"), ((fSizeX / 2.f * 3)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY)); // Render_Shadow 결과 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_ViewShadow"), ((fSizeX / 2.f * 3)), (fSizeY / 2.f * 7.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
+
+	/* outline */
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine"), ((fSizeX / 2.f * 3)), (fSizeY / 2.f * 9.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_OutLine_Blur"), ((fSizeX / 2.f * 3)), (fSizeY / 2.f * 11.f), fSizeX, fSizeY));
+
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Deferred"), ((fSizeX / 2.f * 5)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Effect_Final"), ((fSizeX / 2.f * 5)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+
 	
 	/* 후처리 Shadow */ 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Fog"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_DOF"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HDR"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RadialBlur"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_FXAA"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HSV"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Vignette"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Chroma"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LumaSharpen"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Debug"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Final"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
-	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LumaSharpen"), ((fSizeX / 2.f * 1)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 를 디퍼드에서 계산하던거 함 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Fog"),					((fSizeX / 2.f * 7)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_DOF"),					((fSizeX / 2.f * 7)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HDR"),					((fSizeX / 2.f * 9)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_RadialBlur"),			((fSizeX / 2.f * 9)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_FXAA"),					((fSizeX / 2.f * 11)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_HSV"),					((fSizeX / 2.f * 11)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+	
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Vignette"),				((fSizeX / 2.f * 13)), (fSizeY / 2.f * 1.f), fSizeX, fSizeY)); // 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Chroma"),				((fSizeX / 2.f * 13)), (fSizeY / 2.f * 3.f), fSizeX, fSizeY)); // 
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_LumaSharpen"),			((fSizeX / 2.f * 13)), (fSizeY / 2.f * 5.f), fSizeX, fSizeY)); // 
+
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Priority"),				(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 1.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Debug"),				(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 3.f), fSizeX, fSizeY));
+	FAILED_CHECK(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Final"),				(g_iWinsizeX - fSizeX * 0.5f), (fSizeY / 2.f * 5.f), fSizeX, fSizeY));
 
 	/* !유정 : Effect관련 RenderTarget */
 	{	

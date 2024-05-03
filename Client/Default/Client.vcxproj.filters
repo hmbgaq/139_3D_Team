@@ -8221,9 +8221,6 @@
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObjects\98. Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Camera_Dynamic.cpp">
-      <Filter>02.GameObjects\97. Camera</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\LandObject\Monster</Filter>
     </ClCompile>
@@ -11382,6 +11379,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VampireCommander_Projectile_BloodLoop.cpp">
       <Filter>02.GameObjects\00. Character\BossMonster\IntroBoss\VampireCommander\Parts\Projectile\BloodLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Camera_Dynamic.cpp">
+      <Filter>02.GameObjects\97. Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

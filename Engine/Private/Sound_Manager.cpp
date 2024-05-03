@@ -163,30 +163,30 @@ HRESULT CSound_Manager::Ready_Sound()
 void CSound_Manager::Play_Sound(const wstring& strGroupKey, const wstring& strSoundKey, CHANNELID eID, _float fVolume)
 {
 	// 카테고리 키
-	auto iterCate = m_mapSound.find(strGroupKey);
-	if (iterCate == m_mapSound.end())
-		return;
-
-	// 사운드 키
-	auto iter = iterCate->second->Get_MapSound().find(strSoundKey);
-
-
-	// 여기부터 사운드 플레이
-	FMOD_BOOL bPlay = FALSE;
-
-	if (FMOD_Channel_IsPlaying(m_pChannelArr[eID], &bPlay))
-	{
-		FMOD_System_PlaySound(m_pSystem, iter->second, m_pChannelGroup[SND1_GROUP], FALSE, &m_pChannelArr[eID]);
-	}
-	else
-	{
-		FMOD_Channel_Stop(m_pChannelArr[eID]);
-		FMOD_System_PlaySound(m_pSystem, iter->second, m_pChannelGroup[SND1_GROUP], FALSE, &m_pChannelArr[eID]);
-	}
-
-	FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);//fVolume);
-
-	FMOD_System_Update(m_pSystem);
+	//auto iterCate = m_mapSound.find(strGroupKey);
+	//if (iterCate == m_mapSound.end())
+	//	return;
+	//
+	//// 사운드 키
+	//auto iter = iterCate->second->Get_MapSound().find(strSoundKey);
+	//
+	//
+	//// 여기부터 사운드 플레이
+	//FMOD_BOOL bPlay = FALSE;
+	//
+	//if (FMOD_Channel_IsPlaying(m_pChannelArr[eID], &bPlay))
+	//{
+	//	FMOD_System_PlaySound(m_pSystem, iter->second, m_pChannelGroup[SND1_GROUP], FALSE, &m_pChannelArr[eID]);
+	//}
+	//else
+	//{
+	//	FMOD_Channel_Stop(m_pChannelArr[eID]);
+	//	FMOD_System_PlaySound(m_pSystem, iter->second, m_pChannelGroup[SND1_GROUP], FALSE, &m_pChannelArr[eID]);
+	//}
+	//
+	//FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);//fVolume);
+	//
+	//FMOD_System_Update(m_pSystem);
 }
 
 void CSound_Manager::Play_BGM(const wstring& strGroupKey, const wstring& strSoundKey, _float fVolume)

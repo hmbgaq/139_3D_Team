@@ -37,8 +37,9 @@ public:
 private:
 	HRESULT Ready_CameraAction(_float fTimeDelta);
 
-	_float fAction_X = 0.f;
-	_float fAction_Speed = 0.2f;
+	_float		fAction_X		= 0.9f;
+	_float		fAction_Speed	= 0.2f;
+	_float4x4	 m_vBookMark	= {};
 
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

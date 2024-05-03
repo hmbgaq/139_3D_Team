@@ -49,6 +49,8 @@ private:
 	_tchar					m_szFPS[MAX_PATH] = TEXT("");
 	_float					m_fTimeAcc = { 0.f };
 	_uint					m_iNumRender = { 0 };
+	_bool					bRenderTarget_Active = { false };
+	_bool					bRenderTarget_UI_Active = { false };
 
 
 public:

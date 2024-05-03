@@ -24,6 +24,7 @@ public:
 	virtual	void	Tick(_float fTimeDelta) override;
 	virtual void	Render() override;
 	_bool			Check_ImGui_Rect();
+	HRESULT			Set_ShaderOption(string filePath);
 
 private:
 	/* Imgui Window Click */
@@ -33,6 +34,7 @@ private:
 	/* Top Setting */
 	_bool bRenderTarget_Active = true;
 	_bool bRenderCom_Active = true;
+	_bool bRenderUI_Active = true;
 	_bool m_bObjectCreateWindwo = { true };				/* 창 생성의 bool변수 */
 
 	/* Shader Load - 해당레벨에 대한 셰이더 로드하기 */

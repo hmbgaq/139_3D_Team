@@ -256,7 +256,7 @@ void CEnvironment_Interact::Tick(_float fTimeDelta)
 		{
 			if (m_pUI_Interaction != nullptr)
 			{
-				if (m_pGameInstance->Get_CurrentLevel() != LEVEL_LOADING)
+				if (m_pGameInstance->Get_CurrentLevel() != ECast(LEVEL::LEVEL_LOADING))
 				{
 					if (m_bOpenLevel == true)
 					{
@@ -2539,7 +2539,7 @@ void CEnvironment_Interact::Start_Spline(vector<_float4>* SplinePoints)
 	
 	m_InitMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	_vector vFirstPos, vSecondPos, vResultPos;
+	//_vector vFirstPos, vSecondPos, vResultPos;
 	_int iPointSize = _int(SplinePoints->size());
 	_int iRoopCount = _int(SplinePoints->size() / 2);
 
@@ -2609,7 +2609,7 @@ void CEnvironment_Interact::Start_SplineDouble(vector<_float4>* SplinePoints)
 
 	m_InitMatrix = m_pTransformCom->Get_WorldFloat4x4();
 
-	_vector vFirstPos, vSecondPos, vResultPos;
+	//_vector vFirstPos, vSecondPos, vResultPos;
 	_int iPointSize = (_int)SplinePoints->size();
 	_int iRoopCount = _int(SplinePoints->size() / 4);
 

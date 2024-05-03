@@ -508,6 +508,35 @@ void CGameInstance::Set_PlayerRebirthState(_bool bOption)
 	return m_pRenderer->Set_PlayerRebirthState(bOption);
 }
 
+void CGameInstance::Set_UIRender_Tool(_bool bOption)
+{
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	return m_pRenderer->Set_UIRender_Tool(bOption);
+}
+
+void CGameInstance::Set_RenderTarget_Type(CRenderer::TARGET_TYPE eType)
+{
+	NULL_CHECK_RETURN(m_pRenderer, );
+
+	return m_pRenderer->Set_RenderTarget_Type(eType);
+}
+
+HRESULT CGameInstance::Change_DebugRenderTarget(CRenderer::TARGET_TYPE type)
+{
+	NULL_CHECK_RETURN(m_pRenderer, E_FAIL);
+
+	Clear_All_DebugRenderTarget();
+	return m_pRenderer->Change_DebugRenderTarget(type);
+}
+
+HRESULT CGameInstance::Clear_All_DebugRenderTarget()
+{
+	NULL_CHECK_RETURN(m_pTarget_Manager, E_FAIL);
+
+	return m_pTarget_Manager->Clear_All_DebugRenderTarget();
+}
+
 #ifdef _DEBUG
 void CGameInstance::Set_RenderDebugCom(_bool _bRenderDebug)
 {

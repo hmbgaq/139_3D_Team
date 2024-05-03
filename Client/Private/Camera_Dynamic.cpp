@@ -118,17 +118,32 @@ HRESULT CCamera_Dynamic::Ready_CameraAction(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD1))
 	{
-		//초기화 
-		fAction_X += fTimeDelta;
+		_matrix BookMark_Snow = XMMatrixSet(0.999947131, 3.85625754e-10, -0.00206708559, 0.00000000,
+											0.000310920528, 0.988554597, 0.150741339, 0.00000000,
+											0.00204049703, -0.150744557, 0.988521099, 0.00000000,
+											24.9641399, 22.7107353, 16.9577255, 1.00000000);
+		m_pTransformCom->Set_WorldMatrix(BookMark_Snow);
 	}
-
 	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD2))
 	{
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fMouseSensor * fAction_X * fTimeDelta);
 
 	}
+	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD3))
+	{
+		//초기화 
+		fAction_X += fTimeDelta;
+	}
 
-
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD9))
+	{
+		m_vBookMark = m_pTransformCom->Get_WorldFloat4x4();
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD9))
+	{
+		_matrix NewWorld = XMLoadFloat4x4(&m_vBookMark);
+		m_pTransformCom->Set_WorldMatrix(NewWorld);
+	}
 	return S_OK;
 }
 

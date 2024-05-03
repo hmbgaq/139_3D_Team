@@ -92,6 +92,12 @@ public: /* For.Renderer */
 	HRESULT		Add_CascadeObject(_uint iIndex, CGameObject* pObject);
 	void		Set_PlayerDead(_bool bOption);
 	void		Set_PlayerRebirthState(_bool bOption);
+	void		Set_UIRender_Tool(_bool bOption);
+	void		Set_RenderTarget_Type(CRenderer::TARGET_TYPE eType);
+	HRESULT		Change_DebugRenderTarget(CRenderer::TARGET_TYPE type);
+
+public:	/* Target Manager*/
+	HRESULT		Clear_All_DebugRenderTarget();
 
 #ifdef _DEBUG
 	void		Set_RenderDebugCom(_bool _bRenderDebug);

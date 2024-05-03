@@ -41,7 +41,7 @@ HRESULT CLevel_Logo::Initialize()
 	m_pDataManager->Set_GameState(GAME_STATE::UI);
 	ShowCursor(false);
 
-	//FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // 이펙트 풀
+	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // 이펙트 풀
 
 	//m_pGameInstance->Play_BGM(L"BGM_LOADING", L"LogoLoading.mp3", 10.f);
 
@@ -58,7 +58,8 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
+			//m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
+			m_pDataManager->Set_SelectLevel(LEVEL_GAMEPLAY);
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{

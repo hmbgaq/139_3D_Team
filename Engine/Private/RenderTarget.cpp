@@ -66,6 +66,8 @@ HRESULT CRenderTarget::Clear()
 
 HRESULT CRenderTarget::Ready_Debug(const wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
+	m_bRenderDebug = true;
+
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 
 	m_WorldMatrix._11 = fSizeX;
@@ -93,6 +95,11 @@ HRESULT CRenderTarget::Ready_Debug(const wstring& strTargetTag, _float fX, _floa
 
 HRESULT CRenderTarget::Render_Debug(CShader * pShader, CVIBuffer * pVIBuffer)
 {
+	if (false == m_bRenderDebug)
+	{
+		m_vFontColor.w = 0.f;
+		return S_OK;
+	}
 	FAILED_CHECK(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix));
 
 	FAILED_CHECK(pShader->Bind_SRV("g_DiffuseTexture", m_pSRV));

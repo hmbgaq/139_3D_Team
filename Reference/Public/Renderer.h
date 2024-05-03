@@ -21,7 +21,9 @@ public:
 	};
 
 	enum class POST_TYPE { DEFERRED, FOG, GODRAY, SSR, DOF, HDR, RADIAL_BLUR, FXAA, HSV, VIGNETTE, CHROMA, 
-						   MOTIONBLUR, LUMASHARPEN, FINAL, TYPE_END};
+						   MOTIONBLUR, LUMASHARPEN, FINAL, RESULT, TYPE_END};
+
+	enum class TARGET_TYPE{NONE, ALL, DEFERRED, SHADOW, POSTPROCESSING, EFFECT, TYPE_END};
 
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -58,7 +60,6 @@ private:
 	HRESULT Render_Deferred();
 	HRESULT Render_MyPBR();
 	HRESULT Render_PBR();
-	HRESULT Render_SSR();
 	HRESULT Render_Chroma();			
 	HRESULT Render_LumaSharpen();
 
@@ -78,17 +79,16 @@ private:
 	HRESULT Render_FXAA();
 	HRESULT Render_HSV();
 	HRESULT Render_Vignette(); 
-	HRESULT Render_Final();
 	HRESULT Render_Blend();
-	HRESULT Render_MotionBlur();
-	HRESULT Render_Godray();
 
-	HRESULT Deferred_UI();
+	HRESULT Render_Final();
+	HRESULT Render_ShaderResult();
 
 	/* Effect */
 	HRESULT Render_Effect();
 
 	/* UI */
+	HRESULT Deferred_UI();
 	HRESULT Render_UI();
 	HRESULT Render_UI_Tool();
 
@@ -105,6 +105,11 @@ private:
 	wstring Current_Target(POST_TYPE eType);
 	
 	HRESULT Check_RenderEffect();
+
+	/* Test */
+	HRESULT Render_MotionBlur();
+	HRESULT Render_Godray();
+	HRESULT Render_SSR();
 
 public:
 	/* 렌더옵션 초기화 */
@@ -245,9 +250,7 @@ private:
 
 	/* For. Tool */
 	class CTexture* m_pTool_IrradianceTextureCom[10] = { nullptr };
-	class CTexture* m_pTool_2_IrradianceTextureCom[10] = { nullptr };
 	class CTexture* m_pTool_PreFilteredTextureCom[10] = { nullptr };
-	class CTexture* m_pTool_2_PreFilteredTextureCom[10] = { nullptr };
 
 public:
 	_bool			m_bUI_MRT						= { false };	
@@ -256,16 +259,26 @@ public:
 	_bool			m_bToolLevel					= { false };
 	_int			m_iPBRTexture_InsteadLevel		= { 0 };
 
+	/* For. Tool - 포폴용 준비 셋팅용 */
+public:
+	void			Set_RenderTarget_Type(TARGET_TYPE eType) { m_eTargetType_Tool = eType; }
+	HRESULT			Change_DebugRenderTarget(TARGET_TYPE type);
+
+private:
+	_bool			m_bRenderUI_Tool = { true };
+	TARGET_TYPE		m_eTargetType_Tool = TARGET_TYPE::TYPE_END;
+
 #ifdef _DEBUG
 public:
 	void			Set_DebugRenderTarget(_bool _bDebug) { m_bDebugRenderTarget = _bDebug; }
 	void			Set_DebugCom(_bool _bDebug) { m_bDebugCom = _bDebug; }
+	void			Set_UIRender_Tool(_bool _bDebug) { m_bRenderUI_Tool = _bDebug; }
 
 private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { false };
+	_bool			m_bDebugRenderTarget	= { true };
 	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	
