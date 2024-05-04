@@ -574,8 +574,7 @@ PS_OUT PS_MAIN_HDR(PS_IN In)
 PS_OUT PS_MAIN_RADIAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
-
-
+    
     float4 colour = { 0.f, 0.f, 0.f, 0.f };
     float v = 0.f;
 

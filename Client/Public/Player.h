@@ -229,8 +229,6 @@ public:
 	void Play_Sound_SuperCharge_Enter();
 	void Play_Sound_SuperCharge_Exit();
 
-
-
 public: // !¼ºÈñ Ãß°¡
 	void Activate_SuperChargeUI();
 

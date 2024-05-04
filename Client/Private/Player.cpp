@@ -206,7 +206,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 	/* 성희추가 : UI창 껐다,켰다 하는 Key (옵션창, 스킬창 등등) => GamePlay상태든 UI상태든 입력이 가능해야해서 밖에 뺐음. */
-	if (m_pGameInstance->Get_NextLevel() != LEVEL::LEVEL_TOOL)
+	if (m_pGameInstance->Get_NextLevel() != ECast(LEVEL::LEVEL_TOOL))
 		KeyInput(fTimeDelta);
 
 	if (GAME_STATE::GAMEPLAY != m_pDataManager->Get_GameState())
@@ -245,7 +245,6 @@ void CPlayer::Tick(_float fTimeDelta)
 	if(m_pDataManager->Get_GameState() == GAME_STATE::GAMEPLAY)
 		m_pDataManager->Set_ShowInterface(bIsNotIdle);
 	
-
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Update(XMMatrixIdentity());
 

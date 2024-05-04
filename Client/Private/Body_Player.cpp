@@ -50,7 +50,6 @@ void CBody_Player::Tick(_float fTimeDelta)
 	{
 		Update_ShootingReaction(fTimeDelta);
 	}
-
 }
 
 void CBody_Player::Late_Tick(_float fTimeDelta)
@@ -78,6 +77,14 @@ void CBody_Player::Late_Tick(_float fTimeDelta)
 		//FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_OUTLINE_BLUR, this), );
 	}
 
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD1))
+	{
+		m_ePlayerRenderPass = RENDER_PASS::RENDER_ORIGIN;
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD2))
+	{
+		m_ePlayerRenderPass = RENDER_PASS::RENDER_SNOWMOUNTAIN;
+	}
 	//Rolling(fTimeDelta, m_bPlayerRoll);
 }
 

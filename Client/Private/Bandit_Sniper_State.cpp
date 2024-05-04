@@ -113,7 +113,14 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Normal(CBandit_Sniper* pActor, _fl
 {
 	CState<CBandit_Sniper>* pState = { nullptr };
 	
-	/* 움직이질 않는데 이런게 왜필요해  */
+	if (pActor->Get_BulletCnt() >= 2)
+	{
+		pActor->Set_BulletCnt(0);
+		if (true == pActor->Get_ProtectExist()) /* 쉴드 있음 */
+			return new CSniper_CoverLow_Reload();
+		else
+			return new CSniper_CoverHigh_Reload();
+	}
 
 	pState = Attack(pActor, fTimeDelta, _iAnimIndex);
 	if (pState)	return pState;
@@ -137,24 +144,11 @@ CState<CBandit_Sniper>* CBandit_Sniper_State::Attack(CBandit_Sniper* pActor, _fl
 
 	if (true == pActor->Get_ProtectExist()) /* 쉴드 있음 */
 	{
-		if (pActor->Get_BulletCnt() >= 2)
-		{
-			pActor->Set_BulletCnt(0);
-			return new CSniper_CoverLow_Reload();
-		}
-
 		pActor->Add_BulletCnt(); /* 총알 갯수 추가 */
 		return new CSniper_CoverLow_Over_Start(); // 앉아있다가 정면 공격
 	}
 	else
 	{
-		/* 쉴드 없음 */
-		if (pActor->Get_BulletCnt() >= 2)
-		{
-			pActor->Set_BulletCnt(0); 
-			return new CSniper_CoverHigh_Reload();
-		}
-
 		/* 기존의 서서 조준하고 쏘고 하는 애니메이션이 없음
 			-> 서있다가 무릎굽혀서 쏘고 다시 일어남 -> Taunt  반복 */
 

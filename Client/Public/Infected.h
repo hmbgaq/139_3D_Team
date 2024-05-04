@@ -61,7 +61,7 @@ public:
 
 public:
 	virtual void Explosion() {};
-
+	HRESULT Monster_CommandKey(_float fTimeDelta);
 
 protected:
 	HRESULT Ready_Components();

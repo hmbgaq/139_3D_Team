@@ -112,6 +112,9 @@ void CBandit_Sniper::Tick(_float fTimeDelta)
 void CBandit_Sniper::Late_Tick(_float fTimeDelta)
 {
 	__super::Late_Tick(fTimeDelta);
+
+	if (m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD6))
+		Add_BulletCnt();
 }
 
 HRESULT CBandit_Sniper::Render()

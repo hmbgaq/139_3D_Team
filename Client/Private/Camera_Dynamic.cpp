@@ -116,35 +116,79 @@ void CCamera_Dynamic::Late_Tick(_float fTimeDelta)
 
 HRESULT CCamera_Dynamic::Ready_CameraAction(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD1))
-	{
-		_matrix BookMark_Snow = XMMatrixSet(0.999947131, 3.85625754e-10, -0.00206708559, 0.00000000,
-											0.000310920528, 0.988554597, 0.150741339, 0.00000000,
-											0.00204049703, -0.150744557, 0.988521099, 0.00000000,
-											24.9641399, 22.7107353, 16.9577255, 1.00000000);
-		m_pTransformCom->Set_WorldMatrix(BookMark_Snow);
-	}
-	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD2))
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fMouseSensor * fAction_X * fTimeDelta);
+	//if (m_pGameInstance->Key_Pressing(DIK_NUMPAD1))
+	//{
+	//	_matrix BookMark_Saved = {};
+	//	
+	//	// Intro
+	//	BookMark_Saved = XMMatrixSet(0.373051584, 9.31322575e-10, 0.927539706, 0.00000000, -0.191060930, 0.978552282, 0.0768424720, 0.00000000, -0.907650650, -0.205963597, 0.365051597, 0.00000000, 152.950897, 34.1651726, -7.01468706, 1.00000000);
+	//	
+	//	// Intro Boss
+	//	//BookMark_Saved = XMMatrixSet(0.758161783, -1.62981451e-09, 0.651973069, 0.00000000, 0.0328741893, 0.998697162, -0.0382298827, 0.00000000, -0.651142895, 0.0504116043, 0.757191420, 0.00000000, 58.6203728, 3.81628489, 45.6046448, 1.00000000);
+	//	 
+	//	//SnowMountain 
+	//	//BookMark_Saved = XMMatrixSet(0.999947131, 3.85625754e-10, -0.00206708559, 0.00000000, 0.000310920528, 0.988554597, 0.150741339, 0.00000000, 0.00204049703, -0.150744557, 0.988521099, 0.00000000,24.9641399, 22.7107353, 16.9577255, 1.00000000);
+	//
+	//	// SnowMountain Boss
+	//	// BookMark_Saved = XMMatrixSet();
+	//
+	//	m_pTransformCom->Set_WorldMatrix(BookMark_Saved);
+	//}
+	//if (m_pGameInstance->Key_Pressing(DIK_NUMPAD2))
+	//{
+	//	m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), m_fMouseSensor * fAction_X * fTimeDelta);
+	//
+	//}
+	//if (m_pGameInstance->Key_Pressing(DIK_NUMPAD3))
+	//{
+	//	//초기화 
+	//	//fAction_X += fTimeDelta;
+	//}
 
-	}
-	if (m_pGameInstance->Key_Pressing(DIK_NUMPAD3))
-	{
-		//초기화 
-		fAction_X += fTimeDelta;
-	}
-
+	// 북마크 1 
 	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD9))
 	{
 		m_vBookMark = m_pTransformCom->Get_WorldFloat4x4();
 	}
 	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD9))
 	{
+		if (true == IsMatrixEmpty(m_vBookMark)) // 보안코드 
+			return S_OK;
+
 		_matrix NewWorld = XMLoadFloat4x4(&m_vBookMark);
 		m_pTransformCom->Set_WorldMatrix(NewWorld);
 	}
+
+	// 북마크 2
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD8))
+	{
+		m_vBookMark2 = m_pTransformCom->Get_WorldFloat4x4();
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_NUMPAD8))
+	{
+		if (true == IsMatrixEmpty(m_vBookMark2))
+			return S_OK;
+
+		_matrix NewWorld = XMLoadFloat4x4(&m_vBookMark2);
+		m_pTransformCom->Set_WorldMatrix(NewWorld);
+	}
+
 	return S_OK;
+}
+
+_bool CCamera_Dynamic::IsMatrixEmpty(const float4x4& matrix)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			if (matrix.m[i][j] != 0.0f)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 HRESULT CCamera_Dynamic::Ready_Components()

@@ -47,7 +47,6 @@ CState<CInfected>* CInfected_Melee_RD_01::Update(CInfected* pActor, _float fTime
 			m_pGameInstance->Play_Sound(L"INFECTED_ATTACK", L"digger_attack_melee_whoosh001.wav", SOUND_ENEMY_ATTACK2, 7.f);
 			m_pWeapon->Set_Enable(true);
 			m_bFlags[0] = true;
-
 		}
 
 		if (pActor->Is_Inputable_Front(41) && m_bFlags[1] == false)

@@ -36,10 +36,12 @@ public:
 
 private:
 	HRESULT Ready_CameraAction(_float fTimeDelta);
+	_bool IsMatrixEmpty(const float4x4& matrix);
 
 	_float		fAction_X		= 0.9f;
 	_float		fAction_Speed	= 0.2f;
 	_float4x4	 m_vBookMark	= {};
+	_float4x4	 m_vBookMark2	= {};
 
 public:
 	static CCamera_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPrototypeTag);

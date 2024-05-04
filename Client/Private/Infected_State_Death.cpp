@@ -6,6 +6,7 @@ void CInfected_State_Death::Initialize(CInfected* pActor)
 	__super::Initialize(pActor);
 
 	CBody_Infected* pBody = dynamic_cast<CBody_Infected*>(pActor->Get_Body());
+	pBody->Set_StateDead();
 	pBody->Set_RenderState(CBody_Infected::RENDER_STATE::NAKED);
 }
 

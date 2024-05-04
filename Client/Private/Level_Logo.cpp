@@ -58,8 +58,8 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			//m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
-			m_pDataManager->Set_SelectLevel(LEVEL_GAMEPLAY);
+			m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
+			//m_pDataManager->Set_SelectLevel(LEVEL_GAMEPLAY);
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{

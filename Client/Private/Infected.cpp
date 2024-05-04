@@ -11,6 +11,8 @@
 //#include "Infected_HitLight_F_01_NEW.h"
 //#include "Infected_HitLight_FL_01_NEW.h"
 //#include "Infected_HitLight_FR_01_NEW.h"
+
+#include "Infected_Melee_RM_01.h"
 #include "Infected_HitNormal_FR90_01_NEW.h"
 #include "Infected_Scared_02.h"
 #include "Infected_Scared_03.h"
@@ -137,11 +139,48 @@ void CInfected::Late_Tick(_float fTimeDelta)
 {
 	if (false == m_bCntDead_Active)
 		__super::Late_Tick(fTimeDelta);
+
+	Monster_CommandKey(fTimeDelta);
 }
 
 HRESULT CInfected::Render()
 {
 	__super::Render();
+
+	return S_OK;
+}
+
+HRESULT CInfected::Monster_CommandKey(_float fTimeDelta)
+{
+	if (m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD0))
+	{
+		dynamic_cast<CBody_Infected*>(m_pBody)->Set_StateHit();
+		Hitted_Left(Power::Medium);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD1))
+	{
+		dynamic_cast<CBody_Infected*>(m_pBody)->Set_StateHit();
+		Hitted_Right(Power::Medium);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD2))
+	{
+		dynamic_cast<CBody_Infected*>(m_pBody)->Set_StateHit();
+		Hitted_Knock(Power::Medium);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD3))
+	{
+		m_pActor->Set_State(new CInfected_Melee_RM_01());
+		
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD4))
+	{
+		//m_pActor->Set_MonsterAttackState(true);		/* 공격상태 설정 */
+		m_pActor->Set_State(new CInfected_Electrocute_Loop());
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_RCONTROL) && m_pGameInstance->Key_Down(DIK_NUMPAD5))
+	{
+		Hitted_Dead(Power::Medium);
+	}
 
 	return S_OK;
 }
@@ -153,7 +192,6 @@ HRESULT CInfected::Ready_Components()
 
 void CInfected::Hitted_Left(Power ePower)
 {
-
 	wstring strSoundKey = L"";
 
 	_int iRandomSound = m_pGameInstance->Random_Int(1, 10);

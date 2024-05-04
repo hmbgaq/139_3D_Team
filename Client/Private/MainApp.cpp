@@ -104,6 +104,33 @@ void CMainApp::Tick(_float fTimeDelta)
 		bRenderTarget_UI_Active = !bRenderTarget_UI_Active;
 		m_pGameInstance->Get_Renderer()->Set_UIRender_Tool(bRenderTarget_UI_Active);
 	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_GRAVE))
+	{
+		cout << "===================== 키 설명 ==================== " << endl;
+		cout << "LShift + Numpad_1 = RenderTarget On/Off" << endl;
+		cout << "LShift + Numpad_2 = RenderTarget Type All" << endl;
+		cout << "LShift + Numpad_3 = RenderTarget Type Deferred" << endl;
+		cout << "LShift + Numpad_4 = RenderTarget Type Shadow" << endl;
+		cout << "LShift + Numpad_5 = RenderTarget Type PostProcessing" << endl;
+		cout << "LShift + Numpad_6 = RenderTarget Type Effect" << endl;
+		cout << "LShift + Q = UI On/Off" << endl;
+		cout << endl;
+		cout << "Numpad_1 = Snow맵 전용 북마크로 이동 " << endl;
+		cout << "Numpad_2 = 카메라 회전 " << endl;
+		cout << "Numpad_3 = 카메라 회전 속도 증가 " << endl;
+		cout << endl;
+		cout << "LCtrl  + Numpad_9 = 카메라 북마크1 " << endl;
+		cout << "LShift + Numpad_9 = 카메라 북마크1로 이동" << endl;
+		cout << "LCtrl  + Numpad_8 = 카메라 북마크2 " << endl;
+		cout << "LShift + Numpad_8 = 카메라 북마크2로 이동" << endl;
+		cout << endl;
+		cout << "LCtrl + Numpad_1 = 플레이어 렌더 - Origin" << endl;
+		cout << "LCtrl + Numpad_2 = 플레이어 렌더 - SnowMountain" << endl;
+
+		bRenderDebugCom = !bRenderDebugCom;
+		m_pGameInstance->Get_Renderer()->Set_DebugCom(bRenderDebugCom);
+	}
 	//m_pDevConsole->Tick();
 }
 

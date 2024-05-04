@@ -70,7 +70,7 @@ HRESULT CRenderer::Draw_RenderGroup()
 		FAILED_CHECK(Render_DebugCom()) /* Debug Component -> MRT 타겟에 저장해서 Finaml 에서 추가연산한다. */
 #endif // _DEBUG
 
-	FAILED_CHECK(Check_RenderEffect());
+	FAILED_CHECK(Check_RenderEffect()); /* 플레이어 죽었을때 */
 
 	FAILED_CHECK(Render_Priority());	/* MRT_Priority - Target_Priority  */
 	
@@ -1101,9 +1101,8 @@ HRESULT CRenderer::Render_Final()
 		FAILED_CHECK(m_pShader_Final->Bind_RawValue("g_SepiaPower", &SepiaPower, sizeof(_float)));
 		FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL_SCREEN_SEPHIA)));
 	}
-	else
+	else if (false == m_tScreenDEffect_Desc.bGrayScale_Active && false == m_tScreenDEffect_Desc.bSephia_Active)
 	{
-		/* 둘다 true인경우 적용안됨 하나만 가능 */
 		FAILED_CHECK(m_pShader_Final->Begin(ECast(FINAL_SHADER::FINAL)));
 	}
 
@@ -1803,7 +1802,7 @@ wstring CRenderer::Current_Target(POST_TYPE eCurrType)
 			m_ePrevTarget = eCurrType;
 			break;
 
-		case POST_TYPE::RESULT:
+		case POST_TYPE::FINAL:
 			strCurrentTarget = TEXT("Target_Final");
 			m_ePrevTarget = eCurrType;
 			break;
@@ -1823,9 +1822,24 @@ HRESULT CRenderer::Check_RenderEffect()
 	{
 		m_tHSV_Option.bScreen_Active = true;
 		m_tHSV_Option.fFinal_Saturation <= 0.f ? m_bPlayerDead = false : m_tHSV_Option.fFinal_Saturation -= 0.01f;
+
+		if (m_iCurrentLevel == 9)
+		{
+			m_tScreenDEffect_Desc.bGrayScale_Active = false;
+			m_tScreenDEffect_Desc.bSephia_Active = false;
+			m_bDeadOnce = true;
+		}
 	}
 	else
 	{
+		if (true == m_bDeadOnce)
+		{
+			m_tScreenDEffect_Desc.bGrayScale_Active = false;
+			m_tScreenDEffect_Desc.bSephia_Active = true;
+			m_bDeadOnce = false;
+		}
+
+
 		return S_OK;
 	}
 

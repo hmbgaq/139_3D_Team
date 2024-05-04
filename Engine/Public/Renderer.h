@@ -267,6 +267,7 @@ public:
 private:
 	_bool			m_bRenderUI_Tool = { true };
 	TARGET_TYPE		m_eTargetType_Tool = TARGET_TYPE::TYPE_END;
+	_bool			m_bDeadOnce = { false };
 
 #ifdef _DEBUG
 public:
@@ -278,7 +279,7 @@ private:
 	HRESULT			Ready_DebugRender();
 	HRESULT			Render_DebugCom();	
 	HRESULT			Render_DebugTarget();
-	_bool			m_bDebugRenderTarget	= { true };
+	_bool			m_bDebugRenderTarget	= { false };
 	_bool			m_bDebugCom				= { false };
 	list<class CComponent*>			m_DebugComponent;
 #endif	

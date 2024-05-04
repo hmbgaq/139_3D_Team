@@ -37,9 +37,9 @@ HRESULT CMasterCamera::Initialize(void* pArg)
 	Desc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	Desc.fNear = 0.1f;
 	Desc.fFar = 1000.f;
-	if (m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
-		Desc.fSpeedPerSec = 300.f;
-	else 
+	//if (m_iCurrnetLevel == (_uint)LEVEL_SNOWMOUNTAIN)
+	//	Desc.fSpeedPerSec = 300.f;
+	//else 
 		Desc.fSpeedPerSec = 20.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 

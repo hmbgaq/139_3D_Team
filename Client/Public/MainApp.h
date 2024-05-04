@@ -51,6 +51,7 @@ private:
 	_uint					m_iNumRender = { 0 };
 	_bool					bRenderTarget_Active = { false };
 	_bool					bRenderTarget_UI_Active = { false };
+	_bool					bRenderDebugCom = { false };
 
 
 public:

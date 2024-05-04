@@ -76,32 +76,52 @@ HRESULT CBody_Infected::Render()
 	for (size_t i = 0; i < iNumMeshes; i++)
 	{
 		auto iter = m_vDiscardMesh.find(m_eRender_State); // 현재 상태에 해당하는 vector<int> 찾기 
-		if (iter != m_vDiscardMesh.end())
-		{
-			auto& Discard = iter->second;
-			if (find(Discard.begin(), Discard.end(), i) != Discard.end()) // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 같은경우, 
-			{
-				if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
-				{
-					m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
-					m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
-					m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
-					m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+		if (iter == m_vDiscardMesh.end())
+			return S_OK;
 
-					m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
-					m_pModelCom->Render((_uint)i);
-				}
-				else
-					continue;
-			}
-			else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
+		auto& Discard = iter->second;
+		if (find(Discard.begin(), Discard.end(), i) != Discard.end()) // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 같은경우, 
+		{
+			// m_vDiscardMesh[CBody_Infected::RENDER_STATE::ORIGIN] = { 9, 10, 11, 12, 13, 14, 15 }; - 상처 메시임
+			// Discard 에서 "i를 찾으면" 
+			if (m_eRender_State == CBody_Infected::RENDER_STATE::ATTACK)
 			{
-				
+				// 무기 메시에 블러효과 주는거 
 				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
 				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
 				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
 				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
-	
+
+				m_pShaderCom->Begin(ECast(MONSTER_SHADER::INFECTED_PUNCH));
+				m_pModelCom->Render((_uint)i);
+
+				//m_vDiscardMesh[CBody_Infected::RENDER_STATE::NAKED] = { 0, 1, 2, 5, 7 }; // 겉가죽 + 의상 + 무기 + 기타 
+			}
+			else
+			{
+				continue;
+			}
+		}
+		else // 현재 렌더를 돌리는 메시의 번호가 vector<int>랑 다른 경우, 
+		{
+			// DiscardMesh에서 i를 못찾았을경우 일반렌더 - 그런제 상처메시는 제외하고 
+			auto iter = m_vDiscardMesh.find(CBody_Infected::RENDER_STATE::ORIGIN); // 상처메시 
+			if (iter == m_vDiscardMesh.end())
+				return S_OK;
+
+			auto& Discard2 = iter->second;
+			if (find(Discard2.begin(), Discard2.end(), i) != Discard2.end())
+			{
+				// 상처메시에 해당하는걸 찾으면 
+				continue;
+			}
+			else
+			{
+				m_pModelCom->Bind_BoneMatrices(m_pShaderCom, "g_BoneMatrices", (_uint)i);
+				m_pModelCom->Bind_MaterialResource(m_pShaderCom, (_uint)i, &m_bORM_Available, &m_bEmissive_Available);
+				m_pShaderCom->Bind_RawValue("g_bORM_Available", &m_bORM_Available, sizeof(_bool));
+				m_pShaderCom->Bind_RawValue("g_bEmissive_Available", &m_bEmissive_Available, sizeof(_bool));
+
 				if (m_bDissolve)
 				{
 					m_pDissolveTexture->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture");
@@ -118,7 +138,6 @@ HRESULT CBody_Infected::Render()
 				m_pModelCom->Render((_uint)i);
 			}
 		}
-		
 	}
 
 	return S_OK;
@@ -159,6 +178,12 @@ HRESULT CBody_Infected::Set_StateHit()
 
 HRESULT CBody_Infected::Set_StateDead()
 {
+	auto iter = m_vDiscardMesh.find(RENDER_STATE::ORIGIN);
+	if (iter != m_vDiscardMesh.end()) 
+	{
+		iter->second.clear();
+	}
+
 	return S_OK;
 }
 
@@ -173,8 +198,8 @@ HRESULT CBody_Infected::Ready_Components()
 	{
 		CBounding_OBB::BOUNDING_OBB_DESC		BoundingDesc = {};
 		BoundingDesc.iLayer = ECast(COLLISION_LAYER::MONSTER);
-		BoundingDesc.vExtents = _float3(0.32f, 1.8f, 0.32f);
-		BoundingDesc.vCenter = _float3(0.f, BoundingDesc.vExtents.y / 2.f, 0.f);
+		BoundingDesc.vExtents = _float3(0.32f, 1.f, 0.32f);
+		BoundingDesc.vCenter = _float3(0.f, + BoundingDesc.vExtents.y / 2.f + 0.4f, 0.f);
 
 		FAILED_CHECK(__super::Add_Component(m_pGameInstance->Get_NextLevel(), TEXT("Prototype_Component_Collider_OBB"), TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &BoundingDesc));
 	}
