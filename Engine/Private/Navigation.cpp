@@ -120,6 +120,8 @@ HRESULT CNavigation::Render()
 
 	m_pShader->Begin(0);
 
+
+
 	_uint iCurrentLevel = m_pGameInstance->Get_NextLevel();
 
 	if (iCurrentLevel == 7)
@@ -131,19 +133,19 @@ HRESULT CNavigation::Render()
 				pCell->Render(m_pShader);
 		}
 	}
-	else
-	{
-		if (m_iCurrentIndex == -1)
-		{
-			for (auto& pCell : m_Cells)
-			{
-				if (nullptr != pCell)
-					pCell->Render(m_pShader);
-			}
-		}
-		else
-			m_Cells[m_iCurrentIndex]->Render(m_pShader);
-	}
+	//else
+	//{
+	//	if (m_iCurrentIndex == -1)
+	//	{
+	//		for (auto& pCell : m_Cells)
+	//		{
+	//			if (nullptr != pCell)
+	//				pCell->Render(m_pShader);
+	//		}
+	//	}
+	//	else
+	//		m_Cells[m_iCurrentIndex]->Render(m_pShader);
+	//}
 
 
 

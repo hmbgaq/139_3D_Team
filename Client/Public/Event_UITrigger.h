@@ -47,7 +47,7 @@ public:
 private:
 	//vector<MONSTER
 
-	UI_TRIGGERDESC				 m_tUITriggerDesc = {};
+	UI_TRIGGERDESC							 m_tUITriggerDesc = {};
 	_bool									 m_bJsonReady = false;
 	_bool									 m_bForceActivate = false;
 	vector<CMonster_Character::MONSTER_DESC> m_vecCreateMonsterDesc;

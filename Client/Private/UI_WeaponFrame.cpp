@@ -72,13 +72,13 @@ void CUI_WeaponFrame::Tick(_float fTimeDelta)
     {
         //m_pUIManager->Active_WeaponActiveGuige();
 
-        if (m_pGameInstance->Key_Down(DIK_7))
-            m_eUI_Level = LEVEL0;
-        if (m_pGameInstance->Key_Down(DIK_8))
-            m_eUI_Level = LEVEL1;
-        if (m_pGameInstance->Key_Down(DIK_9))
-            m_eUI_Level = LEVEL2;
-
+       //if (m_pGameInstance->Key_Down(DIK_7))
+       //    m_eUI_Level = LEVEL0;
+       //if (m_pGameInstance->Key_Down(DIK_8))
+       //    m_eUI_Level = LEVEL1;
+       //if (m_pGameInstance->Key_Down(DIK_9))
+       //    m_eUI_Level = LEVEL2;
+       //
         Check_Picking(fTimeDelta);
         //Check_Unlock(fTimeDelta);
         Check_LevelChange(fTimeDelta);

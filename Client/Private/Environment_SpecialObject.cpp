@@ -130,6 +130,8 @@ void CEnvironment_SpecialObject::Late_Tick(_float fTimeDelta)
 
 	FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 
+	if(m_pElevatorColliderCom != nullptr)
+		m_pGameInstance->Add_DebugRender(m_pElevatorColliderCom);
 	
 	if (m_pGameInstance->Get_CurrentLevel() == (_uint)LEVEL_TOOL && m_tEnvironmentDesc.eSpecialType == CEnvironment_SpecialObject::SPECIAL_ELEVATOR && m_pElevatorColliderCom != nullptr)
 	{

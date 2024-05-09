@@ -284,36 +284,40 @@ void CWindow_MapTool::Tick(_float fTimeDelta)
 	
 	if(m_pNavigation != nullptr)
 		m_pGameInstance->Add_DebugRender(m_pNavigation);
+
+	
+	//if(m_pPickingTrigger != nullptr)
+	//	m_pGameInstance->Add_DebugRender(m_pPickingTrigger->Get_TriggerCollider());
 }
 
 void CWindow_MapTool::Render()
 {
-	if (false == m_vecPickingPoints.empty() && nullptr != m_pBatch)
-	{
-		_int iPickingPointSize = (_int)m_vecPickingPoints.size();
-
-		m_pEffect->SetWorld(XMMatrixIdentity());
-		m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
-		m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
-
-		m_pEffect->Apply(m_pContext);
-		m_pContext->IASetInputLayout(m_pInputLayOut);
-
-		m_pBatch->Begin();
-
-		for (_int i = 0; i < iPickingPointSize; ++i)
-		{
-			/* m_pAABB가 월드스페이스 상의 정보다. */
-			if (m_vecPickingPoints[i] != nullptr)
-			{
-
-				DX::Draw(m_pBatch, *m_vecPickingPoints[i], XMVectorSet(1.f, 0.f, 0.f, 1.f));
-			}
-			else
-				break;
-		}
-		m_pBatch->End();
-	}
+	//if (false == m_vecPickingPoints.empty() && nullptr != m_pBatch)
+	//{
+	//	_int iPickingPointSize = (_int)m_vecPickingPoints.size();
+	//
+	//	m_pEffect->SetWorld(XMMatrixIdentity());
+	//	m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
+	//	m_pEffect->SetProjection(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ));
+	//
+	//	m_pEffect->Apply(m_pContext);
+	//	m_pContext->IASetInputLayout(m_pInputLayOut);
+	//
+	//	m_pBatch->Begin();
+	//
+	//	for (_int i = 0; i < iPickingPointSize; ++i)
+	//	{
+	//		/* m_pAABB가 월드스페이스 상의 정보다. */
+	//		if (m_vecPickingPoints[i] != nullptr)
+	//		{
+	//
+	//			DX::Draw(m_pBatch, *m_vecPickingPoints[i], XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	//		}
+	//		else
+	//			break;
+	//	}
+	//	m_pBatch->End();
+	//}
 }
 
 
@@ -895,6 +899,8 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 		json InteractJson = LoadJson["Interact_Json"];
 		_int InteractJsonSize = (_int)InteractJson.size();
 
+		//InteractJsonSize = 0;
+
 		for (_int i = 0; i < InteractJsonSize; ++i)
 		{
 			
@@ -1081,6 +1087,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 		//TODO  트리거 추가하면서 주석처리
  		json MonsterJson = LoadJson["Monster_Json"];
  		_int iMonsterJsonSize = (_int)MonsterJson.size();
+		//iMonsterJsonSize = 0;
  
  		for (_int i = 0; i < iMonsterJsonSize; ++i)
  		{
@@ -1333,6 +1340,7 @@ HRESULT CWindow_MapTool::Load_Function(string strPath, string strFileName)
 
 		json SpecialJson = LoadJson["Special_Json"];
 		_int iSpecialJsonSize = (_int)SpecialJson.size();
+		//iSpecialJsonSize = 0;
 
 		for (_int i = 0; i < iSpecialJsonSize; ++i)
 		{
@@ -1608,6 +1616,11 @@ void CWindow_MapTool::ObjectMode_Change_For_Reset()
 				m_pPreviewCharacter->Set_Enable(false);
 				m_pPreviewCharacter = nullptr;
 			}
+
+			for (_int i = 0; i < m_vecCreateMonster.size(); ++i)
+			{
+				m_vecCreateMonster[i]->Set_Enable(true);
+			}
 		}
 		else if (m_eObjectMode == CWindow_MapTool::OBJECTMODE_TYPE::OBJECTMODE_CHARACTER)
 		{
@@ -1616,6 +1629,14 @@ void CWindow_MapTool::ObjectMode_Change_For_Reset()
 			m_iSelectInstanceIndex = 0;
 			m_iSelectObjectIndex = 0;
 			m_iSelectModelTag = 0;
+
+			
+			for (_int i = 0; i < m_vecCreateMonster.size(); ++i)
+			{
+				m_vecCreateMonster[i]->Set_Enable(true);
+			}
+				
+			
 
 			if(m_pPreviewObject != nullptr)
 			{
@@ -1880,6 +1901,15 @@ void CWindow_MapTool::CharacterMode_Function()
 {
 	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyMask_;
 
+// 	if (m_bSYTest == true)
+// 	{
+// 			for (_int i = 0; i < m_vecCreateMonster.size(); ++i)
+// 			{
+// 				m_vecCreateMonster[i]->Set_Enable(true);
+// 			}
+// 		m_bSYTest = false;
+// 	}
+
 	if (ImGui::BeginTabBar(u8"캐릭터 오브젝트 타입", tab_bar_flags))
 	{
 		if (ImGui::BeginTabItem(u8"일반 몬스터"))
@@ -2035,15 +2065,15 @@ void CWindow_MapTool::TriggerMode_Function()
 		ShowDialog();
 	}
 
-	if (m_pPickingTrigger != nullptr)
-	{
-		CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
-
-		if (pTriggerCollider != nullptr)
-		{
-			m_pGameInstance->Add_DebugRender(pTriggerCollider);
-		}
-	}
+	//if (m_pPickingTrigger != nullptr)
+	//{
+	//	CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
+	//
+	//	if (pTriggerCollider != nullptr)
+	//	{
+	//		m_pGameInstance->Add_DebugRender(pTriggerCollider);
+	//	}
+	//}
 
 }
 
@@ -7301,7 +7331,7 @@ void CWindow_MapTool::Trigger_CreateTab()
 	{
 		
 		static _int iTriggerType = 0;
-		const char* TriggerType[3] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거", "UI 트리거"};
+		const char* TriggerType[3] = { u8"몬스터 스폰트리거", u8"카메라 컷신 트리거", u8"UI 트리거"};
 
 		for (_uint i = 0; i < IM_ARRAYSIZE(TriggerType); ++i)
 		{
@@ -7473,13 +7503,13 @@ void CWindow_MapTool::Trigger_SelectTab()
 	}
 
 
-	if (m_pPickingTrigger != nullptr)
-	{
-		CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
-	
-		if (pTriggerCollider != nullptr)
-			m_pGameInstance->Add_DebugRender(pTriggerCollider);
-	}
+	//if (m_pPickingTrigger != nullptr)
+	//{
+	//	CCollider* pTriggerCollider = m_pPickingTrigger->Get_TriggerCollider();
+	//
+	//	if (pTriggerCollider != nullptr)
+	//		m_pGameInstance->Add_DebugRender(pTriggerCollider);
+	//}
 
 }
 
@@ -11207,6 +11237,8 @@ void CWindow_MapTool::Trigger_GuizmoTick(CEvent_Trigger* pEventTrigger)
 			pMonsterTrigger->Activate();
 			
 	}
+
+
 	
 
 

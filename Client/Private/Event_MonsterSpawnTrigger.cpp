@@ -24,6 +24,77 @@ HRESULT CEvent_MosnterSpawnTrigger::Initialize(void* pArg)
 	Set_ColliderSize(m_tMonsterTriggerDesc.vColliderSize);
 	Set_ColliderCenter(m_tMonsterTriggerDesc.vColliderCenter);
 
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	json LoadJson;
+
+	string strLoadJsonPath;
+
+	if (iCurrentLevel == (_uint)LEVEL_GAMEPLAY)
+	{
+		strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
+	}
+	else if (iCurrentLevel == (_uint)LEVEL_INTRO_BOSS)
+	{
+		//strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
+		strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData.json";
+
+	}
+	else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAIN)
+	{
+		strLoadJsonPath = "../Bin/DataFiles/Data_Map/SnowMountain_MapData.json";
+	}
+	else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAINBOSS)
+	{
+		strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData.json";
+	}
+
+
+
+
+
+	if (SUCCEEDED(CJson_Utility::Load_Json(strLoadJsonPath.c_str(), LoadJson)))
+	{
+		json MonsterJson = LoadJson["Monster_Json"];
+
+		_uint iMonsterJsonFullSize = (_uint)MonsterJson.size();
+
+
+		for (_uint i = 0; i < iMonsterJsonFullSize; ++i)
+		{
+			if (m_tMonsterTriggerDesc.iSpawnGroupIndex == MonsterJson[i]["MonsterGroupIndex"])
+			{
+				CMonster_Character::MONSTER_DESC MonsterDesc;
+
+				MonsterDesc.bPreview = false;
+				MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
+				MonsterDesc.iMonsterGroupIndex = MonsterJson[i]["MonsterGroupIndex"];
+				MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
+
+				const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
+				_float4x4 WorldMatrix;
+
+				for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
+				{
+					for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
+					{
+						WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
+					}
+				}
+
+				MonsterDesc.WorldMatrix = WorldMatrix;
+
+
+				wstring strProtoTypeTag;
+				m_pGameInstance->String_To_WString(MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
+				MonsterDesc.strProtoTypeTag = strProtoTypeTag;
+
+				m_vecCreateMonsterDesc.push_back(MonsterDesc);
+			}
+		}
+		m_bJsonReady = true;
+	}
+
 	return S_OK;
 }
 
@@ -82,92 +153,15 @@ _bool CEvent_MosnterSpawnTrigger::Activate_Condition()
 
 	_bool bSuperCondition = __super::Activate_Condition();
 
-	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+	
 
-	if (iCurrentLevel == (_uint)LEVEL_TOOL)
-	{
-		m_pGameInstance->Add_DebugRender(m_pColliderCom);
-	}
+	
 
 	if(bSuperCondition == false)
 		return false;
 	
-	if (m_bJsonReady == false)
-	{
-		json LoadJson;
-
-		string strLoadJsonPath;
-
-		if (iCurrentLevel == (_uint)LEVEL_GAMEPLAY)
-		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Final_MapData.json";
-		}
-		else if (iCurrentLevel == (_uint)LEVEL_INTRO_BOSS)
-		{
-			//strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_Temp_MapData.json";
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage1Boss_MapData.json";
-			
-		}
-		else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAIN)
-		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/SnowMountain_MapData.json";
-		}
-		else if (iCurrentLevel == (_uint)LEVEL_SNOWMOUNTAINBOSS)
-		{
-			strLoadJsonPath = "../Bin/DataFiles/Data_Map/Stage2Boss_MapData.json";
-		}
-		
-
-		
-		
-
-		if (SUCCEEDED(CJson_Utility::Load_Json(strLoadJsonPath.c_str(), LoadJson)))
-		{
-			json MonsterJson = LoadJson["Monster_Json"];
-
-			_uint iMonsterJsonFullSize = (_uint)MonsterJson.size();
-			
-
-			for (_uint i = 0; i < iMonsterJsonFullSize; ++i)
-			{
-				if (m_tMonsterTriggerDesc.iSpawnGroupIndex == MonsterJson[i]["MonsterGroupIndex"])
-				{
-					CMonster_Character::MONSTER_DESC MonsterDesc;
-
-					MonsterDesc.bPreview = false;
-					MonsterDesc.eDescType = CGameObject::MONSTER_DESC;
-					MonsterDesc.iMonsterGroupIndex = MonsterJson[i]["MonsterGroupIndex"];
-					MonsterDesc.iStartNaviIndex = MonsterJson[i]["StartNaviIndex"];
-
-					const json& TransformJson = MonsterJson[i]["Component"]["Transform"];
-					_float4x4 WorldMatrix;
-
-					for (_int TransformLoopIndex = 0; TransformLoopIndex < 4; ++TransformLoopIndex)
-					{
-						for (_int TransformSecondLoopIndex = 0; TransformSecondLoopIndex < 4; ++TransformSecondLoopIndex)
-						{
-							WorldMatrix.m[TransformLoopIndex][TransformSecondLoopIndex] = TransformJson[TransformLoopIndex][TransformSecondLoopIndex];
-						}
-					}
-
-					MonsterDesc.WorldMatrix = WorldMatrix;
-
-
-					wstring strProtoTypeTag;
-					m_pGameInstance->String_To_WString(MonsterJson[i]["PrototypeTag"], strProtoTypeTag);
-					MonsterDesc.strProtoTypeTag = strProtoTypeTag;
-
-					m_vecCreateMonsterDesc.push_back(MonsterDesc);
-				}
-			}
-			m_bJsonReady = true;
-			return true;
-		}
-	}
-	else
-		return false;
-
-	return false;
+	return true;
+	
 }
 
 _bool CEvent_MosnterSpawnTrigger::End_Condition()

@@ -354,7 +354,8 @@ void CEnvironment_Interact::Late_Tick(_float fTimeDelta)
 	//if (m_pGameInstance->isIn_WorldPlanes(m_pTransformCom->Get_State(CTransform::STATE_POSITION), 5.f))
 		FAILED_CHECK_RETURN(m_pGameInstance->Add_RenderGroup(CRenderer::RENDER_NONBLEND, this), );
 
-	
+	if(m_pInteractColliderCom != nullptr)
+		m_pGameInstance->Add_DebugRender(m_pInteractColliderCom);
 
 	if (m_iCurrentLevelIndex == (_uint)LEVEL_TOOL)
 	{

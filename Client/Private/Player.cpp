@@ -979,12 +979,12 @@ void CPlayer::KeyInput(_float fTimeDelta)
 		m_pUIManager->Active_TutorialBox();
 		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::START);
 	}
-	/* ! UI : TestText / Key : 9 */
-	if (m_pGameInstance->Key_Down(DIK_9))
-	{
-		m_pUIManager->Active_TutorialBox();
-		m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE);
-	}
+	///* ! UI : TestText / Key : 9 */
+	//if (m_pGameInstance->Key_Down(DIK_9))
+	//{
+	//	m_pUIManager->Active_TutorialBox();
+	//	m_pUIManager->Change_TutorialText(TUTORIAL_TEXT::CRANE);
+	//}
 
 	/* ! UI : SkillWindow / Key : K (!아직 UI 안넣음) */
 	if (m_pGameInstance->Key_Down(DIK_K))

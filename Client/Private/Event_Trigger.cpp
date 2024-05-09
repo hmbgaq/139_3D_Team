@@ -21,6 +21,7 @@ HRESULT CEvent_Trigger::Initialize(void* pArg)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 	
+	m_bEnable = true;
 	return S_OK;
 }
 
@@ -30,8 +31,11 @@ void CEvent_Trigger::Activate()
 
 _bool CEvent_Trigger::Activate_Condition()
 {
+	
+
 	if (nullptr == m_pActor || nullptr == m_pColliderCom)
 	{
+
 		if (m_bSetFindActor == false)
 		{
 			m_pActor = dynamic_cast<CPlayer*>(m_pGameInstance->Get_Player());
@@ -48,7 +52,16 @@ _bool CEvent_Trigger::Activate_Condition()
 		return false;
 	}
 
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	
+	
+
+	_int iCurrentLevel = m_pGameInstance->Get_NextLevel();
+
+	if (iCurrentLevel != (_uint)LEVEL_TOOL)
+	{
+		m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+		m_pGameInstance->Add_DebugRender(m_pColliderCom);
+	}
 
 	if(m_bSetFindActor == true && true == m_pColliderCom->Is_Collision(m_pActor->Get_Collider()))
 		return true;

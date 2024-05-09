@@ -250,6 +250,7 @@ private:
 	_bool			m_bCreateCamera = false;
 	_int			m_iSkyTextureIndex = { 0 };
 
+	_bool			m_bSYTest = false;
 	
 
 	
