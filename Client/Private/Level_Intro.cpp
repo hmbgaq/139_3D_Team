@@ -112,7 +112,7 @@ void CLevel_Intro::Tick(_float fTimeDelta)
         m_pGameInstance->Set_ToolPBRTexture_InsteadLevel(m_iPBRTexture);
     }
 
-    Ready_Summon();
+    //Ready_Summon();
 
 
 }

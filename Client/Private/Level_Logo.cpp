@@ -41,7 +41,7 @@ HRESULT CLevel_Logo::Initialize()
 	m_pDataManager->Set_GameState(GAME_STATE::UI);
 	ShowCursor(false);
 
-	FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // 이펙트 풀
+	//FAILED_CHECK(EFFECT_MANAGER->Ready_EffectPool()); // 이펙트 풀
 
 	//m_pGameInstance->Play_BGM(L"BGM_LOADING", L"LogoLoading.mp3", 10.f);
 
@@ -53,13 +53,13 @@ void CLevel_Logo::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_TAB))
 	{
 		_int iCheckPoint = 0;
-		iCheckPoint = MessageBox(g_hWnd, L"확인 선택 시 Intro(테스트맵), 취소 선택 시 되돌아가기.", L"Intro(테스트) 맵으로", MB_OKCANCEL);
+		iCheckPoint = MessageBox(g_hWnd, L"확인 선택 시 Tool, 취소 선택 시 되돌아가기.", L"Tool", MB_OKCANCEL);
 	
 		// 확인 버튼을 눌렀을 때
 		if (iCheckPoint == IDOK)
 		{
-			m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
-			//m_pDataManager->Set_SelectLevel(LEVEL_GAMEPLAY);
+			//m_pDataManager->Set_SelectLevel(LEVEL_INTRO);
+			m_pDataManager->Set_SelectLevel(LEVEL_TOOL);
 		}
 		else if (iCheckPoint == IDCANCEL)
 		{
